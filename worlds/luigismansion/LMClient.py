@@ -367,7 +367,7 @@ class LMContext(CommonContext):
         # KivyMD support, also keeps support with regular Kivy (hopefully)
         try:
             from kvui import MDLabel as Label
-        except ModuleNotFoundError:
+        except ImportError:
             from kvui import Label
 
         if not self.boo_count:
