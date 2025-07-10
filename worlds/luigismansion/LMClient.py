@@ -17,6 +17,7 @@ from .LMGenerator import LuigisMansionRandomizer
 from .Items import *
 from .Locations import ALL_LOCATION_TABLE, SELF_LOCATIONS_TO_RECV, BOOLOSSUS_AP_ID_LIST
 from .Helper_Functions import StringByteFunction as sbf
+from .LMEnergyLink import EnergyLink, EnergyLinkConstants, EnergyLinkProcessor
 
 # Load Universal Tracker modules with aliases
 tracker_loaded = False
@@ -166,7 +167,7 @@ def save_patched_iso(output_data):
         LuigisMansionRandomizer(iso_path, str(os.path.join(directory_to_iso, file_name + ".iso")), output_data)
 
 
-class LMCommandProcessor(ClientCommandProcessor):
+class LMCommandProcessor(EnergyLinkProcessor):
     def __init__(self, ctx: CommonContext):
         super().__init__(ctx)
 
@@ -210,6 +211,9 @@ class LMContext(CommonContext):
         self.dolphin_sync_task: Optional[asyncio.Task[None]] = None
         self.dolphin_status = CONNECTION_INITIAL_STATUS
         self.awaiting_rom = False
+
+        # Manages energy link operations and state.
+        self.energy_link = EnergyLink(self)
 
         # All used when death link is enabled.
         self.is_luigi_dead = False
@@ -314,6 +318,8 @@ class LMContext(CommonContext):
                 Utils.async_start(self.update_death_link(bool(args["slot_data"]["death_link"])))
             if "trap_link" in args["slot_data"] and "TrapLink" not in self.tags:
                 self.tags.add("TrapLink")
+            if "energy_link" in args["slot_data"] and EnergyLinkConstants.ENERGY_LINK not in self.tags:
+                self.energy_link.tag_and_notify()
 
         if cmd == "Bounced":
             if "tags" not in args:
@@ -341,6 +347,9 @@ class LMContext(CommonContext):
                     self.received_trap_link = "Bonk Trap"
                 if trap_name in POSSESION_EQUIV:
                     self.received_trap_link = "Possession Trap"
+
+        if cmd == "SetReply":
+            self.energy_link.try_update_energy_request(args)
 
     def on_deathlink(self, data: dict[str, Any]):
         """
