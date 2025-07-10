@@ -918,6 +918,7 @@ class LMWorld(World):
             "spawn_region": self.origin_region_name,
             "death_link": self.options.death_link.value,
             "trap_link": self.options.trap_link.value,
+            "energy_link": self.options.energy_link.value,
             "luigi max health": self.options.luigi_max_health.value,
             "pickup animation": self.options.enable_pickup_animation.value,
             "apworld version": CLIENT_VERSION,
