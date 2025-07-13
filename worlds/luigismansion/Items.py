@@ -1,8 +1,12 @@
 from typing import NamedTuple, Dict, Set, Optional
 
+from win32comext.ifilter.ifilter import BindIFilterFromStream
+
 from BaseClasses import Item
 from BaseClasses import ItemClassification as IC
 from .Helper_Functions import LMRamData
+from ..kh2.Names.LocationName import SpookyCaveAPBoost
+from ..shivers import ShiversItem
 
 
 class LMItemData(NamedTuple):
@@ -118,6 +122,31 @@ ITEM_TABLE: dict[str, LMItemData] = {
         update_ram_addr=[LMRamData(0x803D8B7C, pointer_offset=0x344, ram_byte_size=4, item_count=1)]),
     "Progressive Flower": LMItemData("Flower Stage", 140, IC.progression,
         update_ram_addr=[LMRamData(0x80338fc0, ram_byte_size=4)])
+}
+
+PORTRAIT_ITEMS: dict[str, LMItemData] = {
+    "Shivers's Candelabra": LMItemData("Portrait Spawner", 150, IC.progression, update_ram_addr=),
+    "Neville's Book": LMItemData("Portrait Spawner", 151, IC.progression, update_ram_addr=),
+    "Lydia's Brush": LMItemData("Portrait Spawner", 152, IC.progression, update_ram_addr=),
+    "Chauncey's Pacifier": LMItemData("Portrait Spawner", 153, IC.progression, update_ram_addr=),
+    "Whirlindas' Dance Steps": LMItemData("Portrait Spawner", 141, IC.progression, update_ram_addr=),
+    "Melody's Music Sheets": LMItemData("Portrait Spawner", 155, IC.progression, update_ram_addr=),
+    "Mr. Luggs's Utensils": LMItemData("Portrait Spawner", 156, IC.progression, update_ram_addr=),
+    "Spooky's Collar": LMItemData("Portrait Spawner", 157, IC.progression, update_ram_addr=),
+    "Bogmire's Shadow": LMItemData("Portrait Spawner", 158, IC.progression, update_ram_addr=),
+    "Biff's Weights": LMItemData("Portrait Spawner", 159, IC.progression, update_ram_addr=),
+    "Petunia's Shower Cap": LMItemData("Portrait Spawner", 160, IC.progression, update_ram_addr=),
+    "Nana's Yarn Balls": LMItemData("Portrait Spawner", 161, IC.progression, update_ram_addr=),
+    "Bankshot's Pool Cue": LMItemData("Portrait Spawner", 162, IC.progression, update_ram_addr=),
+    "The Twins' Mobile": LMItemData("Portrait Spawner", 163, IC.progression, update_ram_addr=),
+    "Clairvoya's Crystal Ball": LMItemData("Portrait Spawner", 164, IC.progression, update_ram_addr=),
+    "Boolossus's Bahamas Ticket": LMItemData("Portrait Spawner", 165, IC.progression, update_ram_addr=),
+    "Grimmly's Mirror": LMItemData("Portrait Spawner", 166, IC.progression, update_ram_addr=),
+    "Toy Soldiers' Wind-up Keys": LMItemData("Portrait Spawner", 167, IC.progression, update_ram_addr=),
+    "Sue Pea's Bed": LMItemData("Portrait Spawner", 168, IC.progression, update_ram_addr=),
+    "Sir Weston's Backpack": LMItemData("Portrait Spawner", 169, IC.progression, update_ram_addr=),
+    "Jarvis's Vase Collection": LMItemData("Portrait Spawner", 170, IC.progression, update_ram_addr=),
+    "Van Gore's Paintbrush": LMItemData("Portrait Spawner", 171, IC.progression, update_ram_addr=),
 }
 
 BOO_ITEM_TABLE: dict[str, LMItemData] = {
