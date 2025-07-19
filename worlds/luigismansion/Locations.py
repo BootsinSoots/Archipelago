@@ -2122,7 +2122,7 @@ SILVER_PORTRAIT_TABLE: dict[str, LMLocationData] = {
         update_ram_addr=[LMRamData(0x803D5E37, bit_position=4, in_game_room_id=27)]),
     "Catch The Whirlindas - Silver": LMLocationData("Ballroom", 881, "Portrait", 34, [], remote_only=True,
         update_ram_addr=[LMRamData(0x803D5E34, bit_position=6, in_game_room_id=9)]),
-    "Catch Shivers - Silver": LMLocationData("Butler's Room", 881, "Portrait", 29, ["Fire Element Medal", "Shivers Spawn"],
+    "Catch Shivers - Silver": LMLocationData("Butler's Room", 921, "Portrait", 29, ["Fire Element Medal", "Shivers Spawn"],
         remote_only=True, update_ram_addr=[LMRamData(0x803D5E35, bit_position=2, in_game_room_id=0)]),
     "Catch Clairvoya - Silver": LMLocationData("Fortune-Teller's Room", 882, "Portrait", 31, [],
         remote_only=True, update_ram_addr=[LMRamData(0x803D5E35, bit_position=0, in_game_room_id=3)]),
