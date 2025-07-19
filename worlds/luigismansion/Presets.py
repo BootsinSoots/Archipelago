@@ -27,6 +27,8 @@ all_random_settings = {
     LMOptions.Lightsanity.internal_name:               "random",
     LMOptions.Walksanity.internal_name:                "random",
     LMOptions.SpeedySpirits.internal_name:             "random",
+    LMOptions.SilverPortrait.internal_name:            "random",
+    LMOptions.GoldPortrait.internal_name:              "random",
     LMOptions.BooGates.internal_name:                  "random",
     LMOptions.KingBooHealth.internal_name:             "random",
     LMOptions.MarioItems.internal_name:                "random",
@@ -71,6 +73,8 @@ allsanity_settings = {
     LMOptions.Lightsanity.internal_name:               "true",
     LMOptions.Walksanity.internal_name:                "true",
     LMOptions.SpeedySpirits.internal_name:             "true",
+    LMOptions.SilverPortrait.internal_name:            "true",
+    LMOptions.GoldPortrait.internal_name:              "true",
 }
 
 money_settings = {
