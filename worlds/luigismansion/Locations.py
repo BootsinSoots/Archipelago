@@ -1680,7 +1680,7 @@ PORTRAIT_LOCATION_TABLE: dict[str, LMLocationData] = {
         update_ram_addr=[LMRamData(0x803D5DAB, bit_position=1, in_game_room_id=59)]),
     "Vincent van Gore, the Starving Artist": LMLocationData("Artist's Studio", 641, "Portrait", 107, [],
         remote_only=True, update_ram_addr=[LMRamData(0x803D5DAA, bit_position=5, in_game_room_id=60)]),
-    "Sir Weston, the Chilly Climber": LMLocationData("Cold Storage", 642, "Portrait", 1, ["Fire Element Medal"],
+    "Sir Weston, the Chilly Climber": LMLocationData("Cold Storage", 642, "Portrait", 1, ["Fire Element Medal"], remote_only=True,
         update_ram_addr=[LMRamData(0x803D5DBF, bit_position=1, in_game_room_id=64)]),
 }
 
@@ -2154,7 +2154,7 @@ SILVER_PORTRAIT_TABLE: dict[str, LMLocationData] = {
         update_ram_addr=[LMRamData(0x803D5E39, bit_position=0, in_game_room_id=59)]),
     "Catch Van Gore - Silver": LMLocationData("Artist's Studio", 896, "Portrait", 107, [],
         remote_only=True, update_ram_addr=[LMRamData(0x803D5E38, bit_position=4, in_game_room_id=60)]),
-    "Catch Sir Weston - Silver": LMLocationData("Cold Storage", 897, "Portrait", 1, ["Fire Element Medal"],
+    "Catch Sir Weston - Silver": LMLocationData("Cold Storage", 897, "Portrait", 1, ["Fire Element Medal"], remote_only=True,
         update_ram_addr=[LMRamData(0x803D5E39, bit_position=2, in_game_room_id=64)]),
 }
 
@@ -2201,7 +2201,7 @@ GOLD_PORTRAIT_TABLE: dict[str, LMLocationData] = {
         update_ram_addr=[LMRamData(0x803D5E39, bit_position=1, in_game_room_id=59)]),
     "Catch Van Gore - Gold": LMLocationData("Artist's Studio", 919, "Portrait", 107, [],
         remote_only=True, update_ram_addr=[LMRamData(0x803D5E38, bit_position=5, in_game_room_id=60)]),
-    "Catch Sir Weston - Gold": LMLocationData("Cold Storage", 920, "Portrait", 1, ["Fire Element Medal"],
+    "Catch Sir Weston - Gold": LMLocationData("Cold Storage", 920, "Portrait", 1, ["Fire Element Medal"], remote_only=True,
         update_ram_addr=[LMRamData(0x803D5E39, bit_position=3, in_game_room_id=64)]),
 }
 
