@@ -51,8 +51,10 @@ def get_hints_by_option(multiworld: MultiWorld, player_hints: set[int]) -> None:
                     loc: Location = multiworld.find_item(iname, player_int)
                 hint = {name: {"Item": loc.item.name,
                                "Location": loc.name,
+                               "Location ID": str(loc.address),
                                "Rec Player": multiworld.player_name[loc.item.player],
                                "Send Player": multiworld.player_name[loc.player],
+                               "Send Player ID": str(loc.player),
                                "Game": loc.game,
                                "Class": "Prog"}}
                 already_hinted_locations.append(loc)
