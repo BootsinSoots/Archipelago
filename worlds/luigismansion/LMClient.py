@@ -242,6 +242,9 @@ class LMContext(CommonContext):
         # Used to let poptracker autotrack Luigi's room
         self.last_room_id = 0
 
+        # Know whether to send in-game hints to the multiworld or not
+        self.send_hints = 0
+
     async def disconnect(self, allow_autoreconnect: bool = False):
         """
         Disconnect the client from the server and reset game state variables.
@@ -310,6 +313,7 @@ class LMContext(CommonContext):
             self.boo_final_count = int(args["slot_data"]["final boo count"])
             self.luigimaxhp = int(args["slot_data"]["luigi max health"])
             self.spawn = str(args["slot_data"]["spawn_region"])
+            self.send_hints = int(args["slot_data"]["send_hints"])
             if "death_link" in args["slot_data"]:
                 Utils.async_start(self.update_death_link(bool(args["slot_data"]["death_link"])))
             if args["slot_data"]["trap_link"] == 1 and "TrapLink" not in self.tags:
