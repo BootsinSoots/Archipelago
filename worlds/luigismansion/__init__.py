@@ -206,7 +206,7 @@ class LMWorld(World):
         if "Full" in self.options.furnisanity.value:
             for location, data in FURNITURE_LOCATION_TABLE.items():
                 region = self.get_region(data.region)
-                entry = LMLocation(self.player, location, region, data)
+                entry: LMLocation = LMLocation(self.player, location, region, data)
                 if len(entry.access) != 0:
                     for item in entry.access:
                         if item == "Fire Element Medal":
@@ -390,7 +390,7 @@ class LMWorld(World):
         if self.options.boosanity:
             for location, data in ROOM_BOO_LOCATION_TABLE.items():
                 region: Region = self.get_region(data.region)
-                entry: Location = LMLocation(self.player, location, region, data)
+                entry: LMLocation = LMLocation(self.player, location, region, data)
                 add_rule(entry, lambda state: state.has("Boo Radar", self.player), "and")
                 if entry.code == 675 and self.open_doors.get(28) == 0:
                     add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
