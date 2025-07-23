@@ -514,20 +514,60 @@ class LMContext(CommonContext):
             }
         }])
 
+
     async def lm_send_hints(self):
+        # If the hint address is empty, no hint has been looked at and we return
         current_hint = int.from_bytes(dme.read_bytes(0x803D33AC, 1)) > 0
         if not current_hint > 0:
             return
 
+        # Check for current room so we know which hint(s) we need to look at, since they mostly all use the same flags
         current_room = dme.read_word(dme.follow_pointers(ROOM_ID_ADDR, [ROOM_ID_OFFSET]))
         hint_dict = copy.copy(ALWAYS_HINT)
+        player_id = 0
+        location_id = 0
+
+        # If portrait ghost hints are on, check them too
         if self.portrait_hints:
             hint_dict.update(PORTRAIT_HINTS)
+
+        # Go through all the hints to check which hint matches the room we are in
         for hint, hintfo in self.hints:
             if current_room != hint_dict[hint]:
                 continue
 
+            # If we match in room 53 or 59, figure out which flag is on and use the matching hint
+            if current_room in (59,53):
+                if current_room == 59:
+                    if (current_hint & (1 << 5)) > 0 and hint == "<doll1>":
+                        player_id = int(hintfo["Send Player ID"])
+                        location_id = int(hintfo["Location ID"])
+                    elif (current_hint & (1 << 6)) > 0 and hint == "<doll2>":
+                        player_id = int(hintfo["Send Player ID"])
+                        location_id = int(hintfo["Location ID"])
+                    elif (current_hint & (1 << 7)) > 0 and hint == "<doll3>":
+                        player_id = int(hintfo["Send Player ID"])
+                        location_id = int(hintfo["Location ID"])
+                else:
+                    if (current_hint & (1 << 5)) > 0 and hint == "Left Telephone":
+                        player_id = int(hintfo["Send Player ID"])
+                        location_id = int(hintfo["Location ID"])
+                    elif (current_hint & (1 << 6)) > 0 and hint == "Center Telephone":
+                        player_id = int(hintfo["Send Player ID"])
+                        location_id = int(hintfo["Location ID"])
+                    elif (current_hint & (1 << 7)) > 0 and hint == "Right Telephone":
+                        player_id = int(hintfo["Send Player ID"])
+                        location_id = int(hintfo["Location ID"])
+            else:
+                player_id = int(hintfo["Send Player ID"])
+                location_id = int(hintfo["Location ID"])
 
+        # Make sure we didn't somehow try to send a null hint
+        if player_id == 0 or location_id == 0:
+            logger.error("Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers")
+            Utils.messagebox("Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers")
+
+        # Send correct CreateHints command
         await self.send_msgs([{
             "cmd": "CreateHints",
             "location_player": player_id,
@@ -696,6 +736,7 @@ async def dolphin_sync_task(ctx: LMContext):
                     if "TrapLink" in ctx.tags:
                         await ctx.handle_traplink()
                     await ctx.lm_check_locations()
+                    await ctx.lm_send_hints()
                     await ctx.lm_update_non_savable_ram()
                 else:
                     if not ctx.auth:
