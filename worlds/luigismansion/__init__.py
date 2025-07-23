@@ -94,6 +94,7 @@ class LMWeb(WebWorld):
             LuigiOptions.StartHiddenMansion,
             LuigiOptions.HintDistribution,
             LuigiOptions.PortraitHints,
+            LuigiOptions.SendHints,
             LuigiOptions.BooHealthOption,
             LuigiOptions.BooHealthValue,
             LuigiOptions.BooSpeed,
@@ -920,6 +921,7 @@ class LMWorld(World):
             "trap_link": self.options.trap_link.value,
             "luigi max health": self.options.luigi_max_health.value,
             "pickup animation": self.options.enable_pickup_animation.value,
+            "hints": self.hints,
             "apworld version": CLIENT_VERSION,
             "seed": self.multiworld.seed,
         }

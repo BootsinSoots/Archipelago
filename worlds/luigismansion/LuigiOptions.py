@@ -13,6 +13,10 @@ class LuigiWalkSpeed(Choice):
     option_schmoovin = 2
     default = 0
 
+class SendHints(DefaultOnToggle):
+    """If enabled, in-game hints will be sent out to the multiworld when discovered."""
+    display_name = "Send Hints"
+    internal_name = "send_hints"
 
 class RandomMusic(Toggle):
     """Randomize Music"""
@@ -583,6 +587,7 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     random_spawn: RandomSpawn
     portrait_hints: PortraitHints
     hint_distribution: HintDistribution
+    send_hints: SendHints
     toadsanity: Toadsanity
     gold_mice: GoldMice
     furnisanity: Furnisanity
