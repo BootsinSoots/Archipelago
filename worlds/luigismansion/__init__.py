@@ -41,7 +41,7 @@ components.append(
 
 icon_paths["archiboolego"] = f"ap:{__name__}/data/archiboolego.png"
 
-CLIENT_VERSION = "0.4.7"
+CLIENT_VERSION = "0.5.0"
 
 class LuigisMansionSettings(settings.Group):
     class ISOFile(settings.UserFilePath):
@@ -922,6 +922,7 @@ class LMWorld(World):
             "luigi max health": self.options.luigi_max_health.value,
             "pickup animation": self.options.enable_pickup_animation.value,
             "send_hints": self.options.send_hints.value,
+            "portrait_hints": self.options.portrait_hints.value,
             "hints": self.hints,
             "apworld version": CLIENT_VERSION,
             "seed": self.multiworld.seed,

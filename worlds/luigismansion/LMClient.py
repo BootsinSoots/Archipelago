@@ -1,4 +1,5 @@
 import asyncio
+import copy
 import os
 import time
 import traceback
@@ -13,6 +14,7 @@ from CommonClient import get_base_parser, gui_enabled, logger, server_loop
 from settings import get_settings, Settings
 
 from . import CLIENT_VERSION
+from .Hints import ALWAYS_HINT, PORTRAIT_HINTS
 from .LMGenerator import LuigisMansionRandomizer
 from .Items import *
 from .Locations import ALL_LOCATION_TABLE, SELF_LOCATIONS_TO_RECV, BOOLOSSUS_AP_ID_LIST
@@ -244,6 +246,7 @@ class LMContext(CommonContext):
 
         # Know whether to send in-game hints to the multiworld or not
         self.send_hints = 0
+        self.portrait_hints = 0
         self.hints = {}
 
     async def disconnect(self, allow_autoreconnect: bool = False):
@@ -315,6 +318,7 @@ class LMContext(CommonContext):
             self.luigimaxhp = int(args["slot_data"]["luigi max health"])
             self.spawn = str(args["slot_data"]["spawn_region"])
             self.send_hints = int(args["slot_data"]["send_hints"])
+            self.portrait_hints = int(args["slot_data"]["portrait_hints"])
             self.hints = args["slot_data"]["hints"]
             if "death_link" in args["slot_data"]:
                 Utils.async_start(self.update_death_link(bool(args["slot_data"]["death_link"])))
@@ -510,12 +514,33 @@ class LMContext(CommonContext):
             }
         }])
 
+    async def lm_send_hints(self):
+        current_hint = int.from_bytes(dme.read_bytes(0x803D33AC, 1)) > 0
+        if not current_hint > 0:
+            return
+
+        current_room = dme.read_word(dme.follow_pointers(ROOM_ID_ADDR, [ROOM_ID_OFFSET]))
+        hint_dict = copy.copy(ALWAYS_HINT)
+        if self.portrait_hints:
+            hint_dict.update(PORTRAIT_HINTS)
+        for hint, hintfo in self.hints:
+            if current_room != hint_dict[hint]:
+                continue
+
+
+        await self.send_msgs([{
+            "cmd": "CreateHints",
+            "location_player": player_id,
+            "locations": [location_id],
+        }])
+
     async def lm_check_locations(self):
         if not (self.check_ingame() and self.check_alive()):
             return
 
         # There will be different checks on different maps.
         current_map_id = dme.read_word(CURR_MAP_ID_ADDR)
+
 
         for mis_loc in self.missing_locations:
             local_loc = self.location_names.lookup_in_game(mis_loc)
