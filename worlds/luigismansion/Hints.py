@@ -6,12 +6,13 @@ from BaseClasses import Location,  MultiWorld
 if TYPE_CHECKING:
     from . import LMWorld
 
-ALWAYS_HINT: dict[str, int] = {"Madame Clairvoya": 3, "Foyer Toad": 2, "Wardrobe Balcony Toad": 40, "1F Washroom Toad": 16, "Courtyard Toad": 24,
-               "Left Telephone": 53, "Center Telephone": 53, "Right Telephone": 53}
+ALWAYS_HINT: dict[str, int] = {"Madame Clairvoya": 3, "Foyer Toad": 2, "Wardrobe Balcony Toad": 40, "1F Washroom Toad": 16,
+                               "Courtyard Toad": 24,"Left Telephone": 53, "Center Telephone": 53, "Right Telephone": 53}
 
-PORTRAIT_HINTS: dict[str, int] = {"<father>": 35, "<mother>": 34, "<baby>": 26, "<dancer>": 9, "<situji>": 18, "<pianist>": 22, "<eater>": 8,
-                  "<dog01>": 11, "<builder>": 23, "<hustler>": 12, "<fat>": 48, "<obaasan>": 49, "<girl>": 29, "<dboy>":27, "<denwa>": 41,
-                  "<gaka>": 60, "<snowman>": 64, "<doll1>": 59, "<doll2>": 59, "<doll3>": 59}
+PORTRAIT_HINTS: dict[str, int] = {"<father>": 35, "<mother>": 34, "<baby>": 26, "<dancer>": 9, "<situji>": 18,
+                                  "<pianist>": 22, "<eater>": 8, "<dog01>": 11, "<builder>": 23, "<hustler>": 12,
+                                  "<fat>": 48, "<obaasan>": 49, "<girl>": 29, "<dboy>":27, "<denwa>": 41,
+                                  "<gaka>": 60, "<snowman>": 64, "<doll1>": 59, "<doll2>": 59, "<doll3>": 59}
 
 
 def get_progression_only_items(multiworld: MultiWorld, player: int, loc, hinted_loc, prog_items_no_skip) -> Location:

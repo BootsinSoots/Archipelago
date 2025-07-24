@@ -11,6 +11,7 @@
 <FRAMEEND>
 <WAIT>(15)
 <WINDOW>(0)<COLOR>(17)
+<FLAGON>(159)
 <RAMDOMJMP>"{HintType}"
 -------------------------
 <CASE>"SpecificHint"
