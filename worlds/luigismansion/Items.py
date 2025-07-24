@@ -113,7 +113,7 @@ ITEM_TABLE: dict[str, LMItemData] = {
         update_ram_addr=[LMRamData(0x803D5DBB, bit_position=7), LMRamData(0x803D339C, bit_position=0)]),
     "Boo Radar": LMItemData("Upgrade", 63, IC.progression,
         update_ram_addr=[LMRamData(0x803D33A2, bit_position=1), LMRamData(0x803D33A2, bit_position=3)]),
-    "Poltergust 4000": LMItemData("Upgrade", 64, IC.useful, update_ram_addr=[LMRamData(0x80081CC8, item_count=0)]),
+    "Progressive Vacuum": LMItemData("Upgrade", 64, IC.progression, update_ram_addr=[LMRamData(0x80081CC8, item_count=0)]),
     "Gold Diamond": LMItemData("Money", 65, IC.progression,
         update_ram_addr=[LMRamData(0x803D8B7C, pointer_offset=0x344, ram_byte_size=4, item_count=1)]),
     "Progressive Flower": LMItemData("Flower Stage", 140, IC.progression,
@@ -235,7 +235,7 @@ other_filler_items: Dict[str, LMItemData] = {
         update_ram_addr=[LMRamData(0x803D8B7C, pointer_offset=0x338, ram_byte_size=4, item_count=1)]),
     "Diamond": LMItemData("Money", 124, IC.filler,
         update_ram_addr=[LMRamData(0x803D8B7C, pointer_offset=0x33C, ram_byte_size=4, item_count=1)]),
-    "Nothing": LMItemData("Nothing Item", 127, IC.filler),
+    "Dust": LMItemData("Dust Item", 127, IC.filler),
     "Small Heart": LMItemData("Heart", 128, IC.filler,
         update_ram_addr=[LMRamData(0x803D8B40, pointer_offset=0xB8, ram_byte_size=2, item_count=20)]),
     "Large Heart": LMItemData("Heart", 129, IC.filler,
@@ -271,7 +271,10 @@ trap_filler_items: Dict[str, LMItemData] = {
         update_ram_addr=[LMRamData(0x804DDE7C, ram_byte_size=4, item_count=6)]), # value of 6
     "Ghost": LMItemData("Trap", 126, IC.trap,
         update_ram_addr=[LMRamData(0x804DDA50, ram_byte_size=4, item_count=1)]),
-
+    # "Fear Trap": LMItemData("Trap", 143, IC.trap, update_ram_addr=), #Crawling
+    # "Drag Trap": LMItemData("Trap", 144, IC.trap, update_ram_addr=),
+    # "Spooky Time": LMItemData("Trap", 145, IC.trap, update_ram_addr=),
+    # "Squash Trap": LMItemData("Trap", 146, IC.trap, update_ram_addr=),
 }
 
 filler_items = {**other_filler_items,

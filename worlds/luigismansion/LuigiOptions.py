@@ -13,6 +13,22 @@ class LuigiWalkSpeed(Choice):
     option_schmoovin = 2
     default = 0
 
+class GameMode(Choice):
+    """
+    Enable alternate game modes:
+
+    Default - Play through the mansion as usual
+
+    Poltergust Hunt - You must first find the Poltergust 3000 inside a piece of furniture before use. Enabling this will
+    automatically add certain pieces of furniture to the pool of locations even if other furniture options are turned off.
+    This will also unlock all doors in the mansion.
+    """
+    display_name = "Game Mode"
+    internal_name = "game_mode"
+    option_default = 0
+    option_poltergust_hunt = 1
+    default = 0
+
 
 class RandomMusic(Toggle):
     """Randomize Music"""
@@ -102,9 +118,9 @@ class BananaTrapWeight(Range):
 
 
 class NothingWeight(Range):
-    """Set the weight for how often nothing is chosen as filler."""
-    display_name = "'Nothing' Weight"
-    internal_name = "mothing_weight"
+    """Set the weight for how often dust is chosen as filler."""
+    display_name = "Dust Weight"
+    internal_name = "dust_weight"
     range_start = 0
     range_end = 100
     default = 40
@@ -120,7 +136,10 @@ class HeartWeight(Range):
 
 
 class BetterVacuum(Choice):
-    """Choose whether to include the Poltergust 4000"""
+    """
+    Choose whether to include the Poltergust 4000.
+
+    If you start with the upgrade on a no-poltergust start, you will receive the base poltergust instead"""
     display_name = "Poltergust 4000"
     internal_name = "good_vacuum"
     option_start_with = 0
@@ -233,7 +252,7 @@ class Furnisanity(OptionSet):
     """
     display_name = "Furnisanity"
     internal_name = "furnisanity"
-    valid_keys = {"Hangables", "Ceiling", "Candles", "Seating", "Surfaces", "Plants", "Storage", "Drawers", "Decor", "Full", "Treasures"}
+    valid_keys = {"Hangables", "Ceiling", "Candles", "Seating", "Surfaces", "Plants", "Storage", "Drawers", "Decor", "Full", "Treasures", "Basement", "1st Floor", "2nd Floor", "Attic", "Roof"}
 
 
 class EarlyFirstKey(Toggle):
@@ -264,13 +283,13 @@ class MarioItems(Range):
     default = 5
 
 
-class WashroomBooCount(Range):
-    """Set the number of Boos required to reach the 1F Washroom. 0 = Starts Open"""
-    display_name = "Washroom Boo Count"
-    internal_name = "washroom_boo_count"
-    range_start = 0
-    range_end = 50
-    default = 5
+# class WashroomBooCount(Range):
+#     """Set the number of Boos required to reach the 1F Washroom. 0 = Starts Open"""
+#     display_name = "Washroom Boo Count"
+#     internal_name = "washroom_boo_count"
+#     range_start = 0
+#     range_end = 50
+#     default = 5
 
 
 class BalconyBooCount(Range):
@@ -316,11 +335,11 @@ class Enemizer(Choice):
     """
     Choose if and how ghosts are randomized.
 
-    Vanilla: No ghost randomization
+    Vanilla - No ghost randomization
 
-    Randomized Elements: Randomized ghost elements and waves
+    Randomized Elements - Randomized ghost elements and waves
 
-    No Elements: Remove ghost elements, randomize waves
+    No Elements - Remove ghost elements, randomize waves
     """
     display_name = "Enemizer"
     internal_name = "enemizer"
@@ -329,11 +348,37 @@ class Enemizer(Choice):
     option_no_elements = 2
     default = 0
 
+class VacuumStart(DefaultOnToggle):
+    """
+    Enable Luigi to have the Poltergust 3000 at the start
+    """
+    display_name = "Starting Vacuum"
+    internal_name = "vacuum_start"
 
-class DoorRando(Toggle):
-    """Randomize which doors are locked or unlocked in the mansion."""
+
+class DoorRando(Choice):
+    """
+    Various options regarding which doors are locked or unlocked in the mansion.
+
+    Off - Doors are in their vanilla state
+
+    Randomized - All doors are randomly locked or unlocked
+
+    Suite Doors - Randomize doors but guarantee the Suite Key Doors remain locked
+
+    All Doors Unlocked - Unlocks all doors in the mansion. Without Boo gates, this will make King Boo immediately accessible.
+
+    All Doors Locked - Locks all door in the mansion.
+    """
     display_name = "Door Randomization"
     internal_name = "door_rando"
+    option_off = 0
+    option_randomized = 1
+    option_suite_doors = 2
+    option_all_doors_unlocked = 3
+    option_all_doors_locked = 4
+    default = 0
+
 
 
 class LuigiFearAnim(DefaultOnToggle):
@@ -559,17 +604,19 @@ class DoorModelRando(Toggle):
 
 class TrapPercentage(Range):
     """
-    Set the percentage of filler items that are traps.
+    Set the percentage of filler items that are traps. Default percentage is 0%
     """
     display_name = "Trap Percentage"
     internal_name = "trap_percentage"
     range_start = 0
     range_end = 100
-    default = 50
+    default = 0
 
 @dataclass
 class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     rank_requirement: RankRequirement
+    game_mode: GameMode
+    vacuum_start: VacuumStart
     walk_speed: LuigiWalkSpeed
     good_vacuum: BetterVacuum
     boo_radar: StartWithBooRadar
@@ -595,7 +642,7 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     speedy_spirits: SpeedySpirits
     boo_gates: BooGates
     mario_items: MarioItems
-    washroom_boo_count: WashroomBooCount
+    #washroom_boo_count: WashroomBooCount
     balcony_boo_count: BalconyBooCount
     final_boo_count: FinalBooCount
     king_boo_health: KingBooHealth
@@ -621,6 +668,6 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     poss_trap_weight: PossTrapWeight
     bonk_trap_weight: BonkTrapWeight
     ghost_weight: GhostTrapWeight
-    nothing_weight: NothingWeight
+    dust_weight: NothingWeight
     heart_weight: HeartWeight
     start_inventory_from_pool: StartInventoryPool
