@@ -1421,6 +1421,10 @@ def update_iyapoo_table(iyapoo_table, output_data):
                 item_data = output_loc["Nursery Speedy Spirit"]
             case "iyapoo15":
                 item_data = output_loc["Nursery Speedy Spirit"]
+
+        if output_data["Options"]["gold_mice"] == 0 and "goldrat" in iyapoo["name"]:
+            continue
+        match iyapoo["name"]:
             case "goldrat0":
                 item_data = output_loc["1F Hallway Chance Mouse"]
             case "goldrat1":
