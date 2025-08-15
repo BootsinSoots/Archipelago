@@ -236,7 +236,7 @@ other_filler_items: Dict[str, LMItemData] = {
     "Emerald": CurrencyItemData(122, { CURRENCY_NAME.EMERALD: 1, }),
     "Ruby": CurrencyItemData(123, { CURRENCY_NAME.RUBY: 1, }),
     "Diamond": CurrencyItemData(124, { CURRENCY_NAME.DIAMOND: 1, }),
-    "Dust": LMItemData("Dust", 127, IC.filler, update_ram_addr=[]),
+    "Dust": LMItemData("Nothing Item", 127, IC.filler, update_ram_addr=[]),
     "Small Heart": LMItemData("Heart", 128, IC.filler,
         update_ram_addr=[LMRamData(0x803D8B40, pointer_offset=0xB8, ram_byte_size=2, item_count=20)]),
     "Large Heart": LMItemData("Heart", 129, IC.filler,
