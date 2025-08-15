@@ -487,6 +487,8 @@ class BooHealthOption(Choice):
 class BooHealthValue(Range):
     """
     Choose the health value all Boos will have if the Boo Health Option is Choice. Range between 1 and 999
+    If boo_health_option is set to random_values, if you set this to "100: 50", the max value used will be 100 instead.
+    If you want a custom range, use a random range function: https://archipelago.gg/tutorial/Archipelago/advanced_settings_en#random-numbers
 
     Values over 150 may not be catchable within the current room and logic cannot account for where they move
 
