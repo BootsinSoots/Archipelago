@@ -36,14 +36,15 @@ def get_other_items(world: "LMWorld", hinted_loc, other_items) -> Location:
 
 
 def get_hints_by_option(multiworld: MultiWorld, player_hints: set[int]) -> None:
-    all_items = multiworld.get_items()
+    # Since locations are optional and you cannot hint items with no location, these will get filtered out.
+    all_placed_items = [item for item in multiworld.get_items() if item.location]
     player_hint_worlds = sorted(player_hints)
     for player_int in player_hint_worlds:
         world: "LMWorld" = multiworld.worlds[player_int]
-        prog_items = [item for item in all_items if item.advancement and not item.code is None and
+        prog_items = [item for item in all_placed_items if item.advancement and not item.code is None and
                       (item.player == player_int or item.location.player == player_int)]
         prog_no_skip = [item for item in prog_items if not item.skip_in_prog_balancing]
-        other_items = [item for item in all_items if not item.advancement and not item.code is None and
+        other_items = [item for item in all_placed_items if not item.advancement and not item.code is None and
                       (item.player == player_int or item.location.player == player_int)]
         already_hinted_locations: List[Location] = []
         hint_list = copy.deepcopy(ALWAYS_HINT)
@@ -82,7 +83,7 @@ def get_hints_by_option(multiworld: MultiWorld, player_hints: set[int]) -> None:
                     else:
                         loc = get_other_items(world, already_hinted_locations, other_items)
                 elif world.options.hint_distribution.value == 2 or world.options.hint_distribution.value == 5:
-                    non_hinted_items = [aItem for aItem in all_items if aItem.location not in already_hinted_locations]
+                    non_hinted_items = [aItem for aItem in all_placed_items if aItem.location not in already_hinted_locations]
                     loc = world.random.choice(non_hinted_items).location
                 if loc.item.advancement:
                     icolor = "Prog"
