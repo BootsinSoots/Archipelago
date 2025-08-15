@@ -98,7 +98,7 @@ def update_blackout_event(gcm: GCM) -> GCM:
     return __update_custom_event(gcm, "44", True, lines, csv_lines)
 
 # Updates all common events
-def update_common_events(gcm: GCM, randomize_mice: bool) -> GCM:
+def update_common_events(gcm: GCM, randomize_mice: bool, starting_vac: bool) -> GCM:
     list_custom_events = ["03", "10", "22", "23", "24", "29", "33", "35", "37", "38", "50", "61", "64",
         "65", "66", "67", "68", "71", "72", "74", "75", "82", "86", "87", "88", "89", "90"]
     if randomize_mice:
@@ -106,7 +106,10 @@ def update_common_events(gcm: GCM, randomize_mice: bool) -> GCM:
 
     for custom_event in list_custom_events:
         lines = get_data(MAIN_PKG_NAME, "data/custom_events/event" + custom_event +".txt").decode('utf-8')
+        if custom_event == "10" and not starting_vac:
+            lines = lines.replace("<WEAPON>", "<NOWEAPON>")
         gcm = __update_custom_event(gcm, custom_event, True, lines, None)
+
 
     return gcm
 

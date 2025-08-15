@@ -200,7 +200,7 @@ class LuigisMansionRandomizer:
             bool_pickup_anim_enabled, bool_boo_rando_enabled, door_model_rando_on)
 
         logger.info("Updating all of the common events with the customized version.")
-        self.gcm = update_common_events(self.gcm, bool_randomize_mice)
+        self.gcm = update_common_events(self.gcm, bool_randomize_mice, bool_start_vacuum)
 
         logger.info("Updating the intro and lab events with the customized version.")
         self.gcm = update_intro_and_lab_events(self.gcm, bool_hidden_mansion, max_health, start_inv_list, bool_start_boo_radar,
