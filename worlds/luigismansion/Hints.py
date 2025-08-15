@@ -37,10 +37,10 @@ def get_other_items(multiworld: MultiWorld, player: int, loc, hinted_loc, other_
 
 
 def get_hints_by_option(multiworld: MultiWorld, player_hints: set[int]) -> None:
-    all_items = multiworld.get_items()
-    prog_items = [item for item in all_items if item.advancement]
+    all_placed_items = [item for item in multiworld.get_items() if item.location]
+    prog_items = [item for item in all_placed_items if item.advancement]
     prog_no_skip = [items for items in prog_items if not items.skip_in_prog_balancing]
-    other_items = [item for item in all_items if not item.advancement]
+    other_items = [item for item in all_placed_items if not item.advancement]
     player_hint_worlds = sorted(player_hints)
     for player_int in player_hint_worlds:
         world: "LMWorld" = multiworld.worlds[player_int]
@@ -82,7 +82,7 @@ def get_hints_by_option(multiworld: MultiWorld, player_hints: set[int]) -> None:
                         loc = get_other_items(multiworld, player_int, loc, already_hinted_locations, other_items)
                 elif world.options.hint_distribution.value == 2 or world.options.hint_distribution.value == 5:
                     while loc is None:
-                        item = multiworld.worlds[player_int].random.choice(all_items)
+                        item = multiworld.worlds[player_int].random.choice(all_placed_items)
                         if item.location not in already_hinted_locations:
                             loc: Location = item.location
                 if loc.item.advancement:
