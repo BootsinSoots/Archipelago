@@ -1,4 +1,5 @@
 import asyncio, time, traceback
+import copy
 import random
 from typing import Any
 
@@ -8,7 +9,6 @@ import dolphin_memory_engine as dme
 
 from .Regions import spawn_locations
 from .iso_helper.lm_rom import LMUSAAPPatch
-from . import CLIENT_VERSION
 from .Hints import ALWAYS_HINT, PORTRAIT_HINTS
 from .LMGenerator import LuigisMansionRandomizer
 from .Items import *
@@ -551,7 +551,7 @@ class LMContext(CommonContext):
 
         # Check for current room so we know which hint(s) we need to look at, since they mostly all use the same flags
         current_room = dme.read_word(dme.follow_pointers(ROOM_ID_ADDR, [ROOM_ID_OFFSET]))
-        hint_dict = copy.copy(ALWAYS_HINT)
+        hint_dict = copy.deepcopy(ALWAYS_HINT)
         player_id = 0
         location_id = 0
 
@@ -592,8 +592,10 @@ class LMContext(CommonContext):
 
         # Make sure we didn't somehow try to send a null hint
         if player_id == 0 or location_id == 0:
-            logger.error("Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers")
-            Utils.messagebox("Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers")
+            logger.error(
+                "Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers")
+            Utils.messagebox(
+                "Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers")
 
         # Send correct CreateHints command
         await self.send_msgs([{
