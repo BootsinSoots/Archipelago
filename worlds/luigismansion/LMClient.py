@@ -560,7 +560,7 @@ class LMContext(CommonContext):
             hint_dict.update(PORTRAIT_HINTS)
 
         # Go through all the hints to check which hint matches the room we are in
-        for hint, hintfo in self.hints:
+        for hint, hintfo in self.hints.items():
             if current_room != hint_dict[hint]:
                 continue
 
@@ -592,17 +592,15 @@ class LMContext(CommonContext):
 
         # Make sure we didn't somehow try to send a null hint
         if player_id == 0 or location_id == 0:
-            logger.error(
-                "Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers")
-            Utils.messagebox(
-                "Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers")
+            logger.error("Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers")
+            Utils.messagebox("Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers")
 
         # Send correct CreateHints command
-        await self.send_msgs([{
+        Utils.async_start(self.send_msgs([{
             "cmd": "CreateHints",
             "location_player": player_id,
             "locations": [location_id],
-        }])
+        }]))
 
     def check_ram_location(self, loc_data, addr_to_update, curr_map_id, map_to_check) -> bool:
         """
