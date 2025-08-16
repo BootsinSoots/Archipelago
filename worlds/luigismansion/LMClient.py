@@ -593,7 +593,7 @@ class LMContext(CommonContext):
         # Make sure we didn't somehow try to send a null hint
         if player_id == 0 or location_id == 0:
             logger.error("Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers")
-            Utils.messagebox("Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers")
+            Utils.messagebox("Hint Error","Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers")
 
         # Send correct CreateHints command
         Utils.async_start(self.send_msgs([{
