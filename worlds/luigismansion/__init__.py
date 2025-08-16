@@ -10,7 +10,6 @@ from typing import ClassVar
 import Options
 import settings
 from BaseClasses import Tutorial, Item, ItemClassification, MultiWorld
-from CommonClient import logger
 from Utils import visualize_regions, local_path
 from worlds.AutoWorld import WebWorld, World
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess, icon_paths
@@ -528,8 +527,6 @@ class LMWorld(World):
 
         # If spawn region is past Boolossus, make sure the gate is possible
         if self.origin_region_name in ("Telephone Room", "Clockwork Room"):
-            logger.warning(f"Chosen spawn location was behind the Balcony and Boosanity was off for Player "
-                           f"{self.player_name}. Balcony Boo Gate count has been capped at 4.")
             if self.options.balcony_boo_count.value > 4 and self.options.boosanity.value == 0:
                 self.options.balcony_boo_count.value = 4
 
