@@ -2044,6 +2044,8 @@ LIGHT_LOCATION_TABLE: dict[str, LMLocationData] = {
         update_ram_addr=[LMRamData(0x803CDFD6, bit_position=1, in_game_room_id=69, ram_byte_size=2)]),
     "Well Light On": LMLocationData("The Well", 774, "KingdomHearts", 0, [], remote_only=True,
         update_ram_addr=[LMRamData(0x803CDFDA, bit_position=1, in_game_room_id=72, ram_byte_size=2)]),
+    "Observatory Light On": LMLocationData("Observatory", 929, "KingdomHearts", 0, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803CDFA2, bit_position=1, in_game_room_id=44, ram_byte_size=2)]),
 }
 
 WALK_LOCATION_TABLE: dict[str, LMLocationData] = {
