@@ -102,6 +102,13 @@ class LMWeb(WebWorld):
             LuigiOptions.BooAnger,
             LuigiOptions.ExtraBooSpots,
         ]),
+        OptionGroup("Cosmetics", [
+            LuigiOptions.RandomMusic,
+            LuigiOptions.DoorModelRando,
+            LuigiOptions.ChestTypes,
+            LuigiOptions.TrapChestType,
+            LuigiOptions.CallMario,
+        ]),
         OptionGroup("Filler Weights", [
             LuigiOptions.BundleWeight,
             LuigiOptions.CoinWeight,
@@ -122,13 +129,6 @@ class LMWeb(WebWorld):
             LuigiOptions.NothingWeight,
             LuigiOptions.HeartWeight,
         ]),
-        OptionGroup("Cosmetics", [
-            LuigiOptions.RandomMusic,
-            LuigiOptions.DoorModelRando,
-            LuigiOptions.ChestTypes,
-            LuigiOptions.TrapChestType,
-            LuigiOptions.CallMario,
-        ])
     ]
 
     tutorials = [
