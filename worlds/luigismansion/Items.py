@@ -306,7 +306,7 @@ BONK_EQUIV = ["Spring Trap", "Damage Trap", "Bonk Trap", "Jumping Jacks Trap"]
 POSSESION_EQUIV = ["Possession Trap", "Laughter Trap", "My Turn! Trap", "Blue Balls Curse", "Controller Drift Trap"]
 FEAR_EQUIV = ["Fear Trap", "Confuse Trap", "Confound Trap", "Confusion Trap"]
 SPOOKY_EQUIV = ["Spooky Time", "Deisometric Trap", "Fake Transition", "Ghost Chat", "SvC Effect"]
-SQUASH_EQUIV = ["Squash Trap", "W I D E Trap"]
+SQUASH_EQUIV = ["Squash Trap", "W I D E Trap", "Meteor Trap"]
 NOVAC_EQUIV = ["No Vac Trap", "Eject Ability", "Depletion trap"]
 
 trap_id_list = [8125, 8126, 8130, 8131, 8132, 8141, 8142, 8143, 8145, 8146, 8147]
