@@ -942,7 +942,8 @@ async def dolphin_sync_task(ctx: LMContext):
             # Lastly check any locations and update the non-saveable ram stuff
             await ctx.lm_check_locations()
             await ctx.give_lm_items()
-            await ctx.lm_send_hints()
+            if ctx.send_hints == 1:
+                await ctx.lm_send_hints()
             await ctx.lm_update_non_savable_ram()
             await asyncio.sleep(0.1)
         except Exception:
