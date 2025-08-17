@@ -545,7 +545,7 @@ class LMContext(CommonContext):
         }])
     async def lm_send_hints(self):
         # If the hint address is empty, no hint has been looked at and we return
-        current_hint = int.from_bytes(dme.read_bytes(0x803D33AC, 1)) > 0
+        current_hint = int.from_bytes(dme.read_bytes(0x803D33AC, 1))
         if not current_hint > 0:
             return
 
