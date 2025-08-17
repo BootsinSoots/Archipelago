@@ -474,6 +474,10 @@ class LMWorld(World):
         if self.options.vacuum_start.value:
             self.multiworld.push_precollected(self.create_item("Progressive Vacuum"))
 
+        if self.options.hint_distribution.value in (1, 4, 5):
+            self.options.send_hints.value = 0
+
+
         if self.using_ut:
             # We know we're in second gen
             self.origin_region_name = passthrough["spawn_region"]  # this should be the same region from slot data

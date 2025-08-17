@@ -30,7 +30,11 @@ class GameMode(Choice):
     default = 0
 
 class SendHints(DefaultOnToggle):
-    """If enabled, in-game hints will be sent out to the multiworld when discovered."""
+    """
+    If enabled, in-game hints will be sent out to the multiworld when discovered.
+
+    This is automatically disabled if hint distribution is set to Junk, Disabled or Vague
+    """
     display_name = "Send Hints"
     internal_name = "send_hints"
 
