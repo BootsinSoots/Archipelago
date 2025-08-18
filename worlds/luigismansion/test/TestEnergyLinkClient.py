@@ -44,7 +44,7 @@ class TEST_DATA:
         }
 
 #TODO: These tests are commented out until we determine how to manage energy link without commands.
-class TestEnergyLinkClient(unittest.TestCase):
+# class TestEnergyLinkClient(unittest.TestCase):
     # def test_get_currency_updates(self):
     #     """Verifies that the currency amount being pulled for energy link is accurate."""
     #     test_currencies = TEST_DATA.get_test_currencies()
