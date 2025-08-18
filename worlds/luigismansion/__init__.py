@@ -526,7 +526,7 @@ class LMWorld(World):
             self.options.balcony_boo_count.value = 31
 
         # If spawn region is past Boolossus, make sure the gate is possible
-        if self.origin_region_name in ("Telephone Room", "Clockwork Room"):
+        if self.origin_region_name in ("Telephone Room", "Clockwork Room", "Armory", "Ceramics Studio"):
             if self.options.balcony_boo_count.value > 4 and self.options.boosanity.value == 0:
                 self.options.balcony_boo_count.value = 4
 
