@@ -383,7 +383,7 @@ class LMWorld(World):
                 add_rule(entry, lambda state: state.has("Ice Element Medal", self.player), "and")
                 add_rule(entry, lambda state: state.has("Progressive Vacuum", self.player), "and")
                 region.locations.append(entry)
-        elif self.options.boo_gates:
+        else:
             for location, data in ROOM_BOO_LOCATION_TABLE.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
