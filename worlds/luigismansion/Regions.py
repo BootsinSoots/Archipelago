@@ -141,9 +141,6 @@ spawn_locations = {
     "2F Bathroom":           {"room_no": 45, "pos_x": -1902.854130, "pos_y": 550, "pos_z": -4660.501950,
                               "key": ["2F Bathroom Key", "Upper 2F Stairwell Key"], "door_keys": ["2F Bathroom Key"],
                               "door_ids": [48], "in_game_room_id": 48}, # 2f bath
-    "Tea Room":              {"room_no": 47, "pos_x": -2873.639400, "pos_y": 550, "pos_z": -4770.667970,
-                              "key": ["Tea Room Key", "Upper 2F Stairwell Key", "South Rec Room Key", "Lower 2F Stairwell Key"],
-                              "door_keys": ["Tea Room Key"], "door_ids": [47], "in_game_room_id": 50}, # tea
     "Observatory":           {"room_no": 41, "pos_x": 3596.065920, "pos_y": 550, "pos_z": -3220.102780,
                               "key": ["Observatory Key", "Astral Hall Key"], "door_keys": ["Observatory Key"],
                               "door_ids": [40], "in_game_room_id": 44}, # observa
