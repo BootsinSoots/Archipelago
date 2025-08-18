@@ -138,52 +138,52 @@ spawn_locations = {
     "Nana's Room":           {"room_no": 46, "pos_x": 173.368210, "pos_y": 550, "pos_z": -4615.553220,
                               "key": ["Nana's Room Key", "Upper 2F Stairwell Key"], "door_keys": ["Nana's Room Key"],
                               "door_ids": [49], "in_game_room_id": 49}, # Nana
+    "2F Bathroom":           {"room_no": 45, "pos_x": -1902.854130, "pos_y": 550, "pos_z": -4660.501950,
+                              "key": ["2F Bathroom Key", "Upper 2F Stairwell Key"], "door_keys": ["2F Bathroom Key"], "door_ids": [48], "in_game_room_id": 48}, # 2f bath
+    "Tea Room":              {"room_no": 47, "pos_x": -2873.639400, "pos_y": 550, "pos_z": -4770.667970,
+                              "key": ["Tea Room Key", "Upper 2F Stairwell Key", "South Rec Room Key", "Lower 2F Stairwell Key"],
+                              "door_keys": ["Tea Room Key"], "door_ids": [47], "in_game_room_id": 50}, # tea
 }
 
 exp_spawns: dict[str,dict[str, int]] = {
-
-    # "2F Bathroom":           {"room_no": 45, "pos_x": -1902.854130, "pos_y": 550, "pos_z": -4660.501950,
-    #                           "key": ["2F Bathroom Key", "Upper 2F Stairwell Key"], "door_keys": [], "door_ids": []}, # 2f bath
-    # "Tea Room":              {"room_no": 47, "pos_x": -2873.639400, "pos_y": 550, "pos_z": -4770.667970,
-    #                           "key": ["Tea Room Key", "Upper 2F Stairwell Key", "South Rec Room Key", "Lower 2F Stairwell Key"]}, # tea
     # "Observatory":           {"room_no": 41, "pos_x": 3596.065920, "pos_y": 550, "pos_z": -3220.102780,
-    #                           "key": ["Observatory Key", "Astral Hall Key"]}, # observa
+    #                           "key": ["Observatory Key", "Astral Hall Key"], "door_keys": [], "door_ids": [], "in_game_room_id": }, # observa
     # "Astral Hall":           {"room_no": 40, "pos_x": -2333.168700, "pos_y": 570, "pos_z": -3326.229000,
-    #                           "key": ["Astral Hall Key", "Upper 2F Stairwell Key"]}, # astral
+    #                           "key": ["Astral Hall Key", "Upper 2F Stairwell Key"], "door_keys": [], "door_ids": [], "in_game_room_id": }, # astral
     # "Sitting Room":          {"room_no": 27, "pos_x": 2225.465090, "pos_y": 550, "pos_z": -98.163559,
-    #                           "key": ["Sitting Room Key", "Guest Room Key"]}, # sitting
+    #                           "key": ["Sitting Room Key", "Guest Room Key"], "door_keys": [], "door_ids": [], "in_game_room_id": }, # sitting
     # "Guest Room":            {"room_no": 28, "pos_x": 2949.315430, "pos_y": 550, "pos_z": -149.029785,
-    #                           "key": ["Heart Key", "Guest Room Key"]}, # guest
+    #                           "key": ["Heart Key", "Guest Room Key"], "door_keys": [], "door_ids": [], "in_game_room_id": }, # guest
     # "Safari Room":           {"room_no": 52, "pos_x": 2718.783450, "pos_y": 1100, "pos_z": -131.375854,
-    #                           "key": ["Safari Room Key", "East Attic Hallway Key", "Balcony Key"]}, # safari
+    #                           "key": ["Safari Room Key", "East Attic Hallway Key", "Balcony Key"], "door_keys": [], "door_ids": [], "in_game_room_id": }, # safari
     # "Ceramics Studio":       {"room_no": 55, "pos_x": -2397.3373540, "pos_y": 1100, "pos_z": -1579.717410,
-    #                           "key": ["Armory Key", "Diamond Key", "Telephone Room Key"]}, # ceramics
+    #                           "key": ["Armory Key", "Diamond Key", "Telephone Room Key"], "door_keys": [], "door_ids": [], "in_game_room_id": }, # ceramics
     # "Anteroom":              {"room_no": 39, "pos_x": -1.503195, "pos_y": 550, "pos_z": -3087.626950,
-    #                           "key": ["Wardrobe Key", "Anteroom Key", "Parlor Key"]}, # Anteroom
+    #                           "key": ["Wardrobe Key", "Anteroom Key", "Parlor Key"], "door_keys": [], "door_ids": [], "in_game_room_id": }, # Anteroom
     # "Wardrobe":              {"room_no": 38, "pos_x": -1789.859250, "pos_y": 550, "pos_z": -3303.123780,
-    #                           "key": ["Wardrobe Key", "Heart Key"]}, # Wardrobe
+    #                           "key": ["Wardrobe Key", "Heart Key"], "door_keys": [], "door_ids": [], "in_game_room_id": }, # Wardrobe
     # "Projection Room":       {"room_no": 13, "pos_x": 281.914215, "pos_y": 0, "pos_z": -3137.967530,
-    #                           "key": ["Projection Room Key", "Billiards Room Key"]}, # Projection
+    #                           "key": ["Projection Room Key", "Billiards Room Key"], "door_keys": [], "door_ids": [], "in_game_room_id": }, # Projection
     # "1F Bathroom":           {"room_no": 17, "pos_x": -2160.237550, "pos_y": 0, "pos_z": -4671.114750,
-    #                           "key": ["1F Bathroom Key", "Heart Key"]}, # 1f bath
+    #                           "key": ["1F Bathroom Key", "Heart Key"], "door_keys": [], "door_ids": [], "in_game_room_id": }, # 1f bath
     # "Fortune-Teller's Room": {"room_no": 3, "pos_x": 1807.135740, "pos_y": 0, "pos_z": 214.838852,
-    #                           "key": ["Fortune Teller Key", "Mirror Room Key"]}, # Fortune Teller
+    #                           "key": ["Fortune Teller Key", "Mirror Room Key"], "door_keys": [], "door_ids": [], "in_game_room_id": }, # Fortune Teller
     # "Mirror Room":           {"room_no": 4, "pos_x": 3343.897950, "pos_y": 0, "pos_z": -114.910957,
-    #                           "key": ["Heart Key", "Mirror Room Key"]}, # Mirror
+    #                           "key": ["Heart Key", "Mirror Room Key"], "door_keys": [], "door_ids": [], "in_game_room_id": }, # Mirror
     # "Ballroom":              {"room_no": 10, "pos_x": 2854.236820, "pos_y": 0, "pos_z": -1565.909060,
-    #                           "key": ["Ballroom Key", "Storage Room Key"]}, # BaLLROOM
+    #                           "key": ["Ballroom Key", "Storage Room Key"], "door_keys": [], "door_ids": [], "in_game_room_id": }, # BaLLROOM
     # "Storage Room":          {"room_no": 14, "pos_x": 3412.177250, "pos_y": 0, "pos_z": -3009.698000,
-    #                           "key": ["Heart Key", "Storage Room Key"]}, # Storage
+    #                           "key": ["Heart Key", "Storage Room Key"], "door_keys": [], "door_ids": [], "in_game_room_id": }, # Storage
     # "Breaker Room":          {"room_no": 67, "pos_x": 3127.567140, "pos_y": -550, "pos_z": -1437.766600,
-    #                           "key": ["Heart Key", "Breaker Room Key"]}, # Breaker
+    #                           "key": ["Heart Key", "Breaker Room Key"], "door_keys": [], "door_ids": [], "in_game_room_id": }, # Breaker
     # "Dining Room":           {"room_no": 9, "pos_x": -393.851349, "pos_y": 0, "pos_z": -1416.557500,
-    #                           "key": ["Dining Room Key", "Kitchen Key"]}, # Dining
+    #                           "key": ["Dining Room Key", "Kitchen Key"], "door_keys": [], "door_ids": [], "in_game_room_id": }, # Dining
     # "Sealed Room":           {"room_no": 36, "pos_x": 3476.570800, "pos_y": 620.000000, "pos_z": -2130.725100,
-    #                           "key": ["Heart Key", "Family Hallway Key", "Parlor Key"]}, # Sealed Room
+    #                           "key": ["Heart Key", "Family Hallway Key", "Parlor Key"], "door_keys": [], "door_ids": [], "in_game_room_id": }, # Sealed Room
     # "Roof":                  {"room_no": 30, "pos_x": 0.000000, "pos_y": 1780.000000, "pos_z": -306.035980,
-    #                           "key": ["Heart Key", "Parlor Key"]}, # Roof
+    #                           "key": ["Heart Key", "Parlor Key"], "door_keys": [], "door_ids": [], "in_game_room_id": }, # Roof
     # "Armory":                {"room_no": 48, "pos_x": -2541.662600, "pos_y": 1100.000000, "pos_z": -40.361595,
-    #                           "key": ["Heart Key", "Armory Key"]}, # Armory
+    #                           "key": ["Heart Key", "Armory Key"], "door_keys": [], "door_ids": [], "in_game_room_id": }, # Armory
 }
 
 
