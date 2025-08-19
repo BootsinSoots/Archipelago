@@ -15,6 +15,7 @@
 -------------------------
 <CASE>"Hint"
 <WINDOW>(0)<COLOR>(17)
+<FLAGON>(158)
 <RAMDOMJMP>"{HintType}"
 -------------------------
 <CASE>"SpecificHint"

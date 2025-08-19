@@ -5,12 +5,13 @@ from BaseClasses import Location,  MultiWorld
 if TYPE_CHECKING:
     from . import LMWorld
 
-ALWAYS_HINT = ["Madame Clairvoya", "Foyer Toad", "Wardrobe Balcony Toad", "1F Washroom Toad", "Courtyard Toad",
-               "Left Telephone", "Center Telephone", "Right Telephone"]
+ALWAYS_HINT: dict[str, int] = {"Madame Clairvoya": 3, "Foyer Toad": 2, "Wardrobe Balcony Toad": 40, "1F Washroom Toad": 16,
+                               "Courtyard Toad": 24,"Left Telephone": 53, "Center Telephone": 53, "Right Telephone": 53}
 
-PORTRAIT_HINTS = ["<father>", "<mother>", "<baby>", "<dancer>", "<situji>", "<pianist>", "<eater>",
-                  "<dog01>", "<builder>", "<hustler>", "<fat>", "<obaasan>", "<girl>", "<dboy>", "<denwa>",
-                  "<gaka>", "<snowman>", "<doll1>", "<doll2>", "<doll3>"]
+PORTRAIT_HINTS: dict[str, int] = {"<father>": 35, "<mother>": 34, "<baby>": 26, "<dancer>": 9, "<situji>": 18,
+                                  "<pianist>": 22, "<eater>": 8, "<dog01>": 11, "<builder>": 23, "<hustler>": 12,
+                                  "<fat>": 48, "<obaasan>": 49, "<girl>": 29, "<dboy>":27, "<denwa>": 41,
+                                  "<gaka>": 60, "<snowman>": 64, "<doll1>": 59, "<doll2>": 59, "<doll3>": 59}
 
 
 def get_progression_only_items(world: "LMWorld", hinted_loc, prog_items_no_skip) -> Location:
@@ -47,10 +48,10 @@ def get_hints_by_option(multiworld: MultiWorld, player_hints: set[int]) -> None:
         other_items = [item for item in all_placed_items if not item.advancement and not item.code is None and
                       (item.player == player_int or item.location.player == player_int)]
         already_hinted_locations: List[Location] = []
-        hint_list = copy.deepcopy(ALWAYS_HINT)
+        hint_list: dict[str, int] = copy.deepcopy(ALWAYS_HINT)
         if world.options.portrait_hints == 1:
-            hint_list += PORTRAIT_HINTS
-        for name in hint_list:
+            hint_list.update(PORTRAIT_HINTS)
+        for name in hint_list.keys():
             if name == "Madame Clairvoya":
                 if world.open_doors[72] == 0:
                     locs: list[Location] = multiworld.find_item_locations("Spade Key", player_int, True)
@@ -62,8 +63,10 @@ def get_hints_by_option(multiworld: MultiWorld, player_hints: set[int]) -> None:
                 loc: Location = world.random.choice(locs)
                 hint = {name: {"Item": loc.item.name,
                                "Location": loc.name,
+                               "Location ID": str(loc.address),
                                "Rec Player": multiworld.player_name[loc.item.player],
                                "Send Player": multiworld.player_name[loc.player],
+                               "Send Player ID": str(loc.player),
                                "Game": loc.game,
                                "Class": "Prog"}}
                 already_hinted_locations.append(loc)
@@ -96,8 +99,10 @@ def get_hints_by_option(multiworld: MultiWorld, player_hints: set[int]) -> None:
                     loc: Location = world.random.choice(world.multiworld.find_item_locations(item_name, loc.player, True))
                 hint = {name: {"Item": item_name,
                                "Location": loc.name,
+                               "Location ID": str(loc.address),
                                "Rec Player": multiworld.player_name[loc.item.player],
                                "Send Player": multiworld.player_name[loc.player],
+                               "Send Player ID": str(loc.player),
                                "Game": loc.game,
                                "Class": icolor}}
                 already_hinted_locations.append(loc)

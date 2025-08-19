@@ -96,10 +96,12 @@ spawn_locations = {
                               "key": ["Club Key", "North Rec Room Key", "Heart Key"], "door_keys":
                               ["Club Key", "North Rec Room Key"], "door_ids": [42, 25], "in_game_room_id": 24}, # Courtyard
     "Clockwork Room":        {"room_no": 56, "pos_x": 10.759588, "pos_y": 1100.000000, "pos_z": -1649.743900,
-                              "key": ["Clockwork Room Key", "Telephone Room Key"], "door_keys": [], "door_ids": [],
+                              "key": ["Clockwork Room Key", "Telephone Room Key"],
+                              "door_keys": ["Clockwork Room Key"], "door_ids": [53],
                               "in_game_room_id": 59}, # Clockwork
     "Foyer":                 {"room_no": 2, "pos_x": -7.640748, "pos_y": 0.000000, "pos_z": 145.174300,
-                              "key": ["Heart Key", "Family Hallway Key", "Parlor Key"], "door_keys": [],
+                              "key": ["Heart Key", "Family Hallway Key", "Parlor Key"],
+                              "door_keys": ["Heart Key", "Family Hallway Key", "Parlor Key"],
                               "door_ids": [3, 34, 33], "in_game_room_id": 2}, # Foyer
     "Rec Room":              {"room_no": 22, "pos_x": 3517.026860, "pos_y": 0.000000, "pos_z": -4646.33203,
                               "key": ["North Rec Room Key", "South Rec Room Key", "Lower 2F Stairwell Key", "Upper 2F Stairwell Key"],
@@ -113,7 +115,7 @@ spawn_locations = {
                               "door_ids": [53, 52], "in_game_room_id": 53}, # Telephone
     "Butler's Room":         {"room_no": 0, "pos_x": -3391.8396, "pos_y": 0, "pos_z": 114.336197,
                               "key": ["Butler's Room Key", "Laundry Room Key", "Heart Key"], "door_keys": [],
-                              "door_ids": [], "in_game_room_id": 0}, # Butler
+                              "door_ids": [1], "in_game_room_id": 0}, # Butler
     "Conservatory":          {"room_no": 21, "pos_x": 780.405884, "pos_y": 0, "pos_z": -4662.089840,
                               "key": ["Conservatory Key", "Lower 2F Stairwell Key","Heart Key"], "door_keys": ["Conservatory Key"],
                               "door_ids": [21], "in_game_room_id": 22}, # Conservatory

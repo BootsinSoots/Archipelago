@@ -1,4 +1,5 @@
 import asyncio, time, traceback
+import copy
 import random
 from typing import Any
 
@@ -8,6 +9,8 @@ import dolphin_memory_engine as dme
 
 from .Regions import spawn_locations
 from .iso_helper.lm_rom import LMUSAAPPatch
+from .Hints import ALWAYS_HINT, PORTRAIT_HINTS
+from .LMGenerator import LuigisMansionRandomizer
 from .Items import *
 from .Locations import ALL_LOCATION_TABLE, SELF_LOCATIONS_TO_RECV
 from .Helper_Functions import StringByteFunction as sbf
@@ -223,6 +226,11 @@ class LMContext(CommonContext):
         self.call_mario = False
         self.yelling_in_client = False
 
+        # Know whether to send in-game hints to the multiworld or not
+        self.send_hints = 0
+        self.portrait_hints = 0
+        self.hints = {}
+
     async def disconnect(self, allow_autoreconnect: bool = False):
         """
         Disconnect the client from the server and reset game state variables.
@@ -292,6 +300,9 @@ class LMContext(CommonContext):
                 self.luigimaxhp = int(args["slot_data"]["luigi max health"])
                 self.spawn = str(args["slot_data"]["spawn_region"])
                 self.boolossus_difficulty = int(args["slot_data"]["boolossus_difficulty"])
+                self.send_hints = int(args["slot_data"]["send_hints"])
+                self.portrait_hints = int(args["slot_data"]["portrait_hints"])
+                self.hints = args["slot_data"]["hints"]
                 Utils.async_start(self.update_death_link(bool(args["slot_data"]["death_link"])), name="Update Deathlink")
                 Utils.async_start(self.update_link_tags(bool(args["slot_data"]["trap_link"]), "TrapLink"), name="Update Traplink")
                 Utils.async_start(self.update_link_tags(bool(args["slot_data"][EnergyLinkConstants.INTERNAL_NAME]),
@@ -375,7 +386,7 @@ class LMContext(CommonContext):
             return False
 
         return True
-    
+
     async def get_wallet_value(self):
         # KivyMD support, also keeps support with regular Kivy (hopefully)
         try:
@@ -390,7 +401,7 @@ class LMContext(CommonContext):
         current_worth = 0
         if self.check_ingame():
             current_worth = self.wallet.get_wallet_worth()
-            
+
         self.wallet_ui.text = f"Wallet:{current_worth}/{self.wallet.get_rank_requirement()}"
 
     async def update_boo_count_label(self):
@@ -532,6 +543,64 @@ class LMContext(CommonContext):
                 "trap_name": trap_name
             }
         }])
+    async def lm_send_hints(self):
+        # If the hint address is empty, no hint has been looked at and we return
+        current_hint = int.from_bytes(dme.read_bytes(0x803D33AC, 1))
+        if not current_hint > 0:
+            return
+
+        # Check for current room so we know which hint(s) we need to look at, since they mostly all use the same flags
+        current_room = dme.read_word(dme.follow_pointers(ROOM_ID_ADDR, [ROOM_ID_OFFSET]))
+        hint_dict = copy.deepcopy(ALWAYS_HINT)
+        player_id = 0
+        location_id = 0
+
+        # If portrait ghost hints are on, check them too
+        if self.portrait_hints:
+            hint_dict.update(PORTRAIT_HINTS)
+
+        # Go through all the hints to check which hint matches the room we are in
+        for hint, hintfo in self.hints.items():
+            if current_room != hint_dict[hint]:
+                continue
+
+            # If we match in room 53 or 59, figure out which flag is on and use the matching hint
+            if current_room in (59,53):
+                if current_room == 59:
+                    if (current_hint & (1 << 5)) > 0 and hint == "<doll1>":
+                        player_id = int(hintfo["Send Player ID"])
+                        location_id = int(hintfo["Location ID"])
+                    elif (current_hint & (1 << 6)) > 0 and hint == "<doll2>":
+                        player_id = int(hintfo["Send Player ID"])
+                        location_id = int(hintfo["Location ID"])
+                    elif (current_hint & (1 << 7)) > 0 and hint == "<doll3>":
+                        player_id = int(hintfo["Send Player ID"])
+                        location_id = int(hintfo["Location ID"])
+                else:
+                    if (current_hint & (1 << 5)) > 0 and hint == "Left Telephone":
+                        player_id = int(hintfo["Send Player ID"])
+                        location_id = int(hintfo["Location ID"])
+                    elif (current_hint & (1 << 6)) > 0 and hint == "Center Telephone":
+                        player_id = int(hintfo["Send Player ID"])
+                        location_id = int(hintfo["Location ID"])
+                    elif (current_hint & (1 << 7)) > 0 and hint == "Right Telephone":
+                        player_id = int(hintfo["Send Player ID"])
+                        location_id = int(hintfo["Location ID"])
+            else:
+                player_id = int(hintfo["Send Player ID"])
+                location_id = int(hintfo["Location ID"])
+
+            # Make sure we didn't somehow try to send a null hint
+            if player_id == 0 or location_id == 0:
+                logger.error("Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers")
+                Utils.messagebox("Hint Error","Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers")
+
+            # Send correct CreateHints command
+            Utils.async_start(self.send_msgs([{
+                "cmd": "CreateHints",
+                "player": player_id,
+                "locations": [location_id],
+            }]))
 
     def check_ram_location(self, loc_data, addr_to_update, curr_map_id, map_to_check) -> bool:
         """
@@ -873,6 +942,8 @@ async def dolphin_sync_task(ctx: LMContext):
             # Lastly check any locations and update the non-saveable ram stuff
             await ctx.lm_check_locations()
             await ctx.give_lm_items()
+            if ctx.send_hints == 1:
+                await ctx.lm_send_hints()
             await ctx.lm_update_non_savable_ram()
             await asyncio.sleep(0.1)
         except Exception:

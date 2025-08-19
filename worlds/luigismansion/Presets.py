@@ -22,6 +22,7 @@ all_random_settings = {
     LMOptions.DoorRando.internal_name:                 "random",
     LMOptions.PortraitHints.internal_name:             "random",
     LMOptions.HintDistribution.internal_name:          "random",
+    LMOptions.SendHints.internal_name:                 "random",
     LMOptions.Toadsanity.internal_name:                "random",
     LMOptions.GoldMice.internal_name:                  "random",
     LMOptions.Boosanity.internal_name:                 "random",

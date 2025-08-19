@@ -94,6 +94,7 @@ class LMWeb(WebWorld):
             LuigiOptions.StartHiddenMansion,
             LuigiOptions.HintDistribution,
             LuigiOptions.PortraitHints,
+            LuigiOptions.SendHints,
             LuigiOptions.BooHealthOption,
             LuigiOptions.BooHealthValue,
             LuigiOptions.BooSpeed,
@@ -473,6 +474,10 @@ class LMWorld(World):
 
         if self.options.vacuum_start.value:
             self.multiworld.push_precollected(self.create_item("Progressive Vacuum"))
+
+        if self.options.hint_distribution.value in (1, 4, 5):
+            self.options.send_hints.value = 0
+
 
         if self.using_ut:
             # We know we're in second gen
@@ -856,6 +861,9 @@ class LMWorld(World):
             "call_mario": self.options.call_mario.value,
             "luigi max health": self.options.luigi_max_health.value,
             "pickup animation": self.options.enable_pickup_animation.value,
+            "send_hints": self.options.send_hints.value,
+            "portrait_hints": self.options.portrait_hints.value,
+            "hints": self.hints,
             "apworld version": CLIENT_VERSION,
             "seed": self.multiworld.seed,
         }
