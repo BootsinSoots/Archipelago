@@ -590,17 +590,17 @@ class LMContext(CommonContext):
                 player_id = int(hintfo["Send Player ID"])
                 location_id = int(hintfo["Location ID"])
 
-        # Make sure we didn't somehow try to send a null hint
-        if player_id == 0 or location_id == 0:
-            logger.error("Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers")
-            Utils.messagebox("Hint Error","Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers")
+            # Make sure we didn't somehow try to send a null hint
+            if player_id == 0 or location_id == 0:
+                logger.error("Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers")
+                Utils.messagebox("Hint Error","Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers")
 
-        # Send correct CreateHints command
-        Utils.async_start(self.send_msgs([{
-            "cmd": "CreateHints",
-            "location_player": player_id,
-            "locations": [location_id],
-        }]))
+            # Send correct CreateHints command
+            Utils.async_start(self.send_msgs([{
+                "cmd": "CreateHints",
+                "player": player_id,
+                "locations": [location_id],
+            }]))
 
     def check_ram_location(self, loc_data, addr_to_update, curr_map_id, map_to_check) -> bool:
         """
