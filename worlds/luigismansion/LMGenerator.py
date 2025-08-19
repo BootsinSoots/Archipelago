@@ -128,7 +128,7 @@ class LuigisMansionRandomizer:
         update_treasure_table(self.jmp_treasure_table, self.jmp_teiden_character_info_table, self.output_data)
         update_furniture_info(self.jmp_furniture_info_table, self.jmp_item_appear_table, self.output_data)
         update_event_info(self.jmp_event_info_table, bool_boo_checks, self.output_data)
-        update_observer_info(self.jmp_observer_info_table)
+        update_observer_info(self.jmp_observer_info_table, self.output_data)
         update_key_info(self.jmp_key_info_table, self.output_data)
         update_obj_info(self.jmp_obj_info_table)
         update_generator_info(self.jmp_generator_info_table)
@@ -174,8 +174,8 @@ class LuigisMansionRandomizer:
         bool_hidden_mansion: bool = bool(self.output_data["Options"]["hidden_mansion"])
         bool_start_boo_radar: bool = not bool(self.output_data["Options"]["boo_radar"])
         walk_speed: int = int(self.output_data["Options"]["walk_speed"])
-        bool_pickup_anim_enabled: bool =  bool(self.output_data["Options"]["enable_fear_animation"])
-        bool_fear_anim_enabled: bool = bool(self.output_data["Options"]["enable_pickup_animation"])
+        bool_fear_anim_enabled: bool =  bool(self.output_data["Options"]["enable_fear_animation"])
+        bool_pickup_anim_enabled: bool = bool(self.output_data["Options"]["enable_pickup_animation"])
         player_name: str = str(self.output_data["Name"])
         king_boo_health: int = int(self.output_data["Options"]["king_boo_health"])
         random_spawn: str = str(self.output_data["Options"]["spawn"])
@@ -200,7 +200,7 @@ class LuigisMansionRandomizer:
             bool_pickup_anim_enabled, bool_boo_rando_enabled, door_model_rando_on)
 
         logger.info("Updating all of the common events with the customized version.")
-        self.gcm = update_common_events(self.gcm, bool_randomize_mice)
+        self.gcm = update_common_events(self.gcm, bool_randomize_mice, bool_start_vacuum)
 
         logger.info("Updating the intro and lab events with the customized version.")
         self.gcm = update_intro_and_lab_events(self.gcm, bool_hidden_mansion, max_health, start_inv_list, bool_start_boo_radar,

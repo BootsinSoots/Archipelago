@@ -77,9 +77,23 @@ Boo Anger (if you want boos to stay passive or get aggressive and attack Luigi),
 - (Optional) Randomize music
 - (Optional) Change Luigi's Max Health
 - (Optional) Change King Boo's health (final boss)
+- (Optional) Energy Link support (I.e., Allows money to be sent to the Archipelago Server as energy)
 - Credit to discord user rishingfod for out Luigi's Mansion client icon
 
 ###### Quality of death:
 
 - (optional) Death Link support. (I.e., if Luigi is defeated, everyone else participating in death link also dies)
 - (optional) Trap Link support (I.e., If Luigi finds a trap, everyone else participating in trap link also gets a trap)
+
+###### Energy Link:
+
+Energy link allows players to send and receive money as energy to other energy-linked team members through commands sent through the LMClient.
+The energy link conversion rate is 5e3:1 (energy:currency) of Luigi's worth. (worth is used when determining the rank requirement)
+
+For example, requesting 50000 energy will send Luigi two Bills (20,000 each) and two Coins (5000 each), for a total worth of 50,000.
+
+Commands are:
+- `/send_energy <amount>` - Sends energy to the Archipelago server to be consumed by any player on the team.
+- `/request_energy <amount>` - Requests energy from the Archipelago server, reducing the available amount up to the requested value.
+- `/display_energy` - Displays the current energy available to your team
+- `/energy_link` - Toggles Energy Link settings for the player's existing session.

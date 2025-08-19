@@ -47,7 +47,7 @@ class Version(typing.NamedTuple):
         return ".".join(str(item) for item in self)
 
 
-__version__ = "0.6.3"
+__version__ = "0.6.4"
 version_tuple = tuplize_version(__version__)
 
 is_linux = sys.platform.startswith("linux")
@@ -483,6 +483,18 @@ def restricted_loads(s: bytes) -> Any:
     return RestrictedUnpickler(io.BytesIO(s)).load()
 
 
+def restricted_dumps(obj: Any) -> bytes:
+    """Helper function analogous to pickle.dumps()."""
+    s = pickle.dumps(obj)
+    # Assert that the string can be successfully loaded by restricted_loads
+    try:
+        restricted_loads(s)
+    except pickle.UnpicklingError as e:
+        raise pickle.PicklingError(e) from e
+
+    return s
+
+
 class ByValue:
     """
     Mixin for enums to pickle value instead of name (restores pre-3.11 behavior). Use as left-most parent.
@@ -888,7 +900,7 @@ def async_start(co: Coroutine[None, None, typing.Any], name: Optional[str] = Non
     Use this to start a task when you don't keep a reference to it or immediately await it,
     to prevent early garbage collection. "fire-and-forget"
     """
-    # https://docs.python.org/3.10/library/asyncio-task.html#asyncio.create_task
+    # https://docs.python.org/3.11/library/asyncio-task.html#asyncio.create_task
     # Python docs:
     # ```
     # Important: Save a reference to the result of [asyncio.create_task],
@@ -941,8 +953,7 @@ def _extend_freeze_support() -> None:
         # Handle the first process that MP will create
         if (
             len(sys.argv) >= 2 and sys.argv[-2] == '-c' and sys.argv[-1].startswith((
-                'from multiprocessing.semaphore_tracker import main',  # Py<3.8
-                'from multiprocessing.resource_tracker import main',  # Py>=3.8
+                'from multiprocessing.resource_tracker import main',
                 'from multiprocessing.forkserver import main'
             )) and set(sys.argv[1:-2]) == set(_args_from_interpreter_flags())
         ):

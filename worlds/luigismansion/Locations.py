@@ -19,7 +19,7 @@ class LMLocationData(NamedTuple):
 
 class LMLocation(Location):
     game: str = "Luigi's Mansion"
-    access: []
+    access: list[str]
     rule_def: str = ""
     locked_item: Optional[str]
 
@@ -110,7 +110,7 @@ BASE_LOCATION_TABLE: dict[str, LMLocationData] = {
     "Sealed Room Upper C Big Chest": LMLocationData("Sealed Room", 36, "Furniture", 527, [], remote_only=True,
                                                      update_ram_addr=[LMRamData(in_game_room_id=37)], require_poltergust=False),
     "Sealed Room SW Shelf Chest": LMLocationData("Sealed Room", 869, "Furniture", 531, [],
-        update_ram_addr=[LMRamData(in_game_room_id=37)]), #TODO test that this is the right entry
+        update_ram_addr=[LMRamData(in_game_room_id=37)]),
     "Armory 4th Gray Chest": LMLocationData("Armory", 38, "Furniture", 651, [], remote_only=True,
                                                      update_ram_addr=[LMRamData(in_game_room_id=51)], require_poltergust=False),
     "Armory 5th Gray Chest": LMLocationData("Armory", 40, "Furniture", 653, [], remote_only=True,
@@ -129,6 +129,8 @@ BASE_LOCATION_TABLE: dict[str, LMLocationData] = {
                        update_ram_addr=[LMRamData(0x803D33B2, bit_position=0, in_game_room_id=0)], map_id=[3]),
     "Catch 9 Ghosts in Training": LMLocationData("Training Room", 927, "Special", 0, [], remote_only=True,
                        update_ram_addr=[LMRamData(0x803D33B2, bit_position=1, in_game_room_id=0)], map_id=[3]),
+    "Wardrobe Clear Chest": LMLocationData("Wardrobe", 0, "Chest", 22, ["Blackout"],
+          update_ram_addr=[LMRamData(0x803CDF9C, bit_position=2, in_game_room_id=41, ram_byte_size=2)]),
 
 
     # Special Case
@@ -187,8 +189,6 @@ CLEAR_GHOST_LOCATION_TABLE: dict[str, LMLocationData] = {
         update_ram_addr=[LMRamData(0x803CDF62, bit_position=2, in_game_room_id=8, ram_byte_size=2)]),
     "Fortune Teller Clear Chest": LMLocationData("Fortune-Teller's Room", 5, "Chest", 2, [],
         update_ram_addr=[LMRamData(0x803CDF56, bit_position=2, in_game_room_id=3, ram_byte_size=2)]),
-    "Wardrobe Clear Chest": LMLocationData("Wardrobe", 0, "Chest", 22, ["Blackout"],
-        update_ram_addr=[LMRamData(0x803CDF9C, bit_position=2, in_game_room_id=41, ram_byte_size=2)]),
     "Study Clear Chest": LMLocationData("Study", 1, "Chest", 19, [],
         update_ram_addr=[LMRamData(0x803CDF94, bit_position=2, in_game_room_id=35, ram_byte_size=2)]),
     "Master Bedroom Clear Chest": LMLocationData("Master Bedroom", 2, "Chest", 18, [],
@@ -247,7 +247,9 @@ ENEMIZER_LOCATION_TABLE: dict[str, LMLocationData] = {
 
 # Adds Toads as locations
 TOAD_LOCATION_TABLE: dict[str, LMLocationData] = {
-    "Foyer Toad": LMLocationData("Foyer", 617, "Toad", -1, [], remote_only=True,
+    "Starting Room Toad": LMLocationData("Foyer", 617, "Toad", -1, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803D33A6, bit_position=5, in_game_room_id=2)], require_poltergust=False),
+    "Foyer Toad": LMLocationData("Foyer", 928, "Toad", -1, [], remote_only=True,
         update_ram_addr=[LMRamData(0x803D33A6, bit_position=5, in_game_room_id=2)], require_poltergust=False),
     "Wardrobe Balcony Toad": LMLocationData("Wardrobe Balcony", 618, "Toad", -1, [], remote_only=True,
         update_ram_addr=[LMRamData(0x803D33A6, bit_position=5, in_game_room_id=40)], require_poltergust=False),
@@ -441,8 +443,6 @@ DECOR_LOCATION_TABLE = {
                                           update_ram_addr=[LMRamData(in_game_room_id=34)]),
     "Nursery Vase": LMLocationData("Nursery", 166, "Furniture", 488, [], 2,
                                    update_ram_addr=[LMRamData(in_game_room_id=26)]),
-    "Nursery Rocking Horse": LMLocationData("Nursery", 168, "Furniture", 364, [],  2, remote_only=True,
-                                            update_ram_addr=[LMRamData(in_game_room_id=26)]),  # TODO doesn't work?
     "Chauncey's Crib (Nursery)": LMLocationData("Nursery", 167, "Furniture", 372, [], 2, remote_only=True,
                                                 update_ram_addr=[LMRamData(in_game_room_id=26)], require_poltergust=False),
     "Nursery Toy Blocks R (closer to Door)": LMLocationData("Nursery", 173, "Furniture", 498, [], 2,
@@ -2044,6 +2044,8 @@ LIGHT_LOCATION_TABLE: dict[str, LMLocationData] = {
         update_ram_addr=[LMRamData(0x803CDFD6, bit_position=1, in_game_room_id=69, ram_byte_size=2)]),
     "Well Light On": LMLocationData("The Well", 774, "KingdomHearts", 0, [], remote_only=True,
         update_ram_addr=[LMRamData(0x803CDFDA, bit_position=1, in_game_room_id=72, ram_byte_size=2)]),
+    "Observatory Light On": LMLocationData("Observatory", 929, "KingdomHearts", 0, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803CDFA2, bit_position=1, in_game_room_id=44, ram_byte_size=2)]),
 }
 
 WALK_LOCATION_TABLE: dict[str, LMLocationData] = {
@@ -2192,7 +2194,7 @@ ALL_LOCATION_TABLE = {**BASE_LOCATION_TABLE,
                       **LIGHT_LOCATION_TABLE}
 
 
-#TODO figure out why this is a list of list of ints instead of a list of ints
+
 SELF_LOCATIONS_TO_RECV: list[int] = [
     LMLocation.get_apid(value.code) for value in ALL_LOCATION_TABLE.values() if value.remote_only]
 

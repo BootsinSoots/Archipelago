@@ -1,10 +1,12 @@
+import copy
 import re
 from math import ceil
 from random import choice, randint
 
 from .Regions import spawn_locations
-from .Items import ALL_ITEMS_TABLE, filler_items
-from .Locations import FLIP_BALCONY_BOO_EVENT_LIST
+from .Items import ALL_ITEMS_TABLE, filler_items, LMItemData, CurrencyItemData
+from .Locations import FLIP_BALCONY_BOO_EVENT_LIST, ALL_LOCATION_TABLE
+from .game.Currency import CURRENCY_NAME, CURRENCIES
 
 speedy_observer_index: list[int] = [183, 182, 179, 178, 177, 101, 100, 99, 98, 97, 21, 19]
 speedy_enemy_index: list[int] = [128, 125, 115, 114, 113, 67, 66, 60, 59, 58, 7, 6]
@@ -99,15 +101,19 @@ def __get_item_name(item_data, slot: int):
 def update_event_info(event_info, boo_checks: bool, output_data):
     # Removes events that we don't want to trigger at all in the mansion, such as some E. Gadd calls, warps after
     # boss battles / grabbing boss keys, and various cutscenes etc. Also remove Mario Items/Elemental Item events
-    events_to_remove = [7, 9, 12, 15, 18, 19, 20, 21, 41, 42, 45, 47, 54, 69, 70, 73, 80, 81, 85, 91]
+    events_to_remove = [7, 9, 15, 18, 19, 20, 21, 41, 42, 45, 47, 54, 69, 70, 73, 80, 81, 85, 91]
 
     # Only remove the boo checks if the player does not want them.
     if not boo_checks:
         events_to_remove += [16, 96]
+    if output_data["Options"]["spawn"] in ("Foyer", "Courtyard", "Wardrobe Balcony", "1F Washroom"):
+        events_to_remove += [12]
 
     event_info.info_file_field_entries = list(filter(
         lambda info_entry: not (info_entry["EventNo"] in events_to_remove or (info_entry["EventNo"] == 93 and
             info_entry["pos_x"] == 0)), event_info.info_file_field_entries))
+
+    spawn_data = spawn_locations[output_data["Options"]["spawn"]]
 
     for x in event_info.info_file_field_entries:
         # Move Telephone rings to third phone, make an A press and make always on
@@ -162,7 +168,6 @@ def update_event_info(event_info, boo_checks: bool, output_data):
 
         # Update the spawn in event trigger to wherever spawn is
         if x["EventNo"] == 48:
-            spawn_data = spawn_locations[output_data["Options"]["spawn"]]
             x["pos_y"] = spawn_data["pos_y"]
             x["pos_z"] = spawn_data["pos_z"]
             x["pos_x"] = spawn_data["pos_x"]
@@ -225,7 +230,7 @@ def update_event_info(event_info, boo_checks: bool, output_data):
             x["PlayerStop"] = 1
             x["EventLoad"] = 0
 
-        # Update the Into event to talk about save anywhere and healing.
+        # Update the Intro event to talk about save anywhere and healing.
         if x["EventNo"] == 11:
             x["EventFlag"] = 0
             x["disappear_flag"] = 0
@@ -235,16 +240,27 @@ def update_event_info(event_info, boo_checks: bool, output_data):
             x["PlayerStop"] = 1
             x["EventLock"] = 1
             x["event_parameter"] = 0
-
-            spawn_region: dict[str, int] = spawn_locations[output_data["Options"]["spawn"]]
-            x["room_no"] = spawn_region["room_no"]
-            x["pos_y"] = spawn_region["pos_y"]
-            x["pos_x"] = spawn_region["pos_x"]
-            x["pos_z"] = spawn_region["pos_z"]
+            x["room_no"] = spawn_data["room_no"]
+            x["pos_y"] = spawn_data["pos_y"]
+            x["pos_x"] = spawn_data["pos_x"]
+            x["pos_z"] = spawn_data["pos_z"]
 
         # Change Training room second visit to always be on
         if x["EventNo"] == 10:
             x["EventFlag"] = 0
+
+        # Update Starting Toad Event (event07) to move to the spawn region.
+        if x["EventNo"] == 12:
+            if not output_data["Options"]["spawn"] in ("Foyer", "Courtyard", "Wardrobe Balcony", "1F Washroom"):
+                x["EventFlag"] = 0
+                x["disappear_flag"] = 0
+                x["EventLoad"] = 0
+                x["EventArea"] = 330
+                x["EventIf"] = 1
+                x["PlayerStop"] = 1
+                x["pos_y"] = spawn_data["pos_y"]
+                x["pos_z"] = int(spawn_data["pos_z"]) - 150
+                x["pos_x"] = int(spawn_data["pos_x"]) - 150 + 2
 
 
 def update_character_info(character_info, output_data):
@@ -299,6 +315,37 @@ def update_teiden_observer_info(observer_info, teiden_observer_info, update_spee
             x = observer_info.info_file_field_entries[entry_no]
             teiden_observer_info.info_file_field_entries.append(x)
             observer_info.info_file_field_entries.remove(x)
+
+    # This one checks for luigi entering the wardrobe in blackout, triggering the Grimmly hint
+    observer_info.info_file_field_entries.append({
+        "name": "observer",
+        "code_name": "(null)",
+        "string_arg0": "(null)",
+        "cond_string_arg0": "(null)",
+        "pos_x": -2040.000000,
+        "pos_y": 760.000000,
+        "pos_z": -3020.000000,
+        "dir_x": 0.000000,
+        "dir_y": 0.000000,
+        "dir_z": 0.000000,
+        "scale_x": 1.000000,
+        "scale_y": 1.000000,
+        "scale_z": 1.000000,
+        "room_no": 38,
+        "cond_arg0": 0,
+        "arg0": 157,
+        "arg1": 0,
+        "arg2": 0,
+        "arg3": 0,
+        "arg4": 0,
+        "arg5": 0,
+        "appear_flag": 0,
+        "disappear_flag": 0,
+        "cond_type": 15,
+        "do_type": 7,
+        "invisible": 1,
+        "(Undocumented)": 0,
+    })
 
     # Adds an observer in Blackout Breaker room (event44) to turn on spikes on the doors when room flag 115 is on.
     teiden_observer_info.info_file_field_entries.append({
@@ -362,13 +409,27 @@ def update_teiden_observer_info(observer_info, teiden_observer_info, update_spee
     })
 
 
-def update_observer_info(observer_info):
+def update_observer_info(observer_info, output_data):
     for x in observer_info.info_file_field_entries:
-        # Allows the Foyer Toad to spawn by default.
+        # Allows the Toads to spawn by default.
         if x["name"] == "kinopio":
+            if x["code_name"] in ("dm_kinopio5", "dm_kinopio4", "dm_kinopio3", "dm_kinopio2"):
+                continue
             x["cond_arg0"] = 0
             x["appear_flag"] = 0
             x["cond_type"] = 13
+            new_x = x.copy()
+            spawn_region_name = output_data["Options"]["spawn"]
+            if not spawn_region_name in ("Foyer", "Courtyard", "1F Washroom", "Wardrobe Balcony"):
+                spawn_data = spawn_locations[spawn_region_name]
+                new_x["room_no"] = spawn_data["room_no"]
+                new_x["pos_y"] = spawn_data["pos_y"]
+                new_x["pos_z"] = int(spawn_data["pos_z"]) - 150
+                new_x["pos_x"] = int(spawn_data["pos_x"]) - 150
+                new_x["code_name"] = "dm_kinopio5"
+                observer_info.info_file_field_entries.append(new_x)
+
+
 
         # Allows the Master Bedroom to be lit after clearing it, even if Neville hasn't been caught.
         if x["room_no"] == 33:
@@ -460,9 +521,9 @@ def update_observer_info(observer_info):
         "code_name": "(null)",
         "string_arg0": "(null)",
         "cond_string_arg0": "(null)",
-        "pos_x": 760.000000,
-        "pos_y": -550.000000,
-        "pos_z": -5950.000000,
+        "pos_x": 1100.000000,
+        "pos_y": -445.000000,
+        "pos_z": -5960.000000,
         "dir_x": 0.000000,
         "dir_y": 0.000000,
         "dir_z": 0.000000,
@@ -728,6 +789,607 @@ def update_observer_info(observer_info):
         "(Undocumented)": 0,
     })
 
+    # This one adds an observer into the Foyer where if Luigi is in the room anywhere, it will turn on the lights..
+    observer_info.info_file_field_entries.append({
+        "name": "observer",
+        "code_name": "(null)",
+        "string_arg0": "(null)",
+        "cond_string_arg0": "(null)",
+        "pos_x": 0.000000,
+        "pos_y": 0.000000,
+        "pos_z": 0.000000,
+        "dir_x": 0.000000,
+        "dir_y": 0.000000,
+        "dir_z": 0.000000,
+        "scale_x": 0.000000,
+        "scale_y": 0.000000,
+        "scale_z": 0.000000,
+        "room_no": 2,
+        "cond_arg0": 0,
+        "arg0": 0,
+        "arg1": 0,
+        "arg2": 0,
+        "arg3": 0,
+        "arg4": 0,
+        "arg5": 0,
+        "appear_flag": 0,
+        "disappear_flag": 0,
+        "cond_type": 15,
+        "do_type": 1,
+        "invisible": 1,
+        "(Undocumented)": 0,
+    })
+    # This one checks for luigi entering the clockwork room, triggering the doll hint
+    observer_info.info_file_field_entries.append({
+        "name": "observer",
+        "code_name": "(null)",
+        "string_arg0": "(null)",
+        "cond_string_arg0": "(null)",
+        "pos_x": 10.000000,
+        "pos_y": 1100.000000,
+        "pos_z": -1650.000000,
+        "dir_x": 0.000000,
+        "dir_y": 0.000000,
+        "dir_z": 0.000000,
+        "scale_x": 1.000000,
+        "scale_y": 1.000000,
+        "scale_z": 1.000000,
+        "room_no": 56,
+        "cond_arg0": 0,
+        "arg0": 157,
+        "arg1": 0,
+        "arg2": 0,
+        "arg3": 0,
+        "arg4": 0,
+        "arg5": 0,
+        "appear_flag": 0,
+        "disappear_flag": 0,
+        "cond_type": 15,
+        "do_type": 7,
+        "invisible": 1,
+        "(Undocumented)": 0,
+    })
+    # This one checks for luigi entering the clockwork room, triggering the doll2 hint
+    observer_info.info_file_field_entries.append({
+        "name": "observer",
+        "code_name": "(null)",
+        "string_arg0": "(null)",
+        "cond_string_arg0": "(null)",
+        "pos_x": 10.000000,
+        "pos_y": 1100.000000,
+        "pos_z": -1650.000000,
+        "dir_x": 0.000000,
+        "dir_y": 0.000000,
+        "dir_z": 0.000000,
+        "scale_x": 1.000000,
+        "scale_y": 1.000000,
+        "scale_z": 1.000000,
+        "room_no": 56,
+        "cond_arg0": 0,
+        "arg0": 158,
+        "arg1": 0,
+        "arg2": 0,
+        "arg3": 0,
+        "arg4": 0,
+        "arg5": 0,
+        "appear_flag": 0,
+        "disappear_flag": 0,
+        "cond_type": 15,
+        "do_type": 7,
+        "invisible": 1,
+        "(Undocumented)": 0,
+    })
+    # This one checks for luigi entering the clockwork room, triggering the doll3 hint
+    observer_info.info_file_field_entries.append({
+        "name": "observer",
+        "code_name": "(null)",
+        "string_arg0": "(null)",
+        "cond_string_arg0": "(null)",
+        "pos_x": 10.000000,
+        "pos_y": 1100.000000,
+        "pos_z": -1650.000000,
+        "dir_x": 0.000000,
+        "dir_y": 0.000000,
+        "dir_z": 0.000000,
+        "scale_x": 1.000000,
+        "scale_y": 1.000000,
+        "scale_z": 1.000000,
+        "room_no": 56,
+        "cond_arg0": 0,
+        "arg0": 159,
+        "arg1": 0,
+        "arg2": 0,
+        "arg3": 0,
+        "arg4": 0,
+        "arg5": 0,
+        "appear_flag": 0,
+        "disappear_flag": 0,
+        "cond_type": 15,
+        "do_type": 7,
+        "invisible": 1,
+        "(Undocumented)": 0,
+    })
+    # This one checks for luigi entering the artist's room, triggering the gaka hint
+    observer_info.info_file_field_entries.append({
+        "name": "observer",
+        "code_name": "(null)",
+        "string_arg0": "(null)",
+        "cond_string_arg0": "(null)",
+        "pos_x": 2890.000000,
+        "pos_y": 1100.000000,
+        "pos_z": -1640.000000,
+        "dir_x": 0.000000,
+        "dir_y": 0.000000,
+        "dir_z": 0.000000,
+        "scale_x": 1.000000,
+        "scale_y": 1.000000,
+        "scale_z": 1.000000,
+        "room_no": 57,
+        "cond_arg0": 0,
+        "arg0": 157,
+        "arg1": 0,
+        "arg2": 0,
+        "arg3": 0,
+        "arg4": 0,
+        "arg5": 0,
+        "appear_flag": 0,
+        "disappear_flag": 0,
+        "cond_type": 15,
+        "do_type": 7,
+        "invisible": 1,
+        "(Undocumented)": 0,
+    })
+    # This one checks for luigi entering the study, triggering the father hint
+    observer_info.info_file_field_entries.append({
+        "name": "observer",
+        "code_name": "(null)",
+        "string_arg0": "(null)",
+        "cond_string_arg0": "(null)",
+        "pos_x": -2440.000000,
+        "pos_y": 550.000000,
+        "pos_z": -2700.000000,
+        "dir_x": 0.000000,
+        "dir_y": 0.000000,
+        "dir_z": 0.000000,
+        "scale_x": 1.000000,
+        "scale_y": 1.000000,
+        "scale_z": 1.000000,
+        "room_no": 34,
+        "cond_arg0": 0,
+        "arg0": 157,
+        "arg1": 0,
+        "arg2": 0,
+        "arg3": 0,
+        "arg4": 0,
+        "arg5": 0,
+        "appear_flag": 0,
+        "disappear_flag": 0,
+        "cond_type": 15,
+        "do_type": 7,
+        "invisible": 1,
+        "(Undocumented)": 0,
+    })
+    # This one checks for luigi entering the master bedroom, triggering the mother hint
+    observer_info.info_file_field_entries.append({
+        "name": "observer",
+        "code_name": "(null)",
+        "string_arg0": "(null)",
+        "cond_string_arg0": "(null)",
+        "pos_x": -3760.000000,
+        "pos_y": 550.000000,
+        "pos_z": -1800.000000,
+        "dir_x": 0.000000,
+        "dir_y": 0.000000,
+        "dir_z": 0.000000,
+        "scale_x": 1.000000,
+        "scale_y": 1.000000,
+        "scale_z": 1.000000,
+        "room_no": 33,
+        "cond_arg0": 0,
+        "arg0": 157,
+        "arg1": 0,
+        "arg2": 0,
+        "arg3": 0,
+        "arg4": 0,
+        "arg5": 0,
+        "appear_flag": 0,
+        "disappear_flag": 0,
+        "cond_type": 15,
+        "do_type": 7,
+        "invisible": 1,
+        "(Undocumented)": 0,
+    })
+    # This one checks for luigi entering the nursery, triggering the baby hint
+    observer_info.info_file_field_entries.append({
+        "name": "observer",
+        "code_name": "(null)",
+        "string_arg0": "(null)",
+        "cond_string_arg0": "(null)",
+        "pos_x": -3340.000000,
+        "pos_y": 550.000000,
+        "pos_z": -220.000000,
+        "dir_x": 0.000000,
+        "dir_y": 0.000000,
+        "dir_z": 0.000000,
+        "scale_x": 1.000000,
+        "scale_y": 1.000000,
+        "scale_z": 1.000000,
+        "room_no": 24,
+        "cond_arg0": 0,
+        "arg0": 157,
+        "arg1": 0,
+        "arg2": 0,
+        "arg3": 0,
+        "arg4": 0,
+        "arg5": 0,
+        "appear_flag": 0,
+        "disappear_flag": 0,
+        "cond_type": 15,
+        "do_type": 7,
+        "invisible": 1,
+        "(Undocumented)": 0,
+    })
+    # This one checks for luigi entering the twins room, triggering the dboy hint
+    observer_info.info_file_field_entries.append({
+        "name": "observer",
+        "code_name": "(null)",
+        "string_arg0": "(null)",
+        "cond_string_arg0": "(null)",
+        "pos_x": -1820.000000,
+        "pos_y": 550.000000,
+        "pos_z": -220.000000,
+        "dir_x": 0.000000,
+        "dir_y": 0.000000,
+        "dir_z": 0.000000,
+        "scale_x": 1.000000,
+        "scale_y": 1.000000,
+        "scale_z": 1.000000,
+        "room_no": 25,
+        "cond_arg0": 0,
+        "arg0": 157,
+        "arg1": 0,
+        "arg2": 0,
+        "arg3": 0,
+        "arg4": 0,
+        "arg5": 0,
+        "appear_flag": 0,
+        "disappear_flag": 0,
+        "cond_type": 15,
+        "do_type": 7,
+        "invisible": 1,
+        "(Undocumented)": 0,
+    })
+    # This one checks for luigi entering the nanas room, triggering the nana hint
+    observer_info.info_file_field_entries.append({
+        "name": "observer",
+        "code_name": "(null)",
+        "string_arg0": "(null)",
+        "cond_string_arg0": "(null)",
+        "pos_x": 300.000000,
+        "pos_y": 550.000000,
+        "pos_z": -4960.000000,
+        "dir_x": 0.000000,
+        "dir_y": 0.000000,
+        "dir_z": 0.000000,
+        "scale_x": 1.000000,
+        "scale_y": 1.000000,
+        "scale_z": 1.000000,
+        "room_no": 46,
+        "cond_arg0": 0,
+        "arg0": 157,
+        "arg1": 0,
+        "arg2": 0,
+        "arg3": 0,
+        "arg4": 0,
+        "arg5": 0,
+        "appear_flag": 0,
+        "disappear_flag": 0,
+        "cond_type": 15,
+        "do_type": 7,
+        "invisible": 1,
+        "(Undocumented)": 0,
+    })
+    # This one checks for luigi entering the 2f bathroom, triggering the petunia hint
+    observer_info.info_file_field_entries.append({
+        "name": "observer",
+        "code_name": "(null)",
+        "string_arg0": "(null)",
+        "cond_string_arg0": "(null)",
+        "pos_x": -2100.000000,
+        "pos_y": 550.000000,
+        "pos_z": -4640.000000,
+        "dir_x": 0.000000,
+        "dir_y": 0.000000,
+        "dir_z": 0.000000,
+        "scale_x": 1.000000,
+        "scale_y": 1.000000,
+        "scale_z": 1.000000,
+        "room_no": 45,
+        "cond_arg0": 0,
+        "arg0": 157,
+        "arg1": 0,
+        "arg2": 0,
+        "arg3": 0,
+        "arg4": 0,
+        "arg5": 0,
+        "appear_flag": 0,
+        "disappear_flag": 0,
+        "cond_type": 15,
+        "do_type": 7,
+        "invisible": 1,
+        "(Undocumented)": 0,
+    })
+    # This one checks for luigi entering the guest room, triggering the girl hint
+    observer_info.info_file_field_entries.append({
+        "name": "observer",
+        "code_name": "(null)",
+        "string_arg0": "(null)",
+        "cond_string_arg0": "(null)",
+        "pos_x": 3340.000000,
+        "pos_y": 550.000000,
+        "pos_z": -220.000000,
+        "dir_x": 0.000000,
+        "dir_y": 0.000000,
+        "dir_z": 0.000000,
+        "scale_x": 1.000000,
+        "scale_y": 1.000000,
+        "scale_z": 1.000000,
+        "room_no": 28,
+        "cond_arg0": 0,
+        "arg0": 157,
+        "arg1": 0,
+        "arg2": 0,
+        "arg3": 0,
+        "arg4": 0,
+        "arg5": 0,
+        "appear_flag": 0,
+        "disappear_flag": 0,
+        "cond_type": 15,
+        "do_type": 7,
+        "invisible": 1,
+        "(Undocumented)": 0,
+    })
+    # This one checks for luigi entering the back hallway, triggering the butler hint
+    observer_info.info_file_field_entries.append({
+        "name": "observer",
+        "code_name": "(null)",
+        "string_arg0": "(null)",
+        "cond_string_arg0": "(null)",
+        "pos_x": -3600.000000,
+        "pos_y": 0.000000,
+        "pos_z": 150.000000,
+        "dir_x": 0.000000,
+        "dir_y": 0.000000,
+        "dir_z": 0.000000,
+        "scale_x": 1.000000,
+        "scale_y": 1.000000,
+        "scale_z": 1.000000,
+        "room_no": 18,
+        "cond_arg0": 0,
+        "arg0": 157,
+        "arg1": 0,
+        "arg2": 0,
+        "arg3": 0,
+        "arg4": 0,
+        "arg5": 0,
+        "appear_flag": 0,
+        "disappear_flag": 0,
+        "cond_type": 15,
+        "do_type": 7,
+        "invisible": 1,
+        "(Undocumented)": 0,
+    })
+    # This one checks for luigi entering the dining room, triggering the luggs hint
+    observer_info.info_file_field_entries.append({
+        "name": "observer",
+        "code_name": "(null)",
+        "string_arg0": "(null)",
+        "cond_string_arg0": "(null)",
+        "pos_x": -280.000000,
+        "pos_y": 0.000000,
+        "pos_z": -1480.000000,
+        "dir_x": 0.000000,
+        "dir_y": 0.000000,
+        "dir_z": 0.000000,
+        "scale_x": 1.000000,
+        "scale_y": 1.000000,
+        "scale_z": 1.000000,
+        "room_no": 9,
+        "cond_arg0": 0,
+        "arg0": 157,
+        "arg1": 0,
+        "arg2": 0,
+        "arg3": 0,
+        "arg4": 0,
+        "arg5": 0,
+        "appear_flag": 0,
+        "disappear_flag": 0,
+        "cond_type": 15,
+        "do_type": 7,
+        "invisible": 1,
+        "(Undocumented)": 0,
+    })
+    # This one checks for luigi entering the ballroom, triggering the dancer hint
+    observer_info.info_file_field_entries.append({
+        "name": "observer",
+        "code_name": "(null)",
+        "string_arg0": "(null)",
+        "cond_string_arg0": "(null)",
+        "pos_x": 2540.000000,
+        "pos_y": 0.000000,
+        "pos_z": -2800.000000,
+        "dir_x": 0.000000,
+        "dir_y": 0.000000,
+        "dir_z": 0.000000,
+        "scale_x": 1.000000,
+        "scale_y": 1.000000,
+        "scale_z": 1.000000,
+        "room_no": 10,
+        "cond_arg0": 0,
+        "arg0": 157,
+        "arg1": 0,
+        "arg2": 0,
+        "arg3": 0,
+        "arg4": 0,
+        "arg5": 0,
+        "appear_flag": 0,
+        "disappear_flag": 0,
+        "cond_type": 15,
+        "do_type": 7,
+        "invisible": 1,
+        "(Undocumented)": 0,
+    })
+    # This one checks for luigi entering the billiard room, triggering the hustler hint
+    observer_info.info_file_field_entries.append({
+        "name": "observer",
+        "code_name": "(null)",
+        "string_arg0": "(null)",
+        "cond_string_arg0": "(null)",
+        "pos_x": -1200.000000,
+        "pos_y": 0.000000,
+        "pos_z": -3840.000000,
+        "dir_x": 0.000000,
+        "dir_y": 0.000000,
+        "dir_z": 0.000000,
+        "scale_x": 1.000000,
+        "scale_y": 1.000000,
+        "scale_z": 1.000000,
+        "room_no": 12,
+        "cond_arg0": 0,
+        "arg0": 157,
+        "arg1": 0,
+        "arg2": 0,
+        "arg3": 0,
+        "arg4": 0,
+        "arg5": 0,
+        "appear_flag": 0,
+        "disappear_flag": 0,
+        "cond_type": 15,
+        "do_type": 7,
+        "invisible": 1,
+        "(Undocumented)": 0,
+    })
+    # This one checks for luigi entering the conservatory, triggering the pianist hint
+    observer_info.info_file_field_entries.append({
+        "name": "observer",
+        "code_name": "(null)",
+        "string_arg0": "(null)",
+        "cond_string_arg0": "(null)",
+        "pos_x": 1360.000000,
+        "pos_y": 0.000000,
+        "pos_z": -4920.000000,
+        "dir_x": 0.000000,
+        "dir_y": 0.000000,
+        "dir_z": 0.000000,
+        "scale_x": 1.000000,
+        "scale_y": 1.000000,
+        "scale_z": 1.000000,
+        "room_no": 21,
+        "cond_arg0": 0,
+        "arg0": 157,
+        "arg1": 0,
+        "arg2": 0,
+        "arg3": 0,
+        "arg4": 0,
+        "arg5": 0,
+        "appear_flag": 0,
+        "disappear_flag": 0,
+        "cond_type": 15,
+        "do_type": 7,
+        "invisible": 1,
+        "(Undocumented)": 0,
+    })
+    # This one checks for luigi entering the rec room, triggering the builder hint
+    observer_info.info_file_field_entries.append({
+        "name": "observer",
+        "code_name": "(null)",
+        "string_arg0": "(null)",
+        "cond_string_arg0": "(null)",
+        "pos_x": 2840.000000,
+        "pos_y": 0.000000,
+        "pos_z": -4940.000000,
+        "dir_x": 0.000000,
+        "dir_y": 0.000000,
+        "dir_z": 0.000000,
+        "scale_x": 1.000000,
+        "scale_y": 1.000000,
+        "scale_z": 1.000000,
+        "room_no": 22,
+        "cond_arg0": 0,
+        "arg0": 157,
+        "arg1": 0,
+        "arg2": 0,
+        "arg3": 0,
+        "arg4": 0,
+        "arg5": 0,
+        "appear_flag": 0,
+        "disappear_flag": 0,
+        "cond_type": 15,
+        "do_type": 7,
+        "invisible": 1,
+        "(Undocumented)": 0,
+    })
+    # This one checks for luigi entering the boneyard, triggering the dog hint
+    observer_info.info_file_field_entries.append({
+        "name": "observer",
+        "code_name": "(null)",
+        "string_arg0": "(null)",
+        "cond_string_arg0": "(null)",
+        "pos_x": -3360.000000,
+        "pos_y": 0.000000,
+        "pos_z": -3080.000000,
+        "dir_x": 0.000000,
+        "dir_y": 0.000000,
+        "dir_z": 0.000000,
+        "scale_x": 1.000000,
+        "scale_y": 1.000000,
+        "scale_z": 1.000000,
+        "room_no": 11,
+        "cond_arg0": 0,
+        "arg0": 157,
+        "arg1": 0,
+        "arg2": 0,
+        "arg3": 0,
+        "arg4": 0,
+        "arg5": 0,
+        "appear_flag": 0,
+        "disappear_flag": 0,
+        "cond_type": 15,
+        "do_type": 7,
+        "invisible": 1,
+        "(Undocumented)": 0,
+    })
+    # This one checks for luigi entering the cold storage, triggering the snowman hint
+    observer_info.info_file_field_entries.append({
+        "name": "observer",
+        "code_name": "(null)",
+        "string_arg0": "(null)",
+        "cond_string_arg0": "(null)",
+        "pos_x": 1180.000000,
+        "pos_y": -445.000000,
+        "pos_z": -690.000000,
+        "dir_x": 0.000000,
+        "dir_y": 0.000000,
+        "dir_z": 0.000000,
+        "scale_x": 1.000000,
+        "scale_y": 1.000000,
+        "scale_z": 1.000000,
+        "room_no": 61,
+        "cond_arg0": 0,
+        "arg0": 157,
+        "arg1": 0,
+        "arg2": 0,
+        "arg3": 0,
+        "arg4": 0,
+        "arg5": 0,
+        "appear_flag": 0,
+        "disappear_flag": 0,
+        "cond_type": 15,
+        "do_type": 7,
+        "invisible": 1,
+        "(Undocumented)": 0,
+    })
+
 
 def update_generator_info(generator_info):
     for x in generator_info.info_file_field_entries:
@@ -938,6 +1600,7 @@ def update_treasure_table(treasure_info, character_info, output_data):
                 char_entry["pos_x"] = -1900.000000
                 char_entry["pos_z"] = -4830.000000
 
+            # Change chest appearance based of player cosmetic choices
             chest_size = int(treasure_info.info_file_field_entries[item_data["loc_enum"]]["size"])
             if item_data["room_no"] != 11 and chest_option > 0:
                 char_entry["name"] = __get_item_chest_visual(item_data["name"], chest_option,
@@ -948,60 +1611,25 @@ def update_treasure_table(treasure_info, character_info, output_data):
                 else:
                     chest_size = __get_chest_size_from_key(item_data["door_id"])
 
-            treasure_item_name = __get_item_name(item_data, slot_num) #nothing
-            coin_amount = 0
-            bill_amount = 0
-            gold_bar_amount = 0
-            sapphire_amount = 0
-            emerald_amount = 0
-            ruby_amount = 0
-            diamond_amount = 0
-            rdiamond_amount = 0
-
             # Define the actor name to use from the Location in the generation output. Act differently if it's a key.
+            treasure_item_name = __get_item_name(item_data, slot_num) #nothing
+
+            # Setting all curriences to 0 value by default.
+            for currency_name in CURRENCIES:
+                treasure_info.info_file_field_entries[item_data["loc_enum"]][currency_name] = 0
+
             # Don't give any items that are not from our game, leave those 0 / blank.
             if int(item_data["player"]) == slot_num and item_data["name"] in ALL_ITEMS_TABLE.keys():
-                lm_item_data = ALL_ITEMS_TABLE[item_data["name"]]
-                if lm_item_data.update_ram_addr and any(update_addr.item_count for update_addr in
-                        lm_item_data.update_ram_addr if update_addr.item_count and update_addr.item_count > 0):
-                    item_amt = next(update_addr.item_count for update_addr in lm_item_data.update_ram_addr if
-                       update_addr.item_count and update_addr.item_count > 0)
+                lm_item_data: type[LMItemData|CurrencyItemData] = ALL_ITEMS_TABLE[item_data["name"]]
 
-                    if "Coins" in item_data["name"]:
-                        if "Bills" in item_data["name"]:
-                            coin_amount = item_amt
-                            bill_amount = item_amt
-                        else:
-                            coin_amount = item_amt
-                    elif "Bills" in item_data["name"]:
-                        bill_amount = item_amt
-                    elif "Gold Bar" in item_data["name"]:
-                        gold_bar_amount = item_amt
-                    elif "Sapphire" in item_data["name"]:
-                        sapphire_amount = item_amt
-                    elif "Emerald" in item_data["name"]:
-                        emerald_amount = item_amt
-                    elif "Ruby" in item_data["name"]:
-                        ruby_amount = item_amt
-                    elif item_data["name"] == "Diamond":
-                        diamond_amount = item_amt
-                    elif "Gold Diamond" in item_data["name"]:
-                        rdiamond_amount = item_amt
+                # If it's a money item, set the currencies based on our defined bundles
+                if hasattr(lm_item_data, 'currencies'):
+                    for currency_name, currency_amount in lm_item_data.currencies.items():
+                        treasure_info.info_file_field_entries[item_data["loc_enum"]][currency_name] = currency_amount
 
+            treasure_info.info_file_field_entries[item_data["loc_enum"]]["cdiamond"] = 0
             treasure_info.info_file_field_entries[item_data["loc_enum"]]["other"] = treasure_item_name
             treasure_info.info_file_field_entries[item_data["loc_enum"]]["size"] = chest_size
-            treasure_info.info_file_field_entries[item_data["loc_enum"]]["coin"] = coin_amount
-            treasure_info.info_file_field_entries[item_data["loc_enum"]]["bill"] = bill_amount
-            treasure_info.info_file_field_entries[item_data["loc_enum"]]["gold"] = gold_bar_amount
-            treasure_info.info_file_field_entries[item_data["loc_enum"]]["spearl"] = 0
-            treasure_info.info_file_field_entries[item_data["loc_enum"]]["mpearl"] = 0
-            treasure_info.info_file_field_entries[item_data["loc_enum"]]["lpearl"] = 0
-            treasure_info.info_file_field_entries[item_data["loc_enum"]]["sapphire"] = sapphire_amount
-            treasure_info.info_file_field_entries[item_data["loc_enum"]]["emerald"] = emerald_amount
-            treasure_info.info_file_field_entries[item_data["loc_enum"]]["ruby"] = ruby_amount
-            treasure_info.info_file_field_entries[item_data["loc_enum"]]["diamond"] = diamond_amount
-            treasure_info.info_file_field_entries[item_data["loc_enum"]]["cdiamond"] = 0
-            treasure_info.info_file_field_entries[item_data["loc_enum"]]["rdiamond"] = rdiamond_amount
             treasure_info.info_file_field_entries[item_data["loc_enum"]]["effect"] = 0
             treasure_info.info_file_field_entries[item_data["loc_enum"]]["camera"] = 0
 
@@ -1141,8 +1769,8 @@ def __set_key_info_entry(key_info_single_entry, item_data, slot: int):
     key_info_single_entry["name"] = __get_item_name(item_data, slot) if not (item_data["door_id"] > 0) else \
         (__get_key_name(item_data["door_id"]))
     key_info_single_entry["open_door_no"] = item_data["door_id"]
-    key_info_single_entry["appear_type"] = 0
-    key_info_single_entry["invisible"] = 0
+    if key_info_single_entry["code_name"] == "demo_key2":
+        key_info_single_entry["invisible"] = 0
     key_info_single_entry["appear_flag"] = 0
     key_info_single_entry["disappear_flag"] = 0
 
@@ -1191,6 +1819,13 @@ def update_furniture_info(furniture_info, item_appear_info, output_data):
         if ((item_data["type"] == "Furniture" and item_name != "Kitchen Oven") and
             output_data["Options"]["extra_boo_spots"] == 1):
                 furniture_info.info_file_field_entries[item_data["loc_enum"]]["telesa_hide"] = 10
+
+        # If our furniture location is remote only, do not add any values to the table and make sure it remains blank
+        if ALL_LOCATION_TABLE[item_name].remote_only:
+            furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 0
+            furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate_num"] = 0
+            furniture_info.info_file_field_entries[item_data["loc_enum"]]["item_table"] = 0
+            continue
 
         actor_item_name = __get_item_name(item_data, int(output_data["Slot"]))
 
@@ -1387,6 +2022,10 @@ def update_iyapoo_table(iyapoo_table, output_data):
                 item_data = output_loc["Nursery Speedy Spirit"]
             case "iyapoo15":
                 item_data = output_loc["Nursery Speedy Spirit"]
+
+        if output_data["Options"]["gold_mice"] == 0 and "goldrat" in iyapoo["name"]:
+            continue
+        match iyapoo["name"]:
             case "goldrat0":
                 item_data = output_loc["1F Hallway Chance Mouse"]
             case "goldrat1":

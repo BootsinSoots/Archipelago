@@ -98,26 +98,36 @@ def update_blackout_event(gcm: GCM) -> GCM:
     return __update_custom_event(gcm, "44", True, lines, csv_lines)
 
 # Updates all common events
-def update_common_events(gcm: GCM, randomize_mice: bool) -> GCM:
-    list_custom_events = ["03", "10", "22", "23", "24", "29", "33", "35", "38", "50", "61", "64", "65",
-     "66", "67", "68", "71", "72", "74", "75", "82", "86", "87", "88", "89", "90"]
+def update_common_events(gcm: GCM, randomize_mice: bool, starting_vac: bool) -> GCM:
+    list_custom_events = ["03", "10", "22", "23", "24", "29", "33", "35", "37", "38", "50", "61", "64",
+        "65", "66", "67", "68", "71", "72", "74", "75", "82", "86", "87", "88", "89", "90"]
     if randomize_mice:
         list_custom_events += ["95", "97", "98", "99", "100"]
 
     for custom_event in list_custom_events:
         lines = get_data(MAIN_PKG_NAME, "data/custom_events/event" + custom_event +".txt").decode('utf-8')
+        if custom_event == "10" and not starting_vac:
+            lines = lines.replace("<WEAPON>", "<NOWEAPON>")
         gcm = __update_custom_event(gcm, custom_event, True, lines, None)
+
 
     return gcm
 
 # Update the intro event and E. Gadd event as needed.
 def update_intro_and_lab_events(gcm: GCM, hidden_mansion: bool, max_health: str, start_inv: list[str],
     start_radar: bool,doors_to_open: dict[int, int], starting_vac: bool) -> GCM:
+    # Update the custom Gallery Event
+    lines = get_data(MAIN_PKG_NAME, "data/custom_events/event28.txt").decode('utf-8')
+    csv_lines = get_data(MAIN_PKG_NAME, "data/custom_csvs/message28.csv").decode('utf-8')
+    gcm = __update_custom_event(gcm, "28", True, lines, csv_lines)
+
+    # Update the custom E. Gadd's lab event.
     lines = get_data(MAIN_PKG_NAME, "data/custom_events/event08.txt").decode('utf-8')
     lines = lines.replace("{LUIGIMAXHP}", max_health)
     csv_lines = get_data(MAIN_PKG_NAME, "data/custom_csvs/message8.csv").decode('utf-8')
     gcm = __update_custom_event(gcm, "08", True, lines, csv_lines)
 
+    # Update the main intro event.
     lines = get_data(MAIN_PKG_NAME, "data/custom_events/event48.txt").decode('utf-8')
     lines = lines.replace("{MANSION_TYPE}", "<URALUIGI>" if hidden_mansion else "<OMOTELUIGI>")
     if not starting_vac:
@@ -186,13 +196,13 @@ def write_portrait_hints(gcm: GCM, hint_distribution_choice: int, all_hints: dic
     csv_lines = get_data(MAIN_PKG_NAME, "data/custom_csvs/message78.csv").decode('utf-8')
     random.seed(seed)
     if hint_distribution_choice == 1:
-        for portrait_name in PORTRAIT_HINTS:
+        for portrait_name in PORTRAIT_HINTS.keys():
             jokes = get_data(MAIN_PKG_NAME, "data/jokes.txt").decode('utf-8')
             joke_hint = random.choice(str.splitlines(jokes)).replace("{BreakHere}", "\n")
             csv_lines = csv_lines.replace(f"{portrait_name}", joke_hint)
     else:
         for portrait_name, portrait_hint in all_hints.items():
-            if portrait_name not in PORTRAIT_HINTS:
+            if portrait_name not in PORTRAIT_HINTS.keys():
                 continue
             match hint_distribution_choice:
                 case 4:
@@ -285,7 +295,14 @@ def write_in_game_hints(gcm: GCM, hint_distribution_choice: int, all_hints: dict
     seed: str) -> GCM:
     random.seed(seed)
 
-    for hint_name in ALWAYS_HINT:
+    # Add new event and csv to our special spawn toad
+    lines = get_data(MAIN_PKG_NAME, "data/custom_events/event12.txt").decode('utf-8')
+    csv_lines = get_data(MAIN_PKG_NAME, "data/custom_csvs/message12.csv").decode('utf-8')
+    lines = lines.replace("{LUIGIMAXHP}", maxhp)
+    gcm = __update_custom_event(gcm, "12", True, lines, csv_lines)
+
+    #Add various hints to their specific hint spots
+    for hint_name in ALWAYS_HINT.keys():
         if hint_name == "Madame Clairvoya":
             continue
         event_no: int = 0

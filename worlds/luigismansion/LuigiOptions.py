@@ -21,7 +21,7 @@ class GameMode(Choice):
 
     Poltergust Hunt - You must first find the Poltergust 3000 inside a piece of furniture before use. Enabling this will
     automatically add certain pieces of furniture to the pool of locations even if other furniture options are turned off.
-    This will also unlock all doors in the mansion.
+    This will also unlock all doors in the mansion. This is intended as a short form game mode
     """
     display_name = "Game Mode"
     internal_name = "game_mode"
@@ -29,6 +29,14 @@ class GameMode(Choice):
     option_poltergust_hunt = 1
     default = 0
 
+class SendHints(DefaultOnToggle):
+    """
+    If enabled, in-game hints will be sent out to the multiworld when discovered.
+
+    This is automatically disabled if hint distribution is set to Junk, Disabled or Vague
+    """
+    display_name = "Send Hints"
+    internal_name = "send_hints"
 
 class RandomMusic(Toggle):
     """Randomize Music"""
@@ -169,7 +177,7 @@ class StartWithBooRadar(Choice):
 
     include: Boo Radar in pool
 
-    exclude: No Boo Radar - Boo Gates and Boosanity will be disabled if excluded
+    exclude: No Boo Radar - generation will fail if excluded while Boo Gates or Boosanity are enabled
     """
     display_name = "Boo Radar"
     internal_name = "boo_radar"
@@ -247,6 +255,8 @@ class Furnisanity(OptionSet):
     "Drawers" includes dressers, drawers, end tables and similar items
 
     "Treasures" turns on only locations that contain treasure (including all plants) in the vanilla game. Does not create duplicate locations
+
+    "Basement, 1st Floor, 2nd FLoor, Attic, and Roof can be used to turn on all furniture pieces on that level.
 
     "Full" turns on all furniture locations and will override any other specified groups
     """
@@ -364,7 +374,7 @@ class DoorRando(Choice):
 
     Randomized - All doors are randomly locked or unlocked
 
-    Suite Doors - Randomize doors but guarantee the Suite Key Doors remain locked
+    Suit Doors - Randomize doors but guarantee the Suit Key Doors remain locked
 
     All Doors Unlocked - Unlocks all doors in the mansion. Without Boo gates, this will make King Boo immediately accessible.
 
@@ -374,7 +384,7 @@ class DoorRando(Choice):
     internal_name = "door_rando"
     option_off = 0
     option_randomized = 1
-    option_suite_doors = 2
+    option_suit_doors = 2
     option_all_doors_unlocked = 3
     option_all_doors_locked = 4
     default = 0
@@ -484,7 +494,9 @@ class BooHealthOption(Choice):
 
 class BooHealthValue(Range):
     """
-    Choose the health value all Boos will have it the Boo Health Option is Choice. Range between 1 and 999
+    Choose the health value all Boos will have if the Boo Health Option is Choice. Range between 1 and 999
+    If boo_health_option is set to random_values, if you set this to "100: 50", the max value used will be 100 instead.
+    If you want a custom range, use a random range function: https://archipelago.gg/tutorial/Archipelago/advanced_settings_en#random-numbers
 
     Values over 150 may not be catchable within the current room and logic cannot account for where they move
 
@@ -527,6 +539,15 @@ class BooAnger(Toggle):
     internal_name = "boo_anger"
     default = 0
 
+class EnergyLink(Toggle):
+    """
+    Games that support energylink will be able to send and retrieve 'energy' from the team's pool.
+    If no team is present, the default team will be used (0).
+
+    'Energy' in the context of Luigi's Mansion will be money.
+    """
+    display_name = "EnergyLink"
+    internal_name = "energy_link"
 
 class TrapLink(Toggle):
     """
@@ -564,6 +585,57 @@ class LuigiMaxHealth(Range):
     range_end = 1000
     default = 100
 
+class FearWeight(Range):
+    """
+    Set the weight for how often fear traps get chosen as traps.
+    """
+    display_name = "Fear Trap Weight"
+    internal_name = "fear_weight"
+    range_start = 0
+    range_end = 100
+    default = 25
+
+class SpookyWeight(Range):
+    """
+    Set the weight for how often spooky time gets chosen as a trap.
+    """
+    display_name = "Spooky Time Weight"
+    internal_name = "spooky_weight"
+    range_start = 0
+    range_end = 100
+    default = 25
+
+class SquashWeight(Range):
+    """
+    Set the weight for how often Squash traps get chosen as traps.
+    """
+    display_name = "Squash Trap Weight"
+    internal_name = "squash_weight"
+    range_start = 0
+    range_end = 100
+    default = 15
+
+class VacTrapWeight(Range):
+    """
+    Set the weight for how often No Vac traps get chosen as traps.
+    """
+    display_name = "No Vac Trap Weight"
+    internal_name = "vac_trap_weight"
+    range_start = 0
+    range_end = 100
+    default = 5
+
+class BoolossusDifficulty(Choice):
+    """
+    Alter the difficulty of the mini-boos in the Boolossus fight. Easy slows them down, Hard speeds them up.
+    """
+    display_name = "Boolossus Diffculty"
+    internal_name = "boolossus_difficulty"
+    option_easy = 0
+    option_normal = 1
+    option_hard = 2
+    default = 1
+
 class PossTrapWeight(Range):
     """
     Set the weight for how often possession traps get chosen as traps.
@@ -593,6 +665,14 @@ class GhostTrapWeight(Range):
     range_start = 0
     range_end = 100
     default = 15
+
+class CallMario(Toggle):
+    """
+    Let everyone know you're looking for Mario in the client!
+    (CAUTION: THIS CAN EASILY SPAM THE CLIENT WITH MESSAGES)
+    """
+    display_name = "Press A to Mario"
+    internal_name = "call_mario"
 
 class DoorModelRando(Toggle):
     """
@@ -632,6 +712,7 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     random_spawn: RandomSpawn
     portrait_hints: PortraitHints
     hint_distribution: HintDistribution
+    send_hints: SendHints
     toadsanity: Toadsanity
     gold_mice: GoldMice
     furnisanity: Furnisanity
@@ -646,6 +727,7 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     balcony_boo_count: BalconyBooCount
     final_boo_count: FinalBooCount
     king_boo_health: KingBooHealth
+    boolossus_difficulty: BoolossusDifficulty
     boo_health_option: BooHealthOption
     boo_health_value: BooHealthValue
     boo_speed: BooSpeed
@@ -654,7 +736,9 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     extra_boo_spots: ExtraBooSpots
     chest_types: ChestTypes
     trap_chests: TrapChestType
+    call_mario: CallMario
     trap_link: TrapLink
+    energy_link: EnergyLink
     trap_percentage: TrapPercentage
     bundle_weight: BundleWeight
     coin_weight: CoinWeight
@@ -668,6 +752,10 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     poss_trap_weight: PossTrapWeight
     bonk_trap_weight: BonkTrapWeight
     ghost_weight: GhostTrapWeight
+    fear_weight: FearWeight
+    spooky_weight: SpookyWeight
+    squash_weight: SquashWeight
+    vac_trap_weight: VacTrapWeight
     dust_weight: NothingWeight
     heart_weight: HeartWeight
     start_inventory_from_pool: StartInventoryPool
