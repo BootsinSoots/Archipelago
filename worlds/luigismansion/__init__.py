@@ -390,7 +390,8 @@ class LMWorld(World):
                 entry = LMLocation(self.player, location, region, data)
                 entry.address = None
                 entry.place_locked_item(Item("Boo", ItemClassification.progression, None, self.player))
-                add_rule(entry, lambda state: state.has("Boo Radar", self.player), "and")
+                if self.options.boo_gates:
+                    add_rule(entry, lambda state: state.has("Boo Radar", self.player), "and")
                 add_rule(entry, lambda state: state.has("Progressive Vacuum", self.player), "and")
                 if entry.region == "Twins' Room" and self.open_doors.get(28) == 0:
                     add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
@@ -530,7 +531,7 @@ class LMWorld(World):
             self.options.balcony_boo_count.value = 31
 
         # If spawn region is past Boolossus, make sure the gate is possible
-        if self.origin_region_name in ("Telephone Room", "Clockwork Room"):
+        if self.origin_region_name in ("Telephone Room", "Clockwork Room", "Armory", "Ceramics Studio"):
             if self.options.balcony_boo_count.value > 4 and self.options.boosanity.value == 0:
                 self.options.balcony_boo_count.value = 4
 
