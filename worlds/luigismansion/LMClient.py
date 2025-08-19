@@ -4,8 +4,9 @@ import random
 from typing import Any
 
 import NetUtils, Utils
-from CommonClient import get_base_parser, gui_enabled, logger, server_loop
+from CommonClient import get_base_parser, gui_enabled, logger, server_loop, CommonContext
 import dolphin_memory_engine as dme
+from .LMUniversalContext import LMUniversalContext
 
 from .Regions import spawn_locations
 from .iso_helper.lm_rom import LMUSAAPPatch
@@ -20,15 +21,6 @@ from .client.ap_link.energy_link.energy_link import EnergyLinkConstants
 from .client.ap_link.energy_link.energy_link_command_processor import EnergyLinkCommandProcessor
 
 CLIENT_VERSION = "V0.5.3"
-
-# Load Universal Tracker modules with aliases
-tracker_loaded = False
-try:
-    from worlds.tracker.TrackerClient import (TrackerCommandProcessor as ClientCommandProcessor,
-                                              TrackerGameContext as CommonContext, UT_VERSION)
-    tracker_loaded = True
-except ImportError:
-    from CommonClient import ClientCommandProcessor, CommonContext
 
 CONNECTION_REFUSED_STATUS = "Detected a non-randomized ROM for LM. Please close and load a different one. Retrying in 5 seconds..."
 CONNECTION_LOST_STATUS = "Dolphin connection was lost. Please restart your emulator and make sure LM is running."
@@ -171,7 +163,7 @@ class LMCommandProcessor(EnergyLinkCommandProcessor):
         if isinstance(self.ctx, LMContext):
             Utils.async_start(self.ctx.get_debug_info(), name="Get Luigi's Mansion Debug info")
 
-class LMContext(CommonContext):
+class LMContext(LMUniversalContext):
     command_processor = LMCommandProcessor
     game = "Luigi's Mansion"
     items_handling = 0b111
@@ -356,67 +348,6 @@ class LMContext(CommonContext):
         self.is_luigi_dead = True
         self.set_luigi_dead()
         return
-
-    def make_gui(self):
-        ui = super().make_gui()
-        ui.base_title = f"Luigi's Mansion Client {CLIENT_VERSION}"
-        if tracker_loaded:
-            if not self.check_universal_tracker_version():
-                Utils.messagebox("Universal Tracker needs updated", "The minimum version of Universal Tracker required for LM is v0.2.11", error=True)
-                raise ImportError("Need to update universal tracker version to at least v0.2.11.")
-            ui.base_title += f" | Universal Tracker {UT_VERSION}"
-
-        # AP version is added behind this automatically
-        ui.base_title += " | Archipelago"
-        return ui
-
-    def check_universal_tracker_version(self) -> bool:
-        import re
-        if not tracker_loaded:
-            return False
-
-        # We are checking for a string that starts with v contains any amount of digits followed by a period
-        # repeating three times (e.x. v0.2.11)
-        match = re.search(r"v\d+.(\d+).(\d+)", UT_VERSION)
-        if len(match.groups()) < 2:
-            return False
-        if int(match.groups()[0]) < 2:
-            return False
-        if int(match.groups()[1]) < 11:
-            return False
-
-        return True
-
-    async def get_wallet_value(self):
-        # KivyMD support, also keeps support with regular Kivy (hopefully)
-        try:
-            from kvui import MDLabel as Label
-        except ImportError:
-            from kvui import Label
-
-        if not hasattr(self, "wallet_ui"):
-            self.wallet_ui = Label(text="", size_hint_x=None, width=120, halign="center")
-            self.ui.connect_layout.add_widget(self.wallet_ui)
-
-        current_worth = 0
-        if self.check_ingame():
-            current_worth = self.wallet.get_wallet_worth()
-
-        self.wallet_ui.text = f"Wallet:{current_worth}/{self.wallet.get_rank_requirement()}"
-
-    async def update_boo_count_label(self):
-        # KivyMD support, also keeps support with regular Kivy (hopefully)
-        try:
-            from kvui import MDLabel as Label
-        except ImportError:
-            from kvui import Label
-
-        if not hasattr(self, "boo_count"):
-            self.boo_count = Label(text="", size_hint_x=None, width=120, halign="center")
-            self.ui.connect_layout.add_widget(self.boo_count)
-
-        curr_boo_count = len(set(([item.item for item in self.items_received if item.item in BOO_AP_ID_LIST])))
-        self.boo_count.text = f"Boo Count: {curr_boo_count}/50"
 
 
     def check_alive(self):
@@ -930,8 +861,8 @@ async def dolphin_sync_task(ctx: LMContext):
 
             # At this point, we are verified as connected. Update boo count in LMClient
             if ctx.ui:
-                await ctx.update_boo_count_label()
-                await ctx.get_wallet_value()
+                await ctx.ui.update_boo_count_label_async()
+                await ctx.ui.get_wallet_value_async()
 
             # Check any Links that a user is subscribed to.
             if "DeathLink" in ctx.tags:
@@ -1024,11 +955,7 @@ def main(output_data: Optional[str] = None, lm_connect=None, lm_password=None):
         ctx.server_task = asyncio.create_task(server_loop(ctx), name="ServerLoop")
 
         # Runs Universal Tracker's internal generator
-        if tracker_loaded:
-            ctx.run_generator()
-            ctx.tags.remove("Tracker")
-        else:
-            logger.warning("Could not find Universal Tracker.")
+        ctx.ut_generate()
 
         if gui_enabled:
             ctx.run_gui()
