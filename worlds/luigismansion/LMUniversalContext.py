@@ -11,7 +11,7 @@ try:
 except ImportError:
     from CommonClient import CommonContext, logger
 
-CLIENT_VERSION = "V0.5.3"
+CLIENT_VERSION = "V0.5.4"
 
 class LMUniversalContext(CommonContext):
     tracker_enabled: bool = False
