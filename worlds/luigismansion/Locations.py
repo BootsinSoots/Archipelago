@@ -892,9 +892,9 @@ HANGABLES_LOCATION_TABLE = {
                                              update_ram_addr=[LMRamData(in_game_room_id=22)]),
     "Conservatory Picture C": LMLocationData("Conservatory", 274, "Furniture", 125, [], 1,
                                              update_ram_addr=[LMRamData(in_game_room_id=22)]),
-    "Conservatory Picture R (hangs Higher)": LMLocationData("Conservatory", 275, "Furniture", 135, [], 1,
+    "Conservatory Picture R (hangs Lower)": LMLocationData("Conservatory", 275, "Furniture", 135, [], 1,
                                                             update_ram_addr=[LMRamData(in_game_room_id=22)]),
-    "Conservatory Picture R (hangs Lower)": LMLocationData("Conservatory", 276, "Furniture", 136, [], 1,
+    "Conservatory Picture R (hangs Higher)": LMLocationData("Conservatory", 276, "Furniture", 136, [], 1,
                                                            update_ram_addr=[LMRamData(in_game_room_id=22)]),
     "Dining Room Picture": LMLocationData("Dining Room", 298, "Furniture", 315, [], 1,
                                           update_ram_addr=[LMRamData(in_game_room_id=8)]),
@@ -1703,7 +1703,7 @@ WDYM_LOCATION_TABLE ={
 
 
 # Adds Portrait Ghosts as locations
-# Certain Ghosts such as Extra Clockwork soliders don't have a jmp entry to check against.
+# Certain Ghosts such as Extra Clockwork soldiers don't have a jmp entry to check against.
 # Bosses do NOT have entries in map2, but we can check their bit addresses if they are captured.
 PORTRAIT_LOCATION_TABLE: dict[str, LMLocationData] = {
     "Neville, the Bookish Father": LMLocationData("Study", 621, "Portrait", 70, [], remote_only=True,
