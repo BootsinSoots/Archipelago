@@ -119,10 +119,6 @@ BASE_LOCATION_TABLE: dict[str, LMLocationData] = {
                                                      update_ram_addr=[LMRamData(in_game_room_id=53)], require_poltergust=False),
     "Telephone Room R1 Chest": LMLocationData("Telephone Room", 44, "Furniture", 681, [], remote_only=True,
                                                      update_ram_addr=[LMRamData(in_game_room_id=53)], require_poltergust=False),
-    "Storage Room Cage Button": LMLocationData("Storage Room", 712, "Special", 256, [], remote_only=True,
-                                    update_ram_addr=[LMRamData(0x803D33A2, bit_position=0, in_game_room_id=14)]),
-    "Storage Room Wall Button": LMLocationData("Storage Room", 921, "Special", 284, [], remote_only=True,
-                           update_ram_addr=[LMRamData(0x803D339E, bit_position=1, in_game_room_id=14)]),
     "Visit E. Gadd's Gallery": LMLocationData("Foyer", 925, "Map", 0, [], remote_only=True,
                                       update_ram_addr=[LMRamData(0x804D80A4)], require_poltergust=False, map_id=[6]),
     "Complete Training": LMLocationData("Training Room", 926, "Special", 0, [], remote_only=True,
@@ -243,6 +239,10 @@ ENEMIZER_LOCATION_TABLE: dict[str, LMLocationData] = {
             update_ram_addr=[LMRamData(0x803D5DBE, bit_position=5, in_game_room_id=15)], map_id=[2,13]),
     "Defeat Boolussus": LMLocationData("Balcony", 922, "Portrait", 56, ["Ice Element Medal"],
                     remote_only=True, update_ram_addr=[LMRamData(0x803D5DBF, bit_position=4, in_game_room_id=62)], map_id=[2,11]),
+    "Storage Room Cage Button": LMLocationData("Storage Room", 712, "Special", 256, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803D33A2, bit_position=0, in_game_room_id=14)]),
+    "Storage Room Wall Button": LMLocationData("Storage Room", 921, "Special", 284, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803D339E, bit_position=1, in_game_room_id=14)]),
 }
 
 # Adds Toads as locations
