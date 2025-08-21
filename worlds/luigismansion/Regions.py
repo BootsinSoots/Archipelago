@@ -282,7 +282,7 @@ def connect_regions(world: "LMWorld"):
     lmconnect(world, "Billiards Room", "Projection Room", "Projection Room Key", 18)
     lmconnect(world, "Fortune-Teller's Room", "Mirror Room", "Mirror Room Key", 5)
     lmconnect(world, "Laundry Room", "Butler's Room", "Butler's Room Key", 1)
-    lmconnect(world, "Butler's Room", "Hidden Room")
+    lmconnect(world, "Butler's Room", "Hidden Room", rule=lambda state: state.has("Progressive Vacuum", world.player))
     lmconnect(world, "Courtyard", "The Well")
     lmconnect(world, "Rec Room", "2F Stairwell", "South Rec Room Key", 24)
     lmconnect(world, "2F Stairwell", "Tea Room", "Tea Room Key", 47,
