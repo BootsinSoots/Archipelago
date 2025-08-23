@@ -4,7 +4,7 @@ import random
 from typing import Any
 
 import NetUtils, Utils
-from CommonClient import get_base_parser, gui_enabled, logger, server_loop, CommonContext
+from CommonClient import get_base_parser, gui_enabled, server_loop
 import dolphin_memory_engine as dme
 from .LMUniversalContext import LMUniversalContext
 
@@ -19,6 +19,14 @@ from .client.Wallet import Wallet
 from .client.ap_link.energy_link.energy_link_client import EnergyLinkClient
 from .client.ap_link.energy_link.energy_link import EnergyLinkConstants
 from .client.ap_link.energy_link.energy_link_command_processor import EnergyLinkCommandProcessor
+
+# Load Universal Tracker modules with aliases
+_tracker_loaded = False
+try:
+    from worlds.tracker.TrackerClient import TrackerGameContext as CommonContext, UT_VERSION, logger
+    _tracker_loaded = True
+except ImportError:
+    from CommonClient import CommonContext, logger
 
 CLIENT_VERSION = "V0.5.3"
 
@@ -625,6 +633,9 @@ class LMContext(LMUniversalContext):
             }])
         return
 
+    def get_item_count_by_id(self, item_id: int) -> int:
+        return len([netItem for netItem in self.items_received if netItem.item == item_id])
+
     async def give_lm_items(self):
         if not (self.check_ingame() and self.check_alive()):
             return
@@ -861,8 +872,11 @@ async def dolphin_sync_task(ctx: LMContext):
 
             # At this point, we are verified as connected. Update boo count in LMClient
             if ctx.ui:
-                await ctx.ui.update_boo_count_label_async()
-                await ctx.ui.get_wallet_value_async()
+                boo_count = len(set(([item.item for item in ctx.items_received if item.item in BOO_AP_ID_LIST])))
+                ctx.ui.update_boo_count_label(boo_count)
+                ctx.ui.get_wallet_value()
+                ctx.ui.update_flower_label(ctx.get_item_count_by_id(8140))
+                ctx.ui.update_vacuum_label(ctx.get_item_count_by_id(8064))
 
             # Check any Links that a user is subscribed to.
             if "DeathLink" in ctx.tags:
@@ -955,7 +969,7 @@ def main(output_data: Optional[str] = None, lm_connect=None, lm_password=None):
         ctx.server_task = asyncio.create_task(server_loop(ctx), name="ServerLoop")
 
         # Runs Universal Tracker's internal generator
-        ctx.ut_generate()
+        ctx._main()
 
         if gui_enabled:
             ctx.run_gui()

@@ -1,7 +1,5 @@
 """ Luigi's Mansion GUI Module. Subclasses CommonContext and TrackerGameContext."""
 import Utils
-from .Items import BOO_AP_ID_LIST
-from .LMGui import build_gui, GameManager, MDLabel
 
 # Load Universal Tracker modules with aliases
 _tracker_loaded = False
@@ -27,10 +25,15 @@ class LMUniversalContext(CommonContext):
         self.tracker_enabled = _tracker_loaded
 
     def make_gui(self):
+        # Performing local import to prevent additional UIs to appear during the patching process.
+        # This appears to be occurring if a spawned process does not have a UI element when importing kvui/kivymd.
+        from .LMGui import build_gui, GameManager, MDLabel, MDLinearProgressIndicator
+
         ui: GameManager = super().make_gui()
         class LMGuiWrapper(ui):
             wallet_ui: MDLabel
             boo_count: MDLabel
+            wallet_progress_bar: MDLinearProgressIndicator
             base_title = f"Luigi's Mansion {CLIENT_VERSION}"
 
             def build(self):
@@ -45,20 +48,34 @@ class LMUniversalContext(CommonContext):
                 build_gui(self)
                 return container
 
-            async def get_wallet_value_async(self):
+            def get_wallet_value(self):
                 current_worth = 0
+                total_worth = self.ctx.wallet.get_rank_requirement()
+
                 if self.ctx.check_ingame():
                     current_worth = self.ctx.wallet.get_wallet_worth()
 
-                self.wallet_ui.text = f"Wallet:{current_worth}/{self.ctx.wallet.get_rank_requirement()}"
+                
+                self.wallet_ui.text = f"{format(current_worth, ',d')}/{format(total_worth, ',d')}"
+                if total_worth != 0:
+                    self.wallet_progress_bar.value = current_worth/total_worth
+                else:
+                    self.wallet_progress_bar.value = 100
 
-            async def update_boo_count_label_async(self):
-                curr_boo_count = len(set(([item.item for item in self.ctx.items_received if item.item in BOO_AP_ID_LIST])))
-                self.boo_count.text = f"Boo Count: {curr_boo_count}/50"
+            def update_boo_count_label(self, item_count: int):
+                boo_total = 50
+                self.boo_count.text = f"{item_count}/{boo_total}"
+                self.boo_progress_bar.value = item_count/boo_total
+            
+            def update_flower_label(self, count: int):
+                self.flower_label.text = f"{count}"
+            
+            def update_vacuum_label(self, item_count: int):
+                self.vacuum_label.text = f"{item_count}"
 
         return LMGuiWrapper
 
-    def ut_generate(self):
+    def _main(self):
         if self.tracker_enabled:
             self.run_generator()
             self.tags.remove("Tracker")
