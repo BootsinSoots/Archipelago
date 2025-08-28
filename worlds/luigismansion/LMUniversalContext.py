@@ -55,7 +55,6 @@ class LMUniversalContext(CommonContext):
                 if self.ctx.check_ingame():
                     current_worth = self.ctx.wallet.get_wallet_worth()
 
-                
                 self.wallet_ui.text = f"{format(current_worth, ',d')}/{format(total_worth, ',d')}"
                 if total_worth != 0:
                     self.wallet_progress_bar.value = current_worth/total_worth
@@ -66,10 +65,10 @@ class LMUniversalContext(CommonContext):
                 boo_total = 50
                 self.boo_count.text = f"{item_count}/{boo_total}"
                 self.boo_progress_bar.value = item_count/boo_total
-            
+
             def update_flower_label(self, count: int):
                 self.flower_label.text = f"{count}"
-            
+
             def update_vacuum_label(self, item_count: int):
                 self.vacuum_label.text = f"{item_count}"
 

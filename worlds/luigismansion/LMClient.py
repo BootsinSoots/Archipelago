@@ -11,7 +11,6 @@ from .LMUniversalContext import LMUniversalContext
 from .Regions import spawn_locations
 from .iso_helper.lm_rom import LMUSAAPPatch
 from .Hints import ALWAYS_HINT, PORTRAIT_HINTS
-from .LMGenerator import LuigisMansionRandomizer
 from .Items import *
 from .Locations import ALL_LOCATION_TABLE, SELF_LOCATIONS_TO_RECV
 from .Helper_Functions import StringByteFunction as sbf
