@@ -88,7 +88,7 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
 
         try:
             # Verify we have a clean rom of the game first
-            self.verify_base_rom(lm_clean_iso)
+            self.verify_base_rom(lm_clean_iso, throw_on_missing_speedups=True)
 
             # Use our randomize function to patch the file into an ISO.
             from ..LMGenerator import LuigisMansionRandomizer
@@ -116,10 +116,28 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
         return file_name
 
     @classmethod
-    def verify_base_rom(cls, lm_rom_path: str):
+    def verify_base_rom(cls, lm_rom_path: str, throw_on_missing_speedups: bool = False):
         # Verifies we have a valid installation of Luigi's Mansion USA. There are some regional file differences.
         logger.info("Verifying if the provided ISO is a valid copy of Luigi's Mansion USA edition.")
-        from gclib import fs_helpers as fs
+        logger.info("Checking GCLib and speedup libs.")
+        # We try importing speedups (pyfastyaz0yay0) to make sure speedups is accessible.
+        import pyfastyaz0yay0
+        from gclib import fs_helpers as fs, yaz0_yay0
+        logger.info("Using GCLib from path: %s.", fs.__file__)
+        logger.info("Using speedups from path: %s.", pyfastyaz0yay0.__file__)
+        logger.info(sys.modules["gclib.yaz0_yay0"])
+
+        if yaz0_yay0.PY_FAST_YAZ0_YAY0_INSTALLED:
+            logger.info("Speedups detected.")
+        else:
+            logger.info("Python module paths: %s", sys.path)
+            if throw_on_missing_speedups:
+                # We want to reset the cached libs so yaz0_yay0 loads with speedups enabled.
+                #del sys.modules["gclib"]
+                #del sys.modules["gclib.yaz0_yay0"]
+                logger.info("Speedups not detected, attempting to pull remote release.")
+                raise ImportError("Cannot continue patching Luigi's Mansion due to missing libraries.")
+            logger.info("Continuing patching without speedups.")
 
         base_md5 = md5()
         with open(lm_rom_path, "rb") as f:
@@ -172,7 +190,7 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
 
     def create_iso(self, temp_dir_path: str, patch_file_path: str, output_iso_path: str, vanilla_iso_path: str):
         logger.info(f"Appending the following to sys path to get dependencies correctly: {temp_dir_path}")
-        sys.path.append(temp_dir_path)
+        sys.path.insert(0, temp_dir_path)
 
         # Verify we have a clean rom of the game first
         self.verify_base_rom(vanilla_iso_path)
