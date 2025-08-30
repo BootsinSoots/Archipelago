@@ -946,22 +946,26 @@ async def display_received_items(ctx: LMContext):
         ctx.item_display_queue = []
 
 def main(output_data: Optional[str] = None, lm_connect=None, lm_password=None):
+    from .client.dolphin_launcher import DolphinLauncher
     Utils.init_logging("Luigi's Mansion Client")
     logger.info(f"Starting LM Client {CLIENT_VERSION}")
     server_address: str = ""
+    dolphin_launcher: DolphinLauncher = DolphinLauncher()
+    rom_path: str = None
 
     if output_data:
         lm_usa_patch = LMUSAAPPatch()
         try:
             lm_usa_manifest = lm_usa_patch.read_contents(output_data)
             server_address = lm_usa_manifest["server"]
-            lm_usa_patch.patch(output_data)
+            rom_path= lm_usa_patch.patch(output_data)
         except Exception as ex:
             logger.error("Unable to patch your Luigi's Mansion ROM as expected. Additional details:\n" + str(ex))
             Utils.messagebox("Cannot Patch Luigi's Mansion", "Unable to patch your Luigi's Mansion ROM as " +
                 "expected. Additional details:\n" + str(ex), True)
             raise ex
 
+    Utils.asyncio.run(dolphin_launcher.launch_dolphin_async(rom_path))
 
     async def _main(connect, password):
         ctx = LMContext(server_address if server_address else connect, password)

@@ -78,22 +78,7 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
         temp_path = os.path.join(tempfile.gettempdir(), "luigis_mansion", CLIENT_VERSION, "libs")
         return temp_path
 
-    async def _launch_dolphin_async(self, rom: str):
-        import subprocess
-        import settings
-        import os
-        subprocess.Popen(
-            [
-                settings.get_settings().luigismansion_options.dolphin_path,
-                f"--exec={os.path.realpath(rom)}",
-            ],
-            cwd=Utils.local_path("."),
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-        )
-
-    def patch(self, aplm_patch: str) -> None:
+    def patch(self, aplm_patch: str) -> str:
         # Get the AP Path for the base ROM
         lm_clean_iso = self.get_base_rom_path()
         logger.info("Provided Luigi's Mansion ISO Path was: " + lm_clean_iso)
@@ -110,7 +95,7 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
             with zipfile.ZipFile(aplm_patch, "r") as zf:
                 aplm_bytes = zf.read("patch.aplm")
             LuigisMansionRandomizer(lm_clean_iso, output_file, aplm_bytes)
-            Utils.asyncio.run(self._launch_dolphin_async(output_file))
+            return output_file
         except ImportError:
             self.__get_remote_dependencies_and_create_iso(aplm_patch, output_file, lm_clean_iso)
 

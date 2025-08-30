@@ -58,6 +58,7 @@ class LuigisMansionSettings(settings.Group):
 
     iso_file: ISOFile = ISOFile(ISOFile.copy_to)
     dolphin_path: DolphinExecutable = DolphinExecutable()
+    auto_start_dolphin: bool = True
 
 
 class LMWeb(WebWorld):
