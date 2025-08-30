@@ -48,7 +48,16 @@ class LuigisMansionSettings(settings.Group):
         copy_to = "Luigi's Mansion (NTSC-U).iso"
         md5s = ["6e3d9ae0ed2fbd2f77fa1ca09a60c494"]
 
+    class DolphinExecutable(settings.UserFilePath):
+        """
+        Dolphin emulator executable path.
+        Automatically starts rom upon patching completion.
+        """
+        is_exe = True
+        description = "The path for dolphin emulator executable."
+
     iso_file: ISOFile = ISOFile(ISOFile.copy_to)
+    dolphin_path: DolphinExecutable = DolphinExecutable()
 
 
 class LMWeb(WebWorld):
