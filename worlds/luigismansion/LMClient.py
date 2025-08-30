@@ -993,7 +993,6 @@ def main(output_data: Optional[str] = None, lm_connect=None, lm_password=None):
     asyncio.run(_main(lm_connect, lm_password))
     colorama.deinit()
 
-
 if __name__ == "__main__":
     parser = get_base_parser()
     args = parser.parse_args()
