@@ -6,7 +6,7 @@ from typing import Any
 import NetUtils, Utils
 from CommonClient import get_base_parser, gui_enabled, server_loop
 import dolphin_memory_engine as dme
-from .LMUniversalContext import LMUniversalContext
+from .LMUniversalContext import LMUniversalContext, logger
 
 from .Regions import spawn_locations
 from .iso_helper.lm_rom import LMUSAAPPatch
@@ -18,16 +18,7 @@ from .client.Wallet import Wallet
 from .client.ap_link.energy_link.energy_link_client import EnergyLinkClient
 from .client.ap_link.energy_link.energy_link import EnergyLinkConstants
 from .client.ap_link.energy_link.energy_link_command_processor import EnergyLinkCommandProcessor
-
-# Load Universal Tracker modules with aliases
-_tracker_loaded = False
-try:
-    from worlds.tracker.TrackerClient import TrackerGameContext as CommonContext, UT_VERSION, logger
-    _tracker_loaded = True
-except ImportError:
-    from CommonClient import CommonContext, logger
-
-CLIENT_VERSION = "V0.5.3"
+from .client.constants import CLIENT_VERSION
 
 CONNECTION_REFUSED_STATUS = "Detected a non-randomized ROM for LM. Please close and load a different one. Retrying in 5 seconds..."
 CONNECTION_LOST_STATUS = "Dolphin connection was lost. Please restart your emulator and make sure LM is running."
@@ -138,11 +129,6 @@ async def write_bytes_and_validate(addr: int, ram_offset: list[str] | None, curr
 
 
 class LMCommandProcessor(EnergyLinkCommandProcessor):
-    def __init__(self, ctx: CommonContext, server_address: str = None):
-        if server_address:
-            ctx.server_address = server_address
-        super().__init__(ctx)
-
     def _cmd_dolphin(self):
         """Prints the current Dolphin status to the client."""
         if isinstance(self.ctx, LMContext):

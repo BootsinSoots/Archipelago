@@ -1,24 +1,16 @@
 """ Module which adds client commands to a given Archipelago Client. """
 import Utils
 
-try:
-    from worlds.tracker.TrackerClient import (TrackerCommandProcessor as
-        ClientCommandProcessor, TrackerGameContext as CommonContext)
-except ImportError:
-    from CommonClient import ClientCommandProcessor, CommonContext
-
 from CommonClient import logger
 from .energy_link_processor import EnergyLinkProcessor
+from ....LMUniversalContext import LMUniversalCommandProcessor, LMUniversalContext, logger
 
-class EnergyLinkCommandProcessor(ClientCommandProcessor):
+class EnergyLinkCommandProcessor(LMUniversalCommandProcessor):
     """ EnergyLink client commands. """
     energy_link: EnergyLinkProcessor
 
-    def __init__(self, ctx: CommonContext, server_address: str = None):
-        if server_address:
-            ctx.server_address = server_address
-        super().__init__(ctx)
-
+    def __init__(self, ctx: LMUniversalContext, server_address: str = None):
+        super().__init__(ctx, server_address)
         self.energy_link = EnergyLinkProcessor(ctx)
 
     def _cmd_send_energy(self, arg: str):
@@ -46,10 +38,10 @@ class EnergyLinkCommandProcessor(ClientCommandProcessor):
 
         Utils.async_start(self.energy_link.request_energy_async(arg))
 
-def _validate_processor_context(ctx: CommonContext):
+def _validate_processor_context(ctx: LMUniversalContext):
     has_energy_link: bool = ctx.energy_link is not None
     is_connected_to_server: bool = ctx.server is not None
-    if isinstance(ctx, CommonContext) and has_energy_link and is_connected_to_server:
+    if isinstance(ctx, LMUniversalContext) and has_energy_link and is_connected_to_server:
         return True
     logger.warning("Please connect the client to the AP server before continuing.")
     return False

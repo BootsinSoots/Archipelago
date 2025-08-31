@@ -816,7 +816,7 @@ class LMWorld(World):
 
     # Fill slot data for LM tracker
     def fill_slot_data(self):
-        from .LMClient import CLIENT_VERSION
+        from .client.constants import CLIENT_VERSION
 
         return {
             "rank requirement": self.options.rank_requirement.value,

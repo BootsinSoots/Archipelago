@@ -1,15 +1,21 @@
 """ Luigi's Mansion GUI Module. Subclasses CommonContext and TrackerGameContext."""
 import Utils
 
+from .client.constants import CLIENT_VERSION
+
 # Load Universal Tracker modules with aliases
 _tracker_loaded = False
 try:
-    from worlds.tracker.TrackerClient import TrackerGameContext as CommonContext, UT_VERSION, logger
+    from worlds.tracker.TrackerClient import TrackerGameContext as CommonContext, TrackerCommandProcessor as ClientCommandProcessor, UT_VERSION, logger
     _tracker_loaded = True
 except ImportError:
-    from CommonClient import CommonContext, logger
+    from CommonClient import CommonContext, ClientCommandProcessor, logger
 
-CLIENT_VERSION = "V0.5.4"
+class LMUniversalCommandProcessor(ClientCommandProcessor):
+    def __init__(self, ctx: CommonContext, server_address: str = None):
+        if server_address:
+            ctx.server_address = server_address
+        super().__init__(ctx)
 
 class LMUniversalContext(CommonContext):
     tracker_enabled: bool = False
