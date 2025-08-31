@@ -95,9 +95,9 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
             with zipfile.ZipFile(aplm_patch, "r") as zf:
                 aplm_bytes = zf.read("patch.aplm")
             LuigisMansionRandomizer(lm_clean_iso, output_file, aplm_bytes)
-            return output_file
         except ImportError:
             self.__get_remote_dependencies_and_create_iso(aplm_patch, output_file, lm_clean_iso)
+        return output_file
 
     def read_contents(self, aplm_patch: str) -> dict[str, Any]:
         with zipfile.ZipFile(aplm_patch, "r") as zf:

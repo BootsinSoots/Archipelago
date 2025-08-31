@@ -8,13 +8,13 @@ from typing import ClassVar
 
 # AP Related Imports
 import Options
-import settings
 from BaseClasses import Tutorial, Item, ItemClassification, MultiWorld
 from Utils import visualize_regions, local_path
 from worlds.AutoWorld import WebWorld, World
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess, icon_paths
 from worlds.generic.Rules import add_rule
 from Options import OptionGroup
+from .client.luigismansion_settings import LuigisMansionSettings
 
 # Relative Imports
 from .Items import ITEM_TABLE, LMItem, get_item_names_per_category, filler_items, ALL_ITEMS_TABLE, BOO_ITEM_TABLE, \
@@ -37,29 +37,6 @@ components.append(
     Component("LM Client", func=run_client, component_type=Type.CLIENT,
         file_identifier=SuffixIdentifier(".aplm"), icon="archiboolego"))
 icon_paths["archiboolego"] = f"ap:{__name__}/data/archiboolego.png"
-
-
-class LuigisMansionSettings(settings.Group):
-    class ISOFile(settings.UserFilePath):
-        """
-        Locate your Luigi's Mansion ISO
-        """
-        description = "Luigi's Mansion (NTSC-U) ISO"
-        copy_to = "Luigi's Mansion (NTSC-U).iso"
-        md5s = ["6e3d9ae0ed2fbd2f77fa1ca09a60c494"]
-
-    class DolphinExecutable(settings.UserFilePath):
-        """
-        Dolphin emulator executable path.
-        Automatically starts rom upon patching completion.
-        """
-        is_exe = True
-        description = "The path for dolphin emulator executable."
-
-    iso_file: ISOFile = ISOFile(ISOFile.copy_to)
-    dolphin_path: DolphinExecutable = DolphinExecutable()
-    auto_start_dolphin: bool = True
-
 
 class LMWeb(WebWorld):
     theme = "stone"
