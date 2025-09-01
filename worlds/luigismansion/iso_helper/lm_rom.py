@@ -202,8 +202,8 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
     def __get_remote_dependencies_and_create_iso(self, aplm_patch: str, output_file: str, lm_clean_iso: str):
         try:
             local_dir_path = self.__get_temp_folder_name()
-            # if temp directory exists and we failed to patch the ISO we want to remove the directory
-            # and get a fresh install.
+            # If temp directory exists, and we failed to patch the ISO, we want to remove the directory
+            #   and instead get a fresh installation.
             if os.path.isdir(local_dir_path):
                 logger.info("Found temporary directory after unsuccessful attempt of generating seed, deleting %s.", local_dir_path)
                 shutil.rmtree(local_dir_path)
