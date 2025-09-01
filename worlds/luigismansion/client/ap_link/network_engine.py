@@ -3,7 +3,7 @@
 import uuid
 import abc
 
-from typing import NamedTuple, Optional, Any
+from typing import NamedTuple, Optional, Any, Set
 from enum import Enum
 from CommonClient import CommonContext
 
@@ -80,7 +80,7 @@ class SetNetworkRequest(NetworkRequest):
         return request
 
 class GetNetworkRequest(NetworkRequest):
-    """ Object representation of the 'Get'command in Archipelago's NetworkProtocol. """
+    """ Object representation of the 'Get' command in Archipelago's NetworkProtocol. """
     keys: list[str]
 
     def __new__(cls, tag, keys):
@@ -97,6 +97,23 @@ class GetNetworkRequest(NetworkRequest):
 
         return request
 
+class ConnectUpdateRequest(NetworkRequest):
+    """ Object representation of the 'ConnectUpdate' command in Archipelago's NetworkProtocol. """
+    tags: Set[str]
+
+    def __new__(cls, tags):
+        instance = super().__new__(cls, "ConnectUpdate", tag=None)
+        instance.tags = tags
+        return instance
+
+    def create_request(self) -> dict[str, Any]:
+        request = {
+            "cmd": self.command,
+            "tags": self.tags,
+        }
+
+        return request
+
 class ArchipelagoNetworkEngine:
     """
     Archipelago's Client to Server NetworkProtocol which utilizes
@@ -108,12 +125,46 @@ class ArchipelagoNetworkEngine:
         self._ctx = ctx
 
     async def send_set_request_async(self, network_request: SetNetworkRequest):
-        """ Sends a 'Set' command to the Archipelago server. """
+        """
+        Sends a 'Set' command to the Archipelago server.
+        
+        :param network_request: The request information to be sent to the 'Set' command.
+        """
         return await self._send_network_request_async(network_request)
 
     async def send_get_request_async(self, network_request: GetNetworkRequest):
-        """ Sends a 'Get' command to the Archipelago server. """
+        """
+        Sends a 'Get' command to the Archipelago server.
+
+        :param network_request: The request information to be sent to the 'Get' command.
+        """
         return await self._send_network_request_async(network_request)
+
+    async def send_connect_update_request_async(self, network_request: ConnectUpdateRequest):
+        """
+        Sends a 'ConnectUpdate' command to the Archipelago server.
+
+        :param network_request: The request information to be sent to the 'ConnectUpdate' command.
+        """
+        return await self._send_network_request_async(network_request)
+
+    def get_team(self) -> int:
+        """Gets the team number of the given network context."""
+        return self._ctx.team
+
+    def get_tags(self) -> Set[str]:
+        """ Gets the tags for the given network context. """
+        return self._ctx.tags
+
+    async def update_tags_async(self, enable_tag: bool, tag_name:str):
+        """Set tags on/off and update the connection if already connected."""
+        old_tags = self.get_tags().copy()
+        if enable_tag:
+            self._ctx.tags.add(tag_name)
+        else:
+            self._ctx.tags -= { tag_name }
+        if old_tags != self.get_tags() and self._ctx.server and not self._ctx.server.socket.closed:
+            await self.send_connect_update_request_async(ConnectUpdateRequest(self.get_tags()))
 
     async def _send_network_request_async(self, request: NetworkRequest):
         await self._ctx.send_msgs([ request.create_request() ])

@@ -2,14 +2,14 @@
 import Utils
 
 from CommonClient import logger
-from .energy_link_processor import EnergyLinkProcessor
-from ....LMUniversalContext import LMUniversalCommandProcessor, LMUniversalContext, logger
+from .energy_link_processor import EnergyLinkProcessor, EnergyLinkConstants
+from ...contexts.base_context import BaseContext, BaseCommandProcessor, logger
 
-class EnergyLinkCommandProcessor(LMUniversalCommandProcessor):
+class EnergyLinkCommandProcessor(BaseCommandProcessor):
     """ EnergyLink client commands. """
     energy_link: EnergyLinkProcessor
 
-    def __init__(self, ctx: LMUniversalContext, server_address: str = None):
+    def __init__(self, ctx: BaseContext, server_address: str = None):
         super().__init__(ctx, server_address)
         self.energy_link = EnergyLinkProcessor(ctx)
 
@@ -38,10 +38,18 @@ class EnergyLinkCommandProcessor(LMUniversalCommandProcessor):
 
         Utils.async_start(self.energy_link.request_energy_async(arg))
 
-def _validate_processor_context(ctx: LMUniversalContext):
+    def _cmd_energy_link(self):
+        """Toggle EnergyLink from the client. Overrides default setting."""
+        luigismansion_context: BaseContext = self.ctx
+        Utils.async_start(luigismansion_context.network_engine.update_tags_async(
+            not EnergyLinkConstants.INTERNAL_NAME in self.ctx.tags,
+            EnergyLinkConstants.FRIENDLY_NAME),
+            name=f"Update {EnergyLinkConstants.FRIENDLY_NAME}")
+
+def _validate_processor_context(ctx: BaseContext):
     has_energy_link: bool = ctx.energy_link is not None
     is_connected_to_server: bool = ctx.server is not None
-    if isinstance(ctx, LMUniversalContext) and has_energy_link and is_connected_to_server:
+    if isinstance(ctx, BaseContext) and has_energy_link and is_connected_to_server:
         return True
     logger.warning("Please connect the client to the AP server before continuing.")
     return False

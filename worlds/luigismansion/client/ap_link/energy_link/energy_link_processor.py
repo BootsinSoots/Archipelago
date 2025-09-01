@@ -17,7 +17,7 @@ class EnergyLinkProcessor:
 
     def __init__(self, ctx: CommonContext):
         self._ctx = ctx
-        self.energy_link = EnergyLink(ctx)
+        self.energy_link = EnergyLink(ctx.network_engine)
 
         if not hasattr(ctx, 'wallet'):
             raise AttributeError("Could not resolve wallet from the provided client context.")
@@ -55,6 +55,8 @@ class EnergyLinkProcessor:
         amount -= remainder
         logger.info("Sending %s energy to team %s's pool.", int(amount), self._ctx.team)
         await self.energy_link.send_energy_async(int(amount))
+        # Sending request to Archipelago server to update energy amount, if requested
+        Utils.async_start(self.energy_link.get_energy_async(), name="Update Energy Link")
 
     async def request_energy_async(self, arg: str):
         """
@@ -85,6 +87,8 @@ class EnergyLinkProcessor:
 
         usable_amount = int(result * minimum_worth)
         await self.energy_link.request_energy_async(usable_amount)
+        # Sending request to Archipelago server to update energy amount, if requested
+        Utils.async_start(self.energy_link.get_energy_async(), name="Update Energy Link")
         logger.info("Requested %s energy from team %s's pool.", usable_amount, self._ctx.team)
 
     async def get_energy_async(self):

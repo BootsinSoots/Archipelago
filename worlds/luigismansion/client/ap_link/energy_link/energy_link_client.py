@@ -1,9 +1,7 @@
 """ Module providing LMClient with EnergyLink integration operations. """
 
-import asyncio
-from CommonClient import CommonContext, logger
 from ...Wallet import Wallet
-from .energy_link import EnergyLink, RequestStatus
+from .energy_link import EnergyLink, RequestStatus, ArchipelagoNetworkEngine
 
 class _ResponseArgs:
     ORIGINAL_VALUE = "original_value"
@@ -16,67 +14,14 @@ class EnergyLinkClient:
     Service which allows clients interact with energy link responses.
     """
     _energy_link: EnergyLink
-    _ctx: CommonContext
     _wallet: Wallet
 
     _current_currency_amount: dict[str, int]
 
-    def __init__(self, ctx: CommonContext, wallet: Wallet):
-        self._ctx = ctx
-        self._energy_link = EnergyLink(ctx)
+    def __init__(self, network_engine: ArchipelagoNetworkEngine, wallet: Wallet):
+        self._energy_link = EnergyLink(network_engine)
         self._wallet = wallet
         self._current_currency_amount = {}
-
-    async def send_energy_to_pool(self, delay_in_seconds: int = 5, wait_timer_in_seconds: int = 5):
-        """
-        Sends energy to pool on a timer when possible.
-
-        :param delay_in_seconds: The amount loops to cache energy before sending it to the server to be stored as energy.
-        :param wait_timer_in_seconds: The duration between energy caching in seconds.
-        """
-        amount_to_send = 0
-        while delay_in_seconds >= 5:
-            delay_in_seconds -= 1
-            amount_to_send += self._get_currency_updates()
-            await asyncio.sleep(wait_timer_in_seconds)
-
-        if amount_to_send > 0:
-            logger.info("Sending %s energy to pool.", amount_to_send)
-            await self._energy_link.send_energy_async(amount_to_send)
-
-    def _get_currency_updates(self, percentage: float = 0.25) -> int:
-        """
-        Pulls an amount of currency from the wallet to be stored in the team's EnergyLink pool.
-        The amount pulled is based upon the difference of currencies multiplied by a percentage to be stored.
-
-        :param percentage: The percent of currency to be send to the EnergyLink pool.
-        """
-        if len(self._current_currency_amount) == 0:
-            for currency_name, currency in self._wallet.get_currencies().items():
-                self._current_currency_amount.update({ currency_name: currency.calculate_worth() })
-            return 0
-
-        amount_to_be_sent_to_energy_link = 0
-        for currency_name, currency in self._wallet.get_currencies().items():
-            twmp_worth = 0
-            if currency_name in self._current_currency_amount:
-                twmp_worth = self._current_currency_amount[currency_name]
-            current_amount = currency.calculate_worth()
-
-            self._current_currency_amount.update({ currency_name: current_amount })
-            current_diff = _calc_currency_difference(twmp_worth, current_amount, percentage)
-
-            if current_diff > 0:
-                amount_to_be_sent_to_energy_link += current_diff
-
-        calculated_amount = int(amount_to_be_sent_to_energy_link / self._wallet.get_calculated_amount_worth(1))
-        raise Exception("wallet.remove_amount_from_wallet function has been removed and this function should not be run.")
-        try:
-            self._wallet.remove_amount_from_wallet(calculated_amount)
-        except ArithmeticError:
-            calculated_amount = 0
-
-        return calculated_amount
 
     def try_update_energy_request(self, args: dict[str, str]) -> bool:
         """

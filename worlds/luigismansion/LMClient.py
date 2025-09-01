@@ -6,7 +6,7 @@ from typing import Any
 import NetUtils, Utils
 from CommonClient import get_base_parser, gui_enabled, server_loop
 import dolphin_memory_engine as dme
-from .LMUniversalContext import LMUniversalContext, logger
+from .client.contexts.base_context import BaseContext, logger
 
 from .Regions import spawn_locations
 from .iso_helper.lm_rom import LMUSAAPPatch
@@ -137,18 +137,14 @@ class LMCommandProcessor(EnergyLinkCommandProcessor):
     def _cmd_deathlink(self):
         """Toggle deathlink from client. Overrides default setting."""
         if isinstance(self.ctx, LMContext):
-            Utils.async_start(self.ctx.update_death_link(not "DeathLink" in self.ctx.tags), name="Update Deathlink")
+            Utils.async_start(self.ctx.network_engine.update_tags_async(not "DeathLink" in self.ctx.tags,
+                "DeathLink"), name="Update Deathlink")
 
     def _cmd_traplink(self):
         """Toggle traplink from client. Overrides default setting."""
         if isinstance(self.ctx, LMContext):
-            Utils.async_start(self.ctx.update_link_tags(not "TrapLink" in self.ctx.tags, "TrapLink"), name="Update Traplink")
-
-    def _cmd_energy_link(self):
-        """Toggle EnergyLink from the client. Overrides default setting."""
-        if isinstance(self.ctx, LMContext):
-            Utils.async_start(self.ctx.update_link_tags(not EnergyLinkConstants.FRIENDLY_NAME in self.ctx.tags,
-                    EnergyLinkConstants.FRIENDLY_NAME), name=f"Update {EnergyLinkConstants.FRIENDLY_NAME}")
+            Utils.async_start(self.ctx.network_engine.update_tags_async(not "TrapLink" in self.ctx.tags,
+                "TrapLink"), name="Update Traplink")
 
     def _cmd_jakeasked(self):
         """Provide debug information from Dolphin's RAM addresses while playing Luigi's Mansion,
@@ -156,7 +152,7 @@ class LMCommandProcessor(EnergyLinkCommandProcessor):
         if isinstance(self.ctx, LMContext):
             Utils.async_start(self.ctx.get_debug_info(), name="Get Luigi's Mansion Debug info")
 
-class LMContext(LMUniversalContext):
+class LMContext(BaseContext):
     command_processor = LMCommandProcessor
     game = "Luigi's Mansion"
     items_handling = 0b111
@@ -178,7 +174,7 @@ class LMContext(LMUniversalContext):
 
         # Manages energy link operations and state.
         self.wallet = Wallet()
-        self.energy_link = EnergyLinkClient(self, self.wallet)
+        self.energy_link = EnergyLinkClient(self.network_engine, self.wallet)
 
         # All used when death link is enabled.
         self.is_luigi_dead = False
@@ -226,16 +222,6 @@ class LMContext(LMUniversalContext):
         self.auth = None
         await super().disconnect(allow_autoreconnect)
 
-    async def update_link_tags(self, link_enabled: bool, link_name:str):
-        """Helper function to set link connection tags on/off and update the connection if already connected."""
-        old_tags = self.tags.copy()
-        if link_enabled:
-            self.tags.add(link_name)
-        else:
-            self.tags -= { link_name }
-        if old_tags != self.tags and self.server and not self.server.socket.closed:
-            await self.send_msgs([{"cmd": "ConnectUpdate", "tags": self.tags}])
-
     async def server_auth(self, password_requested: bool = False):
         """
         Authenticate with the Archipelago server.
@@ -262,37 +248,40 @@ class LMContext(LMUniversalContext):
         super().on_package(cmd, args)
         match cmd:
             case "Connected": # On Connect
+                slot_data = args["slot_data"]
                 # Make sure the world version matches
-                if not args["slot_data"]["apworld version"] == CLIENT_VERSION:
-                    local_version = str(args["slot_data"]["apworld version"]) if (
-                        str(args["slot_data"]["apworld version"])) else "N/A"
+                if not slot_data["apworld version"] == CLIENT_VERSION:
+                    local_version = str(slot_data["apworld version"]) if (
+                        str(slot_data["apworld version"])) else "N/A"
                     raise Utils.VersionException("Error! Server was generated with a different Luigi's Mansion " +
                         f"APWorld version.\nThe client version is {CLIENT_VERSION}!\nPlease verify you are using the " +
                         f"same APWorld as the generator, which is '{local_version}'")
 
-                arg_seed = str(args["slot_data"]["seed"])
+                arg_seed = str(slot_data["seed"])
                 iso_seed = read_string(0x80000001, len(arg_seed))
                 if arg_seed != iso_seed:
                     raise Exception("Incorrect Randomized Luigi's Mansion ISO file selected. The seed does not match." +
                                     "Please verify that you are using the right ISO/seed/APLM file.")
 
-                self.boosanity = bool(args["slot_data"]["boosanity"])
-                self.pickup_anim_on = bool(args["slot_data"]["pickup animation"])
-                self.wallet.rank_requirement = int(args["slot_data"]["rank requirement"])
-                #self.boo_washroom_count = int(args["slot_data"]["washroom boo count"])
-                self.boo_balcony_count = int(args["slot_data"]["balcony boo count"])
-                self.boo_final_count = int(args["slot_data"]["final boo count"])
-                self.luigimaxhp = int(args["slot_data"]["luigi max health"])
-                self.spawn = str(args["slot_data"]["spawn_region"])
-                self.boolossus_difficulty = int(args["slot_data"]["boolossus_difficulty"])
-                self.send_hints = int(args["slot_data"]["send_hints"])
-                self.portrait_hints = int(args["slot_data"]["portrait_hints"])
-                self.hints = args["slot_data"]["hints"]
-                Utils.async_start(self.update_death_link(bool(args["slot_data"]["death_link"])), name="Update Deathlink")
-                Utils.async_start(self.update_link_tags(bool(args["slot_data"]["trap_link"]), "TrapLink"), name="Update Traplink")
-                Utils.async_start(self.update_link_tags(bool(args["slot_data"][EnergyLinkConstants.INTERNAL_NAME]),
+                self.boosanity = bool(slot_data["boosanity"])
+                self.pickup_anim_on = bool(slot_data["pickup animation"])
+                self.wallet.rank_requirement = int(slot_data["rank requirement"])
+                #self.boo_washroom_count = int(slot_data["washroom boo count"])
+                self.boo_balcony_count = int(slot_data["balcony boo count"])
+                self.boo_final_count = int(slot_data["final boo count"])
+                self.luigimaxhp = int(slot_data["luigi max health"])
+                self.spawn = str(slot_data["spawn_region"])
+                self.boolossus_difficulty = int(slot_data["boolossus_difficulty"])
+                self.send_hints = int(slot_data["send_hints"])
+                self.portrait_hints = int(slot_data["portrait_hints"])
+                self.hints = slot_data["hints"]
+                Utils.async_start(self.network_engine.update_tags_async(bool(slot_data["trap_link"]),
+                    "TrapLink"), name="Update Traplink")
+                Utils.async_start(self.network_engine.update_tags_async(bool(slot_data[EnergyLinkConstants.INTERNAL_NAME]),
                     EnergyLinkConstants.FRIENDLY_NAME), name=f"Update {EnergyLinkConstants.FRIENDLY_NAME}")
-                self.call_mario = bool(args["slot_data"]["call_mario"])
+                Utils.async_start(self.network_engine.update_tags_async(bool(slot_data["death_link"]),
+                    "DeathLink"), name="Update Deathlink")
+                self.call_mario = bool(slot_data["call_mario"])
 
             case "Bounced":
                 if "tags" not in args:
@@ -500,6 +489,8 @@ class LMContext(LMUniversalContext):
                     elif (current_hint & (1 << 7)) > 0 and hint == "<doll3>":
                         player_id = int(hintfo["Send Player ID"])
                         location_id = int(hintfo["Location ID"])
+                    else:
+                        continue
                 else:
                     if (current_hint & (1 << 5)) > 0 and hint == "Left Telephone":
                         player_id = int(hintfo["Send Player ID"])
@@ -510,6 +501,8 @@ class LMContext(LMUniversalContext):
                     elif (current_hint & (1 << 7)) > 0 and hint == "Right Telephone":
                         player_id = int(hintfo["Send Player ID"])
                         location_id = int(hintfo["Location ID"])
+                    else:
+                        continue
             else:
                 player_id = int(hintfo["Send Player ID"])
                 location_id = int(hintfo["Location ID"])
