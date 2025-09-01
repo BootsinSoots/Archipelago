@@ -301,6 +301,7 @@ def update_character_info(character_info, output_data):
         if x["name"] == "eater":
             x["disappear_flag"] = 31
 
+        # Editing the starting room spawn coordinates (regardless of it random spawn is turned on).
         if x["room_no"] == 2 and x["name"] == "luige":
             spawn_region: dict[str,int] = spawn_locations[output_data["Options"]["spawn"]]
             x["room_no"] = spawn_region["room_no"]
