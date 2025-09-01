@@ -489,6 +489,8 @@ class LMContext(BaseContext):
                     elif (current_hint & (1 << 7)) > 0 and hint == "<doll3>":
                         player_id = int(hintfo["Send Player ID"])
                         location_id = int(hintfo["Location ID"])
+                    else:
+                        continue
                 else:
                     if (current_hint & (1 << 5)) > 0 and hint == "Left Telephone":
                         player_id = int(hintfo["Send Player ID"])
@@ -499,6 +501,8 @@ class LMContext(BaseContext):
                     elif (current_hint & (1 << 7)) > 0 and hint == "Right Telephone":
                         player_id = int(hintfo["Send Player ID"])
                         location_id = int(hintfo["Location ID"])
+                    else:
+                        continue
             else:
                 player_id = int(hintfo["Send Player ID"])
                 location_id = int(hintfo["Location ID"])
