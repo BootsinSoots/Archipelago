@@ -6,7 +6,7 @@ from typing import Any
 import NetUtils, Utils
 from CommonClient import get_base_parser, gui_enabled, server_loop
 import dolphin_memory_engine as dme
-from .LMUniversalContext import LMUniversalContext, logger
+from .client.contexts.base_context import BaseContext, logger
 
 from .Regions import spawn_locations
 from .iso_helper.lm_rom import LMUSAAPPatch
@@ -152,7 +152,7 @@ class LMCommandProcessor(EnergyLinkCommandProcessor):
         if isinstance(self.ctx, LMContext):
             Utils.async_start(self.ctx.get_debug_info(), name="Get Luigi's Mansion Debug info")
 
-class LMContext(LMUniversalContext):
+class LMContext(BaseContext):
     command_processor = LMCommandProcessor
     game = "Luigi's Mansion"
     items_handling = 0b111
