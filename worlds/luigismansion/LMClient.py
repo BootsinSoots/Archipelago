@@ -755,6 +755,14 @@ class LMContext(BaseContext):
         # Always update Boolossus difficulty
         dme.write_bytes(0x804de3d0, self.boolossus_difficulty.to_bytes(4,'big'))
 
+        # Always update the flower to have the correct amount of flowers in game
+        flower_recv: int = len([netItem for netItem in self.items_received if netItem.item == 8140])
+        flower_count = min(flower_recv + 234, 237)
+        flower_item = self.item_names.lookup_in_game(8140)
+        flower_item_data = ALL_ITEMS_TABLE[flower_item]
+        for flwr_addr_update in flower_item_data.update_ram_addr:
+            dme.write_bytes(flwr_addr_update.ram_addr, flower_count.to_bytes(flwr_addr_update.ram_byte_size, 'big'))
+
         # Make it so the displayed Boo counter always appears even if you don't have boo radar or if you haven't caught
         # a boo in-game yet.
         if self.boosanity:
