@@ -2,6 +2,7 @@
 import Utils
 
 from .client.constants import CLIENT_VERSION
+from .client.ap_link.network_engine import ArchipelagoNetworkEngine
 
 # Load Universal Tracker modules with aliases
 _tracker_loaded = False
@@ -19,6 +20,7 @@ class LMUniversalCommandProcessor(ClientCommandProcessor):
 
 class LMUniversalContext(CommonContext):
     tracker_enabled: bool = False
+    network_engine: ArchipelagoNetworkEngine
 
     def __init__(self, server_address, password):
         """
@@ -29,6 +31,7 @@ class LMUniversalContext(CommonContext):
         """
         super().__init__(server_address, password)
         self.tracker_enabled = _tracker_loaded
+        self.network_engine = ArchipelagoNetworkEngine(self)
 
     def make_gui(self):
         # Performing local import to prevent additional UIs to appear during the patching process.

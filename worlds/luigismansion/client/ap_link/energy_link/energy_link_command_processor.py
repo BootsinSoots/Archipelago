@@ -2,7 +2,7 @@
 import Utils
 
 from CommonClient import logger
-from .energy_link_processor import EnergyLinkProcessor
+from .energy_link_processor import EnergyLinkProcessor, EnergyLinkConstants
 from ....LMUniversalContext import LMUniversalCommandProcessor, LMUniversalContext, logger
 
 class EnergyLinkCommandProcessor(LMUniversalCommandProcessor):
@@ -37,6 +37,14 @@ class EnergyLinkCommandProcessor(LMUniversalCommandProcessor):
             return
 
         Utils.async_start(self.energy_link.request_energy_async(arg))
+
+    def _cmd_energy_link(self):
+        """Toggle EnergyLink from the client. Overrides default setting."""
+        luigismansion_context: LMUniversalContext = self.ctx
+        Utils.async_start(luigismansion_context.network_engine.update_tags_async(
+            not EnergyLinkConstants.INTERNAL_NAME in self.ctx.tags,
+            EnergyLinkConstants.FRIENDLY_NAME),
+            name=f"Update {EnergyLinkConstants.FRIENDLY_NAME}")
 
 def _validate_processor_context(ctx: LMUniversalContext):
     has_energy_link: bool = ctx.energy_link is not None
