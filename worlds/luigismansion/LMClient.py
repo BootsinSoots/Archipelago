@@ -565,7 +565,8 @@ class LMContext(BaseContext):
         if current_map_id == 2:
             current_room_id = dme.read_word(dme.follow_pointers(ROOM_ID_ADDR, [ROOM_ID_OFFSET]))
 
-        for mis_loc in self.missing_locations:
+        local_missing_locs = copy.deepcopy(self.missing_locations)
+        for mis_loc in local_missing_locs:
             local_loc = self.location_names.lookup_in_game(mis_loc)
             lm_loc_data = ALL_LOCATION_TABLE[local_loc]
             if current_map_id not in lm_loc_data.map_id:
