@@ -85,8 +85,9 @@ def get_hints_by_option(multiworld: MultiWorld, player_hints: set[int]) -> None:
                         loc = get_progression_only_items(world, already_hinted_locations, prog_no_skip)
                     else:
                         loc = get_other_items(world, already_hinted_locations, other_items)
-                elif world.options.hint_distribution.value == 2 or world.options.hint_distribution.value == 5:
-                    non_hinted_items = [aItem for aItem in all_placed_items if aItem.location not in already_hinted_locations]
+                elif world.options.hint_distribution.value == 2:
+                    non_hinted_items = [aItem for aItem in all_placed_items if aItem.location not in already_hinted_locations
+                        and not aItem.code is None and (aItem.player == player_int or aItem.location.player == player_int)]
                     loc = world.random.choice(non_hinted_items).location
                 if loc.item.advancement:
                     icolor = "Prog"
