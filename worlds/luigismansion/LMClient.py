@@ -1,6 +1,5 @@
 import asyncio, time, traceback
-import copy
-import random
+import copy, random, sys
 from typing import Any
 
 import NetUtils, Utils
@@ -18,14 +17,7 @@ from .client.Wallet import Wallet
 from .client.ap_link.energy_link.energy_link_client import EnergyLinkClient
 from .client.ap_link.energy_link.energy_link import EnergyLinkConstants
 from .client.ap_link.energy_link.energy_link_command_processor import EnergyLinkCommandProcessor
-from .client.constants import CLIENT_VERSION
-
-CONNECTION_REFUSED_STATUS = "Detected a non-randomized ROM for LM. Please close and load a different one. Retrying in 5 seconds..."
-CONNECTION_LOST_STATUS = "Dolphin connection was lost. Please restart your emulator and make sure LM is running."
-NO_SLOT_NAME_STATUS = "No slot name was detected. Ensure a randomized ROM is loaded. Retrying in 5 seconds..."
-CONNECTION_VERIFY_SERVER = "Dolphin was confirmed to be opened and ready, Connect to the server when ready..."
-CONNECTION_INITIAL_STATUS = "Dolphin emulator was not detected to be running. Retrying in 5 seconds..."
-CONNECTION_CONNECTED_STATUS = "Dolphin is connected, AP is connected, Ready to play LM!"
+from .client.constants import *
 
 # This is the address that holds the player's slot name.
 # This way, the player does not have to manually authenticate their slot name.
@@ -935,27 +927,32 @@ async def display_received_items(ctx: LMContext):
         # Reset the list so next time we enter this function we don't display anything
         ctx.item_display_queue = []
 
-def main(output_data: Optional[str] = None, lm_connect=None, lm_password=None):
+def main(*launch_args: str):
     from .client.dolphin_launcher import DolphinLauncher
+    import colorama
+
+    server_address: str = ""
+    rom_path: str = ""
+
     Utils.init_logging("Luigi's Mansion Client")
     logger.info(f"Starting LM Client {CLIENT_VERSION}")
-    server_address: str = ""
     dolphin_launcher: DolphinLauncher = DolphinLauncher()
-    rom_path: str = None
 
-    if output_data:
+    parser = get_base_parser()
+    parser.add_argument('aplm_file', default="", type=str, nargs="?", help='Path to an APLM file')
+    args = parser.parse_args(launch_args)
+
+    if args.aplm_file:
         lm_usa_patch = LMUSAAPPatch()
         try:
-            lm_usa_manifest = lm_usa_patch.read_contents(output_data)
+            lm_usa_manifest = lm_usa_patch.read_contents(args.aplm_file)
             server_address = lm_usa_manifest["server"]
-            rom_path= lm_usa_patch.patch(output_data)
+            rom_path= lm_usa_patch.patch(args.aplm_file)
         except Exception as ex:
             logger.error("Unable to patch your Luigi's Mansion ROM as expected. Additional details:\n" + str(ex))
             Utils.messagebox("Cannot Patch Luigi's Mansion", "Unable to patch your Luigi's Mansion ROM as " +
                 "expected. Additional details:\n" + str(ex), True)
             raise ex
-
-    Utils.asyncio.run(dolphin_launcher.launch_dolphin_async(rom_path))
 
     async def _main(connect, password):
         ctx = LMContext(server_address if server_address else connect, password)
@@ -981,13 +978,12 @@ def main(output_data: Optional[str] = None, lm_connect=None, lm_password=None):
         if ctx.give_item_task:
             await ctx.give_item_task
 
-    import colorama
+    Utils.asyncio.run(dolphin_launcher.launch_dolphin_async(rom_path))
 
     colorama.just_fix_windows_console()
-    asyncio.run(_main(lm_connect, lm_password))
+    asyncio.run(_main(args.connect, args.password))
     colorama.deinit()
 
 if __name__ == "__main__":
-    parser = get_base_parser()
-    args = parser.parse_args()
-    main(args.connect, args.password)
+    Utils.init_logging("Luigi's Mansion Client", exception_logger="Client")
+    main(*sys.argv[1:])
