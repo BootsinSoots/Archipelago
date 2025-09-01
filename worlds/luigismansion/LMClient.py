@@ -572,7 +572,9 @@ class LMContext(BaseContext):
             if current_map_id not in lm_loc_data.map_id:
                 continue
 
-            for addr_to_update in lm_loc_data.update_ram_addr:
+            # This only checks if one address in the ram list is true, not all, so any location in the list can be true
+            #   to consider the location as "checked"
+            for loc_addr in lm_loc_data.update_ram_addr:
                 # If in main mansion map
                 # TODO this will now calculate every iteration, which will slow down location checks are more are added.
                 if current_map_id == 2:
@@ -580,12 +582,12 @@ class LMContext(BaseContext):
                     if lm_loc_data.code == 617:
                         room_to_check: int = spawn_locations[self.spawn]["in_game_room_id"]
                     else:
-                        room_to_check = addr_to_update.in_game_room_id if not addr_to_update.in_game_room_id is None \
+                        room_to_check = loc_addr.in_game_room_id if not loc_addr.in_game_room_id is None \
                             else current_room_id
                     if not room_to_check == current_room_id:
                         continue
 
-                if self.check_ram_location(lm_loc_data, addr_to_update, current_map_id, lm_loc_data.map_id):
+                if self.check_ram_location(lm_loc_data, loc_addr, current_map_id, lm_loc_data.map_id):
                     self.locations_checked.add(mis_loc)
 
         await self.check_locations(self.locations_checked)
