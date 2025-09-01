@@ -13,7 +13,7 @@ class ISOFile(settings.UserFilePath):
     Locate your Luigi's Mansion ISO
     """
     description = "Luigi's Mansion (NTSC-U) ISO"
-    copy_to = "Luigi's Mansion (NTSC-U).iso"
+    copy_to = None
     md5s = ["6e3d9ae0ed2fbd2f77fa1ca09a60c494"]
 
 class LuigisMansionSettings(settings.Group):
