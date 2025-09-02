@@ -145,7 +145,7 @@ class HeartWeight(Range):
 
 class BetterVacuum(Choice):
     """
-    Choose whether to include vacuum speed upgrades.
+    Choose whether to include vacuum damage upgrades.
 
     If you start with an upgrade on a no-poltergust start, you will receive the base poltergust instead"""
     display_name = "Vacuum Upgrades"
