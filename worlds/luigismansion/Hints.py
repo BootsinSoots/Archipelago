@@ -60,6 +60,9 @@ def get_hints_by_option(multiworld: MultiWorld, player_hints: set[int]) -> None:
                                                      "Mario's Shoe"])
                     locs: list[Location] = multiworld.find_item_locations(iname, player_int, True)
 
+                if not locs:
+                    locs = [get_progression_only_items(world, already_hinted_locations, prog_no_skip)]
+
                 loc: Location = world.random.choice(locs)
                 hint = {name: {"Item": loc.item.name,
                                "Location": loc.name,
