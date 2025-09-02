@@ -145,10 +145,10 @@ class HeartWeight(Range):
 
 class BetterVacuum(Choice):
     """
-    Choose whether to include the Poltergust 4000.
+    Choose whether to include vacuum speed upgrades.
 
-    If you start with the upgrade on a no-poltergust start, you will receive the base poltergust instead"""
-    display_name = "Poltergust 4000"
+    If you start with an upgrade on a no-poltergust start, you will receive the base poltergust instead"""
+    display_name = "Vacuum Upgrades"
     internal_name = "good_vacuum"
     option_start_with = 0
     option_include = 1
@@ -360,7 +360,9 @@ class Enemizer(Choice):
 
 class VacuumStart(DefaultOnToggle):
     """
-    Enable Luigi to have the Poltergust 3000 at the start
+    Enable Luigi to have the Poltergust 3000 at the start.
+
+    If you start with an upgrade on a no-poltergust start, you will receive the base poltergust instead
     """
     display_name = "Starting Vacuum"
     internal_name = "vacuum_start"

@@ -191,6 +191,18 @@ spawn_locations = {
     "Armory":                {"room_no": 48, "pos_x": -2541.662600, "pos_y": 1100.000000, "pos_z": -40.361595,
                               "key": ["Armory Key", "Balcony Key", "Telephone Room Key"],
                               "door_keys": ["Armory Key", "Ceramics Studio Key"], "door_ids": [50, 51], "in_game_room_id": 51}, # Armory
+    "Pipe Room":             {"room_no": 66, "pos_x": 1235, "pos_y": -480.000000, "pos_z": -1433.000000,
+                             "key": ["Pipe Room Key", "Cellar Key"],
+                             "door_keys": ["Pipe Room Key"],
+                             "door_ids": [69], "in_game_room_id": 68},  # Foyer
+    "Cold Storage":          {"room_no": 61, "pos_x": 1405, "pos_y": -550.000000, "pos_z": -25.000000,
+                             "key": ["Cold Storage Key", "Cellar Key"],
+                             "door_keys": ["Cold Storage Key"],
+                             "door_ids": [65], "in_game_room_id": 64},  # Foyer
+    # "Secret Altar":          {"room_no": 70, "pos_x": 2293, "pos_y": -550.000000, "pos_z": -5805.000000,
+    #                          "key": ["Spade Key", "Altar Hallway Key"],
+    #                          "door_keys": ["Spade Key"],
+    #                          "door_ids": [72], "in_game_room_id": 73},  # Foyer
 }
 
 exp_spawns: dict[str,dict[str, int]] = {
@@ -310,8 +322,10 @@ def connect_regions(world: "LMWorld"):
     lmconnect(world, "Clockwork Room", "Roof", rule=lambda state: state.has("Defeat Clockwork", world.player))
     lmconnect(world, "Roof", "Sealed Room", one_way=True),
     lmconnect(world, "Basement Stairwell", "Breaker Room", "Breaker Room Key", 71)
-    lmconnect(world, "Basement Stairwell", "Cellar", "Cellar Key", 68)
-    lmconnect(world, "Cellar", "Basement Hallway", "Basement Hallway Key", 67)
+    lmconnect(world, "Basement Stairwell", "Cellar", "Cellar Key", 68,
+              rule=lambda state: state.has("Progressive Vacuum", world.player))
+    lmconnect(world, "Cellar", "Basement Hallway", "Basement Hallway Key", 67,
+              rule=lambda state: state.has("Progressive Vacuum", world.player))
     lmconnect(world, "Basement Hallway", "Cold Storage", "Cold Storage Key", 65)
     lmconnect(world, "Basement Hallway", "Pipe Room", "Pipe Room Key", 69)
     lmconnect(world, "Basement Hallway", "Altar Hallway", "Altar Hallway Key", 70)
