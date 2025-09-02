@@ -6,7 +6,7 @@ import Utils
 
 from hashlib import md5
 from typing import Any
-import yaml, json, logging, sys, os, zipfile, tempfile
+import json, logging, sys, os, zipfile, tempfile
 import urllib.request
 
 logger = logging.getLogger()
@@ -42,10 +42,13 @@ class LMPlayerContainer(APPlayerContainer):
         super().__init__(patch_path, player, player_name, server)
 
     def write_contents(self, opened_zipfile: zipfile.ZipFile) -> None:
-        opened_zipfile.writestr("patch.aplm",
-            yaml.dump(self.output_data,sort_keys=False,Dumper=yaml.CDumper))
+        opened_zipfile.writestr("patch.aplm", json.dumps(self.output_data, indent=4, default=json_encoder))
         super().write_contents(opened_zipfile)
 
+def json_encoder(obj):
+    if isinstance(obj, set):
+        return list(obj)
+    raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")
 
 class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
     game = RANDOMIZER_NAME
