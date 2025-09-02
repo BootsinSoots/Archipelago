@@ -419,7 +419,7 @@ def update_observer_info(observer_info, output_data):
             x["cond_arg0"] = 0
             x["appear_flag"] = 0
             x["cond_type"] = 13
-            new_x = x.deepcopy()
+            new_x = copy.deepcopy(x)
             spawn_region_name = output_data["Options"]["spawn"]
             if not spawn_region_name in ("Foyer", "Courtyard", "1F Washroom", "Wardrobe Balcony"):
                 spawn_data = spawn_locations[spawn_region_name]
