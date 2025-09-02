@@ -161,7 +161,7 @@ class LMWorld(World):
     def __init__(self, *args, **kwargs):
         super(LMWorld, self).__init__(*args, **kwargs)
         self.ghost_affected_regions: dict[str, str] = GHOST_TO_ROOM.deepcopy()
-        self.open_doors: dict[int, int] = vanilla_door_state.copy()
+        self.open_doors: dict[int, int] = vanilla_door_state.deepcopy()
         self.origin_region_name: str = "Foyer"
         self.finished_hints = threading.Event()
         self.finished_boo_scaling = threading.Event()
@@ -493,7 +493,7 @@ class LMWorld(World):
             if self.options.door_rando.value == 2:
                 for door_num in [3, 42, 59, 72]: # If door is a suite_door, lock it in this option
                     self.open_doors[door_num] = 0
-            spawn_doors = copy.copy(spawn_locations[self.origin_region_name]["door_ids"])
+            spawn_doors = copy.deepcopy(spawn_locations[self.origin_region_name]["door_ids"])
             if spawn_doors:
                 for door in spawn_locations[self.origin_region_name]["door_ids"]:
                     if self.open_doors[door] == 1:
