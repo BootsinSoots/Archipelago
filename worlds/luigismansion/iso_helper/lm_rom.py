@@ -2,6 +2,7 @@ import shutil
 
 from worlds.Files import APPatch, APPlayerContainer, AutoPatchRegister
 from settings import get_settings, Settings
+from NetUtils import convert_to_base_types
 import Utils
 
 from hashlib import md5
@@ -41,13 +42,8 @@ class LMPlayerContainer(APPlayerContainer):
         super().__init__(patch_path, player, player_name, server)
 
     def write_contents(self, opened_zipfile: zipfile.ZipFile) -> None:
-        opened_zipfile.writestr("patch.aplm", json.dumps(self.output_data, indent=4, default=json_encoder))
+        opened_zipfile.writestr("patch.aplm", json.dumps(self.output_data, indent=4, default=convert_to_base_types))
         super().write_contents(opened_zipfile)
-
-def json_encoder(obj):
-    if isinstance(obj, set):
-        return list(obj)
-    raise TypeError(f"Object of type {obj.__class__.__name__} is not JSON serializable")
 
 class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
     game = RANDOMIZER_NAME
