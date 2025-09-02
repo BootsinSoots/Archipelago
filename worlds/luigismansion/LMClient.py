@@ -212,6 +212,8 @@ class LMContext(BaseContext):
 
         """
         self.auth = None
+        dme.un_hook()
+        self.dolphin_status = CONNECTION_LOST_STATUS
         await super().disconnect(allow_autoreconnect)
 
     async def server_auth(self, password_requested: bool = False):
