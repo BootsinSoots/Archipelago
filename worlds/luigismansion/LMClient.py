@@ -284,7 +284,7 @@ class LMContext(BaseContext):
                     self.instance_id = time.time()
 
                 source_name = args["data"]["source"]
-                if "TrapLink" in self.tags and "TrapLink" in args["tags"] and source_name != self.slot_info[self.slot].name:
+                if "TrapLink" in self.tags and "TrapLink" in args["tags"] and source_name != self.player_names[self.slot]:
                     trap_name: str = args["data"]["trap_name"]
                     if trap_name not in ACCEPTED_TRAPS:
                         return
