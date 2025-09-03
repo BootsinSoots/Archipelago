@@ -307,7 +307,7 @@ POSSESION_EQUIV = ["Possession Trap", "Laughter Trap", "My Turn! Trap", "Blue Ba
 FEAR_EQUIV = ["Fear Trap", "Confuse Trap", "Confound Trap", "Confusion Trap"]
 SPOOKY_EQUIV = ["Spooky Time", "Deisometric Trap", "Fake Transition", "Ghost Chat", "SvC Effect"]
 SQUASH_EQUIV = ["Squash Trap", "W I D E Trap", "Meteor Trap"]
-NOVAC_EQUIV = ["No Vac Trap", "Eject Ability", "Depletion trap", "Disable B Trap", "Disable Z Trap"]
+NOVAC_EQUIV = ["No Vac Trap", "Eject Ability", "Depletion trap", "Disable B Trap", "Disable Z Trap", "Dry Trap"]
 
 trap_id_list = [8125, 8126, 8130, 8131, 8132, 8141, 8142, 8143, 8145, 8146, 8147]
 ACCEPTED_TRAPS: list[str] = (ICE_TRAP_EQUIV+BOMB_EQUIV+BANANA_TRAP_EQUIV+GHOST_EQUIV+POISON_MUSH_EQUIV+BONK_EQUIV+POSSESION_EQUIV+
