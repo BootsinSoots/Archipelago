@@ -856,4 +856,41 @@ class LMWorld(World):
             "hints": self.hints,
             "apworld version": CLIENT_VERSION,
             "seed": self.multiworld.seed,
+            "disabled_traps": _get_disabled_traps(self.options),
         }
+
+def _get_disabled_traps(options: LuigiOptions.LMOptions) -> int:
+    """
+    Gets all traps with a weight of 0 to let trap link know they should be ignored when other players acquire them.
+    """
+    from .client.ap_link.trap_link.trap_link import TrapLinkType
+
+    def _is_disabled(weight_percent: int) -> bool:
+        return weight_percent == 0
+
+    # We cast the flag values to an int to reduce amount of data being sent to the server.
+    trap_flags: int = 0
+    if _is_disabled(options.poison_trap_weight.value):
+        trap_flags += TrapLinkType.POISON.value
+    if _is_disabled(options.banana_trap_weight.value):
+        trap_flags += TrapLinkType.BANANA.value
+    if _is_disabled(options.bomb_trap_weight.value):
+        trap_flags += TrapLinkType.BOMB.value
+    if _is_disabled(options.bonk_trap_weight.value):
+        trap_flags += TrapLinkType.BONK.value
+    if _is_disabled(options.ice_trap_weight.value):
+        trap_flags += TrapLinkType.ICE.value
+    if _is_disabled(options.poss_trap_weight.value):
+        trap_flags += TrapLinkType.POSSESSION.value
+    if _is_disabled(options.vac_trap_weight.value):
+        trap_flags += TrapLinkType.NOVAC.value
+    if _is_disabled(options.fear_weight.value):
+        trap_flags += TrapLinkType.FEAR.value
+    if _is_disabled(options.squash_weight.value):
+        trap_flags += TrapLinkType.SQUASH.value
+    if _is_disabled(options.spooky_weight.value):
+        trap_flags += TrapLinkType.SPOOKY.value
+    if _is_disabled(options.ghost_weight.value):
+        trap_flags += TrapLinkType.GHOST.value
+
+    return trap_flags

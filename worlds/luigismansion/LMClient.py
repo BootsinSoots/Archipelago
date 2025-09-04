@@ -17,6 +17,7 @@ from .client.Wallet import Wallet
 from .client.ap_link.energy_link.energy_link_client import EnergyLinkClient
 from .client.ap_link.energy_link.energy_link import EnergyLinkConstants
 from .client.ap_link.energy_link.energy_link_command_processor import EnergyLinkCommandProcessor
+from .client.ap_link.trap_link.trap_link import TrapLink
 from .client.constants import *
 
 # This is the address that holds the player's slot name.
@@ -149,6 +150,7 @@ class LMContext(BaseContext):
     game = "Luigi's Mansion"
     items_handling = 0b111
     wallet: Wallet
+    trap_link: TrapLink
 
     def __init__(self, server_address, password):
         """
@@ -167,6 +169,7 @@ class LMContext(BaseContext):
         # Manages energy link operations and state.
         self.wallet = Wallet()
         self.energy_link = EnergyLinkClient(self.network_engine, self.wallet)
+        self.trap_link = TrapLink(self.network_engine)
 
         # All used when death link is enabled.
         self.is_luigi_dead = False
@@ -187,7 +190,6 @@ class LMContext(BaseContext):
         #self.boo_washroom_count = None
         self.boo_balcony_count = None
         self.boo_final_count = None
-        self.received_trap_link = False
 
         # Used for handling various weird item checks.
         self.last_map_id = 0
@@ -269,8 +271,7 @@ class LMContext(BaseContext):
                 self.send_hints = int(slot_data["send_hints"])
                 self.portrait_hints = int(slot_data["portrait_hints"])
                 self.hints = slot_data["hints"]
-                Utils.async_start(self.network_engine.update_tags_async(bool(slot_data["trap_link"]),
-                    "TrapLink"), name="Update Traplink")
+                self.trap_link.on_connected(args)
                 Utils.async_start(self.network_engine.update_tags_async(bool(slot_data[EnergyLinkConstants.INTERNAL_NAME]),
                     EnergyLinkConstants.FRIENDLY_NAME), name=f"Update {EnergyLinkConstants.FRIENDLY_NAME}")
                 Utils.async_start(self.network_engine.update_tags_async(bool(slot_data["death_link"]),
@@ -282,35 +283,7 @@ class LMContext(BaseContext):
                     return
                 if not hasattr(self, "instance_id"):
                     self.instance_id = time.time()
-
-                source_name = args["data"]["source"]
-                if "TrapLink" in self.tags and "TrapLink" in args["tags"] and source_name != self.player_names[self.slot]:
-                    trap_name: str = args["data"]["trap_name"]
-                    if trap_name not in ACCEPTED_TRAPS:
-                        return
-
-                    if trap_name in ICE_TRAP_EQUIV:
-                        self.received_trap_link = "Ice Trap"
-                    if trap_name in BOMB_EQUIV:
-                        self.received_trap_link = "Bomb"
-                    if trap_name in BANANA_TRAP_EQUIV:
-                        self.received_trap_link = "Banana Trap"
-                    if trap_name in GHOST_EQUIV:
-                        self.received_trap_link = "Ghost"
-                    if trap_name in POISON_MUSH_EQUIV:
-                        self.received_trap_link = "Poison Mushroom"
-                    if trap_name in BONK_EQUIV:
-                        self.received_trap_link = "Bonk Trap"
-                    if trap_name in POSSESION_EQUIV:
-                        self.received_trap_link = "Possession Trap"
-                    if trap_name in FEAR_EQUIV:
-                        self.received_trap_link = "Fear Trap"
-                    if trap_name in SPOOKY_EQUIV:
-                        self.received_trap_link = "Spooky Time"
-                    if trap_name in SQUASH_EQUIV:
-                        self.received_trap_link = "Squash Trap"
-                    if trap_name in NOVAC_EQUIV:
-                        self.received_trap_link = "No Vac Trap"
+                self.trap_link.on_bounced(args)
             case "SetReply":
                 self.energy_link.try_update_energy_request(args)
 
@@ -420,36 +393,6 @@ class LMContext(BaseContext):
                 logger.info("Flag #" + str(current_flag_num+flag_bit) + " is set to: " + flag_val)
         return
 
-    async def handle_traplink(self):
-        # Only try to give items if we are in game and alive.
-        if not (self.check_ingame() and self.check_alive()):
-            return
-
-        if self.received_trap_link:
-            trap = self.received_trap_link
-            lm_item = ALL_ITEMS_TABLE[trap]
-            for addr_to_update in lm_item.update_ram_addr:
-                byte_size = 1 if addr_to_update.ram_byte_size is None else addr_to_update.ram_byte_size
-                curr_val = addr_to_update.item_count
-                if not addr_to_update.pointer_offset is None:
-                    dme.write_bytes(dme.follow_pointers(addr_to_update.ram_addr,
-                        [addr_to_update.pointer_offset]), curr_val.to_bytes(byte_size, 'big'))
-                else:
-                    dme.write_bytes(addr_to_update.ram_addr, curr_val.to_bytes(byte_size, 'big'))
-            self.received_trap_link = False
-
-    async def send_trap_link(self, trap_name: str):
-        if "TrapLink" not in self.tags or self.slot == None:
-            return
-
-        await self.send_msgs([{
-            "cmd": "Bounce", "tags": ["TrapLink"],
-            "data": {
-                "time": time.time(),
-                "source": self.player_names[self.slot],
-                "trap_name": trap_name
-            }
-        }])
     async def lm_send_hints(self):
         # If the hint address is empty, no hint has been looked at and we return
         current_hint = int.from_bytes(dme.read_bytes(0x803D33AC, 1))
@@ -632,8 +575,8 @@ class LMContext(BaseContext):
 
             # If the user is subscribed to send items and the trap is a valid trap and the trap was not already
             # received (to prevent sending the same traps over and over to other TrapLinkers if Luigi died)
-            if "TrapLink" in self.tags and item.item in trap_id_list and last_recv_idx <= non_save_recv_idx:
-                await self.send_trap_link(lm_item_name)
+            if self.trap_link.is_enabled() and item.item in trap_id_list and last_recv_idx <= non_save_recv_idx:
+                await self.trap_link.send_trap_link_async(lm_item_name)
 
             # Filter for only items where we have not received yet. If same slot, only receive locations from pre-set
             # list of locations, otherwise accept other slots. Additionally accept only items from a pre-approved list.
@@ -864,8 +807,10 @@ async def dolphin_sync_task(ctx: LMContext):
             # Check any Links that a user is subscribed to.
             if "DeathLink" in ctx.tags:
                 await ctx.check_death()
-            if "TrapLink" in ctx.tags:
-                await ctx.handle_traplink()
+            if ctx.trap_link.is_enabled():
+                # Only try to give items if we are in game and alive.
+                if (ctx.check_ingame() and ctx.check_alive()):
+                    await ctx.trap_link.handle_traplink_async()
 
             # Lastly check any locations and update the non-saveable ram stuff
             await ctx.lm_check_locations()
@@ -934,7 +879,7 @@ def main(*launch_args: str):
     import colorama
 
     server_address: str = ""
-    rom_path: str = ""
+    rom_path: str = None
 
     Utils.init_logging("Luigi's Mansion Client")
     logger.info(f"Starting LM Client {CLIENT_VERSION}")

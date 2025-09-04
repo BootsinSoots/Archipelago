@@ -2,6 +2,7 @@
 
 import uuid
 import abc
+import time
 
 from typing import NamedTuple, Optional, Any, Set
 from enum import Enum
@@ -114,6 +115,40 @@ class ConnectUpdateRequest(NetworkRequest):
 
         return request
 
+class BounceNetworkRequest(NetworkRequest):
+    tags: Set[str]
+    source: str
+
+    def __new__(cls, tags):
+        instance = super().__new__(cls, "Bounce", tag=None)
+        instance.tags = tags
+        return instance
+
+    def create_request(self) -> dict[str, Any]:
+        request = {
+            "cmd": self.command,
+            "tags": self.tags,
+            "data": {
+                "time": time.time(),
+                "source": self.source
+            }
+        }
+
+        return request
+
+class TrapNetworkRequest(BounceNetworkRequest):
+    trap_name: str
+
+    def __new__(cls, tags, trap_name):
+        instance = super().__new__(cls, tags=tags)
+        instance.trap_name = trap_name
+        return instance
+
+    def create_request(self) -> dict[str, Any]:
+        request = super().create_request()
+        request["data"]["trap_name"] = self.trap_name
+        return request
+
 class ArchipelagoNetworkEngine:
     """
     Archipelago's Client to Server NetworkProtocol which utilizes
@@ -148,6 +183,10 @@ class ArchipelagoNetworkEngine:
         """
         return await self._send_network_request_async(network_request)
 
+    async def send_trap_link_request_async(self, network_request: TrapNetworkRequest):
+        network_request.source = self.get_player_name(self.get_slot())
+        return await self._send_network_request_async(network_request)
+
     def get_team(self) -> int:
         """Gets the team number of the given network context."""
         return self._ctx.team
@@ -155,6 +194,18 @@ class ArchipelagoNetworkEngine:
     def get_tags(self) -> Set[str]:
         """ Gets the tags for the given network context. """
         return self._ctx.tags
+
+    def get_slot(self) -> int:
+        """ Gets the context's slot for the given network context."""
+        return self._ctx.slot
+
+    def get_player_name(self, slot: int) -> str:
+        """
+        Gets the friendly name of the Archipelago game's slot ID.
+        
+        :param slot: The ID of the Archipelago game.
+        """
+        return self._ctx.player_names[slot]
 
     async def update_tags_async(self, enable_tag: bool, tag_name:str):
         """Set tags on/off and update the connection if already connected."""

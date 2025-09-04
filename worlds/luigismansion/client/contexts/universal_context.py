@@ -36,6 +36,11 @@ class UniversalContext(CommonContext):
             logger.warning("Could not find Universal Tracker.")
 
     def make_gui(self):
+        if _tracker_loaded:
+            if not _check_universal_tracker_version():
+                Utils.messagebox("Universal Tracker needs updated", f"The minimum version of Universal Tracker required for LM is v0.2.11. The version currently installed is {UT_VERSION}.", error=True)
+                raise ImportError("Need to update universal tracker version to at least v0.2.11.")
+
         # Performing local import to prevent additional UIs to appear during the patching process.
         # This appears to be occurring if a spawned process does not have a UI element when importing kvui/kivymd.
         from kvui import GameManager
@@ -46,9 +51,6 @@ class UniversalContext(CommonContext):
             def build(self):
                 container = super().build()
                 if _tracker_loaded:
-                    if not _check_universal_tracker_version():
-                        Utils.messagebox("Universal Tracker needs updated", "The minimum version of Universal Tracker required for LM is v0.2.11", error=True)
-                        raise ImportError("Need to update universal tracker version to at least v0.2.11.")
                     self.base_title += f" | Universal Tracker {UT_VERSION}"
                 return container
 
