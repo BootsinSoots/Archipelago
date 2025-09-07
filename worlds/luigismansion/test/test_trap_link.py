@@ -1,8 +1,8 @@
 import unittest
 
 from unittest.mock import patch
-from ..client.ap_link.trap_link.trap_link import TrapLink, TrapLinkType
-from ..client.ap_link.network_engine import ArchipelagoNetworkEngine
+from ..client.links.trap_link import TrapLink, TrapLinkType
+from ..client.links.network_engine import ArchipelagoNetworkEngine
 
 class MockNetworkEngine(ArchipelagoNetworkEngine):
     def __init__(self, tags = [ "TrapLink" ], player_name = "rando-player"):

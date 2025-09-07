@@ -69,6 +69,7 @@ class LMWeb(WebWorld):
         OptionGroup("QOL Changes", [
             LuigiOptions.TrapLink,
             LuigiOptions.EnergyLink,
+            LuigiOptions.RingLink,
             LuigiOptions.TrapPercentage,
             LuigiOptions.LuigiFearAnim,
             LuigiOptions.PickupAnim,
@@ -848,6 +849,7 @@ class LMWorld(World):
             "death_link": self.options.death_link.value,
             "trap_link": self.options.trap_link.value,
             "energy_link": self.options.energy_link.value,
+            "ring_link": self.options.ring_link.value,
             "call_mario": self.options.call_mario.value,
             "luigi max health": self.options.luigi_max_health.value,
             "pickup animation": self.options.enable_pickup_animation.value,

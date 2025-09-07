@@ -6,8 +6,9 @@ import settings
 import Utils
 
 from .luigismansion_settings import LuigisMansionSettings
+from .constants import AP_LOGGER_NAME
 
-logger = logging.getLogger("Client")
+logger = logging.getLogger(AP_LOGGER_NAME)
 
 class DolphinLauncher():
     """

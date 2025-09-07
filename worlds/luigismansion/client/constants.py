@@ -1,6 +1,8 @@
 """ Collection of commonly used constants for Luigi's Mansion. """
 
 CLIENT_VERSION = "V0.5.5"
+CLIENT_NAME = "Luigi's Mansion Client"
+AP_LOGGER_NAME = "Client"
 
 # All the dolphin connection messages used in the client
 CONNECTION_REFUSED_STATUS = "Detected a non-randomized ROM for LM. Please close and load a different one. Retrying in 5 seconds..."

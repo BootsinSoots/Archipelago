@@ -1,7 +1,12 @@
 """ Base context for Luigi's Mansion's game tab in the client. """
 
 from .universal_context import UniversalContext, UniversalCommandProcessor, logger
-from ..ap_link.network_engine import ArchipelagoNetworkEngine
+from ..links.network_engine import ArchipelagoNetworkEngine
+from ..links.energy_link.energy_link_client import EnergyLinkClient
+from ..links.trap_link import TrapLink
+from ..links.ring_link import RingLink
+from ..wallet import Wallet
+from ..wallet_manager import WalletManager
 from ...client.constants import CLIENT_VERSION
 
 class BaseCommandProcessor(UniversalCommandProcessor):
@@ -9,6 +14,10 @@ class BaseCommandProcessor(UniversalCommandProcessor):
 
 class BaseContext(UniversalContext):
     network_engine: ArchipelagoNetworkEngine
+    wallet: Wallet
+    energy_link: EnergyLinkClient
+    trap_link: TrapLink
+    ring_link: RingLink
 
     def __init__(self, server_address, password):
         """
@@ -19,6 +28,9 @@ class BaseContext(UniversalContext):
         """
         super().__init__(server_address, password)
         self.network_engine = ArchipelagoNetworkEngine(self)
+        self.wallet = Wallet()
+        self.trap_link = TrapLink(self.network_engine)
+        self.ring_link = RingLink(self.network_engine, WalletManager(self.wallet))
 
     def make_gui(self):
         # Performing local import to prevent additional UIs to appear during the patching process.

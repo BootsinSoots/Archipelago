@@ -551,13 +551,20 @@ class EnergyLink(Toggle):
     display_name = "EnergyLink"
     internal_name = "energy_link"
 
+class RingLink(Toggle):
+    """
+    Games that support ringlink will be able to send and retrieve 'rings' sent from another ringlink game.
+    'Energy in the context of Luigi's Mansion will be money.
+    """
+    display_name = "RingLink"
+    internal_name = "ring_link"
+
 class TrapLink(Toggle):
     """
     Games that support traplink will all receive similar traps when a matching trap is sent from another traplink game
     """
     display_name = "TrapLink"
     internal_name = "trap_link"
-
 
 class GoldMice(Toggle):
     """
@@ -741,6 +748,7 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     call_mario: CallMario
     trap_link: TrapLink
     energy_link: EnergyLink
+    ring_link: RingLink
     trap_percentage: TrapPercentage
     bundle_weight: BundleWeight
     coin_weight: CoinWeight

@@ -13,11 +13,8 @@ from .Hints import ALWAYS_HINT, PORTRAIT_HINTS
 from .Items import *
 from .Locations import ALL_LOCATION_TABLE, SELF_LOCATIONS_TO_RECV
 from .Helper_Functions import StringByteFunction as sbf
-from .client.Wallet import Wallet
-from .client.ap_link.energy_link.energy_link_client import EnergyLinkClient
-from .client.ap_link.energy_link.energy_link import EnergyLinkConstants
-from .client.ap_link.energy_link.energy_link_command_processor import EnergyLinkCommandProcessor
-from .client.ap_link.trap_link.trap_link import TrapLink
+from .client.links.energy_link.energy_link import EnergyLinkConstants
+from .client.links.energy_link.energy_link_command_processor import EnergyLinkCommandProcessor
 from .client.constants import *
 
 # This is the address that holds the player's slot name.
@@ -149,8 +146,6 @@ class LMContext(BaseContext):
     command_processor = LMCommandProcessor
     game = "Luigi's Mansion"
     items_handling = 0b111
-    wallet: Wallet
-    trap_link: TrapLink
 
     def __init__(self, server_address, password):
         """
@@ -165,11 +160,6 @@ class LMContext(BaseContext):
         self.dolphin_sync_task: Optional[asyncio.Task[None]] = None
         self.dolphin_status = CONNECTION_INITIAL_STATUS
         self.item_display_queue: list[NetUtils.NetworkItem] = []
-
-        # Manages energy link operations and state.
-        self.wallet = Wallet()
-        self.energy_link = EnergyLinkClient(self.network_engine, self.wallet)
-        self.trap_link = TrapLink(self.network_engine)
 
         # All used when death link is enabled.
         self.is_luigi_dead = False
@@ -272,6 +262,7 @@ class LMContext(BaseContext):
                 self.portrait_hints = int(slot_data["portrait_hints"])
                 self.hints = slot_data["hints"]
                 self.trap_link.on_connected(args)
+                self.ring_link.on_connected(args)
                 Utils.async_start(self.network_engine.update_tags_async(bool(slot_data[EnergyLinkConstants.INTERNAL_NAME]),
                     EnergyLinkConstants.FRIENDLY_NAME), name=f"Update {EnergyLinkConstants.FRIENDLY_NAME}")
                 Utils.async_start(self.network_engine.update_tags_async(bool(slot_data["death_link"]),
@@ -284,6 +275,7 @@ class LMContext(BaseContext):
                 if not hasattr(self, "instance_id"):
                     self.instance_id = time.time()
                 self.trap_link.on_bounced(args)
+                self.ring_link.on_bounced(args)
             case "SetReply":
                 self.energy_link.try_update_energy_request(args)
 
@@ -744,10 +736,24 @@ class LMContext(BaseContext):
         self.yelling_in_client = False
         return
 
+async def handle_ringlink_async(ctx: LMContext):
+    while not ctx.exit_event.is_set():
+        if  EnergyLinkConstants.FRIENDLY_NAME in ctx.network_engine.get_tags():
+            logger.info("Ring Link does not currently support interactions with Energy Link, disabling Ring Link.")
+            return
+        if ctx.ring_link.is_enabled():
+            if (ctx.check_ingame() and ctx.check_alive()):
+                await ctx.ring_link.handle_ring_link_async()
+            else:
+                # resets the logic for determining the currency differences, needs to be updated to reset inside of wallet_manager.
+                ctx.ring_link.wallet_manager.previous_amount = 0
+        await asyncio.sleep(0.5)
 
 async def dolphin_sync_task(ctx: LMContext):
     logger.info(f"Using Luigi's Mansion client {CLIENT_VERSION}")
     logger.info("Starting Dolphin connector. Use /dolphin for status information.")
+
+    asyncio.create_task(handle_ringlink_async(ctx), name="HandleRingLink")
 
     while not ctx.exit_event.is_set():
         try:
@@ -797,7 +803,7 @@ async def dolphin_sync_task(ctx: LMContext):
                     await wait_for_next_loop(5)
                     continue
 
-            # At this point, we are verified as connected. Update boo count in LMClient
+            # At this point, we are verified as connected. Update UI elements in the LMCLient tab.
             if ctx.ui:
                 boo_count = len(set(([item.item for item in ctx.items_received if item.item in BOO_AP_ID_LIST])))
                 ctx.ui.update_boo_count_label(boo_count)
@@ -882,7 +888,7 @@ def main(*launch_args: str):
     server_address: str = ""
     rom_path: str = None
 
-    Utils.init_logging("Luigi's Mansion Client")
+    Utils.init_logging(CLIENT_NAME)
     logger.info(f"Starting LM Client {CLIENT_VERSION}")
     dolphin_launcher: DolphinLauncher = DolphinLauncher()
 
@@ -933,5 +939,5 @@ def main(*launch_args: str):
     colorama.deinit()
 
 if __name__ == "__main__":
-    Utils.init_logging("Luigi's Mansion Client", exception_logger="Client")
+    Utils.init_logging(CLIENT_NAME, exception_logger="Client")
     main(*sys.argv[1:])

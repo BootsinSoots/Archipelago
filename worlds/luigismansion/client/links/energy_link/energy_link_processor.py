@@ -4,7 +4,7 @@ import inspect
 import Utils
 
 from CommonClient import CommonContext, logger
-from ...Wallet import Wallet
+from ...wallet import Wallet
 from .energy_link import EnergyLink, EnergyLinkConstants
 
 class EnergyLinkProcessor:

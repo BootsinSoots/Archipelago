@@ -317,7 +317,7 @@ class CurrencyReceiver:
     """
     Sends currency game data from Archipelago server.
     """
-    from .client.Wallet import Wallet
+    from .client.wallet import Wallet
     def __init__(self, wallet: Wallet):
         self.wallet = wallet
 

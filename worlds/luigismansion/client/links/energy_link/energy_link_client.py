@@ -1,6 +1,6 @@
 """ Module providing LMClient with EnergyLink integration operations. """
 
-from ...Wallet import Wallet
+from ...wallet import Wallet
 from .energy_link import EnergyLink, RequestStatus, ArchipelagoNetworkEngine
 
 class _ResponseArgs:

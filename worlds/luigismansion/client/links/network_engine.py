@@ -149,6 +149,19 @@ class TrapNetworkRequest(BounceNetworkRequest):
         request["data"]["trap_name"] = self.trap_name
         return request
 
+class RingNetworkRequest(BounceNetworkRequest):
+    amount: int
+
+    def __new__(cls, tags, amount: int):
+        instance = super().__new__(cls, tags=tags)
+        instance.amount = amount
+        return instance
+
+    def create_request(self):
+        request = super().create_request()
+        request["data"]["amount"] = self.amount
+        return request
+
 class ArchipelagoNetworkEngine:
     """
     Archipelago's Client to Server NetworkProtocol which utilizes
@@ -185,6 +198,9 @@ class ArchipelagoNetworkEngine:
 
     async def send_trap_link_request_async(self, network_request: TrapNetworkRequest):
         network_request.source = self.get_player_name(self.get_slot())
+        return await self._send_network_request_async(network_request)
+
+    async def send_ring_link_request_async(self, network_request: RingNetworkRequest):
         return await self._send_network_request_async(network_request)
 
     def get_team(self) -> int:
