@@ -37,12 +37,12 @@ class RingLink(LinkBase):
 
             calculated_ring_worth = self.wallet_manager.wallet.get_calculated_amount_worth(1)
             if amount > 0:
-                logger.info("%s: Receiving %s coin(s).",RingLinkConstants.FRIENDLY_NAME, amount)
+                logger.info("%s: Somebody got %s coin(s)!",RingLinkConstants.FRIENDLY_NAME, amount)
                 currencies = self.wallet_manager.add_currencies(int(amount * calculated_ring_worth))
                 self.wallet_manager.wallet.add_to_wallet(currencies)
                 self.remote_pending_rings += amount
             elif amount < 0:
-                logger.info("%s: Removing %s coin(s).", RingLinkConstants.FRIENDLY_NAME, amount)
+                logger.info("%s: Somebody lost %s coin(s).", RingLinkConstants.FRIENDLY_NAME, amount)
                 currencies = self.wallet_manager.remove_currencies(amount, calculated_ring_worth)
                 self.wallet_manager.wallet.remove_from_wallet(currencies)
                 self.remote_pending_rings -= amount
@@ -78,7 +78,7 @@ class RingLink(LinkBase):
             ring_link_req = RingNetworkRequest([ RingLinkConstants.FRIENDLY_NAME ], int(amount))
             ring_link_req.source = self.id
 
-            logger.info("%s: Sending %s rings.", RingLinkConstants.FRIENDLY_NAME, int(amount))
+            logger.info("%s: You sent %s rings!", RingLinkConstants.FRIENDLY_NAME, int(amount))
             await self.network_engine.send_ring_link_request_async(ring_link_req)
 
     def is_enabled(self) -> bool:
