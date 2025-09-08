@@ -864,7 +864,7 @@ def _get_disabled_traps(options: LuigiOptions.LMOptions) -> int:
     """
     Gets all traps with a weight of 0 to let trap link know they should be ignored when other players acquire them.
     """
-    from .client.ap_link.trap_link.trap_link import TrapLinkType
+    from .client.links.trap_link import TrapLinkType
 
     def _is_disabled(weight_percent: int) -> bool:
         return weight_percent == 0
