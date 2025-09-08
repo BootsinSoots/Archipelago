@@ -17,8 +17,7 @@ from Options import OptionGroup
 from .client.luigismansion_settings import LuigisMansionSettings
 
 # Relative Imports
-from .Items import ITEM_TABLE, LMItem, get_item_names_per_category, filler_items, ALL_ITEMS_TABLE, BOO_ITEM_TABLE, \
-    trap_filler_items, other_filler_items
+from .Items import *
 from .Locations import *
 from . import LuigiOptions
 from .Hints import get_hints_by_option, ALWAYS_HINT, PORTRAIT_HINTS
