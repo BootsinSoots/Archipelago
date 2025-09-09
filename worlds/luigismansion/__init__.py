@@ -13,17 +13,16 @@ from Utils import visualize_regions, local_path
 from worlds.AutoWorld import WebWorld, World
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess, icon_paths
 from worlds.generic.Rules import add_rule
-from Options import OptionGroup
 from .client.luigismansion_settings import LuigisMansionSettings
 
 # Relative Imports
 from .Items import *
 from .Locations import *
-from . import LuigiOptions
+from .LuigiOptions import *
 from .Hints import get_hints_by_option, ALWAYS_HINT, PORTRAIT_HINTS
 from .Presets import lm_options_presets
 from .Regions import *
-from . import Rules
+from .Rules import *
 from .Rules import set_element_rules
 from .iso_helper.lm_rom import LMPlayerContainer
 
@@ -41,7 +40,7 @@ class LMWeb(WebWorld):
     theme = "stone"
     options_presets = lm_options_presets
     option_groups = [
-        OptionGroup("Extra Locations", [
+        Options.OptionGroup("Extra Locations", [
             LuigiOptions.Furnisanity,
             LuigiOptions.Toadsanity,
             LuigiOptions.GoldMice,
@@ -51,7 +50,7 @@ class LMWeb(WebWorld):
             LuigiOptions.Lightsanity,
             LuigiOptions.Walksanity
         ]),
-        OptionGroup("Access Options", [
+        Options.OptionGroup("Access Options", [
             LuigiOptions.RankRequirement,
             LuigiOptions.GameMode,
             LuigiOptions.VacuumStart,
@@ -65,7 +64,7 @@ class LMWeb(WebWorld):
             LuigiOptions.RandomSpawn,
             LuigiOptions.EarlyFirstKey,
         ]),
-        OptionGroup("QOL Changes", [
+        Options.OptionGroup("QOL Changes", [
             LuigiOptions.TrapLink,
             LuigiOptions.EnergyLink,
             LuigiOptions.RingLink,
@@ -89,14 +88,14 @@ class LMWeb(WebWorld):
             LuigiOptions.BooAnger,
             LuigiOptions.ExtraBooSpots,
         ]),
-        OptionGroup("Cosmetics", [
+        Options.OptionGroup("Cosmetics", [
             LuigiOptions.RandomMusic,
             LuigiOptions.DoorModelRando,
             LuigiOptions.ChestTypes,
             LuigiOptions.TrapChestType,
             LuigiOptions.CallMario,
         ]),
-        OptionGroup("Filler Weights", [
+        Options.OptionGroup("Filler Weights", [
             LuigiOptions.BundleWeight,
             LuigiOptions.CoinWeight,
             LuigiOptions.BillWeight,
@@ -149,7 +148,7 @@ class LMWorld(World):
     location_name_to_id: ClassVar[dict[str, int]] = {
         name: LMLocation.get_apid(data.code) for name, data in ALL_LOCATION_TABLE.items() if data.code is not None
     }
-    settings: LuigisMansionSettings
+    settings = LuigisMansionSettings
     item_name_groups = get_item_names_per_category()
     required_client_version = (0, 6, 2)
     web = LMWeb()
