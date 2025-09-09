@@ -10,7 +10,7 @@ from .constants import AP_LOGGER_NAME
 
 logger = logging.getLogger(AP_LOGGER_NAME)
 
-class DolphinLauncher():
+class DolphinLauncher:
     """
     Manages interactions between the LMClient and the dolphin emulator.
     """
