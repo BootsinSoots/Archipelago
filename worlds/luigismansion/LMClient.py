@@ -491,7 +491,8 @@ class LMContext(BaseContext):
             return
 
         # There will be different checks on different maps.
-        current_map_id = dme.read_word(CURR_MAP_ID_ADDR)
+        current_map_id: int = dme.read_word(CURR_MAP_ID_ADDR)
+        current_room_id: int = 0
         if current_map_id == 2:
             current_room_id = dme.read_word(dme.follow_pointers(ROOM_ID_ADDR, [ROOM_ID_OFFSET]))
 
@@ -512,8 +513,7 @@ class LMContext(BaseContext):
                     if lm_loc_data.code == 617:
                         room_to_check: int = spawn_locations[self.spawn]["in_game_room_id"]
                     else:
-                        room_to_check = loc_addr.in_game_room_id if not loc_addr.in_game_room_id is None \
-                            else current_room_id
+                        room_to_check = loc_addr.in_game_room_id if not loc_addr.in_game_room_id is None else current_room_id
                     if not room_to_check == current_room_id:
                         continue
 
