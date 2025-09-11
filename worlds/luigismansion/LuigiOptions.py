@@ -43,6 +43,14 @@ class RandomMusic(Toggle):
     display_name = "Music Randomization"
     internal_name = "random_music"
 
+class ShowSelfReceivedItems(Choice):
+    """Choose whether you want all in-game received messages for your own items, only progression, or none at all."""
+    display_name = "Show Self Received Item Messaging"
+    internal_name = "self_item_messages"
+    option_all_messages = 0
+    option_progression_items_only = 1
+    option_nothing = 2
+    default = 0
 
 class BundleWeight(Range):
     """Set the weight for how often coin & bill bundles get chosen as filler."""
@@ -732,6 +740,7 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     speedy_spirits: SpeedySpirits
     boo_gates: BooGates
     mario_items: MarioItems
+    self_item_messages: ShowSelfReceivedItems
     #washroom_boo_count: WashroomBooCount
     balcony_boo_count: BalconyBooCount
     final_boo_count: FinalBooCount

@@ -1,12 +1,16 @@
-import asyncio, time, traceback
+import asyncio, time
 import copy, random, sys
 from typing import Any
 
+# AP related imports
 import NetUtils, Utils
 from CommonClient import get_base_parser, gui_enabled, server_loop
-import dolphin_memory_engine as dme
-from .client.contexts.base_context import BaseContext, logger
+from BaseClasses import ItemClassification as IC
 
+import dolphin_memory_engine as dme
+
+# Local related imports
+from .client.contexts.base_context import BaseContext, logger
 from .Regions import spawn_locations
 from .iso_helper.lm_rom import LMUSAAPPatch
 from .Hints import ALWAYS_HINT, PORTRAIT_HINTS
@@ -191,6 +195,9 @@ class LMContext(BaseContext):
         self.call_mario = False
         self.yelling_in_client = False
 
+        # Filters in-game messaging to what the user desires.
+        self.self_item_messages = 0
+
         # Know whether to send in-game hints to the multiworld or not
         self.send_hints = 0
         self.portrait_hints = 0
@@ -268,6 +275,7 @@ class LMContext(BaseContext):
                 Utils.async_start(self.network_engine.update_tags_async(bool(slot_data["death_link"]),
                     "DeathLink"), name="Update Deathlink")
                 self.call_mario = bool(slot_data["call_mario"])
+                self.self_item_messages = int(slot_data["self_item_messages"])
 
             case "Bounced":
                 if "tags" not in args:
@@ -564,7 +572,10 @@ class LMContext(BaseContext):
             lm_item = ALL_ITEMS_TABLE[lm_item_name]
 
             # Add the item to the display items queue to display when it can
-            self.item_display_queue.append(item)
+            if self.self_item_messages == 0:
+                self.item_display_queue.append(item)
+            elif self.self_item_messages == 1 and lm_item.classification == IC.progression:
+                self.item_display_queue.append(item)
 
             # If the user is subscribed to send items and the trap is a valid trap and the trap was not already
             # received (to prevent sending the same traps over and over to other TrapLinkers if Luigi died)
