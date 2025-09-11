@@ -148,7 +148,7 @@ class LMWorld(World):
     location_name_to_id: ClassVar[dict[str, int]] = {
         name: LMLocation.get_apid(data.code) for name, data in ALL_LOCATION_TABLE.items() if data.code is not None
     }
-    settings = LuigisMansionSettings
+    settings: ClassVar[LuigisMansionSettings]
     item_name_groups = get_item_names_per_category()
     required_client_version = (0, 6, 2)
     web = LMWeb()
@@ -156,6 +156,10 @@ class LMWorld(World):
     using_ut: bool # so we can check if we're using UT only once
     ut_can_gen_without_yaml = True  # class var that tells it to ignore the player yaml
 
+    # Adding these to be able to grab from other classes, such as test classes
+    ghost_affected_regions: dict[str, str] = {}
+    open_doors: dict[int, int] = {}
+    hints: dict[str, dict[str, str]] = {}
 
     def __init__(self, *args, **kwargs):
         super(LMWorld, self).__init__(*args, **kwargs)
@@ -857,6 +861,7 @@ class LMWorld(World):
             "apworld version": CLIENT_VERSION,
             "seed": self.multiworld.seed,
             "disabled_traps": _get_disabled_traps(self.options),
+            "self_item_messages": self.options.self_item_messages.value
         }
 
 def _get_disabled_traps(options: LuigiOptions.LMOptions) -> int:

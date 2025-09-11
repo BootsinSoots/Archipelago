@@ -1,12 +1,16 @@
-import asyncio, time, traceback
+import asyncio, time
 import copy, random, sys
 from typing import Any
 
+# AP related imports
 import NetUtils, Utils
 from CommonClient import get_base_parser, gui_enabled, server_loop
-import dolphin_memory_engine as dme
-from .client.contexts.base_context import BaseContext, logger
+from BaseClasses import ItemClassification as IC
 
+import dolphin_memory_engine as dme
+
+# Local related imports
+from .client.contexts.base_context import BaseContext, logger
 from .Regions import spawn_locations
 from .iso_helper.lm_rom import LMUSAAPPatch
 from .Hints import ALWAYS_HINT, PORTRAIT_HINTS
@@ -191,6 +195,9 @@ class LMContext(BaseContext):
         self.call_mario = False
         self.yelling_in_client = False
 
+        # Filters in-game messaging to what the user desires.
+        self.self_item_messages = 0
+
         # Know whether to send in-game hints to the multiworld or not
         self.send_hints = 0
         self.portrait_hints = 0
@@ -268,6 +275,7 @@ class LMContext(BaseContext):
                 Utils.async_start(self.network_engine.update_tags_async(bool(slot_data["death_link"]),
                     "DeathLink"), name="Update Deathlink")
                 self.call_mario = bool(slot_data["call_mario"])
+                self.self_item_messages = int(slot_data["self_item_messages"])
 
             case "Bounced":
                 if "tags" not in args:
@@ -491,7 +499,8 @@ class LMContext(BaseContext):
             return
 
         # There will be different checks on different maps.
-        current_map_id = dme.read_word(CURR_MAP_ID_ADDR)
+        current_map_id: int = dme.read_word(CURR_MAP_ID_ADDR)
+        current_room_id: int = 0
         if current_map_id == 2:
             current_room_id = dme.read_word(dme.follow_pointers(ROOM_ID_ADDR, [ROOM_ID_OFFSET]))
 
@@ -512,8 +521,7 @@ class LMContext(BaseContext):
                     if lm_loc_data.code == 617:
                         room_to_check: int = spawn_locations[self.spawn]["in_game_room_id"]
                     else:
-                        room_to_check = loc_addr.in_game_room_id if not loc_addr.in_game_room_id is None \
-                            else current_room_id
+                        room_to_check = loc_addr.in_game_room_id if not loc_addr.in_game_room_id is None else current_room_id
                     if not room_to_check == current_room_id:
                         continue
 
@@ -564,7 +572,10 @@ class LMContext(BaseContext):
             lm_item = ALL_ITEMS_TABLE[lm_item_name]
 
             # Add the item to the display items queue to display when it can
-            self.item_display_queue.append(item)
+            if self.self_item_messages == 0:
+                self.item_display_queue.append(item)
+            elif self.self_item_messages == 1 and lm_item.classification == IC.progression:
+                self.item_display_queue.append(item)
 
             # If the user is subscribed to send items and the trap is a valid trap and the trap was not already
             # received (to prevent sending the same traps over and over to other TrapLinkers if Luigi died)
@@ -816,7 +827,7 @@ async def dolphin_sync_task(ctx: LMContext):
                 await ctx.check_death()
             if ctx.trap_link.is_enabled():
                 # Only try to give items if we are in game and alive.
-                if (ctx.check_ingame() and ctx.check_alive()):
+                if ctx.check_ingame() and ctx.check_alive():
                     await ctx.trap_link.handle_traplink_async()
 
             # Lastly check any locations and update the non-saveable ram stuff
@@ -826,9 +837,9 @@ async def dolphin_sync_task(ctx: LMContext):
                 await ctx.lm_send_hints()
             await ctx.lm_update_non_savable_ram()
             await asyncio.sleep(0.1)
-        except Exception:
+        except Exception as ex:
             dme.un_hook()
-            logger.error(traceback.format_exc())
+            logger.error(str(ex))
             logger.info("Connection to Dolphin failed, attempting again in 5 seconds...")
             ctx.dolphin_status = CONNECTION_LOST_STATUS
             await ctx.disconnect()
