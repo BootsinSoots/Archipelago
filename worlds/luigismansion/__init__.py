@@ -148,7 +148,7 @@ class LMWorld(World):
     location_name_to_id: ClassVar[dict[str, int]] = {
         name: LMLocation.get_apid(data.code) for name, data in ALL_LOCATION_TABLE.items() if data.code is not None
     }
-    settings = LuigisMansionSettings
+    settings: ClassVar[LuigisMansionSettings]
     item_name_groups = get_item_names_per_category()
     required_client_version = (0, 6, 2)
     web = LMWeb()
