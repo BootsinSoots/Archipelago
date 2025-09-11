@@ -447,7 +447,7 @@ class LMContext(BaseContext):
             # Make sure we didn't somehow try to send a null hint
             if player_id == 0 or location_id == 0:
                 logger.error("Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers")
-                Utils.messagebox("Hint Error",f"Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers"
+                Utils.messagebox("Hint Error",f"Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers" +
                                               f"Location_ID:"+str({location_id})+" player_id:"+str({player_id}))
 
             # Send correct CreateHints command
