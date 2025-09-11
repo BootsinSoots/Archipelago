@@ -1,10 +1,13 @@
 """ Base context for Luigi's Mansion's game tab in the client. """
 
+import Utils
+
 from .universal_context import UniversalContext, UniversalCommandProcessor, logger
 from ..links.network_engine import ArchipelagoNetworkEngine
 from ..links.energy_link.energy_link_client import EnergyLinkClient
 from ..links.trap_link import TrapLink
 from ..links.ring_link import RingLink
+from ..links.link_base import LinkBase
 from ..wallet import Wallet
 from ..wallet_manager import WalletManager
 from ...client.constants import CLIENT_VERSION
@@ -31,6 +34,17 @@ class BaseContext(UniversalContext):
         self.wallet = Wallet()
         self.trap_link = TrapLink(self.network_engine)
         self.ring_link = RingLink(self.network_engine, WalletManager(self.wallet))
+    
+    def on_connected(self, args):
+        tags: list[str] = []
+        if _check_tag(self.trap_link, self.network_engine, args):
+            tags.append(self.trap_link.friendly_name)
+        if _check_tag(self.ring_link, self.network_engine, args):
+            tags.append(self.ring_link.friendly_name)
+        if len(tags) > 0:
+            Utils.async_start(self.network_engine.update_client_tags_async(tags), name="UpdateClientTags")
+
+        self.trap_link.on_connected(args)
 
     def make_gui(self):
         # Performing local import to prevent additional UIs to appear during the patching process.
@@ -77,3 +91,6 @@ class BaseContext(UniversalContext):
                 self.vacuum_label.text = f"{item_count}"
 
         return LMGuiWrapper
+
+def _check_tag(link: LinkBase, network_engine: ArchipelagoNetworkEngine, args) -> bool:
+    return link.slot_name in args["slot_data"] and link.friendly_name not in network_engine.get_tags()

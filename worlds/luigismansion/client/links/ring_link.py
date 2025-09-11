@@ -81,10 +81,6 @@ class RingLink(LinkBase):
             logger.info("%s: You sent %s rings!", RingLinkConstants.FRIENDLY_NAME, int(amount))
             await self.network_engine.send_ring_link_request_async(ring_link_req)
 
-    def is_enabled(self) -> bool:
-        """ Determines if ringlink is enabled in the client. """
-        return RingLinkConstants.FRIENDLY_NAME in self.network_engine.get_tags()  
-
 def _calc_rings(ring_link: RingLink, amount: int) -> int:
     amount_to_update, remainder = divmod(amount + ring_link.remote_pending_rings, ring_link.ring_multiplier)
     ring_link.remote_pending_rings = remainder

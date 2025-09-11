@@ -115,7 +115,6 @@ class TrapLink(LinkBase):
         
         :param args: The arguments to be passed into the 'Connected' command.
         """
-        super().on_connected(args)
         slot_data = args["slot_data"]
         # The flags are cast to an int when sent to the server, so they need to be cast back to the enum.
         if "disabled_traps" not in slot_data:

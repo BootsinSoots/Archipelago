@@ -241,6 +241,7 @@ class LMContext(BaseContext):
         super().on_package(cmd, args)
         match cmd:
             case "Connected": # On Connect
+                super().on_connected(args)
                 slot_data = args["slot_data"]
                 # Make sure the world version matches
                 if not slot_data["apworld version"] == CLIENT_VERSION:
@@ -268,8 +269,6 @@ class LMContext(BaseContext):
                 self.send_hints = int(slot_data["send_hints"])
                 self.portrait_hints = int(slot_data["portrait_hints"])
                 self.hints = slot_data["hints"]
-                self.trap_link.on_connected(args)
-                self.ring_link.on_connected(args)
                 Utils.async_start(self.network_engine.update_tags_async(bool(slot_data[EnergyLinkConstants.INTERNAL_NAME]),
                     EnergyLinkConstants.FRIENDLY_NAME), name=f"Update {EnergyLinkConstants.FRIENDLY_NAME}")
                 Utils.async_start(self.network_engine.update_tags_async(bool(slot_data["death_link"]),
