@@ -816,7 +816,7 @@ async def dolphin_sync_task(ctx: LMContext):
                 await ctx.check_death()
             if ctx.trap_link.is_enabled():
                 # Only try to give items if we are in game and alive.
-                if (ctx.check_ingame() and ctx.check_alive()):
+                if ctx.check_ingame() and ctx.check_alive():
                     await ctx.trap_link.handle_traplink_async()
 
             # Lastly check any locations and update the non-saveable ram stuff
@@ -826,9 +826,9 @@ async def dolphin_sync_task(ctx: LMContext):
                 await ctx.lm_send_hints()
             await ctx.lm_update_non_savable_ram()
             await asyncio.sleep(0.1)
-        except Exception:
+        except Exception as ex:
             dme.un_hook()
-            logger.error(traceback.format_exc())
+            logger.error(str(ex))
             logger.info("Connection to Dolphin failed, attempting again in 5 seconds...")
             ctx.dolphin_status = CONNECTION_LOST_STATUS
             await ctx.disconnect()
