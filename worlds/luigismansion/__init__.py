@@ -861,7 +861,9 @@ class LMWorld(World):
             "apworld version": CLIENT_VERSION,
             "seed": self.multiworld.seed,
             "disabled_traps": _get_disabled_traps(self.options),
-            "self_item_messages": self.options.self_item_messages.value
+            "self_item_messages": self.options.self_item_messages.value,
+            "enable_ring_client_msg": self.options.enable_ring_client_msg.value,
+            "enable_trap_client_msg": self.options.enable_trap_client_msg.value,
         }
 
 def _get_disabled_traps(options: LuigiOptions.LMOptions) -> int:

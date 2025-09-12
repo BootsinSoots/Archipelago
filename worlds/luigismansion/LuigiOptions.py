@@ -709,6 +709,20 @@ class TrapPercentage(Range):
     range_end = 100
     default = 0
 
+class RingLinkClientMsgs(DefaultOnToggle):
+    """
+    Enables messages in the client whenever a ring link is received.
+    """
+    display_name = "Enable Ring Link Client Message"
+    internal_name = "enable_ring_client_msg"
+
+class TrapLinkClientMsgs(DefaultOnToggle):
+    """
+    Enables messages in the client whenever a trap link is received.
+    """
+    display_name = "Enable Trap Link Client Message"
+    internal_name = "enable_trap_client_msg"
+
 @dataclass
 class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     rank_requirement: RankRequirement
@@ -739,8 +753,8 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     walksanity: Walksanity
     speedy_spirits: SpeedySpirits
     boo_gates: BooGates
-    mario_items: MarioItems
     self_item_messages: ShowSelfReceivedItems
+    mario_items: MarioItems
     #washroom_boo_count: WashroomBooCount
     balcony_boo_count: BalconyBooCount
     final_boo_count: FinalBooCount
@@ -756,8 +770,10 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     trap_chests: TrapChestType
     call_mario: CallMario
     trap_link: TrapLink
+    enable_trap_client_msg: TrapLinkClientMsgs
     energy_link: EnergyLink
     ring_link: RingLink
+    enable_ring_client_msg: RingLinkClientMsgs
     trap_percentage: TrapPercentage
     bundle_weight: BundleWeight
     coin_weight: CoinWeight
