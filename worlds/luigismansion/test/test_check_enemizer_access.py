@@ -2,6 +2,7 @@ from BaseClasses import ItemClassification
 from test.bases import WorldTestBase
 
 from .. import LMWorld, ITEM_TABLE
+from ..Locations import *
 
 class LMTestBase(WorldTestBase):
     game = "Luigi's Mansion"
@@ -26,8 +27,13 @@ class LocationFail(LMTestBase):
         print("Currently all of the multiworld's progressive items required are: " + str(self.multiworld.state.prog_items))
         print("Multiworld Seed was: " + str(self.multiworld.seed))
 
+        all_enemizer_locs: dict[str, LMLocationData] = {**CLEAR_GHOST_LOCATION_TABLE, **ENEMIZER_LOCATION_TABLE,
+            **ROOM_BOO_LOCATION_TABLE, **LIGHT_LOCATION_TABLE, **PORTRAIT_LOCATION_TABLE, **TOAD_LOCATION_TABLE}
+
         for affected_region in self.world.ghost_affected_regions.keys():
             if self.world.ghost_affected_regions[affected_region] == "No Element":
                 continue
 
-            # self.assertFalse(self.multiworld.state.can_reach_location("1F Bathroom Shelf Key", self.player))
+            region_enemizer_locs: list[str] = [loc for (loc, loc_data) in all_enemizer_locs.items() if loc_data.region == affected_region]
+            for region_loc in region_enemizer_locs:
+                self.assertFalse(self.multiworld.state.can_reach_location(region_loc, self.player))
