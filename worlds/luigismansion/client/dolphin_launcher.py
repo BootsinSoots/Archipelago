@@ -29,7 +29,7 @@ class DolphinLauncher:
         else:
             self.luigismansion_settings = luigismansion_settings
 
-    async def launch_dolphin_async(self, rom: str = None):
+    async def launch_dolphin_async(self, rom: str):
         """
         Launches the dolphin process if not already running.
 
@@ -45,7 +45,7 @@ class DolphinLauncher:
 
         args = [ self.luigismansion_settings.dolphin_path ]
         logger.info("Attempting to open Dolphin emulator at: %s", self.luigismansion_settings.dolphin_path)
-        if rom is not None:
+        if not rom:
             logger.info("Attempting to open Dolphin emulator with rom path:%s", rom)
             args.append(f"--exec={rom}")
 
