@@ -561,6 +561,7 @@ class LMContext(BaseContext):
         last_recv_idx = dme.read_word(LAST_RECV_ITEM_ADDR)
         if len(self.items_received) == last_recv_idx:
             # Update the non-savable location in memory with the last received in case the player reloaded their game.
+            # TODO give all progression items again during this iteration.
             dme.write_word(NON_SAVE_LAST_RECV_ITEM_ADDR, last_recv_idx)
             return
 
@@ -674,15 +675,19 @@ class LMContext(BaseContext):
                 dme.write_word(NON_SAVE_LAST_RECV_ITEM_ADDR, last_recv_idx)
             await wait_for_next_loop(1)
 
+    # TODO move this function to be called on room change, map change, and at the bottom of give_lm_items
     async def lm_update_non_savable_ram(self):
         if not (self.check_ingame() and self.check_alive()):
             return
 
         # Always adjust the Vacuum speed as saving and quitting or going to E. Gadds lab could reset it back to normal.
+        # TODO use get_item_count_by_id
         vac_count = len(list(netItem.item for netItem in self.items_received if netItem.item == 8064))
         vac_speed = max(min(vac_count - 1, 5),0)
         lm_item_name = self.item_names.lookup_in_game(8064)
         lm_item = ALL_ITEMS_TABLE[lm_item_name]
+
+        # TODO make a class boolean that is on while no vac trap is active. Do not adjust this while thats on.
         for addr_to_update in lm_item.update_ram_addr:
             if addr_to_update.ram_addr == 0x804dda54 and vac_count > 0:  # If we're checking against our vacuum-on address
                 curr_val = 1
@@ -699,6 +704,7 @@ class LMContext(BaseContext):
         dme.write_bytes(0x804de3d0, self.boolossus_difficulty.to_bytes(4,'big'))
 
         # Always update the flower to have the correct amount of flowers in game
+        # TODO use get_item_count_by_id
         flower_recv: int = len([netItem for netItem in self.items_received if netItem.item == 8140])
         flower_count = min(flower_recv + 234, 237)
         flower_item = self.item_names.lookup_in_game(8140)
@@ -731,6 +737,7 @@ class LMContext(BaseContext):
                 boo_val = dme.read_byte(BOO_FINAL_FLAG_ADDR)
                 dme.write_byte(BOO_FINAL_FLAG_ADDR, (boo_val | (1 << BOO_FINAL_FLAG_BIT)))
 
+        # TODO Change this to its own function
         if self.call_mario:
             # Prevents the console from receiving the same message over and over.
             if not self.yelling_in_client:
