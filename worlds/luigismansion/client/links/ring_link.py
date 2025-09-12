@@ -26,7 +26,7 @@ class RingLink(LinkBase):
         super().__init__(friendly_name=RingLinkConstants.FRIENDLY_NAME, slot_name=RingLinkConstants.SLOT_NAME,
             network_engine=network_engine)
         self.wallet_manager = wallet_manager
-        self.id = str(uuid.uuid4())
+        self.id = _get_uuid()
 
     def on_bounced(self, args):
         data = args["data"]
@@ -63,6 +63,8 @@ class RingLink(LinkBase):
             self.pending_rings -= self.remote_pending_rings
             self.remote_pending_rings = 0
 
+        # There may be instances where currency gained/lost may not equate to having a different final value 
+        # and/or ringlink requests may come in and cancel lost currency.
         if timer_end - self.timer_start >= delay:
             amount_to_send, remainder = divmod(self.pending_rings, self.ring_multiplier)
 
@@ -86,3 +88,10 @@ def _calc_rings(ring_link: RingLink, amount: int) -> int:
     ring_link.remote_pending_rings = remainder
 
     return amount_to_update
+
+def _get_uuid() -> int:
+    string_id = str(uuid.uuid4())
+    uid: int = 0
+    for char in string_id:
+        uid += ord(char)
+    return uid

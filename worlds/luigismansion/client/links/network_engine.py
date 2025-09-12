@@ -117,7 +117,7 @@ class ConnectUpdateRequest(NetworkRequest):
 
 class BounceNetworkRequest(NetworkRequest):
     tags: Set[str]
-    source: str
+    source: str | int
 
     def __new__(cls, tags):
         instance = super().__new__(cls, "Bounce", tag=None)
@@ -145,6 +145,8 @@ class TrapNetworkRequest(BounceNetworkRequest):
         return instance
 
     def create_request(self) -> dict[str, Any]:
+        if not isinstance(self.source, str):
+            raise TypeError("Cannot create TrapLink request, source: '%s' isn't a string.", self.source)
         request = super().create_request()
         request["data"]["trap_name"] = self.trap_name
         return request
@@ -158,6 +160,8 @@ class RingNetworkRequest(BounceNetworkRequest):
         return instance
 
     def create_request(self):
+        if not isinstance(self.source, int):
+            raise TypeError("Cannot create RingLink request, source: '%s' isn't an int.", self.source)
         request = super().create_request()
         request["data"]["amount"] = self.amount
         return request
