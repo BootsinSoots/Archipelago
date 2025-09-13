@@ -40,7 +40,7 @@ class TrapLinkType(Flag):
 
 class TrapLink(LinkBase):
     """ Manages interactions between Luigi's Mansion Client, emulator, and Archipelago server. """
-    received_trap: bool = False
+    received_trap: str = ""
     # We want to ignore traps if the player set the trap weight to 0.
     disabled_trap_flags: TrapLinkType = TrapLinkType.NONE
     enable_logger: bool = True
@@ -52,8 +52,7 @@ class TrapLink(LinkBase):
     async def handle_traplink_async(self):
         """ Manages remote Traps being sent to Luigi's Mansion. """
         if self.received_trap:
-            trap = self.received_trap
-            lm_item = ALL_ITEMS_TABLE[trap]
+            lm_item = ALL_ITEMS_TABLE[self.received_trap]
             for addr_to_update in lm_item.update_ram_addr:
                 byte_size = 1 if addr_to_update.ram_byte_size is None else addr_to_update.ram_byte_size
                 curr_val = addr_to_update.item_count
@@ -62,7 +61,7 @@ class TrapLink(LinkBase):
                         [addr_to_update.pointer_offset]), curr_val.to_bytes(byte_size, 'big'))
                 else:
                     dme.write_bytes(addr_to_update.ram_addr, curr_val.to_bytes(byte_size, 'big'))
-            self.received_trap = False
+            self.received_trap = ""
 
     async def send_trap_link_async(self, trap_name: str):
         """
@@ -70,7 +69,7 @@ class TrapLink(LinkBase):
 
         :param trap_name: Friendly name of the trap being set.
         """
-        if self.is_enabled() or self.network_engine.get_slot() is None:
+        if not self.is_enabled() or self.network_engine.get_slot() is None:
             return
 
         await self.network_engine.send_trap_link_request_async(
