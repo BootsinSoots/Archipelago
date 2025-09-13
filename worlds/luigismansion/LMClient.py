@@ -410,7 +410,7 @@ class LMContext(BaseContext):
                         return True
         return False
 
-    async def check_vac_trap_active(self) -> bool:
+    def check_vac_trap_active(self) -> bool:
         is_trap_active: int = int.from_bytes(dme.read_bytes(0x804ddf1c, 4))
         return is_trap_active > 0
 
