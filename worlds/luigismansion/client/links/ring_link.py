@@ -6,7 +6,7 @@ import time
 
 from .network_engine import ArchipelagoNetworkEngine, RingNetworkRequest
 from .link_base import LinkBase
-from ..wallet_manager import WalletManager
+from ..wallet_manager import WalletManager, _remove_currencies
 from ..constants import AP_LOGGER_NAME
 
 logger = logging.getLogger(AP_LOGGER_NAME)
@@ -50,14 +50,15 @@ class RingLink(LinkBase):
             calculated_ring_worth = self.wallet_manager.wallet.get_calculated_amount_worth(1)
             if amount > 0:
                 if self.enable_logger:
-                    logger.info("%s: Somebody got %s coin(s)!",RingLinkConstants.FRIENDLY_NAME, amount)
+                    logger.info("%s: You received %s coin(s)!",RingLinkConstants.FRIENDLY_NAME, amount)
                 currencies = self.wallet_manager.add_currencies(int(amount * calculated_ring_worth))
                 self.wallet_manager.wallet.add_to_wallet(currencies)
                 self.remote_pending_rings += amount
             elif amount < 0:
                 if self.enable_logger:
-                    logger.info("%s: Somebody lost %s coin(s).", RingLinkConstants.FRIENDLY_NAME, amount)
-                currencies = self.wallet_manager.remove_currencies(amount, calculated_ring_worth)
+                    logger.info("%s: You lost %s coin(s).", RingLinkConstants.FRIENDLY_NAME, amount)
+                currencies: dict[str, int] = _remove_currencies(self.wallet_manager.wallet, amount * calculated_ring_worth)
+                # currencies: int = self.wallet_manager.remove_currencies(amount, calculated_ring_worth)
                 self.wallet_manager.wallet.remove_from_wallet(currencies)
                 self.remote_pending_rings -= amount
 
@@ -80,7 +81,7 @@ class RingLink(LinkBase):
             self.pending_rings -= self.remote_pending_rings
             self.remote_pending_rings = 0
 
-        # There may be instances where currency gained/lost may not equate to having a different final value 
+        # There may be instances where currency gained/lost may not equate to having a different final value
         # and/or ringlink requests may come in and cancel currency differences.
         if timer_end - self.timer_start >= delay:
             amount_to_send, remainder = divmod(self.pending_rings, self.ring_multiplier)

@@ -61,8 +61,7 @@ class WalletManager():
 
     def calc_wallet_differences(self) -> int:
         wallet_worth = self.wallet.get_wallet_worth() / self.wallet.get_calculated_amount_worth(1)
-        difference = wallet_worth - self.previous_amount
-        self.previous_amount = wallet_worth
+        difference = self.previous_amount - wallet_worth
         return difference
 
 def _remove_currencies(wallet: Wallet, amount_to_send: int) -> dict[str, int]:
