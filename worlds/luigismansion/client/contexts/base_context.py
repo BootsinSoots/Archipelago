@@ -1,12 +1,10 @@
 """ Base context for Luigi's Mansion's game tab in the client. """
 
 # Python related imports
-import asyncio, random, time, copy
-from typing import TYPE_CHECKING
+import asyncio, random, copy
 
 # AP related imports
 import Utils
-from BaseClasses import ItemClassification as IC
 
 # Relative related imports
 from .universal_context import UniversalContext, UniversalCommandProcessor, logger
@@ -19,8 +17,6 @@ from ..wallet import Wallet
 from ..wallet_manager import WalletManager
 from ...client.constants import *
 from ...Hints import ALWAYS_HINT, PORTRAIT_HINTS
-if TYPE_CHECKING:
-    from ...LMClient import LMContext
 
 # 3rd Party related imports
 import dolphin_memory_engine as dme
@@ -37,12 +33,12 @@ class BaseCommandProcessor(UniversalCommandProcessor):
     pass
 
 class BaseContext(UniversalContext):
+
     network_engine: ArchipelagoNetworkEngine
     wallet: Wallet
     energy_link: EnergyLinkClient
     trap_link: TrapLink
     ring_link: RingLink
-    already_fired_events: bool = False
     call_mario: bool = False
     yelling_in_client: bool = False
     self_item_messages: int = None
@@ -94,9 +90,6 @@ class BaseContext(UniversalContext):
         if self.portrait_hints:
             hint_dict.update(PORTRAIT_HINTS)
 
-        # File off all the non_essential tasks here.
-        self.already_fired_events = True
-
     def make_gui(self):
         # Performing local import to prevent additional UIs to appear during the patching process.
         # This appears to be occurring if a spawned process does not have a UI element when importing kvui/kivymd.
@@ -146,118 +139,81 @@ class BaseContext(UniversalContext):
     async def handle_ringlink_async(self):
         await self.ring_link.handle_ring_link_async()
 
+    async def lm_send_hints(self):
+        # If the hint address is empty, no hint has been looked at and we return
+        current_hint = int.from_bytes(dme.read_bytes(0x803D33AC, 1))
+        if not current_hint > 0:
+            return
+
+        # Check for current room so we know which hint(s) we need to look at, since they mostly all use the same flags
+        current_room = dme.read_word(dme.follow_pointers(ROOM_ID_ADDR, [ROOM_ID_OFFSET]))
+        player_id = 0
+        location_id = 0
+
+        # Go through all the hints to check which hint matches the room we are in
+        for hint, hintfo in self.hints.items():
+            if current_room != self.hint_dict[hint]:
+                continue
+
+            # If we match in room 53 or 59, figure out which flag is on and use the matching hint
+            if current_room in (59, 53):
+                if current_room == 59:
+                    if (current_hint & (1 << 5)) > 0 and hint == "<doll1>":
+                        player_id = int(hintfo["Send Player ID"])
+                        location_id = int(hintfo["Location ID"])
+                    elif (current_hint & (1 << 6)) > 0 and hint == "<doll2>":
+                        player_id = int(hintfo["Send Player ID"])
+                        location_id = int(hintfo["Location ID"])
+                    elif (current_hint & (1 << 7)) > 0 and hint == "<doll3>":
+                        player_id = int(hintfo["Send Player ID"])
+                        location_id = int(hintfo["Location ID"])
+                    else:
+                        continue
+                else:
+                    if (current_hint & (1 << 5)) > 0 and hint == "Left Telephone":
+                        player_id = int(hintfo["Send Player ID"])
+                        location_id = int(hintfo["Location ID"])
+                    elif (current_hint & (1 << 6)) > 0 and hint == "Center Telephone":
+                        player_id = int(hintfo["Send Player ID"])
+                        location_id = int(hintfo["Location ID"])
+                    elif (current_hint & (1 << 7)) > 0 and hint == "Right Telephone":
+                        player_id = int(hintfo["Send Player ID"])
+                        location_id = int(hintfo["Location ID"])
+                    else:
+                        continue
+            else:
+                player_id = int(hintfo["Send Player ID"])
+                location_id = int(hintfo["Location ID"])
+
+            # Make sure we didn't somehow try to send a null hint
+            if player_id == 0 or location_id == 0:
+                logger.error("Hint incorrectly parsed in lm_send_hints while trying to send. " +
+                             "Please inform the Luigi's mansion developers")
+                Utils.messagebox("Hint Error",
+                                 f"Hint incorrectly parsed in lm_send_hints while trying to send. " +
+                                 "Please inform the Luigi's mansion developers" +
+                                 f"Location_ID:" + str({location_id}) + " player_id:" + str({player_id}))
+
+            # Send correct CreateHints command
+            Utils.async_start(self.send_msgs([{
+                "cmd": "CreateHints",
+                "player": player_id,
+                "locations": [location_id],
+            }]))
+
+    async def check_mario_yell(self):
+        # Prevents the console from receiving the same message over and over.
+        if not self.yelling_in_client:
+            luigi_shouting = dme.read_word(LUIGI_SHOUT_ADDR)
+            if luigi_shouting == LUIGI_SHOUT_RAMVALUE:
+                self.yelling_in_client = True
+                Utils.async_start(yell_in_client(self), name="Luigi Is Yelling")
+
 def _check_tag(link: LinkBase, network_engine: ArchipelagoNetworkEngine, args) -> bool:
     return link.slot_name in args["slot_data"] and link.friendly_name not in network_engine.get_tags()
 
-async def non_essentials_async_tasks(ctx: LMContext):
-    try:
-        while ctx.slot:
-            if not (ctx.check_ingame() and ctx.check_alive()):
-                await ctx.wait_for_next_loop(0.5)
-                # Resets the logic for determining the currency differences,
-                # needs to be updated to reset inside of wallet_manager.
-                ctx.ring_link.wallet_manager.previous_amount = 0
-                continue
-
-            # All Link related activities
-            if "DeathLink" in ctx.tags:
-                await check_death(ctx)
-            if ctx.trap_link.is_enabled():
-                await ctx.trap_link.handle_traplink_async()
-            if ctx.ring_link.is_enabled():
-                await ctx.handle_ringlink_async()
-
-            # Async thread related tasks
-            if ctx.send_hints == 1:
-                await lm_send_hints(ctx)
-            if ctx.call_mario:
-                await check_mario_yell()
-
-            await ctx.wait_for_next_loop(0.5)
-    except Exception as genericEx:
-        logger.error("Critical error while running non-essential async tasks. Details: " + str(genericEx))
-
-async def check_mario_yell(ctx: LMContext):
-    # Prevents the console from receiving the same message over and over.
-    if not ctx.yelling_in_client:
-        luigi_shouting = dme.read_word(LUIGI_SHOUT_ADDR)
-        if luigi_shouting == LUIGI_SHOUT_RAMVALUE:
-            ctx.yelling_in_client = True
-            Utils.async_start(yell_in_client(ctx), name="Luigi Is Yelling")
-
-async def yell_in_client(ctx: LMContext) -> None:
+async def yell_in_client(ctx: BaseContext) -> None:
     logger.info(random.choice(LUIGI_SHOUT_LIST))
     await ctx.wait_for_next_loop(LUIGI_SHOUT_DURATION)
     ctx.yelling_in_client = False
     return
-
-async def check_death(ctx: LMContext):
-    if not (ctx.check_ingame() and ctx.check_alive()):
-        return
-
-    if not ctx.is_luigi_dead and time.time() >= float(ctx.last_death_link + (CHECKS_WAIT * LONGER_MODIFIER * 3)):
-        ctx.is_luigi_dead = True
-        ctx.set_luigi_dead()
-        await ctx.send_death(ctx.player_names[ctx.slot] + " scared themselves to death.")
-
-async def lm_send_hints(ctx: LMContext):
-    # If the hint address is empty, no hint has been looked at and we return
-    current_hint = int.from_bytes(dme.read_bytes(0x803D33AC, 1))
-    if not current_hint > 0:
-        return
-
-    # Check for current room so we know which hint(s) we need to look at, since they mostly all use the same flags
-    current_room = dme.read_word(dme.follow_pointers(ROOM_ID_ADDR, [ROOM_ID_OFFSET]))
-    player_id = 0
-    location_id = 0
-
-    # Go through all the hints to check which hint matches the room we are in
-    for hint, hintfo in ctx.hints.items():
-        if current_room != ctx.hint_dict[hint]:
-            continue
-
-        # If we match in room 53 or 59, figure out which flag is on and use the matching hint
-        if current_room in (59, 53):
-            if current_room == 59:
-                if (current_hint & (1 << 5)) > 0 and hint == "<doll1>":
-                    player_id = int(hintfo["Send Player ID"])
-                    location_id = int(hintfo["Location ID"])
-                elif (current_hint & (1 << 6)) > 0 and hint == "<doll2>":
-                    player_id = int(hintfo["Send Player ID"])
-                    location_id = int(hintfo["Location ID"])
-                elif (current_hint & (1 << 7)) > 0 and hint == "<doll3>":
-                    player_id = int(hintfo["Send Player ID"])
-                    location_id = int(hintfo["Location ID"])
-                else:
-                    continue
-            else:
-                if (current_hint & (1 << 5)) > 0 and hint == "Left Telephone":
-                    player_id = int(hintfo["Send Player ID"])
-                    location_id = int(hintfo["Location ID"])
-                elif (current_hint & (1 << 6)) > 0 and hint == "Center Telephone":
-                    player_id = int(hintfo["Send Player ID"])
-                    location_id = int(hintfo["Location ID"])
-                elif (current_hint & (1 << 7)) > 0 and hint == "Right Telephone":
-                    player_id = int(hintfo["Send Player ID"])
-                    location_id = int(hintfo["Location ID"])
-                else:
-                    continue
-        else:
-            player_id = int(hintfo["Send Player ID"])
-            location_id = int(hintfo["Location ID"])
-
-        # Make sure we didn't somehow try to send a null hint
-        if player_id == 0 or location_id == 0:
-            logger.error("Hint incorrectly parsed in lm_send_hints while trying to send. " +
-                         "Please inform the Luigi's mansion developers")
-            Utils.messagebox("Hint Error",
-                             f"Hint incorrectly parsed in lm_send_hints while trying to send. " +
-                             "Please inform the Luigi's mansion developers" +
-                             f"Location_ID:" + str({location_id}) + " player_id:" + str({player_id}))
-
-        # Send correct CreateHints command
-        Utils.async_start(ctx.send_msgs([{
-            "cmd": "CreateHints",
-            "player": player_id,
-            "locations": [location_id],
-        }]))
