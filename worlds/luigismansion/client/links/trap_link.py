@@ -129,14 +129,14 @@ class TrapLink(LinkBase):
             logger.debug("Internal setting 'disabled_traps' not found, zero weighted traps will still be sent to the client.")
         else:
             self.disabled_trap_flags = TrapLinkType(slot_data[SlotDataConstants.DISABLED_TRAPS])
-            logger.info("The following traps will not trigger when Trap Link is enabled: %s.", self.disabled_trap_flags)
+            logger.debug("The following traps will not trigger when Trap Link is enabled: %s.", self.disabled_trap_flags)
         self.enable_logger = bool(slot_data[SlotDataConstants.ENABLE_LOGGER])
 
 def _receive_weighted_trap(trap_link: TrapLink, trap_name: str, trap_type: TrapLinkType):
     if trap_type not in trap_link.disabled_trap_flags:
         trap_link.received_trap = trap_name
         if trap_link.enable_logger:
-            logger.info("%s: Receiving trap %s.", TrapLinkConstants.FRIENDLY_NAME, trap_name)
+            logger.debug("%s: Receiving trap %s.", TrapLinkConstants.FRIENDLY_NAME, trap_name)
     else:
         if trap_link.enable_logger:
-            logger.info("%s: Ignoring trap %s because weight is zero.", TrapLinkConstants.FRIENDLY_NAME, trap_name)
+            logger.debug("%s: Ignoring trap %s because weight is zero.", TrapLinkConstants.FRIENDLY_NAME, trap_name)
