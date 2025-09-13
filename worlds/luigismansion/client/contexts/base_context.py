@@ -12,6 +12,8 @@ from ..wallet import Wallet
 from ..wallet_manager import WalletManager
 from ...client.constants import CLIENT_VERSION
 
+import asyncio
+
 class BaseCommandProcessor(UniversalCommandProcessor):
     pass
 
@@ -72,7 +74,7 @@ class BaseContext(UniversalContext):
                 current_worth = 0
                 total_worth = self.ctx.wallet.get_rank_requirement()
 
-                if self.ctx.check_ingame():
+                if asyncio.run(self.ctx.check_ingame()):
                     current_worth = self.ctx.wallet.get_wallet_worth()
 
                 self.wallet_ui.text = f"{format(current_worth, ',d')}/{format(total_worth, ',d')}"
