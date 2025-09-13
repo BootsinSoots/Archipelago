@@ -250,12 +250,15 @@ class LMContext(BaseContext):
                 self.luigimaxhp = int(slot_data["luigi max health"])
                 self.spawn = str(slot_data["spawn_region"])
                 self.boolossus_difficulty = int(slot_data["boolossus_difficulty"])
+                self.send_hints = bool(slot_data["send_hints"])
+
+                # Update Tags for relevant links
                 Utils.async_start(self.network_engine.update_tags_async(bool(slot_data[EnergyLinkConstants.INTERNAL_NAME]),
                     EnergyLinkConstants.FRIENDLY_NAME), name=f"Update {EnergyLinkConstants.FRIENDLY_NAME}")
                 Utils.async_start(self.network_engine.update_tags_async(bool(slot_data["death_link"]),
                     "DeathLink"), name="Update Deathlink")
 
-                # File off all the non_essential tasks here.
+                # Fire off all the non_essential tasks here.
                 Utils.async_start(self.non_essentials_async_tasks(), "LM Non-Essential Tasks")
                 Utils.async_start(self.display_received_items(), "LM - Display Items in Game")
 
@@ -715,7 +718,7 @@ class LMContext(BaseContext):
                     await self.handle_ringlink_async()
 
                 # Async thread related tasks
-                if self.send_hints == 1:
+                if self.send_hints:
                     logger.info("Hints")
                     await self.lm_send_hints()
                 if self.call_mario:

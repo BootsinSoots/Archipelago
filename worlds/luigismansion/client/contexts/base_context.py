@@ -43,9 +43,8 @@ class BaseContext(UniversalContext):
     yelling_in_client: bool = False
     self_item_messages: int = None
     hints = None
-    portrait_hints = None
-    send_hints = None
-    hint_dict = None
+    portrait_hints: bool = None
+    hint_dict: dict[str, int] = None
 
     def __init__(self, server_address, password):
         """
@@ -81,14 +80,13 @@ class BaseContext(UniversalContext):
         slot_data = args["slot_data"]
         self.call_mario = bool(slot_data["call_mario"])
         self.self_item_messages = int(slot_data["self_item_messages"])
-        self.send_hints = int(slot_data["send_hints"])
-        self.portrait_hints = int(slot_data["portrait_hints"])
+        self.portrait_hints = bool(slot_data["portrait_hints"])
         self.hints = slot_data["hints"]
 
-        hint_dict = copy.deepcopy(ALWAYS_HINT)
+        self.hint_dict = copy.deepcopy(ALWAYS_HINT)
         # If portrait ghost hints are on, check them too
         if self.portrait_hints:
-            hint_dict.update(PORTRAIT_HINTS)
+            self.hint_dict.update(PORTRAIT_HINTS)
 
     def make_gui(self):
         # Performing local import to prevent additional UIs to appear during the patching process.
@@ -151,7 +149,8 @@ class BaseContext(UniversalContext):
         location_id = 0
 
         logger.info("Current Room: " + str(current_room))
-        logger.info("Hint Dict: " + str(self.hints))
+        logger.info("Slot Info Hint Dict: " + str(self.hints))
+        logger.info("Local Dict Hint Dict: " + str(self.hint_dict))
 
         # Go through all the hints to check which hint matches the room we are in
         for hint, hintfo in self.hints.items():
