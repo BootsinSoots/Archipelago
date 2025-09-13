@@ -74,7 +74,7 @@ class BaseContext(UniversalContext):
                 current_worth = 0
                 total_worth = self.ctx.wallet.get_rank_requirement()
 
-                if asyncio.run(self.ctx.check_ingame()):
+                if self.ctx.check_ingame():
                     current_worth = self.ctx.wallet.get_wallet_worth()
 
                 self.wallet_ui.text = f"{format(current_worth, ',d')}/{format(total_worth, ',d')}"
