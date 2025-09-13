@@ -16,6 +16,7 @@ class DolphinLauncher:
     """
     luigismansion_settings: LuigisMansionSettings
     dolphin_process_name = "dolphin"
+    exclusion_dolphin_process_name: list[str] = ["dolphinmemoryengine"]
 
     def __init__(self, luigismansion_settings: LuigisMansionSettings = None):
         """
@@ -57,9 +58,10 @@ class DolphinLauncher:
             stderr=subprocess.DEVNULL
         )
 
-def _check_dolphin_process_open(ctx: DolphinLauncher) -> bool:
+def _check_dolphin_process_open(dl: DolphinLauncher) -> bool:
     for proc in psutil.process_iter():
-        if ctx.dolphin_process_name in proc.name().lower():
+        if (dl.dolphin_process_name in proc.name().lower() and
+            not proc.name().lower() not in dl.exclusion_dolphin_process_name):
             logger.info("Located existing Dolphin process: %s, skipping.", proc.name())
             return True
     logger.info("No existing Dolphin processes, continuing.")
