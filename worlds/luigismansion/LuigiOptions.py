@@ -562,7 +562,8 @@ class EnergyLink(Toggle):
 class RingLink(Toggle):
     """
     Games that support ringlink will be able to send and retrieve 'rings' sent from another ringlink game.
-    'Energy in the context of Luigi's Mansion will be money.
+
+    'Rings' in the context of Luigi's Mansion will be Coins.
     """
     display_name = "RingLink"
     internal_name = "ring_link"
