@@ -150,6 +150,9 @@ class BaseContext(UniversalContext):
         player_id = 0
         location_id = 0
 
+        logger.info("Current Room: " + str(current_room))
+        logger.info("Hint Dict: " + str(self.hints))
+
         # Go through all the hints to check which hint matches the room we are in
         for hint, hintfo in self.hints.items():
             if current_room != self.hint_dict[hint]:
