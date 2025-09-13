@@ -164,6 +164,7 @@ class LMContext(BaseContext):
         self.dolphin_sync_task: Optional[asyncio.Task[None]] = None
         self.dolphin_status = CONNECTION_INITIAL_STATUS
         self.item_display_queue: list[NetUtils.NetworkItem] = []
+        self.already_fired_events = False
 
         # All used when death link is enabled.
         self.is_luigi_dead = False
@@ -184,6 +185,7 @@ class LMContext(BaseContext):
         #self.boo_washroom_count = None
         self.boo_balcony_count = None
         self.boo_final_count = None
+        self.arg_seed = ""
 
         # Used for handling various weird item checks.
         self.last_map_id = 0
@@ -254,12 +256,7 @@ class LMContext(BaseContext):
                         f"APWorld version.\nThe client version is {CLIENT_VERSION}!\nPlease verify you are using the " +
                         f"same APWorld as the generator, which is '{local_version}'")
 
-                arg_seed = str(slot_data["seed"])
-                iso_seed = read_string(0x80000001, len(arg_seed))
-                if arg_seed != iso_seed:
-                    raise Exception("Incorrect Randomized Luigi's Mansion ISO file selected. The seed does not match." +
-                                    "Please verify that you are using the right ISO/seed/APLM file.")
-
+                self.arg_seed = str(slot_data["seed"])
                 self.boosanity = bool(slot_data["boosanity"])
                 self.pickup_anim_on = bool(slot_data["pickup animation"])
                 self.wallet.rank_requirement = int(slot_data["rank requirement"])
@@ -278,6 +275,7 @@ class LMContext(BaseContext):
                     "DeathLink"), name="Update Deathlink")
                 self.call_mario = bool(slot_data["call_mario"])
                 self.self_item_messages = int(slot_data["self_item_messages"])
+                Utils.async_start(display_received_items(self), name="LuigiMansion - DisplayItems")
 
             case "Bounced":
                 if "tags" not in args:
@@ -322,7 +320,7 @@ class LMContext(BaseContext):
         self.last_health_checked = time.time()
         return False
 
-    async def check_ingame(self):
+    def check_ingame(self):
         # The game has an address that lets us know if we are in a playable state or not.
         # This isn't perfect indicator however as although the game says ready, we still map be loading in,
         # warping around, etc.
@@ -372,11 +370,18 @@ class LMContext(BaseContext):
         return False
 
     async def check_death(self):
-        if await self.check_ingame() and not self.check_alive():
-            if not self.is_luigi_dead and time.time() >= self.last_death_link + (CHECKS_WAIT*LONGER_MODIFIER*3):
-                self.is_luigi_dead = True
-                self.set_luigi_dead()
-                await self.send_death(self.player_names[self.slot] + " scared themselves to death.")
+        try:
+            while self.slot:
+                if not (self.check_ingame() and self.check_alive()):
+                    await wait_for_next_loop(0.5)
+                    continue
+
+                if not self.is_luigi_dead and time.time() >= self.last_death_link + (CHECKS_WAIT*LONGER_MODIFIER*3):
+                    self.is_luigi_dead = True
+                    self.set_luigi_dead()
+                    await self.send_death(self.player_names[self.slot] + " scared themselves to death.")
+        except Exception as genericEx:
+            logger.error("Unable to check Luigi death as expected. Details: " + str(genericEx))
         return
 
     def set_luigi_dead(self):
@@ -384,7 +389,7 @@ class LMContext(BaseContext):
         return
 
     async def get_debug_info(self):
-        if not (dme.is_hooked() and self.dolphin_status == CONNECTION_CONNECTED_STATUS) or not await self.check_ingame():
+        if not (dme.is_hooked() and self.dolphin_status == CONNECTION_CONNECTED_STATUS) or not self.check_ingame():
             logger.info("Unable to use this command until you are in a Luigi's Mansion ROM, loaded and connected.")
             return
 
@@ -399,68 +404,80 @@ class LMContext(BaseContext):
         return
 
     async def lm_send_hints(self):
-        # If the hint address is empty, no hint has been looked at and we return
-        current_hint = int.from_bytes(dme.read_bytes(0x803D33AC, 1))
-        if not current_hint > 0:
-            return
+        try:
+            hint_dict = copy.deepcopy(ALWAYS_HINT)
 
-        # Check for current room so we know which hint(s) we need to look at, since they mostly all use the same flags
-        current_room = dme.read_word(dme.follow_pointers(ROOM_ID_ADDR, [ROOM_ID_OFFSET]))
-        hint_dict = copy.deepcopy(ALWAYS_HINT)
-        player_id = 0
-        location_id = 0
+            # If portrait ghost hints are on, check them too
+            if self.portrait_hints:
+                hint_dict.update(PORTRAIT_HINTS)
 
-        # If portrait ghost hints are on, check them too
-        if self.portrait_hints:
-            hint_dict.update(PORTRAIT_HINTS)
+            while self.slot:
+                if not (self.check_ingame() and self.check_alive()):
+                    await wait_for_next_loop(0.5)
+                    continue
 
-        # Go through all the hints to check which hint matches the room we are in
-        for hint, hintfo in self.hints.items():
-            if current_room != hint_dict[hint]:
-                continue
+                # If the hint address is empty, no hint has been looked at and we return
+                current_hint = int.from_bytes(dme.read_bytes(0x803D33AC, 1))
+                if not current_hint > 0:
+                    return
 
-            # If we match in room 53 or 59, figure out which flag is on and use the matching hint
-            if current_room in (59,53):
-                if current_room == 59:
-                    if (current_hint & (1 << 5)) > 0 and hint == "<doll1>":
-                        player_id = int(hintfo["Send Player ID"])
-                        location_id = int(hintfo["Location ID"])
-                    elif (current_hint & (1 << 6)) > 0 and hint == "<doll2>":
-                        player_id = int(hintfo["Send Player ID"])
-                        location_id = int(hintfo["Location ID"])
-                    elif (current_hint & (1 << 7)) > 0 and hint == "<doll3>":
-                        player_id = int(hintfo["Send Player ID"])
-                        location_id = int(hintfo["Location ID"])
-                    else:
+                # Check for current room so we know which hint(s) we need to look at, since they mostly all use the same flags
+                current_room = dme.read_word(dme.follow_pointers(ROOM_ID_ADDR, [ROOM_ID_OFFSET]))
+                player_id = 0
+                location_id = 0
+
+                # Go through all the hints to check which hint matches the room we are in
+                for hint, hintfo in self.hints.items():
+                    if current_room != hint_dict[hint]:
                         continue
-                else:
-                    if (current_hint & (1 << 5)) > 0 and hint == "Left Telephone":
-                        player_id = int(hintfo["Send Player ID"])
-                        location_id = int(hintfo["Location ID"])
-                    elif (current_hint & (1 << 6)) > 0 and hint == "Center Telephone":
-                        player_id = int(hintfo["Send Player ID"])
-                        location_id = int(hintfo["Location ID"])
-                    elif (current_hint & (1 << 7)) > 0 and hint == "Right Telephone":
-                        player_id = int(hintfo["Send Player ID"])
-                        location_id = int(hintfo["Location ID"])
+
+                    # If we match in room 53 or 59, figure out which flag is on and use the matching hint
+                    if current_room in (59, 53):
+                        if current_room == 59:
+                            if (current_hint & (1 << 5)) > 0 and hint == "<doll1>":
+                                player_id = int(hintfo["Send Player ID"])
+                                location_id = int(hintfo["Location ID"])
+                            elif (current_hint & (1 << 6)) > 0 and hint == "<doll2>":
+                                player_id = int(hintfo["Send Player ID"])
+                                location_id = int(hintfo["Location ID"])
+                            elif (current_hint & (1 << 7)) > 0 and hint == "<doll3>":
+                                player_id = int(hintfo["Send Player ID"])
+                                location_id = int(hintfo["Location ID"])
+                            else:
+                                continue
+                        else:
+                            if (current_hint & (1 << 5)) > 0 and hint == "Left Telephone":
+                                player_id = int(hintfo["Send Player ID"])
+                                location_id = int(hintfo["Location ID"])
+                            elif (current_hint & (1 << 6)) > 0 and hint == "Center Telephone":
+                                player_id = int(hintfo["Send Player ID"])
+                                location_id = int(hintfo["Location ID"])
+                            elif (current_hint & (1 << 7)) > 0 and hint == "Right Telephone":
+                                player_id = int(hintfo["Send Player ID"])
+                                location_id = int(hintfo["Location ID"])
+                            else:
+                                continue
                     else:
-                        continue
-            else:
-                player_id = int(hintfo["Send Player ID"])
-                location_id = int(hintfo["Location ID"])
+                        player_id = int(hintfo["Send Player ID"])
+                        location_id = int(hintfo["Location ID"])
 
-            # Make sure we didn't somehow try to send a null hint
-            if player_id == 0 or location_id == 0:
-                logger.error("Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers")
-                Utils.messagebox("Hint Error",f"Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers" +
-                                              f"Location_ID:"+str({location_id})+" player_id:"+str({player_id}))
+                    # Make sure we didn't somehow try to send a null hint
+                    if player_id == 0 or location_id == 0:
+                        logger.error("Hint incorrectly parsed in lm_send_hints while trying to send. " +
+                                     "Please inform the Luigi's mansion developers")
+                        Utils.messagebox("Hint Error",
+                                         f"Hint incorrectly parsed in lm_send_hints while trying to send. " +
+                                         "Please inform the Luigi's mansion developers" +
+                                         f"Location_ID:" + str({location_id}) + " player_id:" + str({player_id}))
 
-            # Send correct CreateHints command
-            Utils.async_start(self.send_msgs([{
-                "cmd": "CreateHints",
-                "player": player_id,
-                "locations": [location_id],
-            }]))
+                    # Send correct CreateHints command
+                    Utils.async_start(self.send_msgs([{
+                        "cmd": "CreateHints",
+                        "player": player_id,
+                        "locations": [location_id],
+                    }]))
+        except Exception as genericEx:
+            logger.error("Unable to send LM hints due to an error. Details: " + str(genericEx))
 
     def check_ram_location(self, loc_data, addr_to_update, curr_map_id, map_to_check) -> bool:
         """
@@ -504,9 +521,6 @@ class LMContext(BaseContext):
         return is_trap_active > 0
 
     async def lm_check_locations(self):
-        if not (await self.check_ingame() and self.check_alive()):
-            return
-
         # There will be different checks on different maps.
         current_map_id: int = dme.read_word(CURR_MAP_ID_ADDR)
         current_room_id: int = 0
@@ -597,9 +611,6 @@ class LMContext(BaseContext):
 
     # TODO Review these loops as something could be skipped over.
     async def give_lm_items(self):
-        if not (await self.check_ingame() and self.check_alive()):
-            return
-
         last_recv_idx = dme.read_word(LAST_RECV_ITEM_ADDR)
         if len(self.items_received) == last_recv_idx:
             if last_recv_idx != self.last_received_idx:
@@ -716,9 +727,6 @@ class LMContext(BaseContext):
 
     async def lm_update_non_savable_ram(self):
         try:
-            if not (await self.check_ingame() and self.check_alive()):
-                return
-
             # Always adjust the Vacuum speed as saving and quitting or going to E. Gadds lab could reset it back to normal.
             vac_count = self.get_item_count_by_id(8064)
             vac_speed = max(min(vac_count - 1, 5),0)
@@ -786,12 +794,20 @@ class LMContext(BaseContext):
         return
 
     async def check_mario_yell(self):
-        # Prevents the console from receiving the same message over and over.
-        if not self.yelling_in_client:
-            luigi_shouting = dme.read_word(LUIGI_SHOUT_ADDR)
-            if luigi_shouting == LUIGI_SHOUT_RAMVALUE:
-                self.yelling_in_client = True
-                Utils.async_start(self.yell_in_client(), name="Luigi Is Yelling")
+        try:
+            while self.slot:
+                if not(self.check_ingame() and self.check_alive()):
+                    await wait_for_next_loop(0.5)
+                    continue
+
+                # Prevents the console from receiving the same message over and over.
+                if not self.yelling_in_client:
+                    luigi_shouting = dme.read_word(LUIGI_SHOUT_ADDR)
+                    if luigi_shouting == LUIGI_SHOUT_RAMVALUE:
+                        self.yelling_in_client = True
+                        Utils.async_start(self.yell_in_client(), name="Luigi Is Yelling")
+        except Exception as genericEx:
+            logger.error("LUIGI CANNOT YELL OUT TO MARIO DUE TO ERROR. Details: " + str(genericEx))
 
     async def yell_in_client(self) -> None:
         logger.info(random.choice(LUIGI_SHOUT_LIST))
@@ -800,150 +816,168 @@ class LMContext(BaseContext):
         return
 
 async def handle_ringlink_async(ctx: LMContext):
-    while not ctx.exit_event.is_set():
-        if  EnergyLinkConstants.FRIENDLY_NAME in ctx.network_engine.get_tags():
-            logger.info("Ring Link does not currently support interactions with Energy Link, disabling Ring Link.")
-            return
-        if ctx.ring_link.is_enabled():
-            if await ctx.check_ingame() and ctx.check_alive():
+    try:
+        while ctx.slot:
+            if ctx.check_ingame() and ctx.check_alive():
                 await ctx.ring_link.handle_ring_link_async()
             else:
-                # resets the logic for determining the currency differences, needs to be updated to reset inside of wallet_manager.
+                # Resets the logic for determining the currency differences,
+                # needs to be updated to reset inside of wallet_manager.
                 ctx.ring_link.wallet_manager.previous_amount = 0
-        await asyncio.sleep(0.5)
+            await wait_for_next_loop(0.5)
+    except Exception as genericEx:
+        logger.error("Unable to handle ring link properly due to an error. Details: " + str(genericEx))
 
 async def dolphin_sync_task(ctx: LMContext):
     logger.info(f"Using Luigi's Mansion client {CLIENT_VERSION}")
     logger.info("Starting Dolphin connector. Use /dolphin for status information.")
 
-    asyncio.create_task(handle_ringlink_async(ctx), name="HandleRingLink")
-
-    while not ctx.exit_event.is_set():
-        try:
-            # If DME is not already hooked or connected in any way
-            if not dme.is_hooked():
-                dme.hook()
-                if dme.get_status() == dme.get_status().noEmu or dme.get_status() == dme.get_status().notRunning:
-                    dme.un_hook()
-                    ctx.dolphin_status = CONNECTION_INITIAL_STATUS
-                    logger.info(ctx.dolphin_status)
-                    await wait_for_next_loop(5)
-                    continue
-
-            if not ctx.dolphin_status == CONNECTION_CONNECTED_STATUS:
-                # If the Game ID is a standard one, the randomized ISO has not been loaded - so disconnect
-                game_id = read_string(0x80000000, 6)
-                if game_id in ["GLME01", "GLMJ01","GLMP01"]:
-                    logger.info(CONNECTION_REFUSED_STATUS)
-                    ctx.dolphin_status = CONNECTION_REFUSED_STATUS
-                    dme.un_hook()
-                    await wait_for_next_loop(5)
-                    continue
-
-                # If we are not connected to server, check for player name in RAM address
-                if not ctx.auth:
-                    ctx.auth = read_string(SLOT_NAME_ADDR, SLOT_NAME_STR_LENGTH)
-
-                    # If no player name is found, disconnect DME and inform player
-                    if not ctx.auth:
-                        ctx.auth = None
-                        ctx.dolphin_status = NO_SLOT_NAME_STATUS
+    try:
+        while not ctx.exit_event.is_set():
+            try:
+                # If DME is not already hooked or connected in any way
+                if not dme.is_hooked():
+                    dme.hook()
+                    if dme.get_status() == dme.get_status().noEmu or dme.get_status() == dme.get_status().notRunning:
+                        dme.un_hook()
+                        ctx.dolphin_status = CONNECTION_INITIAL_STATUS
                         logger.info(ctx.dolphin_status)
+                        await wait_for_next_loop(5)
+                        continue
+
+                if not ctx.dolphin_status == CONNECTION_CONNECTED_STATUS:
+                    # If the Game ID is a standard one, the randomized ISO has not been loaded - so disconnect
+                    game_id = read_string(0x80000000, 6)
+                    if game_id in ["GLME01", "GLMJ01","GLMP01"]:
+                        logger.info(CONNECTION_REFUSED_STATUS)
+                        ctx.dolphin_status = CONNECTION_REFUSED_STATUS
                         dme.un_hook()
                         await wait_for_next_loop(5)
                         continue
 
-                # Reset the locations_checked while we wait
-                ctx.locations_checked = set()
+                    # If we are not connected to server, check for player name in RAM address
+                    if not ctx.auth:
+                        ctx.auth = read_string(SLOT_NAME_ADDR, SLOT_NAME_STR_LENGTH)
 
-                # Inform the player we are ready and waiting for them to connect.
-                if not ctx.dolphin_status == CONNECTION_VERIFY_SERVER:
-                    ctx.dolphin_status = CONNECTION_VERIFY_SERVER
-                    logger.info(ctx.dolphin_status)
-                await ctx.server_auth()
+                        # If no player name is found, disconnect DME and inform player
+                        if not ctx.auth:
+                            ctx.auth = None
+                            ctx.dolphin_status = NO_SLOT_NAME_STATUS
+                            logger.info(ctx.dolphin_status)
+                            dme.un_hook()
+                            await wait_for_next_loop(5)
+                            continue
 
-                if not ctx.slot:
-                    await wait_for_next_loop(5)
+                    # Reset the locations_checked while we wait
+                    ctx.locations_checked = set()
+
+                    # Inform the player we are ready and waiting for them to connect.
+                    if not ctx.dolphin_status == CONNECTION_VERIFY_SERVER:
+                        ctx.dolphin_status = CONNECTION_VERIFY_SERVER
+                        logger.info(ctx.dolphin_status)
+                    await ctx.server_auth()
+
+                    if not ctx.slot:
+                        await wait_for_next_loop(5)
+                        continue
+
+                arg_seed = read_string(0x80000001, len(str(ctx.arg_seed)))
+                if arg_seed != ctx.arg_seed:
+                    raise Exception("Incorrect Randomized Luigi's Mansion ISO file selected. The seed does not match." +
+                                    "Please verify that you are using the right ISO/seed/APLM file.")
+
+                # At this point, we are verified as connected. Update UI elements in the LMCLient tab.
+                if ctx.ui:
+                    boo_count = len(set(([item.item for item in ctx.items_received if item.item in BOO_AP_ID_LIST])))
+                    ctx.ui.update_boo_count_label(boo_count)
+                    ctx.ui.get_wallet_value()
+                    ctx.ui.update_flower_label(ctx.get_item_count_by_id(8140))
+                    ctx.ui.update_vacuum_label(ctx.get_item_count_by_id(8064))
+
+                if not (ctx.check_ingame() and ctx.check_alive()):
+                    await wait_for_next_loop(0.1)
+                    # Resets the logic for determining the currency differences,
+                    # needs to be updated to reset inside of wallet_manager.
+                    ctx.ring_link.wallet_manager.previous_amount = 0
                     continue
 
-            # At this point, we are verified as connected. Update UI elements in the LMCLient tab.
-            if ctx.ui:
-                boo_count = len(set(([item.item for item in ctx.items_received if item.item in BOO_AP_ID_LIST])))
-                ctx.ui.update_boo_count_label(boo_count)
-                ctx.ui.get_wallet_value()
-                ctx.ui.update_flower_label(ctx.get_item_count_by_id(8140))
-                ctx.ui.update_vacuum_label(ctx.get_item_count_by_id(8064))
+                # Check any Links that a user is subscribed to.
+                if "DeathLink" in ctx.tags:
+                    Utils.async_start(ctx.check_death())
+                if ctx.trap_link.is_enabled():
+                    Utils.async_start(ctx.trap_link.handle_traplink_async())
+                if ctx.ring_link.is_enabled():
+                    Utils.async_start(handle_ringlink_async(ctx), name="HandleRingLink")
 
-            # Check any Links that a user is subscribed to.
-            if "DeathLink" in ctx.tags:
-                await ctx.check_death()
-            if ctx.trap_link.is_enabled():
-                # Only try to give items if we are in game and alive.
-                if await ctx.check_ingame() and ctx.check_alive():
-                    await ctx.trap_link.handle_traplink_async()
+                # Async thread related tasks
+                if ctx.send_hints == 1:
+                    Utils.async_start(ctx.lm_send_hints())
+                if ctx.call_mario:
+                    await ctx.check_mario_yell()
 
-            # Lastly check any locations and update the non-saveable ram stuff
-            await ctx.lm_check_locations()
-            await ctx.give_lm_items()
-            if ctx.send_hints == 1:
-                await ctx.lm_send_hints()
-            if ctx.call_mario:
-                await ctx.check_mario_yell()
-            await asyncio.sleep(0.1)
-        except Exception as ex:
-            dme.un_hook()
-            logger.error(str(ex))
-            logger.info("Connection to Dolphin failed, attempting again in 5 seconds...")
-            ctx.dolphin_status = CONNECTION_LOST_STATUS
-            await ctx.disconnect()
-            await asyncio.sleep(5)
-            continue
+                # Lastly check any locations and update the non-save able ram stuff
+                await ctx.lm_check_locations()
+                await ctx.give_lm_items()
+                await wait_for_next_loop(0.1)
+            except Exception as ex:
+                dme.un_hook()
+                logger.error(str(ex))
+                logger.info("Connection to Dolphin failed, attempting again in 5 seconds...")
+                ctx.dolphin_status = CONNECTION_LOST_STATUS
+                await ctx.disconnect()
+                await wait_for_next_loop(5)
+                continue
+    except Exception as threadEx:
+        logger.error("Something went horribly wrong with the Luigis Mansion client. Details: " + str(threadEx))
 
 async def wait_for_next_loop(time_to_wait: float):
     await asyncio.sleep(time_to_wait)
 
 async def display_received_items(ctx: LMContext):
-    while not ctx.exit_event.is_set():
-        if not (dme.is_hooked() and ctx.dolphin_status == CONNECTION_CONNECTED_STATUS and
-            await ctx.check_ingame() and ctx.check_alive()):
-            await wait_for_next_loop(5)
-            continue
+    try:
+        while not ctx.exit_event.is_set() and ctx.slot:
+            if not (dme.is_hooked() and ctx.dolphin_status == CONNECTION_CONNECTED_STATUS and
+                await ctx.check_ingame() and ctx.check_alive()):
+                await wait_for_next_loop(5)
+                continue
 
-        if not ctx.item_display_queue:
-            await wait_for_next_loop(5)
-            continue
+            if not ctx.item_display_queue:
+                await wait_for_next_loop(5)
+                continue
 
-        for item in ctx.item_display_queue:
-            lm_item_name = ctx.item_names.lookup_in_game(item.item)
+            for item in ctx.item_display_queue:
+                lm_item_name = ctx.item_names.lookup_in_game(item.item)
 
-            item_name_display = lm_item_name[:RECV_MAX_STRING_LENGTH].replace("&", "")
-            short_item_name = sbf.string_to_bytes_with_limit(item_name_display, RECV_LINE_STRING_LENGTH)
-            dme.write_bytes(RECV_ITEM_NAME_ADDR, short_item_name + b'\x00')
+                item_name_display = lm_item_name[:RECV_MAX_STRING_LENGTH].replace("&", "")
+                short_item_name = sbf.string_to_bytes_with_limit(item_name_display, RECV_LINE_STRING_LENGTH)
+                dme.write_bytes(RECV_ITEM_NAME_ADDR, short_item_name + b'\x00')
 
-            if item.player == ctx.slot:
-                loc_name_retr = ctx.location_names.lookup_in_game(item.location)
-            else:
-                loc_name_retr = ctx.location_names.lookup_in_slot(item.location, item.player)
-            loc_name_display = loc_name_retr[:SLOT_NAME_STR_LENGTH].replace("&", "")
-            loc_name_bytes = sbf.string_to_bytes_with_limit(loc_name_display, RECV_LINE_STRING_LENGTH)
-            dme.write_bytes(RECV_ITEM_LOC_ADDR, loc_name_bytes + b'\x00')
+                if item.player == ctx.slot:
+                    loc_name_retr = ctx.location_names.lookup_in_game(item.location)
+                else:
+                    loc_name_retr = ctx.location_names.lookup_in_slot(item.location, item.player)
+                loc_name_display = loc_name_retr[:SLOT_NAME_STR_LENGTH].replace("&", "")
+                loc_name_bytes = sbf.string_to_bytes_with_limit(loc_name_display, RECV_LINE_STRING_LENGTH)
+                dme.write_bytes(RECV_ITEM_LOC_ADDR, loc_name_bytes + b'\x00')
 
-            recv_full_player_name = ctx.player_names[item.player]
-            recv_name_repl = recv_full_player_name.replace("&", "")
-            # We try to check the received player's name is under the slot length first.
-            short_recv_name = sbf.string_to_bytes_with_limit(recv_name_repl, SLOT_NAME_STR_LENGTH)
-            # Then we can re-combine it with 's Game to stay under te max char limit.
-            recv_name_display = short_recv_name.decode("utf-8") + "'s Game"
-            dme.write_bytes(RECV_ITEM_SENDER_ADDR,
-                sbf.string_to_bytes_with_limit(recv_name_display, RECV_LINE_STRING_LENGTH) + b'\x00')
+                recv_full_player_name = ctx.player_names[item.player]
+                recv_name_repl = recv_full_player_name.replace("&", "")
+                # We try to check the received player's name is under the slot length first.
+                short_recv_name = sbf.string_to_bytes_with_limit(recv_name_repl, SLOT_NAME_STR_LENGTH)
+                # Then we can re-combine it with 's Game to stay under te max char limit.
+                recv_name_display = short_recv_name.decode("utf-8") + "'s Game"
+                dme.write_bytes(RECV_ITEM_SENDER_ADDR,
+                    sbf.string_to_bytes_with_limit(recv_name_display, RECV_LINE_STRING_LENGTH) + b'\x00')
 
-            dme.write_word(RECV_ITEM_DISPLAY_TIMER_ADDR, int(RECV_DEFAULT_TIMER_IN_HEX, 16))
-            await wait_for_next_loop(int(RECV_DEFAULT_TIMER_IN_HEX, 16)/FRAME_AVG_COUNT)
-            while dme.read_byte(RECV_ITEM_DISPLAY_VIZ_ADDR) > 0:
-                await wait_for_next_loop(0.1)
+                dme.write_word(RECV_ITEM_DISPLAY_TIMER_ADDR, int(RECV_DEFAULT_TIMER_IN_HEX, 16))
+                await wait_for_next_loop(int(RECV_DEFAULT_TIMER_IN_HEX, 16)/FRAME_AVG_COUNT)
+                while dme.read_byte(RECV_ITEM_DISPLAY_VIZ_ADDR) > 0:
+                    await wait_for_next_loop(0.1)
 
-        # Reset the list so next time we enter this function we don't display anything
-        ctx.item_display_queue = []
+            # Reset the list so next time we enter this function we don't display anything
+            ctx.item_display_queue = []
+    except Exception as genericEx:
+        logger.error("While trying to display an item in game, an unknown issue occurred. Details: " + str(genericEx))
 
 def main(*launch_args: str):
     from .client.dolphin_launcher import DolphinLauncher
@@ -982,19 +1016,15 @@ def main(*launch_args: str):
         if gui_enabled:
             ctx.run_gui()
         ctx.run_cli()
-        await asyncio.sleep(1)
+        await wait_for_next_loop(1)
 
         ctx.dolphin_sync_task = asyncio.create_task(dolphin_sync_task(ctx), name="DolphinSync")
-        ctx.give_item_task = asyncio.create_task(display_received_items(ctx), name="LuigiDisplayItems")
 
         await ctx.exit_event.wait()
         await ctx.shutdown()
 
         if ctx.dolphin_sync_task:
             await ctx.dolphin_sync_task
-
-        if ctx.give_item_task:
-            await ctx.give_item_task
 
     Utils.asyncio.run(dolphin_launcher.launch_dolphin_async(rom_path))
 
