@@ -182,8 +182,10 @@ class BaseContext(UniversalContext):
                     else:
                         continue
             else:
+                logger.info("Hint Info for: " + hint)
                 player_id = int(hintfo["Send Player ID"])
                 location_id = int(hintfo["Location ID"])
+                logger.info("Found Player ID '" + str(player_id) + "'; Location ID '" + str(location_id) + "'")
 
             # Make sure we didn't somehow try to send a null hint
             if player_id == 0 or location_id == 0:
