@@ -146,6 +146,7 @@ class LMContext(BaseContext):
         super().__init__(server_address, password)
 
         # Handle various Dolphin connection related tasks
+        self.instance_id = None
         self.dolphin_sync_task: Optional[asyncio.Task[None]] = None
         self.dolphin_status = CONNECTION_INITIAL_STATUS
         self.item_display_queue: list[NetUtils.NetworkItem] = []

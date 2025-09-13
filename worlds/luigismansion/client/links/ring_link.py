@@ -11,18 +11,18 @@ from ..constants import AP_LOGGER_NAME
 
 logger = logging.getLogger(AP_LOGGER_NAME)
 
-class RingLinkConstants():
+class RingLinkConstants:
     FRIENDLY_NAME = "RingLink"
     SLOT_NAME = "ring_link"
 
-class SlotDataConstants():
+class SlotDataConstants:
     ENABLE_LOGGER = "enable_ring_client_msg"
     SLOT_DATA = "slot_data"
 
 class RingLink(LinkBase):
     wallet_manager: WalletManager
     ring_multiplier = 5
-    timer_start: time = time.time()
+    timer_start: float = time.time()
     pending_rings: int = 0
     remote_pending_rings: int = 0
     enable_logger: bool = True
@@ -34,14 +34,20 @@ class RingLink(LinkBase):
         self.id = _get_uuid()
 
     def on_connected(self, args):
+        if not self.is_enabled():
+            return
+
         slot_data = args[SlotDataConstants.SLOT_DATA]
         if SlotDataConstants.ENABLE_LOGGER in slot_data:
             self.enable_logger = slot_data[SlotDataConstants.ENABLE_LOGGER]
 
     def on_bounced(self, args):
+        if not self.is_enabled():
+            return
+
         data = args["data"]
         source_name = data["source"]
-        if self.is_enabled() and RingLinkConstants.FRIENDLY_NAME in args["tags"] and source_name != self.id:
+        if RingLinkConstants.FRIENDLY_NAME in args["tags"] and source_name != self.id:
             base_amount = data["amount"]
             amount = _calc_rings(self, base_amount)
 
@@ -60,7 +66,10 @@ class RingLink(LinkBase):
                 self.remote_pending_rings -= amount
 
     async def handle_ring_link_async(self, delay: int = 5):
-        timer_end = time.time()
+        if not self.is_enabled():
+            return
+
+        timer_end: float = time.time()
 
         # this is the first time the function is run and shouldn't continue if true.
         initial_check: bool = self.wallet_manager.previous_amount == 0

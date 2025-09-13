@@ -18,7 +18,7 @@ class TrapLinkConstants:
     FRIENDLY_NAME = "TrapLink"
     SLOT_NAME = "trap_link"
 
-class SlotDataConstants():
+class SlotDataConstants:
     DISABLED_TRAPS = "disabled_traps"
     ENABLE_LOGGER = "enable_trap_client_msg"
     SLOT_DATA = "slot_data"
@@ -82,11 +82,14 @@ class TrapLink(LinkBase):
         
         :param args: The arguments to be passed into the 'Bounced' command.
         """
+        if not self.is_enabled():
+            return
+
         data = args["data"]
         source_name = data["source"]
         # if the traplink tag is not present in the client's available tags, and if traplink isn't available in the args tags,
             # and lastly if the source of the trap was local (slot name matches current client's slot name) we don't want to send a trap
-        if self.is_enabled() and TrapLinkConstants.FRIENDLY_NAME in args["tags"] and source_name != self.network_engine.get_player_name(self.network_engine.get_slot()):
+        if TrapLinkConstants.FRIENDLY_NAME in args["tags"] and source_name != self.network_engine.get_player_name(self.network_engine.get_slot()):
             trap_name: str = data["trap_name"]
             if trap_name not in ACCEPTED_TRAPS:
                 return
@@ -120,6 +123,9 @@ class TrapLink(LinkBase):
         
         :param args: The arguments to be passed into the 'Connected' command.
         """
+        if not self.is_enabled():
+            return
+
         slot_data = args[SlotDataConstants.SLOT_DATA]
         # The flags are cast to an int when sent to the server, so they need to be cast back to the enum.
         if SlotDataConstants.DISABLED_TRAPS not in slot_data:
