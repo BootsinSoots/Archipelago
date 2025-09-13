@@ -80,11 +80,15 @@ class TrapLink(LinkBase):
         is_trap_active: int = int.from_bytes(dme.read_bytes(0x804ddf1c, 4))
         return is_trap_active > 0
 
-    def on_bounced(self, args, vac_count: int):
+    def already_has_vacuum(self) -> bool:
+        return int.from_bytes(dme.read_bytes(0x804dda54, 4)) > 0
+
+    def on_bounced(self, args):
         """
         Performs traplink operations during the 'Bounced' command in `on_package`.
         
         :param args: The arguments to be passed into the 'Bounced' command.
+        :param vac_count: Amount of vacuums the player currently has, which indicates if the player needs
         """
         if not self.is_enabled():
             return
@@ -119,7 +123,7 @@ class TrapLink(LinkBase):
             elif trap_name in SQUASH_EQUIV:
                 _receive_weighted_trap(self, "Squash Trap", TrapLinkType.SQUASH)
             elif trap_name in NOVAC_EQUIV:
-                if vac_count > 0:
+                if self.already_has_vacuum():
                     _receive_weighted_trap(self, "No Vac Trap", TrapLinkType.NOVAC)
 
     def on_connected(self, args):
