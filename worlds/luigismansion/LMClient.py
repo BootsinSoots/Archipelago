@@ -268,7 +268,7 @@ class LMContext(BaseContext):
                     return
                 if not hasattr(self, "instance_id"):
                     self.instance_id = time.time()
-                self.trap_link.on_bounced(args)
+                self.trap_link.on_bounced(args, self.get_item_count_by_id(8064))
                 self.ring_link.on_bounced(args)
             case "SetReply":
                 self.energy_link.try_update_energy_request(args)

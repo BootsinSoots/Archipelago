@@ -80,7 +80,7 @@ class TrapLink(LinkBase):
         is_trap_active: int = int.from_bytes(dme.read_bytes(0x804ddf1c, 4))
         return is_trap_active > 0
 
-    def on_bounced(self, args):
+    def on_bounced(self, args, vac_count: int):
         """
         Performs traplink operations during the 'Bounced' command in `on_package`.
         
@@ -119,7 +119,8 @@ class TrapLink(LinkBase):
             elif trap_name in SQUASH_EQUIV:
                 _receive_weighted_trap(self, "Squash Trap", TrapLinkType.SQUASH)
             elif trap_name in NOVAC_EQUIV:
-                _receive_weighted_trap(self, "No Vac Trap", TrapLinkType.NOVAC)
+                if vac_count > 0:
+                    _receive_weighted_trap(self, "No Vac Trap", TrapLinkType.NOVAC)
 
     def on_connected(self, args):
         """
