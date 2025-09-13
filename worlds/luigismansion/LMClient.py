@@ -268,7 +268,7 @@ class LMContext(BaseContext):
                     return
                 if not hasattr(self, "instance_id"):
                     self.instance_id = time.time()
-                self.trap_link.on_bounced(args)
+                self.trap_link.on_bounced(args, self.get_item_count_by_id(8064))
                 self.ring_link.on_bounced(args)
             case "SetReply":
                 self.energy_link.try_update_energy_request(args)
@@ -527,6 +527,7 @@ class LMContext(BaseContext):
             # If the user is subscribed to send items and the trap is a valid trap and the trap was not already
             # received (to prevent sending the same traps over and over to other TrapLinkers if Luigi died)
             if self.trap_link.is_enabled() and item.item in trap_id_list and last_recv_idx > non_save_recv_idx:
+                logger.info("Triggering Trap...")
                 await self.trap_link.send_trap_link_async(lm_item_name)
 
             # Filter for only items where we have not received yet. If same slot, only receive locations from pre-set

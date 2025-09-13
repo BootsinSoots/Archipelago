@@ -80,10 +80,7 @@ class TrapLink(LinkBase):
         is_trap_active: int = int.from_bytes(dme.read_bytes(0x804ddf1c, 4))
         return is_trap_active > 0
 
-    def already_has_vacuum(self) -> bool:
-        return int.from_bytes(dme.read_bytes(0x804dda54, 4)) > 0
-
-    def on_bounced(self, args):
+    def on_bounced(self, args, vac_count: int):
         """
         Performs traplink operations during the 'Bounced' command in `on_package`.
         
@@ -104,7 +101,7 @@ class TrapLink(LinkBase):
 
             if trap_name in ICE_TRAP_EQUIV:
                 _receive_weighted_trap(self, "Ice Trap", TrapLinkType.ICE)
-            elif trap_name in BOMB_EQUIV and TrapLinkType.BOMB not in self.disabled_trap_flags:
+            elif trap_name in BOMB_EQUIV:
                 _receive_weighted_trap(self, "Bomb", TrapLinkType.BOMB)
             elif trap_name in BANANA_TRAP_EQUIV:
                 _receive_weighted_trap(self, "Banana Trap", TrapLinkType.BANANA)
@@ -112,7 +109,7 @@ class TrapLink(LinkBase):
                 _receive_weighted_trap(self, "Ghost", TrapLinkType.GHOST)
             elif trap_name in POISON_MUSH_EQUIV:
                 _receive_weighted_trap(self, "Poison Mushroom", TrapLinkType.POISON)
-            elif trap_name in BONK_EQUIV and TrapLinkType.BONK not in self.disabled_trap_flags:
+            elif trap_name in BONK_EQUIV:
                 _receive_weighted_trap(self, "Bonk Trap", TrapLinkType.BONK)
             elif trap_name in POSSESION_EQUIV:
                 _receive_weighted_trap(self, "Possession Trap", TrapLinkType.POSSESSION)
@@ -123,7 +120,7 @@ class TrapLink(LinkBase):
             elif trap_name in SQUASH_EQUIV:
                 _receive_weighted_trap(self, "Squash Trap", TrapLinkType.SQUASH)
             elif trap_name in NOVAC_EQUIV:
-                if self.already_has_vacuum():
+                if vac_count > 0:
                     _receive_weighted_trap(self, "No Vac Trap", TrapLinkType.NOVAC)
 
     def on_connected(self, args):
