@@ -61,7 +61,7 @@ class DolphinLauncher:
 def _check_dolphin_process_open(dl: DolphinLauncher) -> bool:
     for proc in psutil.process_iter():
         if (dl.dolphin_process_name in proc.name().lower() and
-            not proc.name().lower() not in dl.exclusion_dolphin_process_name):
+            proc.name().lower() not in dl.exclusion_dolphin_process_name):
             logger.info("Located existing Dolphin process: %s, skipping.", proc.name())
             return True
     logger.info("No existing Dolphin processes, continuing.")
