@@ -4,7 +4,7 @@ import inspect
 import Utils
 
 from CommonClient import CommonContext, logger
-from ...wallet import Wallet
+from ...wallet import Wallet, CURRENCY_NAME
 from .energy_link import EnergyLink, EnergyLinkConstants
 
 class EnergyLinkProcessor:
@@ -35,7 +35,7 @@ class EnergyLinkProcessor:
             return
         if not _has_energy_link_tag(self._ctx):
             return
-        if not _check_if_in_game(self._ctx):
+        if not await _check_if_in_game(self._ctx):
             logger.error("Make sure that Luigi's Mansion is running before sending energy.")
             return
 
@@ -69,7 +69,7 @@ class EnergyLinkProcessor:
         if not is_valid:
             return
 
-        if not _check_if_in_game(self._ctx):
+        if not await _check_if_in_game(self._ctx):
             logger.error("Make sure that Luigi's Mansion is running before requesting energy.")
             return
 
@@ -127,10 +127,10 @@ def _validate_processor_arg(amount: str):
         return False, 0
     return True, amount_as_int
 
-def _check_if_in_game(ctx):
+async def _check_if_in_game(ctx):
     if not hasattr(ctx, 'check_ingame') and inspect.isfunction(ctx.check_ingame()):
         return False
-    if not ctx.check_ingame():
+    if not await ctx.check_ingame():
         return False
     return True
 
@@ -156,6 +156,10 @@ def _remove_currencies(wallet: Wallet, amount_to_send: int) -> dict[str, int]:
     for currency_name, currency_type in wallet.get_currencies().items():
         if new_amount == 0:
             break
+
+        # We don't want to convert gold diamonds because they are a hard requirement to complete the game.
+        if currency_name == CURRENCY_NAME.GOLD_DIAMOND:
+            continue
 
         currency_to_remove, remainder = divmod(new_amount, currency_type.calc_value)
         new_amount = remainder
