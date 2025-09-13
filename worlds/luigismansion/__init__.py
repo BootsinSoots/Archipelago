@@ -65,9 +65,13 @@ class LMWeb(WebWorld):
             LuigiOptions.EarlyFirstKey,
         ]),
         Options.OptionGroup("QOL Changes", [
+            LuigiOptions.ShowSelfReceivedItems,
+            LuigiOptions.DeathLink,
             LuigiOptions.TrapLink,
+            LuigiOptions.TrapLinkClientMsgs,
             LuigiOptions.EnergyLink,
             LuigiOptions.RingLink,
+            LuigiOptions.RingLinkClientMsgs,
             LuigiOptions.TrapPercentage,
             LuigiOptions.LuigiFearAnim,
             LuigiOptions.PickupAnim,
