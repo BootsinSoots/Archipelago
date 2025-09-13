@@ -572,7 +572,8 @@ class LMContext(BaseContext):
 
         try:
             for (key, val) in progressive_items.items():
-                if key in ["Progressive Vacuum", "Gold Diamond", "Progressive Flower"]:
+                if key in ["Progressive Vacuum", "Gold Diamond", "Progressive Flower"] or \
+                    LMItem.get_apid(val.code) not in self.items_received:
                     continue
 
                 for addr_to_update in val.update_ram_addr:
