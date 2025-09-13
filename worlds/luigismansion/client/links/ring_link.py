@@ -34,12 +34,8 @@ class RingLink(LinkBase):
         self.id = _get_uuid()
 
     def on_connected(self, args):
-        if not self.is_enabled():
-            return
-
         slot_data = args[SlotDataConstants.SLOT_DATA]
-        if SlotDataConstants.ENABLE_LOGGER in slot_data:
-            self.enable_logger = slot_data[SlotDataConstants.ENABLE_LOGGER]
+        self.enable_logger = bool(slot_data[SlotDataConstants.ENABLE_LOGGER])
 
     def on_bounced(self, args):
         if not self.is_enabled():

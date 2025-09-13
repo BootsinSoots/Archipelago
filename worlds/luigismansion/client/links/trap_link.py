@@ -123,18 +123,14 @@ class TrapLink(LinkBase):
         
         :param args: The arguments to be passed into the 'Connected' command.
         """
-        if not self.is_enabled():
-            return
-
         slot_data = args[SlotDataConstants.SLOT_DATA]
         # The flags are cast to an int when sent to the server, so they need to be cast back to the enum.
         if SlotDataConstants.DISABLED_TRAPS not in slot_data:
             logger.debug("Internal setting 'disabled_traps' not found, zero weighted traps will still be sent to the client.")
         else:
             self.disabled_trap_flags = TrapLinkType(slot_data[SlotDataConstants.DISABLED_TRAPS])
-            logger.debug("The following traps will not trigger when Trap Link is enabled: %s.", self.disabled_trap_flags)
-        if SlotDataConstants.ENABLE_LOGGER in slot_data:
-            self.enable_logger = slot_data[SlotDataConstants.ENABLE_LOGGER]
+            logger.info("The following traps will not trigger when Trap Link is enabled: %s.", self.disabled_trap_flags)
+        self.enable_logger = bool(slot_data[SlotDataConstants.ENABLE_LOGGER])
 
 def _receive_weighted_trap(trap_link: TrapLink, trap_name: str, trap_type: TrapLinkType):
     if trap_type not in trap_link.disabled_trap_flags:
