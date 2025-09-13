@@ -22,4 +22,5 @@ ROOM_ID_OFFSET = 0x35C
 
 # Wait timer constants for between loops
 WAIT_TIMER_SHORT_TIMEOUT: float = 0.125
+WAIT_TIMER_MEDIUM_TIMEOUT: float = 1.5
 WAIT_TIMER_LONG_TIMEOUT: float = 5

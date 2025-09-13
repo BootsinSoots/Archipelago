@@ -191,9 +191,6 @@ class LMContext(BaseContext):
         # Last received index to track locally in the client
         self.last_received_idx: int = 0
 
-        # Handle when to call non-essential tasks
-        self.already_fired_events: bool = False
-
     async def disconnect(self, allow_autoreconnect: bool = False):
         """
         Disconnect the client from the server and reset game state variables.
@@ -260,7 +257,7 @@ class LMContext(BaseContext):
 
                 # File off all the non_essential tasks here.
                 Utils.async_start(self.non_essentials_async_tasks(), "LM Non-Essential Tasks")
-                self.already_fired_events = True
+                Utils.async_start(self.display_received_items(), "LM - Display Items in Game")
 
             case "Bounced":
                 if "tags" not in args:
@@ -619,9 +616,6 @@ class LMContext(BaseContext):
                 dme.write_word(NON_SAVE_LAST_RECV_ITEM_ADDR, last_recv_idx)
             await self.wait_for_next_loop(0.1)
 
-        if self.item_display_queue:
-            Utils.async_start(self.display_received_items(), "LM - Display Items in Game")
-
     async def lm_update_non_savable_ram(self):
         try:
             # Always adjust the Vacuum speed as saving and quitting or going to E. Gadds lab could reset it back to normal.
@@ -691,7 +685,7 @@ class LMContext(BaseContext):
         return
 
     async def check_death(self):
-        if not (self.check_ingame() and self.check_alive()):
+        if not self.last_not_ingame or (self.check_ingame() and self.check_alive()):
             return
 
         if not self.is_luigi_dead and time.time() >= float(self.last_death_link + (CHECKS_WAIT * LONGER_MODIFIER * 3)):
@@ -734,22 +728,23 @@ class LMContext(BaseContext):
                     await self.wait_for_next_loop(WAIT_TIMER_LONG_TIMEOUT)
                     continue
 
-                for item in self.item_display_queue:
-                    lm_item_name = self.item_names.lookup_in_game(item.item)
+                while self.item_display_queue:
+                    item_to_display = self.item_display_queue.pop()
+                    lm_item_name = self.item_names.lookup_in_game(item_to_display.item)
 
                     item_name_display = lm_item_name[:RECV_MAX_STRING_LENGTH].replace("&", "")
                     short_item_name = sbf.string_to_bytes_with_limit(item_name_display, RECV_LINE_STRING_LENGTH)
                     dme.write_bytes(RECV_ITEM_NAME_ADDR, short_item_name + b'\x00')
 
-                    if item.player == self.slot:
-                        loc_name_retr = self.location_names.lookup_in_game(item.location)
+                    if item_to_display.player == self.slot:
+                        loc_name_retr = self.location_names.lookup_in_game(item_to_display.location)
                     else:
-                        loc_name_retr = self.location_names.lookup_in_slot(item.location, item.player)
+                        loc_name_retr = self.location_names.lookup_in_slot(item_to_display.location, item_to_display.player)
                     loc_name_display = loc_name_retr[:SLOT_NAME_STR_LENGTH].replace("&", "")
                     loc_name_bytes = sbf.string_to_bytes_with_limit(loc_name_display, RECV_LINE_STRING_LENGTH)
                     dme.write_bytes(RECV_ITEM_LOC_ADDR, loc_name_bytes + b'\x00')
 
-                    recv_full_player_name = self.player_names[item.player]
+                    recv_full_player_name = self.player_names[item_to_display.player]
                     recv_name_repl = recv_full_player_name.replace("&", "")
                     # We try to check the received player's name is under the slot length first.
                     short_recv_name = sbf.string_to_bytes_with_limit(recv_name_repl, SLOT_NAME_STR_LENGTH)
@@ -764,8 +759,7 @@ class LMContext(BaseContext):
                     while dme.read_byte(RECV_ITEM_DISPLAY_VIZ_ADDR) > 0:
                         await self.wait_for_next_loop(WAIT_TIMER_SHORT_TIMEOUT)
 
-                # Reset the list so next time we enter this function we don't display anything
-                self.item_display_queue = []
+                    await self.wait_for_next_loop(WAIT_TIMER_MEDIUM_TIMEOUT)
         except Exception as genericEx:
             logger.error(
                 "While trying to display an item in game, an unknown issue occurred. Details: " + str(genericEx))
