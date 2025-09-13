@@ -34,6 +34,7 @@ class BaseContext(UniversalContext):
         self.wallet = Wallet()
         self.trap_link = TrapLink(self.network_engine)
         self.ring_link = RingLink(self.network_engine, WalletManager(self.wallet))
+        self.energy_link = EnergyLinkClient(self.network_engine, self.wallet)
     
     def on_connected(self, args):
         tags: list[str] = []
