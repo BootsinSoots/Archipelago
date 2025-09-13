@@ -45,7 +45,7 @@ class DolphinLauncher:
 
         args = [ self.luigismansion_settings.dolphin_path ]
         logger.info("Attempting to open Dolphin emulator at: %s", self.luigismansion_settings.dolphin_path)
-        if not rom:
+        if rom:
             logger.info("Attempting to open Dolphin emulator with rom path:%s", rom)
             args.append(f"--exec={rom}")
 
