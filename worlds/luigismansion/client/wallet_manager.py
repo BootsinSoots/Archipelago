@@ -1,8 +1,8 @@
-""" """
+""" Helper functions for wallet operations. """
 
 import logging
 
-from .wallet import Wallet
+from .wallet import Wallet, CURRENCY_NAME
 from.constants import AP_LOGGER_NAME
 
 logger = logging.getLogger(AP_LOGGER_NAME)
@@ -72,6 +72,10 @@ def _remove_currencies(wallet: Wallet, amount_to_send: int) -> dict[str, int]:
     for currency_name, currency_type in wallet.get_currencies().items():
         if new_amount == 0:
             break
+
+        # We don't want to convert gold diamonds because they are a hard requirement to complete the game.
+        if currency_name == CURRENCY_NAME.GOLD_DIAMOND:
+            continue
 
         currency_to_remove, remainder = divmod(new_amount, currency_type.calc_value)
         new_amount = remainder

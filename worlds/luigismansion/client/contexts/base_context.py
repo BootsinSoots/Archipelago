@@ -45,6 +45,7 @@ class BaseContext(UniversalContext):
             Utils.async_start(self.network_engine.update_client_tags_async(tags), name="UpdateClientTags")
 
         self.trap_link.on_connected(args)
+        self.ring_link.on_connected(args)
 
     def make_gui(self):
         # Performing local import to prevent additional UIs to appear during the patching process.

@@ -18,6 +18,11 @@ class TrapLinkConstants:
     FRIENDLY_NAME = "TrapLink"
     SLOT_NAME = "trap_link"
 
+class SlotDataConstants():
+    DISABLED_TRAPS = "disabled_traps"
+    ENABLE_LOGGER = "enable_trap_client_msg"
+    SLOT_DATA = "slot_data"
+
 class TrapLinkType(Flag):
     """ A flag collection of Trap types supported in Luigi's Mansion. """
     NONE = 0
@@ -38,6 +43,7 @@ class TrapLink(LinkBase):
     received_trap: bool = False
     # We want to ignore traps if the player set the trap weight to 0.
     disabled_trap_flags: TrapLinkType = TrapLinkType.NONE
+    enable_logger: bool = True
 
     def __init__(self, network_engine: ArchipelagoNetworkEngine):
         super().__init__(friendly_name=TrapLinkConstants.FRIENDLY_NAME, slot_name=TrapLinkConstants.SLOT_NAME,
@@ -115,17 +121,21 @@ class TrapLink(LinkBase):
         
         :param args: The arguments to be passed into the 'Connected' command.
         """
-        slot_data = args["slot_data"]
+        slot_data = args[SlotDataConstants.SLOT_DATA]
         # The flags are cast to an int when sent to the server, so they need to be cast back to the enum.
-        if "disabled_traps" not in slot_data:
+        if SlotDataConstants.DISABLED_TRAPS not in slot_data:
             logger.debug("Internal setting 'disabled_traps' not found, zero weighted traps will still be sent to the client.")
         else:
-            self.disabled_trap_flags = TrapLinkType(slot_data["disabled_traps"])
+            self.disabled_trap_flags = TrapLinkType(slot_data[SlotDataConstants.DISABLED_TRAPS])
             logger.debug("The following traps will not trigger when Trap Link is enabled: %s.", self.disabled_trap_flags)
+        if SlotDataConstants.ENABLE_LOGGER in slot_data:
+            self.enable_logger = slot_data[SlotDataConstants.ENABLE_LOGGER]
 
 def _receive_weighted_trap(trap_link: TrapLink, trap_name: str, trap_type: TrapLinkType):
     if trap_type not in trap_link.disabled_trap_flags:
         trap_link.received_trap = trap_name
-        logger.info("%s: Receiving trap %s.", TrapLinkConstants.FRIENDLY_NAME, trap_name)
+        if trap_link.enable_logger:
+            logger.info("%s: Receiving trap %s.", TrapLinkConstants.FRIENDLY_NAME, trap_name)
     else:
-        logger.info("%s: Ignoring trap %s because weight is zero.", TrapLinkConstants.FRIENDLY_NAME, trap_name)
+        if trap_link.enable_logger:
+            logger.info("%s: Ignoring trap %s because weight is zero.", TrapLinkConstants.FRIENDLY_NAME, trap_name)
