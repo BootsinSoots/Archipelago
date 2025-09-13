@@ -338,8 +338,8 @@ class LMContext(BaseContext):
             self.last_map_id = curr_map_id
             self.last_not_ingame = time.time()
             self.already_mentioned_rank_diff = False
-            await self.lm_update_non_savable_ram()
-            await self.give_progression_again()
+            Utils.async_start(self.lm_update_non_savable_ram(), "LM - Update Non-Saveable RAM - Map Change")
+            Utils.async_start(self.give_progression_again(), "LM - Give Progression Items")
             return False
 
         # These are the only valid maps we want Luigi to have checks with or do health detection with.
@@ -364,7 +364,7 @@ class LMContext(BaseContext):
                             "operations": [{"operation": "replace", "value": current_room_id}]
                         }]), name="Update Luigi Mansion Room ID")
                         self.last_room_id = current_room_id
-                        await self.lm_update_non_savable_ram()
+                        Utils.async_start(self.lm_update_non_savable_ram(), "LM - Update Non-Saveable RAM - Room Change")
                 return bool_loaded_in_map
             return True
 
@@ -569,25 +569,30 @@ class LMContext(BaseContext):
     # debug breakpoints in Dolphin. Instead, just give all the progressive items again and be done with it.
     async def give_progression_again(self):
         progressive_items: dict[str, LMItemData] = {**ITEM_TABLE}
-        for (key, val) in progressive_items.items():
-            if key in ["Progressive Vacuum", "Gold Diamond", "Progressive Flower"]:
-                continue
 
-            for addr_to_update in val.update_ram_addr:
-                byte_size = 1 if addr_to_update.ram_byte_size is None else addr_to_update.ram_byte_size
-                ram_offset = None
-                if addr_to_update.pointer_offset:
-                    ram_offset = [addr_to_update.pointer_offset]
+        try:
+            for (key, val) in progressive_items.items():
+                if key in ["Progressive Vacuum", "Gold Diamond", "Progressive Flower"]:
+                    continue
 
-                if not addr_to_update.pointer_offset is None:
-                    curr_val = int.from_bytes(dme.read_bytes(dme.follow_pointers(addr_to_update.ram_addr,
-                        [addr_to_update.pointer_offset]), byte_size))
-                else:
-                    curr_val = int.from_bytes(dme.read_bytes(addr_to_update.ram_addr, byte_size))
+                for addr_to_update in val.update_ram_addr:
+                    byte_size = 1 if addr_to_update.ram_byte_size is None else addr_to_update.ram_byte_size
+                    ram_offset = None
+                    if addr_to_update.pointer_offset:
+                        ram_offset = [addr_to_update.pointer_offset]
 
-                curr_val = (curr_val | (1 << addr_to_update.bit_position))
-                await write_bytes_and_validate(addr_to_update.ram_addr, ram_offset, curr_val.to_bytes(byte_size, 'big'))
+                    if not addr_to_update.pointer_offset is None:
+                        curr_val = int.from_bytes(dme.read_bytes(dme.follow_pointers(addr_to_update.ram_addr,
+                            [addr_to_update.pointer_offset]), byte_size))
+                    else:
+                        curr_val = int.from_bytes(dme.read_bytes(addr_to_update.ram_addr, byte_size))
 
+                    curr_val = (curr_val | (1 << addr_to_update.bit_position))
+                    await write_bytes_and_validate(addr_to_update.ram_addr, ram_offset, curr_val.to_bytes(byte_size, 'big'))
+        except Exception as genericEx:
+            logger.error("Unable to give progression items as expected due to an error. Details: " + str(genericEx))
+
+        return
 
     # TODO Review these loops as something could be skipped over.
     async def give_lm_items(self):
@@ -708,72 +713,74 @@ class LMContext(BaseContext):
                 dme.write_word(NON_SAVE_LAST_RECV_ITEM_ADDR, last_recv_idx)
             await wait_for_next_loop(1)
 
-    # TODO move this function to be called on room change, map change, and at the bottom of give_lm_items
     async def lm_update_non_savable_ram(self):
-        if not (await self.check_ingame() and self.check_alive()):
-            return
+        try:
+            if not (await self.check_ingame() and self.check_alive()):
+                return
 
-        # Always adjust the Vacuum speed as saving and quitting or going to E. Gadds lab could reset it back to normal.
-        vac_count = self.get_item_count_by_id(8064)
-        vac_speed = max(min(vac_count - 1, 5),0)
-        lm_item_name = self.item_names.lookup_in_game(8064)
-        lm_item = ALL_ITEMS_TABLE[lm_item_name]
+            # Always adjust the Vacuum speed as saving and quitting or going to E. Gadds lab could reset it back to normal.
+            vac_count = self.get_item_count_by_id(8064)
+            vac_speed = max(min(vac_count - 1, 5),0)
+            lm_item_name = self.item_names.lookup_in_game(8064)
+            lm_item = ALL_ITEMS_TABLE[lm_item_name]
 
-        if not self.check_vac_trap_active():
-            for addr_to_update in lm_item.update_ram_addr:
-                if addr_to_update.ram_addr == 0x804dda54 and vac_count > 0:  # If we're checking against our vacuum-on address
-                    curr_val = 1
-                    dme.write_bytes(addr_to_update.ram_addr, curr_val.to_bytes(addr_to_update.ram_byte_size, 'big'))
-                else:
-                    dme.write_bytes(addr_to_update.ram_addr, vac_speed.to_bytes(addr_to_update.ram_byte_size, 'big'))
-
-        # Always adjust Pickup animation issues if the user turned pick up animations off.
-        if not self.pickup_anim_on:
-            crown_helper_val = "00000001"
-            dme.write_bytes(0x804DE40C, bytes.fromhex(crown_helper_val))
-
-        # Always update Boolossus difficulty
-        dme.write_bytes(0x804de3d0, self.boolossus_difficulty.to_bytes(4,'big'))
-
-        # Always update the flower to have the correct amount of flowers in game
-        flower_recv: int = self.get_item_count_by_id(8140)
-        flower_count = min(flower_recv + 234, 237)
-        flower_item = self.item_names.lookup_in_game(8140)
-        flower_item_data = ALL_ITEMS_TABLE[flower_item]
-        for flwr_addr_update in flower_item_data.update_ram_addr:
-            dme.write_bytes(flwr_addr_update.ram_addr, flower_count.to_bytes(flwr_addr_update.ram_byte_size, 'big'))
-
-        # Always update the gold diamond count to have the correct amount of diamonds in game
-        diamond_recv: int = self.get_item_count_by_id(8065)
-        diamond_item = self.item_names.lookup_in_game(8065)
-        diamond_item_data = ALL_ITEMS_TABLE[diamond_item]
-        for diam_addr_update in diamond_item_data.update_ram_addr:
-            dme.write_bytes(diam_addr_update.ram_addr, diamond_recv.to_bytes(diam_addr_update.ram_byte_size, 'big'))
-
-        # Make it so the displayed Boo counter always appears even if you don't have boo radar or if you haven't caught
-        # a boo in-game yet.
-        if self.boosanity:
-            # This allows the in-game display to work correctly.
-            dme.write_bytes(0x803D5E0B, bytes.fromhex("01"))
-
-            # Update the in-game counter to reflect how many boos you got.
-            boo_received_list = [item.item for item in self.items_received if item.item in BOO_AP_ID_LIST]
-
-            for boo_item in boo_received_list:
-                lm_item_name = self.item_names.lookup_in_game(boo_item)
-                lm_item = ALL_ITEMS_TABLE[lm_item_name]
+            if not self.check_vac_trap_active():
                 for addr_to_update in lm_item.update_ram_addr:
-                    curr_val = dme.read_byte(addr_to_update.ram_addr)
-                    curr_val = (curr_val | (1 << addr_to_update.bit_position))
-                    dme.write_byte(addr_to_update.ram_addr, curr_val)
+                    if addr_to_update.ram_addr == 0x804dda54 and vac_count > 0:  # If we're checking against our vacuum-on address
+                        curr_val = 1
+                        dme.write_bytes(addr_to_update.ram_addr, curr_val.to_bytes(addr_to_update.ram_byte_size, 'big'))
+                    else:
+                        dme.write_bytes(addr_to_update.ram_addr, vac_speed.to_bytes(addr_to_update.ram_byte_size, 'big'))
 
-            curr_boo_count = len(set(boo_received_list))
-            if curr_boo_count >= self.boo_balcony_count:
-                boo_val = dme.read_byte(BOO_BALCONY_FLAG_ADDR)
-                dme.write_byte(BOO_BALCONY_FLAG_ADDR, (boo_val | (1 << BOO_BALCONY_FLAG_BIT)))
-            if curr_boo_count >= self.boo_final_count:
-                boo_val = dme.read_byte(BOO_FINAL_FLAG_ADDR)
-                dme.write_byte(BOO_FINAL_FLAG_ADDR, (boo_val | (1 << BOO_FINAL_FLAG_BIT)))
+            # Always adjust Pickup animation issues if the user turned pick up animations off.
+            if not self.pickup_anim_on:
+                crown_helper_val = "00000001"
+                dme.write_bytes(0x804DE40C, bytes.fromhex(crown_helper_val))
+
+            # Always update Boolossus difficulty
+            dme.write_bytes(0x804de3d0, self.boolossus_difficulty.to_bytes(4,'big'))
+
+            # Always update the flower to have the correct amount of flowers in game
+            flower_recv: int = self.get_item_count_by_id(8140)
+            flower_count = min(flower_recv + 234, 237)
+            flower_item = self.item_names.lookup_in_game(8140)
+            flower_item_data = ALL_ITEMS_TABLE[flower_item]
+            for flwr_addr_update in flower_item_data.update_ram_addr:
+                dme.write_bytes(flwr_addr_update.ram_addr, flower_count.to_bytes(flwr_addr_update.ram_byte_size, 'big'))
+
+            # Always update the gold diamond count to have the correct amount of diamonds in game
+            diamond_recv: int = self.get_item_count_by_id(8065)
+            diamond_item = self.item_names.lookup_in_game(8065)
+            diamond_item_data = ALL_ITEMS_TABLE[diamond_item]
+            for diam_addr_update in diamond_item_data.update_ram_addr:
+                dme.write_bytes(diam_addr_update.ram_addr, diamond_recv.to_bytes(diam_addr_update.ram_byte_size, 'big'))
+
+            # Make it so the displayed Boo counter always appears even if you don't have boo radar or if you haven't caught
+            # a boo in-game yet.
+            if self.boosanity:
+                # This allows the in-game display to work correctly.
+                dme.write_bytes(0x803D5E0B, bytes.fromhex("01"))
+
+                # Update the in-game counter to reflect how many boos you got.
+                boo_received_list = [item.item for item in self.items_received if item.item in BOO_AP_ID_LIST]
+
+                for boo_item in boo_received_list:
+                    lm_item_name = self.item_names.lookup_in_game(boo_item)
+                    lm_item = ALL_ITEMS_TABLE[lm_item_name]
+                    for addr_to_update in lm_item.update_ram_addr:
+                        curr_val = dme.read_byte(addr_to_update.ram_addr)
+                        curr_val = (curr_val | (1 << addr_to_update.bit_position))
+                        dme.write_byte(addr_to_update.ram_addr, curr_val)
+
+                curr_boo_count = len(set(boo_received_list))
+                if curr_boo_count >= self.boo_balcony_count:
+                    boo_val = dme.read_byte(BOO_BALCONY_FLAG_ADDR)
+                    dme.write_byte(BOO_BALCONY_FLAG_ADDR, (boo_val | (1 << BOO_BALCONY_FLAG_BIT)))
+                if curr_boo_count >= self.boo_final_count:
+                    boo_val = dme.read_byte(BOO_FINAL_FLAG_ADDR)
+                    dme.write_byte(BOO_FINAL_FLAG_ADDR, (boo_val | (1 << BOO_FINAL_FLAG_BIT)))
+        except Exception as genericEx:
+            logger.error("Unable to update the non-saveable ram as expected due to an error. Details: " + str(genericEx))
 
         return
 
