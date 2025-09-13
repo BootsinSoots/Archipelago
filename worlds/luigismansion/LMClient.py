@@ -199,9 +199,12 @@ class LMContext(BaseContext):
         self.self_item_messages = 0
 
         # Know whether to send in-game hints to the multiworld or not
-        self.send_hints = 0
-        self.portrait_hints = 0
+        self.send_hints: int = 0
+        self.portrait_hints: int = 0
         self.hints = {}
+
+        # Last received index to track locally in the client
+        self.last_received_idx: int = 0
 
     async def disconnect(self, allow_autoreconnect: bool = False):
         """
@@ -319,7 +322,7 @@ class LMContext(BaseContext):
         self.last_health_checked = time.time()
         return False
 
-    def check_ingame(self):
+    async def check_ingame(self):
         # The game has an address that lets us know if we are in a playable state or not.
         # This isn't perfect indicator however as although the game says ready, we still map be loading in,
         # warping around, etc.
@@ -335,6 +338,8 @@ class LMContext(BaseContext):
             self.last_map_id = curr_map_id
             self.last_not_ingame = time.time()
             self.already_mentioned_rank_diff = False
+            await self.lm_update_non_savable_ram()
+            await self.give_progression_again()
             return False
 
         # These are the only valid maps we want Luigi to have checks with or do health detection with.
@@ -359,6 +364,7 @@ class LMContext(BaseContext):
                             "operations": [{"operation": "replace", "value": current_room_id}]
                         }]), name="Update Luigi Mansion Room ID")
                         self.last_room_id = current_room_id
+                        await self.lm_update_non_savable_ram()
                 return bool_loaded_in_map
             return True
 
@@ -366,7 +372,7 @@ class LMContext(BaseContext):
         return False
 
     async def check_death(self):
-        if self.check_ingame() and not self.check_alive():
+        if await self.check_ingame() and not self.check_alive():
             if not self.is_luigi_dead and time.time() >= self.last_death_link + (CHECKS_WAIT*LONGER_MODIFIER*3):
                 self.is_luigi_dead = True
                 self.set_luigi_dead()
@@ -378,7 +384,7 @@ class LMContext(BaseContext):
         return
 
     async def get_debug_info(self):
-        if not (dme.is_hooked() and self.dolphin_status == CONNECTION_CONNECTED_STATUS) or not self.check_ingame():
+        if not (dme.is_hooked() and self.dolphin_status == CONNECTION_CONNECTED_STATUS) or not await self.check_ingame():
             logger.info("Unable to use this command until you are in a Luigi's Mansion ROM, loaded and connected.")
             return
 
@@ -493,8 +499,12 @@ class LMContext(BaseContext):
                         return True
         return False
 
+    async def check_vac_trap_active(self) -> bool:
+        is_trap_active: int = int.from_bytes(dme.read_bytes(0x804ddf1c, 4))
+        return is_trap_active > 0
+
     async def lm_check_locations(self):
-        if not (self.check_ingame() and self.check_alive()):
+        if not (await self.check_ingame() and self.check_alive()):
             return
 
         # There will be different checks on different maps.
@@ -554,16 +564,44 @@ class LMContext(BaseContext):
     def get_item_count_by_id(self, item_id: int) -> int:
         return len([netItem for netItem in self.items_received if netItem.item == item_id])
 
+    # Through god knows how many hours of debugging, we have figured out that LM will change bytes due to certain
+    # Events in game, however it is currently unknown when they trigger and the average user does not know how to
+    # debug breakpoints in Dolphin. Instead, just give all the progressive items again and be done with it.
+    async def give_progression_again(self):
+        progressive_items: dict[str, LMItemData] = {**ITEM_TABLE}
+        for (key, val) in progressive_items.items():
+            if key in ["Progressive Vacuum", "Gold Diamond", "Progressive Flower"]:
+                continue
+
+            for addr_to_update in val.update_ram_addr:
+                byte_size = 1 if addr_to_update.ram_byte_size is None else addr_to_update.ram_byte_size
+                ram_offset = None
+                if addr_to_update.pointer_offset:
+                    ram_offset = [addr_to_update.pointer_offset]
+
+                if not addr_to_update.pointer_offset is None:
+                    curr_val = int.from_bytes(dme.read_bytes(dme.follow_pointers(addr_to_update.ram_addr,
+                        [addr_to_update.pointer_offset]), byte_size))
+                else:
+                    curr_val = int.from_bytes(dme.read_bytes(addr_to_update.ram_addr, byte_size))
+
+                curr_val = (curr_val | (1 << addr_to_update.bit_position))
+                await write_bytes_and_validate(addr_to_update.ram_addr, ram_offset, curr_val.to_bytes(byte_size, 'big'))
+
+
+    # TODO Review these loops as something could be skipped over.
     async def give_lm_items(self):
-        if not (self.check_ingame() and self.check_alive()):
+        if not (await self.check_ingame() and self.check_alive()):
             return
 
         last_recv_idx = dme.read_word(LAST_RECV_ITEM_ADDR)
         if len(self.items_received) == last_recv_idx:
-            # Update the non-savable location in memory with the last received in case the player reloaded their game.
-            # TODO give all progression items again during this iteration.
-            dme.write_word(NON_SAVE_LAST_RECV_ITEM_ADDR, last_recv_idx)
-            return
+            if last_recv_idx != self.last_received_idx:
+                self.last_received_idx = last_recv_idx
+                # Update the non-savable location in memory with the last
+                # received in case the player reloaded their game.
+                dme.write_word(NON_SAVE_LAST_RECV_ITEM_ADDR, last_recv_idx)
+                return
 
         non_save_recv_idx: int = dme.read_word(NON_SAVE_LAST_RECV_ITEM_ADDR)
         recv_items = self.items_received[last_recv_idx:]
@@ -620,29 +658,26 @@ class LMContext(BaseContext):
 
                 if item.item in trap_id_list:
                     # If we have no vacuum, do not trigger a No Vac trap
-                    if item.item == 8147 and len(
-                            [netItem for netItem in self.items_received if netItem.item == 8064]) < 1:
+                    if item.item == 8147 and self.get_item_count_by_id(8064) < 1:
                         last_recv_idx += 1
                         dme.write_word(LAST_RECV_ITEM_ADDR, last_recv_idx)
                         continue
                     else:
                         curr_val = addr_to_update.item_count
                 elif item.item == 8140:  # Progressive Flower, 00EB, 00EC, 00ED
-                    flower_count: int = len([netItem for netItem in self.items_received if netItem.item == 8140])
+                    flower_count: int = self.get_item_count_by_id(8140)
                     curr_val = min(flower_count + 234, 237)
                     ram_offset = None
                 elif item.item == 8064:  # If it's a Progressive Vacuum
                     if addr_to_update.ram_addr == 0x804dda54:  # If we're checking against our vacuum-on address
                         curr_val = addr_to_update.item_count
                     else:  # If we're checking against our vacuum speed address
-                        curr_val: int = min(5, (
-                                    len([netItem for netItem in self.items_received if netItem.item == 8064]) - 1))
+                        curr_val: int = min(5, self.get_item_count_by_id(8064) - 1)
                         ram_offset = None
                 elif not addr_to_update.item_count is None:
                     if not ram_offset is None:
                         curr_val = int.from_bytes(dme.read_bytes(dme.follow_pointers(addr_to_update.ram_addr,
-                                                                                     [addr_to_update.pointer_offset]),
-                                                                 byte_size))
+                            [addr_to_update.pointer_offset]), byte_size))
                         if item.item in HEALTH_RELATED_ITEMS:
                             curr_val = min(curr_val + addr_to_update.item_count, self.luigimaxhp)
                         else:
@@ -653,8 +688,7 @@ class LMContext(BaseContext):
                 else:
                     if not addr_to_update.pointer_offset is None:
                         curr_val = int.from_bytes(dme.read_bytes(dme.follow_pointers(addr_to_update.ram_addr,
-                                                                                     [addr_to_update.pointer_offset]),
-                                                                 byte_size))
+                            [addr_to_update.pointer_offset]), byte_size))
                         curr_val = (curr_val | (1 << addr_to_update.bit_position))
                     else:
                         curr_val = int.from_bytes(dme.read_bytes(addr_to_update.ram_addr, byte_size))
@@ -663,8 +697,7 @@ class LMContext(BaseContext):
                         else:
                             curr_val += 1
 
-                await write_bytes_and_validate(addr_to_update.ram_addr, ram_offset,
-                                               curr_val.to_bytes(byte_size, 'big'))
+                await write_bytes_and_validate(addr_to_update.ram_addr, ram_offset, curr_val.to_bytes(byte_size, 'big'))
 
             # Update the last received index to ensure we don't receive the same item over and over.
             last_recv_idx += 1
@@ -677,23 +710,22 @@ class LMContext(BaseContext):
 
     # TODO move this function to be called on room change, map change, and at the bottom of give_lm_items
     async def lm_update_non_savable_ram(self):
-        if not (self.check_ingame() and self.check_alive()):
+        if not (await self.check_ingame() and self.check_alive()):
             return
 
         # Always adjust the Vacuum speed as saving and quitting or going to E. Gadds lab could reset it back to normal.
-        # TODO use get_item_count_by_id
-        vac_count = len(list(netItem.item for netItem in self.items_received if netItem.item == 8064))
+        vac_count = self.get_item_count_by_id(8064)
         vac_speed = max(min(vac_count - 1, 5),0)
         lm_item_name = self.item_names.lookup_in_game(8064)
         lm_item = ALL_ITEMS_TABLE[lm_item_name]
 
-        # TODO make a class boolean that is on while no vac trap is active. Do not adjust this while thats on.
-        for addr_to_update in lm_item.update_ram_addr:
-            if addr_to_update.ram_addr == 0x804dda54 and vac_count > 0:  # If we're checking against our vacuum-on address
-                curr_val = 1
-                dme.write_bytes(addr_to_update.ram_addr, curr_val.to_bytes(addr_to_update.ram_byte_size, 'big'))
-            else:
-                dme.write_bytes(addr_to_update.ram_addr, vac_speed.to_bytes(addr_to_update.ram_byte_size, 'big'))
+        if not self.check_vac_trap_active():
+            for addr_to_update in lm_item.update_ram_addr:
+                if addr_to_update.ram_addr == 0x804dda54 and vac_count > 0:  # If we're checking against our vacuum-on address
+                    curr_val = 1
+                    dme.write_bytes(addr_to_update.ram_addr, curr_val.to_bytes(addr_to_update.ram_byte_size, 'big'))
+                else:
+                    dme.write_bytes(addr_to_update.ram_addr, vac_speed.to_bytes(addr_to_update.ram_byte_size, 'big'))
 
         # Always adjust Pickup animation issues if the user turned pick up animations off.
         if not self.pickup_anim_on:
@@ -704,13 +736,19 @@ class LMContext(BaseContext):
         dme.write_bytes(0x804de3d0, self.boolossus_difficulty.to_bytes(4,'big'))
 
         # Always update the flower to have the correct amount of flowers in game
-        # TODO use get_item_count_by_id
-        flower_recv: int = len([netItem for netItem in self.items_received if netItem.item == 8140])
+        flower_recv: int = self.get_item_count_by_id(8140)
         flower_count = min(flower_recv + 234, 237)
         flower_item = self.item_names.lookup_in_game(8140)
         flower_item_data = ALL_ITEMS_TABLE[flower_item]
         for flwr_addr_update in flower_item_data.update_ram_addr:
             dme.write_bytes(flwr_addr_update.ram_addr, flower_count.to_bytes(flwr_addr_update.ram_byte_size, 'big'))
+
+        # Always update the gold diamond count to have the correct amount of diamonds in game
+        diamond_recv: int = self.get_item_count_by_id(8065)
+        diamond_item = self.item_names.lookup_in_game(8065)
+        diamond_item_data = ALL_ITEMS_TABLE[diamond_item]
+        for diam_addr_update in diamond_item_data.update_ram_addr:
+            dme.write_bytes(diam_addr_update.ram_addr, diamond_recv.to_bytes(diam_addr_update.ram_byte_size, 'big'))
 
         # Make it so the displayed Boo counter always appears even if you don't have boo radar or if you haven't caught
         # a boo in-game yet.
@@ -737,15 +775,15 @@ class LMContext(BaseContext):
                 boo_val = dme.read_byte(BOO_FINAL_FLAG_ADDR)
                 dme.write_byte(BOO_FINAL_FLAG_ADDR, (boo_val | (1 << BOO_FINAL_FLAG_BIT)))
 
-        # TODO Change this to its own function
-        if self.call_mario:
-            # Prevents the console from receiving the same message over and over.
-            if not self.yelling_in_client:
-                luigi_shouting = dme.read_word(LUIGI_SHOUT_ADDR)
-                if luigi_shouting == LUIGI_SHOUT_RAMVALUE:
-                    self.yelling_in_client = True
-                    Utils.async_start(self.yell_in_client(), name="Luigi Is Yelling")
         return
+
+    async def check_mario_yell(self):
+        # Prevents the console from receiving the same message over and over.
+        if not self.yelling_in_client:
+            luigi_shouting = dme.read_word(LUIGI_SHOUT_ADDR)
+            if luigi_shouting == LUIGI_SHOUT_RAMVALUE:
+                self.yelling_in_client = True
+                Utils.async_start(self.yell_in_client(), name="Luigi Is Yelling")
 
     async def yell_in_client(self) -> None:
         logger.info(random.choice(LUIGI_SHOUT_LIST))
@@ -759,7 +797,7 @@ async def handle_ringlink_async(ctx: LMContext):
             logger.info("Ring Link does not currently support interactions with Energy Link, disabling Ring Link.")
             return
         if ctx.ring_link.is_enabled():
-            if (ctx.check_ingame() and ctx.check_alive()):
+            if await ctx.check_ingame() and ctx.check_alive():
                 await ctx.ring_link.handle_ring_link_async()
             else:
                 # resets the logic for determining the currency differences, needs to be updated to reset inside of wallet_manager.
@@ -833,7 +871,7 @@ async def dolphin_sync_task(ctx: LMContext):
                 await ctx.check_death()
             if ctx.trap_link.is_enabled():
                 # Only try to give items if we are in game and alive.
-                if ctx.check_ingame() and ctx.check_alive():
+                if await ctx.check_ingame() and ctx.check_alive():
                     await ctx.trap_link.handle_traplink_async()
 
             # Lastly check any locations and update the non-saveable ram stuff
@@ -841,7 +879,8 @@ async def dolphin_sync_task(ctx: LMContext):
             await ctx.give_lm_items()
             if ctx.send_hints == 1:
                 await ctx.lm_send_hints()
-            await ctx.lm_update_non_savable_ram()
+            if ctx.call_mario:
+                await ctx.check_mario_yell()
             await asyncio.sleep(0.1)
         except Exception as ex:
             dme.un_hook()
@@ -858,7 +897,7 @@ async def wait_for_next_loop(time_to_wait: float):
 async def display_received_items(ctx: LMContext):
     while not ctx.exit_event.is_set():
         if not (dme.is_hooked() and ctx.dolphin_status == CONNECTION_CONNECTED_STATUS and
-            ctx.check_ingame() and ctx.check_alive()):
+            await ctx.check_ingame() and ctx.check_alive()):
             await wait_for_next_loop(5)
             continue
 
@@ -903,7 +942,7 @@ def main(*launch_args: str):
     import colorama
 
     server_address: str = ""
-    rom_path: str = None
+    rom_path: str = ""
 
     Utils.init_logging(CLIENT_NAME)
     logger.info(f"Starting LM Client {CLIENT_VERSION}")
