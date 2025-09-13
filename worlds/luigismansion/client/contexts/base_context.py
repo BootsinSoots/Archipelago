@@ -12,8 +12,6 @@ from ..wallet import Wallet
 from ..wallet_manager import WalletManager
 from ...client.constants import CLIENT_VERSION
 
-import asyncio
-
 class BaseCommandProcessor(UniversalCommandProcessor):
     pass
 
@@ -98,3 +96,4 @@ class BaseContext(UniversalContext):
 
 def _check_tag(link: LinkBase, network_engine: ArchipelagoNetworkEngine, args) -> bool:
     return link.slot_name in args["slot_data"] and link.friendly_name not in network_engine.get_tags()
+
