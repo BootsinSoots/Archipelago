@@ -141,7 +141,7 @@ def _receive_weighted_trap(trap_link: TrapLink, trap_name: str, trap_type: TrapL
     if trap_type not in trap_link.disabled_trap_flags:
         trap_link.received_trap = trap_name
         if trap_link.enable_logger:
-            logger.debug("%s: Receiving trap %s.", TrapLinkConstants.FRIENDLY_NAME, trap_name)
+            logger.info("%s: Receiving trap %s.", TrapLinkConstants.FRIENDLY_NAME, trap_name)
     else:
         if trap_link.enable_logger:
-            logger.debug("%s: Ignoring trap %s because weight is zero.", TrapLinkConstants.FRIENDLY_NAME, trap_name)
+            logger.info("%s: Ignoring trap %s because weight is zero.", TrapLinkConstants.FRIENDLY_NAME, trap_name)
