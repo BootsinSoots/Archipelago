@@ -411,10 +411,6 @@ class LMContext(BaseContext):
                         return True
         return False
 
-    def check_vac_trap_active(self) -> bool:
-        is_trap_active: int = int.from_bytes(dme.read_bytes(0x804ddf1c, 4))
-        return is_trap_active > 0
-
     async def lm_check_locations(self):
         # There will be different checks on different maps.
         current_map_id: int = dme.read_word(CURR_MAP_ID_ADDR)
@@ -623,7 +619,7 @@ class LMContext(BaseContext):
             lm_item_name = self.item_names.lookup_in_game(8064)
             lm_item = ALL_ITEMS_TABLE[lm_item_name]
 
-            if not self.check_vac_trap_active():
+            if not self.trap_link.check_vac_trap_active():
                 for addr_to_update in lm_item.update_ram_addr:
                     if addr_to_update.ram_addr == 0x804dda54 and vac_count > 0:  # If we're checking against our vacuum-on address
                         curr_val = 1

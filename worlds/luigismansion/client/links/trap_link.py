@@ -76,6 +76,10 @@ class TrapLink(LinkBase):
             TrapNetworkRequest(tags=[ TrapLinkConstants.FRIENDLY_NAME ],
             trap_name=trap_name))
 
+    def check_vac_trap_active(self) -> bool:
+        is_trap_active: int = int.from_bytes(dme.read_bytes(0x804ddf1c, 4))
+        return is_trap_active > 0
+
     def on_bounced(self, args):
         """
         Performs traplink operations during the 'Bounced' command in `on_package`.
