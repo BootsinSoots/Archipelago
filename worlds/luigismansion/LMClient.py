@@ -708,21 +708,16 @@ class LMContext(BaseContext):
 
                 # All Link related activities
                 if "DeathLink" in self.tags:
-                    logger.info("DeathLink")
                     await self.check_death()
                 if self.trap_link.is_enabled():
-                    logger.info("TrapLink")
                     await self.trap_link.handle_traplink_async()
                 if self.ring_link.is_enabled():
-                    logger.info("RingLink")
                     await self.handle_ringlink_async()
 
                 # Async thread related tasks
                 if self.send_hints:
-                    logger.info("Hints")
                     await self.lm_send_hints()
                 if self.call_mario:
-                    logger.info("CallMario")
                     await self.check_mario_yell()
 
                 await self.wait_for_next_loop(0.5)

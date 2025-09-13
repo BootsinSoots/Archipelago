@@ -148,10 +148,6 @@ class BaseContext(UniversalContext):
         player_id = 0
         location_id = 0
 
-        logger.info("Current Room: " + str(current_room))
-        logger.info("Slot Info Hint Dict: " + str(self.hints))
-        logger.info("Local Dict Hint Dict: " + str(self.hint_dict))
-
         # Go through all the hints to check which hint matches the room we are in
         for hint, hintfo in self.hints.items():
             if current_room != self.hint_dict[hint]:
@@ -184,10 +180,8 @@ class BaseContext(UniversalContext):
                     else:
                         continue
             else:
-                logger.info("Hint Info for: " + hint)
                 player_id = int(hintfo["Send Player ID"])
                 location_id = int(hintfo["Location ID"])
-                logger.info("Found Player ID '" + str(player_id) + "'; Location ID '" + str(location_id) + "'")
 
             # Make sure we didn't somehow try to send a null hint
             if player_id == 0 or location_id == 0:
