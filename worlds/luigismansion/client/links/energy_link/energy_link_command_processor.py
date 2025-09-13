@@ -48,7 +48,7 @@ class EnergyLinkCommandProcessor(BaseCommandProcessor):
 
 def _validate_processor_context(ctx: BaseContext):
     has_energy_link: bool = ctx.energy_link is not None
-    is_connected_to_server: bool = ctx.server is not None
+    is_connected_to_server: bool = ctx.slot is not None
     if isinstance(ctx, BaseContext) and has_energy_link and is_connected_to_server:
         return True
     logger.warning("Please connect the client to the AP server before continuing.")
