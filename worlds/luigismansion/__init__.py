@@ -65,6 +65,10 @@ class LMWeb(WebWorld):
             LuigiOptions.EarlyFirstKey,
         ]),
         Options.OptionGroup("QOL Changes", [
+            LuigiOptions.LuigiWalkSpeed,
+            LuigiOptions.LuigiMaxHealth,
+            LuigiOptions.LuigiFearAnim,
+            LuigiOptions.PickupAnim,
             LuigiOptions.ShowSelfReceivedItems,
             LuigiOptions.DeathLink,
             LuigiOptions.TrapLink,
@@ -72,11 +76,6 @@ class LMWeb(WebWorld):
             LuigiOptions.EnergyLink,
             LuigiOptions.RingLink,
             LuigiOptions.RingLinkClientMsgs,
-            LuigiOptions.TrapPercentage,
-            LuigiOptions.LuigiFearAnim,
-            LuigiOptions.PickupAnim,
-            LuigiOptions.LuigiWalkSpeed,
-            LuigiOptions.LuigiMaxHealth,
             LuigiOptions.BetterVacuum,
             LuigiOptions.KingBooHealth,
             LuigiOptions.BoolossusDifficulty,
@@ -100,6 +99,7 @@ class LMWeb(WebWorld):
             LuigiOptions.CallMario,
         ]),
         Options.OptionGroup("Filler Weights", [
+            LuigiOptions.TrapPercentage,
             LuigiOptions.BundleWeight,
             LuigiOptions.CoinWeight,
             LuigiOptions.BillWeight,
@@ -429,9 +429,14 @@ class LMWorld(World):
         add_rule(loc, lambda state: state.has("Progressive Vacuum", self.player), "and")
 
     def generate_early(self):
+        if self.options.energy_link == 1 and self.options.ring_link == 1:
+            raise Options.OptionError("In Luigi's Mansion, both energy_link and ring_link cannot be enabled.\n"
+                                      f"This error was found in {self.player_name}'s Luigi's Mansion world."
+                                      f"Their YAML must be fixed")
+
         if (self.options.boosanity == 1 or self.options.boo_gates == 1) and self.options.boo_radar == 2:
-            raise Options.OptionError(f"When Boo Radar is excluded, neither Boosanity nor Boo Gates can be active "
-                                      f"This error was found in {self.player_name}'s Luigi's Mansion world. "
+            raise Options.OptionError(f"When Boo Radar is excluded, neither Boosanity nor Boo Gates can be active.\n"
+                                      f"This error was found in {self.player_name}'s Luigi's Mansion world."
                                       f"Their YAML must be fixed")
         if hasattr(self.multiworld, "re_gen_passthrough"):
             if "Luigi's Mansion" in self.multiworld.re_gen_passthrough:
