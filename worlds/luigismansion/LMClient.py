@@ -738,8 +738,7 @@ class LMContext(BaseContext):
                     # Then we can re-combine it with 's Game to stay under te max char limit.
                     recv_name_display = short_recv_name.decode("utf-8") + "'s Game"
                     dme.write_bytes(RECV_ITEM_SENDER_ADDR,
-                                    sbf.string_to_bytes_with_limit(recv_name_display,
-                                                                   RECV_LINE_STRING_LENGTH) + b'\x00')
+                        sbf.string_to_bytes_with_limit(recv_name_display, RECV_LINE_STRING_LENGTH) + b'\x00')
 
                     dme.write_word(RECV_ITEM_DISPLAY_TIMER_ADDR, int(RECV_DEFAULT_TIMER_IN_HEX, 16))
                     await self.wait_for_next_loop(int(RECV_DEFAULT_TIMER_IN_HEX, 16) / FRAME_AVG_COUNT)
