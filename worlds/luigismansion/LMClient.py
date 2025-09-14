@@ -689,9 +689,12 @@ class LMContext(BaseContext):
     async def manage_wallet_async(self):
         try:
             while self.slot:
+                if not (self.check_ingame() and self.check_alive()):
+                    await self.wait_for_next_loop(0.5)
+                    continue
+
                 await self.ring_link.wallet_manager.calc_wallet_differences_async()
                 await self.wait_for_next_loop(0.5)
-
         except Exception as generic_ex:
             logger.error("Critical error with watching currencies async tasks. Details: " + str(generic_ex))
 
