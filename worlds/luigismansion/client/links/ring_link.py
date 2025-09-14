@@ -61,7 +61,7 @@ class RingLink(LinkBase):
             elif amount < 0:
                 if self.enable_logger:
                     logger.info("%s: You lost %s coin(s).", RingLinkConstants.FRIENDLY_NAME, amount)
-                self.wallet_manager.wallet.set_specific_currency("COINS", max(coins_current_amt - amount_difference, 0))
+                self.wallet_manager.wallet.set_specific_currency(CURRENCY_NAME.COINS, max(coins_current_amt - amount_difference, 0))
                 self.remote_rings_sent -= amount
 
     async def handle_ring_link_async(self, delay: int = 5):
