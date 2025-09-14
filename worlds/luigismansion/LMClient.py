@@ -686,14 +686,25 @@ class LMContext(BaseContext):
             self.set_luigi_dead()
             await self.send_death(self.player_names[self.slot] + " scared themselves to death.")
 
+    async def manage_wallet_async(self):
+        try:
+            while self.slot:
+                await self.ring_link.wallet_manager.calc_wallet_differences_async()
+                await self.wait_for_next_loop(0.5)
+
+        except Exception as generic_ex:
+            logger.error("Critical error with watching currencies async tasks. Details: " + str(generic_ex))
+
     async def non_essentials_async_tasks(self):
+        wallet_manager_event_active: bool = False
+
         try:
             while self.slot:
                 if not (self.check_ingame() and self.check_alive()):
                     await self.wait_for_next_loop(0.5)
                     # Resets the logic for determining the currency differences,
                     # needs to be updated to reset inside of wallet_manager.
-                    self.ring_link.wallet_manager.previous_amount = 0
+                    self.ring_link.wallet_manager.reset_wallet_watching()
                     continue
 
                 # All Link related activities
@@ -702,6 +713,9 @@ class LMContext(BaseContext):
                 if self.trap_link.is_enabled():
                     await self.trap_link.handle_traplink_async()
                 if self.ring_link.is_enabled():
+                    if not wallet_manager_event_active:
+                        wallet_manager_event_active = not wallet_manager_event_active
+                        Utils.async_start(self.manage_wallet_async(), name="ManageWallet")
                     await self.handle_ringlink_async()
 
                 # Async thread related tasks
@@ -827,7 +841,7 @@ class LMContext(BaseContext):
                         await self.wait_for_next_loop(WAIT_TIMER_SHORT_TIMEOUT)
                         # Resets the logic for determining the currency differences,
                         # needs to be updated to reset inside of wallet_manager.
-                        self.ring_link.wallet_manager.previous_amount = 0
+                        self.ring_link.wallet_manager.reset_wallet_watching()
                         continue
 
                     # Lastly check any locations and update the non-save able ram stuff
