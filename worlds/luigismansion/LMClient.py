@@ -716,7 +716,7 @@ class LMContext(BaseContext):
                     continue
 
                 while self.item_display_queue:
-                    item_to_display = self.item_display_queue.pop()
+                    item_to_display = self.item_display_queue.pop(0)
                     lm_item_name = self.item_names.lookup_in_game(item_to_display.item)
 
                     item_name_display = lm_item_name[:RECV_MAX_STRING_LENGTH].replace("&", "")
