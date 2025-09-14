@@ -82,12 +82,7 @@ class RingLink(LinkBase):
             difference -= self.remote_rings_sent
             self.remote_rings_sent = 0
 
-            amount_to_send, remainder = divmod(difference, self.ring_multiplier)
-            if amount_to_send == 0:
-                return
-
-            await self.send_rings_async(amount_to_send)
-            self.pending_rings = remainder
+            await self.send_rings_async(difference)
             self.timer_start = time.time()
 
     async def send_rings_async(self, amount: int):
