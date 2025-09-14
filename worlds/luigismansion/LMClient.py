@@ -191,6 +191,7 @@ class LMContext(BaseContext):
 
         # Last received index to track locally in the client
         self.last_received_idx: int = 0
+        self.non_save_last_recv_idx: int = 0
 
     async def disconnect(self, allow_autoreconnect: bool = False):
         """
@@ -504,14 +505,10 @@ class LMContext(BaseContext):
     async def give_lm_items(self):
         last_recv_idx = dme.read_word(LAST_RECV_ITEM_ADDR)
         if len(self.items_received) == last_recv_idx:
-            if last_recv_idx != self.last_received_idx:
-                self.last_received_idx = last_recv_idx
-                # Update the non-savable location in memory with the last
-                # received in case the player reloaded their game.
-                dme.write_word(NON_SAVE_LAST_RECV_ITEM_ADDR, last_recv_idx)
-                return
+            return
 
-        non_save_recv_idx: int = dme.read_word(NON_SAVE_LAST_RECV_ITEM_ADDR)
+        self.last_received_idx = last_recv_idx
+        self.non_save_last_recv_idx = dme.read_word(NON_SAVE_LAST_RECV_ITEM_ADDR)
         recv_items = self.items_received[last_recv_idx:]
         for item in recv_items:
             lm_item_name = self.item_names.lookup_in_game(item.item)
@@ -526,7 +523,7 @@ class LMContext(BaseContext):
             last_recv_idx += 1
             # If the user is subscribed to send items and the trap is a valid trap and the trap was not already
             # received (to prevent sending the same traps over and over to other TrapLinkers if Luigi died)
-            if self.trap_link.is_enabled() and item.item in trap_id_list and last_recv_idx > non_save_recv_idx:
+            if self.trap_link.is_enabled() and item.item in trap_id_list and last_recv_idx > self.non_save_last_recv_idx:
                 logger.info("Triggering Trap...")
                 await self.trap_link.send_trap_link_async(lm_item_name)
 
@@ -534,25 +531,20 @@ class LMContext(BaseContext):
             # list of locations, otherwise accept other slots. Additionally accept only items from a pre-approved list.
             if item.item in RECV_ITEMS_IGNORE or (item.player == self.slot and not
             (item.location in SELF_LOCATIONS_TO_RECV or item.item in RECV_OWN_GAME_ITEMS or item.location < 0)):
-                dme.write_word(LAST_RECV_ITEM_ADDR, last_recv_idx)
-                if last_recv_idx > non_save_recv_idx:
-                    # Lastly, update the non-saveable received index with the current last received index.
-                    dme.write_word(NON_SAVE_LAST_RECV_ITEM_ADDR, last_recv_idx)
+                self.update_received_idx(last_recv_idx)
                 continue
 
             # Sends remote currency items from the server to the client.
             if lm_item.type == "Money":
                 currency_receiver = CurrencyReceiver(self.wallet)
                 currency_receiver.send_to_wallet(lm_item)
-                dme.write_word(LAST_RECV_ITEM_ADDR, last_recv_idx)
-
-                if last_recv_idx > non_save_recv_idx:
-                    # Lastly, update the non-saveable received index with the current last received index.
-                    dme.write_word(NON_SAVE_LAST_RECV_ITEM_ADDR, last_recv_idx)
+                self.update_received_idx(last_recv_idx)
                 continue
-            elif lm_item.type == "Trap" and last_recv_idx < non_save_recv_idx:
+            elif lm_item.type == "Trap" and (self.non_save_last_recv_idx > last_recv_idx or
+                (item.item == 8147 and self.get_item_count_by_id(8064) < 1)):
                 # Skip this trap item to avoid Luigi dying in an infinite trap loop.
-                dme.write_word(LAST_RECV_ITEM_ADDR, last_recv_idx)
+                # Also skip No Vac Trap if we don't have a vacuum
+                self.update_received_idx(last_recv_idx)
                 continue
 
             for addr_to_update in lm_item.update_ram_addr:
@@ -562,13 +554,7 @@ class LMContext(BaseContext):
                     ram_offset = [addr_to_update.pointer_offset]
 
                 if item.item in trap_id_list:
-                    # If we have no vacuum, do not trigger a No Vac trap
-                    if item.item == 8147 and self.get_item_count_by_id(8064) < 1:
-                        last_recv_idx += 1
-                        dme.write_word(LAST_RECV_ITEM_ADDR, last_recv_idx)
-                        continue
-                    else:
-                        curr_val = addr_to_update.item_count
+                    curr_val = addr_to_update.item_count
                 elif item.item == 8140:  # Progressive Flower, 00EB, 00EC, 00ED
                     flower_count: int = self.get_item_count_by_id(8140)
                     curr_val = min(flower_count + 234, 237)
@@ -605,12 +591,17 @@ class LMContext(BaseContext):
                 await write_bytes_and_validate(addr_to_update.ram_addr, ram_offset, curr_val.to_bytes(byte_size, 'big'))
 
             # Update the last received index to ensure we don't receive the same item over and over.
-            dme.write_word(LAST_RECV_ITEM_ADDR, last_recv_idx)
-
-            # Lastly, update the non-saveable received index with the current last received index.
-            if last_recv_idx > non_save_recv_idx:
-                dme.write_word(NON_SAVE_LAST_RECV_ITEM_ADDR, last_recv_idx)
+            self.update_received_idx(last_recv_idx)
             await self.wait_for_next_loop(0.5)
+
+    def update_received_idx(self, last_recv_idx: int):
+        self.last_received_idx = last_recv_idx
+        dme.write_word(LAST_RECV_ITEM_ADDR, last_recv_idx)
+
+        # Lastly, update the non-saveable received index with the current last received index.
+        if last_recv_idx > self.non_save_last_recv_idx:
+            self.non_save_last_recv_idx = last_recv_idx
+            dme.write_word(NON_SAVE_LAST_RECV_ITEM_ADDR, last_recv_idx)
 
     async def lm_update_non_savable_ram(self):
         try:
