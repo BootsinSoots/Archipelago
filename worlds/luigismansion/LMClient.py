@@ -511,6 +511,7 @@ class LMContext(BaseContext):
         self.non_save_last_recv_idx = dme.read_word(NON_SAVE_LAST_RECV_ITEM_ADDR)
         recv_items = self.items_received[last_recv_idx:]
         for item in recv_items:
+            last_recv_idx += 1
             lm_item_name = self.item_names.lookup_in_game(item.item)
             lm_item = ALL_ITEMS_TABLE[lm_item_name]
 
@@ -520,7 +521,6 @@ class LMContext(BaseContext):
             elif self.self_item_messages == 1 and lm_item.classification == IC.progression:
                 self.item_display_queue.append(item)
 
-            last_recv_idx += 1
             # If the user is subscribed to send items and the trap is a valid trap and the trap was not already
             # received (to prevent sending the same traps over and over to other TrapLinkers if Luigi died)
             if self.trap_link.is_enabled() and item.item in trap_id_list and last_recv_idx > self.non_save_last_recv_idx:
