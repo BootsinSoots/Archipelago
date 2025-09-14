@@ -265,6 +265,9 @@ class LMContext(BaseContext):
                 Utils.async_start(self.display_received_items(), "LM - Display Items in Game")
 
             case "Bounced":
+                if not self.check_ingame() and self.check_alive():
+                    return
+
                 if "tags" not in args:
                     return
                 if not hasattr(self, "instance_id"):
@@ -272,6 +275,9 @@ class LMContext(BaseContext):
                 self.trap_link.on_bounced(args, self.get_item_count_by_id(8064))
                 self.ring_link.on_bounced(args)
             case "SetReply":
+                if not self.check_ingame() and self.check_alive():
+                    return
+
                 self.energy_link.try_update_energy_request(args)
 
     def on_deathlink(self, data: dict[str, Any]):
@@ -540,7 +546,7 @@ class LMContext(BaseContext):
                 currency_receiver.send_to_wallet(lm_item)
                 self.update_received_idx(last_recv_idx)
                 continue
-            elif lm_item.type == "Trap" and (self.non_save_last_recv_idx > last_recv_idx or
+            elif lm_item.type == "Trap" and (self.non_save_last_recv_idx >= last_recv_idx or
                 (item.item == 8147 and self.get_item_count_by_id(8064) < 1)):
                 # Skip this trap item to avoid Luigi dying in an infinite trap loop.
                 # Also skip No Vac Trap if we don't have a vacuum
