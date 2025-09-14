@@ -301,6 +301,7 @@ def update_character_info(character_info, output_data):
         if x["name"] == "eater":
             x["disappear_flag"] = 31
 
+        # Editing the starting room spawn coordinates (regardless of it random spawn is turned on).
         if x["room_no"] == 2 and x["name"] == "luige":
             spawn_region: dict[str,int] = spawn_locations[output_data["Options"]["spawn"]]
             x["room_no"] = spawn_region["room_no"]
@@ -418,7 +419,7 @@ def update_observer_info(observer_info, output_data):
             x["cond_arg0"] = 0
             x["appear_flag"] = 0
             x["cond_type"] = 13
-            new_x = x.copy()
+            new_x = copy.deepcopy(x)
             spawn_region_name = output_data["Options"]["spawn"]
             if not spawn_region_name in ("Foyer", "Courtyard", "1F Washroom", "Wardrobe Balcony"):
                 spawn_data = spawn_locations[spawn_region_name]
@@ -521,9 +522,9 @@ def update_observer_info(observer_info, output_data):
         "code_name": "(null)",
         "string_arg0": "(null)",
         "cond_string_arg0": "(null)",
-        "pos_x": 1100.000000,
+        "pos_x": 590.000000,
         "pos_y": -445.000000,
-        "pos_z": -5960.000000,
+        "pos_z": -5910.000000,
         "dir_x": 0.000000,
         "dir_y": 0.000000,
         "dir_z": 0.000000,

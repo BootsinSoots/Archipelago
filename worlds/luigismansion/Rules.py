@@ -33,16 +33,15 @@ ICE_SPIRIT_SPOT = ("Kitchen",
 
 def set_element_rules(world: "LMWorld", location: LMLocation, use_enemizer: bool):
     region = location.region
-    if len(location.access) != 0:
-        for item in location.access:
-            if item == "Fire Element Medal":
-                add_rule(location, lambda state: can_fst_fire(state, world.player), "and")
-            elif item == "Water Element Medal":
-                add_rule(location, lambda state: can_fst_water(state, world.player), "and")
-            elif item == "Ice Element Medal":
-                add_rule(location, lambda state: can_fst_ice(state, world.player), "and")
-            else:
-                add_rule(location, lambda state, i=item: state.has(i, world.player), "and")
+    for item in location.access:
+        if item == "Fire Element Medal":
+            add_rule(location, lambda state: can_fst_fire(state, world.player), "and")
+        elif item == "Water Element Medal":
+            add_rule(location, lambda state: can_fst_water(state, world.player), "and")
+        elif item == "Ice Element Medal":
+            add_rule(location, lambda state: can_fst_ice(state, world.player), "and")
+        else:
+            add_rule(location, lambda state, i=item: state.has(i, world.player), "and")
 
     if use_enemizer:
         if region in world.ghost_affected_regions.keys() and location != "Uncle Grimmly, Hermit of the Darkness":
