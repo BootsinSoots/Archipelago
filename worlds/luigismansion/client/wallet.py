@@ -35,6 +35,15 @@ class Wallet:
         for key, value in currencies.items():
             self._currencies[key].add(value)
 
+    def set_specific_currency(self, currency: str, amount: int):
+        """
+        Adds currencies to Luigi's wallet.
+
+        :param currency: Name of the specific currency that needs to be set to the provided amount.
+        :param amount: Amount that the provided currency will be set to.
+        """
+        self._currencies[currency].set(amount)
+
     def check_rank_requirement(self) -> bool:
         """
         Determines if Luigi's wallet's worth meets or exceeds the rank requirement.

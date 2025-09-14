@@ -7,7 +7,7 @@ from.constants import AP_LOGGER_NAME
 
 logger = logging.getLogger(AP_LOGGER_NAME)
 
-class WalletManager():
+class WalletManager:
     wallet: Wallet
     previous_amount: int = 0
 

@@ -8,6 +8,7 @@ from .network_engine import ArchipelagoNetworkEngine, RingNetworkRequest
 from .link_base import LinkBase
 from ..wallet_manager import WalletManager, _remove_currencies
 from ..constants import AP_LOGGER_NAME
+from ...game.Currency import CURRENCY_NAME
 
 logger = logging.getLogger(AP_LOGGER_NAME)
 
@@ -48,18 +49,18 @@ class RingLink(LinkBase):
             amount = _calc_rings(self, base_amount)
 
             calculated_ring_worth = self.wallet_manager.wallet.get_calculated_amount_worth(1)
+            coins_current_amt: int = self.wallet_manager.wallet.get_currency_amount(CURRENCY_NAME.COINS)
+            amount_difference: int = amount * calculated_ring_worth
             if amount > 0:
                 if self.enable_logger:
                     logger.info("%s: You received %s coin(s)!",RingLinkConstants.FRIENDLY_NAME, amount)
-                currencies = self.wallet_manager.add_currencies(int(amount * calculated_ring_worth))
+                currencies = self.wallet_manager.add_currencies(amount_difference)
                 self.wallet_manager.wallet.add_to_wallet(currencies)
                 self.remote_pending_rings += amount
             elif amount < 0:
                 if self.enable_logger:
                     logger.info("%s: You lost %s coin(s).", RingLinkConstants.FRIENDLY_NAME, amount)
-                currencies: dict[str, int] = _remove_currencies(self.wallet_manager.wallet, amount * calculated_ring_worth)
-                # currencies: int = self.wallet_manager.remove_currencies(amount, calculated_ring_worth)
-                self.wallet_manager.wallet.remove_from_wallet(currencies)
+                self.wallet_manager.wallet.set_specific_currency("COINS", max(coins_current_amt - amount_difference, 0))
                 self.remote_pending_rings -= amount
 
     async def handle_ring_link_async(self, delay: int = 5):
