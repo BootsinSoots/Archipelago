@@ -540,6 +540,9 @@ class LMWorld(World):
             self.options.balcony_boo_count.value = 0
             # self.options.washroom_boo_count.value = 0
 
+        self.lm_create_items()
+
+
     def create_regions(self):
         # Add all randomizable regions
         for region_name in REGION_LIST.values():
@@ -593,7 +596,7 @@ class LMWorld(World):
     # def post_fill(self):
     #     visualize_regions(self.multiworld.get_region(self.origin_region_name, self.player), "luigiregions.puml", linetype_ortho=False)
 
-    def create_items(self):
+    def lm_create_items(self):
         exclude = [item.name for item in self.multiworld.precollected_items[self.player]]
         loc_itempool: list[LMItem] = []
         if self.options.boosanity:
