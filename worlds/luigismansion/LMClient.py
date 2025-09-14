@@ -747,8 +747,7 @@ class LMContext(BaseContext):
 
                     await self.wait_for_next_loop(WAIT_TIMER_MEDIUM_TIMEOUT)
         except Exception as genericEx:
-            logger.error(
-                "While trying to display an item in game, an unknown issue occurred. Details: " + str(genericEx))
+            logger.error("While trying to display an item in game, an unknown issue occurred. Details: " + str(genericEx))
 
     async def dolphin_sync_main_task(self):
         logger.info(f"Using Luigi's Mansion client {CLIENT_VERSION}")
