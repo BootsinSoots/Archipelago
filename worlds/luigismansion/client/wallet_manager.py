@@ -36,10 +36,12 @@ class WalletManager():
 
     def remove_currencies(self, amount_to_send: int, minimum_worth: int) -> dict[str, int]:
         new_amount = amount_to_send
+        temp_currencies: dict[str, int]
+        remaining: int
 
         while new_amount > 0:
             # Try to remove currency from energy link amount.
-            temp_currencies, remaining = _remove_currencies(self.wallet, new_amount)
+            temp_currencies, remaining  = _remove_currencies(self.wallet, new_amount)
             new_amount = remaining
             self.wallet.remove_from_wallet(temp_currencies)
 
