@@ -57,7 +57,6 @@ class Currency:
         """
         Removes an amount of currency based upon the currency_type.
 
-        :param currency_type: The memory location for the currency type to be removed.
         :param amount: The amount of currency to be added based upon the currency_type.
         :return: If the amount was removed from the wallet True is returned, otherwise False.
         :rtype: bool
@@ -66,6 +65,21 @@ class Currency:
 
         if amount <= current_currency:
             dme.write_word(dme.follow_pointers(_WALLET_START_ADDR, [self.mem_loc]), (current_currency - amount))
+            return True
+        return False
+
+    def set(self, amount: int) -> bool:
+        """
+        Removes an amount of currency based upon the currency_type.
+
+        :param amount: The amount of currency to be added based upon the currency_type.
+        :return: If the amount was removed from the wallet True is returned, otherwise False.
+        :rtype: bool
+        """
+        current_currency = self.get()
+
+        if amount <= current_currency:
+            dme.write_word(dme.follow_pointers(_WALLET_START_ADDR, [self.mem_loc]), amount)
             return True
         return False
 

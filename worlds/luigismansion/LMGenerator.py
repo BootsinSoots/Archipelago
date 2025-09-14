@@ -1,6 +1,6 @@
+import json
 import os, yaml
 
-from collections import Counter
 from CommonClient import logger
 
 from gclib.gcm import GCM
@@ -8,15 +8,6 @@ from gclib.dol import DOL
 from gclib.rarc import RARC
 from gclib.yaz0_yay0 import Yay0
 
-def counter_constructor(loader, node):
-    args = loader.construct_sequence(node)
-    return Counter(*args)
-
-# Core implemented custom collection counters which yaml.safe_load cannot serialize by default.
-yaml.SafeLoader.add_constructor(
-    'tag:yaml.org,2002:python/object/apply:collections.Counter',
-    counter_constructor
-)
 from .iso_helper.DOL_Updater import update_dol_offsets
 from .iso_helper.Update_GameUSA import update_game_usa
 from .iso_helper.JMP_Info_File import JMPInfoFile
@@ -40,7 +31,7 @@ class LuigisMansionRandomizer:
         except IOError:
             raise Exception("'" + randomized_output_file_path + "' is currently in use by another program.")
 
-        self.output_data = yaml.safe_load(ap_output_data)
+        self.output_data = json.loads(ap_output_data.decode('utf-8'))
 
         # After verifying, this will also read the entire iso, including system files and their content
         self.gcm = GCM(self.clean_iso_path)

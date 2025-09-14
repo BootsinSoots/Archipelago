@@ -4,7 +4,7 @@ import inspect
 import Utils
 
 from CommonClient import CommonContext, logger
-from ...Wallet import Wallet
+from ...wallet import Wallet, CURRENCY_NAME
 from .energy_link import EnergyLink, EnergyLinkConstants
 
 class EnergyLinkProcessor:
@@ -17,7 +17,7 @@ class EnergyLinkProcessor:
 
     def __init__(self, ctx: CommonContext):
         self._ctx = ctx
-        self.energy_link = EnergyLink(ctx)
+        self.energy_link = EnergyLink(ctx.network_engine)
 
         if not hasattr(ctx, 'wallet'):
             raise AttributeError("Could not resolve wallet from the provided client context.")
@@ -35,7 +35,7 @@ class EnergyLinkProcessor:
             return
         if not _has_energy_link_tag(self._ctx):
             return
-        if not _check_if_in_game(self._ctx):
+        if not await _check_if_in_game(self._ctx):
             logger.error("Make sure that Luigi's Mansion is running before sending energy.")
             return
 
@@ -55,6 +55,8 @@ class EnergyLinkProcessor:
         amount -= remainder
         logger.info("Sending %s energy to team %s's pool.", int(amount), self._ctx.team)
         await self.energy_link.send_energy_async(int(amount))
+        # Sending request to Archipelago server to update energy amount, if requested
+        Utils.async_start(self.energy_link.get_energy_async(), name="Update Energy Link")
 
     async def request_energy_async(self, arg: str):
         """
@@ -67,7 +69,7 @@ class EnergyLinkProcessor:
         if not is_valid:
             return
 
-        if not _check_if_in_game(self._ctx):
+        if not await _check_if_in_game(self._ctx):
             logger.error("Make sure that Luigi's Mansion is running before requesting energy.")
             return
 
@@ -85,6 +87,8 @@ class EnergyLinkProcessor:
 
         usable_amount = int(result * minimum_worth)
         await self.energy_link.request_energy_async(usable_amount)
+        # Sending request to Archipelago server to update energy amount, if requested
+        Utils.async_start(self.energy_link.get_energy_async(), name="Update Energy Link")
         logger.info("Requested %s energy from team %s's pool.", usable_amount, self._ctx.team)
 
     async def get_energy_async(self):
@@ -123,10 +127,10 @@ def _validate_processor_arg(amount: str):
         return False, 0
     return True, amount_as_int
 
-def _check_if_in_game(ctx):
+async def _check_if_in_game(ctx):
     if not hasattr(ctx, 'check_ingame') and inspect.isfunction(ctx.check_ingame()):
         return False
-    if not ctx.check_ingame():
+    if not await ctx.check_ingame():
         return False
     return True
 
@@ -152,6 +156,10 @@ def _remove_currencies(wallet: Wallet, amount_to_send: int) -> dict[str, int]:
     for currency_name, currency_type in wallet.get_currencies().items():
         if new_amount == 0:
             break
+
+        # We don't want to convert gold diamonds because they are a hard requirement to complete the game.
+        if currency_name == CURRENCY_NAME.GOLD_DIAMOND:
+            continue
 
         currency_to_remove, remainder = divmod(new_amount, currency_type.calc_value)
         new_amount = remainder

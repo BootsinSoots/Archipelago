@@ -2,11 +2,12 @@ import shutil
 
 from worlds.Files import APPatch, APPlayerContainer, AutoPatchRegister
 from settings import get_settings, Settings
+from NetUtils import convert_to_base_types
 import Utils
 
 from hashlib import md5
 from typing import Any
-import yaml, json, logging, sys, os, zipfile, tempfile
+import json, logging, sys, os, zipfile, tempfile
 import urllib.request
 
 logger = logging.getLogger()
@@ -35,17 +36,14 @@ class LMPlayerContainer(APPlayerContainer):
     compression_method = zipfile.ZIP_DEFLATED
     patch_file_ending = ".aplm"
 
-    def __init__(self, player_choices: dict, patch_path: str, base_path:str, player_name: str, player: int,
+    def __init__(self, player_choices: dict, patch_path: str, player_name: str, player: int,
         server: str = ""):
         self.output_data = player_choices
-        self.file_path = base_path
         super().__init__(patch_path, player, player_name, server)
 
     def write_contents(self, opened_zipfile: zipfile.ZipFile) -> None:
-        opened_zipfile.writestr("patch.aplm",
-            yaml.dump(self.output_data,sort_keys=False,Dumper=yaml.CDumper))
+        opened_zipfile.writestr("patch.aplm", json.dumps(self.output_data, indent=4, default=convert_to_base_types))
         super().write_contents(opened_zipfile)
-
 
 class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
     game = RANDOMIZER_NAME
@@ -78,7 +76,7 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
         temp_path = os.path.join(tempfile.gettempdir(), "luigis_mansion", CLIENT_VERSION, "libs")
         return temp_path
 
-    def patch(self, aplm_patch: str) -> None:
+    def patch(self, aplm_patch: str) -> str:
         # Get the AP Path for the base ROM
         lm_clean_iso = self.get_base_rom_path()
         logger.info("Provided Luigi's Mansion ISO Path was: " + lm_clean_iso)
@@ -97,6 +95,7 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
             LuigisMansionRandomizer(lm_clean_iso, output_file, aplm_bytes)
         except ImportError:
             self.__get_remote_dependencies_and_create_iso(aplm_patch, output_file, lm_clean_iso)
+        return output_file
 
     def read_contents(self, aplm_patch: str) -> dict[str, Any]:
         with zipfile.ZipFile(aplm_patch, "r") as zf:
@@ -132,9 +131,6 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
         else:
             logger.info("Python module paths: %s", sys.path)
             if throw_on_missing_speedups:
-                # We want to reset the cached libs so yaz0_yay0 loads with speedups enabled.
-                #del sys.modules["gclib"]
-                #del sys.modules["gclib.yaz0_yay0"]
                 logger.info("Speedups not detected, attempting to pull remote release.")
                 raise ImportError("Cannot continue patching Luigi's Mansion due to missing libraries.")
             logger.info("Continuing patching without speedups.")
@@ -204,8 +200,8 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
     def __get_remote_dependencies_and_create_iso(self, aplm_patch: str, output_file: str, lm_clean_iso: str):
         try:
             local_dir_path = self.__get_temp_folder_name()
-            # if temp directory exists and we failed to patch the ISO we want to remove the directory
-            # and get a fresh install.
+            # If temp directory exists, and we failed to patch the ISO, we want to remove the directory
+            #   and instead get a fresh installation.
             if os.path.isdir(local_dir_path):
                 logger.info("Found temporary directory after unsuccessful attempt of generating seed, deleting %s.", local_dir_path)
                 shutil.rmtree(local_dir_path)

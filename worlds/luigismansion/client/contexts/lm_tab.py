@@ -23,8 +23,11 @@ def _make_progress_bar_layout(ui: GameManager, counter: MDLabel, progress_bar: M
 
     ui.lm_layout.add_widget(root_layout)
 
-def _make_progressive_layout(ui: GameManager):
-    root_layout = MDBoxLayout(padding=[5, 5, 5, 5])
+def _make_progressive_layout(ui: GameManager, debug: bool = False):
+    debug_color = [0,0,0,0]
+    if debug:
+        debug_color = [0,0,1,1]
+    root_layout = MDBoxLayout(padding=[5, 5, 5, 5], line_color=debug_color)
 
     ui.flower_label = MDLabel(text="0", font_style="Display", halign="center")
     ui.vacuum_label = MDLabel(text="0", font_style="Display", halign="center")

@@ -1,5 +1,5 @@
 import unittest
-from ..client.Wallet import Wallet, _RANK_REQ_AMTS
+from ..client.wallet import Wallet, _RANK_REQ_AMTS
 from ..game.Currency import *
 
 class _MockCurrency(Currency):

@@ -1,7 +1,7 @@
 import unittest
-from ..client.Wallet import Wallet
+from ..client.wallet import Wallet
 from ..game.Currency import *
-from ..client.ap_link.energy_link.energy_link_client import EnergyLinkClient
+from ..client.links.energy_link.energy_link_client import EnergyLinkClient
 from CommonClient import CommonContext
 
 class _MockCommonContext(CommonContext):
