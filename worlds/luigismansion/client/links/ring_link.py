@@ -26,6 +26,7 @@ class RingLink(LinkBase):
     timer_start: float = time.time()
     pending_rings: int = 0
     remote_pending_rings: int = 0
+    remote_rings_sent: int = 0
     enable_logger: bool = True
 
     def __init__(self, network_engine: ArchipelagoNetworkEngine, wallet_manager: WalletManager):
@@ -56,12 +57,12 @@ class RingLink(LinkBase):
                     logger.info("%s: You received %s coin(s)!",RingLinkConstants.FRIENDLY_NAME, amount)
                 currencies = self.wallet_manager.add_currencies(amount_difference)
                 self.wallet_manager.wallet.add_to_wallet(currencies)
-                self.remote_pending_rings += amount
+                self.remote_rings_sent += amount
             elif amount < 0:
                 if self.enable_logger:
                     logger.info("%s: You lost %s coin(s).", RingLinkConstants.FRIENDLY_NAME, amount)
                 self.wallet_manager.wallet.set_specific_currency("COINS", max(coins_current_amt - amount_difference, 0))
-                self.remote_pending_rings -= amount
+                self.remote_rings_sent -= amount
 
     async def handle_ring_link_async(self, delay: int = 5):
         if not self.is_enabled():
@@ -69,24 +70,19 @@ class RingLink(LinkBase):
 
         timer_end: float = time.time()
 
-        # this is the first time the function is run and shouldn't continue if true.
-        initial_check: bool = self.wallet_manager.previous_amount == 0
-        pending_rings: int = self.wallet_manager.calc_wallet_differences()
-
-        if initial_check:
-            return
-
-        self.pending_rings += pending_rings
-
-        if self.remote_pending_rings != 0:
-            self.pending_rings -= self.remote_pending_rings
-            self.remote_pending_rings = 0
-
         # There may be instances where currency gained/lost may not equate to having a different final value
         # and/or ringlink requests may come in and cancel currency differences.
         if timer_end - self.timer_start >= delay:
-            amount_to_send, remainder = divmod(self.pending_rings, self.ring_multiplier)
+            difference = self.wallet_manager._difference
+            self.wallet_manager._difference = 0
 
+            if difference == 0:
+                return
+
+            difference -= self.remote_rings_sent
+            self.remote_rings_sent = 0
+
+            amount_to_send, remainder = divmod(difference, self.ring_multiplier)
             if amount_to_send == 0:
                 return
 

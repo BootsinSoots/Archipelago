@@ -10,6 +10,8 @@ logger = logging.getLogger(AP_LOGGER_NAME)
 class WalletManager:
     wallet: Wallet
     previous_amount: int = 0
+    initial_check: bool = True
+    _difference: int = 0
 
     def __init__(self, wallet: Wallet):
         self.wallet = wallet
@@ -61,12 +63,22 @@ class WalletManager:
 
         return int(new_amount)
 
-    def calc_wallet_differences(self) -> int:
-        wallet_worth = self.wallet.get_wallet_worth() / self.wallet.get_calculated_amount_worth(1)
-        difference = self.previous_amount - wallet_worth
-        return difference
+    def reset_wallet_watching(self):
+        self.initial_check = True
+        self._difference = 0
 
-def _remove_currencies(wallet: Wallet, amount_to_send: int) -> dict[str, int]:
+    async def calc_wallet_differences_async(self):
+        """ We want to asychnrously monitor the difference in currency for sending rings VIA ringlink. """
+        ring_equiv = self.wallet.get_wallet_worth() / self.wallet.get_calculated_amount_worth(1)
+
+        if self.initial_check:
+            self.initial_check = not self.initial_check
+        else:
+            self._difference += ring_equiv - self.previous_amount
+
+        self.previous_amount = ring_equiv
+
+def _remove_currencies(wallet: Wallet, amount_to_send: int) -> tuple[dict[str, int], int]:
     new_amount = amount_to_send
     currencies_to_remove: dict[str, int] = {}
 
