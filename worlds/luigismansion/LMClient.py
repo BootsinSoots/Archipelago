@@ -265,7 +265,7 @@ class LMContext(BaseContext):
                 Utils.async_start(self.display_received_items(), "LM - Display Items in Game")
 
             case "Bounced":
-                if not self.check_ingame() and self.check_alive():
+                if not (self.check_ingame() and self.check_alive()):
                     return
 
                 if "tags" not in args:
@@ -275,7 +275,7 @@ class LMContext(BaseContext):
                 self.trap_link.on_bounced(args, self.get_item_count_by_id(8064))
                 self.ring_link.on_bounced(args)
             case "SetReply":
-                if not self.check_ingame() and self.check_alive():
+                if not (self.check_ingame() and self.check_alive()):
                     return
 
                 self.energy_link.try_update_energy_request(args)
