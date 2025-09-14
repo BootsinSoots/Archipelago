@@ -715,7 +715,7 @@ class LMContext(BaseContext):
                 if self.ring_link.is_enabled():
                     if not wallet_manager_event_active:
                         wallet_manager_event_active = not wallet_manager_event_active
-                        Utils.async_start(self.manage_wallet_async(), name="ManageWallet")
+                        Utils.async_start(self.manage_wallet_async(), name="LM - ManageWallet")
                     await self.handle_ringlink_async()
 
                 # Async thread related tasks
