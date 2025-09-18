@@ -25,6 +25,8 @@ from .Regions import *
 from .Rules import *
 from .Rules import set_element_rules
 from .iso_helper.lm_rom import LMPlayerContainer
+if TYPE_CHECKING:
+    from NetUtils import MultiData
 
 def run_client(*args):
     from .LMClient import main  # lazy import
@@ -868,7 +870,7 @@ class LMWorld(World):
             "pickup animation": self.options.enable_pickup_animation.value,
             "send_hints": self.options.send_hints.value,
             "portrait_hints": self.options.portrait_hints.value,
-            "hints": dict(self.hints),
+            "hints": self.hints,
             "apworld version": CLIENT_VERSION,
             "seed": self.multiworld.seed,
             "disabled_traps": _get_disabled_traps(self.options),
@@ -876,6 +878,12 @@ class LMWorld(World):
             "enable_ring_client_msg": self.options.enable_ring_client_msg.value,
             "enable_trap_client_msg": self.options.enable_trap_client_msg.value,
         }
+
+    def modify_multidata(self, multidata: "MultiData") -> None:
+        if self.options.hint_distribution != 5 and self.options.hint_distribution != 1:
+            self.finished_hints.wait()
+        if self.options.boo_health_option.value == 2:
+            self.finished_boo_scaling.wait()
 
 def _get_disabled_traps(options: LuigiOptions.LMOptions) -> int:
     """
