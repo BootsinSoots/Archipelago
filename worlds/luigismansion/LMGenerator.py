@@ -96,7 +96,7 @@ class LuigisMansionRandomizer:
         ap_world_version = "<0.5.6"
 
         if AP_WORLD_VERSION_NAME in output_data:
-            ap_world_version = self.output_data[AP_WORLD_VERSION_NAME]
+            ap_world_version = output_data[AP_WORLD_VERSION_NAME]
         if ap_world_version != CLIENT_VERSION:
             raise Utils.VersionException("Error! Server was generated with a different Luigi's Mansion " +
                         f"APWorld version.\nThe client version is {CLIENT_VERSION}!\nPlease verify you are using the " +
