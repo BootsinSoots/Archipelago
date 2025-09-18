@@ -868,7 +868,7 @@ class LMWorld(World):
             "pickup animation": self.options.enable_pickup_animation.value,
             "send_hints": self.options.send_hints.value,
             "portrait_hints": self.options.portrait_hints.value,
-            "hints": self.hints,
+            "hints": dict(self.hints),
             "apworld version": CLIENT_VERSION,
             "seed": self.multiworld.seed,
             "disabled_traps": _get_disabled_traps(self.options),
