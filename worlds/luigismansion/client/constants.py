@@ -2,7 +2,9 @@
 
 CLIENT_VERSION = "V0.5.5"
 CLIENT_NAME = "Luigi's Mansion Client"
+
 AP_LOGGER_NAME = "Client"
+AP_WORLD_VERSION_NAME = "APWorldVersion"
 
 # All the dolphin connection messages used in the client
 CONNECTION_REFUSED_STATUS = "Detected a non-randomized ROM for LM. Please close and load a different one. Retrying in 5 seconds..."

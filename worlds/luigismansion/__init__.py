@@ -14,6 +14,7 @@ from worlds.AutoWorld import WebWorld, World
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess, icon_paths
 from worlds.generic.Rules import add_rule
 from .client.luigismansion_settings import LuigisMansionSettings
+from .client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME
 
 # Relative Imports
 from .Items import *
@@ -750,6 +751,7 @@ class LMWorld(World):
             "Entrances": {},
             "Room Enemies": {},
             "Hints": {},
+            AP_WORLD_VERSION_NAME: CLIENT_VERSION
         }
 
         # Output relevant options to file
@@ -833,8 +835,6 @@ class LMWorld(World):
 
     # Fill slot data for LM tracker
     def fill_slot_data(self):
-        from .client.constants import CLIENT_VERSION
-
         return {
             "rank requirement": self.options.rank_requirement.value,
             "game mode": self.options.game_mode.value,

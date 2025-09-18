@@ -1,5 +1,6 @@
 import json
 import os, yaml
+import Utils
 
 from CommonClient import logger
 
@@ -14,6 +15,7 @@ from .iso_helper.JMP_Info_File import JMPInfoFile
 from .Patching import *
 from .Helper_Functions import StringByteFunction as sbf
 from .iso_helper.Events import *
+from .client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME
 
 RANDOMIZER_NAME = "Luigi's Mansion"
 
@@ -32,6 +34,9 @@ class LuigisMansionRandomizer:
             raise Exception("'" + randomized_output_file_path + "' is currently in use by another program.")
 
         self.output_data = json.loads(ap_output_data.decode('utf-8'))
+
+        # Make sure that the server and client versions match before attempting to patch ISO.
+        self._check_server_version(self.output_data)
 
         # After verifying, this will also read the entire iso, including system files and their content
         self.gcm = GCM(self.clean_iso_path)
@@ -81,6 +86,21 @@ class LuigisMansionRandomizer:
 
         # Saves the randomized iso file, with all files updated.
         self.save_randomized_iso()
+
+    def _check_server_version(self, output_data):
+        """
+        Compares the version provided in the patch manifest against the client's version.
+        
+        :param output_data: The manifest's output data which we attempt to acquire the generated version.
+        """
+        ap_world_version = "<0.5.6"
+
+        if AP_WORLD_VERSION_NAME in output_data:
+            ap_world_version = self.output_data[AP_WORLD_VERSION_NAME]
+        if ap_world_version != CLIENT_VERSION:
+            raise Utils.VersionException("Error! Server was generated with a different Luigi's Mansion " +
+                        f"APWorld version.\nThe client version is {CLIENT_VERSION}!\nPlease verify you are using the " +
+                        f"same APWorld as the generator, which is '{ap_world_version}'")
 
     # Get an ARC / RARC / SZP file from within the ISO / ROM
     def get_arc(self, arc_path):
