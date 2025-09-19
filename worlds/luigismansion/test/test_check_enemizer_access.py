@@ -18,8 +18,11 @@ class LocationFail(LMTestBase):
     }
 
     def test_enemizer_locations_requires_element(self):
+        import logging
+        logger = logging.getLogger(__name__)
+
         if not any([_ for _ in self.world.ghost_affected_regions.keys() if self.world.ghost_affected_regions[_] == "No Element"]):
-            print("All regions did not require any elements. Multiworld Seed was: " + str(self.multiworld.seed))
+            logger.info("All regions did not require any elements. Multiworld Seed was: " + str(self.multiworld.seed))
             return
 
         prog_items = []
@@ -27,8 +30,8 @@ class LocationFail(LMTestBase):
             if data.classification == ItemClassification.progression and not data.type == "Medal":
                 prog_items.append(name)
         self.collect_by_name(prog_items)
-        print("Currently all of the multiworld's progressive items required are: " + str(self.multiworld.state.prog_items))
-        print("Multiworld Seed was: " + str(self.multiworld.seed))
+        logger.info("Currently all of the multiworld's progressive items required are: " + str(self.multiworld.state.prog_items))
+        logger.info("Multiworld Seed was: " + str(self.multiworld.seed))
 
         all_enemizer_locs: dict[str, LMLocationData] = {**CLEAR_GHOST_LOCATION_TABLE, **ENEMIZER_LOCATION_TABLE,
             **ROOM_BOO_LOCATION_TABLE, **LIGHT_LOCATION_TABLE, **PORTRAIT_LOCATION_TABLE, **TOAD_LOCATION_TABLE}
