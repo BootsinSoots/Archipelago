@@ -11,7 +11,10 @@ class LMTestBase(WorldTestBase):
 
 class LocationFail(LMTestBase):
     options = {
-        "enemizer": 1
+        "enemizer": 1,
+        "portrification": 1,
+        "toadsanity": 1,
+        "boosanity": 1,
     }
 
     def test_enemizer_locations_requires_element(self):

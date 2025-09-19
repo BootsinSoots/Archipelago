@@ -4,7 +4,7 @@ from unittest.mock import patch, MagicMock
 from ..client.dolphin_launcher import DolphinLauncher
 from ..client.luigismansion_settings import LuigisMansionSettings
 
-class _TestSettings():
+class _TestSettings:
     luigismansion_options: LuigisMansionSettings = LuigisMansionSettings()
 
 class TestDolphinLauncher(unittest.TestCase):
@@ -45,7 +45,7 @@ class TestAsyncDolphinLauncher(unittest.IsolatedAsyncioTestCase):
             lm_settings.dolphin_path = "this is a test path"
 
             dolphin_launcher = DolphinLauncher(lm_settings)
-            await dolphin_launcher.launch_dolphin_async()
+            await dolphin_launcher.launch_dolphin_async("")
 
             self.assertEqual(0, mock_Popen.call_count)
 
@@ -60,7 +60,7 @@ class TestAsyncDolphinLauncher(unittest.IsolatedAsyncioTestCase):
             lm_settings.dolphin_path = "this is a test path"
 
             dolphin_launcher = DolphinLauncher(lm_settings)
-            await dolphin_launcher.launch_dolphin_async()
+            await dolphin_launcher.launch_dolphin_async("")
 
             arg_list = mock_subprocess_open.call_args.args[0]
             self.assertEqual(1, mock_subprocess_open.call_count)
@@ -99,7 +99,7 @@ class TestAsyncDolphinLauncher(unittest.IsolatedAsyncioTestCase):
             lm_settings.dolphin_path = "this is a test path"
 
             dolphin_launcher = DolphinLauncher(lm_settings)
-            await dolphin_launcher.launch_dolphin_async()
+            await dolphin_launcher.launch_dolphin_async("")
 
             self.assertEqual(0, mock_subprocess_open.call_count)
             self.assertEqual(0, mock_process_check.call_count)
