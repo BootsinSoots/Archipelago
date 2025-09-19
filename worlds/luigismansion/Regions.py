@@ -96,8 +96,8 @@ spawn_locations = {
                               "key": ["Club Key", "North Rec Room Key", "Heart Key"], "door_keys":
                               ["Club Key", "North Rec Room Key"], "door_ids": [42, 25], "in_game_room_id": 24}, # Courtyard
     "Clockwork Room":        {"room_no": 56, "pos_x": 10.759588, "pos_y": 1100.000000, "pos_z": -1649.743900,
-                              "key": ["Clockwork Room Key", "Telephone Room Key"],
-                              "door_keys": ["Clockwork Room Key"], "door_ids": [53],
+                              "key": ["Clockwork Key", "Telephone Room Key"],
+                              "door_keys": ["Clockwork Key"], "door_ids": [53],
                               "in_game_room_id": 59}, # Clockwork
     "Foyer":                 {"room_no": 2, "pos_x": -7.640748, "pos_y": 0.000000, "pos_z": 145.174300,
                               "key": ["Heart Key", "Family Hallway Key", "Parlor Key"],
@@ -111,7 +111,7 @@ spawn_locations = {
     #                           "key": ["Laundry Key", "Butler's Rom Key", "Heart Key"], "door_keys": ["Laundry Key", "Butler's Rom Key"],
     #                           "door_ids": [1, 7]},  # Laundry removed due to new spawn toad triggering as you leave
     "Telephone Room":        {"room_no": 50, "pos_x": -9.812825, "pos_y": 1100, "pos_z": 118.738243,
-                              "key": ["Telephone Room Key", "Clockwork Room Key"], "door_keys": ["Telephone Room Key", "Clockwork Room Key"],
+                              "key": ["Telephone Room Key", "Clockwork Key"], "door_keys": ["Telephone Room Key", "Clockwork Key"],
                               "door_ids": [53, 52], "in_game_room_id": 53}, # Telephone
     "Butler's Room":         {"room_no": 0, "pos_x": -3391.8396, "pos_y": 0, "pos_z": 114.336197,
                               "key": ["Butler's Room Key", "Laundry Room Key", "Heart Key"], "door_keys": [],
@@ -123,7 +123,7 @@ spawn_locations = {
                               "key": ["Billiards Room Key", "Heart Key"], "door_keys": ["Billiards Room Key", "Projection Room Key"],
                               "door_ids": [17, 18], "in_game_room_id": 12}, # Billiards
     "Twins' Room":           {"room_no": 25, "pos_x": -1729.586790, "pos_y": 550, "pos_z": 116.055779,
-                              "key": ["Twins' Room Key", "Family Hallway Key"], "door_keys": ["Twins' Room Key"],
+                              "key": ["Twins Bedroom Key", "Family Hallway Key"], "door_keys": ["Twins Bedroom Key"],
                               "door_ids": [28], "in_game_room_id": 27}, # Twins
     "Nursery":               {"room_no": 24, "pos_x": -3331.658690, "pos_y": 550, "pos_z": -198.970337,
                               "key": ["Nursery Key", "Family Hallway Key"], "door_keys": ["Nursery Key"],
