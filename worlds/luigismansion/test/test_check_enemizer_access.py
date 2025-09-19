@@ -15,6 +15,7 @@ class LocationFail(LMTestBase):
         "portrification": 1,
         "toadsanity": 1,
         "boosanity": 1,
+        "lightsanity": 1,
     }
 
     def test_enemizer_locations_requires_element(self):
