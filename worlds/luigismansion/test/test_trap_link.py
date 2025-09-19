@@ -44,12 +44,13 @@ class TestTrapLink(unittest.TestCase):
         args = {
             "slot_data":{
                 "trap_link": "TrapLink",
-                "disabled_traps": 3
+                "disabled_traps": 3,
+                "enable_trap_client_msg": True,
             }
         }
 
         trap_link.on_connected(args)
-        self.assertEqual(trap_link.disabled_trap_flags, TrapLinkType.POISON | TrapLinkType.ICE)
+        self.assertEqual(trap_link.disabled_trap_flags, TrapLinkType(TrapLinkType.POISON.value + TrapLinkType.ICE.value))
 
     def test_on_bounced_flag_no_traps_triggered(self):
         """ Verifies that when a trap type is on the disabled list it doesn't trigger. """
@@ -67,7 +68,7 @@ class TestTrapLink(unittest.TestCase):
                 }
 
                 trap_link.disabled_trap_flags |= trap_type
-                trap_link.on_bounced(args)
+                trap_link.on_bounced(args, 0)
                 self.assertFalse(trap_link.received_trap)
 
     def test_on_bounced_traps_triggered(self):
@@ -86,7 +87,7 @@ class TestTrapLink(unittest.TestCase):
                     }
                 }
 
-                trap_link.on_bounced(args)
+                trap_link.on_bounced(args, 0)
                 self.assertTrue(trap_link.received_trap)
 
     def test_on_bounced_traps_all_flags_not_triggered(self):
@@ -104,8 +105,12 @@ class TestTrapLink(unittest.TestCase):
                         "trap_name": trap_name
                     }
                 }
-                trap_link.disabled_trap_flags |= TrapLinkType.BANANA | TrapLinkType.BOMB | TrapLinkType.BONK | TrapLinkType.FEAR | TrapLinkType.GHOST | TrapLinkType.ICE | TrapLinkType.NOVAC | TrapLinkType.POISON | TrapLinkType.POSSESSION | TrapLinkType.SPOOKY | TrapLinkType.SQUASH
-                trap_link.on_bounced(args)
+                all_disabled_traps: TrapLinkType = TrapLinkType(TrapLinkType.BANANA.value + TrapLinkType.BOMB.value +
+                    TrapLinkType.BONK.value + TrapLinkType.FEAR.value + TrapLinkType.GHOST.value +
+                    TrapLinkType.ICE.value + TrapLinkType.NOVAC.value + TrapLinkType.POISON.value +
+                    TrapLinkType.POSSESSION.value + TrapLinkType.SPOOKY.value + TrapLinkType.SQUASH.value)
+                trap_link.disabled_trap_flags |= all_disabled_traps
+                trap_link.on_bounced(args, 1)
                 self.assertFalse(trap_link.received_trap)
 
     def test_on_bounced_trap_link_disabled(self):
@@ -121,7 +126,7 @@ class TestTrapLink(unittest.TestCase):
             }
         }
 
-        trap_link.on_bounced(args)
+        trap_link.on_bounced(args, 0)
         self.assertFalse(trap_link.received_trap)
 
     def test_on_bounced_no_tag_disabled(self):
@@ -137,7 +142,7 @@ class TestTrapLink(unittest.TestCase):
             }
         }
 
-        trap_link.on_bounced(args)
+        trap_link.on_bounced(args, 0)
         self.assertFalse(trap_link.received_trap)
 
     def test_on_bounced_same_player_disabled(self):
@@ -154,7 +159,7 @@ class TestTrapLink(unittest.TestCase):
             }
         }
 
-        trap_link.on_bounced(args)
+        trap_link.on_bounced(args, 0)
         self.assertFalse(trap_link.received_trap)
 
     def test_on_bounced_enabled_traps_receive_with_disabled_flag(self):
@@ -173,5 +178,5 @@ class TestTrapLink(unittest.TestCase):
                 }
 
                 trap_link.disabled_trap_flags |= TrapLinkType.ICE
-                trap_link.on_bounced(args)
+                trap_link.on_bounced(args, 0)
                 self.assertTrue(trap_link.received_trap)
