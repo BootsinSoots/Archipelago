@@ -546,7 +546,7 @@ class LMWorld(World):
         if self.options.early_first_key.value == 1:
             early_key = ""
             for key in spawn_locations[self.origin_region_name]["key"]:
-                key_data: LMItemData = copy.deepcopy(ITEM_TABLE[key])
+                key_data: LMItemData = ITEM_TABLE[key]
                 if self.open_doors[key_data.doorid] == 0:
                     early_key = key
                     break
