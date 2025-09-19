@@ -178,6 +178,7 @@ class LMWorld(World):
         self.boo_spheres: dict[str, int] = {}
         self.hints: dict[str, dict[str, str]] = {}
         self.spawn_full_locked: bool = False
+        self.local_early_key: str = ""
 
     @staticmethod
     def interpret_slot_data(slot_data):
@@ -542,6 +543,17 @@ class LMWorld(World):
             self.options.balcony_boo_count.value = 0
             # self.options.washroom_boo_count.value = 0
 
+        if self.options.early_first_key.value == 1:
+            early_key = ""
+            for key in spawn_locations[self.origin_region_name]["key"]:
+                key_data: LMItemData = copy.deepcopy(ITEM_TABLE[key])
+                if self.open_doors[key_data.doorid] == 0:
+                    early_key = key
+                    break
+            if len(early_key) > 0:
+                self.local_early_key = early_key
+                self.multiworld.local_early_items[self.player].update({early_key: 1})
+
     def create_regions(self):
         # Add all randomizable regions
         for region_name in REGION_LIST.values():
@@ -597,6 +609,8 @@ class LMWorld(World):
 
     def create_items(self):
         exclude = [item.name for item in self.multiworld.precollected_items[self.player]]
+        if len(self.local_early_key) > 0:
+            exclude += self.local_early_key
         loc_itempool: list[LMItem] = []
         if self.options.boosanity:
             for item, data in BOO_ITEM_TABLE.items(): # Always create 1 copy of each boo and not more
@@ -607,7 +621,6 @@ class LMWorld(World):
                 exclude += ["Progressive Vacuum"]
         if self.options.boo_radar.value == 2:
             exclude += ["Boo Radar"]
-        item_list: set = set()
         for item, data in ITEM_TABLE.items():
             copies_to_place = 1
             if data.doorid in self.open_doors.keys() and self.open_doors.get(data.doorid) == 1:
@@ -624,16 +637,7 @@ class LMWorld(World):
             if item == "Progressive Vacuum" and (curr_player_vac_count+copies_to_place) < 1:
                 raise Options.OptionError(f"{self.player_name} has excluded too many copies of Progressive Vacuum and the seed cannot be completed")
             for _ in range(copies_to_place):
-                item_list.add(item)
                 loc_itempool.append(self.create_item(item))
-        if self.options.early_first_key.value == 1:
-            early_key = ""
-            for key in spawn_locations[self.origin_region_name]["key"]:
-                if key in item_list:
-                    early_key = key
-                    break
-            if len(early_key) > 0:
-                self.multiworld.local_early_items[self.player].update({early_key: 1})
 
         # Calculate the number of additional filler items to create to fill all locations
         n_locations = len(self.multiworld.get_unfilled_locations(self.player))
