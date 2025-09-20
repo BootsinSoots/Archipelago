@@ -1774,6 +1774,8 @@ def __set_key_info_entry(key_info_single_entry, item_data, slot: int):
     key_info_single_entry["appear_flag"] = 0
     key_info_single_entry["disappear_flag"] = 0
 
+def update_gallery_furniture_info(furniture_info, output_data):
+
 
 def update_furniture_info(furniture_info, item_appear_info, output_data):
     # Adjust the item spawn height based on if the item spawns from the ceiling or high up on the wall.
