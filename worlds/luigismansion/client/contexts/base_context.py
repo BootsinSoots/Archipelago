@@ -208,7 +208,8 @@ class BaseContext(UniversalContext):
                 Utils.async_start(yell_in_client(self), name="Luigi Is Yelling")
 
 def _check_tag(link: LinkBase, network_engine: ArchipelagoNetworkEngine, args) -> bool:
-    return link.slot_name in args["slot_data"] and link.friendly_name not in network_engine.get_tags()
+    slot_data = args["slot_data"]
+    return link.slot_name in slot_data and slot_data[link.slot_name] == 1 and link.friendly_name not in network_engine.get_tags()
 
 async def yell_in_client(ctx: BaseContext) -> None:
     logger.info(random.choice(LUIGI_SHOUT_LIST))
