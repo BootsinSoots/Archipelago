@@ -149,7 +149,7 @@ spawn_locations = {
     "Sitting Room":          {"room_no": 27, "pos_x": 2225.465090, "pos_y": 550, "pos_z": -98.163559,
                               "key": ["Sitting Room Key", "Guest Room Key"],
                               "door_keys": ["Sitting Room Key", "Guest Room Key"], "door_ids": [29, 30], "in_game_room_id": 28}, # sitting
-    "Guest Room":            {"room_no": 28, "pos_x": 2949.315430, "pos_y": 550, "pos_z": -149.029785,
+    "Guest Room":            {"room_no": 28, "pos_x": 3637.69727, "pos_y": 550, "pos_z": 201.316391,
                               "key": ["Guest Room Key", "Sitting Room Key"], "door_keys": ["Guest Room Key"],
                               "door_ids": [30], "in_game_room_id": 29}, # guest
     "Safari Room":           {"room_no": 52, "pos_x": 3317.313480, "pos_y": 1100, "pos_z": 225,
