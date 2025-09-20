@@ -63,7 +63,8 @@ class LMWeb(WebWorld):
             LuigiOptions.Portrification,
             LuigiOptions.SpeedySpirits,
             LuigiOptions.Lightsanity,
-            LuigiOptions.Walksanity
+            LuigiOptions.Walksanity,
+            LuigiOptions.WhatDoYouMean,
         ]),
         OptionGroup("Access Options", [
             LuigiOptions.RankRequirement,

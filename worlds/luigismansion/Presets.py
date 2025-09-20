@@ -30,6 +30,7 @@ all_random_settings = {
     LMOptions.Lightsanity.internal_name:               "random",
     LMOptions.Walksanity.internal_name:                "random",
     LMOptions.SpeedySpirits.internal_name:             "random",
+    LMOptions.WhatDoYouMean.internal_name:             "random",
     LMOptions.BooGates.internal_name:                  "random",
     LMOptions.KingBooHealth.internal_name:             "random",
     LMOptions.BoolossusDifficulty.internal_name:       "random",
@@ -81,6 +82,7 @@ allsanity_settings = {
     LMOptions.Lightsanity.internal_name:               "true",
     LMOptions.Walksanity.internal_name:                "true",
     LMOptions.SpeedySpirits.internal_name:             "true",
+    LMOptions.WhatDoYouMean.internal_name:             "true",
 }
 
 money_settings = {
@@ -124,7 +126,7 @@ trap_settings = {
 }
 
 lm_options_presets: Dict[str, Dict[str, Any]] = {
-    "All random": all_random_settings,
+    "All Random": all_random_settings,
     "I Love Money": money_settings,
     "Raining Traps": trap_settings,
     "Allsanity": allsanity_settings,

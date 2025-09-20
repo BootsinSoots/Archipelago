@@ -292,6 +292,10 @@ class MarioItems(Range):
     range_end = 5
     default = 5
 
+class WhatDoYouMean(Toggle):
+    """Adds locations you would never expect."""
+    display_name = "What do you mean these are locations?"
+    internal_name = "WDYM_checks"
 
 # class WashroomBooCount(Range):
 #     """Set the number of Boos required to reach the 1F Washroom. 0 = Starts Open"""
@@ -721,6 +725,7 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     lightsanity: Lightsanity
     walksanity: Walksanity
     speedy_spirits: SpeedySpirits
+    WDYM_checks: WhatDoYouMean
     boo_gates: BooGates
     mario_items: MarioItems
     #washroom_boo_count: WashroomBooCount
