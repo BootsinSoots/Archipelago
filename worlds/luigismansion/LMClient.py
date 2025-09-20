@@ -645,7 +645,7 @@ class LMContext(CommonContext):
 
         # There will be different checks on different maps.
         current_map_id = dme.read_word(CURR_MAP_ID_ADDR)
-        if current_map_id == 2:
+        if current_map_id in [2,6]: # Check if we're in the Mansion or the Gallery
             current_room_id = dme.read_word(dme.follow_pointers(ROOM_ID_ADDR, [ROOM_ID_OFFSET]))
 
         for mis_loc in self.missing_locations:
