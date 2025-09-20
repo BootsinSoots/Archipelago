@@ -26,7 +26,7 @@ class RingLink(LinkBase):
     timer_start: float = time.time()
     pending_rings: int = 0
     remote_pending_rings: int = 0
-    remote_rings_sent: int = 0
+    remote_rings_received: bool = False
     enable_logger: bool = True
 
     def __init__(self, network_engine: ArchipelagoNetworkEngine, wallet_manager: WalletManager):
@@ -57,12 +57,12 @@ class RingLink(LinkBase):
                     logger.info("%s: You received %s coin(s)!",RingLinkConstants.FRIENDLY_NAME, amount)
                 currencies = self.wallet_manager.add_currencies(amount_difference)
                 self.wallet_manager.wallet.add_to_wallet(currencies)
-                self.remote_rings_sent += amount
+                self.remote_rings_received = True
             elif amount < 0:
                 if self.enable_logger:
                     logger.info("%s: You lost %s coin(s).", RingLinkConstants.FRIENDLY_NAME, amount)
                 self.wallet_manager.wallet.set_specific_currency(CURRENCY_NAME.COINS, max(coins_current_amt - amount_difference, 0))
-                self.remote_rings_sent -= amount
+                self.remote_rings_received = True
 
     async def handle_ring_link_async(self, delay: int = 5):
         if not self.is_enabled():
@@ -73,14 +73,9 @@ class RingLink(LinkBase):
         # There may be instances where currency gained/lost may not equate to having a different final value
         # and/or ringlink requests may come in and cancel currency differences.
         if timer_end - self.timer_start >= delay:
-            difference = self.wallet_manager._difference
-            self.wallet_manager._difference = 0
-
-            if difference == 0:
+            difference = self.wallet_manager.reset_difference()
+            if not _should_send_rings(self, difference):
                 return
-
-            difference -= self.remote_rings_sent
-            self.remote_rings_sent = 0
 
             await self.send_rings_async(difference * self.ring_multiplier)
             self.timer_start = time.time()
@@ -106,3 +101,24 @@ def _get_uuid() -> int:
     for char in string_id:
         uid += ord(char)
     return uid
+
+def _should_send_rings(ring_link: RingLink, difference: int) -> bool:
+    should_send = True
+    max_to_be_sent: int = 1000
+
+    # If the wallet difference is 0 there's nothing to send.
+    if difference == 0:
+        should_send = False
+    # If the number is outrageous, we want to avoid sending.
+    elif abs(difference) > max_to_be_sent:
+        should_send = False
+    # Lastly, if we received rings within the last update we want to avoid sending.
+    elif ring_link.remote_rings_received:
+        should_send = False
+
+    # If we're not sending we want to reset all counters.
+    if not should_send:
+        ring_link.remote_rings_received = False
+        ring_link.wallet_manager.reset_difference()
+
+    return should_send
