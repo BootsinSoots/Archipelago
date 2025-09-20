@@ -1699,6 +1699,22 @@ WDYM_LOCATION_TABLE ={
                                                    update_ram_addr=[LMRamData(in_game_room_id=55)]),
     "Safari Room C Cheetah Carpet": LMLocationData("Safari Room", 868, "Furniture", 683, [],
                                                    update_ram_addr=[LMRamData(in_game_room_id=55)]),
+    "Left Gallery Angel": LMLocationData("Gallery", 930, "Furniture", 7, [],
+                                                   update_ram_addr=[LMRamData(in_game_room_id=0)], map_id=[6],require_poltergust=False),
+    "Right Gallery Angel": LMLocationData("Gallery", 931, "Furniture", 8, [],
+                                         update_ram_addr=[LMRamData(in_game_room_id=0)], map_id=[6], require_poltergust=False),
+    "Right Gallery Chandelier": LMLocationData("Gallery", 932, "Furniture", 1, [],
+                                          update_ram_addr=[LMRamData(in_game_room_id=3)], map_id=[6]),
+    "Right Gallery Angel Altar": LMLocationData("Gallery", 933, "Furniture", 4, [],
+                                               update_ram_addr=[LMRamData(in_game_room_id=3)], map_id=[6], require_poltergust=False),
+    "Right Gallery Dresser": LMLocationData("Gallery", 934, "Furniture", 6, [],
+                                               update_ram_addr=[LMRamData(in_game_room_id=3)], map_id=[6], require_poltergust=False),
+    "Left Gallery Chandelier": LMLocationData("Gallery", 935, "Furniture", 0, [],
+                                               update_ram_addr=[LMRamData(in_game_room_id=3)], map_id=[6]),
+    "Left Gallery Angel Altar": LMLocationData("Gallery", 936, "Furniture", 3, [],
+                                               update_ram_addr=[LMRamData(in_game_room_id=3)], map_id=[6], require_poltergust=False),
+    "Left Gallery Dresser": LMLocationData("Gallery", 937, "Furniture", 5, [],
+                                               update_ram_addr=[LMRamData(in_game_room_id=3)], map_id=[6], require_poltergust=False),
 }
 
 
