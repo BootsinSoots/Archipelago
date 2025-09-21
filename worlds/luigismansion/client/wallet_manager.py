@@ -64,19 +64,26 @@ class WalletManager:
         return int(new_amount)
 
     def reset_wallet_watching(self):
+        """ Resets wallet counting, used when a client disconnects/reconnects. """
         self.initial_check = True
-        self._difference = 0
+        self.reset_difference()
 
     async def calc_wallet_differences_async(self):
         """ We want to asychnrously monitor the difference in currency for sending rings VIA ringlink. """
         ring_equiv = self.wallet.get_wallet_worth() / self.wallet.get_calculated_amount_worth(1)
 
-        if self.initial_check:
+        if self.initial_check and ring_equiv > 0:
             self.initial_check = not self.initial_check
         else:
             self._difference += ring_equiv - self.previous_amount
 
         self.previous_amount = ring_equiv
+
+    def reset_difference(self) -> int:
+        """ Gets the current wallet differences and resets the counter. """
+        current_difference = self._difference
+        self._difference = 0
+        return current_difference
 
 def _remove_currencies(wallet: Wallet, amount_to_send: int) -> tuple[dict[str, int], int]:
     new_amount = amount_to_send
