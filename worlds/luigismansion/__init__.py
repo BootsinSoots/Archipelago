@@ -298,7 +298,10 @@ class LMWorld(World):
                 entry = LMLocation(self.player, location, region, data)
                 if data.require_poltergust or region.name == self.origin_region_name:
                     add_rule(entry, lambda state: state.has("Progressive Vacuum", self.player), "and")
-                set_element_rules(self, entry, False)
+                if data.code in (603,604,605,606,607,608,609): #Specifically the Artist's Easels require element rules
+                    set_element_rules(self, entry, True)
+                else:
+                    set_element_rules(self, entry, False)
                 region.locations.append(entry)
         if self.options.gold_mice:
             for location, data in GOLD_MICE_LOCATION_TABLE.items():
