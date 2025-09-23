@@ -73,7 +73,7 @@ class LMWeb(WebWorld):
             LuigiOptions.LuigiFearAnim,
             LuigiOptions.PickupAnim,
             LuigiOptions.ShowSelfReceivedItems,
-            LuigiOptions.DeathLink,
+            Options.DeathLink,
             LuigiOptions.TrapLink,
             LuigiOptions.TrapLinkClientMsgs,
             LuigiOptions.EnergyLink,
