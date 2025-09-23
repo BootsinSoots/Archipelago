@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from Options import Toggle, Range, PerGameCommonOptions, Choice, StartInventoryPool, DeathLinkMixin, OptionSet, \
-    DefaultOnToggle, DeathLink
+    DefaultOnToggle
 
 
 class LuigiWalkSpeed(Choice):
