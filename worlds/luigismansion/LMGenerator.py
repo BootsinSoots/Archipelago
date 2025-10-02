@@ -191,7 +191,7 @@ class LuigisMansionRandomizer:
         king_boo_health: int = int(self.output_data["Options"]["king_boo_health"])
         random_spawn: str = str(self.output_data["Options"]["spawn"])
         door_model_rando_on: bool = bool(self.output_data["Options"]["door_model_rando"])
-        bool_start_extra_vacuum: bool = not bool(self.output_data["Options"]["good_vacuum"])
+        bool_start_extra_vacuum: int = int(self.output_data["Options"]["vacuum_upgrades"])
 
         # Boo related options
         bool_boo_checks: bool = True if self.output_data["Options"]["boo_gates"] == 1 else False

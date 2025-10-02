@@ -92,7 +92,7 @@ def __get_item_name(item_data, slot: int):
 
         case "Boo Radar":
             return "gameboy"
-        case "Progressive Vacuum":
+        case "Vacuum Upgrade"|"Poltergust 3000":
             return "vbody"
 
     return "nothing"

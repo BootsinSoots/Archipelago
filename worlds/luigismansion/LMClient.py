@@ -272,7 +272,7 @@ class LMContext(BaseContext):
                     return
                 if not hasattr(self, "instance_id"):
                     self.instance_id = time.time()
-                self.trap_link.on_bounced(args, self.get_item_count_by_id(8064))
+                self.trap_link.on_bounced(args, self.get_item_count_by_id(8148))
                 self.ring_link.on_bounced(args)
             case "SetReply":
                 if not (self.check_ingame() and self.check_alive()):
@@ -357,6 +357,10 @@ class LMContext(BaseContext):
                         self.last_room_id = current_room_id
                         Utils.async_start(self.lm_update_non_savable_ram(), "LM - Update Non-Saveable RAM - Room Change")
                 return bool_loaded_in_map
+            elif curr_map_id == 3:
+                curr_val = int.from_bytes(dme.read_byte(0x803D33AE)) #finding flag 168 to check if it's on
+                if (curr_val & (1 << 0)) > 0:
+                    Utils.async_start(self.lm_update_non_savable_ram(), "LM - Update Non-Saveable RAM - Training Room")
             return True
 
         self.last_not_ingame = time.time()
@@ -484,7 +488,7 @@ class LMContext(BaseContext):
 
         try:
             for (key, val) in progressive_items.items():
-                if key in ["Progressive Vacuum", "Gold Diamond", "Progressive Flower"] or \
+                if key in ["Vacuum Upgrade", "Gold Diamond", "Progressive Flower", "Poltergust 3000"] or \
                     LMItem.get_apid(val.code) not in self.items_received:
                     continue
 
@@ -547,7 +551,7 @@ class LMContext(BaseContext):
                 self.update_received_idx(last_recv_idx)
                 continue
             elif lm_item.type == "Trap" and (self.non_save_last_recv_idx >= last_recv_idx or
-                (item.item == 8147 and self.get_item_count_by_id(8064) < 1)):
+                (item.item == 8147 and self.get_item_count_by_id(8148) < 1)):
                 # Skip this trap item to avoid Luigi dying in an infinite trap loop.
                 # Also skip No Vac Trap if we don't have a vacuum
                 self.update_received_idx(last_recv_idx)
@@ -565,12 +569,9 @@ class LMContext(BaseContext):
                     flower_count: int = self.get_item_count_by_id(8140)
                     curr_val = min(flower_count + 234, 237)
                     ram_offset = None
-                elif item.item == 8064:  # If it's a Progressive Vacuum
-                    if addr_to_update.ram_addr == 0x804dda54:  # If we're checking against our vacuum-on address
-                        curr_val = addr_to_update.item_count
-                    else:  # If we're checking against our vacuum speed address
-                        curr_val: int = min(5, self.get_item_count_by_id(8064) - 1)
-                        ram_offset = None
+                elif item.item == 8064:  # If it's a vacuum upgrade
+                    curr_val: int = self.get_item_count_by_id(8064)
+                    ram_offset = None
                 elif not addr_to_update.item_count is None:
                     if not ram_offset is None:
                         curr_val = int.from_bytes(dme.read_bytes(dme.follow_pointers(addr_to_update.ram_addr,
@@ -612,18 +613,19 @@ class LMContext(BaseContext):
     async def lm_update_non_savable_ram(self):
         try:
             # Always adjust the Vacuum speed as saving and quitting or going to E. Gadds lab could reset it back to normal.
-            vac_count = self.get_item_count_by_id(8064)
-            vac_speed = max(min(vac_count - 1, 5),0)
-            lm_item_name = self.item_names.lookup_in_game(8064)
-            lm_item = ALL_ITEMS_TABLE[lm_item_name]
+            vac_count = self.get_item_count_by_id(8148)
+            vac_speed = max(min(self.get_item_count_by_id(8064), 5),0)
 
             if not self.trap_link.check_vac_trap_active():
-                for addr_to_update in lm_item.update_ram_addr:
-                    if addr_to_update.ram_addr == 0x804dda54 and vac_count > 0:  # If we're checking against our vacuum-on address
-                        curr_val = 1
-                        dme.write_bytes(addr_to_update.ram_addr, curr_val.to_bytes(addr_to_update.ram_byte_size, 'big'))
-                    else:
-                        dme.write_bytes(addr_to_update.ram_addr, vac_speed.to_bytes(addr_to_update.ram_byte_size, 'big'))
+                for item in [8064, 8148]:
+                    lm_item_name = self.item_names.lookup_in_game(item)
+                    lm_item = ALL_ITEMS_TABLE[lm_item_name]
+                    for addr_to_update in lm_item.update_ram_addr:
+                        if addr_to_update.ram_addr == 0x804dda54 and vac_count > 0:  # If we're checking against our vacuum-on address
+                            curr_val = 1
+                            dme.write_bytes(addr_to_update.ram_addr, curr_val.to_bytes(addr_to_update.ram_byte_size, 'big'))
+                        else:
+                            dme.write_bytes(addr_to_update.ram_addr, vac_speed.to_bytes(addr_to_update.ram_byte_size, 'big'))
 
             # Always adjust Pickup animation issues if the user turned pick up animations off.
             if not self.pickup_anim_on:

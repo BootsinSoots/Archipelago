@@ -294,7 +294,7 @@ def connect_regions(world: "LMWorld"):
     lmconnect(world, "Billiards Room", "Projection Room", "Projection Room Key", 18)
     lmconnect(world, "Fortune-Teller's Room", "Mirror Room", "Mirror Room Key", 5)
     lmconnect(world, "Laundry Room", "Butler's Room", "Butler's Room Key", 1)
-    lmconnect(world, "Butler's Room", "Hidden Room", rule=lambda state: state.has("Progressive Vacuum", world.player))
+    lmconnect(world, "Butler's Room", "Hidden Room", rule=lambda state: state.has("Poltergust 3000", world.player))
     lmconnect(world, "Courtyard", "The Well")
     lmconnect(world, "Rec Room", "2F Stairwell", "South Rec Room Key", 24)
     lmconnect(world, "2F Stairwell", "Tea Room", "Tea Room Key", 47,
@@ -323,9 +323,9 @@ def connect_regions(world: "LMWorld"):
     lmconnect(world, "Roof", "Sealed Room", one_way=True),
     lmconnect(world, "Basement Stairwell", "Breaker Room", "Breaker Room Key", 71)
     lmconnect(world, "Basement Stairwell", "Cellar", "Cellar Key", 68,
-              rule=lambda state: state.has("Progressive Vacuum", world.player))
+              rule=lambda state: state.has("Poltergust 3000", world.player))
     lmconnect(world, "Cellar", "Basement Hallway", "Basement Hallway Key", 67,
-              rule=lambda state: state.has("Progressive Vacuum", world.player))
+              rule=lambda state: state.has("Poltergust 3000", world.player))
     lmconnect(world, "Basement Hallway", "Cold Storage", "Cold Storage Key", 65)
     lmconnect(world, "Basement Hallway", "Pipe Room", "Pipe Room Key", 69)
     lmconnect(world, "Basement Hallway", "Altar Hallway", "Altar Hallway Key", 70)

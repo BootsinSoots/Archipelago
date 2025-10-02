@@ -33,6 +33,7 @@
 <FRAMESTART>
 <NORMALSCREEN>
 <WEAPON>
+<FLAGON>(168)
 <LUIGISTOP3>
 <WAIT>(15)
 <GHOSTRESET>
@@ -46,6 +47,7 @@
 
 <PDEMO>"gb_minigame1"
 <ACTOR>"demo_luigi"<ACT>"DM_LOKGB_ST"
+<FLAGOFF>(168)
 //----------------------------------------------------
 //----------------------------------------------------
 <CASE>"recover"

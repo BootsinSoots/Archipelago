@@ -120,8 +120,10 @@ ITEM_TABLE: dict[str, LMItemData] = {
         update_ram_addr=[LMRamData(0x803D5DBB, bit_position=7), LMRamData(0x803D339C, bit_position=0)]),
     "Boo Radar": LMItemData("Upgrade", 63, IC.progression,
         update_ram_addr=[LMRamData(0x803D33A2, bit_position=1), LMRamData(0x803D33A2, bit_position=3)]),
-    "Progressive Vacuum": LMItemData("Upgrade", 64, IC.progression,
-        update_ram_addr=[LMRamData(0x804ddde0, item_count=1, ram_byte_size=4), LMRamData(0x804dda54, ram_byte_size=4, item_count=1)]),
+    "Vacuum Upgrade": LMItemData("Upgrade", 64, IC.useful,
+        update_ram_addr=[LMRamData(0x804ddde0, item_count=1, ram_byte_size=4)]),
+    "Poltergust 3000": LMItemData("Upgrade", 148, IC.progression,
+        update_ram_addr=[LMRamData(0x804dda54, ram_byte_size=4, item_count=1)]),
     "Gold Diamond": CurrencyItemData(65, { CURRENCY_NAME.GOLD_DIAMOND: 1 }, classification=IC.progression),
     "Progressive Flower": LMItemData("Flower Stage", 140, IC.progression,
         update_ram_addr=[LMRamData(0x80338fc0, ram_byte_size=4)])

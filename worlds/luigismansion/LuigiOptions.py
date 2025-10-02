@@ -151,16 +151,13 @@ class HeartWeight(Range):
     default = 10
 
 
-class BetterVacuum(Choice):
+class BetterVacuum(Range):
     """
-    Choose whether to include vacuum damage upgrades.
-
-    If you start with an upgrade on a no-poltergust start, you will receive the base poltergust instead"""
+    Choose how many vacuum upgrades to include, up to 5."""
     display_name = "Vacuum Upgrades"
-    internal_name = "good_vacuum"
-    option_start_with = 0
-    option_include = 1
-    option_exclude = 2
+    internal_name = "vacuum_upgrades"
+    range_start = 0
+    range_end = 5
     default = 1
 
 
@@ -730,7 +727,7 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     game_mode: GameMode
     vacuum_start: VacuumStart
     walk_speed: LuigiWalkSpeed
-    good_vacuum: BetterVacuum
+    vacuum_upgrades: BetterVacuum
     boo_radar: StartWithBooRadar
     hidden_mansion: StartHiddenMansion
     enable_fear_animation: LuigiFearAnim

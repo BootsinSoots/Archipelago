@@ -58,7 +58,7 @@ def set_element_rules(world: "LMWorld", location: LMLocation, use_enemizer: bool
                 pass
 
 def can_fst_fire(state: CollectionState, player: int):
-    return (state.has("Fire Element Medal", player) and state.has("Progressive Vacuum", player)
+    return (state.has("Fire Element Medal", player) and state.has("Poltergust 3000", player)
                                                     and (state.can_reach_region("1F Hallway", player) or
                                                         state.can_reach_region("Study", player) or
                                                         state.can_reach_region("Butler's Room", player) or
@@ -72,7 +72,7 @@ def can_fst_fire(state: CollectionState, player: int):
 
 
 def can_fst_water(state, player):
-    return (state.has("Water Element Medal", player) and state.has("Progressive Vacuum", player) and
+    return (state.has("Water Element Medal", player) and state.has("Poltergust 3000", player) and
                                                         (state.can_reach_region("Kitchen", player) or
                                                          state.can_reach_region("Boneyard", player) or
                                                          state.can_reach_region("Courtyard", player) or
@@ -82,7 +82,7 @@ def can_fst_water(state, player):
 
 
 def can_fst_ice(state, player):
-    return (state.has("Ice Element Medal", player) and state.has("Progressive Vacuum", player)
+    return (state.has("Ice Element Medal", player) and state.has("Poltergust 3000", player)
                                                     and (state.can_reach_region("Kitchen", player) or
                                                        state.can_reach_region("Pipe Room", player) or
                                                        state.can_reach_region("Tea Room", player) or
