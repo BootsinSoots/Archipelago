@@ -291,12 +291,17 @@ class LuigisMansionRandomizer:
         logger.info("Saving all files back into the main mansion file, then generating the new ISO file...")
         self.map_two_file.save_changes()
         self.map_three_file.save_changes()
-        if self.output_data["Options"]["WDYM_checks"] == 1:
-            self.map_six_file.save_changes()
+
         logger.info("map2.szp Yay0 check...")
         self.gcm.changed_files["files/Map/map2.szp"] = Yay0.compress(self.map_two_file.data)
+        logger.info("map3.szp Yay0 check...")
         self.gcm.changed_files["files/Map/map3.szp"] = Yay0.compress(self.map_three_file.data)
-        self.gcm.changed_files["files/Map/map6.szp"] = Yay0.compress(self.map_six_file.data)
+
+        if self.output_data["Options"]["WDYM_checks"] == 1:
+            logger.info("Saving WDYM map changes...")
+            self.map_six_file.save_changes()
+            logger.info("map6.szp Yay0 check...")
+            self.gcm.changed_files["files/Map/map6.szp"] = Yay0.compress(self.map_six_file.data)
 
         # Generator function to combine all necessary files into an ISO file.
         # Returned information is ignored.
