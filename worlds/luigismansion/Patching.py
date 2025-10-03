@@ -263,11 +263,10 @@ def update_event_info(event_info, boo_checks: bool, output_data):
                 x["pos_z"] = int(spawn_data["pos_z"]) - 150
                 x["pos_x"] = int(spawn_data["pos_x"]) - 150 + 2
 
-def update_gallery_character_info(character_info, output_data):
-    if output_data["Options"]["WDYM_checks"] == 1:
-        for x in character_info.info_file_field_entries:
-            if x["name"] == "lohakase":
-                x["pos_z"] = -31.651000
+def update_gallery_character_info(character_info):
+    for x in character_info.info_file_field_entries:
+        if x["name"] == "lohakase":
+            x["pos_z"] = -31.651000
 
 def update_character_info(character_info, output_data):
     # Removes useless cutscene objects and the vacuum in the Parlor under the closet.

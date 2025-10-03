@@ -165,7 +165,7 @@ class LuigisMansionRandomizer:
         update_event_info(self.jmp_map3_event_info_table, bool_boo_checks, self.output_data)
         if self.output_data["Options"]["WDYM_checks"] == 1:
             update_gallery_furniture_info(self.jmp_map6_furniture_info_table, self.jmp_item_appear_table, self.output_data)
-            update_gallery_character_info(self.jmp_map6_character_info_table, self.output_data)
+            update_gallery_character_info(self.jmp_map6_character_info_table)
 
         # Updates all the data entries in each jmp table in the szp file.
         self.update_map_info_table(self.map_two_file,self.jmp_character_info_table)
