@@ -677,7 +677,10 @@ class LMWorld(World):
 
 
     def get_other_filler_item(self,other_filler, filler_weights) -> str:
-        return self.random.choices(other_filler, weights=filler_weights, k=1)[0]
+        if sum(filler_weights) != 0:
+            return self.random.choices(other_filler, weights=filler_weights, k=1)[0]
+        else:
+            return "Nothing"
 
     def get_filler_item_name(self) -> str:
         filler = list(filler_items.keys())
@@ -699,7 +702,10 @@ class LMWorld(World):
                           self.options.banana_trap_weight.value, self.options.poison_trap_weight.value,
                           self.options.ghost_weight.value, self.options.fear_weight.value,
                           self.options.spooky_weight.value, self.options.squash_weight.value, self.options.vac_trap_weight.value]  # 15bill, 25bill, 1bar, 2bar
-        return self.random.choices(filler, weights=filler_weights, k=1)[0]
+        if sum(filler_weights) != 0:
+            return self.random.choices(filler, weights=filler_weights, k=1)[0]
+        else:
+            return "Nothing"
 
     def set_rules(self):
         self.multiworld.completion_condition[self.player] = lambda state: state.has("Mario's Painting", self.player)
