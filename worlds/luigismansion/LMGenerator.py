@@ -1,5 +1,8 @@
 import json
 import os, yaml
+
+from gclib.gclib_file import GCLibFile
+
 import Utils
 
 from CommonClient import logger
@@ -63,7 +66,7 @@ class LuigisMansionRandomizer:
         self.map_three_file = self.get_arc("files/Map/map3.szp")
         self.map_six_file = self.get_arc("files/Map/map6.szp")
 
-        # Loads all the specific JMP tables AP may potentially change / update.
+        # Loads all the specific JMP tables AP may potentially change / update in map 2.
         # Although some events are not changed by AP directly, they are changed here to remove un-necessary cutscenes,
         # set certain flag values, and remove un-necessary script tags.
         self.jmp_item_info_table = self.load_map_info_table(self.map_two_file,"iteminfotable")
@@ -83,7 +86,11 @@ class LuigisMansionRandomizer:
             self.jmp_teiden_enemy_info_table = self.load_map_info_table(self.map_two_file,"teidenenemyinfo")
         self.jmp_teiden_character_info_table = self.load_map_info_table(self.map_two_file,"teidencharacterinfo")
         self.jmp_iyapoo_table = self.load_map_info_table(self.map_two_file,"iyapootable")
+
+        # Map 3 JMP tables
         self.jmp_map3_event_info_table = self.load_map_info_table(self.map_three_file,"eventinfo")
+
+        # Map 6 JMP tables
         self.jmp_map6_furniture_info_table = self.load_map_info_table(self.map_six_file,"furnitureinfo")
 
         # Saves the randomized iso file, with all files updated.
@@ -173,7 +180,16 @@ class LuigisMansionRandomizer:
             self.update_map_info_table(self.map_two_file,self.jmp_teiden_enemy_info_table)
         self.update_map_info_table(self.map_two_file,self.jmp_boo_table)
         self.update_map_info_table(self.map_two_file,self.jmp_iyapoo_table)
+
+        # Update Map 3 JMP Tables
         self.update_map_info_table(self.map_three_file, self.jmp_map3_event_info_table)
+
+        # Update Map 6 JMP Tables, need to copy item appear table and item info table first.
+        self.map_six_file.add_new_file("iteminfotable", self.jmp_item_info_table.info_file_entry.data,
+            self.jmp_map6_furniture_info_table.info_file_entry.node)
+        self.map_six_file.add_new_file("itemappeartable", self.jmp_item_info_table.info_file_entry.data,
+            self.jmp_map6_furniture_info_table.info_file_entry.node)
+        self.update_map_info_table(self.map_six_file, self.jmp_map6_furniture_info_table)
 
     def save_randomized_iso(self):
         # Get Output data required information
