@@ -395,7 +395,9 @@ REGION_LIST = {
     50: "Telephone Room",
     56: "Clockwork Room",
     60: "Roof",
-    68: "Altar Hallway"
+    68: "Altar Hallway",
+    100: "Gallery",
+    101: "Training Room"
 }
 
 # ROOM_EXITS = []
