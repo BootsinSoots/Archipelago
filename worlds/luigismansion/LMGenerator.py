@@ -187,7 +187,7 @@ class LuigisMansionRandomizer:
         # Update Map 6 JMP Tables, need to copy item appear table and item info table first.
         self.map_six_file.add_new_file("iteminfotable", self.jmp_item_info_table.info_file_entry.data,
             self.jmp_map6_furniture_info_table.info_file_entry.node)
-        self.map_six_file.add_new_file("itemappeartable", self.jmp_item_info_table.info_file_entry.data,
+        self.map_six_file.add_new_file("itemappeartable", self.jmp_item_appear_table.info_file_entry.data,
             self.jmp_map6_furniture_info_table.info_file_entry.node)
         self.update_map_info_table(self.map_six_file, self.jmp_map6_furniture_info_table)
 
