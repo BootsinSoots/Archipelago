@@ -295,6 +295,8 @@ class LuigisMansionRandomizer:
             self.map_six_file.save_changes()
         logger.info("map2.szp Yay0 check...")
         self.gcm.changed_files["files/Map/map2.szp"] = Yay0.compress(self.map_two_file.data)
+        self.gcm.changed_files["files/Map/map3.szp"] = Yay0.compress(self.map_three_file.data)
+        self.gcm.changed_files["files/Map/map6.szp"] = Yay0.compress(self.map_six_file.data)
 
         # Generator function to combine all necessary files into an ISO file.
         # Returned information is ignored.
