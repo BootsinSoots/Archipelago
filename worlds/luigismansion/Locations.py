@@ -119,7 +119,7 @@ BASE_LOCATION_TABLE: dict[str, LMLocationData] = {
                                                      update_ram_addr=[LMRamData(in_game_room_id=53)], require_poltergust=False),
     "Telephone Room R1 Chest": LMLocationData("Telephone Room", 44, "Furniture", 681, [], remote_only=True,
                                                      update_ram_addr=[LMRamData(in_game_room_id=53)], require_poltergust=False),
-    "Visit E. Gadd's Gallery": LMLocationData("Foyer", 925, "Map", 0, [], remote_only=True,
+    "Visit E. Gadd's Gallery": LMLocationData("Gallery", 925, "Map", 0, [], remote_only=True,
                                       update_ram_addr=[LMRamData(0x804D80A4)], require_poltergust=False, map_id=[6]),
     "Complete Training": LMLocationData("Training Room", 926, "Special", 0, [], remote_only=True,
                        update_ram_addr=[LMRamData(0x803D33B2, bit_position=0, in_game_room_id=0)], map_id=[3]),

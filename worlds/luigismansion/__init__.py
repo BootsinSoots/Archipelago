@@ -572,7 +572,7 @@ class LMWorld(World):
         # Assign each location to their region
         for location, data in BASE_LOCATION_TABLE.items():
             # Set our special spawn locations to the spawn regions
-            if data.code in (708, 853, 925, 926, 927):
+            if data.code in (708, 853):
                 region = self.get_region(self.origin_region_name)
             else:
                 region = self.get_region(data.region)

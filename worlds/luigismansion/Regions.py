@@ -332,6 +332,8 @@ def connect_regions(world: "LMWorld"):
     lmconnect(world, "Altar Hallway", "Secret Altar", "Spade Key", 72,
             lambda state, final_boo_count=world.options.final_boo_count.value: state.has_group("Boo", world.player, final_boo_count)
                           or state.has("Boo", world.player, final_boo_count))
+    lmconnect(world, world.origin_region_name, "Gallery")
+    lmconnect(world, world.origin_region_name, "Training Room")
 
 
 REGION_LIST = {
