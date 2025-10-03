@@ -61,6 +61,7 @@ class LuigisMansionRandomizer:
         logger.info("Loading all of the main mansion map files into memory.")
         self.map_two_file = self.get_arc("files/Map/map2.szp")
         self.map_three_file = self.get_arc("files/Map/map3.szp")
+        self.map_six_file = self.get_arc("files/Map/map6.szp")
 
         # Loads all the specific JMP tables AP may potentially change / update.
         # Although some events are not changed by AP directly, they are changed here to remove un-necessary cutscenes,
@@ -83,6 +84,7 @@ class LuigisMansionRandomizer:
         self.jmp_teiden_character_info_table = self.load_map_info_table(self.map_two_file,"teidencharacterinfo")
         self.jmp_iyapoo_table = self.load_map_info_table(self.map_two_file,"iyapootable")
         self.jmp_map3_event_info_table = self.load_map_info_table(self.map_three_file,"eventinfo")
+        self.jmp_map6_furniture_info_table = self.load_map_info_table(self.map_six_file,"furnitureinfo")
 
         # Saves the randomized iso file, with all files updated.
         self.save_randomized_iso()
@@ -151,6 +153,7 @@ class LuigisMansionRandomizer:
         update_boo_table(self.jmp_boo_table, self.output_data)
         update_iyapoo_table(self.jmp_iyapoo_table, self.output_data)
         update_event_info(self.jmp_map3_event_info_table, bool_boo_checks, self.output_data)
+        update_gallery_furniture_info(self.jmp_map6_furniture_info_table, self.jmp_item_appear_table, self.output_data)
 
         # Updates all the data entries in each jmp table in the szp file.
         self.update_map_info_table(self.map_two_file,self.jmp_character_info_table)
