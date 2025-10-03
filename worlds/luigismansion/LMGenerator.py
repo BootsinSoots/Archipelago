@@ -94,6 +94,7 @@ class LuigisMansionRandomizer:
         # Map 6 JMP tables
         if self.output_data["Options"]["WDYM_checks"] == 1:
             self.jmp_map6_furniture_info_table = self.load_map_info_table(self.map_six_file,"furnitureinfo")
+            self.jmp_map6_character_info_table = self.load_map_info_table(self.map_six_file, "characterinfo")
 
         # Saves the randomized iso file, with all files updated.
         self.save_randomized_iso()
@@ -162,7 +163,9 @@ class LuigisMansionRandomizer:
         update_boo_table(self.jmp_boo_table, self.output_data)
         update_iyapoo_table(self.jmp_iyapoo_table, self.output_data)
         update_event_info(self.jmp_map3_event_info_table, bool_boo_checks, self.output_data)
-        update_gallery_furniture_info(self.jmp_map6_furniture_info_table, self.jmp_item_appear_table, self.output_data)
+        if self.output_data["Options"]["WDYM_checks"] == 1:
+            update_gallery_furniture_info(self.jmp_map6_furniture_info_table, self.jmp_item_appear_table, self.output_data)
+            update_gallery_character_info(self.jmp_map6_character_info_table, self.output_data)
 
         # Updates all the data entries in each jmp table in the szp file.
         self.update_map_info_table(self.map_two_file,self.jmp_character_info_table)
@@ -193,6 +196,7 @@ class LuigisMansionRandomizer:
             self.map_six_file.add_new_file("itemappeartable", self.jmp_item_appear_table.info_file_entry.data,
                 self.jmp_map6_furniture_info_table.info_file_entry.parent_node)
             self.update_map_info_table(self.map_six_file, self.jmp_map6_furniture_info_table)
+            self.update_map_info_table(self.map_six_file, self.jmp_map6_character_info_table)
 
     def save_randomized_iso(self):
         # Get Output data required information
