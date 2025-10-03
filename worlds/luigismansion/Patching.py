@@ -1780,6 +1780,7 @@ def update_gallery_furniture_info(furniture_info, item_appear_info, output_data)
     for furniture_jmp_id in ceiling_furniture_list:
         current_y_offset = furniture_info.info_file_field_entries[furniture_jmp_id]["item_offset_y"]
         adjust_y_offset = 225.0
+        furniture_info.info_file_field_entries[furniture_jmp_id]["item_offset_y"] = current_y_offset - adjust_y_offset
 
     for item_name, item_data in output_data["Locations"].items():
         if not (item_data["type"] == "Furniture" or item_data["type"] == "Plant"):
