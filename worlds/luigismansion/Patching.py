@@ -3,6 +3,7 @@ import re
 from math import ceil
 from random import choice, randint
 
+from . import WDYM_LOCATION_TABLE, LMLocationData
 from .Regions import spawn_locations
 from .Items import ALL_ITEMS_TABLE, filler_items, LMItemData, CurrencyItemData
 from .Locations import FLIP_BALCONY_BOO_EVENT_LIST, ALL_LOCATION_TABLE
@@ -1783,7 +1784,8 @@ def update_gallery_furniture_info(furniture_info, item_appear_info, output_data)
         furniture_info.info_file_field_entries[furniture_jmp_id]["item_offset_y"] = current_y_offset - adjust_y_offset
 
     for item_name, item_data in output_data["Locations"].items():
-        if not (item_data["type"] == "Furniture" or item_data["type"] == "Plant"):
+        location_data: LMLocationData = ALL_LOCATION_TABLE[item_name]
+        if not (location_data.region == "Gallery" and item_data["type"] == "Furniture"):
             continue
 
         actor_item_name = __get_item_name(item_data, int(output_data["Slot"]))
