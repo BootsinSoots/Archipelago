@@ -1,7 +1,5 @@
 import json
-import os, yaml
-
-from gclib.gclib_file import GCLibFile
+import os
 
 import Utils
 
@@ -62,6 +60,7 @@ class LuigisMansionRandomizer:
         # Important note: SZP are just RARC / Arc files that are yay0 compressed, at least for Luigi's Mansion
         # Get Arc automatically handles decompressing RARC data from yay0, but compressing is on us later.
         logger.info("Loading all of the main mansion map files into memory.")
+        self.map_one_file = self.get_arc("files/Map/map1.szp")
         self.map_two_file = self.get_arc("files/Map/map2.szp")
         self.map_three_file = self.get_arc("files/Map/map3.szp")
         if self.output_data["Options"]["WDYM_checks"] == 1:
@@ -87,6 +86,9 @@ class LuigisMansionRandomizer:
             self.jmp_teiden_enemy_info_table = self.load_map_info_table(self.map_two_file,"teidenenemyinfo")
         self.jmp_teiden_character_info_table = self.load_map_info_table(self.map_two_file,"teidencharacterinfo")
         self.jmp_iyapoo_table = self.load_map_info_table(self.map_two_file,"iyapootable")
+
+        # Map 1 JMP tables
+        self.jmp_map1_event_info_table = self.load_map_info_table(self.map_one_file, "eventinfo")
 
         # Map 3 JMP tables
         self.jmp_map3_event_info_table = self.load_map_info_table(self.map_three_file,"eventinfo")
@@ -167,6 +169,8 @@ class LuigisMansionRandomizer:
             update_gallery_furniture_info(self.jmp_map6_furniture_info_table, self.jmp_item_appear_table, self.output_data)
             update_gallery_character_info(self.jmp_map6_character_info_table)
 
+        update_map_one_event_info(self.jmp_map1_event_info_table)
+
         # Updates all the data entries in each jmp table in the szp file.
         self.update_map_info_table(self.map_two_file,self.jmp_character_info_table)
         self.update_map_info_table(self.map_two_file,self.jmp_teiden_character_info_table)
@@ -185,6 +189,9 @@ class LuigisMansionRandomizer:
             self.update_map_info_table(self.map_two_file,self.jmp_teiden_enemy_info_table)
         self.update_map_info_table(self.map_two_file,self.jmp_boo_table)
         self.update_map_info_table(self.map_two_file,self.jmp_iyapoo_table)
+
+        # Update Map 1 JMP Tables
+        self.update_map_info_table(self.map_one_file, self.jmp_map1_event_info_table)
 
         # Update Map 3 JMP Tables
         self.update_map_info_table(self.map_three_file, self.jmp_map3_event_info_table)
@@ -289,9 +296,12 @@ class LuigisMansionRandomizer:
         # As mentioned before, these szp files need to be compressed again in order to be properly read by Dolphin/GC.
         # If you forget this, you will get an Invalid read error on a certain memory address typically.
         logger.info("Saving all files back into the main mansion file, then generating the new ISO file...")
+        self.map_one_file.save_changes()
         self.map_two_file.save_changes()
         self.map_three_file.save_changes()
 
+        logger.info("map1.szp Yay0 check...")
+        self.gcm.changed_files["files/Map/map1.szp"] = Yay0.compress(self.map_one_file.data)
         logger.info("map2.szp Yay0 check...")
         self.gcm.changed_files["files/Map/map2.szp"] = Yay0.compress(self.map_two_file.data)
         logger.info("map3.szp Yay0 check...")

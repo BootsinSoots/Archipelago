@@ -98,6 +98,10 @@ def __get_item_name(item_data, slot: int):
 
     return "nothing"
 
+def update_map_one_event_info(event_info):
+    for x in event_info.info_file_field_entries:
+        if x["EventNo"] == 8:
+            x["EventIf"] = 5
 
 def update_event_info(event_info, boo_checks: bool, output_data):
     # Removes events that we don't want to trigger at all in the mansion, such as some E. Gadd calls, warps after
