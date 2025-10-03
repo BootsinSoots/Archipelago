@@ -267,6 +267,7 @@ def update_gallery_character_info(character_info):
     for x in character_info.info_file_field_entries:
         if x["name"] == "lohakase":
             x["pos_z"] = -31.651000
+            x["invisible"] = 1
 
 def update_character_info(character_info, output_data):
     # Removes useless cutscene objects and the vacuum in the Parlor under the closet.

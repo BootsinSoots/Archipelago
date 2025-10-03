@@ -290,6 +290,9 @@ class LuigisMansionRandomizer:
         # If you forget this, you will get an Invalid read error on a certain memory address typically.
         logger.info("Saving all files back into the main mansion file, then generating the new ISO file...")
         self.map_two_file.save_changes()
+        self.map_three_file.save_changes()
+        if self.output_data["Options"]["WDYM_checks"] == 1:
+            self.map_six_file.save_changes()
         logger.info("map2.szp Yay0 check...")
         self.gcm.changed_files["files/Map/map2.szp"] = Yay0.compress(self.map_two_file.data)
 
