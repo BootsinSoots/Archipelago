@@ -1,6 +1,7 @@
+import json
 import os, yaml
+import Utils
 
-from collections import Counter
 from CommonClient import logger
 
 from gclib.gcm import GCM
@@ -8,21 +9,13 @@ from gclib.dol import DOL
 from gclib.rarc import RARC
 from gclib.yaz0_yay0 import Yay0
 
-def counter_constructor(loader, node):
-    args = loader.construct_sequence(node)
-    return Counter(*args)
-
-# Core implemented custom collection counters which yaml.safe_load cannot serialize by default.
-yaml.SafeLoader.add_constructor(
-    'tag:yaml.org,2002:python/object/apply:collections.Counter',
-    counter_constructor
-)
 from .iso_helper.DOL_Updater import update_dol_offsets
 from .iso_helper.Update_GameUSA import update_game_usa
 from .iso_helper.JMP_Info_File import JMPInfoFile
 from .Patching import *
 from .Helper_Functions import StringByteFunction as sbf
 from .iso_helper.Events import *
+from .client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME
 
 RANDOMIZER_NAME = "Luigi's Mansion"
 
@@ -40,7 +33,10 @@ class LuigisMansionRandomizer:
         except IOError:
             raise Exception("'" + randomized_output_file_path + "' is currently in use by another program.")
 
-        self.output_data = yaml.safe_load(ap_output_data)
+        self.output_data = json.loads(ap_output_data.decode('utf-8'))
+
+        # Make sure that the server and client versions match before attempting to patch ISO.
+        self._check_server_version(self.output_data)
 
         # After verifying, this will also read the entire iso, including system files and their content
         self.gcm = GCM(self.clean_iso_path)
@@ -90,6 +86,21 @@ class LuigisMansionRandomizer:
 
         # Saves the randomized iso file, with all files updated.
         self.save_randomized_iso()
+
+    def _check_server_version(self, output_data):
+        """
+        Compares the version provided in the patch manifest against the client's version.
+        
+        :param output_data: The manifest's output data which we attempt to acquire the generated version.
+        """
+        ap_world_version = "<0.5.6"
+
+        if AP_WORLD_VERSION_NAME in output_data:
+            ap_world_version = output_data[AP_WORLD_VERSION_NAME]
+        if ap_world_version != CLIENT_VERSION:
+            raise Utils.VersionException("Error! Server was generated with a different Luigi's Mansion " +
+                        f"APWorld version.\nThe client version is {CLIENT_VERSION}!\nPlease verify you are using the " +
+                        f"same APWorld as the generator, which is '{ap_world_version}'")
 
     # Get an ARC / RARC / SZP file from within the ISO / ROM
     def get_arc(self, arc_path):
@@ -180,7 +191,7 @@ class LuigisMansionRandomizer:
         king_boo_health: int = int(self.output_data["Options"]["king_boo_health"])
         random_spawn: str = str(self.output_data["Options"]["spawn"])
         door_model_rando_on: bool = bool(self.output_data["Options"]["door_model_rando"])
-        bool_start_extra_vacuum: bool = not bool(self.output_data["Options"]["good_vacuum"])
+        bool_start_extra_vacuum: int = int(self.output_data["Options"]["vacuum_upgrades"])
 
         # Boo related options
         bool_boo_checks: bool = True if self.output_data["Options"]["boo_gates"] == 1 else False

@@ -89,15 +89,15 @@ GHOST_TO_ROOM = {
 }
 
 spawn_locations = {
-    "Hidden Room":           {"room_no": 1, "pos_x": -1803.157350, "pos_y": 0.000000, "pos_z": 153.575714,
+    "Hidden Room":           {"room_no": 1, "pos_x": -1998.314700, "pos_y": 0.000000, "pos_z": 225.000000,
                               "key": ["Butler's Room Key", "Laundry Room Key", "Heart Key"], "door_keys": [],
                               "door_ids": [], "in_game_room_id": 1}, # Hidden
     "Courtyard":             {"room_no": 23, "pos_x": 1613.042970, "pos_y": 9.000000, "pos_z": -5663.574710,
                               "key": ["Club Key", "North Rec Room Key", "Heart Key"], "door_keys":
                               ["Club Key", "North Rec Room Key"], "door_ids": [42, 25], "in_game_room_id": 24}, # Courtyard
     "Clockwork Room":        {"room_no": 56, "pos_x": 10.759588, "pos_y": 1100.000000, "pos_z": -1649.743900,
-                              "key": ["Clockwork Room Key", "Telephone Room Key"],
-                              "door_keys": ["Clockwork Room Key"], "door_ids": [53],
+                              "key": ["Clockwork Key", "Telephone Room Key"],
+                              "door_keys": ["Clockwork Key"], "door_ids": [53],
                               "in_game_room_id": 59}, # Clockwork
     "Foyer":                 {"room_no": 2, "pos_x": -7.640748, "pos_y": 0.000000, "pos_z": 145.174300,
                               "key": ["Heart Key", "Family Hallway Key", "Parlor Key"],
@@ -111,7 +111,7 @@ spawn_locations = {
     #                           "key": ["Laundry Key", "Butler's Rom Key", "Heart Key"], "door_keys": ["Laundry Key", "Butler's Rom Key"],
     #                           "door_ids": [1, 7]},  # Laundry removed due to new spawn toad triggering as you leave
     "Telephone Room":        {"room_no": 50, "pos_x": -9.812825, "pos_y": 1100, "pos_z": 118.738243,
-                              "key": ["Telephone Room Key", "Clockwork Room Key"], "door_keys": ["Telephone Room Key", "Clockwork Room Key"],
+                              "key": ["Telephone Room Key", "Clockwork Key"], "door_keys": ["Telephone Room Key", "Clockwork Key"],
                               "door_ids": [53, 52], "in_game_room_id": 53}, # Telephone
     "Butler's Room":         {"room_no": 0, "pos_x": -3391.8396, "pos_y": 0, "pos_z": 114.336197,
                               "key": ["Butler's Room Key", "Laundry Room Key", "Heart Key"], "door_keys": [],
@@ -123,7 +123,7 @@ spawn_locations = {
                               "key": ["Billiards Room Key", "Heart Key"], "door_keys": ["Billiards Room Key", "Projection Room Key"],
                               "door_ids": [17, 18], "in_game_room_id": 12}, # Billiards
     "Twins' Room":           {"room_no": 25, "pos_x": -1729.586790, "pos_y": 550, "pos_z": 116.055779,
-                              "key": ["Twins' Room Key", "Family Hallway Key"], "door_keys": ["Twins' Room Key"],
+                              "key": ["Twins Bedroom Key", "Family Hallway Key"], "door_keys": ["Twins Bedroom Key"],
                               "door_ids": [28], "in_game_room_id": 27}, # Twins
     "Nursery":               {"room_no": 24, "pos_x": -3331.658690, "pos_y": 550, "pos_z": -198.970337,
                               "key": ["Nursery Key", "Family Hallway Key"], "door_keys": ["Nursery Key"],
@@ -137,22 +137,22 @@ spawn_locations = {
     "Parlor":                {"room_no": 35, "pos_x": -43.294357, "pos_y": 550, "pos_z": -1775.288450,
                              "key": ["Parlor Key", "Heart Key", "Anteroom Key"], "door_keys": ["Parlor Key", "Anteroom Key"],
                               "door_ids": [34, 38], "in_game_room_id": 36}, # Parlor
-    "Nana's Room":           {"room_no": 46, "pos_x": 173.368210, "pos_y": 550, "pos_z": -4615.553220,
+    "Nana's Room":           {"room_no": 46, "pos_x": -457.708374, "pos_y": 550, "pos_z": -4535.000000,
                               "key": ["Nana's Room Key", "Upper 2F Stairwell Key"], "door_keys": ["Nana's Room Key"],
                               "door_ids": [49], "in_game_room_id": 49}, # Nana
     "2F Bathroom":           {"room_no": 45, "pos_x": -1902.854130, "pos_y": 550, "pos_z": -4660.501950,
                               "key": ["2F Bathroom Key", "Upper 2F Stairwell Key"], "door_keys": ["2F Bathroom Key"],
                               "door_ids": [48], "in_game_room_id": 48}, # 2f bath
-    "Astral Hall":           {"room_no": 40, "pos_x": -2333.168700, "pos_y": 570, "pos_z": -3326.229000,
+    "Astral Hall":           {"room_no": 40, "pos_x": 2023.579290, "pos_y": 550, "pos_z": -2915.000000,
                               "key": ["Astral Hall Key", "Upper 2F Stairwell Key"],
                               "door_keys": ["Astral Hall Key", "Observatory Key"], "door_ids": [44, 40], "in_game_room_id": 43}, # astral
     "Sitting Room":          {"room_no": 27, "pos_x": 2225.465090, "pos_y": 550, "pos_z": -98.163559,
                               "key": ["Sitting Room Key", "Guest Room Key"],
                               "door_keys": ["Sitting Room Key", "Guest Room Key"], "door_ids": [29, 30], "in_game_room_id": 28}, # sitting
-    "Guest Room":            {"room_no": 28, "pos_x": 2949.315430, "pos_y": 550, "pos_z": -149.029785,
+    "Guest Room":            {"room_no": 28, "pos_x": 3637.69727, "pos_y": 550, "pos_z": 201.316391,
                               "key": ["Guest Room Key", "Sitting Room Key"], "door_keys": ["Guest Room Key"],
                               "door_ids": [30], "in_game_room_id": 29}, # guest
-    "Safari Room":           {"room_no": 52, "pos_x": 2718.783450, "pos_y": 1100, "pos_z": -131.375854,
+    "Safari Room":           {"room_no": 52, "pos_x": 3317.313480, "pos_y": 1100, "pos_z": 225,
                               "key": ["Safari Room Key", "East Attic Hallway Key", "Balcony Key"],
                               "door_keys": ["Safari Room Key", "East Attic Hallway Key"], "door_ids": [55, 56], "in_game_room_id": 55}, # safari
     "Ceramics Studio":       {"room_no": 55, "pos_x": -2397.3373540, "pos_y": 1100, "pos_z": -1579.717410,
@@ -191,6 +191,18 @@ spawn_locations = {
     "Armory":                {"room_no": 48, "pos_x": -2541.662600, "pos_y": 1100.000000, "pos_z": -40.361595,
                               "key": ["Armory Key", "Balcony Key", "Telephone Room Key"],
                               "door_keys": ["Armory Key", "Ceramics Studio Key"], "door_ids": [50, 51], "in_game_room_id": 51}, # Armory
+    "Pipe Room":             {"room_no": 66, "pos_x": 1235, "pos_y": -480.000000, "pos_z": -1433.000000,
+                             "key": ["Pipe Room Key", "Cellar Key"],
+                             "door_keys": ["Pipe Room Key"],
+                             "door_ids": [69], "in_game_room_id": 68},  # Foyer
+    "Cold Storage":          {"room_no": 61, "pos_x": 1405, "pos_y": -550.000000, "pos_z": -25.000000,
+                             "key": ["Cold Storage Key", "Cellar Key"],
+                             "door_keys": ["Cold Storage Key"],
+                             "door_ids": [65], "in_game_room_id": 64},  # Foyer
+    # "Secret Altar":          {"room_no": 70, "pos_x": 2293, "pos_y": -550.000000, "pos_z": -5805.000000,
+    #                          "key": ["Spade Key", "Altar Hallway Key"],
+    #                          "door_keys": ["Spade Key"],
+    #                          "door_ids": [72], "in_game_room_id": 73},  # Foyer
 }
 
 exp_spawns: dict[str,dict[str, int]] = {
@@ -282,7 +294,7 @@ def connect_regions(world: "LMWorld"):
     lmconnect(world, "Billiards Room", "Projection Room", "Projection Room Key", 18)
     lmconnect(world, "Fortune-Teller's Room", "Mirror Room", "Mirror Room Key", 5)
     lmconnect(world, "Laundry Room", "Butler's Room", "Butler's Room Key", 1)
-    lmconnect(world, "Butler's Room", "Hidden Room")
+    lmconnect(world, "Butler's Room", "Hidden Room", rule=lambda state: state.has("Poltergust 3000", world.player))
     lmconnect(world, "Courtyard", "The Well")
     lmconnect(world, "Rec Room", "2F Stairwell", "South Rec Room Key", 24)
     lmconnect(world, "2F Stairwell", "Tea Room", "Tea Room Key", 47,
@@ -310,8 +322,10 @@ def connect_regions(world: "LMWorld"):
     lmconnect(world, "Clockwork Room", "Roof", rule=lambda state: state.has("Defeat Clockwork", world.player))
     lmconnect(world, "Roof", "Sealed Room", one_way=True),
     lmconnect(world, "Basement Stairwell", "Breaker Room", "Breaker Room Key", 71)
-    lmconnect(world, "Basement Stairwell", "Cellar", "Cellar Key", 68)
-    lmconnect(world, "Cellar", "Basement Hallway", "Basement Hallway Key", 67)
+    lmconnect(world, "Basement Stairwell", "Cellar", "Cellar Key", 68,
+              rule=lambda state: state.has("Poltergust 3000", world.player))
+    lmconnect(world, "Cellar", "Basement Hallway", "Basement Hallway Key", 67,
+              rule=lambda state: state.has("Poltergust 3000", world.player))
     lmconnect(world, "Basement Hallway", "Cold Storage", "Cold Storage Key", 65)
     lmconnect(world, "Basement Hallway", "Pipe Room", "Pipe Room Key", 69)
     lmconnect(world, "Basement Hallway", "Altar Hallway", "Altar Hallway Key", 70)

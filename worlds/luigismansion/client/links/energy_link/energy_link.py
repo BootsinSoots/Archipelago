@@ -1,6 +1,6 @@
 """ Module which performs NetworkProtocol operations for the EnergyLink integration. """
 
-from CommonClient import CommonContext
+from typing import Set
 from ..network_engine import ArchipelagoRequest, RequestStatus, ArchipelagoNetworkEngine, SetNetworkRequest, GetNetworkRequest
 
 class EnergyLinkConstants:
@@ -28,14 +28,11 @@ class EnergyLink:
 
     Requests/Sends 'energy' to the team's energy pool to be used as needed.
     """
-    _ctx: CommonContext
-
     energy_requests: dict[str, EnergyRequest] = {}
     network_engine: ArchipelagoNetworkEngine
 
-    def __init__(self, ctx: CommonContext):
-        self.network_engine = ArchipelagoNetworkEngine(ctx)
-        self._ctx = ctx
+    def __init__(self, network_engine: ArchipelagoNetworkEngine):
+        self.network_engine = network_engine
 
     async def request_energy_async(self, amount: int) -> EnergyRequest:
         """
@@ -44,8 +41,7 @@ class EnergyLink:
         :param amount: The amount of energy to be added to Luigi's wallet. 
         The actual amount may vary due to the async nature of the call.
         """
-        current_ctx = self._ctx
-        if not _validate_energy_request(current_ctx.tags, amount):
+        if not _validate_energy_request(self.network_engine.get_tags(), amount):
             raise AttributeError("Could not validate arguments for given request.")
 
         request = EnergyRequest(amount)
@@ -72,9 +68,7 @@ class EnergyLink:
 
         :param amount: The amount of energy to be removed from Luigi's wallet.
         """
-
-        current_ctx = self._ctx
-        if not _validate_energy_request(current_ctx.tags, amount):
+        if not _validate_energy_request(self.network_engine.get_tags(), amount):
             raise AttributeError("Could not validate arguments for given request.")
 
         request = EnergyRequest(amount)
@@ -109,9 +103,9 @@ class EnergyLink:
         """
         Gets the energy link team identifier.
         """
-        return f"{EnergyLinkConstants.FRIENDLY_NAME}{self._ctx.team}"
+        return f"{EnergyLinkConstants.FRIENDLY_NAME}{self.network_engine.get_team()}"
 
-def _validate_energy_request(tags: set, amount: int) -> bool:
+def _validate_energy_request(tags: Set[str], amount: int) -> bool:
     """
     Determines if the request is valid before sending it to Archipelago.
 

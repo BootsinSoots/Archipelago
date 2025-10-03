@@ -43,6 +43,14 @@ class RandomMusic(Toggle):
     display_name = "Music Randomization"
     internal_name = "random_music"
 
+class ShowSelfReceivedItems(Choice):
+    """Choose whether you want all in-game received messages for your own items, only progression, or none at all."""
+    display_name = "Show Self Received Item Messaging"
+    internal_name = "self_item_messages"
+    option_all_messages = 0
+    option_progression_items_only = 1
+    option_nothing = 2
+    default = 0
 
 class BundleWeight(Range):
     """Set the weight for how often coin & bill bundles get chosen as filler."""
@@ -143,16 +151,13 @@ class HeartWeight(Range):
     default = 10
 
 
-class BetterVacuum(Choice):
+class BetterVacuum(Range):
     """
-    Choose whether to include the Poltergust 4000.
-
-    If you start with the upgrade on a no-poltergust start, you will receive the base poltergust instead"""
-    display_name = "Poltergust 4000"
-    internal_name = "good_vacuum"
-    option_start_with = 0
-    option_include = 1
-    option_exclude = 2
+    Choose how many vacuum upgrades to include, up to 5."""
+    display_name = "Vacuum Upgrades"
+    internal_name = "vacuum_upgrades"
+    range_start = 0
+    range_end = 5
     default = 1
 
 
@@ -364,7 +369,9 @@ class Enemizer(Choice):
 
 class VacuumStart(DefaultOnToggle):
     """
-    Enable Luigi to have the Poltergust 3000 at the start
+    Enable Luigi to have the Poltergust 3000 at the start.
+
+    If you start with an upgrade on a no-poltergust start, you will receive the base poltergust instead
     """
     display_name = "Starting Vacuum"
     internal_name = "vacuum_start"
@@ -553,13 +560,21 @@ class EnergyLink(Toggle):
     display_name = "EnergyLink"
     internal_name = "energy_link"
 
+class RingLink(Toggle):
+    """
+    Games that support ringlink will be able to send and retrieve 'rings' sent from another ringlink game.
+
+    'Rings' in the context of Luigi's Mansion will be Coins.
+    """
+    display_name = "RingLink"
+    internal_name = "ring_link"
+
 class TrapLink(Toggle):
     """
     Games that support traplink will all receive similar traps when a matching trap is sent from another traplink game
     """
     display_name = "TrapLink"
     internal_name = "trap_link"
-
 
 class GoldMice(Toggle):
     """
@@ -696,13 +711,27 @@ class TrapPercentage(Range):
     range_end = 100
     default = 0
 
+class RingLinkClientMsgs(DefaultOnToggle):
+    """
+    Enables messages in the client whenever a ring link is received.
+    """
+    display_name = "Enable Ring Link Client Message"
+    internal_name = "enable_ring_client_msg"
+
+class TrapLinkClientMsgs(DefaultOnToggle):
+    """
+    Enables messages in the client whenever a trap link is received.
+    """
+    display_name = "Enable Trap Link Client Message"
+    internal_name = "enable_trap_client_msg"
+
 @dataclass
 class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     rank_requirement: RankRequirement
     game_mode: GameMode
     vacuum_start: VacuumStart
     walk_speed: LuigiWalkSpeed
-    good_vacuum: BetterVacuum
+    vacuum_upgrades: BetterVacuum
     boo_radar: StartWithBooRadar
     hidden_mansion: StartHiddenMansion
     enable_fear_animation: LuigiFearAnim
@@ -727,6 +756,7 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     speedy_spirits: SpeedySpirits
     WDYM_checks: WhatDoYouMean
     boo_gates: BooGates
+    self_item_messages: ShowSelfReceivedItems
     mario_items: MarioItems
     #washroom_boo_count: WashroomBooCount
     balcony_boo_count: BalconyBooCount
@@ -743,7 +773,10 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     trap_chests: TrapChestType
     call_mario: CallMario
     trap_link: TrapLink
+    enable_trap_client_msg: TrapLinkClientMsgs
     energy_link: EnergyLink
+    ring_link: RingLink
+    enable_ring_client_msg: RingLinkClientMsgs
     trap_percentage: TrapPercentage
     bundle_weight: BundleWeight
     coin_weight: CoinWeight

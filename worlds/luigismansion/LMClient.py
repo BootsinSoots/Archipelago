@@ -1,41 +1,24 @@
-import asyncio, time, traceback
-import copy
-import random
+import asyncio, time
+import copy, sys
 from typing import Any
 
+# AP related imports
 import NetUtils, Utils
-from CommonClient import get_base_parser, gui_enabled, logger, server_loop
+from CommonClient import get_base_parser, gui_enabled, server_loop
+
+# 3rd Party related imports
 import dolphin_memory_engine as dme
 
+# Local related imports
+from .client.contexts.base_context import BaseContext, logger
 from .Regions import spawn_locations
 from .iso_helper.lm_rom import LMUSAAPPatch
-from .Hints import ALWAYS_HINT, PORTRAIT_HINTS
-from .LMGenerator import LuigisMansionRandomizer
 from .Items import *
 from .Locations import ALL_LOCATION_TABLE, SELF_LOCATIONS_TO_RECV
 from .Helper_Functions import StringByteFunction as sbf
-from .client.Wallet import Wallet
-from .client.ap_link.energy_link.energy_link_client import EnergyLinkClient
-from .client.ap_link.energy_link.energy_link import EnergyLinkConstants
-from .client.ap_link.energy_link.energy_link_command_processor import EnergyLinkCommandProcessor
-
-CLIENT_VERSION = "V0.5.3"
-
-# Load Universal Tracker modules with aliases
-tracker_loaded = False
-try:
-    from worlds.tracker.TrackerClient import (TrackerCommandProcessor as ClientCommandProcessor,
-                                              TrackerGameContext as CommonContext, UT_VERSION)
-    tracker_loaded = True
-except ImportError:
-    from CommonClient import ClientCommandProcessor, CommonContext
-
-CONNECTION_REFUSED_STATUS = "Detected a non-randomized ROM for LM. Please close and load a different one. Retrying in 5 seconds..."
-CONNECTION_LOST_STATUS = "Dolphin connection was lost. Please restart your emulator and make sure LM is running."
-NO_SLOT_NAME_STATUS = "No slot name was detected. Ensure a randomized ROM is loaded. Retrying in 5 seconds..."
-CONNECTION_VERIFY_SERVER = "Dolphin was confirmed to be opened and ready, Connect to the server when ready..."
-CONNECTION_INITIAL_STATUS = "Dolphin emulator was not detected to be running. Retrying in 5 seconds..."
-CONNECTION_CONNECTED_STATUS = "Dolphin is connected, AP is connected, Ready to play LM!"
+from .client.links.energy_link.energy_link import EnergyLinkConstants
+from .client.links.energy_link.energy_link_command_processor import EnergyLinkCommandProcessor
+from .client.constants import *
 
 # This is the address that holds the player's slot name.
 # This way, the player does not have to manually authenticate their slot name.
@@ -50,10 +33,6 @@ CURR_MAP_ID_ADDR = 0x804D80A4
 # This address is used to check/set the player's health for DeathLink. (2 bytes / Half word)
 CURR_HEALTH_ADDR = 0x803D8B40
 CURR_HEALTH_OFFSET = 0xB8
-
-# This address is used to track which room Luigi is in within the main mansion map (Map2)
-ROOM_ID_ADDR = 0x803D8B7C
-ROOM_ID_OFFSET = 0x35C
 
 # This Furniture address table contains the start of the addresses used for currently loaded in Furniture.
 # Since multiple rooms can be loaded into the background, several hundred addresses must be checked.
@@ -92,10 +71,6 @@ EVENT_FLAG_RECV_ADDRR = 0x803D33B1
 # This address will monitor when you capture the final boss, King Boo
 KING_BOO_ADDR = 0x803D5DBF
 
-# Static time to wait for health and death checks
-CHECKS_WAIT = 3
-LONGER_MODIFIER = 2
-
 # This address is used to deal with the current display for Captured Boos
 BOO_COUNTER_DISPLAY_ADDR = 0x803A3CC4
 BOO_COUNTER_DISPLAY_OFFSET = 0x77
@@ -107,12 +82,6 @@ BOO_BALCONY_FLAG_ADDR = 0x803D3399
 BOO_BALCONY_FLAG_BIT = 2
 BOO_FINAL_FLAG_ADDR = 0x803D33A2
 BOO_FINAL_FLAG_BIT = 5
-
-# Handles when Luigi says "Mario" in game.
-LUIGI_SHOUT_ADDR = 0x804EB558
-LUIGI_SHOUT_DURATION = 3 # Time in seconds of how long the mario shout lasts.
-LUIGI_SHOUT_RAMVALUE = 0xBCB84ED4
-LUIGI_SHOUT_LIST = ["Mario?", "Marrrio", "MARIO!", "MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARIOOOOOOOOOOOOOOOOOOOO"]
 
 
 def read_short(console_address: int):
@@ -139,11 +108,6 @@ async def write_bytes_and_validate(addr: int, ram_offset: list[str] | None, curr
 
 
 class LMCommandProcessor(EnergyLinkCommandProcessor):
-    def __init__(self, ctx: CommonContext, server_address: str = None):
-        if server_address:
-            ctx.server_address = server_address
-        super().__init__(ctx)
-
     def _cmd_dolphin(self):
         """Prints the current Dolphin status to the client."""
         if isinstance(self.ctx, LMContext):
@@ -152,18 +116,14 @@ class LMCommandProcessor(EnergyLinkCommandProcessor):
     def _cmd_deathlink(self):
         """Toggle deathlink from client. Overrides default setting."""
         if isinstance(self.ctx, LMContext):
-            Utils.async_start(self.ctx.update_death_link(not "DeathLink" in self.ctx.tags), name="Update Deathlink")
+            Utils.async_start(self.ctx.network_engine.update_tags_async(not "DeathLink" in self.ctx.tags,
+                "DeathLink"), name="Update Deathlink")
 
     def _cmd_traplink(self):
         """Toggle traplink from client. Overrides default setting."""
         if isinstance(self.ctx, LMContext):
-            Utils.async_start(self.ctx.update_link_tags(not "TrapLink" in self.ctx.tags, "TrapLink"), name="Update Traplink")
-
-    def _cmd_energy_link(self):
-        """Toggle EnergyLink from the client. Overrides default setting."""
-        if isinstance(self.ctx, LMContext):
-            Utils.async_start(self.ctx.update_link_tags(not EnergyLinkConstants.FRIENDLY_NAME in self.ctx.tags,
-                    EnergyLinkConstants.FRIENDLY_NAME), name=f"Update {EnergyLinkConstants.FRIENDLY_NAME}")
+            Utils.async_start(self.ctx.network_engine.update_tags_async(not "TrapLink" in self.ctx.tags,
+                "TrapLink"), name="Update Traplink")
 
     def _cmd_jakeasked(self):
         """Provide debug information from Dolphin's RAM addresses while playing Luigi's Mansion,
@@ -171,11 +131,10 @@ class LMCommandProcessor(EnergyLinkCommandProcessor):
         if isinstance(self.ctx, LMContext):
             Utils.async_start(self.ctx.get_debug_info(), name="Get Luigi's Mansion Debug info")
 
-class LMContext(CommonContext):
+class LMContext(BaseContext):
     command_processor = LMCommandProcessor
     game = "Luigi's Mansion"
     items_handling = 0b111
-    wallet: Wallet
 
     def __init__(self, server_address, password):
         """
@@ -187,13 +146,10 @@ class LMContext(CommonContext):
         super().__init__(server_address, password)
 
         # Handle various Dolphin connection related tasks
+        self.instance_id = None
         self.dolphin_sync_task: Optional[asyncio.Task[None]] = None
         self.dolphin_status = CONNECTION_INITIAL_STATUS
         self.item_display_queue: list[NetUtils.NetworkItem] = []
-
-        # Manages energy link operations and state.
-        self.wallet = Wallet()
-        self.energy_link = EnergyLinkClient(self, self.wallet)
 
         # All used when death link is enabled.
         self.is_luigi_dead = False
@@ -214,7 +170,7 @@ class LMContext(CommonContext):
         #self.boo_washroom_count = None
         self.boo_balcony_count = None
         self.boo_final_count = None
-        self.received_trap_link = False
+        self.arg_seed = ""
 
         # Used for handling various weird item checks.
         self.last_map_id = 0
@@ -222,14 +178,20 @@ class LMContext(CommonContext):
         # Used to let poptracker autotrack Luigi's room
         self.last_room_id = 0
 
-        # Used to handle if mario calling is enabled.
-        self.call_mario = False
-        self.yelling_in_client = False
+        # Filters in-game messaging to what the user desires.
+        self.self_item_messages = 0
 
         # Know whether to send in-game hints to the multiworld or not
-        self.send_hints = 0
-        self.portrait_hints = 0
+        self.send_hints: int = 0
+        self.portrait_hints: int = 0
         self.hints = {}
+
+        # Boolossus difficulty
+        self.boolossus_difficulty: int = 1
+
+        # Last received index to track locally in the client
+        self.last_received_idx: int = 0
+        self.non_save_last_recv_idx: int = 0
 
     async def disconnect(self, allow_autoreconnect: bool = False):
         """
@@ -238,18 +200,11 @@ class LMContext(CommonContext):
         :param allow_autoreconnect: Allow the client to auto-reconnect to the server. Defaults to `False`.
 
         """
-        self.auth = None
         await super().disconnect(allow_autoreconnect)
-
-    async def update_link_tags(self, link_enabled: bool, link_name:str):
-        """Helper function to set link connection tags on/off and update the connection if already connected."""
-        old_tags = self.tags.copy()
-        if link_enabled:
-            self.tags.add(link_name)
-        else:
-            self.tags -= { link_name }
-        if old_tags != self.tags and self.server and not self.server.socket.closed:
-            await self.send_msgs([{"cmd": "ConnectUpdate", "tags": self.tags}])
+        self.auth = None
+        dme.un_hook()
+        self.dolphin_status = CONNECTION_LOST_STATUS
+        self.already_fired_events = False
 
     async def server_auth(self, password_requested: bool = False):
         """
@@ -277,73 +232,52 @@ class LMContext(CommonContext):
         super().on_package(cmd, args)
         match cmd:
             case "Connected": # On Connect
+                super().on_connected(args)
+                slot_data = args["slot_data"]
                 # Make sure the world version matches
-                if not args["slot_data"]["apworld version"] == CLIENT_VERSION:
-                    local_version = str(args["slot_data"]["apworld version"]) if (
-                        str(args["slot_data"]["apworld version"])) else "N/A"
+                if not slot_data["apworld version"] == CLIENT_VERSION:
+                    local_version = str(slot_data["apworld version"]) if (
+                        str(slot_data["apworld version"])) else "N/A"
                     raise Utils.VersionException("Error! Server was generated with a different Luigi's Mansion " +
                         f"APWorld version.\nThe client version is {CLIENT_VERSION}!\nPlease verify you are using the " +
                         f"same APWorld as the generator, which is '{local_version}'")
 
-                arg_seed = str(args["slot_data"]["seed"])
-                iso_seed = read_string(0x80000001, len(arg_seed))
-                if arg_seed != iso_seed:
-                    raise Exception("Incorrect Randomized Luigi's Mansion ISO file selected. The seed does not match." +
-                                    "Please verify that you are using the right ISO/seed/APLM file.")
+                self.arg_seed = str(slot_data["seed"])
+                self.boosanity = bool(slot_data["boosanity"])
+                self.pickup_anim_on = bool(slot_data["pickup animation"])
+                self.wallet.rank_requirement = int(slot_data["rank requirement"])
+                #self.boo_washroom_count = int(slot_data["washroom boo count"])
+                self.boo_balcony_count = int(slot_data["balcony boo count"])
+                self.boo_final_count = int(slot_data["final boo count"])
+                self.luigimaxhp = int(slot_data["luigi max health"])
+                self.spawn = str(slot_data["spawn_region"])
+                self.boolossus_difficulty = int(slot_data["boolossus_difficulty"])
+                self.send_hints = bool(slot_data["send_hints"])
 
-                self.boosanity = bool(args["slot_data"]["boosanity"])
-                self.pickup_anim_on = bool(args["slot_data"]["pickup animation"])
-                self.wallet.rank_requirement = int(args["slot_data"]["rank requirement"])
-                #self.boo_washroom_count = int(args["slot_data"]["washroom boo count"])
-                self.boo_balcony_count = int(args["slot_data"]["balcony boo count"])
-                self.boo_final_count = int(args["slot_data"]["final boo count"])
-                self.luigimaxhp = int(args["slot_data"]["luigi max health"])
-                self.spawn = str(args["slot_data"]["spawn_region"])
-                self.boolossus_difficulty = int(args["slot_data"]["boolossus_difficulty"])
-                self.send_hints = int(args["slot_data"]["send_hints"])
-                self.portrait_hints = int(args["slot_data"]["portrait_hints"])
-                self.hints = args["slot_data"]["hints"]
-                Utils.async_start(self.update_death_link(bool(args["slot_data"]["death_link"])), name="Update Deathlink")
-                Utils.async_start(self.update_link_tags(bool(args["slot_data"]["trap_link"]), "TrapLink"), name="Update Traplink")
-                Utils.async_start(self.update_link_tags(bool(args["slot_data"][EnergyLinkConstants.INTERNAL_NAME]),
+                # Update Tags for relevant links
+                Utils.async_start(self.network_engine.update_tags_async(bool(slot_data[EnergyLinkConstants.INTERNAL_NAME]),
                     EnergyLinkConstants.FRIENDLY_NAME), name=f"Update {EnergyLinkConstants.FRIENDLY_NAME}")
-                self.call_mario = bool(args["slot_data"]["call_mario"])
+                Utils.async_start(self.network_engine.update_tags_async(bool(slot_data["death_link"]),
+                    "DeathLink"), name="Update Deathlink")
+
+                # Fire off all the non_essential tasks here.
+                Utils.async_start(self.non_essentials_async_tasks(), "LM Non-Essential Tasks")
+                Utils.async_start(self.display_received_items(), "LM - Display Items in Game")
 
             case "Bounced":
+                if not (self.check_ingame() and self.check_alive()):
+                    return
+
                 if "tags" not in args:
                     return
                 if not hasattr(self, "instance_id"):
                     self.instance_id = time.time()
-
-                source_name = args["data"]["source"]
-                if "TrapLink" in self.tags and "TrapLink" in args["tags"] and source_name != self.slot_info[self.slot].name:
-                    trap_name: str = args["data"]["trap_name"]
-                    if trap_name not in ACCEPTED_TRAPS:
-                        return
-
-                    if trap_name in ICE_TRAP_EQUIV:
-                        self.received_trap_link = "Ice Trap"
-                    if trap_name in BOMB_EQUIV:
-                        self.received_trap_link = "Bomb"
-                    if trap_name in BANANA_TRAP_EQUIV:
-                        self.received_trap_link = "Banana Trap"
-                    if trap_name in GHOST_EQUIV:
-                        self.received_trap_link = "Ghost"
-                    if trap_name in POISON_MUSH_EQUIV:
-                        self.received_trap_link = "Poison Mushroom"
-                    if trap_name in BONK_EQUIV:
-                        self.received_trap_link = "Bonk Trap"
-                    if trap_name in POSSESION_EQUIV:
-                        self.received_trap_link = "Possession Trap"
-                    if trap_name in FEAR_EQUIV:
-                        self.received_trap_link = "Fear Trap"
-                    if trap_name in SPOOKY_EQUIV:
-                        self.received_trap_link = "Spooky Time"
-                    if trap_name in SQUASH_EQUIV:
-                        self.received_trap_link = "Squash Trap"
-                    if trap_name in NOVAC_EQUIV:
-                        self.received_trap_link = "No Vac Trap"
+                self.trap_link.on_bounced(args, self.get_item_count_by_id(8148))
+                self.ring_link.on_bounced(args)
             case "SetReply":
+                if not (self.check_ingame() and self.check_alive()):
+                    return
+
                 self.energy_link.try_update_energy_request(args)
 
     def on_deathlink(self, data: dict[str, Any]):
@@ -356,67 +290,6 @@ class LMContext(CommonContext):
         self.is_luigi_dead = True
         self.set_luigi_dead()
         return
-
-    def make_gui(self):
-        ui = super().make_gui()
-        ui.base_title = f"Luigi's Mansion Client {CLIENT_VERSION}"
-        if tracker_loaded:
-            if not self.check_universal_tracker_version():
-                Utils.messagebox("Universal Tracker needs updated", "The minimum version of Universal Tracker required for LM is v0.2.11", error=True)
-                raise ImportError("Need to update universal tracker version to at least v0.2.11.")
-            ui.base_title += f" | Universal Tracker {UT_VERSION}"
-
-        # AP version is added behind this automatically
-        ui.base_title += " | Archipelago"
-        return ui
-
-    def check_universal_tracker_version(self) -> bool:
-        import re
-        if not tracker_loaded:
-            return False
-
-        # We are checking for a string that starts with v contains any amount of digits followed by a period
-        # repeating three times (e.x. v0.2.11)
-        match = re.search(r"v\d+.(\d+).(\d+)", UT_VERSION)
-        if len(match.groups()) < 2:
-            return False
-        if int(match.groups()[0]) < 2:
-            return False
-        if int(match.groups()[1]) < 11:
-            return False
-
-        return True
-
-    async def get_wallet_value(self):
-        # KivyMD support, also keeps support with regular Kivy (hopefully)
-        try:
-            from kvui import MDLabel as Label
-        except ImportError:
-            from kvui import Label
-
-        if not hasattr(self, "wallet_ui"):
-            self.wallet_ui = Label(text="", size_hint_x=None, width=120, halign="center")
-            self.ui.connect_layout.add_widget(self.wallet_ui)
-
-        current_worth = 0
-        if self.check_ingame():
-            current_worth = self.wallet.get_wallet_worth()
-
-        self.wallet_ui.text = f"Wallet:{current_worth}/{self.wallet.get_rank_requirement()}"
-
-    async def update_boo_count_label(self):
-        # KivyMD support, also keeps support with regular Kivy (hopefully)
-        try:
-            from kvui import MDLabel as Label
-        except ImportError:
-            from kvui import Label
-
-        if not hasattr(self, "boo_count"):
-            self.boo_count = Label(text="", size_hint_x=None, width=120, halign="center")
-            self.ui.connect_layout.add_widget(self.boo_count)
-
-        curr_boo_count = len(set(([item.item for item in self.items_received if item.item in BOO_AP_ID_LIST])))
-        self.boo_count.text = f"Boo Count: {curr_boo_count}/50"
 
 
     def check_alive(self):
@@ -456,6 +329,8 @@ class LMContext(CommonContext):
             self.last_map_id = curr_map_id
             self.last_not_ingame = time.time()
             self.already_mentioned_rank_diff = False
+            Utils.async_start(self.lm_update_non_savable_ram(), "LM - Update Non-Saveable RAM - Map Change")
+            Utils.async_start(self.give_progression_again(), "LM - Give Progression Items")
             return False
 
         # These are the only valid maps we want Luigi to have checks with or do health detection with.
@@ -480,19 +355,16 @@ class LMContext(CommonContext):
                             "operations": [{"operation": "replace", "value": current_room_id}]
                         }]), name="Update Luigi Mansion Room ID")
                         self.last_room_id = current_room_id
+                        Utils.async_start(self.lm_update_non_savable_ram(), "LM - Update Non-Saveable RAM - Room Change")
                 return bool_loaded_in_map
+            elif curr_map_id == 3:
+                curr_val = int.from_bytes(dme.read_byte(0x803D33AE)) #finding flag 168 to check if it's on
+                if (curr_val & (1 << 0)) > 0:
+                    Utils.async_start(self.lm_update_non_savable_ram(), "LM - Update Non-Saveable RAM - Training Room")
             return True
 
         self.last_not_ingame = time.time()
         return False
-
-    async def check_death(self):
-        if self.check_ingame() and not self.check_alive():
-            if not self.is_luigi_dead and time.time() >= self.last_death_link + (CHECKS_WAIT*LONGER_MODIFIER*3):
-                self.is_luigi_dead = True
-                self.set_luigi_dead()
-                await self.send_death(self.player_names[self.slot] + " scared themselves to death.")
-        return
 
     def set_luigi_dead(self):
         write_short(dme.follow_pointers(CURR_HEALTH_ADDR, [CURR_HEALTH_OFFSET]), 0)
@@ -512,95 +384,6 @@ class LMContext(CommonContext):
                 flag_val = "True" if (curr_val & (1 << flag_bit)) > 0 else "False"
                 logger.info("Flag #" + str(current_flag_num+flag_bit) + " is set to: " + flag_val)
         return
-
-    async def handle_traplink(self):
-        # Only try to give items if we are in game and alive.
-        if not (self.check_ingame() and self.check_alive()):
-            return
-
-        if self.received_trap_link:
-            trap = self.received_trap_link
-            lm_item = ALL_ITEMS_TABLE[trap]
-            for addr_to_update in lm_item.update_ram_addr:
-                byte_size = 1 if addr_to_update.ram_byte_size is None else addr_to_update.ram_byte_size
-                curr_val = addr_to_update.item_count
-                if not addr_to_update.pointer_offset is None:
-                    dme.write_bytes(dme.follow_pointers(addr_to_update.ram_addr,
-                        [addr_to_update.pointer_offset]), curr_val.to_bytes(byte_size, 'big'))
-                else:
-                    dme.write_bytes(addr_to_update.ram_addr, curr_val.to_bytes(byte_size, 'big'))
-            self.received_trap_link = False
-
-    async def send_trap_link(self, trap_name: str):
-        if "TrapLink" not in self.tags or self.slot == None:
-            return
-
-        await self.send_msgs([{
-            "cmd": "Bounce", "tags": ["TrapLink"],
-            "data": {
-                "time": time.time(),
-                "source": self.player_names[self.slot],
-                "trap_name": trap_name
-            }
-        }])
-    async def lm_send_hints(self):
-        # If the hint address is empty, no hint has been looked at and we return
-        current_hint = int.from_bytes(dme.read_bytes(0x803D33AC, 1))
-        if not current_hint > 0:
-            return
-
-        # Check for current room so we know which hint(s) we need to look at, since they mostly all use the same flags
-        current_room = dme.read_word(dme.follow_pointers(ROOM_ID_ADDR, [ROOM_ID_OFFSET]))
-        hint_dict = copy.deepcopy(ALWAYS_HINT)
-        player_id = 0
-        location_id = 0
-
-        # If portrait ghost hints are on, check them too
-        if self.portrait_hints:
-            hint_dict.update(PORTRAIT_HINTS)
-
-        # Go through all the hints to check which hint matches the room we are in
-        for hint, hintfo in self.hints.items():
-            if current_room != hint_dict[hint]:
-                continue
-
-            # If we match in room 53 or 59, figure out which flag is on and use the matching hint
-            if current_room in (59,53):
-                if current_room == 59:
-                    if (current_hint & (1 << 5)) > 0 and hint == "<doll1>":
-                        player_id = int(hintfo["Send Player ID"])
-                        location_id = int(hintfo["Location ID"])
-                    elif (current_hint & (1 << 6)) > 0 and hint == "<doll2>":
-                        player_id = int(hintfo["Send Player ID"])
-                        location_id = int(hintfo["Location ID"])
-                    elif (current_hint & (1 << 7)) > 0 and hint == "<doll3>":
-                        player_id = int(hintfo["Send Player ID"])
-                        location_id = int(hintfo["Location ID"])
-                else:
-                    if (current_hint & (1 << 5)) > 0 and hint == "Left Telephone":
-                        player_id = int(hintfo["Send Player ID"])
-                        location_id = int(hintfo["Location ID"])
-                    elif (current_hint & (1 << 6)) > 0 and hint == "Center Telephone":
-                        player_id = int(hintfo["Send Player ID"])
-                        location_id = int(hintfo["Location ID"])
-                    elif (current_hint & (1 << 7)) > 0 and hint == "Right Telephone":
-                        player_id = int(hintfo["Send Player ID"])
-                        location_id = int(hintfo["Location ID"])
-            else:
-                player_id = int(hintfo["Send Player ID"])
-                location_id = int(hintfo["Location ID"])
-
-            # Make sure we didn't somehow try to send a null hint
-            if player_id == 0 or location_id == 0:
-                logger.error("Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers")
-                Utils.messagebox("Hint Error","Hint incorrectly parsed in lm_send_hints while trying to send. Please inform the Luigi's mansion developers")
-
-            # Send correct CreateHints command
-            Utils.async_start(self.send_msgs([{
-                "cmd": "CreateHints",
-                "player": player_id,
-                "locations": [location_id],
-            }]))
 
     def check_ram_location(self, loc_data, addr_to_update, curr_map_id, map_to_check) -> bool:
         """
@@ -640,21 +423,22 @@ class LMContext(CommonContext):
         return False
 
     async def lm_check_locations(self):
-        if not (self.check_ingame() and self.check_alive()):
-            return
-
         # There will be different checks on different maps.
-        current_map_id = dme.read_word(CURR_MAP_ID_ADDR)
+        current_map_id: int = dme.read_word(CURR_MAP_ID_ADDR)
+        current_room_id: int = 0
         if current_map_id in [2,6]: # Check if we're in the Mansion or the Gallery
             current_room_id = dme.read_word(dme.follow_pointers(ROOM_ID_ADDR, [ROOM_ID_OFFSET]))
 
-        for mis_loc in self.missing_locations:
+        local_missing_locs = copy.deepcopy(self.missing_locations)
+        for mis_loc in local_missing_locs:
             local_loc = self.location_names.lookup_in_game(mis_loc)
             lm_loc_data = ALL_LOCATION_TABLE[local_loc]
             if current_map_id not in lm_loc_data.map_id:
                 continue
 
-            for addr_to_update in lm_loc_data.update_ram_addr:
+            # This only checks if one address in the ram list is true, not all, so any location in the list can be true
+            #   to consider the location as "checked"
+            for loc_addr in lm_loc_data.update_ram_addr:
                 # If in main mansion map
                 # TODO this will now calculate every iteration, which will slow down location checks are more are added.
                 if current_map_id == 2:
@@ -662,12 +446,11 @@ class LMContext(CommonContext):
                     if lm_loc_data.code == 617:
                         room_to_check: int = spawn_locations[self.spawn]["in_game_room_id"]
                     else:
-                        room_to_check = addr_to_update.in_game_room_id if not addr_to_update.in_game_room_id is None \
-                            else current_room_id
+                        room_to_check = loc_addr.in_game_room_id if not loc_addr.in_game_room_id is None else current_room_id
                     if not room_to_check == current_room_id:
                         continue
 
-                if self.check_ram_location(lm_loc_data, addr_to_update, current_map_id, lm_loc_data.map_id):
+                if self.check_ram_location(lm_loc_data, loc_addr, current_map_id, lm_loc_data.map_id):
                     self.locations_checked.add(mis_loc)
 
         await self.check_locations(self.locations_checked)
@@ -694,58 +477,84 @@ class LMContext(CommonContext):
             }])
         return
 
-    async def give_lm_items(self):
-        if not (self.check_ingame() and self.check_alive()):
-            return
+    def get_item_count_by_id(self, item_id: int) -> int:
+        return len([netItem for netItem in self.items_received if netItem.item == item_id])
 
+    # Through god knows how many hours of debugging, we have figured out that LM will change bytes due to certain
+    # Events in game, however it is currently unknown when they trigger and the average user does not know how to
+    # debug breakpoints in Dolphin. Instead, just give all the progressive items again and be done with it.
+    async def give_progression_again(self):
+        progressive_items: dict[str, LMItemData] = {**ITEM_TABLE}
+
+        try:
+            for (key, val) in progressive_items.items():
+                if key in ["Vacuum Upgrade", "Gold Diamond", "Progressive Flower", "Poltergust 3000"] or \
+                    LMItem.get_apid(val.code) not in self.items_received:
+                    continue
+
+                for addr_to_update in val.update_ram_addr:
+                    byte_size = 1 if addr_to_update.ram_byte_size is None else addr_to_update.ram_byte_size
+                    ram_offset = None
+                    if addr_to_update.pointer_offset:
+                        ram_offset = [addr_to_update.pointer_offset]
+
+                    if not addr_to_update.pointer_offset is None:
+                        curr_val = int.from_bytes(dme.read_bytes(dme.follow_pointers(addr_to_update.ram_addr,
+                            [addr_to_update.pointer_offset]), byte_size))
+                    else:
+                        curr_val = int.from_bytes(dme.read_bytes(addr_to_update.ram_addr, byte_size))
+
+                    curr_val = (curr_val | (1 << addr_to_update.bit_position))
+                    await write_bytes_and_validate(addr_to_update.ram_addr, ram_offset, curr_val.to_bytes(byte_size, 'big'))
+        except Exception as genericEx:
+            logger.error("Unable to give progression items as expected due to an error. Details: " + str(genericEx))
+
+        return
+
+    # TODO Review these loops as something could be skipped over.
+    async def give_lm_items(self):
         last_recv_idx = dme.read_word(LAST_RECV_ITEM_ADDR)
         if len(self.items_received) == last_recv_idx:
-            # Update the non-savable location in memory with the last received in case the player reloaded their game.
-            dme.write_word(NON_SAVE_LAST_RECV_ITEM_ADDR, last_recv_idx)
             return
 
-        non_save_recv_idx: int = dme.read_word(NON_SAVE_LAST_RECV_ITEM_ADDR)
+        self.last_received_idx = last_recv_idx
+        self.non_save_last_recv_idx = dme.read_word(NON_SAVE_LAST_RECV_ITEM_ADDR)
         recv_items = self.items_received[last_recv_idx:]
         for item in recv_items:
+            last_recv_idx += 1
             lm_item_name = self.item_names.lookup_in_game(item.item)
             lm_item = ALL_ITEMS_TABLE[lm_item_name]
 
             # Add the item to the display items queue to display when it can
-            self.item_display_queue.append(item)
+            if self.self_item_messages == 0:
+                self.item_display_queue.append(item)
+            elif self.self_item_messages == 1 and lm_item.classification == IC.progression:
+                self.item_display_queue.append(item)
 
             # If the user is subscribed to send items and the trap is a valid trap and the trap was not already
             # received (to prevent sending the same traps over and over to other TrapLinkers if Luigi died)
-            if "TrapLink" in self.tags and item.item in trap_id_list and last_recv_idx <= non_save_recv_idx:
-                await self.send_trap_link(lm_item_name)
+            if self.trap_link.is_enabled() and item.item in trap_id_list and last_recv_idx > self.non_save_last_recv_idx:
+                logger.info("Triggering Trap...")
+                await self.trap_link.send_trap_link_async(lm_item_name)
 
             # Filter for only items where we have not received yet. If same slot, only receive locations from pre-set
             # list of locations, otherwise accept other slots. Additionally accept only items from a pre-approved list.
             if item.item in RECV_ITEMS_IGNORE or (item.player == self.slot and not
             (item.location in SELF_LOCATIONS_TO_RECV or item.item in RECV_OWN_GAME_ITEMS or item.location < 0)):
-                last_recv_idx += 1
-                dme.write_word(LAST_RECV_ITEM_ADDR, last_recv_idx)
-
-                if last_recv_idx > non_save_recv_idx:
-                    # Lastly, update the non-saveable received index with the current last received index.
-                    dme.write_word(NON_SAVE_LAST_RECV_ITEM_ADDR, last_recv_idx)
+                self.update_received_idx(last_recv_idx)
                 continue
 
             # Sends remote currency items from the server to the client.
             if lm_item.type == "Money":
                 currency_receiver = CurrencyReceiver(self.wallet)
                 currency_receiver.send_to_wallet(lm_item)
-
-                last_recv_idx += 1
-                dme.write_word(LAST_RECV_ITEM_ADDR, last_recv_idx)
-
-                if last_recv_idx > non_save_recv_idx:
-                    # Lastly, update the non-saveable received index with the current last received index.
-                    dme.write_word(NON_SAVE_LAST_RECV_ITEM_ADDR, last_recv_idx)
+                self.update_received_idx(last_recv_idx)
                 continue
-            elif lm_item.type == "Trap" and last_recv_idx < non_save_recv_idx:
+            elif lm_item.type == "Trap" and (self.non_save_last_recv_idx >= last_recv_idx or
+                (item.item == 8147 and self.get_item_count_by_id(8148) < 1)):
                 # Skip this trap item to avoid Luigi dying in an infinite trap loop.
-                last_recv_idx += 1
-                dme.write_word(LAST_RECV_ITEM_ADDR, last_recv_idx)
+                # Also skip No Vac Trap if we don't have a vacuum
+                self.update_received_idx(last_recv_idx)
                 continue
 
             for addr_to_update in lm_item.update_ram_addr:
@@ -755,30 +564,18 @@ class LMContext(CommonContext):
                     ram_offset = [addr_to_update.pointer_offset]
 
                 if item.item in trap_id_list:
-                    # If we have no vacuum, do not trigger a No Vac trap
-                    if item.item == 8147 and len(
-                            [netItem for netItem in self.items_received if netItem.item == 8064]) < 1:
-                        last_recv_idx += 1
-                        dme.write_word(LAST_RECV_ITEM_ADDR, last_recv_idx)
-                        continue
-                    else:
-                        curr_val = addr_to_update.item_count
+                    curr_val = addr_to_update.item_count
                 elif item.item == 8140:  # Progressive Flower, 00EB, 00EC, 00ED
-                    flower_count: int = len([netItem for netItem in self.items_received if netItem.item == 8140])
+                    flower_count: int = self.get_item_count_by_id(8140)
                     curr_val = min(flower_count + 234, 237)
                     ram_offset = None
-                elif item.item == 8064:  # If it's a Progressive Vacuum
-                    if addr_to_update.ram_addr == 0x804dda54:  # If we're checking against our vacuum-on address
-                        curr_val = addr_to_update.item_count
-                    else:  # If we're checking against our vacuum speed address
-                        curr_val: int = min(5, (
-                                    len([netItem for netItem in self.items_received if netItem.item == 8064]) - 1))
-                        ram_offset = None
+                elif item.item == 8064:  # If it's a vacuum upgrade
+                    curr_val: int = self.get_item_count_by_id(8064)
+                    ram_offset = None
                 elif not addr_to_update.item_count is None:
                     if not ram_offset is None:
                         curr_val = int.from_bytes(dme.read_bytes(dme.follow_pointers(addr_to_update.ram_addr,
-                                                                                     [addr_to_update.pointer_offset]),
-                                                                 byte_size))
+                            [addr_to_update.pointer_offset]), byte_size))
                         if item.item in HEALTH_RELATED_ITEMS:
                             curr_val = min(curr_val + addr_to_update.item_count, self.luigimaxhp)
                         else:
@@ -789,8 +586,7 @@ class LMContext(CommonContext):
                 else:
                     if not addr_to_update.pointer_offset is None:
                         curr_val = int.from_bytes(dme.read_bytes(dme.follow_pointers(addr_to_update.ram_addr,
-                                                                                     [addr_to_update.pointer_offset]),
-                                                                 byte_size))
+                            [addr_to_update.pointer_offset]), byte_size))
                         curr_val = (curr_val | (1 << addr_to_update.bit_position))
                     else:
                         curr_val = int.from_bytes(dme.read_bytes(addr_to_update.ram_addr, byte_size))
@@ -799,244 +595,315 @@ class LMContext(CommonContext):
                         else:
                             curr_val += 1
 
-                await write_bytes_and_validate(addr_to_update.ram_addr, ram_offset,
-                                               curr_val.to_bytes(byte_size, 'big'))
+                await write_bytes_and_validate(addr_to_update.ram_addr, ram_offset, curr_val.to_bytes(byte_size, 'big'))
 
             # Update the last received index to ensure we don't receive the same item over and over.
-            last_recv_idx += 1
-            dme.write_word(LAST_RECV_ITEM_ADDR, last_recv_idx)
+            self.update_received_idx(last_recv_idx)
+            await self.wait_for_next_loop(0.5)
 
-            if last_recv_idx > non_save_recv_idx:
-                # Lastly, update the non-saveable received index with the current last received index.
-                dme.write_word(NON_SAVE_LAST_RECV_ITEM_ADDR, last_recv_idx)
-            await wait_for_next_loop(1)
+    def update_received_idx(self, last_recv_idx: int):
+        self.last_received_idx = last_recv_idx
+        dme.write_word(LAST_RECV_ITEM_ADDR, last_recv_idx)
+
+        # Lastly, update the non-saveable received index with the current last received index.
+        if last_recv_idx > self.non_save_last_recv_idx:
+            self.non_save_last_recv_idx = last_recv_idx
+            dme.write_word(NON_SAVE_LAST_RECV_ITEM_ADDR, last_recv_idx)
 
     async def lm_update_non_savable_ram(self):
-        if not (self.check_ingame() and self.check_alive()):
+        try:
+            # Always adjust the Vacuum speed as saving and quitting or going to E. Gadds lab could reset it back to normal.
+            vac_count = self.get_item_count_by_id(8148)
+            vac_speed = max(min(self.get_item_count_by_id(8064), 5),0)
+
+            if not self.trap_link.check_vac_trap_active():
+                for item in [8064, 8148]:
+                    lm_item_name = self.item_names.lookup_in_game(item)
+                    lm_item = ALL_ITEMS_TABLE[lm_item_name]
+                    for addr_to_update in lm_item.update_ram_addr:
+                        if addr_to_update.ram_addr == 0x804dda54 and vac_count > 0:  # If we're checking against our vacuum-on address
+                            curr_val = 1
+                            dme.write_bytes(addr_to_update.ram_addr, curr_val.to_bytes(addr_to_update.ram_byte_size, 'big'))
+                        else:
+                            dme.write_bytes(addr_to_update.ram_addr, vac_speed.to_bytes(addr_to_update.ram_byte_size, 'big'))
+
+            # Always adjust Pickup animation issues if the user turned pick up animations off.
+            if not self.pickup_anim_on:
+                crown_helper_val = "00000001"
+                dme.write_bytes(0x804DE40C, bytes.fromhex(crown_helper_val))
+
+            # Always update Boolossus difficulty
+            dme.write_bytes(0x804de3d0, self.boolossus_difficulty.to_bytes(4,'big'))
+
+            # Always update the flower to have the correct amount of flowers in game
+            flower_recv: int = self.get_item_count_by_id(8140)
+            flower_count = min(flower_recv + 234, 237)
+            flower_item = self.item_names.lookup_in_game(8140)
+            flower_item_data = ALL_ITEMS_TABLE[flower_item]
+            for flwr_addr_update in flower_item_data.update_ram_addr:
+                dme.write_bytes(flwr_addr_update.ram_addr, flower_count.to_bytes(flwr_addr_update.ram_byte_size, 'big'))
+
+            # Always update the gold diamond count to have the correct amount of diamonds in game
+            diamond_recv: int = self.get_item_count_by_id(8065)
+            diamond_item = self.item_names.lookup_in_game(8065)
+            diamond_item_data = ALL_ITEMS_TABLE[diamond_item]
+            for diam_addr_update in diamond_item_data.update_ram_addr:
+                dme.write_bytes(diam_addr_update.ram_addr, diamond_recv.to_bytes(diam_addr_update.ram_byte_size, 'big'))
+
+            # Make it so the displayed Boo counter always appears even if you don't have boo radar or if you haven't caught
+            # a boo in-game yet.
+            if self.boosanity:
+                # This allows the in-game display to work correctly.
+                dme.write_bytes(0x803D5E0B, bytes.fromhex("01"))
+
+                # Update the in-game counter to reflect how many boos you got.
+                boo_received_list = [item.item for item in self.items_received if item.item in BOO_AP_ID_LIST]
+
+                for boo_item in boo_received_list:
+                    lm_item_name = self.item_names.lookup_in_game(boo_item)
+                    lm_item = ALL_ITEMS_TABLE[lm_item_name]
+                    for addr_to_update in lm_item.update_ram_addr:
+                        curr_val = dme.read_byte(addr_to_update.ram_addr)
+                        curr_val = (curr_val | (1 << addr_to_update.bit_position))
+                        dme.write_byte(addr_to_update.ram_addr, curr_val)
+
+                curr_boo_count = len(set(boo_received_list))
+                if curr_boo_count >= self.boo_balcony_count:
+                    boo_val = dme.read_byte(BOO_BALCONY_FLAG_ADDR)
+                    dme.write_byte(BOO_BALCONY_FLAG_ADDR, (boo_val | (1 << BOO_BALCONY_FLAG_BIT)))
+                if curr_boo_count >= self.boo_final_count:
+                    boo_val = dme.read_byte(BOO_FINAL_FLAG_ADDR)
+                    dme.write_byte(BOO_FINAL_FLAG_ADDR, (boo_val | (1 << BOO_FINAL_FLAG_BIT)))
+        except Exception as genericEx:
+            logger.error("Unable to update the non-saveable ram as expected due to an error. Details: " + str(genericEx))
+
+        return
+
+    async def check_death(self):
+        if not self.last_not_ingame or (self.check_ingame() and self.check_alive()):
             return
 
-        # Always adjust the Vacuum speed as saving and quitting or going to E. Gadds lab could reset it back to normal.
-        vac_count = len(list(netItem.item for netItem in self.items_received if netItem.item == 8064))
-        vac_speed = max(min(vac_count - 1, 5),0)
-        lm_item_name = self.item_names.lookup_in_game(8064)
-        lm_item = ALL_ITEMS_TABLE[lm_item_name]
-        for addr_to_update in lm_item.update_ram_addr:
-            if addr_to_update.ram_addr == 0x804dda54 and vac_count > 0:  # If we're checking against our vacuum-on address
-                curr_val = 1
-                dme.write_bytes(addr_to_update.ram_addr, curr_val.to_bytes(addr_to_update.ram_byte_size, 'big'))
-            else:
-                dme.write_bytes(addr_to_update.ram_addr, vac_speed.to_bytes(addr_to_update.ram_byte_size, 'big'))
+        if not self.is_luigi_dead and time.time() >= float(self.last_death_link + (CHECKS_WAIT * LONGER_MODIFIER * 3)):
+            self.is_luigi_dead = True
+            self.set_luigi_dead()
+            await self.send_death(self.player_names[self.slot] + " scared themselves to death.")
 
-        # Always adjust Pickup animation issues if the user turned pick up animations off.
-        if not self.pickup_anim_on:
-            crown_helper_val = "00000001"
-            dme.write_bytes(0x804DE40C, bytes.fromhex(crown_helper_val))
-
-        # Always update Boolossus difficulty
-        dme.write_bytes(0x804de3d0, self.boolossus_difficulty.to_bytes(4,'big'))
-
-        # Make it so the displayed Boo counter always appears even if you don't have boo radar or if you haven't caught
-        # a boo in-game yet.
-        if self.boosanity:
-            # This allows the in-game display to work correctly.
-            dme.write_bytes(0x803D5E0B, bytes.fromhex("01"))
-
-            # Update the in-game counter to reflect how many boos you got.
-            boo_received_list = [item.item for item in self.items_received if item.item in BOO_AP_ID_LIST]
-
-            for boo_item in boo_received_list:
-                lm_item_name = self.item_names.lookup_in_game(boo_item)
-                lm_item = ALL_ITEMS_TABLE[lm_item_name]
-                for addr_to_update in lm_item.update_ram_addr:
-                    curr_val = dme.read_byte(addr_to_update.ram_addr)
-                    curr_val = (curr_val | (1 << addr_to_update.bit_position))
-                    dme.write_byte(addr_to_update.ram_addr, curr_val)
-
-            curr_boo_count = len(set(boo_received_list))
-            if curr_boo_count >= self.boo_balcony_count:
-                boo_val = dme.read_byte(BOO_BALCONY_FLAG_ADDR)
-                dme.write_byte(BOO_BALCONY_FLAG_ADDR, (boo_val | (1 << BOO_BALCONY_FLAG_BIT)))
-            if curr_boo_count >= self.boo_final_count:
-                boo_val = dme.read_byte(BOO_FINAL_FLAG_ADDR)
-                dme.write_byte(BOO_FINAL_FLAG_ADDR, (boo_val | (1 << BOO_FINAL_FLAG_BIT)))
-
-        if self.call_mario:
-            # Prevents the console from receiving the same message over and over.
-            if not self.yelling_in_client:
-                luigi_shouting = dme.read_word(LUIGI_SHOUT_ADDR)
-                if luigi_shouting == LUIGI_SHOUT_RAMVALUE:
-                    self.yelling_in_client = True
-                    Utils.async_start(self.yell_in_client(), name="Luigi Is Yelling")
-        return
-
-    async def yell_in_client(self) -> None:
-        logger.info(random.choice(LUIGI_SHOUT_LIST))
-        await wait_for_next_loop(LUIGI_SHOUT_DURATION)
-        self.yelling_in_client = False
-        return
-
-
-async def dolphin_sync_task(ctx: LMContext):
-    logger.info(f"Using Luigi's Mansion client {CLIENT_VERSION}")
-    logger.info("Starting Dolphin connector. Use /dolphin for status information.")
-
-    while not ctx.exit_event.is_set():
+    async def manage_wallet_async(self):
         try:
-            # If DME is not already hooked or connected in any way
-            if not dme.is_hooked():
-                dme.hook()
-                if dme.get_status() == dme.get_status().noEmu or dme.get_status() == dme.get_status().notRunning:
-                    dme.un_hook()
-                    ctx.dolphin_status = CONNECTION_INITIAL_STATUS
-                    logger.info(ctx.dolphin_status)
-                    await wait_for_next_loop(5)
+            while self.slot:
+                if not (self.check_ingame() and self.check_alive()):
+                    await self.wait_for_next_loop(0.5)
                     continue
 
-            if not ctx.dolphin_status == CONNECTION_CONNECTED_STATUS:
-                # If the Game ID is a standard one, the randomized ISO has not been loaded - so disconnect
-                game_id = read_string(0x80000000, 6)
-                if game_id in ["GLME01", "GLMJ01","GLMP01"]:
-                    logger.info(CONNECTION_REFUSED_STATUS)
-                    ctx.dolphin_status = CONNECTION_REFUSED_STATUS
-                    dme.un_hook()
-                    await wait_for_next_loop(5)
+                await self.ring_link.wallet_manager.calc_wallet_differences_async()
+                await self.wait_for_next_loop(0.5)
+        except Exception as generic_ex:
+            logger.error("Critical error with watching currencies async tasks. Details: " + str(generic_ex))
+
+    async def non_essentials_async_tasks(self):
+        wallet_manager_event_active: bool = False
+
+        try:
+            while self.slot:
+                if not (self.check_ingame() and self.check_alive()):
+                    await self.wait_for_next_loop(0.5)
+                    # Resets the logic for determining the currency differences,
+                    # needs to be updated to reset inside of wallet_manager.
+                    self.ring_link.wallet_manager.reset_wallet_watching()
                     continue
 
-                # If we are not connected to server, check for player name in RAM address
-                if not ctx.auth:
-                    ctx.auth = read_string(SLOT_NAME_ADDR, SLOT_NAME_STR_LENGTH)
+                # All Link related activities
+                if "DeathLink" in self.tags:
+                    await self.check_death()
+                if self.trap_link.is_enabled():
+                    await self.trap_link.handle_traplink_async()
+                if self.ring_link.is_enabled():
+                    if not wallet_manager_event_active:
+                        wallet_manager_event_active = not wallet_manager_event_active
+                        Utils.async_start(self.manage_wallet_async(), name="LM - ManageWallet")
+                    await self.handle_ringlink_async()
 
-                    # If no player name is found, disconnect DME and inform player
-                    if not ctx.auth:
-                        ctx.auth = None
-                        ctx.dolphin_status = NO_SLOT_NAME_STATUS
-                        logger.info(ctx.dolphin_status)
-                        dme.un_hook()
-                        await wait_for_next_loop(5)
+                # Async thread related tasks
+                if self.send_hints:
+                    await self.lm_send_hints()
+                if self.call_mario:
+                    await self.check_mario_yell()
+
+                await self.wait_for_next_loop(0.5)
+        except Exception as genericEx:
+            logger.error("Critical error while running non-essential async tasks. Details: " + str(genericEx))
+
+    async def display_received_items(self):
+        try:
+            while self.slot:
+                if not (self.check_ingame() and self.check_alive()) or not self.item_display_queue:
+                    await self.wait_for_next_loop(WAIT_TIMER_LONG_TIMEOUT)
+                    continue
+
+                while self.item_display_queue:
+                    item_to_display = self.item_display_queue.pop(0)
+                    lm_item_name = self.item_names.lookup_in_game(item_to_display.item)
+
+                    item_name_display = lm_item_name[:RECV_MAX_STRING_LENGTH].replace("&", "")
+                    short_item_name = sbf.string_to_bytes_with_limit(item_name_display, RECV_LINE_STRING_LENGTH)
+                    dme.write_bytes(RECV_ITEM_NAME_ADDR, short_item_name + b'\x00')
+
+                    if item_to_display.player == self.slot:
+                        loc_name_retr = self.location_names.lookup_in_game(item_to_display.location)
+                    else:
+                        loc_name_retr = self.location_names.lookup_in_slot(item_to_display.location, item_to_display.player)
+                    loc_name_display = loc_name_retr[:SLOT_NAME_STR_LENGTH].replace("&", "")
+                    loc_name_bytes = sbf.string_to_bytes_with_limit(loc_name_display, RECV_LINE_STRING_LENGTH)
+                    dme.write_bytes(RECV_ITEM_LOC_ADDR, loc_name_bytes + b'\x00')
+
+                    recv_full_player_name = self.player_names[item_to_display.player]
+                    recv_name_repl = recv_full_player_name.replace("&", "")
+                    # We try to check the received player's name is under the slot length first.
+                    short_recv_name = sbf.string_to_bytes_with_limit(recv_name_repl, SLOT_NAME_STR_LENGTH)
+                    # Then we can re-combine it with 's Game to stay under te max char limit.
+                    recv_name_display = short_recv_name.decode("utf-8") + "'s Game"
+                    dme.write_bytes(RECV_ITEM_SENDER_ADDR,
+                        sbf.string_to_bytes_with_limit(recv_name_display, RECV_LINE_STRING_LENGTH) + b'\x00')
+
+                    dme.write_word(RECV_ITEM_DISPLAY_TIMER_ADDR, int(RECV_DEFAULT_TIMER_IN_HEX, 16))
+                    await self.wait_for_next_loop(int(RECV_DEFAULT_TIMER_IN_HEX, 16) / FRAME_AVG_COUNT)
+                    while dme.read_byte(RECV_ITEM_DISPLAY_VIZ_ADDR) > 0:
+                        await self.wait_for_next_loop(WAIT_TIMER_SHORT_TIMEOUT)
+
+                    await self.wait_for_next_loop(WAIT_TIMER_MEDIUM_TIMEOUT)
+        except Exception as genericEx:
+            logger.error("While trying to display an item in game, an unknown issue occurred. Details: " + str(genericEx))
+
+    async def dolphin_sync_main_task(self):
+        logger.info(f"Using Luigi's Mansion client {CLIENT_VERSION}")
+        logger.info("Starting Dolphin connector. Use /dolphin for status information.")
+
+        try:
+            while not self.exit_event.is_set():
+                try:
+                    # If DME is not already hooked or connected in any way
+                    if not dme.is_hooked():
+                        dme.hook()
+                        if dme.get_status() == dme.get_status().noEmu or dme.get_status() == dme.get_status().notRunning:
+                            dme.un_hook()
+                            self.dolphin_status = CONNECTION_INITIAL_STATUS
+                            logger.info(self.dolphin_status)
+                            await self.wait_for_next_loop(WAIT_TIMER_LONG_TIMEOUT)
+                            continue
+
+                    if not self.dolphin_status == CONNECTION_CONNECTED_STATUS:
+                        # If the Game ID is a standard one, the randomized ISO has not been loaded - so disconnect
+                        game_id = read_string(0x80000000, 6)
+                        if game_id in ["GLME01", "GLMJ01", "GLMP01"]:
+                            logger.info(CONNECTION_REFUSED_STATUS)
+                            self.dolphin_status = CONNECTION_REFUSED_STATUS
+                            dme.un_hook()
+                            await self.wait_for_next_loop(WAIT_TIMER_LONG_TIMEOUT)
+                            continue
+
+                        # If we are not connected to server, check for player name in RAM address
+                        if not self.auth:
+                            self.auth = read_string(SLOT_NAME_ADDR, SLOT_NAME_STR_LENGTH)
+
+                            # If no player name is found, disconnect DME and inform player
+                            if not self.auth:
+                                self.auth = None
+                                self.dolphin_status = NO_SLOT_NAME_STATUS
+                                logger.info(self.dolphin_status)
+                                dme.un_hook()
+                                await self.wait_for_next_loop(WAIT_TIMER_LONG_TIMEOUT)
+                                continue
+
+                        # Reset the locations_checked while we wait
+                        self.locations_checked = set()
+
+                        # Inform the player we are ready and waiting for them to connect.
+                        if not self.dolphin_status == CONNECTION_VERIFY_SERVER:
+                            self.dolphin_status = CONNECTION_VERIFY_SERVER
+                            logger.info(self.dolphin_status)
+                        await self.server_auth()
+
+                        if not self.slot:
+                            await self.wait_for_next_loop(WAIT_TIMER_LONG_TIMEOUT)
+                            continue
+
+                    arg_seed = read_string(0x80000001, len(str(self.arg_seed)))
+                    if arg_seed != self.arg_seed:
+                        raise Exception(
+                            "Incorrect Randomized Luigi's Mansion ISO file selected. The seed does not match." +
+                            "Please verify that you are using the right ISO/seed/APLM file.")
+
+                    # At this point, we are verified as connected. Update UI elements in the LMCLient tab.
+                    if self.ui:
+                        boo_count = len(
+                            set(([item.item for item in self.items_received if item.item in BOO_AP_ID_LIST])))
+                        self.ui.update_boo_count_label(boo_count)
+                        self.ui.get_wallet_value()
+                        self.ui.update_flower_label(self.get_item_count_by_id(8140))
+                        self.ui.update_vacuum_label(self.get_item_count_by_id(8064))
+
+                    if not (self.check_ingame() and self.check_alive()):
+                        await self.wait_for_next_loop(WAIT_TIMER_SHORT_TIMEOUT)
+                        # Resets the logic for determining the currency differences,
+                        # needs to be updated to reset inside of wallet_manager.
+                        self.ring_link.wallet_manager.reset_wallet_watching()
                         continue
 
-                # Reset the locations_checked while we wait
-                ctx.locations_checked = set()
-
-                # Inform the player we are ready and waiting for them to connect.
-                if not ctx.dolphin_status == CONNECTION_VERIFY_SERVER:
-                    ctx.dolphin_status = CONNECTION_VERIFY_SERVER
-                    logger.info(ctx.dolphin_status)
-                await ctx.server_auth()
-
-                if not ctx.slot:
-                    await wait_for_next_loop(5)
+                    # Lastly check any locations and update the non-save able ram stuff
+                    await self.lm_check_locations()
+                    await self.give_lm_items()
+                    await self.wait_for_next_loop(WAIT_TIMER_SHORT_TIMEOUT)
+                except Exception as ex:
+                    dme.un_hook()
+                    logger.error(str(ex))
+                    logger.info("Connection to Dolphin failed, attempting again in 5 seconds...")
+                    self.dolphin_status = CONNECTION_LOST_STATUS
+                    await self.disconnect()
+                    await self.wait_for_next_loop(WAIT_TIMER_LONG_TIMEOUT)
                     continue
+        except Exception as threadEx:
+            logger.error("Something went horribly wrong with the Luigis Mansion client. Details: " + str(threadEx))
 
-            # At this point, we are verified as connected. Update boo count in LMClient
-            if ctx.ui:
-                await ctx.update_boo_count_label()
-                await ctx.get_wallet_value()
+def main(*launch_args: str):
+    from .client.dolphin_launcher import DolphinLauncher
+    import colorama
 
-            # Check any Links that a user is subscribed to.
-            if "DeathLink" in ctx.tags:
-                await ctx.check_death()
-            if "TrapLink" in ctx.tags:
-                await ctx.handle_traplink()
-
-            # Lastly check any locations and update the non-saveable ram stuff
-            await ctx.lm_check_locations()
-            await ctx.give_lm_items()
-            if ctx.send_hints == 1:
-                await ctx.lm_send_hints()
-            await ctx.lm_update_non_savable_ram()
-            await asyncio.sleep(0.1)
-        except Exception:
-            dme.un_hook()
-            logger.error(traceback.format_exc())
-            logger.info("Connection to Dolphin failed, attempting again in 5 seconds...")
-            ctx.dolphin_status = CONNECTION_LOST_STATUS
-            await ctx.disconnect()
-            await asyncio.sleep(5)
-            continue
-
-async def wait_for_next_loop(time_to_wait: float):
-    await asyncio.sleep(time_to_wait)
-
-async def display_received_items(ctx: LMContext):
-    while not ctx.exit_event.is_set():
-        if not (dme.is_hooked() and ctx.dolphin_status == CONNECTION_CONNECTED_STATUS and
-            ctx.check_ingame() and ctx.check_alive()):
-            await wait_for_next_loop(5)
-            continue
-
-        if not ctx.item_display_queue:
-            await wait_for_next_loop(5)
-            continue
-
-        for item in ctx.item_display_queue:
-            lm_item_name = ctx.item_names.lookup_in_game(item.item)
-
-            item_name_display = lm_item_name[:RECV_MAX_STRING_LENGTH].replace("&", "")
-            short_item_name = sbf.string_to_bytes_with_limit(item_name_display, RECV_LINE_STRING_LENGTH)
-            dme.write_bytes(RECV_ITEM_NAME_ADDR, short_item_name + b'\x00')
-
-            if item.player == ctx.slot:
-                loc_name_retr = ctx.location_names.lookup_in_game(item.location)
-            else:
-                loc_name_retr = ctx.location_names.lookup_in_slot(item.location, item.player)
-            loc_name_display = loc_name_retr[:SLOT_NAME_STR_LENGTH].replace("&", "")
-            loc_name_bytes = sbf.string_to_bytes_with_limit(loc_name_display, RECV_LINE_STRING_LENGTH)
-            dme.write_bytes(RECV_ITEM_LOC_ADDR, loc_name_bytes + b'\x00')
-
-            recv_full_player_name = ctx.player_names[item.player]
-            recv_name_repl = recv_full_player_name.replace("&", "")
-            # We try to check the received player's name is under the slot length first.
-            short_recv_name = sbf.string_to_bytes_with_limit(recv_name_repl, SLOT_NAME_STR_LENGTH)
-            # Then we can re-combine it with 's Game to stay under te max char limit.
-            recv_name_display = short_recv_name.decode("utf-8") + "'s Game"
-            dme.write_bytes(RECV_ITEM_SENDER_ADDR,
-                sbf.string_to_bytes_with_limit(recv_name_display, RECV_LINE_STRING_LENGTH) + b'\x00')
-
-            dme.write_word(RECV_ITEM_DISPLAY_TIMER_ADDR, int(RECV_DEFAULT_TIMER_IN_HEX, 16))
-            await wait_for_next_loop(int(RECV_DEFAULT_TIMER_IN_HEX, 16)/FRAME_AVG_COUNT)
-            while dme.read_byte(RECV_ITEM_DISPLAY_VIZ_ADDR) > 0:
-                await wait_for_next_loop(0.1)
-
-        # Reset the list so next time we enter this function we don't display anything
-        ctx.item_display_queue = []
-
-def main(output_data: Optional[str] = None, lm_connect=None, lm_password=None):
-    Utils.init_logging("Luigi's Mansion Client")
-    logger.info(f"Starting LM Client {CLIENT_VERSION}")
     server_address: str = ""
+    rom_path: str = ""
 
-    if output_data:
+    Utils.init_logging(CLIENT_NAME)
+    logger.info(f"Starting LM Client {CLIENT_VERSION}")
+    dolphin_launcher: DolphinLauncher = DolphinLauncher()
+
+    parser = get_base_parser()
+    parser.add_argument('aplm_file', default="", type=str, nargs="?", help='Path to an APLM file')
+    args = parser.parse_args(launch_args)
+
+    if args.aplm_file:
         lm_usa_patch = LMUSAAPPatch()
         try:
-            lm_usa_manifest = lm_usa_patch.read_contents(output_data)
+            lm_usa_manifest = lm_usa_patch.read_contents(args.aplm_file)
             server_address = lm_usa_manifest["server"]
-            lm_usa_patch.patch(output_data)
+            rom_path= lm_usa_patch.patch(args.aplm_file)
         except Exception as ex:
             logger.error("Unable to patch your Luigi's Mansion ROM as expected. Additional details:\n" + str(ex))
             Utils.messagebox("Cannot Patch Luigi's Mansion", "Unable to patch your Luigi's Mansion ROM as " +
                 "expected. Additional details:\n" + str(ex), True)
             raise ex
 
-
     async def _main(connect, password):
         ctx = LMContext(server_address if server_address else connect, password)
         ctx.server_task = asyncio.create_task(server_loop(ctx), name="ServerLoop")
 
         # Runs Universal Tracker's internal generator
-        if tracker_loaded:
-            ctx.run_generator()
-            ctx.tags.remove("Tracker")
-        else:
-            logger.warning("Could not find Universal Tracker.")
+        ctx._main()
 
         if gui_enabled:
             ctx.run_gui()
         ctx.run_cli()
-        await asyncio.sleep(1)
+        await ctx.wait_for_next_loop(WAIT_TIMER_LONG_TIMEOUT)
 
-        ctx.dolphin_sync_task = asyncio.create_task(dolphin_sync_task(ctx), name="DolphinSync")
-        ctx.give_item_task = asyncio.create_task(display_received_items(ctx), name="LuigiDisplayItems")
+        ctx.dolphin_sync_task = asyncio.create_task(ctx.dolphin_sync_main_task(), name="DolphinSync")
 
         await ctx.exit_event.wait()
         await ctx.shutdown()
@@ -1044,17 +911,12 @@ def main(output_data: Optional[str] = None, lm_connect=None, lm_password=None):
         if ctx.dolphin_sync_task:
             await ctx.dolphin_sync_task
 
-        if ctx.give_item_task:
-            await ctx.give_item_task
-
-    import colorama
+    Utils.asyncio.run(dolphin_launcher.launch_dolphin_async(rom_path))
 
     colorama.just_fix_windows_console()
-    asyncio.run(_main(lm_connect, lm_password))
+    asyncio.run(_main(args.connect, args.password))
     colorama.deinit()
 
-
 if __name__ == "__main__":
-    parser = get_base_parser()
-    args = parser.parse_args()
-    main(args.connect, args.password)
+    Utils.init_logging(CLIENT_NAME, exception_logger="Client")
+    main(*sys.argv[1:])

@@ -45,6 +45,7 @@ all_random_settings = {
     LMOptions.GemsWeight.internal_name:                "random",
     LMOptions.TrapLink.internal_name:                  "random",
     LMOptions.EnergyLink.internal_name:                "random",
+    LMOptions.RingLink.internal_name:                  "random",
     LMOptions.PoisonTrapWeight.internal_name:          "random",
     LMOptions.BombWeight.internal_name:                "random",
     LMOptions.IceTrapWeight.internal_name:             "random",
