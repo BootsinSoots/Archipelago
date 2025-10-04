@@ -51,7 +51,6 @@
 <CASE>"recover"
 <BGM>(8)
  <MENUOFF>
-<FLAGON>(168)
 <WINDOW>(2)<COLOR>(1)<SPEAK>(0)
 <SE>(158)
 <ANYKEY>
@@ -65,13 +64,14 @@
 <SE>(200)
 <ANYKEY>
  <MENUON>
-<FLAGOFF>(168)
+<FLAGON>(168)
 <PLIGHT>(0)
 <CLOSEWINDOW>(2)
 <LUIGIFREE>
 <LUIGIFREE2>
 <CAMERAEND>
 <ACTOR>"demo_luigi"<SHADOWON>
+<FLAGOFF>(168)
 //----------------------------------------------------
 //----------------------------------------------------
 <FLAGON>(85)
