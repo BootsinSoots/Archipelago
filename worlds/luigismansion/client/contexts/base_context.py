@@ -28,10 +28,6 @@ LUIGI_SHOUT_DURATION = 3 # Time in seconds of how long the mario shout lasts.
 LUIGI_SHOUT_RAMVALUE = 0xBCB84ED4
 LUIGI_SHOUT_LIST = ["Mario?", "Marrrio", "MARIO!", "MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARIOOOOOOOOOOOOOOOOOOOO"]
 
-
-class BaseCommandProcessor(UniversalCommandProcessor):
-    pass
-
 class BaseContext(UniversalContext):
 
     network_engine: ArchipelagoNetworkEngine
@@ -216,3 +212,22 @@ async def yell_in_client(ctx: BaseContext) -> None:
     await ctx.wait_for_next_loop(LUIGI_SHOUT_DURATION)
     ctx.yelling_in_client = False
     return
+
+
+class BaseCommandProcessor(UniversalCommandProcessor):
+    def __init__(self, ctx: BaseContext, server_address: str = None):
+        if server_address:
+            ctx.server_address = server_address
+        super().__init__(ctx)
+
+    def _cmd_traplink(self):
+        """Toggle traplink from client. Overrides default setting."""
+        if isinstance(self.ctx, BaseContext):
+            Utils.async_start(self.ctx.network_engine.update_tags_async(not self.ctx.trap_link.is_enabled(),
+                "TrapLink"), name="Update Traplink")
+
+    def _cmd_ringlink(self):
+        """Toggle traplink from client. Overrides default setting."""
+        if isinstance(self.ctx, BaseContext):
+            Utils.async_start(self.ctx.network_engine.update_tags_async(not self.ctx.ring_link.is_enabled(),
+                "RingLink"), name="Update RingLink")

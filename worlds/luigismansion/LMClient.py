@@ -119,12 +119,6 @@ class LMCommandProcessor(EnergyLinkCommandProcessor):
             Utils.async_start(self.ctx.network_engine.update_tags_async(not "DeathLink" in self.ctx.tags,
                 "DeathLink"), name="Update Deathlink")
 
-    def _cmd_traplink(self):
-        """Toggle traplink from client. Overrides default setting."""
-        if isinstance(self.ctx, LMContext):
-            Utils.async_start(self.ctx.network_engine.update_tags_async(not "TrapLink" in self.ctx.tags,
-                "TrapLink"), name="Update Traplink")
-
     def _cmd_jakeasked(self):
         """Provide debug information from Dolphin's RAM addresses while playing Luigi's Mansion,
         if the devs ask for it."""
@@ -358,7 +352,7 @@ class LMContext(BaseContext):
                         Utils.async_start(self.lm_update_non_savable_ram(), "LM - Update Non-Saveable RAM - Room Change")
                 return bool_loaded_in_map
             elif curr_map_id == 3:
-                curr_val = int.from_bytes(dme.read_byte(0x803D33AE)) #finding flag 168 to check if it's on
+                curr_val = dme.read_byte(MEMORY_CONSTANTS.TRAINING_BUTTON_LAYOUT_SCREEN)
                 if (curr_val & (1 << 0)) > 0:
                     Utils.async_start(self.lm_update_non_savable_ram(), "LM - Update Non-Saveable RAM - Training Room")
             return True

@@ -206,7 +206,7 @@ class LuigisMansionRandomizer:
         bool_portrait_hints: bool = True if self.output_data["Options"]["portrait_hints"] == 1 else False
 
         logger.info("Updating all the main.dol offsets with their appropriate values.")
-        self.gcm, self.dol = update_dol_offsets(self.gcm, self.dol, self.seed, bool_start_extra_vacuum, bool_start_vacuum,
+        self.gcm, self.dol = update_dol_offsets(self.gcm, self.dol, self.seed,
             start_inv_list, walk_speed, player_name, random_spawn, king_boo_health, bool_fear_anim_enabled,
             bool_pickup_anim_enabled, bool_boo_rando_enabled, door_model_rando_on)
 
