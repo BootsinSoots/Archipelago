@@ -31,7 +31,7 @@ class MEMORY_CONSTANTS:
     """ Constants which reference Luigi's Mansion memory allocations. """
 
     TRAINING_BUTTON_LAYOUT_SCREEN = 0x803D33AE
-    """ Flag 168: Determines if the button layout screen during training is present. """
+    """ Flag 168: Room flag used to determine if the button layout screen during training is present. """
 
     class TRAP_CONSTANTS:
         """ Memory Allocations for Archipelago TrapLink. """
