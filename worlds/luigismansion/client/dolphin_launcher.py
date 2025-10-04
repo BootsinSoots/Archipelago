@@ -28,7 +28,7 @@ class DolphinLauncher:
         if luigismansion_settings is None:
             self.emulator_settings: EmulatorSettings = settings.get_settings().luigismansion_options.dolphin_settings
         else:
-            self.emulator_settings = luigismansion_settings
+            self.emulator_settings = luigismansion_settings.dolphin_settings
 
     async def launch_dolphin_async(self, rom: str):
         """
