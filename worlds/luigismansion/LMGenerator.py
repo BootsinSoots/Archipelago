@@ -167,7 +167,7 @@ class LuigisMansionRandomizer:
         update_event_info(self.jmp_map3_event_info_table, bool_boo_checks, self.output_data)
         if self.output_data["Options"]["WDYM_checks"] == 1:
             update_gallery_furniture_info(self.jmp_map6_furniture_info_table, self.jmp_item_appear_table, self.output_data)
-            update_gallery_character_info(self.jmp_map6_character_info_table)
+            # update_gallery_character_info(self.jmp_map6_character_info_table)
 
         update_map_one_event_info(self.jmp_map1_event_info_table)
 
@@ -203,7 +203,7 @@ class LuigisMansionRandomizer:
             self.map_six_file.add_new_file("itemappeartable", self.jmp_item_appear_table.info_file_entry.data,
                 self.jmp_map6_furniture_info_table.info_file_entry.parent_node)
             self.update_map_info_table(self.map_six_file, self.jmp_map6_furniture_info_table)
-            self.update_map_info_table(self.map_six_file, self.jmp_map6_character_info_table)
+            # self.update_map_info_table(self.map_six_file, self.jmp_map6_character_info_table)
 
     def save_randomized_iso(self):
         # Get Output data required information
