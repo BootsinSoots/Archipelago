@@ -5,7 +5,7 @@ import psutil
 import settings
 import Utils
 
-from .luigismansion_settings import LuigisMansionSettings
+from .luigismansion_settings import LuigisMansionSettings, EmulatorSettings
 from .constants import AP_LOGGER_NAME
 
 logger = logging.getLogger(AP_LOGGER_NAME)
@@ -14,7 +14,7 @@ class DolphinLauncher:
     """
     Manages interactions between the LMClient and the dolphin emulator.
     """
-    luigismansion_settings: LuigisMansionSettings
+    emulator_settings: EmulatorSettings
     dolphin_process_name = "dolphin"
     exclusion_dolphin_process_name: list[str] = ["dolphinmemoryengine"]
 
@@ -26,28 +26,29 @@ class DolphinLauncher:
             Handled by the ArchipelagoLauncher in the host.yaml file.
         """
         if luigismansion_settings is None:
-            self.luigismansion_settings = settings.get_settings().luigismansion_options
+            self.emulator_settings: EmulatorSettings = settings.get_settings().luigismansion_options.dolphin_settings
         else:
-            self.luigismansion_settings = luigismansion_settings
+            self.emulator_settings = luigismansion_settings
 
     async def launch_dolphin_async(self, rom: str):
         """
-        Launches the dolphin process if not already running.
+        Launches the emulator process if not already running.
 
-        :param rom: The rom to load into dolphin emulator when starting the process,
+        :param rom: The rom to load into emulator when starting the process,
             if 'None' the process won't load any rom.
         """
-        if not self.luigismansion_settings.auto_start_dolphin:
-            logger.info("Host.yaml settings 'auto_start_dolphin' is 'false', skipping.")
+        if not self.emulator_settings.auto_start:
+            logger.info("Host.yaml settings 'auto_start' is 'false', skipping.")
             return
 
-        if _check_dolphin_process_open(self):
+        if _check_emulator_process_open(self):
             return
 
-        args = [ self.luigismansion_settings.dolphin_path ]
-        logger.info("Attempting to open Dolphin emulator at: %s", self.luigismansion_settings.dolphin_path)
+        args = [ self.emulator_settings.path ] + self.emulator_settings.additional_args
+
+        logger.info("Attempting to open emulator with the following arguments:'%s'",  ' '.join(args))
         if rom:
-            logger.info("Attempting to open Dolphin emulator with rom path:%s", rom)
+            logger.info("Attempting to open emulator with rom path:%s", rom)
             args.append(f"--exec={rom}")
 
         subprocess.Popen(
@@ -58,7 +59,7 @@ class DolphinLauncher:
             stderr=subprocess.DEVNULL
         )
 
-def _check_dolphin_process_open(dl: DolphinLauncher) -> bool:
+def _check_emulator_process_open(dl: DolphinLauncher) -> bool:
     for proc in psutil.process_iter():
         if (dl.dolphin_process_name in proc.name().lower() and
             proc.name().lower() not in dl.exclusion_dolphin_process_name):
