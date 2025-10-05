@@ -101,6 +101,7 @@ class LMWeb(WebWorld):
             LuigiOptions.DoorModelRando,
             LuigiOptions.ChestTypes,
             LuigiOptions.TrapChestType,
+            LuigiOptions.Spookiness,
             LuigiOptions.CallMario,
         ]),
         Options.OptionGroup("Filler Weights", [

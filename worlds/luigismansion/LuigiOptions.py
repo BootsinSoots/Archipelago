@@ -160,6 +160,19 @@ class BetterVacuum(Range):
     range_end = 5
     default = 1
 
+class Spookiness(Choice):
+    """
+    Change ambient room sounds.
+    Vanilla = unchanged ambience
+    Full Spooky = All rooms become spooky
+    Random Rooms = Random rooms become spooky
+    """
+    display_name = "Spookiness"
+    internal_name = "spookiness"
+    option_vanilla = 0
+    option_full_spooky = 1
+    option_random_rooms = 2
+    default = 0
 
 # These might end up being the same
 class StartHiddenMansion(Toggle):
@@ -767,6 +780,7 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     chest_types: ChestTypes
     trap_chests: TrapChestType
     call_mario: CallMario
+    spookiness: Spookiness
     trap_link: TrapLink
     enable_trap_client_msg: TrapLinkClientMsgs
     energy_link: EnergyLink
