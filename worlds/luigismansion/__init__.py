@@ -558,7 +558,7 @@ class LMWorld(World):
 
     def create_regions(self):
         # Add all randomizable regions
-        for region_name in REGION_LIST.values():
+        for region_name in REGION_LIST.keys():
             self.multiworld.regions.append(Region(region_name, self.player, self.multiworld))
 
         # Assign each location to their region
@@ -793,8 +793,7 @@ class LMWorld(World):
                         if location.address:
                             if location.item.type == "Door Key":
                                 itemid = location.item.doorid
-                        inv_reg_list = {v:k for k, v in REGION_LIST.items()}
-                        roomid = inv_reg_list[location.parent_region.name]
+                        roomid = REGION_LIST[location.parent_region.name]
                         item_info = {
                             "player": location.item.player,
                             "name": location.item.name,
@@ -810,8 +809,7 @@ class LMWorld(World):
 
                         output_data["Locations"][location.name] = item_info
                     else:
-                        inv_reg_list = {v:k for k, v in REGION_LIST.items()}
-                        roomid = inv_reg_list[location.parent_region.name]
+                        roomid = REGION_LIST[location.parent_region.name]
                         item_info = {
                             "player": location.item.player,
                             "name": location.item.name,
