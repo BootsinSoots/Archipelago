@@ -5,6 +5,10 @@
 <BGM>(20)
 <WIPEKIND>(3)
 <WARP>(11)
-<RAMDOMJMP>"blackout"
+<END>
 <CASE>"blackout"
+<WINDOW>(0)<COLOR>(4)
+<SAY><COLOR>(3)Go hide in the darkness, Green Man!
+<ANYKEY>
+<CLOSEWINDOW>(0)
 <END>
