@@ -82,6 +82,8 @@ class LuigisMansionRandomizer:
             self.jmp_teiden_enemy_info_table = self.load_map_info_table(self.map_two_file,"teidenenemyinfo")
         self.jmp_teiden_character_info_table = self.load_map_info_table(self.map_two_file,"teidencharacterinfo")
         self.jmp_iyapoo_table = self.load_map_info_table(self.map_two_file,"iyapootable")
+        if self.output_data["Options"]["spookiness"] != 0:
+            self.jmp_room_info_table = self.load_map_info_table(self.map_two_file, "roominfo")
         self.jmp_map3_event_info_table = self.load_map_info_table(self.map_three_file,"eventinfo")
 
         # Saves the randomized iso file, with all files updated.
@@ -130,6 +132,7 @@ class LuigisMansionRandomizer:
         # Get Output data required information
         bool_boo_checks = True if self.output_data["Options"]["boo_gates"] == 1 else False
         bool_speedy_spirits = True if self.output_data["Options"]["speedy_spirits"] == 1 else False
+        int_spookiness: int = self.output_data["Options"]["spookiness"]
 
         # Updates all data entries for each jmp table in memory first.
         update_character_info(self.jmp_character_info_table, self.output_data)
@@ -150,6 +153,8 @@ class LuigisMansionRandomizer:
             update_teiden_enemy_info(self.jmp_enemy_info_table, self.jmp_teiden_enemy_info_table)
         update_boo_table(self.jmp_boo_table, self.output_data)
         update_iyapoo_table(self.jmp_iyapoo_table, self.output_data)
+        if int_spookiness != 0:
+            update_room_info(self.jmp_room_info_table, int_spookiness)
         update_event_info(self.jmp_map3_event_info_table, bool_boo_checks, self.output_data)
 
         # Updates all the data entries in each jmp table in the szp file.
@@ -170,6 +175,7 @@ class LuigisMansionRandomizer:
             self.update_map_info_table(self.map_two_file,self.jmp_teiden_enemy_info_table)
         self.update_map_info_table(self.map_two_file,self.jmp_boo_table)
         self.update_map_info_table(self.map_two_file,self.jmp_iyapoo_table)
+        self.update_map_info_table(self.map_two_file, self.jmp_room_info_table)
         self.update_map_info_table(self.map_three_file, self.jmp_map3_event_info_table)
 
     def save_randomized_iso(self):
