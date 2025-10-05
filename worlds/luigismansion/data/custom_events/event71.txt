@@ -1,6 +1,10 @@
+<CHECKFLAG>(61)"blackout""normal"
+<CASE>"normal"
 <FLAGOFF>(34)
 <FLAGON>(171)
 <BGM>(20)
 <WIPEKIND>(3)
 <WARP>(11)
+<RAMDOMJMP>"blackout"
+<CASE>"blackout"
 <END>
