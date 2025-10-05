@@ -7,8 +7,9 @@
 <WARP>(11)
 <END>
 <CASE>"blackout"
-<WINDOW>(0)<COLOR>(4)
-<SAY><COLOR>(3)Go hide in the darkness, Green Man!
+<WINDOW>(0)<COLOR>(3)
+<SAY><COLOR>(3)It is too scary to fight them\nin the dark!
 <ANYKEY>
+<SAY><COLOR>(3)Maybe I should turn the\nbreaker back on!
 <CLOSEWINDOW>(0)
 <END>
