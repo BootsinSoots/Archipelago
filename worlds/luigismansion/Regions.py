@@ -1,9 +1,32 @@
-from typing import Optional, Callable, TYPE_CHECKING
+from typing import Optional, Callable, TYPE_CHECKING, NamedTuple
+from BaseClasses import Region, MultiWorld
 
 from . import Rules
 
 if TYPE_CHECKING:
     from . import Rules, LMWorld
+
+
+class LMRegionInfo(NamedTuple):
+    region_name: str
+    floor: int
+    room_id: int
+    map_id: int
+    in_game_id: int
+    door_ids: list[int]
+
+class LMRegion(Region):
+    room_id: int
+    map_id: int
+    in_game_id: int
+    door_ids: list[int]
+
+    def __init__(self, region_data: LMRegionInfo, player: int, multiworld: MultiWorld):
+        super().__init__(region_data.region_name, player, multiworld)
+        self.room_id = region_data.room_id
+        self.door_ids = region_data.door_ids
+        self.map_id = region_data.map_id
+
 
 vanilla_door_state = {
         34: 0,
@@ -332,7 +355,6 @@ def connect_regions(world: "LMWorld"):
     lmconnect(world, "Altar Hallway", "Secret Altar", "Spade Key", 72,
             lambda state, final_boo_count=world.options.final_boo_count.value: state.has_group("Boo", world.player, final_boo_count)
                           or state.has("Boo", world.player, final_boo_count))
-
 
 REGION_LIST = {
     "Parlor": 35,
