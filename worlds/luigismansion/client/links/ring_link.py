@@ -27,7 +27,6 @@ class RingLink(LinkBase):
     pending_rings: int = 0
     remote_pending_rings: int = 0
     remote_rings_received: bool = False
-    enable_logger: bool = True
 
     def __init__(self, network_engine: ArchipelagoNetworkEngine, wallet_manager: WalletManager):
         super().__init__(friendly_name=RingLinkConstants.FRIENDLY_NAME, slot_name=RingLinkConstants.SLOT_NAME,

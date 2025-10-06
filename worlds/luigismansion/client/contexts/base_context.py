@@ -231,3 +231,21 @@ class BaseCommandProcessor(UniversalCommandProcessor):
         if isinstance(self.ctx, BaseContext):
             Utils.async_start(self.ctx.network_engine.update_tags_async(not self.ctx.ring_link.is_enabled(),
                 "RingLink"), name="Update RingLink")
+
+    def _cmd_ringlink_msg(self):
+        """ Toggles RingLink messages being displayed in the client."""
+        if isinstance(self.ctx, BaseContext):
+            self.ctx.ring_link.set_logs(not self.ctx.ring_link.enable_logger)
+            _log_msg_status_to_client(self.ctx.ring_link)
+
+    def _cmd_traplink_msg(self):
+        """ Toggles TrapLink messages being displayed in the client."""
+        if isinstance(self.ctx, BaseContext):
+            self.ctx.trap_link.set_logs(not self.ctx.trap_link.enable_logger)
+            _log_msg_status_to_client(self.ctx.trap_link)
+
+def _log_msg_status_to_client(link_base: LinkBase):
+    is_enabled: str = "disabled"
+    if link_base.enable_logger:
+        is_enabled = "enabled"
+    logger.info("%s client logs are now %s.", link_base.friendly_name,  is_enabled)

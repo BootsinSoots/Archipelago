@@ -44,7 +44,11 @@ class DolphinLauncher:
         if _check_emulator_process_open(self):
             return
 
-        args = [ self.emulator_settings.path ] + self.emulator_settings.additional_args
+        path = self.emulator_settings.path
+        if Utils.is_linux and path in [ "", "./" ]:
+            raise ValueError("The emulator path is not set, please update the host.yaml file with the emulator path.")
+
+        args = [ path ] + self.emulator_settings.additional_args
 
         logger.info("Attempting to open emulator with the following arguments:'%s'",  ' '.join(args))
         if rom:
@@ -53,7 +57,7 @@ class DolphinLauncher:
 
         subprocess.Popen(
             args,
-            cwd=Utils.local_path("."),
+            cwd=None,
             stdin=subprocess.DEVNULL,
             stdout=subprocess.DEVNULL,
             stderr=subprocess.DEVNULL
