@@ -821,11 +821,11 @@ class LMContext(BaseContext):
                             await self.wait_for_next_loop(WAIT_TIMER_LONG_TIMEOUT)
                             continue
 
-                    arg_seed = read_string(0x80000001, len(str(self.arg_seed)))
-                    if arg_seed != self.arg_seed:
-                        raise Exception(
-                            "Incorrect Randomized Luigi's Mansion ISO file selected. The seed does not match." +
-                            "Please verify that you are using the right ISO/seed/APLM file.")
+                        arg_seed = read_string(0x80000001, len(str(self.arg_seed)))
+                        if arg_seed != self.arg_seed:
+                            raise Exception(
+                                "Incorrect Randomized Luigi's Mansion ISO file selected. The seed does not match." +
+                                "Please verify that you are using the right ISO/seed/APLM file.")
 
                     # At this point, we are verified as connected. Update UI elements in the LMCLient tab.
                     if self.ui:
