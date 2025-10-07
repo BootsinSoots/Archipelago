@@ -58,13 +58,13 @@ class RingLink(LinkBase):
                 currencies = self.wallet_manager.add_currencies(amount_difference)
                 self.wallet_manager.wallet.add_to_wallet(currencies)
                 self.remote_rings_received = True
-                self.rings_received_by_link += amount
             elif amount < 0:
                 if self.enable_logger:
                     logger.info("%s: You lost %s coin(s).", RingLinkConstants.FRIENDLY_NAME, amount * -1)
                 self.wallet_manager.wallet.set_specific_currency(CURRENCY_NAME.COINS, max(coins_current_amt - amount_difference, 0))
                 self.remote_rings_received = True
-                self.rings_received_by_link += amount
+            logger.info("Adding ring amount: %s to total amount:%s.", amount, self.rings_received_by_link)
+            self.rings_received_by_link += amount
 
     async def handle_ring_link_async(self, delay: int = 5):
         if not self.is_enabled():
@@ -76,19 +76,13 @@ class RingLink(LinkBase):
         # and/or ringlink requests may come in and cancel currency differences.
         if timer_end - self.timer_start >= delay:
             difference = self.wallet_manager.reset_difference()
-            #if not _should_send_rings(self, difference):
-            #    return
-
-            if difference == 0:
+            if not _should_send_rings(self, difference):
                 return
 
-            difference -= self.rings_received_by_link
+            received_rings = self.rings_received_by_link
             self.rings_received_by_link = 0
-
-            if difference > 500 or difference < -500:
-                logger.info("There was a problem with RingLink and it attempted to send %s rings", difference)
-                self.timer_start = time.time()
-                return
+            difference -= received_rings
+            logger.info("DEBUG: Coins received:%s | Wallet difference:%s", received_rings, difference)
 
             await self.send_rings_async(difference * self.ring_multiplier)
             self.timer_start = time.time()
@@ -117,7 +111,7 @@ def _get_uuid() -> int:
 
 def _should_send_rings(ring_link: RingLink, difference: int) -> bool:
     should_send = True
-    max_to_be_sent: int = 1000
+    max_to_be_sent: int = 500
 
     # If the wallet difference is 0 there's nothing to send.
     if difference == 0:
