@@ -80,17 +80,14 @@ class RingLink(LinkBase):
             self.rings_received_by_link = 0
             logger.info("DEBUG: Resetting coin amount.")
             logger.info("DEBUG: Coins received:%s | Wallet difference:%s", received_rings, difference)
-            if received_rings >= 0:
+            if received_rings > 0:
                 difference -= received_rings
                 if difference <= 0:
-                    difference = 0
+                    return
             elif received_rings < 0:
                 difference += received_rings
                 if difference >= 0:
-                    difference = 0
-
-            if difference == 0:
-                return
+                    return
 
             await self.send_rings_async(difference * self.ring_multiplier)
             self.timer_start = time.time()
