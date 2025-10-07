@@ -81,7 +81,7 @@ class RingLink(LinkBase):
             difference -= self.rings_received_by_link
             self.rings_received_by_link = 0
 
-            if difference > 100 or difference < 100:
+            if difference > 100 or difference < -100:
                 logger.info("There was a problem with RingLink and it attempted to send %s rings", difference)
                 self.timer_start = time.time()
                 return
