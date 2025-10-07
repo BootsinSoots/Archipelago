@@ -27,6 +27,7 @@ class RingLink(LinkBase):
     pending_rings: int = 0
     remote_pending_rings: int = 0
     remote_rings_received: bool = False
+    rings_received_by_link: int = 0
 
     def __init__(self, network_engine: ArchipelagoNetworkEngine, wallet_manager: WalletManager):
         super().__init__(friendly_name=RingLinkConstants.FRIENDLY_NAME, slot_name=RingLinkConstants.SLOT_NAME,
@@ -57,11 +58,13 @@ class RingLink(LinkBase):
                 currencies = self.wallet_manager.add_currencies(amount_difference)
                 self.wallet_manager.wallet.add_to_wallet(currencies)
                 self.remote_rings_received = True
+                self.rings_received_by_link += amount
             elif amount < 0:
                 if self.enable_logger:
                     logger.info("%s: You lost %s coin(s).", RingLinkConstants.FRIENDLY_NAME, amount * -1)
                 self.wallet_manager.wallet.set_specific_currency(CURRENCY_NAME.COINS, max(coins_current_amt - amount_difference, 0))
                 self.remote_rings_received = True
+                self.rings_received_by_link += amount
 
     async def handle_ring_link_async(self, delay: int = 5):
         if not self.is_enabled():
@@ -73,7 +76,14 @@ class RingLink(LinkBase):
         # and/or ringlink requests may come in and cancel currency differences.
         if timer_end - self.timer_start >= delay:
             difference = self.wallet_manager.reset_difference()
-            if not _should_send_rings(self, difference):
+            #if not _should_send_rings(self, difference):
+            #    return
+            difference -= self.rings_received_by_link
+            self.rings_received_by_link = 0
+
+            if difference > 100 or difference < 100:
+                logger.info("There was a problem with RingLink and it attempted to send %s rings", difference)
+                self.timer_start = time.time()
                 return
 
             await self.send_rings_async(difference * self.ring_multiplier)
