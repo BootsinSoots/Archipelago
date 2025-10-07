@@ -86,6 +86,7 @@ class RingLink(LinkBase):
 
             if self.enable_logger:
                 logger.info("%s: You sent %s rings!", RingLinkConstants.FRIENDLY_NAME, int(amount))
+            self.remote_rings_received = True
             await self.network_engine.send_ring_link_request_async(ring_link_req)
 
 def _calc_rings(ring_link: RingLink, amount: int) -> int:
