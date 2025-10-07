@@ -22,7 +22,7 @@ class SlotDataConstants:
 
 class RingLink(LinkBase):
     wallet_manager: WalletManager
-    ring_multiplier = 5
+    ring_multiplier = 1
     timer_start: float = time.time()
     pending_rings: int = 0
     remote_pending_rings: int = 0
