@@ -49,19 +49,16 @@ class RingLink(LinkBase):
             base_amount = data["amount"]
             amount = _calc_rings(self, base_amount)
 
-            calculated_ring_worth = self.wallet_manager.wallet.get_calculated_amount_worth(1)
-            coins_current_amt: int = self.wallet_manager.wallet.get_currency_amount(CURRENCY_NAME.COINS)
-            amount_difference: int = amount * calculated_ring_worth
             if amount > 0:
                 if self.enable_logger:
                     logger.info("%s: You received %s coin(s)!",RingLinkConstants.FRIENDLY_NAME, amount)
-                currencies = self.wallet_manager.add_currencies(amount_difference)
-                self.wallet_manager.wallet.add_to_wallet(currencies)
+                self.wallet_manager.wallet.add_to_wallet({ CURRENCY_NAME.COINS: amount })
                 self.remote_rings_received = True
             elif amount < 0:
                 if self.enable_logger:
                     logger.info("%s: You lost %s coin(s).", RingLinkConstants.FRIENDLY_NAME, amount * -1)
-                self.wallet_manager.wallet.set_specific_currency(CURRENCY_NAME.COINS, max(coins_current_amt - amount_difference, 0))
+                coins_current_amt: int = self.wallet_manager.wallet.get_currency_amount(CURRENCY_NAME.COINS)
+                self.wallet_manager.wallet.set_specific_currency(CURRENCY_NAME.COINS, max(coins_current_amt - amount, 0))
                 self.remote_rings_received = True
             self.rings_received_by_link += amount
             logger.info("DEBUG: Adding ring amount: %s making total: %s.", amount, self.rings_received_by_link)
