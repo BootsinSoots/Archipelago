@@ -2127,12 +2127,12 @@ def update_room_info(room_info, spooky_rating: int):
     if spooky_rating == 1:
         for room in room_info.info_file_field_entries:
             room["Thunder"] = 3 # MANY THUNDER
-            room["sound_echo_parameter"] = 25 # LONG ECHO
+            room["sound_echo_parameter"] = 20 # LONG ECHO
             room["sound_room_code"] = 5 # CREAKY CREAKY
     elif spooky_rating == 2:
         for room in room_info.info_file_field_entries:
             coin_flip = choice([0,1])
             if coin_flip == 1:
                 room["Thunder"] = 3  # MANY THUNDER
-                room["sound_echo_parameter"] = 25  # LONG ECHO
+                room["sound_echo_parameter"] = 20  # LONG ECHO
                 room["sound_room_code"] = 5  # CREAKY CREAKY
