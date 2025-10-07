@@ -78,10 +78,14 @@ class RingLink(LinkBase):
             difference = self.wallet_manager.reset_difference()
             #if not _should_send_rings(self, difference):
             #    return
+
+            if difference == 0:
+                return
+
             difference -= self.rings_received_by_link
             self.rings_received_by_link = 0
 
-            if difference > 100 or difference < -100:
+            if difference > 500 or difference < -500:
                 logger.info("There was a problem with RingLink and it attempted to send %s rings", difference)
                 self.timer_start = time.time()
                 return
