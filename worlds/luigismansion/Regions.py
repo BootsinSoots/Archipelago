@@ -113,7 +113,7 @@ spawn_locations = {
     "Telephone Room":        {"room_no": 50, "pos_x": -9.812825, "pos_y": 1100, "pos_z": 118.738243,
                               "key": ["Telephone Room Key", "Clockwork Key"], "door_keys": ["Telephone Room Key", "Clockwork Key"],
                               "door_ids": [53, 52], "in_game_room_id": 53}, # Telephone
-    "Butler's Room":         {"room_no": 0, "pos_x": -3391.8396, "pos_y": 0, "pos_z": 114.336197,
+    "Butler's Room":         {"room_no": 0, "pos_x": -3800.646, "pos_y": 0, "pos_z": -327.291077,
                               "key": ["Butler's Room Key", "Laundry Room Key", "Heart Key"], "door_keys": [],
                               "door_ids": [1], "in_game_room_id": 0}, # Butler
     "Conservatory":          {"room_no": 21, "pos_x": 780.405884, "pos_y": 0, "pos_z": -4662.089840,
