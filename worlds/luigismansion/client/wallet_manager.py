@@ -70,7 +70,7 @@ class WalletManager:
 
     async def calc_wallet_differences_async(self):
         """ We want to asychnrously monitor the difference in currency for sending rings VIA ringlink. """
-        ring_equiv = self.wallet.get_wallet_worth() / self.wallet.get_calculated_amount_worth(1)
+        ring_equiv = self.wallet.get_currency_amount(CURRENCY_NAME.COINS)
 
         if self.initial_check and ring_equiv > 0:
             self.initial_check = not self.initial_check

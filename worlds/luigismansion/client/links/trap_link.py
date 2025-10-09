@@ -43,7 +43,6 @@ class TrapLink(LinkBase):
     received_trap: str = ""
     # We want to ignore traps if the player set the trap weight to 0.
     disabled_trap_flags: TrapLinkType = TrapLinkType.NONE
-    enable_logger: bool = True
 
     def __init__(self, network_engine: ArchipelagoNetworkEngine):
         super().__init__(friendly_name=TrapLinkConstants.FRIENDLY_NAME, slot_name=TrapLinkConstants.SLOT_NAME,
@@ -56,7 +55,7 @@ class TrapLink(LinkBase):
             for addr_to_update in lm_item.update_ram_addr:
                 byte_size = 1 if addr_to_update.ram_byte_size is None else addr_to_update.ram_byte_size
                 curr_val = addr_to_update.item_count
-                if not addr_to_update.pointer_offset is None:
+                if addr_to_update.pointer_offset is not None:
                     dme.write_bytes(dme.follow_pointers(addr_to_update.ram_addr,
                         [addr_to_update.pointer_offset]), curr_val.to_bytes(byte_size, 'big'))
                 else:

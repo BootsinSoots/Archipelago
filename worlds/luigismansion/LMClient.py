@@ -553,9 +553,7 @@ class LMContext(BaseContext):
 
             for addr_to_update in lm_item.update_ram_addr:
                 byte_size = 1 if addr_to_update.ram_byte_size is None else addr_to_update.ram_byte_size
-                ram_offset = None
-                if addr_to_update.pointer_offset:
-                    ram_offset = [addr_to_update.pointer_offset]
+                ram_offset = None if not addr_to_update.pointer_offset else [addr_to_update.pointer_offset]
 
                 if item.item in trap_id_list:
                     curr_val = addr_to_update.item_count

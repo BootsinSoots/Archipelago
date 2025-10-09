@@ -22,12 +22,12 @@ class SlotDataConstants:
 
 class RingLink(LinkBase):
     wallet_manager: WalletManager
-    ring_multiplier = 5
+    ring_multiplier = 1
     timer_start: float = time.time()
     pending_rings: int = 0
     remote_pending_rings: int = 0
     remote_rings_received: bool = False
-    enable_logger: bool = True
+    rings_received_by_link: int = 0
 
     def __init__(self, network_engine: ArchipelagoNetworkEngine, wallet_manager: WalletManager):
         super().__init__(friendly_name=RingLinkConstants.FRIENDLY_NAME, slot_name=RingLinkConstants.SLOT_NAME,
@@ -49,20 +49,19 @@ class RingLink(LinkBase):
             base_amount = data["amount"]
             amount = _calc_rings(self, base_amount)
 
-            calculated_ring_worth = self.wallet_manager.wallet.get_calculated_amount_worth(1)
-            coins_current_amt: int = self.wallet_manager.wallet.get_currency_amount(CURRENCY_NAME.COINS)
-            amount_difference: int = amount * calculated_ring_worth
             if amount > 0:
                 if self.enable_logger:
                     logger.info("%s: You received %s coin(s)!",RingLinkConstants.FRIENDLY_NAME, amount)
-                currencies = self.wallet_manager.add_currencies(amount_difference)
-                self.wallet_manager.wallet.add_to_wallet(currencies)
+                self.wallet_manager.wallet.add_to_wallet({ CURRENCY_NAME.COINS: amount })
                 self.remote_rings_received = True
             elif amount < 0:
                 if self.enable_logger:
-                    logger.info("%s: You lost %s coin(s).", RingLinkConstants.FRIENDLY_NAME, amount)
-                self.wallet_manager.wallet.set_specific_currency(CURRENCY_NAME.COINS, max(coins_current_amt - amount_difference, 0))
+                    logger.info("%s: You lost %s coin(s).", RingLinkConstants.FRIENDLY_NAME, amount * -1)
+                coins_current_amt: int = self.wallet_manager.wallet.get_currency_amount(CURRENCY_NAME.COINS)
+                self.wallet_manager.wallet.set_specific_currency(CURRENCY_NAME.COINS, max(coins_current_amt - amount, 0))
                 self.remote_rings_received = True
+            self.rings_received_by_link += amount
+            logger.info("DEBUG: Adding ring amount: %s making total: %s.", amount, self.rings_received_by_link)
 
     async def handle_ring_link_async(self, delay: int = 5):
         if not self.is_enabled():
@@ -77,6 +76,19 @@ class RingLink(LinkBase):
             if not _should_send_rings(self, difference):
                 return
 
+            received_rings = self.rings_received_by_link
+            self.rings_received_by_link = 0
+            logger.info("DEBUG: Resetting coin amount.")
+            logger.info("DEBUG: Coins received:%s | Wallet difference:%s", received_rings, difference)
+            if received_rings > 0:
+                difference -= received_rings
+                if difference <= 0:
+                    return
+            elif received_rings < 0:
+                difference += received_rings
+                if difference >= 0:
+                    return
+
             await self.send_rings_async(difference * self.ring_multiplier)
             self.timer_start = time.time()
 
@@ -86,7 +98,7 @@ class RingLink(LinkBase):
             ring_link_req.source = self.id
 
             if self.enable_logger:
-                logger.info("%s: You sent %s rings!", RingLinkConstants.FRIENDLY_NAME, int(amount))
+                logger.info("%s: You sent %s coin(s)!", RingLinkConstants.FRIENDLY_NAME, int(amount))
             await self.network_engine.send_ring_link_request_async(ring_link_req)
 
 def _calc_rings(ring_link: RingLink, amount: int) -> int:
@@ -104,7 +116,7 @@ def _get_uuid() -> int:
 
 def _should_send_rings(ring_link: RingLink, difference: int) -> bool:
     should_send = True
-    max_to_be_sent: int = 1000
+    max_to_be_sent: int = 500
 
     # If the wallet difference is 0 there's nothing to send.
     if difference == 0:
