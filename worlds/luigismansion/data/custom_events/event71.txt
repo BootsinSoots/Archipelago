@@ -1,0 +1,15 @@
+<CHECKFLAG>(61)"blackout""normal"
+<CASE>"normal"
+<FLAGOFF>(34)
+<FLAGON>(171)
+<BGM>(20)
+<WIPEKIND>(3)
+<WARP>(11)
+<END>
+<CASE>"blackout"
+<WINDOW>(0)<COLOR>(3)
+<SAY><COLOR>(3)It is too scary to fight them\nin the dark!
+<ANYKEY>
+<SAY><COLOR>(3)Maybe I should turn the\nbreaker back on!
+<CLOSEWINDOW>(0)
+<END>
