@@ -63,15 +63,12 @@ class RingLink(LinkBase):
                 self.wallet.set_specific_currency(CURRENCY_NAME.COINS, max(coins_current_amt - abs(amount), 0))
                 self.remote_rings_received = True
             self.rings_received_by_link += amount
-            logger.info("DEBUG: Adding ring amount: %s making total: %s.", amount, self.rings_received_by_link)
 
     async def handle_ring_link_async(self, delay: int = 1):
         if not self.is_enabled():
             return
 
         timer_end: float = time.time()
-        logger.info("Luigi's wallet has %s", self.wallet.get_currency_amount(CURRENCY_NAME.COINS))
-
         # There may be instances where currency gained/lost may not equate to having a different final value
         # and/or ringlink requests may come in and cancel currency differences.
         if timer_end - self.timer_start >= delay:
@@ -81,8 +78,6 @@ class RingLink(LinkBase):
 
             received_rings = self.rings_received_by_link
             self.rings_received_by_link = 0
-            logger.info("DEBUG: Resetting coin amount.")
-            logger.info("DEBUG: Coins received:%s | Wallet difference:%s", received_rings, difference)
             if received_rings > 0:
                 difference -= received_rings
                 if difference <= 0:
