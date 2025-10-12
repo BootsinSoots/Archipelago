@@ -59,7 +59,7 @@ class RingLink(LinkBase):
                 if self.enable_logger:
                     logger.info("%s: You lost %s coin(s).", RingLinkConstants.FRIENDLY_NAME, amount * -1)
                 coins_current_amt: int = self.wallet.get_currency_amount(CURRENCY_NAME.COINS)
-                self.wallet.set_specific_currency(CURRENCY_NAME.COINS, max(coins_current_amt - amount, 0))
+                self.wallet.set_specific_currency(CURRENCY_NAME.COINS, max(coins_current_amt - abs(amount), 0))
                 self.remote_rings_received = True
             self.rings_received_by_link += amount
             logger.info("DEBUG: Adding ring amount: %s making total: %s.", amount, self.rings_received_by_link)
