@@ -173,7 +173,7 @@ spawn_locations = {
     "1F Bathroom":           {"room_no": 17, "pos_x": -2160.237550, "pos_y": 0, "pos_z": -4671.114750,
                               "key": ["1F Bathroom Key", "Heart Key"], "door_keys": ["1F Bathroom Key"],
                               "door_ids": [23], "in_game_room_id": 21}, # 1f bath
-    "Mirror Room":           {"room_no": 4, "pos_x": 3343.897950, "pos_y": 0, "pos_z": -114.910957,
+    "Mirror Room":           {"room_no": 4, "pos_x": 3821.63525, "pos_y": 0, "pos_z": 215.000000,
                               "key": ["Mirror Room Key", "Fortune Teller Key"], "door_keys": ["Mirror Room Key"],
                               "door_ids": [5], "in_game_room_id": 4}, # Mirror
     "Ballroom":              {"room_no": 10, "pos_x": 2854.236820, "pos_y": 0, "pos_z": -1565.909060,
