@@ -142,6 +142,7 @@ def _get_difference(ring_link: RingLink) -> int:
     if previous == 0:
         is_initialized = False
     current = ring_link.wallet.get_currency_amount(CURRENCY_NAME.COINS)
+    ring_link.previous_coins = current
     # We don't want to manage differences between negative wallet values, so we just set difference to 0.
     if current < 0:
         return 0
