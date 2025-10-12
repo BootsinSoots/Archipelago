@@ -14,7 +14,6 @@ from ..links.trap_link import TrapLink
 from ..links.ring_link import RingLink
 from ..links.link_base import LinkBase
 from ..wallet import Wallet
-from ..wallet_manager import WalletManager
 from ...client.constants import *
 from ...Hints import ALWAYS_HINT, PORTRAIT_HINTS
 
