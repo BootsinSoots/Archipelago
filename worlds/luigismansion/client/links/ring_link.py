@@ -103,6 +103,9 @@ class RingLink(LinkBase):
                 logger.info("%s: You sent %s coin(s)!", RingLinkConstants.FRIENDLY_NAME, int(amount))
             await self.network_engine.send_ring_link_request_async(ring_link_req)
 
+    def reset_ringlink(self):
+        self.rings_received_by_link = 0
+
 def _calc_rings(ring_link: RingLink, amount: int) -> int:
     amount_to_update, remainder = divmod(amount + ring_link.remote_pending_rings, ring_link.ring_multiplier)
     ring_link.remote_pending_rings = remainder

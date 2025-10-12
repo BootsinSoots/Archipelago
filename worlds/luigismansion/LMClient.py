@@ -696,6 +696,9 @@ class LMContext(BaseContext):
             while self.slot:
                 if not (self.check_ingame() and self.check_alive()):
                     await self.wait_for_next_loop(0.5)
+                    # Resets the logic for determining the currency differences,
+                    # needs to be updated to reset inside of wallet_manager.
+                    self.ring_link.reset_ringlink()
                     continue
 
                 # All Link related activities
@@ -827,6 +830,9 @@ class LMContext(BaseContext):
 
                     if not (self.check_ingame() and self.check_alive()):
                         await self.wait_for_next_loop(WAIT_TIMER_SHORT_TIMEOUT)
+                        # Resets the logic for determining the currency differences,
+                        # needs to be updated to reset inside of wallet_manager.
+                        self.ring_link.reset_ringlink()
                         continue
 
                     # Lastly check any locations and update the non-save able ram stuff
