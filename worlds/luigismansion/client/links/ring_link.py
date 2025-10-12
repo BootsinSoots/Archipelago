@@ -29,6 +29,7 @@ class RingLink(LinkBase):
     remote_rings_received: bool = False
     rings_received_by_link: int = 0
     previous_coins: int = 0
+    initialized: bool = False
 
     def __init__(self, network_engine: ArchipelagoNetworkEngine, wallet: Wallet):
         super().__init__(friendly_name=RingLinkConstants.FRIENDLY_NAME, slot_name=RingLinkConstants.SLOT_NAME,
@@ -105,6 +106,7 @@ class RingLink(LinkBase):
 
     def reset_ringlink(self):
         self.rings_received_by_link = 0
+        self.initialized = False
 
 def _calc_rings(ring_link: RingLink, amount: int) -> int:
     amount_to_update, remainder = divmod(amount + ring_link.remote_pending_rings, ring_link.ring_multiplier)
@@ -140,17 +142,16 @@ def _should_send_rings(ring_link: RingLink, difference: int) -> bool:
     return should_send
 
 def _get_difference(ring_link: RingLink) -> int:
-    is_initialized = True
     previous = ring_link.previous_coins
 
-    if previous == 0:
-        is_initialized = False
+    if not ring_link.initialized:
+        ring_link.initialized = True
+        ring_link.previous_coins = ring_link.wallet.get_currency_amount(CURRENCY_NAME.COINS)
+        return 0
     current = ring_link.wallet.get_currency_amount(CURRENCY_NAME.COINS)
     ring_link.previous_coins = current
     # We don't want to manage differences between negative wallet values, so we just set difference to 0.
     if current < 0:
-        return 0
-    if not is_initialized:
         return 0
     difference = current - previous
     return difference
