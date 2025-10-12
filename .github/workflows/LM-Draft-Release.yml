@@ -57,22 +57,22 @@ jobs:
       with:
         python-version: "~3.12.10"
         cache: pip
-    - name: Fuzzer-Check-1-yml
-      uses: Eijebong/ap-actions/fuzz@main
-      with:
-        apworld-path: worlds/luigismansion
-        ap-version: '0.6.3'
-        python-version: '3.12'
-        runs: 1000
-        yamls-per-run: 1
     - name: Fuzzer-Check-3-yml
       uses: Eijebong/ap-actions/fuzz@main
       with:
         apworld-path: worlds/luigismansion
         ap-version: '0.6.3'
         python-version: '3.12'
-        runs: 1000
+        runs: 15000
         yamls-per-run: 3
+    - name: Fuzzer-Check-1-yml
+      uses: Eijebong/ap-actions/fuzz@main
+      with:
+        apworld-path: worlds/luigismansion
+        ap-version: '0.6.3'
+        python-version: '3.12'
+        runs: 15000
+        yamls-per-run: 1
 
   package:
     needs: [windows-deps, linux-deps]
