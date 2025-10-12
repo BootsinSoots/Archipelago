@@ -119,12 +119,6 @@ class LMCommandProcessor(EnergyLinkCommandProcessor):
             Utils.async_start(self.ctx.network_engine.update_tags_async(not "DeathLink" in self.ctx.tags,
                 "DeathLink"), name="Update Deathlink")
 
-    def _cmd_traplink(self):
-        """Toggle traplink from client. Overrides default setting."""
-        if isinstance(self.ctx, LMContext):
-            Utils.async_start(self.ctx.network_engine.update_tags_async(not "TrapLink" in self.ctx.tags,
-                "TrapLink"), name="Update Traplink")
-
     def _cmd_jakeasked(self):
         """Provide debug information from Dolphin's RAM addresses while playing Luigi's Mansion,
         if the devs ask for it."""
@@ -263,6 +257,7 @@ class LMContext(BaseContext):
                 # Fire off all the non_essential tasks here.
                 Utils.async_start(self.non_essentials_async_tasks(), "LM Non-Essential Tasks")
                 Utils.async_start(self.display_received_items(), "LM - Display Items in Game")
+                self.ring_link.reset_ringlink()
 
             case "Bounced":
                 if not (self.check_ingame() and self.check_alive()):
@@ -272,7 +267,7 @@ class LMContext(BaseContext):
                     return
                 if not hasattr(self, "instance_id"):
                     self.instance_id = time.time()
-                self.trap_link.on_bounced(args, self.get_item_count_by_id(8064))
+                self.trap_link.on_bounced(args, self.get_item_count_by_id(8148))
                 self.ring_link.on_bounced(args)
             case "SetReply":
                 if not (self.check_ingame() and self.check_alive()):
@@ -319,6 +314,7 @@ class LMContext(BaseContext):
         # warping around, etc.
         int_play_state = dme.read_word(CURR_PLAY_STATE_ADDR)
         if not int_play_state == 2:
+            self.ring_link.reset_ringlink()
             self.last_not_ingame = time.time()
             return False
 
@@ -357,6 +353,10 @@ class LMContext(BaseContext):
                         self.last_room_id = current_room_id
                         Utils.async_start(self.lm_update_non_savable_ram(), "LM - Update Non-Saveable RAM - Room Change")
                 return bool_loaded_in_map
+            elif curr_map_id == 3:
+                curr_val = dme.read_byte(MEMORY_CONSTANTS.TRAINING_BUTTON_LAYOUT_SCREEN)
+                if (curr_val & (1 << 0)) > 0:
+                    Utils.async_start(self.lm_update_non_savable_ram(), "LM - Update Non-Saveable RAM - Training Room")
             return True
 
         self.last_not_ingame = time.time()
@@ -484,7 +484,7 @@ class LMContext(BaseContext):
 
         try:
             for (key, val) in progressive_items.items():
-                if key in ["Progressive Vacuum", "Gold Diamond", "Progressive Flower"] or \
+                if key in ["Vacuum Upgrade", "Gold Diamond", "Progressive Flower", "Poltergust 3000"] or \
                     LMItem.get_apid(val.code) not in self.items_received:
                     continue
 
@@ -547,7 +547,7 @@ class LMContext(BaseContext):
                 self.update_received_idx(last_recv_idx)
                 continue
             elif lm_item.type == "Trap" and (self.non_save_last_recv_idx >= last_recv_idx or
-                (item.item == 8147 and self.get_item_count_by_id(8064) < 1)):
+                (item.item == 8147 and self.get_item_count_by_id(8148) < 1)):
                 # Skip this trap item to avoid Luigi dying in an infinite trap loop.
                 # Also skip No Vac Trap if we don't have a vacuum
                 self.update_received_idx(last_recv_idx)
@@ -555,9 +555,7 @@ class LMContext(BaseContext):
 
             for addr_to_update in lm_item.update_ram_addr:
                 byte_size = 1 if addr_to_update.ram_byte_size is None else addr_to_update.ram_byte_size
-                ram_offset = None
-                if addr_to_update.pointer_offset:
-                    ram_offset = [addr_to_update.pointer_offset]
+                ram_offset = None if not addr_to_update.pointer_offset else [addr_to_update.pointer_offset]
 
                 if item.item in trap_id_list:
                     curr_val = addr_to_update.item_count
@@ -565,12 +563,9 @@ class LMContext(BaseContext):
                     flower_count: int = self.get_item_count_by_id(8140)
                     curr_val = min(flower_count + 234, 237)
                     ram_offset = None
-                elif item.item == 8064:  # If it's a Progressive Vacuum
-                    if addr_to_update.ram_addr == 0x804dda54:  # If we're checking against our vacuum-on address
-                        curr_val = addr_to_update.item_count
-                    else:  # If we're checking against our vacuum speed address
-                        curr_val: int = min(5, self.get_item_count_by_id(8064) - 1)
-                        ram_offset = None
+                elif item.item == 8064:  # If it's a vacuum upgrade
+                    curr_val: int = self.get_item_count_by_id(8064)
+                    ram_offset = None
                 elif not addr_to_update.item_count is None:
                     if not ram_offset is None:
                         curr_val = int.from_bytes(dme.read_bytes(dme.follow_pointers(addr_to_update.ram_addr,
@@ -612,18 +607,19 @@ class LMContext(BaseContext):
     async def lm_update_non_savable_ram(self):
         try:
             # Always adjust the Vacuum speed as saving and quitting or going to E. Gadds lab could reset it back to normal.
-            vac_count = self.get_item_count_by_id(8064)
-            vac_speed = max(min(vac_count - 1, 5),0)
-            lm_item_name = self.item_names.lookup_in_game(8064)
-            lm_item = ALL_ITEMS_TABLE[lm_item_name]
+            vac_count = self.get_item_count_by_id(8148)
+            vac_speed = max(min(self.get_item_count_by_id(8064), 5),0)
 
             if not self.trap_link.check_vac_trap_active():
-                for addr_to_update in lm_item.update_ram_addr:
-                    if addr_to_update.ram_addr == 0x804dda54 and vac_count > 0:  # If we're checking against our vacuum-on address
-                        curr_val = 1
-                        dme.write_bytes(addr_to_update.ram_addr, curr_val.to_bytes(addr_to_update.ram_byte_size, 'big'))
-                    else:
-                        dme.write_bytes(addr_to_update.ram_addr, vac_speed.to_bytes(addr_to_update.ram_byte_size, 'big'))
+                for item in [8064, 8148]:
+                    lm_item_name = self.item_names.lookup_in_game(item)
+                    lm_item = ALL_ITEMS_TABLE[lm_item_name]
+                    for addr_to_update in lm_item.update_ram_addr:
+                        if addr_to_update.ram_addr == 0x804dda54 and vac_count > 0:  # If we're checking against our vacuum-on address
+                            curr_val = 1
+                            dme.write_bytes(addr_to_update.ram_addr, curr_val.to_bytes(addr_to_update.ram_byte_size, 'big'))
+                        else:
+                            dme.write_bytes(addr_to_update.ram_addr, vac_speed.to_bytes(addr_to_update.ram_byte_size, 'big'))
 
             # Always adjust Pickup animation issues if the user turned pick up animations off.
             if not self.pickup_anim_on:
@@ -693,21 +689,18 @@ class LMContext(BaseContext):
                     await self.wait_for_next_loop(0.5)
                     continue
 
-                await self.ring_link.wallet_manager.calc_wallet_differences_async()
                 await self.wait_for_next_loop(0.5)
         except Exception as generic_ex:
             logger.error("Critical error with watching currencies async tasks. Details: " + str(generic_ex))
 
     async def non_essentials_async_tasks(self):
-        wallet_manager_event_active: bool = False
-
         try:
             while self.slot:
                 if not (self.check_ingame() and self.check_alive()):
                     await self.wait_for_next_loop(0.5)
                     # Resets the logic for determining the currency differences,
                     # needs to be updated to reset inside of wallet_manager.
-                    self.ring_link.wallet_manager.reset_wallet_watching()
+                    # self.ring_link.reset_ringlink()
                     continue
 
                 # All Link related activities
@@ -716,9 +709,6 @@ class LMContext(BaseContext):
                 if self.trap_link.is_enabled():
                     await self.trap_link.handle_traplink_async()
                 if self.ring_link.is_enabled():
-                    if not wallet_manager_event_active:
-                        wallet_manager_event_active = not wallet_manager_event_active
-                        Utils.async_start(self.manage_wallet_async(), name="LM - ManageWallet")
                     await self.handle_ringlink_async()
 
                 # Async thread related tasks
@@ -825,11 +815,11 @@ class LMContext(BaseContext):
                             await self.wait_for_next_loop(WAIT_TIMER_LONG_TIMEOUT)
                             continue
 
-                    arg_seed = read_string(0x80000001, len(str(self.arg_seed)))
-                    if arg_seed != self.arg_seed:
-                        raise Exception(
-                            "Incorrect Randomized Luigi's Mansion ISO file selected. The seed does not match." +
-                            "Please verify that you are using the right ISO/seed/APLM file.")
+                        arg_seed = read_string(0x80000001, len(str(self.arg_seed)))
+                        if arg_seed != self.arg_seed:
+                            raise Exception(
+                                "Incorrect Randomized Luigi's Mansion ISO file selected. The seed does not match." +
+                                "Please verify that you are using the right ISO/seed/APLM file.")
 
                     # At this point, we are verified as connected. Update UI elements in the LMCLient tab.
                     if self.ui:
@@ -844,7 +834,7 @@ class LMContext(BaseContext):
                         await self.wait_for_next_loop(WAIT_TIMER_SHORT_TIMEOUT)
                         # Resets the logic for determining the currency differences,
                         # needs to be updated to reset inside of wallet_manager.
-                        self.ring_link.wallet_manager.reset_wallet_watching()
+                        self.ring_link.reset_ringlink()
                         continue
 
                     # Lastly check any locations and update the non-save able ram stuff

@@ -60,6 +60,7 @@ all_random_settings = {
     LMOptions.NothingWeight.internal_name:             "random",
     LMOptions.ChestTypes.internal_name:                "random",
     LMOptions.TrapChestType.internal_name:             "random",
+    LMOptions.Spookiness.internal_name:                "random",
     LMOptions.CallMario.internal_name:                 "random",
     LMOptions.BooHealthOption.internal_name:           "random",
     LMOptions.BooHealthValue.internal_name:            "random",

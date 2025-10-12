@@ -113,7 +113,7 @@ spawn_locations = {
     "Telephone Room":        {"room_no": 50, "pos_x": -9.812825, "pos_y": 1100, "pos_z": 118.738243,
                               "key": ["Telephone Room Key", "Clockwork Key"], "door_keys": ["Telephone Room Key", "Clockwork Key"],
                               "door_ids": [53, 52], "in_game_room_id": 53}, # Telephone
-    "Butler's Room":         {"room_no": 0, "pos_x": -3391.8396, "pos_y": 0, "pos_z": 114.336197,
+    "Butler's Room":         {"room_no": 0, "pos_x": -3800.646, "pos_y": 0, "pos_z": -327.291077,
                               "key": ["Butler's Room Key", "Laundry Room Key", "Heart Key"], "door_keys": [],
                               "door_ids": [1], "in_game_room_id": 0}, # Butler
     "Conservatory":          {"room_no": 21, "pos_x": 780.405884, "pos_y": 0, "pos_z": -4662.089840,
@@ -149,7 +149,7 @@ spawn_locations = {
     "Sitting Room":          {"room_no": 27, "pos_x": 2225.465090, "pos_y": 550, "pos_z": -98.163559,
                               "key": ["Sitting Room Key", "Guest Room Key"],
                               "door_keys": ["Sitting Room Key", "Guest Room Key"], "door_ids": [29, 30], "in_game_room_id": 28}, # sitting
-    "Guest Room":            {"room_no": 28, "pos_x": 2949.315430, "pos_y": 550, "pos_z": -149.029785,
+    "Guest Room":            {"room_no": 28, "pos_x": 3637.69727, "pos_y": 550, "pos_z": 201.316391,
                               "key": ["Guest Room Key", "Sitting Room Key"], "door_keys": ["Guest Room Key"],
                               "door_ids": [30], "in_game_room_id": 29}, # guest
     "Safari Room":           {"room_no": 52, "pos_x": 3317.313480, "pos_y": 1100, "pos_z": 225,
@@ -173,7 +173,7 @@ spawn_locations = {
     "1F Bathroom":           {"room_no": 17, "pos_x": -2160.237550, "pos_y": 0, "pos_z": -4671.114750,
                               "key": ["1F Bathroom Key", "Heart Key"], "door_keys": ["1F Bathroom Key"],
                               "door_ids": [23], "in_game_room_id": 21}, # 1f bath
-    "Mirror Room":           {"room_no": 4, "pos_x": 3343.897950, "pos_y": 0, "pos_z": -114.910957,
+    "Mirror Room":           {"room_no": 4, "pos_x": 3821.63525, "pos_y": 0, "pos_z": 215.000000,
                               "key": ["Mirror Room Key", "Fortune Teller Key"], "door_keys": ["Mirror Room Key"],
                               "door_ids": [5], "in_game_room_id": 4}, # Mirror
     "Ballroom":              {"room_no": 10, "pos_x": 2854.236820, "pos_y": 0, "pos_z": -1565.909060,
@@ -294,7 +294,7 @@ def connect_regions(world: "LMWorld"):
     lmconnect(world, "Billiards Room", "Projection Room", "Projection Room Key", 18)
     lmconnect(world, "Fortune-Teller's Room", "Mirror Room", "Mirror Room Key", 5)
     lmconnect(world, "Laundry Room", "Butler's Room", "Butler's Room Key", 1)
-    lmconnect(world, "Butler's Room", "Hidden Room", rule=lambda state: state.has("Progressive Vacuum", world.player))
+    lmconnect(world, "Butler's Room", "Hidden Room", rule=lambda state: state.has("Poltergust 3000", world.player))
     lmconnect(world, "Courtyard", "The Well")
     lmconnect(world, "Rec Room", "2F Stairwell", "South Rec Room Key", 24)
     lmconnect(world, "2F Stairwell", "Tea Room", "Tea Room Key", 47,
@@ -323,9 +323,9 @@ def connect_regions(world: "LMWorld"):
     lmconnect(world, "Roof", "Sealed Room", one_way=True),
     lmconnect(world, "Basement Stairwell", "Breaker Room", "Breaker Room Key", 71)
     lmconnect(world, "Basement Stairwell", "Cellar", "Cellar Key", 68,
-              rule=lambda state: state.has("Progressive Vacuum", world.player))
+              rule=lambda state: state.has("Poltergust 3000", world.player))
     lmconnect(world, "Cellar", "Basement Hallway", "Basement Hallway Key", 67,
-              rule=lambda state: state.has("Progressive Vacuum", world.player))
+              rule=lambda state: state.has("Poltergust 3000", world.player))
     lmconnect(world, "Basement Hallway", "Cold Storage", "Cold Storage Key", 65)
     lmconnect(world, "Basement Hallway", "Pipe Room", "Pipe Room Key", 69)
     lmconnect(world, "Basement Hallway", "Altar Hallway", "Altar Hallway Key", 70)
@@ -335,65 +335,65 @@ def connect_regions(world: "LMWorld"):
 
 
 REGION_LIST = {
-    35: "Parlor",
-    2: "Foyer",
-    29: "Family Hallway",
-    6: "1F Hallway",
-    39: "Anteroom",
-    69: "The Well",
-    38: "Wardrobe",
-    37: "Wardrobe Balcony",
-    34: "Study",
-    33: "Master Bedroom",
-    24: "Nursery",
-    25: "Twins' Room",
-    5: "Laundry Room",
-    0: "Butler's Room",
-    3: "Fortune-Teller's Room",
-    10: "Ballroom",
-    9: "Dining Room",
-    17: "1F Washroom",
-    20: "1F Bathroom",
-    21: "Conservatory",
-    12: "Billiards Room",
-    65: "Basement Stairwell",
-    13: "Projection Room",
-    8: "Kitchen",
-    11: "Boneyard",
-    16: "Graveyard",
-    1: "Hidden Room",
-    14: "Storage Room",
-    4: "Mirror Room",
-    22: "Rec Room",
-    23: "Courtyard",
-    19: "2F Stairwell",
-    63: "Cellar",
-    67: "Breaker Room",
-    62: "Basement Hallway",
-    61: "Cold Storage",
-    66: "Pipe Room",
-    70: "Secret Altar",
-    47: "Tea Room",
-    46: "Nana's Room",
-    26: "2F Rear Hallway",
-    42: "2F Washroom",
-    45: "2F Bathroom",
-    40: "Astral Hall",
-    41: "Observatory",
-    36: "Sealed Room",
-    27: "Sitting Room",
-    28: "Guest Room",
-    52: "Safari Room",
-    51: "East Attic Hallway",
-    49: "West Attic Hallway",
-    57: "Artist's Studio",
-    59: "Balcony",
-    48: "Armory",
-    55: "Ceramics Studio",
-    50: "Telephone Room",
-    56: "Clockwork Room",
-    60: "Roof",
-    68: "Altar Hallway"
+    "Parlor": 35,
+    "Foyer": 2,
+    "Family Hallway": 29,
+    "1F Hallway": 6,
+    "Anteroom": 39,
+    "The Well": 69,
+    "Wardrobe": 38,
+    "Wardrobe Balcony": 37,
+    "Study": 34,
+    "Master Bedroom": 33,
+    "Nursery": 24,
+    "Twins' Room": 25,
+    "Laundry Room": 5,
+    "Butler's Room": 0,
+    "Fortune-Teller's Room": 3,
+    "Ballroom": 10,
+    "Dining Room": 9,
+    "1F Washroom": 17,
+    "1F Bathroom": 20,
+    "Conservatory": 21,
+    "Billiards Room": 12,
+    "Basement Stairwell": 65,
+    "Projection Room": 13,
+    "Kitchen": 8,
+    "Boneyard": 11,
+    "Graveyard": 16,
+    "Hidden Room": 1,
+    "Storage Room": 14,
+    "Mirror Room": 4,
+    "Rec Room": 22,
+    "Courtyard": 23,
+    "2F Stairwell": 19,
+    "Cellar": 63,
+    "Breaker Room": 67,
+    "Basement Hallway": 62,
+    "Cold Storage": 61,
+    "Pipe Room": 66,
+    "Secret Altar": 70,
+    "Tea Room": 47,
+    "Nana's Room": 46,
+    "2F Rear Hallway": 26,
+    "2F Washroom": 42,
+    "2F Bathroom": 45,
+    "Astral Hall": 40,
+    "Observatory": 41,
+    "Sealed Room": 36,
+    "Sitting Room": 27,
+    "Guest Room": 28,
+    "Safari Room": 52,
+    "East Attic Hallway": 51,
+    "West Attic Hallway": 49,
+    "Artist's Studio": 57,
+    "Balcony": 59,
+    "Armory": 48,
+    "Ceramics Studio": 55,
+    "Telephone Room": 50,
+    "Clockwork Room": 56,
+    "Roof": 60,
+    "Altar Hallway": 68
 }
 
 # ROOM_EXITS = []

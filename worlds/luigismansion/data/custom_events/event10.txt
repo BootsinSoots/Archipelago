@@ -64,12 +64,14 @@
 <SE>(200)
 <ANYKEY>
  <MENUON>
+<FLAGON>(168)
 <PLIGHT>(0)
 <CLOSEWINDOW>(2)
 <LUIGIFREE>
 <LUIGIFREE2>
 <CAMERAEND>
 <ACTOR>"demo_luigi"<SHADOWON>
+<FLAGOFF>(168)
 //----------------------------------------------------
 //----------------------------------------------------
 <FLAGON>(85)

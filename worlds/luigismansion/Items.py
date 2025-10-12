@@ -120,8 +120,10 @@ ITEM_TABLE: dict[str, LMItemData] = {
         update_ram_addr=[LMRamData(0x803D5DBB, bit_position=7), LMRamData(0x803D339C, bit_position=0)]),
     "Boo Radar": LMItemData("Upgrade", 63, IC.progression,
         update_ram_addr=[LMRamData(0x803D33A2, bit_position=1), LMRamData(0x803D33A2, bit_position=3)]),
-    "Progressive Vacuum": LMItemData("Upgrade", 64, IC.progression,
-        update_ram_addr=[LMRamData(0x804ddde0, item_count=1, ram_byte_size=4), LMRamData(0x804dda54, ram_byte_size=4, item_count=1)]),
+    "Vacuum Upgrade": LMItemData("Upgrade", 64, IC.useful,
+        update_ram_addr=[LMRamData(0x804ddde0, item_count=1, ram_byte_size=4)]),
+    "Poltergust 3000": LMItemData("Upgrade", 148, IC.progression,
+        update_ram_addr=[LMRamData(0x804dda54, ram_byte_size=4, item_count=1)]),
     "Gold Diamond": CurrencyItemData(65, { CURRENCY_NAME.GOLD_DIAMOND: 1 }, classification=IC.progression),
     "Progressive Flower": LMItemData("Flower Stage", 140, IC.progression,
         update_ram_addr=[LMRamData(0x80338fc0, ram_byte_size=4)])
@@ -297,16 +299,16 @@ RECV_ITEMS_IGNORE: list[int] = [8127]
 # List of health related items, which are used to not exceed max health
 HEALTH_RELATED_ITEMS: list[int] = [8128, 8129]
 
-ICE_TRAP_EQUIV = ["Freeze Trap", "Frozen Trap", "Ice Trap", "Paralyze Trap", "Chaos Control Trap", "Bubble Trap"]
+ICE_TRAP_EQUIV = ["Freeze Trap", "Frozen Trap", "Ice Trap", "Paralyze Trap", "Chaos Control Trap", "Bubble Trap", "Ice Floor Trap"]
 BOMB_EQUIV = ["TNT Barrel Trap", "Bomb", "Fire Trap", "Items to Bombs"]
-BANANA_TRAP_EQUIV = ["Stun Trap", "Banana Trap", "Thwimp Trap", "Hiccup Trap", "Push Trap", "Pie Trap", "Banana Peel Trap"]
+BANANA_TRAP_EQUIV = ["Stun Trap", "Banana Trap", "Thwimp Trap", "Hiccup Trap", "Push Trap", "Pie Trap", "Banana Peel Trap", "Slip Trap"]
 GHOST_EQUIV = ["OmoTrap", "Ghost", "Bee Trap", "Police Trap", "Nut Trap", "Army Trap", "Buyon Trap"]
 POISON_MUSH_EQUIV = [ "Tiny Trap", "Poison Mushroom", "Iron Boots Trap", "Poison Trap", "Electrocution Trap", "Slow Trap", "Frog Trap", "Slowness Trap"]
 BONK_EQUIV = ["Spring Trap", "Damage Trap", "Bonk Trap", "Jumping Jacks Trap"]
 POSSESION_EQUIV = ["Possession Trap", "Laughter Trap", "My Turn! Trap", "Blue Balls Curse", "Controller Drift Trap"]
 FEAR_EQUIV = ["Fear Trap", "Confuse Trap", "Confound Trap", "Confusion Trap", "Icy Hot Pants Trap"]
 SPOOKY_EQUIV = ["Spooky Time", "Deisometric Trap", "Fake Transition", "Ghost Chat", "SvC Effect", "Pixellation Trap", "144p Trap"]
-SQUASH_EQUIV = ["Squash Trap", "W I D E Trap", "Meteor Trap", "Spike Ball Trap", "Whoops! Trap"]
+SQUASH_EQUIV = ["Squash Trap", "W I D E Trap", "Meteor Trap", "Spike Ball Trap", "Whoops! Trap", "Paper Trap"]
 NOVAC_EQUIV = ["No Vac Trap", "Eject Ability", "Depletion trap", "Disable B Trap", "Disable Z Trap", "Dry Trap", "Cursed Ball Trap"]
 
 trap_id_list = [8125, 8126, 8130, 8131, 8132, 8141, 8142, 8143, 8145, 8146, 8147]

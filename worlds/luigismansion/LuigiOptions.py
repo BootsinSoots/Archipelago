@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from Options import Toggle, Range, PerGameCommonOptions, Choice, StartInventoryPool, DeathLinkMixin, OptionSet, \
-    DefaultOnToggle, DeathLink
+    DefaultOnToggle
 
 
 class LuigiWalkSpeed(Choice):
@@ -151,18 +151,28 @@ class HeartWeight(Range):
     default = 10
 
 
-class BetterVacuum(Choice):
+class BetterVacuum(Range):
     """
-    Choose whether to include vacuum damage upgrades.
-
-    If you start with an upgrade on a no-poltergust start, you will receive the base poltergust instead"""
+    Choose how many vacuum upgrades to include, up to 5."""
     display_name = "Vacuum Upgrades"
-    internal_name = "good_vacuum"
-    option_start_with = 0
-    option_include = 1
-    option_exclude = 2
+    internal_name = "vacuum_upgrades"
+    range_start = 0
+    range_end = 5
     default = 1
 
+class Spookiness(Choice):
+    """
+    Change ambient room sounds.
+    Vanilla = unchanged ambience
+    Full Spooky = All rooms become spooky
+    Random Rooms = Random rooms become spooky
+    """
+    display_name = "Spookiness"
+    internal_name = "spookiness"
+    option_vanilla = 0
+    option_full_spooky = 1
+    option_random_rooms = 2
+    default = 0
 
 # These might end up being the same
 class StartHiddenMansion(Toggle):
@@ -730,7 +740,7 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     game_mode: GameMode
     vacuum_start: VacuumStart
     walk_speed: LuigiWalkSpeed
-    good_vacuum: BetterVacuum
+    vacuum_upgrades: BetterVacuum
     boo_radar: StartWithBooRadar
     hidden_mansion: StartHiddenMansion
     enable_fear_animation: LuigiFearAnim
@@ -770,6 +780,7 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     chest_types: ChestTypes
     trap_chests: TrapChestType
     call_mario: CallMario
+    spookiness: Spookiness
     trap_link: TrapLink
     enable_trap_client_msg: TrapLinkClientMsgs
     energy_link: EnergyLink

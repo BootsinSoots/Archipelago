@@ -92,7 +92,7 @@ def __get_item_name(item_data, slot: int):
 
         case "Boo Radar":
             return "gameboy"
-        case "Progressive Vacuum":
+        case "Vacuum Upgrade"|"Poltergust 3000":
             return "vbody"
 
     return "nothing"
@@ -2122,3 +2122,17 @@ def apply_new_ghost(enemy_info_entry, element):
     # If the new ghost is a Ceiling Ghost, increase its spawning Y position so it spawns in the air.
     if "tenjyo" in enemy_info_entry["name"]:
         enemy_info_entry["pos_y"] += 200.000
+
+def update_room_info(room_info, spooky_rating: int):
+    if spooky_rating == 1:
+        for room in room_info.info_file_field_entries:
+            room["Thunder"] = 3 # MANY THUNDER
+            room["sound_echo_parameter"] = 20 # LONG ECHO
+            room["sound_room_code"] = 5 # CREAKY CREAKY
+    elif spooky_rating == 2:
+        for room in room_info.info_file_field_entries:
+            coin_flip = choice([0,1])
+            if coin_flip == 1:
+                room["Thunder"] = 3  # MANY THUNDER
+                room["sound_echo_parameter"] = 20  # LONG ECHO
+                room["sound_room_code"] = 5  # CREAKY CREAKY
