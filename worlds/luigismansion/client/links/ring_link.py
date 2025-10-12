@@ -64,11 +64,12 @@ class RingLink(LinkBase):
             self.rings_received_by_link += amount
             logger.info("DEBUG: Adding ring amount: %s making total: %s.", amount, self.rings_received_by_link)
 
-    async def handle_ring_link_async(self, delay: int = 5):
+    async def handle_ring_link_async(self, delay: int = 1):
         if not self.is_enabled():
             return
 
         timer_end: float = time.time()
+        logger.info("Luigi's wallet has %s", self.wallet.get_currency_amount(CURRENCY_NAME.COINS))
 
         # There may be instances where currency gained/lost may not equate to having a different final value
         # and/or ringlink requests may come in and cancel currency differences.
