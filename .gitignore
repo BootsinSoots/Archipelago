@@ -12,6 +12,7 @@
 *.aptloz
 *.aptww
 *.apemerald
+*.aplm
 *.pyc
 *.pyd
 *.sfc
@@ -32,6 +33,7 @@
 *.apsave
 *.BIN
 *.puml
+*.iso
 
 setups
 build

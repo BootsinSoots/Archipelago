@@ -1,0 +1,40 @@
+## Base ISO Changes:
+- Save anywhere by pressing Down on the Dpad + B (as long as blackout is not on and if you are NOT in a boss fight)
+- Add interactable (Furniture) object within the game into the pool as locations, including plants. Different subgroups can be selected
+(Optional)
+- Add Portrait Ghosts into the pool as locations. Must be connected to server (Optional)
+- Add Toads into the pool as locations. Must be connected to server (Optional)
+- Add turning on Lights as checks. Must be connected to server. (Optional)
+- Add visiting rooms as checks. Must be connected to server. (Optional)
+- Add Speedy Spirits into the pool as locations. Must be connected to server. These are blackout only, and still count even if they run away, so unmissable (Optional)
+- Add Boos into the pool as separate locations and items. Only Boo Radar is required for the locations.  
+- Require the player to have obtained enough money to get a specific rank upon completion. (Optional)
+- 1F Washroom Boo Gate has been removed in favor of simply locking the door.
+- Customize the Boo count requirement for the Balcony and Secret Altar
+- Customize the number of Mario's items needed to trigger the Fortune-teller
+- Various streamlining tweaks (removed cutscenes, dialogue, transitions, and animations) except ending cutscenes
+- The Blackout can be toggled from the breaker in the breaker room, to access certain locations of the game.
+- Start with the stronger Poltergust or include it in the item pool
+- Start with the Boo Radar or include it in the pool
+- In Game Hints on Toads, Telephones and Madame Clairvoya
+- (Optional) Start in the Hidden Mansion
+- (Optional) Turn off Fear and Pickup animations for Luigi.
+- (Optional) Increase Luigi's innate movement speed.
+- (Optional) Randomize music
+- (Optional) Deathlink (Can be toggled in client)
+- (Optional) TrapLink, which shares traps with others who have it enabled (Can be toggled in client)
+- (Optional) Weights for all filler items
+- (Optional) Change Luigi's Max Health
+- (Optional) Change King Boo's health (final boss)
+- (Optional) Chest Cosmetics can change based on the item it contains
+- (Optional) Randomize music
+- (Optional) Portrait Ghost hearts have hints on them
+- Randomize the ghost types in certain rooms of the mansion
+- Randomize the type of enemies to be shuffled around
+- Randomize your starting location so you don't always start in the Foyer
+- Randomize which doors are open or closed by default
+- Randomize the models the door use (in other words change the look for the doors themselves).
+- Randomize how chests look when they contain items.
+- Enable hints to various locations including Madame Clarivoya, Toads, and the telelphones
+- Enable scanning Portrait ghost's hearts to get additional hints
+- Randomize Boo health, Boo Speed (how fast they move around), Boo Escape time (how long before they leave the current room), Boo Anger (if you want boos to stay passive or get aggressive and attack Luigi), and Extra Boo Spots (add more spots for Boos to hide in furniture).
