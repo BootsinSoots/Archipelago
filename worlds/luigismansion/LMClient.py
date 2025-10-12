@@ -257,6 +257,7 @@ class LMContext(BaseContext):
                 # Fire off all the non_essential tasks here.
                 Utils.async_start(self.non_essentials_async_tasks(), "LM Non-Essential Tasks")
                 Utils.async_start(self.display_received_items(), "LM - Display Items in Game")
+                self.ring_link.reset_ringlink()
 
             case "Bounced":
                 if not (self.check_ingame() and self.check_alive()):
@@ -313,6 +314,7 @@ class LMContext(BaseContext):
         # warping around, etc.
         int_play_state = dme.read_word(CURR_PLAY_STATE_ADDR)
         if not int_play_state == 2:
+            self.ring_link.reset_ringlink()
             self.last_not_ingame = time.time()
             return False
 
@@ -698,7 +700,7 @@ class LMContext(BaseContext):
                     await self.wait_for_next_loop(0.5)
                     # Resets the logic for determining the currency differences,
                     # needs to be updated to reset inside of wallet_manager.
-                    self.ring_link.reset_ringlink()
+                    # self.ring_link.reset_ringlink()
                     continue
 
                 # All Link related activities
