@@ -368,19 +368,19 @@
         "move_time",
         "attack"
     ],
-  "roominfo": [
-    "name",
-    "RoomNo",
-    "Thunder",
-    "VRbox",
-    "DustLv",
-    "LightColorR",
-    "LightColorG",
-    "LightColorB",
-    "Distance",
-    "Lv",
-    "sound_echo_parameter",
-    "sound_room_code",
-    "sound_room_size"
-  ]
+    "roominfo": [
+      "name",
+      "RoomNo",
+      "Thunder",
+      "VRbox",
+      "DustLv",
+      "LightColorR",
+      "LightColorG",
+      "LightColorB",
+      "Distance",
+      "Lv",
+      "sound_echo_parameter",
+      "sound_room_code",
+      "sound_room_size"
+    ]
 }
