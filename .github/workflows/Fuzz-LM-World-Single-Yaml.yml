@@ -15,7 +15,7 @@ jobs:
       uses: Eijebong/ap-actions/fuzz@main
       with:
         apworld-path: worlds/luigismansion
-        ap-version: '0.6.2'
+        ap-version: '0.6.3'
         python-version: '3.12'
         runs: 15000
         yamls-per-run: 1
