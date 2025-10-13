@@ -175,7 +175,8 @@ class LuigisMansionRandomizer:
             self.update_map_info_table(self.map_two_file,self.jmp_teiden_enemy_info_table)
         self.update_map_info_table(self.map_two_file,self.jmp_boo_table)
         self.update_map_info_table(self.map_two_file,self.jmp_iyapoo_table)
-        self.update_map_info_table(self.map_two_file, self.jmp_room_info_table)
+        if int_spookiness != 0:
+            self.update_map_info_table(self.map_two_file, self.jmp_room_info_table)
         self.update_map_info_table(self.map_three_file, self.jmp_map3_event_info_table)
 
     def save_randomized_iso(self):
