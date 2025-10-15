@@ -132,9 +132,10 @@ class LuigisMansionRandomizer:
         # Get Output data required information
         bool_boo_checks = True if self.output_data["Options"]["boo_gates"] == 1 else False
         bool_speedy_spirits = True if self.output_data["Options"]["speedy_spirits"] == 1 else False
-        int_spookiness: int = self.output_data["Options"]["spookiness"]
+        int_spookiness: int = int(self.output_data["Options"]["spookiness"])
 
         # Updates all data entries for each jmp table in memory first.
+        logger.info("Updating the in-game tables for chests, furniture, etc.")
         update_character_info(self.jmp_character_info_table, self.output_data)
         update_item_info_table(self.jmp_item_info_table, self.output_data)
         update_item_appear_table(self.jmp_item_appear_table, self.output_data)
@@ -142,6 +143,8 @@ class LuigisMansionRandomizer:
         update_treasure_table(self.jmp_treasure_table, self.jmp_teiden_character_info_table, self.output_data)
         update_furniture_info(self.jmp_furniture_info_table, self.jmp_item_appear_table, self.output_data)
         update_event_info(self.jmp_event_info_table, bool_boo_checks, self.output_data)
+
+        logger.info("Updating in-game observers, enemies, and speedy spirits (if on)...")
         update_observer_info(self.jmp_observer_info_table, self.output_data)
         update_key_info(self.jmp_key_info_table, self.output_data)
         update_obj_info(self.jmp_obj_info_table)
@@ -151,6 +154,8 @@ class LuigisMansionRandomizer:
             self.jmp_teiden_observer_info_table, bool_speedy_spirits)
         if bool_speedy_spirits:
             update_teiden_enemy_info(self.jmp_enemy_info_table, self.jmp_teiden_enemy_info_table)
+
+        logger.info("Updating Boos, other iyapoos, and rooms/events...")
         update_boo_table(self.jmp_boo_table, self.output_data)
         update_iyapoo_table(self.jmp_iyapoo_table, self.output_data)
         if int_spookiness != 0:
@@ -158,6 +163,7 @@ class LuigisMansionRandomizer:
         update_event_info(self.jmp_map3_event_info_table, bool_boo_checks, self.output_data)
 
         # Updates all the data entries in each jmp table in the szp file.
+        logger.info("Saving all jmp tables back into their respective map files...")
         self.update_map_info_table(self.map_two_file,self.jmp_character_info_table)
         self.update_map_info_table(self.map_two_file,self.jmp_teiden_character_info_table)
         self.update_map_info_table(self.map_two_file,self.jmp_item_info_table)
@@ -175,7 +181,8 @@ class LuigisMansionRandomizer:
             self.update_map_info_table(self.map_two_file,self.jmp_teiden_enemy_info_table)
         self.update_map_info_table(self.map_two_file,self.jmp_boo_table)
         self.update_map_info_table(self.map_two_file,self.jmp_iyapoo_table)
-        self.update_map_info_table(self.map_two_file, self.jmp_room_info_table)
+        if int_spookiness != 0:
+            self.update_map_info_table(self.map_two_file, self.jmp_room_info_table)
         self.update_map_info_table(self.map_three_file, self.jmp_map3_event_info_table)
 
     def save_randomized_iso(self):
@@ -197,7 +204,6 @@ class LuigisMansionRandomizer:
         king_boo_health: int = int(self.output_data["Options"]["king_boo_health"])
         random_spawn: str = str(self.output_data["Options"]["spawn"])
         door_model_rando_on: bool = bool(self.output_data["Options"]["door_model_rando"])
-        bool_start_extra_vacuum: int = int(self.output_data["Options"]["vacuum_upgrades"])
 
         # Boo related options
         bool_boo_checks: bool = True if self.output_data["Options"]["boo_gates"] == 1 else False
@@ -262,7 +268,6 @@ class LuigisMansionRandomizer:
             logger.info("Randomized Music is enabled, updating all events with various in-game music.")
             self.gcm = randomize_music(self.gcm, self.seed)
 
-        logger.info("Updating the in-game tables for chests, furniture, ghosts, etc.")
         self.update_map_jmp_tables()
 
         # Save the map two file changes

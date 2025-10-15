@@ -14,7 +14,6 @@ from ..links.trap_link import TrapLink
 from ..links.ring_link import RingLink
 from ..links.link_base import LinkBase
 from ..wallet import Wallet
-from ..wallet_manager import WalletManager
 from ...client.constants import *
 from ...Hints import ALWAYS_HINT, PORTRAIT_HINTS
 
@@ -53,7 +52,7 @@ class BaseContext(UniversalContext):
         self.network_engine = ArchipelagoNetworkEngine(self)
         self.wallet = Wallet()
         self.trap_link = TrapLink(self.network_engine)
-        self.ring_link = RingLink(self.network_engine, WalletManager(self.wallet))
+        self.ring_link = RingLink(self.network_engine, self.wallet)
         self.energy_link = EnergyLinkClient(self.network_engine, self.wallet)
         self.already_fired_events = False
 
