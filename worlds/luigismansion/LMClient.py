@@ -257,6 +257,7 @@ class LMContext(BaseContext):
                 # Fire off all the non_essential tasks here.
                 Utils.async_start(self.non_essentials_async_tasks(), "LM Non-Essential Tasks")
                 Utils.async_start(self.display_received_items(), "LM - Display Items in Game")
+                self.ring_link.reset_ringlink()
 
             case "Bounced":
                 if not (self.check_ingame() and self.check_alive()):
@@ -313,6 +314,7 @@ class LMContext(BaseContext):
         # warping around, etc.
         int_play_state = dme.read_word(CURR_PLAY_STATE_ADDR)
         if not int_play_state == 2:
+            self.ring_link.reset_ringlink()
             self.last_not_ingame = time.time()
             return False
 
@@ -687,21 +689,18 @@ class LMContext(BaseContext):
                     await self.wait_for_next_loop(0.5)
                     continue
 
-                await self.ring_link.wallet_manager.calc_wallet_differences_async()
                 await self.wait_for_next_loop(0.5)
         except Exception as generic_ex:
             logger.error("Critical error with watching currencies async tasks. Details: " + str(generic_ex))
 
     async def non_essentials_async_tasks(self):
-        wallet_manager_event_active: bool = False
-
         try:
             while self.slot:
                 if not (self.check_ingame() and self.check_alive()):
                     await self.wait_for_next_loop(0.5)
                     # Resets the logic for determining the currency differences,
                     # needs to be updated to reset inside of wallet_manager.
-                    self.ring_link.wallet_manager.reset_wallet_watching()
+                    # self.ring_link.reset_ringlink()
                     continue
 
                 # All Link related activities
@@ -710,9 +709,6 @@ class LMContext(BaseContext):
                 if self.trap_link.is_enabled():
                     await self.trap_link.handle_traplink_async()
                 if self.ring_link.is_enabled():
-                    if not wallet_manager_event_active:
-                        wallet_manager_event_active = not wallet_manager_event_active
-                        Utils.async_start(self.manage_wallet_async(), name="LM - ManageWallet")
                     await self.handle_ringlink_async()
 
                 # Async thread related tasks
@@ -838,7 +834,7 @@ class LMContext(BaseContext):
                         await self.wait_for_next_loop(WAIT_TIMER_SHORT_TIMEOUT)
                         # Resets the logic for determining the currency differences,
                         # needs to be updated to reset inside of wallet_manager.
-                        self.ring_link.wallet_manager.reset_wallet_watching()
+                        self.ring_link.reset_ringlink()
                         continue
 
                     # Lastly check any locations and update the non-save able ram stuff
