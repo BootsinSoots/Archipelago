@@ -91,6 +91,7 @@ vanilla_door_state = {
         72: 0
     }
 
+# Kept separate from REGION_LIST due to mutability and having to change rule creation
 GHOST_TO_ROOM = {
     "Wardrobe": "No Element",
     "Laundry Room": "No Element",
