@@ -25,6 +25,7 @@ class LMRegion(Region):
     map_id: int
     in_game_room_id: int
     door_ids: list[int]
+    door_keys: list[str]
 
     def __init__(self, region_data: LMRegionInfo, player: int, multiworld: MultiWorld):
         super().__init__(region_data.region_name, player, multiworld)
@@ -32,6 +33,7 @@ class LMRegion(Region):
         self.door_ids = region_data.door_ids
         self.map_id = region_data.map_id
         self.in_game_room_id = region_data.in_game_room_id
+        self.door_keys = region_data.door_keys
 
 
 vanilla_door_state = {
