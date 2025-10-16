@@ -15,6 +15,7 @@ class LMRegionInfo(NamedTuple):
     in_game_room_id: int
     door_ids: list[int]
     early_keys: list[str]
+    door_keys: list[str]
     pos_x: float
     pos_y: float
     pos_z: float
@@ -361,6 +362,7 @@ def connect_regions(world: "LMWorld"):
             lambda state, final_boo_count=world.options.final_boo_count.value: state.has_group("Boo", world.player, final_boo_count)
                           or state.has("Boo", world.player, final_boo_count))
 
+#TODO Convert to list of LMRegionData. Include Spawn Region list info, somehow
 REGION_LIST = {
     "Parlor": 35,
     "Foyer": 2,
