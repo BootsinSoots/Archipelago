@@ -16,9 +16,13 @@ from .Locations import SohLocation, base_location_table, \
     pots_dungeon_location_table, \
     crates_overworld_location_table, \
     crates_dungeon_location_table, \
+    tree_location_table, \
     freestanding_overworld_location_table, \
     freestanding_dungeon_location_table, \
-    fairies_location_table, \
+    fairies_fountain_location_table, \
+    fairies_stone_location_table, \
+    fairies_bean_location_table, \
+    fairies_song_location_table, \
     grass_overworld_location_table, \
     grass_dungeon_location_table, \
     fish_pond_location_table, \
@@ -83,10 +87,12 @@ class SohRegion(Region):
             state._soh_update_age_reachable_regions(self.player)
             state._soh_age[self.player] = stored_age
         
-        if state._soh_age[self.player] == "child":
+        if state._soh_age[self.player] == Ages.CHILD:
             return self in state._soh_child_reachable_regions[self.player]
-        elif state._soh_age[self.player] == "adult":
+        elif state._soh_age[self.player] == Ages.ADULT:
             return self in state._soh_adult_reachable_regions[self.player]
+        elif state._soh_age[self.player] == Ages.BOTH:
+            return self in state._soh_child_reachable_regions[self.player] and self in state._soh_adult_reachable_regions[self.player]
         else:
             return self in state._soh_child_reachable_regions[self.player] or self in state._soh_adult_reachable_regions[self.player]
 
@@ -95,7 +101,7 @@ def create_regions_and_locations(world: "SohWorld") -> None:
     # Fill region data table based on the regions enum list
     region_data_table: Dict[str, SohRegionData] = {}
     for entry in Regions:
-        region_data_table[entry.value] = SohRegionData([])
+        region_data_table[entry] = SohRegionData([])
 
     # Create regions.
     for region_name in region_data_table.keys():
@@ -106,152 +112,112 @@ def create_regions_and_locations(world: "SohWorld") -> None:
         # Create locations
 
         # Base locations
-        world.included_locations.update({
-            location_name: address for location_name, address in base_location_table.items()
-        })
+        world.included_locations.update(base_location_table)
 
         # Gold Skulltulas (Overworld)
-        world.included_locations.update({
-            location_name: address for location_name, address in gold_skulltula_overworld_location_table.items()
-        })
+        world.included_locations.update(gold_skulltula_overworld_location_table)
 
         # Gold Skulltulas (Dungeon)
-        world.included_locations.update({
-            location_name: address for location_name, address in gold_skulltula_dungeon_location_table.items()
-        })
+        world.included_locations.update(gold_skulltula_dungeon_location_table)
 
-        # Shops
-        if world.options.shuffle_shops:
-            world.included_locations.update({
-                location_name: address for location_name, address in shops_location_table.items()
-            })
+        # Shops, Add all shop locations vanilla items will get prefilled and locked
+        # Todo: maybe we have to add the vanilla locations as events (id = None)
+        # check if vanilla items show up in the list of checks
+        world.included_locations.update(shops_location_table)
 
         # Scrubs
         if world.options.shuffle_scrubs:
-            world.included_locations.update({
-                location_name: address for location_name, address in scrubs_location_table.items()
-            })
+            world.included_locations.update(scrubs_location_table)
 
         # Adult Trade Items
         if world.options.shuffle_adult_trade_items:
-            world.included_locations.update({
-                location_name: address for location_name, address in trade_items_location_table.items()
-            })
+            world.included_locations.update(trade_items_location_table)
 
         # Merchants
         if world.options.shuffle_merchants == "bean_merchant_only" or world.options.shuffle_merchants == "all":
-            world.included_locations.update({
-                location_name: address for location_name, address in merchants_items_location_table.items()
-                if location_name == "ZR Magic Bean Salesman"
-            })
+            world.included_locations["ZR Magic Bean Salesman"] = merchants_items_location_table["ZR Magic Bean Salesman"]
 
         if world.options.shuffle_merchants == "all_but_beans" or world.options.shuffle_merchants == "all":
-            world.included_locations.update({
-                location_name: address for location_name, address in merchants_items_location_table.items()
-                if location_name in {"Kak Granny's Shop", "GC Medigoron", "Wasteland Carpet Salesman"}
-            })
+            for location_name in ("Kak Granny's Shop", "GC Medigoron", "Wasteland Carpet Salesman"):
+                world.included_locations[location_name] = merchants_items_location_table[location_name]
 
         # Cows
         if world.options.shuffle_cows:
-            world.included_locations.update({
-                location_name: address for location_name, address in cows_location_table.items()
-            })
+            world.included_locations.update(cows_location_table)
 
         # Frogs
         if world.options.shuffle_frog_song_rupees:
-            world.included_locations.update({
-                location_name: address for location_name, address in frogs_location_table.items()
-            })
+            world.included_locations.update(frogs_location_table)
 
         # Beehives
         if world.options.shuffle_beehives:
-            world.included_locations.update({
-                location_name: address for location_name, address in beehives_location_table.items()
-            })
+            world.included_locations.update(beehives_location_table)
 
         # Pots (Overworld)
         if world.options.shuffle_pots == "overworld" or world.options.shuffle_pots == "all":
-            world.included_locations.update({
-                location_name: address for location_name, address in pots_overworld_location_table.items()
-            })
+            world.included_locations.update(pots_overworld_location_table)
 
         # Pots (Dungeon)
         if world.options.shuffle_pots == "dungeon" or world.options.shuffle_pots == "all":
-            world.included_locations.update({
-                location_name: address for location_name, address in pots_dungeon_location_table.items()
-            })
+            world.included_locations.update(pots_dungeon_location_table)
 
         # Crates (Overworld)
         if world.options.shuffle_crates == "overworld" or world.options.shuffle_crates == "all":
-            world.included_locations.update({
-                location_name: address for location_name, address in crates_overworld_location_table.items()
-            })
+            world.included_locations.update(crates_overworld_location_table)
 
         # Crates (Dungeon)
         if world.options.shuffle_crates == "dungeon" or world.options.shuffle_crates == "all":
-            world.included_locations.update({
-                location_name: address for location_name, address in crates_dungeon_location_table.items()
-            })
+            world.included_locations.update(crates_dungeon_location_table)
+
+        # Trees
+        if world.options.shuffle_trees:
+            world.included_locations.update(tree_location_table)
 
         # Freestanding (Overworld)
         if world.options.shuffle_freestanding_items == "overworld" or world.options.shuffle_freestanding_items == "all":
-            world.included_locations.update({
-                location_name: address for location_name, address in freestanding_overworld_location_table.items()
-            })
+            world.included_locations.update(freestanding_overworld_location_table)
 
         # Freestanding (Dungeon)
         if world.options.shuffle_freestanding_items == "dungeon" or world.options.shuffle_freestanding_items == "all":
-            world.included_locations.update({
-                location_name: address for location_name, address in freestanding_dungeon_location_table.items()
-            })
+            world.included_locations.update(freestanding_dungeon_location_table)
 
         # Fairies
-        if world.options.shuffle_fairies:
-            world.included_locations.update({
-                location_name: address for location_name, address in fairies_location_table.items()
-            })
+        if world.options.shuffle_fountain_fairies:
+            world.included_locations.update(fairies_fountain_location_table)
+        if world.options.shuffle_stone_fairies:
+            world.included_locations.update(fairies_stone_location_table)
+        if world.options.shuffle_bean_fairies:
+            world.included_locations.update(fairies_bean_location_table)
+        if world.options.shuffle_song_fairies:
+            world.included_locations.update(fairies_song_location_table)
 
         # Grass (Overworld)
         if world.options.shuffle_grass == "overworld" or world.options.shuffle_grass == "all":
-            world.included_locations.update({
-                location_name: address for location_name, address in grass_overworld_location_table.items()
-            })
+            world.included_locations.update(grass_overworld_location_table)
 
         # Grass (Dungeon)
         if world.options.shuffle_grass == "dungeon" or world.options.shuffle_grass == "all":
-            world.included_locations.update({
-                location_name: address for location_name, address in grass_dungeon_location_table.items()
-            })
+            world.included_locations.update(grass_dungeon_location_table)
 
         # Fish (Pond)
         if world.options.shuffle_fish == "pond" or world.options.shuffle_fish == "all":
-            world.included_locations.update({
-                location_name: address for location_name, address in fish_pond_location_table.items()
-            })
+            world.included_locations.update(fish_pond_location_table)
 
         # Fish (Overworld)
         if world.options.shuffle_fish == "overworld" or world.options.shuffle_fish == "all":
-            world.included_locations.update({
-                location_name: address for location_name, address in fish_overworld_location_table.items()
-            })
+            world.included_locations.update(fish_overworld_location_table)
 
         # Child Zelda
         if not world.options.skip_child_zelda:
-            world.included_locations.update({
-                location_name: address for location_name, address in child_zelda_location_table.items()
-            })
+            world.included_locations.update(child_zelda_location_table)
 
         # Carpenters
         if world.options.fortress_carpenters == "normal":
-            world.included_locations.update({
-                location_name: address for location_name, address in carpenters_location_table.items()
-            })
+            world.included_locations.update(carpenters_location_table)
 
         if world.options.fortress_carpenters == "fast":
-            world.included_locations.update({
-                location_name: address for location_name, address in carpenters_location_table.items()
-                if location_name in {"GF Freed All Carpenters", "GF 1 Torch Carpenter"}
-            })
+            for location_name in ("GF Gerudo Membership Card", "TH 1 Torch Carpenter"):
+                world.included_locations[location_name] = carpenters_location_table[location_name]
 
         if world.options.shuffle_100_gs_reward:
             world.included_locations.update(hundred_skulls_location_table)
@@ -268,39 +234,33 @@ def create_regions_and_locations(world: "SohWorld") -> None:
     # Place any locations that still don't have a region in the ROOT region.
     # TODO should be removed when logic is done
     for location_name, location_address in world.included_locations.items():
-        world.get_region(Regions.ROOT.value).add_locations({location_name: location_address}, SohLocation)
+        world.get_region(Regions.ROOT).add_locations({location_name: location_address}, SohLocation)
 
+# Create a dictionary mapping blue warp rewards to their vanilla items
+dungeon_reward_item_mapping = {
+    Locations.QUEEN_GOHMA: Items.KOKIRIS_EMERALD,
+    Locations.KING_DODONGO: Items.GORONS_RUBY,
+    Locations.BARINADE: Items.ZORAS_SAPPHIRE,
+    Locations.PHANTOM_GANON: Items.FOREST_MEDALLION,
+    Locations.VOLVAGIA: Items.FIRE_MEDALLION,
+    Locations.MORPHA: Items.WATER_MEDALLION,
+    Locations.BONGO_BONGO: Items.SHADOW_MEDALLION,
+    Locations.TWINROVA: Items.SPIRIT_MEDALLION,
+    Locations.LINKS_POCKET: Items.LIGHT_MEDALLION
+}
 
 def place_locked_items(world: "SohWorld") -> None:
     
     # Add Weird Egg and Zelda's Letter to their vanilla locations when not shuffled
     if not world.options.skip_child_zelda and not world.options.shuffle_weird_egg:
-        world.get_location(Locations.HC_MALON_EGG.value).place_locked_item(world.create_item(Items.WEIRD_EGG.value))
+        world.get_location(Locations.HC_MALON_EGG).place_locked_item(world.create_item(Items.WEIRD_EGG))
 
     if not world.options.skip_child_zelda:
-        world.get_location(Locations.HC_ZELDAS_LETTER.value).place_locked_item(world.create_item(Items.ZELDAS_LETTER.value))
+        world.get_location(Locations.HC_ZELDAS_LETTER).place_locked_item(world.create_item(Items.ZELDAS_LETTER))
 
     # Place Master Sword on vanilla location if not shuffled
     if not world.options.shuffle_master_sword:
-        world.get_location(Locations.MARKET_TOT_MASTER_SWORD.value).place_locked_item(world.create_item(Items.MASTER_SWORD.value))
-
-    # Handle vanilla goron tunic in shop
-    # TODO: Proper implementation of vanilla shop items and shuffle them amongst all shops
-    if world.options.shuffle_shops:
-        world.get_location(Locations.GC_SHOP_ITEM1.value).place_locked_item(world.create_item(Items.BUY_GORON_TUNIC.value))
-
-    # Create a dictionary mapping blue warp rewards to their vanilla items
-    dungeon_reward_item_mapping = {
-        Locations.QUEEN_GOHMA: Items.KOKIRIS_EMERALD,
-        Locations.KING_DODONGO: Items.GORONS_RUBY,
-        Locations.BARINADE: Items.ZORAS_SAPPHIRE,
-        Locations.PHANTOM_GANON: Items.FOREST_MEDALLION,
-        Locations.VOLVAGIA: Items.FIRE_MEDALLION,
-        Locations.MORPHA: Items.WATER_MEDALLION,
-        Locations.BONGO_BONGO: Items.SHADOW_MEDALLION,
-        Locations.TWINROVA: Items.SPIRIT_MEDALLION,
-        Locations.LINKS_POCKET: Items.LIGHT_MEDALLION
-    }
+        world.get_location(Locations.MARKET_TOT_MASTER_SWORD).place_locked_item(world.create_item(Items.MASTER_SWORD))
 
     # Preplace dungeon rewards in vanilla locations when not shuffled
     if world.options.shuffle_dungeon_rewards == "off":      
@@ -308,29 +268,21 @@ def place_locked_items(world: "SohWorld") -> None:
         for location_name, reward_name in zip(dungeon_reward_item_mapping.keys(), dungeon_reward_item_mapping.values()):
             world.get_location(location_name.value).place_locked_item(world.create_item(reward_name.value))
 
-    if world.options.shuffle_dungeon_rewards == "dungeons": 
-        # Extract and shuffle just the item names from location_item_mapping
-        reward_names = list(dungeon_reward_item_mapping.values())
-        world.random.shuffle(reward_names)
-        
-        # Pair each location with a unique shuffled dungeon reward
-        for location_name, reward_name in zip(dungeon_reward_item_mapping.keys(), reward_names):
-            world.get_location(location_name.value).place_locked_item(world.create_item(reward_name.value))
-
     # Place Ganons Boss Key
     if not world.options.ganons_castle_boss_key == "vanilla" and not world.options.ganons_castle_boss_key == "anywhere" and not world.options.triforce_hunt:
-        world.get_location(Locations.MARKET_TOT_LIGHT_ARROW_CUTSCENE.value).place_locked_item(world.create_item(Items.GANONS_CASTLE_BOSS_KEY.value))
+        world.get_location(Locations.MARKET_TOT_LIGHT_ARROW_CUTSCENE).place_locked_item(world.create_item(Items.GANONS_CASTLE_BOSS_KEY))
 
     if world.options.ganons_castle_boss_key == "vanilla" and not world.options.triforce_hunt:
-        world.get_location(Locations.GANONS_CASTLE_TOWER_BOSS_KEY_CHEST.value).place_locked_item(world.create_item(Items.GANONS_CASTLE_BOSS_KEY.value))
+        world.get_location(Locations.GANONS_CASTLE_TOWER_BOSS_KEY_CHEST).place_locked_item(world.create_item(Items.GANONS_CASTLE_BOSS_KEY))
 
     # Preplace tokens based on settings.
     if world.options.shuffle_skull_tokens == "off" or world.options.shuffle_skull_tokens == "dungeon":
-        token_item = world.create_item(Items.GOLD_SKULLTULA_TOKEN.value)
+        token_item = world.create_item(Items.GOLD_SKULLTULA_TOKEN)
         for location_name, address in gold_skulltula_overworld_location_table.items():
             world.get_location(location_name).place_locked_item(token_item)
 
     if world.options.shuffle_skull_tokens == "off" or world.options.shuffle_skull_tokens == "overworld":
-        token_item = world.create_item(Items.GOLD_SKULLTULA_TOKEN.value)
+        token_item = world.create_item(Items.GOLD_SKULLTULA_TOKEN)
         for location_name, address in gold_skulltula_dungeon_location_table.items():
             world.get_location(location_name).place_locked_item(token_item)
+

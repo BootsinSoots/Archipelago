@@ -1,29 +1,22 @@
-from typing import TYPE_CHECKING
-
-from ...Enums import *
 from ...LogicHelpers import *
 
-
 if TYPE_CHECKING:
-    from worlds.oot_soh import SohWorld
+    from ... import SohWorld
 
-
-class EventLocations(str, Enum):
-    ZORAS_RIVER_SHRUB = "Zora's River Shrub"
+class EventLocations(StrEnum):
+    ZR_BUG_GRASS = "ZR Bug Grass"
     MAGIC_BEAN_SALESMAN_SHOP = "Magic Bean Salesman Shop"
+    ZR_OPEN_GROTTO_GOSSIP_STONE_SONG_FAIRY = "ZR Upper Grotto Gossip Stone Song Fairy"
+    ZR_OPEN_GROTTO_BUTTERFLY_FAIRY = "ZR Upper Grotto Butterfly Fairy"
+    ZR_OPEN_GROTTO_BUG_GRASS = "ZR Upper Grotto Bug Grass"
+    ZR_OPEN_GROTTO_POND_FISH = "ZR Upper Grotto Pond Fish"
+    ZR_BEAN_PATCH = "ZR Bean Patch"
+
+class LocalEvents(StrEnum):
+    ZR_BEAN_PLANTED = "ZR Bean Planted"
 
 
 def set_region_rules(world: "SohWorld") -> None:
-    player = world.player
-    
-    # TODO: Temporary to test generation
-    connect_regions(Regions.KOKIRI_FOREST, world, [
-        (Regions.ZR_FRONT, lambda bundle: True)
-    ])
-    connect_regions(Regions.ZR_FRONT, world, [
-        (Regions.KOKIRI_FOREST, lambda bundle: True)
-    ])
-
     ## ZR Front
     # Locations
     add_locations(Regions.ZR_FRONT, world, [
@@ -40,7 +33,8 @@ def set_region_rules(world: "SohWorld") -> None:
         (Locations.ZR_NEAR_TREE_GRASS9, lambda bundle: can_cut_shrubs(bundle)),
         (Locations.ZR_NEAR_TREE_GRASS10, lambda bundle: can_cut_shrubs(bundle)),
         (Locations.ZR_NEAR_TREE_GRASS11, lambda bundle: can_cut_shrubs(bundle)),
-        (Locations.ZR_NEAR_TREE_GRASS12, lambda bundle: can_cut_shrubs(bundle))
+        (Locations.ZR_NEAR_TREE_GRASS12, lambda bundle: can_cut_shrubs(bundle)),
+        (Locations.ZR_TREE, lambda bundle: is_child(bundle) and can_bonk_trees(bundle)),
 
     ])
     # Connections
@@ -52,13 +46,16 @@ def set_region_rules(world: "SohWorld") -> None:
     ## Zora River
     # Events
     add_events(Regions.ZORA_RIVER, world, [
-        (EventLocations.MAGIC_BEAN_SALESMAN_SHOP, Events.CAN_BUY_BEANS, 
-            lambda bundle: has_item(Items.CHILD_WALLET, bundle) and (world.options.shuffle_merchants.value == 0 or world.options.shuffle_merchants.value == 2)), # Bean shop not randomized
-        (EventLocations.ZORAS_RIVER_SHRUB, Events.CAN_ACCESS_BUGS, lambda bundle: can_cut_shrubs(bundle))
+        (EventLocations.ZR_BUG_GRASS, Events.CAN_ACCESS_BUGS, lambda bundle: can_cut_shrubs(bundle)),
+        (EventLocations.ZR_BEAN_PATCH, LocalEvents.ZR_BEAN_PLANTED, lambda bundle: is_child(bundle) and can_use(Items.MAGIC_BEAN, bundle)),
     ])
+    if world.options.shuffle_merchants.value == 0 or world.options.shuffle_merchants.value == 2: # Only when selling vanilla item (beans)
+        add_events(Regions.ZORA_RIVER, world, [
+            (EventLocations.MAGIC_BEAN_SALESMAN_SHOP, Events.CAN_BUY_BEANS, lambda bundle: has_item(Items.CHILD_WALLET, bundle))
+        ])
     # Locations
     add_locations(Regions.ZORA_RIVER, world, [
-        (Locations.ZR_MAGIC_BEAN_SALESMAN, lambda bundle: is_child(bundle)),
+        (Locations.ZR_MAGIC_BEAN_SALESMAN, lambda bundle: is_child(bundle) and has_item(Items.CHILD_WALLET, bundle)),
         (Locations.ZR_FROGS_OCARINA_GAME, lambda bundle: (is_child(bundle) and
                                                                can_use(Items.SONG_OF_STORMS, bundle) and
                                                                can_use(Items.SONG_OF_TIME, bundle) and
@@ -164,6 +161,13 @@ def set_region_rules(world: "SohWorld") -> None:
     ])
 
     ## ZR Open Grotto
+    # Events
+    add_events(Regions.ZR_OPEN_GROTTO, world, [
+        (EventLocations.ZR_OPEN_GROTTO_GOSSIP_STONE_SONG_FAIRY, Events.CAN_ACCESS_FAIRIES, lambda bundle: (call_gossip_fairy(bundle))),
+        (EventLocations.ZR_OPEN_GROTTO_BUTTERFLY_FAIRY, Events.CAN_ACCESS_FAIRIES, lambda bundle: (can_use(Items.STICKS, bundle))),
+        (EventLocations.ZR_OPEN_GROTTO_BUG_GRASS, Events.CAN_ACCESS_BUGS, lambda bundle: (can_cut_shrubs(bundle))),
+        (EventLocations.ZR_OPEN_GROTTO_POND_FISH, Events.CAN_ACCESS_FISH, lambda bundle: True)
+    ])
     # Locations
     add_locations(Regions.ZR_OPEN_GROTTO, world, [
         (Locations.ZR_OPEN_GROTTO_CHEST, lambda bundle: True),

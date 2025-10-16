@@ -1,19 +1,22 @@
-from typing import TYPE_CHECKING
-
-from ...Enums import *
 from ...LogicHelpers import *
 
 if TYPE_CHECKING:
-    from worlds.oot_soh import SohWorld
+    from ... import SohWorld
 
-class EventLocations(str, Enum):
-    DMC_GOSSIP_STONE_FAIRY = "Death Mountain Crater Gossip Stone Fairy"
-    DMC_BEAN_PLANT_FAIRY = "Death Mountain Crater Bean Plant Fairy"
+class EventLocations(StrEnum):
+    DMC_GOSSIP_STONE_SONG_FAIRY = "DMC Gossip Stone Song Fairy"
+    DMC_BEAN_PLANT_FAIRY = "DMC Bean Plant Fairy"
+    DMC_UPPER_GROTTO_GOSSIP_STONE_SONG_FAIRY = "DMC Upper Grotto Gossip Stone Song Fairy"
+    DMC_UPPER_GROTTO_BUTTERFLY_FAIRY = "DMC Upper Grotto Butterfly Fairy"
+    DMC_UPPER_GROTTO_BUG_GRASS = "DMC Upper Grotto Bug Grass"
+    DMC_UPPER_GROTTO_PUDDLE_FISH = "DMC Upper Grotto Puddle Fish"
+    DMC_BEAN_PATCH = "DMC Bean Patch"
+
+class LocalEvents(StrEnum):
+    DMC_BEAN_PLANTED = "DMC Bean Planted"
 
 
 def set_region_rules(world: "SohWorld") -> None:
-    player = world.player
-    
     ## Death Mountain Crater Upper Nearby
     # Connections
     connect_regions(Regions.DMC_UPPER_NEARBY, world, [
@@ -25,11 +28,11 @@ def set_region_rules(world: "SohWorld") -> None:
     ## Death Mountain Crater Upper Local
     # Events
     add_events(Regions.DMC_UPPER_LOCAL, world, [
-        (EventLocations.DMC_GOSSIP_STONE_FAIRY, Events.CAN_ACCESS_FAIRIES, lambda bundle: has_explosives(bundle) and call_gossip_fairy_except_suns(bundle) and (fire_timer(bundle) >= 16 or hearts(bundle) >= 3))
+        (EventLocations.DMC_GOSSIP_STONE_SONG_FAIRY, Events.CAN_ACCESS_FAIRIES, lambda bundle: has_explosives(bundle) and call_gossip_fairy_except_suns(bundle) and (fire_timer(bundle) >= 16 or hearts(bundle) >= 3))
     ])
     # Locations
     add_locations(Regions.DMC_UPPER_LOCAL, world, [
-        (Locations.DMC_WALL_FREESTANDING_PO_H, lambda bundle: fire_timer(bundle) >= 16 or hearts(bundle) >= 3),
+        (Locations.DMC_WALL_FREESTANDING_POH, lambda bundle: fire_timer(bundle) >= 16 or hearts(bundle) >= 3),
         (Locations.DMC_GS_CRATE, lambda bundle: (fire_timer(bundle) >= 8 or hearts(bundle) >= 3) and is_child(bundle) and can_attack(bundle) and can_break_crates(bundle)),
         (Locations.DMC_GOSSIP_STONE_FAIRY, lambda bundle: call_gossip_fairy_except_suns(bundle) and has_explosives(bundle) and (fire_timer(bundle) >= 16 or hearts(bundle) >= 3)),
         (Locations.DMC_GOSSIP_STONE_BIG_FAIRY, lambda bundle: can_use(Items.SONG_OF_STORMS, bundle) and (fire_timer(bundle) >= 16 or hearts(bundle) >= 3)),
@@ -52,7 +55,7 @@ def set_region_rules(world: "SohWorld") -> None:
     # Connections
     connect_regions(Regions.DMC_LADDER_REGION_NEARBY, world, [
         (Regions.DMC_UPPER_NEARBY, lambda bundle: hearts(bundle) >= 3),
-        (Regions.DMC_LOWER_NEARBY, lambda bundle: hearts(bundle) >= 3 and (can_use(Items.HOVER_BOOTS, bundle) or (can_do_trick(Tricks.DMC_BOULDER_JS, bundle) and is_adult(bundle) and can_use(Items.MEGATON_HAMMER, bundle)) or (can_do_trick("DMC Boulder Skip", bundle) and is_adult(bundle))))
+        (Regions.DMC_LOWER_NEARBY, lambda bundle: hearts(bundle) >= 3 and (can_use(Items.HOVER_BOOTS, bundle) or (can_do_trick(Tricks.DMC_BOULDER_JS, bundle) and is_adult(bundle) and can_use(Items.MEGATON_HAMMER, bundle)) or (can_do_trick(Tricks.DMC_BOULDER_SKIP, bundle) and is_adult(bundle))))
     ])
 
     ## Death Mountain Crater Lower Nearby
@@ -80,32 +83,27 @@ def set_region_rules(world: "SohWorld") -> None:
         (Regions.DMC_CENTRAL_LOCAL, lambda bundle: (can_use(Items.HOVER_BOOTS, bundle) or can_use(Items.HOOKSHOT, bundle) or (is_adult(bundle) and can_shield(bundle) and can_do_trick(Tricks.DMC_BOLERO_JUMP, bundle))) and fire_timer(bundle) >= 24)
     ])
 
-    ## Death Mountain Crater Volcano Vent
-    ### This is a deviation from the original SOH logic because of the uni
-    add_locations(Regions.DMC_VOLCANO_VENT, world, [
-        (Locations.DMC_VOLCANO_FREESTANDING_PO_H, lambda bundle: True),
-    ])
-    # Connections
-    connect_regions(Regions.DMC_VOLCANO_VENT, world, [
-        (Regions.DMC_CENTRAL_NEARBY, lambda bundle: True)
-    ])
-
     ## Death Mountain Crater Central Nearby
     # Locations
     add_locations(Regions.DMC_CENTRAL_NEARBY, world, [
-        (Locations.SHEIK_IN_CRATER, lambda bundle: is_adult(bundle) and (fire_timer(bundle) >= 8 or hearts(bundle) >= 3))
+        (Locations.SHEIK_IN_CRATER, lambda bundle: is_adult(bundle) and (fire_timer(bundle) >= 8 or hearts(bundle) >= 3)),
+        (Locations.DMC_VOLCANO_FREESTANDING_POH, lambda bundle: is_adult(bundle) and
+                                                                hearts(bundle) >= 3 and
+                                                                (has_item(LocalEvents.DMC_BEAN_PLANTED, bundle) or
+                                                                 (can_do_trick(Tricks.DMC_HOVER_BEAN_POH, bundle)
+                                                                  and
+                                                                  can_use(Items.HOVER_BOOTS, bundle)))),
     ])
     # Connections
     connect_regions(Regions.DMC_CENTRAL_NEARBY, world, [
         (Regions.DMC_CENTRAL_LOCAL, lambda bundle: fire_timer(bundle) >= 48),
-        (Regions.DMC_VOLCANO_VENT, lambda bundle: is_adult(bundle) and hearts(bundle) >= 3 and can_do_trick(Tricks.DMC_HOVER_BEAN_POH, bundle) and can_use(Items.HOVER_BOOTS, bundle)),
-
     ])
 
     ## Death Mountain Crater Central Local
     # Events
     add_events(Regions.DMC_CENTRAL_LOCAL, world, [
-        (EventLocations.DMC_BEAN_PLANT_FAIRY, Events.CAN_ACCESS_FAIRIES, lambda bundle: can_use(Items.MAGIC_BEAN, bundle) and can_use(Items.SONG_OF_STORMS, bundle) and (fire_timer(bundle) >= 8 or hearts(bundle) >= 3))
+        (EventLocations.DMC_BEAN_PLANT_FAIRY, Events.CAN_ACCESS_FAIRIES, lambda bundle: can_use(Items.MAGIC_BEAN, bundle) and can_use(Items.SONG_OF_STORMS, bundle) and (fire_timer(bundle) >= 8 or hearts(bundle) >= 3)),
+        (EventLocations.DMC_BEAN_PATCH, LocalEvents.DMC_BEAN_PLANTED, lambda bundle: is_child(bundle) and can_use(Items.MAGIC_BEAN, bundle) and (fire_timer(bundle) >= 8 or hearts(bundle) >= 3)),
     ])
     # Locations
     add_locations(Regions.DMC_CENTRAL_LOCAL, world, [
@@ -125,11 +123,10 @@ def set_region_rules(world: "SohWorld") -> None:
     # Connections
     connect_regions(Regions.DMC_CENTRAL_LOCAL, world, [
         (Regions.DMC_CENTRAL_NEARBY, lambda bundle: True),
-        (Regions.DMC_LOWER_NEARBY, lambda bundle: (is_adult(bundle) and can_plant_bean(bundle)) or can_use(Items.HOVER_BOOTS, bundle) or can_use(Items.HOOKSHOT, bundle)),
-        (Regions.DMC_UPPER_NEARBY, lambda bundle: is_adult(bundle) and can_plant_bean(bundle)) 
+        (Regions.DMC_LOWER_NEARBY, lambda bundle: (is_adult(bundle) and has_item(LocalEvents.DMC_BEAN_PLANTED, bundle)) or can_use(Items.HOVER_BOOTS, bundle) or can_use(Items.HOOKSHOT, bundle)),
+        (Regions.DMC_UPPER_NEARBY, lambda bundle: is_adult(bundle) and has_item(LocalEvents.DMC_BEAN_PLANTED, bundle)),
         (Regions.FIRE_TEMPLE_ENTRYWAY, lambda bundle: (is_child(bundle) and hearts(bundle) >= 3 and False) or (is_adult(bundle) and fire_timer(bundle) >= 24)), # TODO Implement Dungeon Shuffle Option to replace False
         (Regions.DMC_DISTANT_PLATFORM, lambda bundle: (fire_timer(bundle) >= 48 or hearts(bundle) >= 2) and can_use(Items.DISTANT_SCARECROW, bundle)),
-        (Regions.DMC_VOLCANO_VENT, lambda bundle: is_adult(bundle) and hearts(bundle) >= 3 and can_plant_bean(bundle))
     ])
 
     ## Death Mountain Crater Great Fairy Fountain
@@ -143,6 +140,13 @@ def set_region_rules(world: "SohWorld") -> None:
     ])
 
     ## Death Mountain Crater Upper Grotto
+    # Events
+    add_events(Regions.DMC_UPPER_GROTTO, world, [
+        (EventLocations.DMC_UPPER_GROTTO_GOSSIP_STONE_SONG_FAIRY, Events.CAN_ACCESS_FAIRIES, lambda bundle: (call_gossip_fairy(bundle))),
+        (EventLocations.DMC_UPPER_GROTTO_BUTTERFLY_FAIRY, Events.CAN_ACCESS_FAIRIES, lambda bundle: (can_use(Items.STICKS, bundle))),
+        (EventLocations.DMC_UPPER_GROTTO_BUG_GRASS, Events.CAN_ACCESS_BUGS, lambda bundle: (can_cut_shrubs(bundle))),
+        (EventLocations.DMC_UPPER_GROTTO_PUDDLE_FISH, Events.CAN_ACCESS_FISH, lambda bundle: True)
+    ])
     # Locations
     add_locations(Regions.DMC_UPPER_GROTTO, world, [
         (Locations.DMC_UPPER_GROTTO_CHEST, lambda bundle: True),
@@ -180,7 +184,7 @@ def set_region_rules(world: "SohWorld") -> None:
         (Locations.DMC_DISTANT_PLATFORM_RUPEE1, lambda bundle: is_adult(bundle)),
         (Locations.DMC_DISTANT_PLATFORM_RUPEE2, lambda bundle: is_adult(bundle)),
         (Locations.DMC_DISTANT_PLATFORM_RUPEE3, lambda bundle: is_adult(bundle)),
-        (Locations.DMC_DISTANT_PLATFORM_RUPEE4, lambda bundle: is_adult(bundle))
+        (Locations.DMC_DISTANT_PLATFORM_RUPEE4, lambda bundle: is_adult(bundle)),
         (Locations.DMC_DISTANT_PLATFORM_RUPEE5, lambda bundle: is_adult(bundle)),
         (Locations.DMC_DISTANT_PLATFORM_RUPEE6, lambda bundle: is_adult(bundle)),
         (Locations.DMC_DISTANT_PLATFORM_RED_RUPEE, lambda bundle: is_adult(bundle))

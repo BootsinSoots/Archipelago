@@ -1,17 +1,15 @@
-from typing import Dict, List, TYPE_CHECKING
+from typing import Dict, TYPE_CHECKING
 import math
 
 from .Enums import *
-from .Items import SohItem, item_data_table, filler_items, filler_bottles
+from .Items import item_data_table, filler_items, filler_bottles
 
 if TYPE_CHECKING:
     from . import SohWorld
 
 
 def create_item_pool(world: "SohWorld") -> None:
-    item_pool: List[SohItem] = []
-
-    items_to_create: Dict[Enum, int] = {item: data.quantity_in_item_pool for item, data in item_data_table.items()}
+    items_to_create: Dict[str, int] = {item: data.quantity_in_item_pool for item, data in item_data_table.items()}
 
     filler_bottle_amount: int = 2
 
@@ -228,20 +226,13 @@ def create_item_pool(world: "SohWorld") -> None:
     # Add regular item pool
     for item, quantity in items_to_create.items():
         for _ in range(quantity):
-            item_pool.append(world.create_item(item.value))
+            world.item_pool.append(world.create_item(item))
 
     # Add random filler bottles
-    item_pool += [world.create_item(get_filler_bottle(world).value) for _ in range(filler_bottle_amount)]
+    world.item_pool += [world.create_item(get_filler_bottle(world)) for _ in range(filler_bottle_amount)]
 
-    # Add junk items to fill remaining locations
-    open_location_count = sum(1 for loc in world.get_locations() if not loc.locked)
-    filler_item_count: int = open_location_count - len(item_pool)
-    item_pool += [world.create_item(get_filler_item(world).value) for _ in range(filler_item_count)]
-
-    world.multiworld.itempool += item_pool
-
-def get_filler_item(world: "SohWorld") -> Enum:
+def get_filler_item(world: "SohWorld") -> str:
     return world.random.choice(filler_items)
 
-def get_filler_bottle(world: "SohWorld") -> Enum:
+def get_filler_bottle(world: "SohWorld") -> str:
     return world.random.choice(filler_bottles)

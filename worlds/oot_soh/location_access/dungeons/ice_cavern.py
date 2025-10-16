@@ -1,18 +1,13 @@
-from typing import TYPE_CHECKING
-
-from ...Enums import *
 from ...LogicHelpers import *
 
 if TYPE_CHECKING:
-    from worlds.oot_soh import SohWorld
+    from ... import SohWorld
 
-
-class EventLocations(str, Enum):
+class EventLocations(StrEnum):
     ICE_CAVERN_BLUE_FIRE_ACCESS = "Ice Cavern Blue Fire Access"
 
+
 def set_region_rules(world: "SohWorld") -> None:
-    player = world.player
-    
     ## Ice Cavern Entryway
     # Locations
     add_locations(Regions.ICE_CAVERN_ENTRYWAY, world, [])
@@ -38,15 +33,15 @@ def set_region_rules(world: "SohWorld") -> None:
     ## Ice Cavern Main
     # Events
     add_events(Regions.ICE_CAVERN, world, [
-        (EventLocations.ICE_CAVERN_BLUE_FIRE_ACCESS, Events.BLUE_FIRE_ACCESS, lambda bundle: is_adult(bundle))
+        (EventLocations.ICE_CAVERN_BLUE_FIRE_ACCESS, Events.CAN_ACCESS_BLUE_FIRE, lambda bundle: is_adult(bundle) or (can_do_trick(Tricks.GROUND_JUMP_HARD, bundle) and can_ground_jump(bundle)))
     ])
     # Locations
     add_locations(Regions.ICE_CAVERN, world, [
-        (Locations.ICE_CAVERN_MAP_CHEST, lambda bundle: blue_fire(bundle) and is_adult(bundle)),
+        (Locations.ICE_CAVERN_MAP_CHEST, lambda bundle: blue_fire(bundle) and (is_adult(bundle) or (can_do_trick(Tricks.GROUND_JUMP_HARD, bundle) and can_ground_jump(bundle)))),
         (Locations.ICE_CAVERN_COMPASS_CHEST, lambda bundle: blue_fire(bundle)),
         (Locations.ICE_CAVERN_IRON_BOOTS_CHEST, lambda bundle: blue_fire(bundle) and can_kill_enemy(bundle, Enemies.WOLFOS)),
-        (Locations.SHEIK_IN_ICE_CAVERN, lambda bundle: blue_fire(bundle) and can_kill_enemy(bundle, Enemies.WOLFOS) and is_adult()),
-        (Locations.ICE_CAVERN_FREESTANDING_PO_H, lambda bundle: blue_fire(bundle)),
+        (Locations.SHEIK_IN_ICE_CAVERN, lambda bundle: blue_fire(bundle) and can_kill_enemy(bundle, Enemies.WOLFOS) and is_adult(bundle)),
+        (Locations.ICE_CAVERN_FREESTANDING_POH, lambda bundle: blue_fire(bundle)),
         (Locations.ICE_CAVERN_GS_SPINNING_SCYTHE_ROOM, lambda bundle: hookshot_or_boomerang(bundle)),
         (Locations.ICE_CAVERN_GS_HEART_PIECE_ROOM, lambda bundle: blue_fire(bundle) and hookshot_or_boomerang(bundle)),
         (Locations.ICE_CAVERN_GS_PUSH_BLOCK_ROOM, lambda bundle: blue_fire(bundle) and (hookshot_or_boomerang(bundle) or (can_do_trick(Tricks.ICE_BLOCK_GS, bundle) and can_use(Items.HOVER_BOOTS, bundle)))),
@@ -57,11 +52,11 @@ def set_region_rules(world: "SohWorld") -> None:
         (Locations.ICE_CAVERN_SPINNING_BLADE_POT3, lambda bundle: can_break_pots(bundle)),
         (Locations.ICE_CAVERN_NEAR_END_POT1, lambda bundle: can_break_pots(bundle) and blue_fire(bundle)),
         (Locations.ICE_CAVERN_NEAR_END_POT2, lambda bundle: can_break_pots(bundle) and blue_fire(bundle)),
-        (Locations.ICE_CAVERN_FROZEN_POT1, lambda bundle: can_break_pots(bundle) and blue_fire(bundle) and is_adult(bundle)),
+        (Locations.ICE_CAVERN_FROZEN_POT1, lambda bundle: can_break_pots(bundle) and blue_fire(bundle) and (is_adult(bundle) or (can_do_trick(Tricks.GROUND_JUMP_HARD, bundle) and can_ground_jump(bundle)))),
         (Locations.ICE_CAVERN_LOBBY_RUPEE, lambda bundle: blue_fire(bundle)),
-        (Locations.ICE_CAVERN_MAP_ROOM_LEFT_HEART, lambda bundle: is_adult(bundle)),
-        (Locations.ICE_CAVERN_MAP_ROOM_MIDDLE_HEART, lambda bundle: is_adult(bundle)),
-        (Locations.ICE_CAVERN_MAP_ROOM_RIGHT_HEART, lambda bundle: is_adult(bundle)),
+        (Locations.ICE_CAVERN_MAP_ROOM_LEFT_HEART, lambda bundle: is_adult(bundle) or (can_do_trick(Tricks.GROUND_JUMP_HARD, bundle) and can_ground_jump(bundle))),
+        (Locations.ICE_CAVERN_MAP_ROOM_MIDDLE_HEART, lambda bundle: is_adult(bundle) or (can_do_trick(Tricks.GROUND_JUMP_HARD, bundle) and can_ground_jump(bundle))),
+        (Locations.ICE_CAVERN_MAP_ROOM_RIGHT_HEART, lambda bundle: is_adult(bundle) or (can_do_trick(Tricks.GROUND_JUMP_HARD, bundle) and can_ground_jump(bundle))),
         (Locations.ICE_CAVERN_SLIDING_BLOCK_ROOM_RUPEE1, lambda bundle: blue_fire(bundle) and (can_use(Items.SONG_OF_TIME, bundle) or can_use(Items.BOOMERANG, bundle))),
         (Locations.ICE_CAVERN_SLIDING_BLOCK_ROOM_RUPEE2, lambda bundle: blue_fire(bundle) and (can_use(Items.SONG_OF_TIME, bundle) or can_use(Items.BOOMERANG, bundle))),
         (Locations.ICE_CAVERN_SLIDING_BLOCK_ROOM_RUPEE3, lambda bundle: blue_fire(bundle) and (can_use(Items.SONG_OF_TIME, bundle) or can_use(Items.BOOMERANG, bundle)))

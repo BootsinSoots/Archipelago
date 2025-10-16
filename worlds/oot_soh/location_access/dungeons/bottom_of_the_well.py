@@ -1,13 +1,9 @@
-from typing import TYPE_CHECKING
-
-from ...Enums import *
 from ...LogicHelpers import *
 
 if TYPE_CHECKING:
-    from worlds.oot_soh import SohWorld
+    from ... import SohWorld
 
-
-class EventLocations(str, Enum):
+class EventLocations(StrEnum):
     BOTTOM_OF_THE_WELL_LOWERED_WATER = "Bottom of the Well Lowered Water"
     BOTTOM_OF_THE_WELL_NUT_POT = "Bottom of the Well Nut Pot"
     BOTTOM_OF_THE_WELL_STICK_POT = "Bottom of the Well Stick Pot"
@@ -15,21 +11,11 @@ class EventLocations(str, Enum):
     BOTTOM_OF_THE_WELL_BABAS_NUTS = "Bottom of the Well Deku Baba Nuts"
 
 
-class LocalEvents(str, Enum):
+class LocalEvents(StrEnum):
     LOWERED_WATER_INSIDE_BOTTOM_OF_THE_WELL = "Water was lowered in the Bottom of the Well"
 
 
 def set_region_rules(world: "SohWorld") -> None:
-    player = world.player
-    
-    # TODO: Temporary to test generation
-    connect_regions(Regions.KOKIRI_FOREST, world, [
-        (Regions.BOTTOM_OF_THE_WELL_ENTRYWAY, lambda bundle: True)
-    ])
-    connect_regions(Regions.BOTTOM_OF_THE_WELL_ENTRYWAY, world, [
-        (Regions.KOKIRI_FOREST, lambda bundle: True)
-    ])
-
     ## Bottom of The Well Entryway
     # Locations
     add_locations(Regions.BOTTOM_OF_THE_WELL_ENTRYWAY, world, [])
