@@ -21,19 +21,11 @@ class LMRegionInfo(NamedTuple):
     pos_z: float
 
 class LMRegion(Region):
-    room_id: int
-    map_id: int
-    in_game_room_id: int
-    door_ids: list[int]
-    door_keys: list[str]
+    region_data: LMRegionInfo
 
     def __init__(self, region_data: LMRegionInfo, player: int, multiworld: MultiWorld):
         super().__init__(region_data.region_name, player, multiworld)
-        self.room_id = region_data.room_id
-        self.door_ids = region_data.door_ids
-        self.map_id = region_data.map_id
-        self.in_game_room_id = region_data.in_game_room_id
-        self.door_keys = region_data.door_keys
+        self.region_data = region_data
 
 
 vanilla_door_state = {
