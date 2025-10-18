@@ -37,11 +37,13 @@ REGION_LIST: dict[str, LMRegionInfo] = {
     "The Well": 69,
     "Wardrobe": 38,
     "Wardrobe Balcony": 37,
-    "Study": 34,
+    "Study": LMRegionInfo(2, 2, 34, 35, ["Study Key", "Family Hallway Key"],  ["Study Key"], [32],
+        False, -1696.352290, 550.000000, -1605.182980),
     "Master Bedroom": 33,
     "Nursery": 24,
     "Twins' Room": 25,
-    "Laundry Room": 5,
+    "Laundry Room": LMRegionInfo(2, 1, 5, 5, ["Laundry Key", "Butler's Rom Key", "Heart Key"],
+        ["Laundry Key", "Butler's Rom Key"], [1, 7], False, -3165.112550, 0.000000, -804.770508),
     "Butler's Room": 0,
     "Fortune-Teller's Room": 3,
     "Ballroom": 10,
@@ -59,16 +61,19 @@ REGION_LIST: dict[str, LMRegionInfo] = {
         allow_random_spawn=True, pos_x=-1998.314700, pos_y=0.000000, pos_z=225.000000),
     "Storage Room": 14,
     "Mirror Room": 4,
-    "Rec Room": 22,
+    "Rec Room": LMRegionInfo(2, 1, 22, 23, ["North Rec Room Key", "South Rec Room Key", "Lower 2F Stairwell Key",
+        "Upper 2F Stairwell Key"], ["North Rec Room Key", "South Rec Room Key"], [24, 25], True,
+        3517.026860, 0.000000, -4646.33203),
     "Courtyard": LMRegionInfo(2, 1, 23, 24, ["Club Key", "North Rec Room Key", "Heart Key"],
         ["Club Key", "North Rec Room Key"], [42, 25], True,  1613.042970, 9.000000, -5663.574710),
-    "2F Stairwell": 19,
+    "2F Stairwell": LMRegionInfo(2, 2, 19, 18, []),
     "Cellar": 63,
     "Breaker Room": 67,
     "Basement Hallway": 62,
     "Cold Storage": 61,
     "Pipe Room": 66,
-    "Secret Altar": 70,
+    "Secret Altar": LMRegionInfo(2, 0, 70, 73, ["Spade Key", "Altar Hallway Key"], ["Spade Key"], [72],
+        False, 2293.000000, -550.000000, -5805.000000),
     "Tea Room": 47,
     "Nana's Room": 46,
     "2F Rear Hallway": 26,
@@ -87,7 +92,8 @@ REGION_LIST: dict[str, LMRegionInfo] = {
     "Armory": 48,
     "Ceramics Studio": 55,
     "Telephone Room": 50,
-    "Clockwork Room": 56,
+    "Clockwork Room": LMRegionInfo(2, 3, 56, 59, ["Clockwork Key", "Telephone Room Key"], ["Clockwork Key"], [53],
+        True, 10.759588, 1100.000000, -1649.743900),
     "Roof": 60,
     "Altar Hallway": 68
 }
@@ -178,17 +184,6 @@ GHOST_TO_ROOM = {
 }
 
 spawn_locations = {
-    "Clockwork Room":        {"room_no": 56, "pos_x": 10.759588, "pos_y": 1100.000000, "pos_z": -1649.743900,
-                              "key": ["Clockwork Key", "Telephone Room Key"],
-                              "door_keys": ["Clockwork Key"], "door_ids": [53],
-                              "in_game_room_id": 59}, # Clockwork
-    "Rec Room":              {"room_no": 22, "pos_x": 3517.026860, "pos_y": 0.000000, "pos_z": -4646.33203,
-                              "key": ["North Rec Room Key", "South Rec Room Key", "Lower 2F Stairwell Key", "Upper 2F Stairwell Key"],
-                              "door_keys": ["North Rec Room Key", "South Rec Room Key"],
-                              "door_ids": [24, 25], "in_game_room_id": 23}, # Rec Room
-    # "Laundry Room":          {"room_no": 5, "pos_x": -3165.112550, "pos_y": 0, "pos_z": -804.770508,
-    #                           "key": ["Laundry Key", "Butler's Rom Key", "Heart Key"], "door_keys": ["Laundry Key", "Butler's Rom Key"],
-    #                           "door_ids": [1, 7]},  # Laundry removed due to new spawn toad triggering as you leave
     "Telephone Room":        {"room_no": 50, "pos_x": -9.812825, "pos_y": 1100, "pos_z": 118.738243,
                               "key": ["Telephone Room Key", "Clockwork Key"], "door_keys": ["Telephone Room Key", "Clockwork Key"],
                               "door_ids": [53, 52], "in_game_room_id": 53}, # Telephone
@@ -210,9 +205,6 @@ spawn_locations = {
     "Master Bedroom":        {"room_no": 33, "pos_x": -3365.857670, "pos_y": 550, "pos_z": -1513.529660,
                               "key": ["Master Bedroom Key", "Family Hallway Key"], "door_keys": ["Master Bedroom Key"],
                               "door_ids": [31], "in_game_room_id": 34}, # Master bed
-    #"Study":                 {"room_no": 34, "pos_x": -1696.352290, "pos_y": 550, "pos_z": -1605.182980,
-    #                          "key": ["Study Key", "Family Hallway Key"], "door_keys": ["Study Key"]
-    #                          "door_ids": [32]}, # Study Errors and neville's Chair doesn't spawn?
     "Nana's Room":           {"room_no": 46, "pos_x": -457.708374, "pos_y": 550, "pos_z": -4535.000000,
                               "key": ["Nana's Room Key", "Upper 2F Stairwell Key"], "door_keys": ["Nana's Room Key"],
                               "door_ids": [49], "in_game_room_id": 49}, # Nana
@@ -275,10 +267,6 @@ spawn_locations = {
                              "key": ["Cold Storage Key", "Cellar Key"],
                              "door_keys": ["Cold Storage Key"],
                              "door_ids": [65], "in_game_room_id": 64},  # Foyer
-    # "Secret Altar":          {"room_no": 70, "pos_x": 2293, "pos_y": -550.000000, "pos_z": -5805.000000,
-    #                          "key": ["Spade Key", "Altar Hallway Key"],
-    #                          "door_keys": ["Spade Key"],
-    #                          "door_ids": [72], "in_game_room_id": 73},  # Foyer
 }
 
 exp_spawns: dict[str,dict[str, int]] = {
