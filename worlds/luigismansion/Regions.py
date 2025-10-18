@@ -31,8 +31,8 @@ REGION_LIST: dict[str, LMRegionInfo] = {
         ["Heart Key", "Family Hallway Key", "Parlor Key"], [3, 34, 33], True, -7.640748, 0.000000, 145.174300),
     "Parlor": LMRegionInfo(2, 2, 35, 36, ["Parlor Key", "Heart Key", "Anteroom Key"],
         ["Parlor Key", "Anteroom Key"], [34, 38], True, -43.294357, 550.000000, -1775.288450),
-    "Family Hallway": 29,
-    "1F Hallway": 6,
+    "Family Hallway": LMRegionInfo(2, 2, 29, 30, []),
+    "1F Hallway": LMRegionInfo(2, 1, 6, 6, []),
     "Anteroom": 39,
     "The Well": 69,
     "Wardrobe": 38,
@@ -55,11 +55,13 @@ REGION_LIST: dict[str, LMRegionInfo] = {
     "Kitchen": 8,
     "Boneyard": 11,
     "Graveyard": 16,
-    "Hidden Room": 1,
+    "Hidden Room": LMRegionInfo(2, 1, 1, 1, ["Butler's Room Key", "Laundry Room Key", "Heart Key"],
+        allow_random_spawn=True, pos_x=-1998.314700, pos_y=0.000000, pos_z=225.000000),
     "Storage Room": 14,
     "Mirror Room": 4,
     "Rec Room": 22,
-    "Courtyard": 23,
+    "Courtyard": LMRegionInfo(2, 1, 23, 24, ["Club Key", "North Rec Room Key", "Heart Key"],
+        ["Club Key", "North Rec Room Key"], [42, 25], True,  1613.042970, 9.000000, -5663.574710),
     "2F Stairwell": 19,
     "Cellar": 63,
     "Breaker Room": 67,
@@ -176,12 +178,6 @@ GHOST_TO_ROOM = {
 }
 
 spawn_locations = {
-    "Hidden Room":           {"room_no": 1, "pos_x": -1998.314700, "pos_y": 0.000000, "pos_z": 225.000000,
-                              "key": ["Butler's Room Key", "Laundry Room Key", "Heart Key"], "door_keys": [],
-                              "door_ids": [], "in_game_room_id": 1}, # Hidden
-    "Courtyard":             {"room_no": 23, "pos_x": 1613.042970, "pos_y": 9.000000, "pos_z": -5663.574710,
-                              "key": ["Club Key", "North Rec Room Key", "Heart Key"], "door_keys":
-                              ["Club Key", "North Rec Room Key"], "door_ids": [42, 25], "in_game_room_id": 24}, # Courtyard
     "Clockwork Room":        {"room_no": 56, "pos_x": 10.759588, "pos_y": 1100.000000, "pos_z": -1649.743900,
                               "key": ["Clockwork Key", "Telephone Room Key"],
                               "door_keys": ["Clockwork Key"], "door_ids": [53],
