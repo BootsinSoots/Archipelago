@@ -8,11 +8,10 @@ from typing import ClassVar
 
 # AP Related Imports
 import Options
-from BaseClasses import Tutorial, Item, ItemClassification, MultiWorld
+from BaseClasses import Tutorial, ItemClassification
 from Utils import visualize_regions, local_path
 from worlds.AutoWorld import WebWorld, World
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess, icon_paths
-from worlds.generic.Rules import add_rule
 from .client.luigismansion_settings import LuigisMansionSettings
 from .client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME
 
@@ -491,7 +490,8 @@ class LMWorld(World):
             # We know we're in second gen
             self.origin_region_name = passthrough["spawn_region"]  # this should be the same region from slot data
         elif self.options.random_spawn.value > 0:
-            self.origin_region_name = self.random.choice(list(spawn_locations.keys()))
+            self.origin_region_name = self.random.choice([region_name for (region_name, region_data) in REGION_LIST if
+                region_data.allow_random_spawn])
 
         if self.using_ut:
             # We know we're in second gen
