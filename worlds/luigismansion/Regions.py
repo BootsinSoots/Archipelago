@@ -1,31 +1,94 @@
 from typing import Optional, Callable, TYPE_CHECKING, NamedTuple
 from BaseClasses import Region, MultiWorld
 
-from . import Rules
-
 if TYPE_CHECKING:
     from . import Rules, LMWorld
 
 
 class LMRegionInfo(NamedTuple):
-    region_name: str
+    map_id: int
     floor: int
     room_id: int
-    map_id: int
     in_game_room_id: int
-    door_ids: list[int]
     early_keys: list[str]
-    door_keys: list[str]
-    pos_x: float
-    pos_y: float
-    pos_z: float
+    door_keys: list[str] = []
+    door_ids: list[int] = []
+    allow_random_spawn: bool = False
+    pos_x: float = 0.0000000
+    pos_y: float = 0.0000000
+    pos_z: float = 0.0000000
 
 class LMRegion(Region):
     region_data: LMRegionInfo
 
-    def __init__(self, region_data: LMRegionInfo, player: int, multiworld: MultiWorld):
-        super().__init__(region_data.region_name, player, multiworld)
+    def __init__(self, region_name: str, region_data: LMRegionInfo, player: int, multiworld: MultiWorld):
+        super().__init__(region_name, player, multiworld)
         self.region_data = region_data
+
+
+REGION_LIST: dict[str, LMRegionInfo] = {
+    "Foyer": LMRegionInfo(2, 1, 2, 2, ["Heart Key", "Family Hallway Key", "Parlor Key"],
+        ["Heart Key", "Family Hallway Key", "Parlor Key"], [3, 34, 33], True, -7.640748, 0.000000, 145.174300),
+    "Parlor": LMRegionInfo(2, 2, 35, 36, ["Parlor Key", "Heart Key", "Anteroom Key"],
+        ["Parlor Key", "Anteroom Key"], [34, 38], True, -43.294357, 550.000000, -1775.288450),
+    "Family Hallway": 29,
+    "1F Hallway": 6,
+    "Anteroom": 39,
+    "The Well": 69,
+    "Wardrobe": 38,
+    "Wardrobe Balcony": 37,
+    "Study": 34,
+    "Master Bedroom": 33,
+    "Nursery": 24,
+    "Twins' Room": 25,
+    "Laundry Room": 5,
+    "Butler's Room": 0,
+    "Fortune-Teller's Room": 3,
+    "Ballroom": 10,
+    "Dining Room": 9,
+    "1F Washroom": 17,
+    "1F Bathroom": 20,
+    "Conservatory": 21,
+    "Billiards Room": 12,
+    "Basement Stairwell": 65,
+    "Projection Room": 13,
+    "Kitchen": 8,
+    "Boneyard": 11,
+    "Graveyard": 16,
+    "Hidden Room": 1,
+    "Storage Room": 14,
+    "Mirror Room": 4,
+    "Rec Room": 22,
+    "Courtyard": 23,
+    "2F Stairwell": 19,
+    "Cellar": 63,
+    "Breaker Room": 67,
+    "Basement Hallway": 62,
+    "Cold Storage": 61,
+    "Pipe Room": 66,
+    "Secret Altar": 70,
+    "Tea Room": 47,
+    "Nana's Room": 46,
+    "2F Rear Hallway": 26,
+    "2F Washroom": 42,
+    "2F Bathroom": 45,
+    "Astral Hall": 40,
+    "Observatory": 41,
+    "Sealed Room": 36,
+    "Sitting Room": 27,
+    "Guest Room": 28,
+    "Safari Room": 52,
+    "East Attic Hallway": 51,
+    "West Attic Hallway": 49,
+    "Artist's Studio": 57,
+    "Balcony": 59,
+    "Armory": 48,
+    "Ceramics Studio": 55,
+    "Telephone Room": 50,
+    "Clockwork Room": 56,
+    "Roof": 60,
+    "Altar Hallway": 68
+}
 
 
 vanilla_door_state = {
@@ -123,10 +186,6 @@ spawn_locations = {
                               "key": ["Clockwork Key", "Telephone Room Key"],
                               "door_keys": ["Clockwork Key"], "door_ids": [53],
                               "in_game_room_id": 59}, # Clockwork
-    "Foyer":                 {"room_no": 2, "pos_x": -7.640748, "pos_y": 0.000000, "pos_z": 145.174300,
-                              "key": ["Heart Key", "Family Hallway Key", "Parlor Key"],
-                              "door_keys": ["Heart Key", "Family Hallway Key", "Parlor Key"],
-                              "door_ids": [3, 34, 33], "in_game_room_id": 2}, # Foyer
     "Rec Room":              {"room_no": 22, "pos_x": 3517.026860, "pos_y": 0.000000, "pos_z": -4646.33203,
                               "key": ["North Rec Room Key", "South Rec Room Key", "Lower 2F Stairwell Key", "Upper 2F Stairwell Key"],
                               "door_keys": ["North Rec Room Key", "South Rec Room Key"],
@@ -158,9 +217,6 @@ spawn_locations = {
     #"Study":                 {"room_no": 34, "pos_x": -1696.352290, "pos_y": 550, "pos_z": -1605.182980,
     #                          "key": ["Study Key", "Family Hallway Key"], "door_keys": ["Study Key"]
     #                          "door_ids": [32]}, # Study Errors and neville's Chair doesn't spawn?
-    "Parlor":                {"room_no": 35, "pos_x": -43.294357, "pos_y": 550, "pos_z": -1775.288450,
-                             "key": ["Parlor Key", "Heart Key", "Anteroom Key"], "door_keys": ["Parlor Key", "Anteroom Key"],
-                              "door_ids": [34, 38], "in_game_room_id": 36}, # Parlor
     "Nana's Room":           {"room_no": 46, "pos_x": -457.708374, "pos_y": 550, "pos_z": -4535.000000,
                               "key": ["Nana's Room Key", "Upper 2F Stairwell Key"], "door_keys": ["Nana's Room Key"],
                               "door_ids": [49], "in_game_room_id": 49}, # Nana
@@ -356,69 +412,6 @@ def connect_regions(world: "LMWorld"):
     lmconnect(world, "Altar Hallway", "Secret Altar", "Spade Key", 72,
             lambda state, final_boo_count=world.options.final_boo_count.value: state.has_group("Boo", world.player, final_boo_count)
                           or state.has("Boo", world.player, final_boo_count))
-
-#TODO Convert to list of LMRegionData. Include Spawn Region list info, somehow
-REGION_LIST = {
-    "Parlor": 35,
-    "Foyer": 2,
-    "Family Hallway": 29,
-    "1F Hallway": 6,
-    "Anteroom": 39,
-    "The Well": 69,
-    "Wardrobe": 38,
-    "Wardrobe Balcony": 37,
-    "Study": 34,
-    "Master Bedroom": 33,
-    "Nursery": 24,
-    "Twins' Room": 25,
-    "Laundry Room": 5,
-    "Butler's Room": 0,
-    "Fortune-Teller's Room": 3,
-    "Ballroom": 10,
-    "Dining Room": 9,
-    "1F Washroom": 17,
-    "1F Bathroom": 20,
-    "Conservatory": 21,
-    "Billiards Room": 12,
-    "Basement Stairwell": 65,
-    "Projection Room": 13,
-    "Kitchen": 8,
-    "Boneyard": 11,
-    "Graveyard": 16,
-    "Hidden Room": 1,
-    "Storage Room": 14,
-    "Mirror Room": 4,
-    "Rec Room": 22,
-    "Courtyard": 23,
-    "2F Stairwell": 19,
-    "Cellar": 63,
-    "Breaker Room": 67,
-    "Basement Hallway": 62,
-    "Cold Storage": 61,
-    "Pipe Room": 66,
-    "Secret Altar": 70,
-    "Tea Room": 47,
-    "Nana's Room": 46,
-    "2F Rear Hallway": 26,
-    "2F Washroom": 42,
-    "2F Bathroom": 45,
-    "Astral Hall": 40,
-    "Observatory": 41,
-    "Sealed Room": 36,
-    "Sitting Room": 27,
-    "Guest Room": 28,
-    "Safari Room": 52,
-    "East Attic Hallway": 51,
-    "West Attic Hallway": 49,
-    "Artist's Studio": 57,
-    "Balcony": 59,
-    "Armory": 48,
-    "Ceramics Studio": 55,
-    "Telephone Room": 50,
-    "Clockwork Room": 56,
-    "Roof": 60,
-    "Altar Hallway": 68
-}
 
 # ROOM_EXITS = []
 
