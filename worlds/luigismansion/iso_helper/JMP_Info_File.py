@@ -16,15 +16,15 @@ STRING_BYTE_LENGTH = 32
 MAIN_PKG_NAME = "worlds.luigismansion.LMGenerator"
 
 class JMPInfoFile:
-    __header_byte_length = 0
-    __data_line_byte_length = 0
-    __info_file_headers = None
-    __end_file_terminator = None
+    _header_byte_length = 0
+    _data_line_byte_length = 0
+    _info_file_headers = None
+    _end_file_terminator = None
 
     info_file_field_entries = None
     info_file_entry = None
 
-    def __init__(self, main_rarc_file: RARC, name_of_info_file: str):
+    def _init_(self, main_rarc_file: RARC, name_of_info_file: str):
         # A valid file must already be loaded prior to calling this module.
         if main_rarc_file is None:
             raise Exception("A pre-loaded RARC object was not provided, unable to retrieve JMP info files...")
@@ -55,21 +55,21 @@ class JMPInfoFile:
         # Based on the data line size, the bytes would need to be split into their logical fields.
         self.info_file_entry.data.seek(0)
 
-        data_line_count, field_count, self.__header_byte_length, self.__data_line_byte_length = (
+        data_line_count, field_count, self._header_byte_length, self._data_line_byte_length = (
             struct.unpack(">iiII", self.info_file_entry.data.read(IMPORTANT_HEADER_BYTE_LENGTH)))
 
         # As mentioned before, these extra header bytes describe each field, taking up 12 bytes each.
         # (see more details in JMP_Field_Header.py)
-        self.__extra_header_bytes = io.BytesIO(self.info_file_entry.data.read(
-            self.__header_byte_length-IMPORTANT_HEADER_BYTE_LENGTH))
+        self._extra_header_bytes = io.BytesIO(self.info_file_entry.data.read(
+            self._header_byte_length-IMPORTANT_HEADER_BYTE_LENGTH))
 
         # This will get the header field data for each field defined.
-        self.__info_file_headers = []
+        self._info_file_headers = []
         header_index = 0
-        for header_line in range(0, len(self.__extra_header_bytes.getvalue()), FIELD_DATA_BYTE_LENGTH):
-            current_line = io.BytesIO(self.__extra_header_bytes.read(FIELD_DATA_BYTE_LENGTH))
+        for header_line in range(0, len(self._extra_header_bytes.getvalue()), FIELD_DATA_BYTE_LENGTH):
+            current_line = io.BytesIO(self._extra_header_bytes.read(FIELD_DATA_BYTE_LENGTH))
             local_field_header = JMPFieldHeader(header_name_list[header_index], current_line)
-            self.__info_file_headers.append(local_field_header)
+            self._info_file_headers.append(local_field_header)
             header_index += 1
 
         # This will grab the data lines defined in the file.
@@ -77,19 +77,19 @@ class JMPInfoFile:
         #    strings, they are not required to get the data. Strings will automatically strip padding and null chars.
         self.info_file_field_entries = []
 
-        for data_line in range(self.__header_byte_length, len(self.info_file_entry.data.getvalue()),
-                               self.__data_line_byte_length):
-            current_line = io.BytesIO(self.info_file_entry.data.read(self.__data_line_byte_length))
+        for data_line in range(self._header_byte_length, len(self.info_file_entry.data.getvalue()),
+                               self._data_line_byte_length):
+            current_line = io.BytesIO(self.info_file_entry.data.read(self._data_line_byte_length))
 
             # Some info files have random @ signs as their file terminator.
             # This project captures this information and saves it for later when the file is converted back to bytes
-            if len(current_line.getvalue()) < self.__data_line_byte_length and bool(re.search("@{4,}", str(current_line.getvalue()))):
-                self.__end_file_terminator = current_line
+            if len(current_line.getvalue()) < self._data_line_byte_length and bool(re.search("@{4,}", str(current_line.getvalue()))):
+                self._end_file_terminator = current_line
                 break
 
             data_line_info = {}
 
-            for jmp_header in self.__info_file_headers:
+            for jmp_header in self._info_file_headers:
                 # Set the data stream in the starting bit right position.
                 current_line.seek(jmp_header.get_field_start_bit)
 
@@ -109,33 +109,33 @@ class JMPInfoFile:
 
     def add_blank_data_lines(self, line_amount: int):
         # Go back to an existing line
-        if not self.__end_file_terminator is None:
+        if not self._end_file_terminator is None:
             self.info_file_entry.data.seek(len(self.info_file_entry.data.getbuffer()) -
-                    len(self.__end_file_terminator.getbuffer()) - self.__data_line_byte_length)
+                    len(self._end_file_terminator.getbuffer()) - self._data_line_byte_length)
         else:
-            self.info_file_entry.data.seek(len(self.info_file_entry.data.getbuffer()) - self.__data_line_byte_length)
+            self.info_file_entry.data.seek(len(self.info_file_entry.data.getbuffer()) - self._data_line_byte_length)
 
         # Copy the data (which may include bitmask information, offset, and shift details)
-        old_line = io.BytesIO(self.info_file_entry.data.read(self.__data_line_byte_length))
+        old_line = io.BytesIO(self.info_file_entry.data.read(self._data_line_byte_length))
 
         # Get the end file offset where we need to begin writing
         end_file_buffer = len(self.info_file_entry.data.getbuffer())
-        if not self.__end_file_terminator is None:
-            end_file_buffer -= len(self.__end_file_terminator.getbuffer())
+        if not self._end_file_terminator is None:
+            end_file_buffer -= len(self._end_file_terminator.getbuffer())
         self.info_file_entry.data.seek(end_file_buffer)
 
         for x in range(line_amount):
             self.info_file_entry.data.write(old_line.getvalue())
 
         # Add the file terminator back if it existed
-        if not self.__end_file_terminator is None:
+        if not self._end_file_terminator is None:
             self.info_file_entry.data.seek(len(self.info_file_entry.data.getbuffer()))
-            self.info_file_entry.data.write(self.__end_file_terminator.getvalue())
+            self.info_file_entry.data.write(self._end_file_terminator.getvalue())
 
     def print_header_info(self):
         print(self.info_file_entry.name + "; Data Line(s) Count: " + str(len(self.info_file_field_entries)) +
-              "; # of Fields: " + str(len(self.__info_file_headers)) + "; Header Byte Length: " +
-              str(self.__header_byte_length) + "; Single Data Line Byte Length: " + str(self.__data_line_byte_length))
+              "; # of Fields: " + str(len(self._info_file_headers)) + "; Header Byte Length: " +
+              str(self._header_byte_length) + "; Single Data Line Byte Length: " + str(self._data_line_byte_length))
 
 
     # Using the original BytesIO stream, we will write back to the original data as needed.
@@ -149,9 +149,9 @@ class JMPInfoFile:
             self.add_blank_data_lines(len(self.info_file_field_entries) - data_line_count)
 
         for index, data_line in enumerate(self.info_file_field_entries):
-            data_field_offset = self.__header_byte_length+(index*self.__data_line_byte_length)
+            data_field_offset = self._header_byte_length+(index*self._data_line_byte_length)
 
-            for jmp_header in self.__info_file_headers:
+            for jmp_header in self._info_file_headers:
                 # Set the data stream in the starting bit right position.
                 # Stream starts at the current line starting point + Starting Bit offset
                 self.info_file_entry.data.seek(data_field_offset+jmp_header.get_field_start_bit)
