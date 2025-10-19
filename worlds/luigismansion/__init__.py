@@ -559,7 +559,7 @@ class LMWorld(World):
     def create_regions(self):
         # Add all randomizable regions
         for region_name in REGION_LIST.keys():
-            self.multiworld.regions.append(Region(region_name, self.player, self.multiworld))
+            self.multiworld.regions.append(LMRegion(region_name, REGION_LIST[region_name], self.player, self.multiworld))
 
         # Assign each location to their region
         for location, data in BASE_LOCATION_TABLE.items():
