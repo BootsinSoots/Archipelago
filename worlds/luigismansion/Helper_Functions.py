@@ -5,6 +5,7 @@ from gclib.rarc import RARCFileEntry, RARC
 
 
 PROJECT_ROOT: Path = Path(__file__).resolve().parent
+RANDOMIZER_NAME = "Luigi's Mansion"
 
 class LMRamData(NamedTuple):
     ram_addr: Optional[int] = None
@@ -73,3 +74,10 @@ def find_rarc_file_entry(rarc_file: RARC, directory_name: str, name_of_file: str
       if file_entry.name == name_of_file and file_entry.parent_node.name == directory_name:
         return file_entry
     return None
+
+# Get an ARC / RARC / SZP file from within the ISO / ROM
+def get_arc(self, arc_path):
+    arc_path = arc_path.replace("\\", "/")
+    arc = RARC(self.gcm.read_file_data(arc_path))  # Automatically decompresses Yay0
+    arc.read()
+    return arc

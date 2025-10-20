@@ -12,10 +12,9 @@ from BaseClasses import Tutorial, ItemClassification
 from Utils import visualize_regions, local_path
 from worlds.AutoWorld import WebWorld, World
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess, icon_paths
-from .client.luigismansion_settings import LuigisMansionSettings
-from .client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME
 
 # Relative Imports
+from .Helper_Functions import RANDOMIZER_NAME
 from .Items import *
 from .Locations import *
 from .LuigiOptions import *
@@ -25,6 +24,9 @@ from .Regions import *
 from .Rules import *
 from .Rules import set_element_rules
 from .iso_helper.lm_rom import LMPlayerContainer
+from .client.luigismansion_settings import LuigisMansionSettings
+from .client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME
+
 if TYPE_CHECKING:
     from NetUtils import MultiData
 
@@ -147,7 +149,7 @@ class LMWorld(World):
     before he can move in and save Mario!
     """
 
-    game: ClassVar[str] = "Luigi's Mansion"
+    game: ClassVar[str] = RANDOMIZER_NAME
     options_dataclass = LuigiOptions.LMOptions
     options: LuigiOptions.LMOptions
 
@@ -451,13 +453,13 @@ class LMWorld(World):
         passthrough = {}
 
         if self.options.energy_link == 1 and self.options.ring_link == 1:
-            raise Options.OptionError("In Luigi's Mansion, both energy_link and ring_link cannot be enabled.\n"
-                                      f"This error was found in {self.player_name}'s Luigi's Mansion world."
+            raise Options.OptionError(f"In {RANDOMIZER_NAME}, both energy_link and ring_link cannot be enabled.\n"
+                                      f"This error was found in {self.player_name}'s {RANDOMIZER_NAME} world."
                                       f"Their YAML must be fixed")
 
         if (self.options.boosanity == 1 or self.options.boo_gates == 1) and self.options.boo_radar == 2:
             raise Options.OptionError(f"When Boo Radar is excluded, neither Boosanity nor Boo Gates can be active.\n"
-                                      f"This error was found in {self.player_name}'s Luigi's Mansion world."
+                                      f"This error was found in {self.player_name}'s {RANDOMIZER_NAME} world."
                                       f"Their YAML must be fixed")
         if hasattr(self.multiworld, "re_gen_passthrough"):
             if self.game in self.multiworld.re_gen_passthrough:
@@ -837,7 +839,7 @@ class LMWorld(World):
                         if self.options.boo_health_option.value == 2 and location.name in ROOM_BOO_LOCATION_TABLE.keys():
                                 item_info.update({"boo_sphere": self.boo_spheres[location.name]})
                 else:
-                    item_info = {"name": "Nothing", "game": "Luigi's Mansion", "classification": "filler"}
+                    item_info = {"name": "Nothing", "game": self.game, "classification": "filler"}
                 output_data["Locations"][location.name] = item_info
 
         # Outputs the plando details to our expected output file
