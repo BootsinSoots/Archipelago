@@ -3,8 +3,8 @@ import re
 from math import ceil
 from random import choice, randint
 
-from . import WDYM_LOCATION_TABLE, LMLocationData
-from .Regions import spawn_locations
+from . import WDYM_LOCATION_TABLE, LMLocationData, LMRegionInfo
+from .Regions import REGION_LIST
 from .Items import ALL_ITEMS_TABLE, filler_items, LMItemData, CurrencyItemData
 from .Locations import FLIP_BALCONY_BOO_EVENT_LIST, ALL_LOCATION_TABLE
 from .game.Currency import CURRENCY_NAME, CURRENCIES
@@ -118,7 +118,7 @@ def update_event_info(event_info, boo_checks: bool, output_data):
         lambda info_entry: not (info_entry["EventNo"] in events_to_remove or (info_entry["EventNo"] == 93 and
             info_entry["pos_x"] == 0)), event_info.info_file_field_entries))
 
-    spawn_data = spawn_locations[output_data["Options"]["spawn"]]
+    spawn_data = REGION_LIST[output_data["Options"]["spawn"]]
 
     for x in event_info.info_file_field_entries:
         # Move Telephone rings to third phone, make an A press and make always on
@@ -173,9 +173,9 @@ def update_event_info(event_info, boo_checks: bool, output_data):
 
         # Update the spawn in event trigger to wherever spawn is
         if x["EventNo"] == 48:
-            x["pos_y"] = spawn_data["pos_y"]
-            x["pos_z"] = spawn_data["pos_z"]
-            x["pos_x"] = spawn_data["pos_x"]
+            x["pos_y"] = spawn_data.pos_y
+            x["pos_z"] = spawn_data.pos_z
+            x["pos_x"] = spawn_data.pos_x
 
         # Removes the Mr. Bones requirement. He will spawn instantly
         if x["EventNo"] == 23:
@@ -313,11 +313,11 @@ def update_character_info(character_info, output_data):
 
         # Editing the starting room spawn coordinates (regardless of it random spawn is turned on).
         if x["room_no"] == 2 and x["name"] == "luige":
-            spawn_region: dict[str,int] = spawn_locations[output_data["Options"]["spawn"]]
-            x["room_no"] = spawn_region["room_no"]
-            x["pos_y"] = spawn_region["pos_y"]
-            x["pos_x"] = spawn_region["pos_x"]
-            x["pos_z"] = spawn_region["pos_z"]
+            spawn_region: LMRegionInfo = REGION_LIST[output_data["Options"]["spawn"]]
+            x["room_no"] = spawn_region.room_id
+            x["pos_y"] = spawn_region.pos_y
+            x["pos_x"] = spawn_region.pos_x
+            x["pos_z"] = spawn_region.pos_z
 
 
 def update_teiden_observer_info(observer_info, teiden_observer_info, update_speedy_spirits: bool):
@@ -432,11 +432,11 @@ def update_observer_info(observer_info, output_data):
             new_x = copy.deepcopy(x)
             spawn_region_name = output_data["Options"]["spawn"]
             if not spawn_region_name in ("Foyer", "Courtyard", "1F Washroom", "Wardrobe Balcony"):
-                spawn_data = spawn_locations[spawn_region_name]
-                new_x["room_no"] = spawn_data["room_no"]
-                new_x["pos_y"] = spawn_data["pos_y"]
-                new_x["pos_z"] = int(spawn_data["pos_z"]) - 150
-                new_x["pos_x"] = int(spawn_data["pos_x"]) - 150
+                spawn_data = REGION_LIST[spawn_region_name]
+                new_x["room_no"] = spawn_data.room_id
+                new_x["pos_y"] = spawn_data.pos_y
+                new_x["pos_z"] = int(spawn_data.pos_z) - 150
+                new_x["pos_x"] = int(spawn_data.pos_x) - 150
                 new_x["code_name"] = "dm_kinopio5"
                 observer_info.info_file_field_entries.append(new_x)
 
