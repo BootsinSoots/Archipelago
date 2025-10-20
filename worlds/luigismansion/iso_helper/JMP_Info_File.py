@@ -2,7 +2,7 @@ import re
 import struct
 import io
 import json
-from pkgutil import get_data
+from pathlib import Path
 
 from gclib.rarc import RARC
 from .JMP_Field_Header import JMPFieldHeader
@@ -13,8 +13,6 @@ FIELD_DATA_BYTE_LENGTH = 12
 INTEGER_BYTE_LENGTH = 4
 STRING_BYTE_LENGTH = 32
 
-MAIN_PKG_NAME = "worlds.luigismansion.LMGenerator"
-
 class JMPInfoFile:
     _header_byte_length = 0
     _data_line_byte_length = 0
@@ -24,7 +22,7 @@ class JMPInfoFile:
     info_file_field_entries = None
     info_file_entry = None
 
-    def _init_(self, main_rarc_file: RARC, name_of_info_file: str):
+    def __init__(self, main_rarc_file: RARC, name_of_info_file: str):
         # A valid file must already be loaded prior to calling this module.
         if main_rarc_file is None:
             raise Exception("A pre-loaded RARC object was not provided, unable to retrieve JMP info files...")
@@ -37,12 +35,13 @@ class JMPInfoFile:
         if self.info_file_entry is None:
             raise Exception("Unable to find an info file with name '" + name_of_info_file + "' in provided RARC file.")
 
-        json_data = json.loads(get_data(MAIN_PKG_NAME, "data/names.json"))
+        names_json_path: Path = Path(__file__).resolve().parent.parent.joinpath('data', 'names.json')
+        json_data: dict = json.loads(names_json_path.read_text(encoding='utf-8'))
 
         if name_of_info_file not in json_data:
             raise Exception("Unable to load info file headers for '" + name_of_info_file + "'.")
 
-        header_name_list = json_data[name_of_info_file]
+        header_name_list: dict = json_data[name_of_info_file]
 
         # After loading a JMP info file, then the file bytes must be observed.
         # In the beginning, info files have a series of bytes that provide metadata about the file itself.
