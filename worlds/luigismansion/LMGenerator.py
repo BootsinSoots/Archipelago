@@ -1,5 +1,5 @@
-import json
-import os
+import json, os
+from random import Random
 
 import Utils
 
@@ -14,13 +14,13 @@ from .iso_helper.DOL_Updater import update_dol_offsets
 from .iso_helper.Update_GameUSA import update_game_usa
 from .iso_helper.JMP_Info_File import JMPInfoFile
 from .Patching import *
-from .Helper_Functions import StringByteFunction as sbf
+from .Helper_Functions import StringByteFunction as sbf, get_arc, RANDOMIZER_NAME
 from .iso_helper.Events import *
 from .client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME
 
-RANDOMIZER_NAME = "Luigi's Mansion"
-
 class LuigisMansionRandomizer:
+    random: Random
+
     def __init__(self, clean_iso_path: str, randomized_output_file_path: str, ap_output_data: bytes, debug_flag=False):
         # Takes note of the provided Randomized Folder path and if files should be exported instead of making an ISO.
         self.debug = debug_flag
@@ -32,12 +32,15 @@ class LuigisMansionRandomizer:
                 temp_file = open(randomized_output_file_path, "r+")  # or "a+", whatever you need
                 temp_file.close()
         except IOError:
-            raise Exception("'" + randomized_output_file_path + "' is currently in use by another program.")
+            raise Exception(f"'{randomized_output_file_path}' is currently in use by another program.")
 
-        self.output_data = json.loads(ap_output_data.decode('utf-8'))
+        self.output_data: dict = json.loads(ap_output_data.decode('utf-8'))
 
         # Make sure that the server and client versions match before attempting to patch ISO.
-        self._check_server_version(self.output_data)
+        self._check_server_version(self.output_data.get(AP_WORLD_VERSION_NAME, "<0.5.6"))
+
+        # Set the random's seed for uses in other files.
+        self.random.seed(self.output_data["Seed"])
 
         # After verifying, this will also read the entire iso, including system files and their content
         self.gcm = GCM(self.clean_iso_path)
@@ -45,13 +48,7 @@ class LuigisMansionRandomizer:
         self.dol = DOL()
 
         # Change game ID so save files are different
-        logger.info("Updating the ISO game id with the AP generated seed.")
-        self.seed = self.output_data["Seed"]
-        magic_seed = str(self.seed)
-        bin_data = self.gcm.read_file_data("sys/boot.bin")
-        bin_data.seek(0x01)
-        bin_data.write(sbf.string_to_bytes(magic_seed, len(magic_seed)))
-        self.gcm.changed_files["sys/boot.bin"] = bin_data
+        self._update_game_id(self.output_data["Seed"])
 
         # Updates the Game USA folder to have the correct ghost file we expect.
         logger.info("Updating game_usa.szp to import the ghost files as we expect.")
@@ -60,11 +57,19 @@ class LuigisMansionRandomizer:
         # Important note: SZP are just RARC / Arc files that are yay0 compressed, at least for Luigi's Mansion
         # Get Arc automatically handles decompressing RARC data from yay0, but compressing is on us later.
         logger.info("Loading all of the main mansion map files into memory.")
-        self.map_one_file = self.get_arc("files/Map/map1.szp")
-        self.map_two_file = self.get_arc("files/Map/map2.szp")
-        self.map_three_file = self.get_arc("files/Map/map3.szp")
+
+        # Map 1 contains information on E. Gadd's Lab
+        self.map_one_file = get_arc(self.gcm, "files/Map/map1.szp")
+
+        # Map 2 contains information on the main mansion map
+        self.map_two_file = get_arc(self.gcm, "files/Map/map2.szp")
+
+        # Map 3 contains information on the training room map
+        self.map_three_file = get_arc(self.gcm, "files/Map/map3.szp")
+
+        # Map 6 contains information on the gallery map
         if self.output_data["Options"]["WDYM_checks"] == 1:
-            self.map_six_file = self.get_arc("files/Map/map6.szp")
+            self.map_six_file = get_arc(self.gcm, "files/Map/map6.szp")
 
         # Loads all the specific JMP tables AP may potentially change / update in map 2.
         # Although some events are not changed by AP directly, they are changed here to remove un-necessary cutscenes,
@@ -103,27 +108,28 @@ class LuigisMansionRandomizer:
         # Saves the randomized iso file, with all files updated.
         self.save_randomized_iso()
 
-    def _check_server_version(self, output_data):
+    def _check_server_version(self, ap_world_version: str):
         """
         Compares the version provided in the patch manifest against the client's version.
         
-        :param output_data: The manifest's output data which we attempt to acquire the generated version.
+        :param ap_world_version: The output data's generated version.
         """
-        ap_world_version = "<0.5.6"
-
-        if AP_WORLD_VERSION_NAME in output_data:
-            ap_world_version = output_data[AP_WORLD_VERSION_NAME]
         if ap_world_version != CLIENT_VERSION:
-            raise Utils.VersionException("Error! Server was generated with a different Luigi's Mansion " +
+            raise Utils.VersionException(f"Error! Server was generated with a different {RANDOMIZER_NAME} " +
                         f"APWorld version.\nThe client version is {CLIENT_VERSION}!\nPlease verify you are using the " +
                         f"same APWorld as the generator, which is '{ap_world_version}'")
 
-    # Get an ARC / RARC / SZP file from within the ISO / ROM
-    def get_arc(self, arc_path):
-        arc_path = arc_path.replace("\\", "/")
-        arc = RARC(self.gcm.read_file_data(arc_path))  # Automatically decompresses Yay0
-        arc.read()
-        return arc
+    def _update_game_id(self, seed: str):
+        """
+        Updates the ISO's game id to use AP's seed that was generated.
+
+        :param seed: The seed number that was generated and provided from output data.
+        """
+        logger.info("Updating the ISO game id with the AP generated seed.")
+        bin_data: BytesIO = self.gcm.read_file_data("sys/boot.bin")
+        bin_data.seek(0x01)
+        bin_data.write(sbf.string_to_bytes(seed, len(seed)))
+        self.gcm.changed_files["sys/boot.bin"] = bin_data
 
     # Uses custom class to load in JMP Info file entry (see more details in JMP_Info_File.py)
     def load_map_info_table(self, map_file, jmp_table_name: str):
@@ -141,14 +147,13 @@ class LuigisMansionRandomizer:
                 jmp_file.data = jmp_info_file.info_file_entry.data
                 break
 
-    # Updates all jmp tables in the map2.szp and map3.szp file.
-    def update_map_jmp_tables(self):
+    # Randomizes all jmp related data and calls their relevant functions.
+    def randomize_jmp_tables(self):
         # Get Output data required information
         bool_boo_checks = True if self.output_data["Options"]["boo_gates"] == 1 else False
         bool_speedy_spirits = True if self.output_data["Options"]["speedy_spirits"] == 1 else False
         int_spookiness: int = int(self.output_data["Options"]["spookiness"])
 
-        # Updates all data entries for each jmp table in memory first.
         logger.info("Updating the in-game tables for chests, furniture, etc.")
         update_character_info(self.jmp_character_info_table, self.output_data)
         update_item_info_table(self.jmp_item_info_table, self.output_data)
@@ -180,6 +185,10 @@ class LuigisMansionRandomizer:
             # update_gallery_character_info(self.jmp_map6_character_info_table)
 
         update_map_one_event_info(self.jmp_map1_event_info_table)
+
+    # Updates all jmp tables in the corresponding map files.
+    def update_map_jmp_tables(self):
+        int_spookiness: int = int(self.output_data["Options"]["spookiness"])
 
         # Updates all the data entries in each jmp table in the szp file.
         logger.info("Saving all jmp tables back into their respective map files...")
@@ -251,16 +260,15 @@ class LuigisMansionRandomizer:
         bool_portrait_hints: bool = True if self.output_data["Options"]["portrait_hints"] == 1 else False
 
         logger.info("Updating all the main.dol offsets with their appropriate values.")
-        self.gcm, self.dol = update_dol_offsets(self.gcm, self.dol, self.seed,
-            start_inv_list, walk_speed, player_name, random_spawn, king_boo_health, bool_fear_anim_enabled,
-            bool_pickup_anim_enabled, bool_boo_rando_enabled, door_model_rando_on)
+        update_dol_offsets(self, start_inv_list, walk_speed, player_name, random_spawn, king_boo_health,
+            bool_fear_anim_enabled, bool_pickup_anim_enabled, bool_boo_rando_enabled, door_model_rando_on)
 
         logger.info("Updating all of the common events with the customized version.")
-        self.gcm = update_common_events(self.gcm, bool_randomize_mice, bool_start_vacuum)
+        update_common_events(self.gcm, bool_randomize_mice, bool_start_vacuum)
 
         logger.info("Updating the intro and lab events with the customized version.")
-        self.gcm = update_intro_and_lab_events(self.gcm, bool_hidden_mansion, max_health, start_inv_list, bool_start_boo_radar,
-            door_to_close_list, bool_start_vacuum)
+        update_intro_and_lab_events(self.gcm, bool_hidden_mansion, max_health, start_inv_list,
+            bool_start_boo_radar, door_to_close_list, bool_start_vacuum)
 
         if bool_boo_checks:
             logger.info("Boo Gates was enabled, updating all of the common events with the customized version.")
@@ -278,30 +286,30 @@ class LuigisMansionRandomizer:
                     self.jmp_event_info_table.info_file_field_entries = list(filter(lambda info_entry: not (
                         info_entry["EventNo"] == int(event_no)), self.jmp_event_info_table.info_file_field_entries))
                     continue
-                self.gcm = update_boo_gates(self.gcm, event_no, required_boo_count,
-                    bool_boo_rando_enabled, str_move_type)
+                update_boo_gates(self.gcm, event_no, required_boo_count, bool_boo_rando_enabled, str_move_type)
 
         logger.info("Updating the blackout event with the customized version.")
-        self.gcm = update_blackout_event(self.gcm)
+        update_blackout_event(self.gcm)
 
         logger.info("Updating Clairvoya's event with the customized version.")
-        self.gcm = randomize_clairvoya(self.gcm, req_mario_count, hint_dist, madam_hint_dict, self.seed)
+        randomize_clairvoya(self, req_mario_count, hint_dist, madam_hint_dict)
 
         logger.info("Updating common events with the generated in-game hints.")
-        self.gcm = write_in_game_hints(self.gcm, hint_dist, hint_list, max_health, self.seed)
+        write_in_game_hints(self, hint_dist, hint_list, max_health)
 
         logger.info("Updating the spawn event...")
-        self.gcm = update_spawn_events(self.gcm)
+        update_spawn_events(self.gcm)
 
         if bool_portrait_hints:
             logger.info("Portrait Hints are enabled, updating portrait ghost hearts with the generated in-game hints.")
-            self.gcm = write_portrait_hints(self.gcm, hint_dist, hint_list, self.seed)
+            write_portrait_hints(self, hint_dist, hint_list)
 
         if bool_randomize_music:
             logger.info("Randomized Music is enabled, updating all events with various in-game music.")
-            self.gcm = randomize_music(self.gcm, self.seed)
+            randomize_music(self)
 
         logger.info("Updating the in-game tables for chests, furniture, ghosts, etc.")
+        self.randomize_jmp_tables()
         self.update_map_jmp_tables()
 
         # Save the map two file changes

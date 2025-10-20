@@ -1,8 +1,7 @@
 import re
 from io import BytesIO
-import random
 from pkgutil import get_data
-from typing import Optional
+from typing import TYPE_CHECKING
 
 from gclib.gcm import GCM
 from gclib.rarc import RARCFileEntry
@@ -12,11 +11,13 @@ from ..Helper_Functions import get_arc
 from ..Hints import ALWAYS_HINT, PORTRAIT_HINTS
 from CommonClient import logger
 
+if TYPE_CHECKING:
+    from ..LMGenerator import LuigisMansionRandomizer
+
 MAIN_PKG_NAME = "worlds.luigismansion.LMGenerator"
 
 
-def update_boo_gates(gcm: GCM, event_no: str, req_boo_count: int, boo_rando_enabled: bool,
-    move_luigi: Optional[str]) -> GCM:
+def update_boo_gates(gcm: GCM, event_no: str, req_boo_count: int, boo_rando_enabled: bool, move_luigi: str):
 
     lines = get_data(MAIN_PKG_NAME, "data/custom_events/event" + event_no + ".txt").decode('utf-8')
     if move_luigi:
@@ -26,7 +27,8 @@ def update_boo_gates(gcm: GCM, event_no: str, req_boo_count: int, boo_rando_enab
         lines = lines.replace("{Count0}", str(0)).replace("{Count1}", str(0))
         lines = lines.replace("{Count2}", str(0)).replace("{Count3}", str(0))
         lines = lines.replace("{Count4}", str(req_boo_count)).replace("{CaseBegin}", str_begin_case)
-        return _update_custom_event(gcm, event_no, True, lines, None)
+        _update_custom_event(gcm, event_no, True, lines, None)
+        return
 
     str_begin_case = "CheckBoos"
     lines = lines.replace("{CaseBegin}", str_begin_case)
@@ -79,16 +81,16 @@ def update_boo_gates(gcm: GCM, event_no: str, req_boo_count: int, boo_rando_enab
             lines = lines.replace("{Case3}", str_not_enough)
             lines = lines.replace("{Case4}", str_boo_captured)
 
-    return _update_custom_event(gcm, event_no, True, lines, None)
+    _update_custom_event(gcm, event_no, True, lines, None)
 
 # Updates the event txt and csv for blackout
-def update_blackout_event(gcm: GCM) -> GCM:
+def update_blackout_event(gcm: GCM):
     lines = get_data(MAIN_PKG_NAME, "data/custom_events/event44.txt").decode('utf-8')
     csv_lines = get_data(MAIN_PKG_NAME, "data/custom_csvs/message44.csv").decode('utf-8')
-    return _update_custom_event(gcm, "44", True, lines, csv_lines)
+    _update_custom_event(gcm, "44", True, lines, csv_lines)
 
 # Updates all common events
-def update_common_events(gcm: GCM, randomize_mice: bool, starting_vac: bool) -> GCM:
+def update_common_events(gcm: GCM, randomize_mice: bool, starting_vac: bool):
     list_custom_events = ["03", "10", "13", "22", "23", "24", "29", "33", "35", "37", "38", "50", "61", "64",
         "65", "66", "67", "68", "71", "72", "74", "75", "82", "86", "87", "88", "89", "90"]
     if randomize_mice:
@@ -98,24 +100,21 @@ def update_common_events(gcm: GCM, randomize_mice: bool, starting_vac: bool) -> 
         lines = get_data(MAIN_PKG_NAME, "data/custom_events/event" + custom_event +".txt").decode('utf-8')
         if custom_event == "10" and not starting_vac:
             lines = lines.replace("<WEAPON>", "<NOWEAPON>")
-        gcm = _update_custom_event(gcm, custom_event, True, lines, None)
-
-
-    return gcm
+        _update_custom_event(gcm, custom_event, True, lines, None)
 
 # Update the intro event and E. Gadd event as needed.
 def update_intro_and_lab_events(gcm: GCM, hidden_mansion: bool, max_health: str, start_inv: list[str],
-    start_radar: bool,doors_to_open: dict[int, int], starting_vac: bool) -> GCM:
+    start_radar: bool,doors_to_open: dict[int, int], starting_vac: bool):
     # Update the custom Gallery Event
     lines = get_data(MAIN_PKG_NAME, "data/custom_events/event28.txt").decode('utf-8')
     csv_lines = get_data(MAIN_PKG_NAME, "data/custom_csvs/message28.csv").decode('utf-8')
-    gcm = _update_custom_event(gcm, "28", True, lines, csv_lines)
+    _update_custom_event(gcm, "28", True, lines, csv_lines)
 
     # Update the custom E. Gadd's lab event.
     lines = get_data(MAIN_PKG_NAME, "data/custom_events/event08.txt").decode('utf-8')
     lines = lines.replace("{LUIGIMAXHP}", max_health)
     csv_lines = get_data(MAIN_PKG_NAME, "data/custom_csvs/message8.csv").decode('utf-8')
-    gcm = _update_custom_event(gcm, "08", True, lines, csv_lines)
+    _update_custom_event(gcm, "08", True, lines, csv_lines)
 
     # Update the main intro event.
     lines = get_data(MAIN_PKG_NAME, "data/custom_events/event48.txt").decode('utf-8')
@@ -139,19 +138,18 @@ def update_intro_and_lab_events(gcm: GCM, hidden_mansion: bool, max_health: str,
     lines = lines.replace("{DOOR_LIST}", ''.join(event_door_list))
     lines = lines.replace("{LUIGIMAXHP}", max_health)
 
-    return _update_custom_event(gcm, "48", False, lines, None)
+    _update_custom_event(gcm, "48", False, lines, None)
 
 # Randomizes all the music in all the event.txt files.
-def randomize_music(gcm: GCM, seed: str) -> GCM:
+def randomize_music(lm_gen: "LuigisMansionRandomizer"):
     list_ignore_events = ["event00.szp"]
-    event_dir = gcm.get_or_create_dir_file_entry("files/Event")
-    random.seed(seed)
+    event_dir = lm_gen.gcm.get_or_create_dir_file_entry("files/Event")
 
     for lm_event in [event_file for event_file in event_dir.children if not event_file.is_dir]:
         if lm_event.name in list_ignore_events or not re.match(r"event\d+\.szp", lm_event.name):
             continue
 
-        event_arc = get_arc(gcm, lm_event.file_path)
+        event_arc = get_arc(lm_gen.gcm, lm_event.file_path)
         name_to_find = lm_event.name.replace(".szp", ".txt")
 
         if not any(event_file for event_file in event_arc.file_entries if event_file.name == name_to_find):
@@ -167,7 +165,7 @@ def randomize_music(gcm: GCM, seed: str) -> GCM:
                 list_of_bad_music = [-1, 13, 17, 21, 24, 28, 41]
                 int_music_selection: int = -1
                 while int_music_selection in list_of_bad_music:
-                    int_music_selection = random.randint(0, 52)
+                    int_music_selection = lm_gen.random.randint(0, 52)
                 event_str = event_str.replace(music_match, "<BGM>(" + str(int_music_selection) + ")")
 
         updated_event = BytesIO(event_str.encode('utf-8'))
@@ -177,18 +175,15 @@ def randomize_music(gcm: GCM, seed: str) -> GCM:
 
         event_arc.save_changes()
         logger.info("Randomize music Yay0 check...")
-        gcm.changed_files[lm_event.file_path] = Yay0.compress(event_arc.data)
-    return gcm
+        lm_gen.gcm.changed_files[lm_event.file_path] = Yay0.compress(event_arc.data)
 
 # Updates all portrait ghost hints, if the option is turned on.
-def write_portrait_hints(gcm: GCM, hint_distribution_choice: int, all_hints: dict[str, dict[str,str]],
-                        seed: str) -> GCM:
+def write_portrait_hints(lm_gen: "LuigisMansionRandomizer", hint_distribution_choice: int, all_hints: dict[str, dict[str,str]]):
     csv_lines = get_data(MAIN_PKG_NAME, "data/custom_csvs/message78.csv").decode('utf-8')
-    random.seed(seed)
     if hint_distribution_choice == 1:
         for portrait_name in PORTRAIT_HINTS.keys():
             jokes = get_data(MAIN_PKG_NAME, "data/jokes.txt").decode('utf-8')
-            joke_hint = random.choice(str.splitlines(jokes)).replace("{BreakHere}", "\n")
+            joke_hint = lm_gen.random.choice(str.splitlines(jokes)).replace("{BreakHere}", "\n")
             csv_lines = csv_lines.replace(f"{portrait_name}", joke_hint)
     else:
         for portrait_name, portrait_hint in all_hints.items():
@@ -218,14 +213,13 @@ def write_portrait_hints(gcm: GCM, hint_distribution_choice: int, all_hints: dic
                               "\n<COLOR>(0) can be found at \n<COLOR>(1)"+portrait_hint["Send Player"]+"'s \n"+portrait_hint["Location"])
                     csv_lines = csv_lines.replace(f"{portrait_name}", hintfo)
 
-    return _update_custom_event(gcm, "78", True, None, csv_lines)
+    _update_custom_event(lm_gen.gcm, "78", True, None, csv_lines)
 
 # Updates clairvoya's hints and mario item information based on the options selected.
-def randomize_clairvoya(gcm: GCM, req_mario_count: str, hint_distribution_choice: int,
-    madame_hint: dict[str, str], seed: str) -> GCM:
+def randomize_clairvoya(lm_gen: "LuigisMansionRandomizer", req_mario_count: str, hint_distribution_choice: int,
+    madame_hint: dict[str, str]):
     lines = get_data(MAIN_PKG_NAME, "data/custom_events/event36.txt").decode('utf-8')
     csv_lines = get_data(MAIN_PKG_NAME, "data/custom_csvs/message36.csv").decode('utf-8')
-    random.seed(seed)
 
     match hint_distribution_choice:
         case 4:
@@ -246,7 +240,7 @@ def randomize_clairvoya(gcm: GCM, req_mario_count: str, hint_distribution_choice
             case_type = "DisabledHint"
         case 1:
             jokes = get_data(MAIN_PKG_NAME, "data/jokes.txt").decode('utf-8')
-            joke_hint = random.choice(str.splitlines(jokes))
+            joke_hint = lm_gen.random.choice(str.splitlines(jokes))
             csv_lines = csv_lines.replace("{JokeText}", joke_hint)
             case_type = "JokeHint"
         case _:
@@ -278,18 +272,18 @@ def randomize_clairvoya(gcm: GCM, req_mario_count: str, hint_distribution_choice
         else:
             lines = lines.replace(cases_to_replace[i], str_bad_end)
 
-    return _update_custom_event(gcm, "36", True, lines, csv_lines)
+    _update_custom_event(lm_gen.gcm, "36", True, lines, csv_lines)
 
 # Writes all the in game hints for everything except clairvoya
-def write_in_game_hints(gcm: GCM, hint_distribution_choice: int, all_hints: dict[str, dict[str, str]], maxhp: str,
-    seed: str) -> GCM:
-    random.seed(seed)
+def write_in_game_hints(lm_gen: "LuigisMansionRandomizer", hint_distribution_choice: int,
+    all_hints: dict[str, dict[str, str]], maxhp: str):
+    hint_data: dict[str, str] = {}
 
     # Add new event and csv to our special spawn toad
     lines = get_data(MAIN_PKG_NAME, "data/custom_events/event12.txt").decode('utf-8')
     csv_lines = get_data(MAIN_PKG_NAME, "data/custom_csvs/message12.csv").decode('utf-8')
     lines = lines.replace("{LUIGIMAXHP}", maxhp)
-    gcm = _update_custom_event(gcm, "12", True, lines, csv_lines)
+    _update_custom_event(lm_gen.gcm, "12", True, lines, csv_lines)
 
     #Add various hints to their specific hint spots
     for hint_name in ALWAYS_HINT.keys():
@@ -339,7 +333,7 @@ def write_in_game_hints(gcm: GCM, hint_distribution_choice: int, all_hints: dict
                 case_type = "DisabledHint"
             case 1:
                 jokes = get_data(MAIN_PKG_NAME, "data/jokes.txt").decode('utf-8')
-                joke_hint = random.choice(str.splitlines(jokes))
+                joke_hint = lm_gen.random.choice(str.splitlines(jokes))
                 csv_lines = csv_lines.replace("{JokeText}", joke_hint)
                 case_type = "JokeHint"
             case _:
@@ -363,19 +357,18 @@ def write_in_game_hints(gcm: GCM, hint_distribution_choice: int, all_hints: dict
             lines = lines.replace("{LUIGIMAXHP}", maxhp)
 
         if event_no == 4:
-            gcm = _update_custom_event(gcm, "04", True, lines, csv_lines)
+            _update_custom_event(lm_gen.gcm, "04", True, lines, csv_lines)
         else:
-            gcm = _update_custom_event(gcm, str(event_no), True, lines, csv_lines)
-    return gcm
+            _update_custom_event(lm_gen.gcm, str(event_no), True, lines, csv_lines)
 
 # Update the spawn event info
-def update_spawn_events(gcm: GCM) -> GCM:
+def update_spawn_events(gcm: GCM):
     lines = get_data(MAIN_PKG_NAME, "data/custom_events/event11.txt").decode('utf-8')
-    return _update_custom_event(gcm, "11", True, lines, None)
+    _update_custom_event(gcm, "11", True, lines, None)
 
 # Using the provided txt or csv lines for a given event file, updates the actual szp file in memory with this data.
 def _update_custom_event(gcm: GCM, event_number: str, delete_all_other_files: bool,
-    event_txt=None, event_csv=None) -> GCM:
+    event_txt=None, event_csv=None):
     if not event_txt and not event_csv:
         raise Exception("Cannot have both the event text and csv text be null/empty.")
 
@@ -397,8 +390,6 @@ def _update_custom_event(gcm: GCM, event_number: str, delete_all_other_files: bo
         next((info_files for info_files in custom_event.file_entries if
               info_files.name == event_csv_file)).data = csv_lines
 
-    custom_event.save_changes()
-
     if delete_all_other_files:
         files_to_keep: list[str] = [event_txt_file, ".", ".."]
         if event_csv:
@@ -413,5 +404,5 @@ def _update_custom_event(gcm: GCM, event_number: str, delete_all_other_files: bo
         #TODO check for all directories being empty and delete them.
 
     logger.info(f"Event{event_number} Yay0 check...")
+    custom_event.save_changes()
     gcm.changed_files["files/Event/event" + event_number + ".szp"] = Yay0.compress(custom_event.data)
-    return gcm
