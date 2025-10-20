@@ -2,6 +2,7 @@ from typing import NamedTuple, Optional
 from pathlib import Path
 
 from gclib.rarc import RARCFileEntry, RARC
+from gclib.gcm import GCM
 
 
 PROJECT_ROOT: Path = Path(__file__).resolve().parent
@@ -76,8 +77,8 @@ def find_rarc_file_entry(rarc_file: RARC, directory_name: str, name_of_file: str
     return None
 
 # Get an ARC / RARC / SZP file from within the ISO / ROM
-def get_arc(self, arc_path):
+def get_arc(gcm: GCM, arc_path):
     arc_path = arc_path.replace("\\", "/")
-    arc = RARC(self.gcm.read_file_data(arc_path))  # Automatically decompresses Yay0
+    arc = RARC(gcm.read_file_data(arc_path))  # Automatically decompresses Yay0
     arc.read()
     return arc
