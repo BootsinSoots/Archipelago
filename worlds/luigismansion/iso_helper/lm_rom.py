@@ -13,7 +13,6 @@ import urllib.request
 from ..Helper_Functions import RANDOMIZER_NAME
 
 logger = logging.getLogger()
-MAIN_PKG_NAME = "worlds.luigismansion.LMGenerator"
 
 LM_USA_MD5 = 0x6e3d9ae0ed2fbd2f77fa1ca09a60c494
 
@@ -86,14 +85,7 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
         output_file = base_path + self.result_file_ending
 
         try:
-            # Verify we have a clean rom of the game first
-            self.verify_base_rom(lm_clean_iso, throw_on_missing_speedups=True)
-
-            # Use our randomize function to patch the file into an ISO.
-            from ..LMGenerator import LuigisMansionRandomizer
-            with zipfile.ZipFile(aplm_patch, "r") as zf:
-                aplm_bytes = zf.read("patch.aplm")
-            LuigisMansionRandomizer(lm_clean_iso, output_file, aplm_bytes)
+            self.create_iso(aplm_patch, output_file, lm_clean_iso, True)
         except ImportError:
             self._get_remote_dependencies_and_create_iso(aplm_patch, output_file, lm_clean_iso)
         return output_file
@@ -185,12 +177,9 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
 
         return
 
-    def create_iso(self, temp_dir_path: str, patch_file_path: str, output_iso_path: str, vanilla_iso_path: str):
-        logger.info(f"Appending the following to sys path to get dependencies correctly: {temp_dir_path}")
-        sys.path.insert(0, temp_dir_path)
-
+    def create_iso(self, patch_file_path: str, output_iso_path: str, vanilla_iso_path: str, throw_error: bool):
         # Verify we have a clean rom of the game first
-        self.verify_base_rom(vanilla_iso_path)
+        self.verify_base_rom(vanilla_iso_path, throw_error)
 
         # Use our randomize function to patch the file into an ISO.
         from ..LMGenerator import LuigisMansionRandomizer
@@ -199,6 +188,7 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
         LuigisMansionRandomizer(vanilla_iso_path, output_iso_path, aplm_bytes)
 
     def _get_remote_dependencies_and_create_iso(self, aplm_patch: str, output_file: str, lm_clean_iso: str):
+        local_dir_path: str = "N/A"
         try:
             local_dir_path = self._get_temp_folder_name()
             # If temp directory exists, and we failed to patch the ISO, we want to remove the directory
@@ -210,6 +200,10 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
             # Load the external dependencies based on OS
             logger.info("Temporary Directory created as: %s", local_dir_path)
             self.download_lib_zip(local_dir_path)
-            self.create_iso(local_dir_path, aplm_patch, output_file, lm_clean_iso)
+
+            logger.info(f"Appending the following to sys path to get dependencies correctly: {local_dir_path}")
+            sys.path.insert(0, local_dir_path)
+
+            self.create_iso(aplm_patch, output_file, lm_clean_iso, False)
         except PermissionError:
             logger.warning("Failed to cleanup temp folder, %s ignoring delete.", local_dir_path)
