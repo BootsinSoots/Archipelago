@@ -39,19 +39,26 @@ REGION_LIST: dict[str, LMRegionInfo] = {
     "Wardrobe Balcony": 37,
     "Study": LMRegionInfo(2, 2, 34, 35, ["Study Key", "Family Hallway Key"],  ["Study Key"], [32],
         False, -1696.352290, 550.000000, -1605.182980),
-    "Master Bedroom": 33,
-    "Nursery": 24,
-    "Twins' Room": 25,
-    "Laundry Room": LMRegionInfo(2, 1, 5, 5, ["Laundry Key", "Butler's Rom Key", "Heart Key"],
-        ["Laundry Key", "Butler's Rom Key"], [1, 7], False, -3165.112550, 0.000000, -804.770508),
-    "Butler's Room": 0,
+    "Master Bedroom": LMRegionInfo(2, 2, 33, 34, ["Master Bedroom Key", "Family Hallway Key"], ["Master Bedroom Key"],
+                                   [31], True, -3365.857670, 550.000000, -1513.529660),
+    "Nursery": LMRegionInfo(2, 2, 24, 26, ["Nursery Key", "Family Hallway Key"], ["Nursery Key"], [27], True,
+                            -3331.658690, 550.000000, -198.970337),
+    "Twins' Room": LMRegionInfo(2, 2, 25, 27, ["Twins Bedroom Key", "Family Hallway Key"], ["Twins Bedroom Key"], [28],
+                                True, -1729.586790, 550.000000, 116.055779),
+    "Laundry Room": LMRegionInfo(2, 1, 5, 5, ["Laundry Key", "Butler's Room Key", "Heart Key"],
+        ["Laundry Key", "Butler's Room Key"], [1, 7], False, -3165.112550, 0.000000, -804.770508),
+    "Butler's Room": LMRegionInfo(2, 1, 0, 0, ["Butler's Room Key", "Laundry Key", "Heart Key"], ["Butler's Room Key"],
+                                  [1], True, -3800.646000, 0.000000, -327.291077),
     "Fortune-Teller's Room": 3,
     "Ballroom": 10,
     "Dining Room": 9,
     "1F Washroom": 17,
     "1F Bathroom": 20,
-    "Conservatory": 21,
-    "Billiards Room": 12,
+    "Conservatory": LMRegionInfo(2, 1, 21, 22, ["Conservatory Key", "Lower 2F Stairwell Key", "Heart Key"],
+                                 ["Conservatory Key"], [21], True, 780.405884, 0.000000, -4662.089840),
+    "Billiards Room": LMRegionInfo(2, 1, 12, 12, ["Billiards Room Key", "Heart Key"],
+                                   ["Billiards Room Key", "Projection room Key"], [17, 18], True,
+                                   -963.755737, 0.000000, -3055.808110),
     "Basement Stairwell": 65,
     "Projection Room": 13,
     "Kitchen": 8,
@@ -75,10 +82,12 @@ REGION_LIST: dict[str, LMRegionInfo] = {
     "Secret Altar": LMRegionInfo(2, 0, 70, 73, ["Spade Key", "Altar Hallway Key"], ["Spade Key"], [72],
         False, 2293.000000, -550.000000, -5805.000000),
     "Tea Room": 47,
-    "Nana's Room": 46,
+    "Nana's Room": LMRegionInfo(2, 2, 46, 49, ["Nana's Room Key", "Upper 2F Stairwell Key"], ["Nana's Room Key"], [49],
+                                True, -457.708374, 550.000000, -4535.000000),
     "2F Rear Hallway": 26,
     "2F Washroom": 42,
-    "2F Bathroom": 45,
+    "2F Bathroom": LMRegionInfo(2, 2, 45, 48, ["2F Bathroom Key", "Upper 2F Stairwell Key"], ["2F Bathroom Key"], [48],
+                                True, -1902.854130, 550.000000, -4660.501950),
     "Astral Hall": 40,
     "Observatory": 41,
     "Sealed Room": 36,
@@ -91,7 +100,9 @@ REGION_LIST: dict[str, LMRegionInfo] = {
     "Balcony": 59,
     "Armory": 48,
     "Ceramics Studio": 55,
-    "Telephone Room": 50,
+    "Telephone Room": LMRegionInfo(2, 3, 50, 53, ["Telephone Room Key", "Clockwork Key"],
+                                   ["Telephone Room Key", "Clockwork Key"], [52, 53], True,
+                                   -9.812825, 1100.000000, 118.738243),
     "Clockwork Room": LMRegionInfo(2, 3, 56, 59, ["Clockwork Key", "Telephone Room Key"], ["Clockwork Key"], [53],
         True, 10.759588, 1100.000000, -1649.743900),
     "Roof": 60,
@@ -184,33 +195,6 @@ GHOST_TO_ROOM = {
 }
 
 spawn_locations = {
-    "Telephone Room":        {"room_no": 50, "pos_x": -9.812825, "pos_y": 1100, "pos_z": 118.738243,
-                              "key": ["Telephone Room Key", "Clockwork Key"], "door_keys": ["Telephone Room Key", "Clockwork Key"],
-                              "door_ids": [53, 52], "in_game_room_id": 53}, # Telephone
-    "Butler's Room":         {"room_no": 0, "pos_x": -3800.646, "pos_y": 0, "pos_z": -327.291077,
-                              "key": ["Butler's Room Key", "Laundry Room Key", "Heart Key"], "door_keys": [],
-                              "door_ids": [1], "in_game_room_id": 0}, # Butler
-    "Conservatory":          {"room_no": 21, "pos_x": 780.405884, "pos_y": 0, "pos_z": -4662.089840,
-                              "key": ["Conservatory Key", "Lower 2F Stairwell Key","Heart Key"], "door_keys": ["Conservatory Key"],
-                              "door_ids": [21], "in_game_room_id": 22}, # Conservatory
-    "Billiards Room":        {"room_no": 12, "pos_x": -963.755737, "pos_y": 0, "pos_z": -3055.808110,
-                              "key": ["Billiards Room Key", "Heart Key"], "door_keys": ["Billiards Room Key", "Projection Room Key"],
-                              "door_ids": [17, 18], "in_game_room_id": 12}, # Billiards
-    "Twins' Room":           {"room_no": 25, "pos_x": -1729.586790, "pos_y": 550, "pos_z": 116.055779,
-                              "key": ["Twins Bedroom Key", "Family Hallway Key"], "door_keys": ["Twins Bedroom Key"],
-                              "door_ids": [28], "in_game_room_id": 27}, # Twins
-    "Nursery":               {"room_no": 24, "pos_x": -3331.658690, "pos_y": 550, "pos_z": -198.970337,
-                              "key": ["Nursery Key", "Family Hallway Key"], "door_keys": ["Nursery Key"],
-                              "door_ids": [27], "in_game_room_id": 26}, # Nursery
-    "Master Bedroom":        {"room_no": 33, "pos_x": -3365.857670, "pos_y": 550, "pos_z": -1513.529660,
-                              "key": ["Master Bedroom Key", "Family Hallway Key"], "door_keys": ["Master Bedroom Key"],
-                              "door_ids": [31], "in_game_room_id": 34}, # Master bed
-    "Nana's Room":           {"room_no": 46, "pos_x": -457.708374, "pos_y": 550, "pos_z": -4535.000000,
-                              "key": ["Nana's Room Key", "Upper 2F Stairwell Key"], "door_keys": ["Nana's Room Key"],
-                              "door_ids": [49], "in_game_room_id": 49}, # Nana
-    "2F Bathroom":           {"room_no": 45, "pos_x": -1902.854130, "pos_y": 550, "pos_z": -4660.501950,
-                              "key": ["2F Bathroom Key", "Upper 2F Stairwell Key"], "door_keys": ["2F Bathroom Key"],
-                              "door_ids": [48], "in_game_room_id": 48}, # 2f bath
     "Astral Hall":           {"room_no": 40, "pos_x": 2023.579290, "pos_y": 550, "pos_z": -2915.000000,
                               "key": ["Astral Hall Key", "Upper 2F Stairwell Key"],
                               "door_keys": ["Astral Hall Key", "Observatory Key"], "door_ids": [44, 40], "in_game_room_id": 43}, # astral
@@ -268,10 +252,6 @@ spawn_locations = {
                              "door_keys": ["Cold Storage Key"],
                              "door_ids": [65], "in_game_room_id": 64},  # Foyer
 }
-
-exp_spawns: dict[str,dict[str, int]] = {
-}
-
 
 def set_ghost_type(world: "LMWorld", ghost_list: dict):
     for region_name in ghost_list:
