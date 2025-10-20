@@ -385,7 +385,7 @@ class LMWorld(World):
                              "and")
                 if entry.parent_region.name == self.origin_region_name:
                     if self.spawn_full_locked:
-                        keys = spawn_locations[self.origin_region_name]["door_keys"]
+                        keys = REGION_LIST[self.origin_region_name].door_keys
                         for key in keys:
                             add_rule(entry, lambda state, k=key: state.has(k, self.player), "or")
                 set_element_rules(self, entry, True)
@@ -415,7 +415,7 @@ class LMWorld(World):
                              "and")
                 if entry.parent_region.name == self.origin_region_name:
                     if self.spawn_full_locked:
-                        keys = spawn_locations[self.origin_region_name]["door_keys"]
+                        keys = REGION_LIST[self.origin_region_name].door_keys
                         for key in keys:
                             add_rule(entry, lambda state, k=key: state.has(k, self.player), "or")
                 entry.code = None
@@ -523,9 +523,9 @@ class LMWorld(World):
             if self.options.door_rando.value == 2:
                 for door_num in [3, 42, 59, 72]: # If door is a suite_door, lock it in this option
                     self.open_doors[door_num] = 0
-            spawn_doors = copy.deepcopy(spawn_locations[self.origin_region_name]["door_ids"])
+            spawn_doors = copy.deepcopy(REGION_LIST[self.origin_region_name].door_ids)
             if spawn_doors:
-                for door in spawn_locations[self.origin_region_name]["door_ids"]:
+                for door in REGION_LIST[self.origin_region_name].door_ids:
                     if self.open_doors[door] == 1:
                         spawn_doors.remove(door)
                 if not spawn_doors:
@@ -556,7 +556,7 @@ class LMWorld(World):
 
         if self.options.early_first_key.value == 1:
             early_key = ""
-            for key in spawn_locations[self.origin_region_name]["key"]:
+            for key in REGION_LIST[self.origin_region_name].early_keys:
                 key_data: LMItemData = ITEM_TABLE[key]
                 if self.open_doors[key_data.doorid] == 0:
                     early_key = key
