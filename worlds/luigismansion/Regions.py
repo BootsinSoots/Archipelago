@@ -214,9 +214,6 @@ GHOST_TO_ROOM = {
     # "Sitting Room": "Fire"  # Fire
 }
 
-spawn_locations = {
-}
-
 def set_ghost_type(world: "LMWorld", ghost_list: dict):
     for region_name in ghost_list:
         types = ["Fire", "Water", "Ice", "No Element"]
