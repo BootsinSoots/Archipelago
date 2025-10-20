@@ -77,7 +77,7 @@ def find_rarc_file_entry(rarc_file: RARC, directory_name: str, name_of_file: str
     return None
 
 # Get an ARC / RARC / SZP file from within the ISO / ROM
-def get_arc(gcm: GCM, arc_path):
+def get_arc(gcm: GCM, arc_path) -> RARC:
     arc_path = arc_path.replace("\\", "/")
     if arc_path in gcm.changed_files:
         arc = RARC(gcm.get_changed_file_data(arc_path))
