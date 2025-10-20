@@ -8,11 +8,10 @@ from typing import ClassVar
 
 # AP Related Imports
 import Options
-from BaseClasses import Tutorial, Item, ItemClassification, MultiWorld
+from BaseClasses import Tutorial, ItemClassification
 from Utils import visualize_regions, local_path
 from worlds.AutoWorld import WebWorld, World
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess, icon_paths
-from worlds.generic.Rules import add_rule
 from .client.luigismansion_settings import LuigisMansionSettings
 from .client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME
 
@@ -51,7 +50,8 @@ class LMWeb(WebWorld):
             LuigiOptions.Portrification,
             LuigiOptions.SpeedySpirits,
             LuigiOptions.Lightsanity,
-            LuigiOptions.Walksanity
+            LuigiOptions.Walksanity,
+            LuigiOptions.WhatDoYouMean,
         ]),
         Options.OptionGroup("Access Options", [
             LuigiOptions.RankRequirement,
@@ -191,6 +191,14 @@ class LMWorld(World):
     def _set_optional_locations(self):
 
         # Set the flags for progression location by checking player's settings
+        if self.options.WDYM_checks:
+            for location, data in WDYM_LOCATION_TABLE.items():
+                region = self.get_region(data.region)
+                entry = LMLocation(self.player, location, region, data)
+                if data.require_poltergust:
+                    add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
+                set_element_rules(self, entry, False)
+                region.locations.append(entry)
         if self.options.toadsanity:
             for location, data in TOAD_LOCATION_TABLE.items():
                 # If location is starting room toad, assign to starting room. Otherwise proceed as normal
@@ -377,7 +385,7 @@ class LMWorld(World):
                              "and")
                 if entry.parent_region.name == self.origin_region_name:
                     if self.spawn_full_locked:
-                        keys = spawn_locations[self.origin_region_name]["door_keys"]
+                        keys = REGION_LIST[self.origin_region_name].door_keys
                         for key in keys:
                             add_rule(entry, lambda state, k=key: state.has(k, self.player), "or")
                 set_element_rules(self, entry, True)
@@ -407,7 +415,7 @@ class LMWorld(World):
                              "and")
                 if entry.parent_region.name == self.origin_region_name:
                     if self.spawn_full_locked:
-                        keys = spawn_locations[self.origin_region_name]["door_keys"]
+                        keys = REGION_LIST[self.origin_region_name].door_keys
                         for key in keys:
                             add_rule(entry, lambda state, k=key: state.has(k, self.player), "or")
                 entry.code = None
@@ -439,6 +447,8 @@ class LMWorld(World):
         add_rule(loc, lambda state: state.has("Poltergust 3000", self.player), "and")
 
     def generate_early(self):
+        passthrough = {}
+
         if self.options.energy_link == 1 and self.options.ring_link == 1:
             raise Options.OptionError("In Luigi's Mansion, both energy_link and ring_link cannot be enabled.\n"
                                       f"This error was found in {self.player_name}'s Luigi's Mansion world."
@@ -449,9 +459,9 @@ class LMWorld(World):
                                       f"This error was found in {self.player_name}'s Luigi's Mansion world."
                                       f"Their YAML must be fixed")
         if hasattr(self.multiworld, "re_gen_passthrough"):
-            if "Luigi's Mansion" in self.multiworld.re_gen_passthrough:
+            if self.game in self.multiworld.re_gen_passthrough:
                 self.using_ut = True
-                passthrough = self.multiworld.re_gen_passthrough["Luigi's Mansion"]
+                passthrough = self.multiworld.re_gen_passthrough[self.game]
                 self.options.rank_requirement.value = passthrough["rank requirement"]
                 self.options.game_mode.value = passthrough["game mode"]
                 self.options.vacuum_upgrades.value = passthrough["better vacuum"]
@@ -491,7 +501,8 @@ class LMWorld(World):
             # We know we're in second gen
             self.origin_region_name = passthrough["spawn_region"]  # this should be the same region from slot data
         elif self.options.random_spawn.value > 0:
-            self.origin_region_name = self.random.choice(list(spawn_locations.keys()))
+            self.origin_region_name = self.random.choice([region_name for (region_name, region_data) in REGION_LIST if
+                region_data.allow_random_spawn])
 
         if self.using_ut:
             # We know we're in second gen
@@ -514,9 +525,9 @@ class LMWorld(World):
             if self.options.door_rando.value == 2:
                 for door_num in [3, 42, 59, 72]: # If door is a suite_door, lock it in this option
                     self.open_doors[door_num] = 0
-            spawn_doors = copy.deepcopy(spawn_locations[self.origin_region_name]["door_ids"])
+            spawn_doors = copy.deepcopy(REGION_LIST[self.origin_region_name].door_ids)
             if spawn_doors:
-                for door in spawn_locations[self.origin_region_name]["door_ids"]:
+                for door in REGION_LIST[self.origin_region_name].door_ids:
                     if self.open_doors[door] == 1:
                         spawn_doors.remove(door)
                 if not spawn_doors:
@@ -547,7 +558,7 @@ class LMWorld(World):
 
         if self.options.early_first_key.value == 1:
             early_key = ""
-            for key in spawn_locations[self.origin_region_name]["key"]:
+            for key in REGION_LIST[self.origin_region_name].early_keys:
                 key_data: LMItemData = ITEM_TABLE[key]
                 if self.open_doors[key_data.doorid] == 0:
                     early_key = key
@@ -559,12 +570,12 @@ class LMWorld(World):
     def create_regions(self):
         # Add all randomizable regions
         for region_name in REGION_LIST.keys():
-            self.multiworld.regions.append(Region(region_name, self.player, self.multiworld))
+            self.multiworld.regions.append(LMRegion(region_name, REGION_LIST[region_name], self.player, self.multiworld))
 
         # Assign each location to their region
         for location, data in BASE_LOCATION_TABLE.items():
             # Set our special spawn locations to the spawn regions
-            if data.code in (708, 853, 925, 926, 927):
+            if data.code in (708, 853):
                 region = self.get_region(self.origin_region_name)
             else:
                 region = self.get_region(data.region)
@@ -784,21 +795,22 @@ class LMWorld(World):
             self.finished_boo_scaling.wait()
 
         # Output which item has been placed at each location
-        locations = self.get_locations()
+        locations = list(lmloc for lmloc in self.get_locations() if isinstance(lmloc, LMLocation))
         for location in locations:
             if location.address is not None or (location.name in ROOM_BOO_LOCATION_TABLE.keys()):
                 if location.item:
+                    lm_item: "LMItem" = location.item #TODO fix this type hint warning.
                     itemid = 0
-                    if location.item.player == self.player:
+                    if lm_item.player == self.player:
                         if location.address:
-                            if location.item.type == "Door Key":
-                                itemid = location.item.doorid
-                        roomid = REGION_LIST[location.parent_region.name]
+                            if lm_item.type == "Door Key":
+                                itemid = lm_item.doorid
+                        roomid = REGION_LIST[location.parent_region.name].room_id
                         item_info = {
-                            "player": location.item.player,
-                            "name": location.item.name,
-                            "game": location.item.game,
-                            "classification": location.item.classification.name,
+                            "player": lm_item.player,
+                            "name": lm_item.name,
+                            "game": lm_item.game,
+                            "classification": lm_item.classification.name,
                             "door_id": itemid,
                             "room_no": roomid,
                             "type": location.type,
@@ -809,12 +821,12 @@ class LMWorld(World):
 
                         output_data["Locations"][location.name] = item_info
                     else:
-                        roomid = REGION_LIST[location.parent_region.name]
+                        roomid = REGION_LIST[location.parent_region.name].room_id
                         item_info = {
-                            "player": location.item.player,
-                            "name": location.item.name,
-                            "game": location.item.game,
-                            "classification": location.item.classification.name,
+                            "player": lm_item.player,
+                            "name": lm_item.name,
+                            "game": lm_item.game,
+                            "classification": lm_item.classification.name,
                             "door_id": itemid,
                             "room_no": roomid,
                             "type": location.type,
@@ -854,6 +866,7 @@ class LMWorld(World):
             "speedy spirits": self.options.speedy_spirits.value,
             "lightsanity": self.options.lightsanity.value,
             "walksanity": self.options.walksanity.value,
+            "WDYM": self.options.WDYM_checks.value,
             "clairvoya requirement": self.options.mario_items.value,
             "boo gates": self.options.boo_gates.value,
             "boolossus_difficulty": self.options.boolossus_difficulty.value,

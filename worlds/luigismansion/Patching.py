@@ -3,9 +3,9 @@ import re
 from math import ceil
 from random import choice, randint
 
-from .Regions import spawn_locations
+from .Regions import REGION_LIST, LMRegionInfo
 from .Items import ALL_ITEMS_TABLE, filler_items, LMItemData, CurrencyItemData
-from .Locations import FLIP_BALCONY_BOO_EVENT_LIST, ALL_LOCATION_TABLE
+from .Locations import FLIP_BALCONY_BOO_EVENT_LIST, ALL_LOCATION_TABLE, LMLocationData, WDYM_LOCATION_TABLE
 from .game.Currency import CURRENCY_NAME, CURRENCIES
 
 speedy_observer_index: list[int] = [183, 182, 179, 178, 177, 101, 100, 99, 98, 97, 21, 19]
@@ -97,6 +97,10 @@ def __get_item_name(item_data, slot: int):
 
     return "nothing"
 
+def update_map_one_event_info(event_info):
+    for x in event_info.info_file_field_entries:
+        if x["EventNo"] == 8:
+            x["EventIf"] = 5
 
 def update_event_info(event_info, boo_checks: bool, output_data):
     # Removes events that we don't want to trigger at all in the mansion, such as some E. Gadd calls, warps after
@@ -113,7 +117,7 @@ def update_event_info(event_info, boo_checks: bool, output_data):
         lambda info_entry: not (info_entry["EventNo"] in events_to_remove or (info_entry["EventNo"] == 93 and
             info_entry["pos_x"] == 0)), event_info.info_file_field_entries))
 
-    spawn_data = spawn_locations[output_data["Options"]["spawn"]]
+    spawn_data = REGION_LIST[output_data["Options"]["spawn"]]
 
     for x in event_info.info_file_field_entries:
         # Move Telephone rings to third phone, make an A press and make always on
@@ -168,9 +172,9 @@ def update_event_info(event_info, boo_checks: bool, output_data):
 
         # Update the spawn in event trigger to wherever spawn is
         if x["EventNo"] == 48:
-            x["pos_y"] = spawn_data["pos_y"]
-            x["pos_z"] = spawn_data["pos_z"]
-            x["pos_x"] = spawn_data["pos_x"]
+            x["pos_y"] = spawn_data.pos_y
+            x["pos_z"] = spawn_data.pos_z
+            x["pos_x"] = spawn_data.pos_x
 
         # Removes the Mr. Bones requirement. He will spawn instantly
         if x["EventNo"] == 23:
@@ -240,10 +244,10 @@ def update_event_info(event_info, boo_checks: bool, output_data):
             x["PlayerStop"] = 1
             x["EventLock"] = 1
             x["event_parameter"] = 0
-            x["room_no"] = spawn_data["room_no"]
-            x["pos_y"] = spawn_data["pos_y"]
-            x["pos_x"] = spawn_data["pos_x"]
-            x["pos_z"] = spawn_data["pos_z"]
+            x["room_no"] = spawn_data.room_id
+            x["pos_y"] = spawn_data.pos_y
+            x["pos_x"] = spawn_data.pos_x
+            x["pos_z"] = spawn_data.pos_z
 
         # Change Training room second visit to always be on
         if x["EventNo"] == 10:
@@ -258,10 +262,15 @@ def update_event_info(event_info, boo_checks: bool, output_data):
                 x["EventArea"] = 330
                 x["EventIf"] = 1
                 x["PlayerStop"] = 1
-                x["pos_y"] = spawn_data["pos_y"]
-                x["pos_z"] = int(spawn_data["pos_z"]) - 150
-                x["pos_x"] = int(spawn_data["pos_x"]) - 150 + 2
+                x["pos_y"] = spawn_data.pos_y
+                x["pos_z"] = int(spawn_data.pos_z) - 150
+                x["pos_x"] = int(spawn_data.pos_x) - 150 + 2
 
+# def update_gallery_character_info(character_info):
+#     for x in character_info.info_file_field_entries:
+#         if x["name"] == "lohakase":
+#             x["pos_z"] = -31.651000
+#             x["invisible"] = 1
 
 def update_character_info(character_info, output_data):
     # Removes useless cutscene objects and the vacuum in the Parlor under the closet.
@@ -303,11 +312,11 @@ def update_character_info(character_info, output_data):
 
         # Editing the starting room spawn coordinates (regardless of it random spawn is turned on).
         if x["room_no"] == 2 and x["name"] == "luige":
-            spawn_region: dict[str,int] = spawn_locations[output_data["Options"]["spawn"]]
-            x["room_no"] = spawn_region["room_no"]
-            x["pos_y"] = spawn_region["pos_y"]
-            x["pos_x"] = spawn_region["pos_x"]
-            x["pos_z"] = spawn_region["pos_z"]
+            spawn_region: LMRegionInfo = REGION_LIST[output_data["Options"]["spawn"]]
+            x["room_no"] = spawn_region.room_id
+            x["pos_y"] = spawn_region.pos_y
+            x["pos_x"] = spawn_region.pos_x
+            x["pos_z"] = spawn_region.pos_z
 
 
 def update_teiden_observer_info(observer_info, teiden_observer_info, update_speedy_spirits: bool):
@@ -422,14 +431,13 @@ def update_observer_info(observer_info, output_data):
             new_x = copy.deepcopy(x)
             spawn_region_name = output_data["Options"]["spawn"]
             if not spawn_region_name in ("Foyer", "Courtyard", "1F Washroom", "Wardrobe Balcony"):
-                spawn_data = spawn_locations[spawn_region_name]
-                new_x["room_no"] = spawn_data["room_no"]
-                new_x["pos_y"] = spawn_data["pos_y"]
-                new_x["pos_z"] = int(spawn_data["pos_z"]) - 150
-                new_x["pos_x"] = int(spawn_data["pos_x"]) - 150
+                spawn_data = REGION_LIST[spawn_region_name]
+                new_x["room_no"] = spawn_data.room_id
+                new_x["pos_y"] = spawn_data.pos_y
+                new_x["pos_z"] = int(spawn_data.pos_z) - 150
+                new_x["pos_x"] = int(spawn_data.pos_x) - 150
                 new_x["code_name"] = "dm_kinopio5"
                 observer_info.info_file_field_entries.append(new_x)
-
 
 
         # Allows the Master Bedroom to be lit after clearing it, even if Neville hasn't been caught.
@@ -452,9 +460,6 @@ def update_observer_info(observer_info, output_data):
         elif x["name"] == "iphone" and x["pos_x"] == 0.000000:
             x["code_name"] = "tel1"
 
-        # Ignore me, I am the observers that spawn ghosts for Vincent
-        # if x["string_arg0"] in ["57_1", "57_2", "57_3", "57_4", "57_5", "57_6", "57_7"]:
-        #    x["string_arg0"] = "(null)"
 
     # This one checks for the candles being lit in the Fortune-Teller's Room, flagging that key spawn
     observer_info.info_file_field_entries.append({
@@ -1775,6 +1780,60 @@ def __set_key_info_entry(key_info_single_entry, item_data, slot: int):
     key_info_single_entry["appear_flag"] = 0
     key_info_single_entry["disappear_flag"] = 0
 
+def update_gallery_furniture_info(furniture_info, item_appear_info, output_data):
+    ceiling_furniture_list: list[int] = [0, 1]
+    for furniture_jmp_id in ceiling_furniture_list:
+        current_y_offset = furniture_info.info_file_field_entries[furniture_jmp_id]["item_offset_y"]
+        adjust_y_offset = 225.0
+        furniture_info.info_file_field_entries[furniture_jmp_id]["item_offset_y"] = current_y_offset - adjust_y_offset
+
+    for item_name, item_data in output_data["Locations"].items():
+        location_data: LMLocationData = ALL_LOCATION_TABLE[item_name]
+        if not (location_data.region == "Gallery" and item_data["type"] == "Furniture"):
+            continue
+
+        actor_item_name = __get_item_name(item_data, int(output_data["Slot"]))
+
+        # Replace the furnitureinfo entry to spawn an item from the "itemappeartable".
+        # If the entry is supposed to be money, then generate a random amount of coins and/or bills from it.
+        filtered_item_appear = list(item_appear_entry for item_appear_entry in
+            item_appear_info.info_file_field_entries if  item_appear_entry["item0"] == actor_item_name)
+        item_appear_entry_idx = filtered_item_appear[len(filtered_item_appear) - 1]
+
+        furniture_info.info_file_field_entries[item_data["loc_enum"]]["item_table"] = (
+            item_appear_info.info_file_field_entries.index(item_appear_entry_idx))
+
+        # TODO update using ALL items table instead
+        if any((key, val) for (key, val) in filler_items.items() if
+               key == item_data["name"] and key != "Diamond" and val.type == "Money") \
+                and item_data["player"] == output_data["Slot"]:
+            furniture_info.info_file_field_entries[item_data["loc_enum"]]["item_table"] = 11
+            int_money_amt = 1
+            if re.search(r"^\d+", item_data["name"]):
+                int_money_amt = int(re.search(r"^\d+", item_data["name"]).group())
+            furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate_num"] = int_money_amt
+            if "Coins" in item_data["name"]:
+                if "Bills" in item_data["name"]:
+                    furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 3
+                else:
+                    furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 1
+            elif "Bills" in item_data["name"]:
+                furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 2
+            elif "Sapphire" in item_data["name"]:
+                furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 4
+            elif "Emerald" in item_data["name"]:
+                furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 6
+            elif "Ruby" in item_data["name"]:
+                furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 5
+            elif "Gold Bar" in item_data["name"]:
+                furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 7
+            else:
+                furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 0
+                furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate_num"] = 0
+        else:
+            furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 0
+            furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate_num"] = 0
+
 
 def update_furniture_info(furniture_info, item_appear_info, output_data):
     # Adjust the item spawn height based on if the item spawns from the ceiling or high up on the wall.
@@ -1877,35 +1936,6 @@ def update_furniture_info(furniture_info, item_appear_info, output_data):
             furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate_num"] = 0
 
 
-# Dictionary of Room names and their ID. Used for the Enemizer.
-ROOM_ID_TO_NAME = {
-    39: "Anteroom",
-    35: "Parlor",
-    27: "Sitting Room",
-    16: "Graveyard",
-    4: "Mirror Room",
-    38: "Wardrobe",
-    5: "Laundry Room",
-    1: "Hidden Room",
-    14: "Storage Room",
-    8: "Kitchen",
-    20: "1F Bathroom",
-    23: "Courtyard",
-    47: "Tea Room",
-    42: "2F Washroom",
-    13: "Projection Room",
-    52: "Safari Room",
-    63: "Cellar",
-    50: "Telephone Room",
-    60: "Roof",
-    36: "Sealed Room",
-    48: "Armory",
-    66: "Pipe Room",
-    10: "Ballroom",
-    57: "Artist's Studio"
-}
-
-
 def update_teiden_enemy_info(enemy_info, teiden_enemy_info):
 
     for entry_no in speedy_enemy_index:
@@ -1915,6 +1945,7 @@ def update_teiden_enemy_info(enemy_info, teiden_enemy_info):
 
 
 def update_enemy_info(enemy_info, output_data):
+    # TODO Randomize Blackout enemies as well.
     # A list of all the ghost actors of the game we want to replace.
     # It excludes the "waiter" ghost as that is needed for Mr. Luggs to work properly.
     ghost_list = ["yapoo1", "mapoo1", "mopoo1",
@@ -1928,28 +1959,17 @@ def update_enemy_info(enemy_info, output_data):
 
     # If randomize ghosts options are enabled
     if output_data["Options"]["enemizer"] > 0:
-        for x in enemy_info.info_file_field_entries:
-            if not ROOM_ID_TO_NAME.keys().__contains__(x["room_no"]):
-                continue
-            room_enemy_entry = next(((key, val) for (key, val) in output_data["Room Enemies"].items() if
-                                     ROOM_ID_TO_NAME[x["room_no"]] == key and x["name"] in ghost_list), None)
+        for key, val in output_data["Room Enemies"].items():
+            room_id: int = REGION_LIST[key].room_id
+            for enemy_to_change in enemy_info.info_file_field_entries:
+                if enemy_to_change["room_no"] != room_id:
+                    continue
 
-            if "16_1" in x["create_name"]:
-                x["pos_y"] = 30.000000
+                if "16_1" in enemy_to_change["create_name"]:
+                    enemy_to_change["pos_y"] = 30.000000
 
-            if not room_enemy_entry is None or x["room_no"] == 35 or x["room_no"] == 27:
-                apply_new_ghost(x, "No Element" if (x["room_no"] == 35 or x["room_no"] == 27) else room_enemy_entry[1])
-
-        # Disables enemies in furniture to allow them to spawn properly if an item is hidden inside said furniture.
-        # if x["access_name"] != "(null)":
-        # if "_99" in x["access_name"]:
-        # TODO: Speedies do not seem to block items, only normal ghosts
-        # owo = True
-        # else:
-        # x["create_name"] = "(null)"
-        # x["access_name"] = "(null)"
-        # if x["cond_type"] == 17:
-        # x["do_type"] = 6
+                room_element: str = "No Element" if (room_id in [27, 35, 40]) else val
+                apply_new_ghost(enemy_to_change, room_element)
 
 
 def update_boo_table(telesa_info, output_data):

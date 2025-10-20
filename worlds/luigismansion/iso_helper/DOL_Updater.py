@@ -5,7 +5,7 @@ from pkgutil import get_data
 from gclib.dol import DOL, DOLSection
 from gclib.gcm import GCM
 
-from ..Regions import spawn_locations
+from ..Regions import REGION_LIST, LMRegionInfo
 from ..Helper_Functions import StringByteFunction as sbf
 
 CUSTOM_CODE_OFFSET_START = 0x39FA20
@@ -123,13 +123,13 @@ def update_dol_offsets(gcm: GCM, dol: DOL, seed: str, start_inv: list[str],
         dol.data.write(bytes.fromhex(dol_val))
 
     if not random_spawn == "Foyer":
-        spawn_info: dict = spawn_locations[random_spawn]
+        spawn_info: LMRegionInfo = REGION_LIST[random_spawn]
         dol.data.seek(0x3A05E0)
-        dol.data.write(struct.pack(">f", spawn_info["pos_x"]))
+        dol.data.write(struct.pack(">f", spawn_info.pos_x))
         dol.data.seek(0x3A05E4)
-        dol.data.write(struct.pack(">f", spawn_info["pos_y"]))
+        dol.data.write(struct.pack(">f", spawn_info.pos_y))
         dol.data.seek(0x3A05E8)
-        dol.data.write(struct.pack(">f", spawn_info["pos_z"]))
+        dol.data.write(struct.pack(">f", spawn_info.pos_z))
 
     if dool_model_rando_on:
         door_model_offsets: list[int] = [0x2FFFBE, 0x2FFFDA, 0x2FFFF6, 0x300012, 0x30004A, 0x300066, 0x300082,

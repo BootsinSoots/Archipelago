@@ -1,5 +1,8 @@
 from typing import NamedTuple, Optional
 
+from gclib.rarc import RARCFileEntry, RARC
+
+
 class LMRamData(NamedTuple):
     ram_addr: Optional[int] = None
     bit_position: Optional[int] = None
@@ -61,3 +64,9 @@ class StringByteFunction:
     @staticmethod
     def byte_string_strip_null_terminator(bytes_input: bytes):
         return bytes_input.decode().strip("\0")
+
+def find_rarc_file_entry(rarc_file: RARC, directory_name: str, name_of_file: str) -> RARCFileEntry | None:
+    for file_entry in rarc_file.file_entries:
+      if file_entry.name == name_of_file and file_entry.parent_node.name == directory_name:
+        return file_entry
+    return None

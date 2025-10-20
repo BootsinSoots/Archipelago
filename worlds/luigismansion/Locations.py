@@ -119,7 +119,7 @@ BASE_LOCATION_TABLE: dict[str, LMLocationData] = {
                                                      update_ram_addr=[LMRamData(in_game_room_id=53)], require_poltergust=False),
     "Telephone Room R1 Chest": LMLocationData("Telephone Room", 44, "Furniture", 681, [], remote_only=True,
                                                      update_ram_addr=[LMRamData(in_game_room_id=53)], require_poltergust=False),
-    "Visit E. Gadd's Gallery": LMLocationData("Foyer", 925, "Map", 0, [], remote_only=True,
+    "Visit E. Gadd's Gallery": LMLocationData("Gallery", 925, "Map", 0, [], remote_only=True,
                                       update_ram_addr=[LMRamData(0x804D80A4)], require_poltergust=False, map_id=[6]),
     "Complete Training": LMLocationData("Training Room", 926, "Special", 0, [], remote_only=True,
                        update_ram_addr=[LMRamData(0x803D33B2, bit_position=0, in_game_room_id=0)], map_id=[3]),
@@ -892,9 +892,9 @@ HANGABLES_LOCATION_TABLE = {
                                              update_ram_addr=[LMRamData(in_game_room_id=22)]),
     "Conservatory Picture C": LMLocationData("Conservatory", 274, "Furniture", 125, [], 1,
                                              update_ram_addr=[LMRamData(in_game_room_id=22)]),
-    "Conservatory Picture R (hangs Higher)": LMLocationData("Conservatory", 275, "Furniture", 135, [], 1,
+    "Conservatory Picture R (hangs Lower)": LMLocationData("Conservatory", 275, "Furniture", 135, [], 1,
                                                             update_ram_addr=[LMRamData(in_game_room_id=22)]),
-    "Conservatory Picture R (hangs Lower)": LMLocationData("Conservatory", 276, "Furniture", 136, [], 1,
+    "Conservatory Picture R (hangs Higher)": LMLocationData("Conservatory", 276, "Furniture", 136, [], 1,
                                                            update_ram_addr=[LMRamData(in_game_room_id=22)]),
     "Dining Room Picture": LMLocationData("Dining Room", 298, "Furniture", 315, [], 1,
                                           update_ram_addr=[LMRamData(in_game_room_id=8)]),
@@ -1699,11 +1699,27 @@ WDYM_LOCATION_TABLE ={
                                                    update_ram_addr=[LMRamData(in_game_room_id=55)]),
     "Safari Room C Cheetah Carpet": LMLocationData("Safari Room", 868, "Furniture", 683, [],
                                                    update_ram_addr=[LMRamData(in_game_room_id=55)]),
+    "Left Gallery Angel": LMLocationData("Gallery", 930, "Furniture", 7, [],
+                                                   update_ram_addr=[LMRamData(in_game_room_id=0)], map_id=[6],require_poltergust=False),
+    "Right Gallery Angel": LMLocationData("Gallery", 931, "Furniture", 8, [],
+                                         update_ram_addr=[LMRamData(in_game_room_id=0)], map_id=[6], require_poltergust=False),
+    "Right Gallery Chandelier": LMLocationData("Gallery", 932, "Furniture", 1, [],
+                                          update_ram_addr=[LMRamData(in_game_room_id=3)], map_id=[6]),
+    "Right Gallery Angel Altar": LMLocationData("Gallery", 933, "Furniture", 4, [],
+                                               update_ram_addr=[LMRamData(in_game_room_id=3)], map_id=[6], require_poltergust=False),
+    "Right Gallery Dresser": LMLocationData("Gallery", 934, "Furniture", 6, [],
+                                               update_ram_addr=[LMRamData(in_game_room_id=3)], map_id=[6], require_poltergust=False),
+    "Left Gallery Chandelier": LMLocationData("Gallery", 935, "Furniture", 0, [],
+                                               update_ram_addr=[LMRamData(in_game_room_id=3)], map_id=[6]),
+    "Left Gallery Angel Altar": LMLocationData("Gallery", 936, "Furniture", 3, [],
+                                               update_ram_addr=[LMRamData(in_game_room_id=3)], map_id=[6], require_poltergust=False),
+    "Left Gallery Dresser": LMLocationData("Gallery", 937, "Furniture", 5, [],
+                                               update_ram_addr=[LMRamData(in_game_room_id=3)], map_id=[6], require_poltergust=False),
 }
 
 
 # Adds Portrait Ghosts as locations
-# Certain Ghosts such as Extra Clockwork soliders don't have a jmp entry to check against.
+# Certain Ghosts such as Extra Clockwork soldiers don't have a jmp entry to check against.
 # Bosses do NOT have entries in map2, but we can check their bit addresses if they are captured.
 PORTRAIT_LOCATION_TABLE: dict[str, LMLocationData] = {
     "Neville, the Bookish Father": LMLocationData("Study", 621, "Portrait", 70, [], remote_only=True,
@@ -2203,7 +2219,8 @@ ALL_LOCATION_TABLE = {**BASE_LOCATION_TABLE,
                       **TOAD_LOCATION_TABLE,
                       **PORTRAIT_LOCATION_TABLE,
                       **WALK_LOCATION_TABLE,
-                      **LIGHT_LOCATION_TABLE}
+                      **LIGHT_LOCATION_TABLE,
+                      **WDYM_LOCATION_TABLE}
 
 
 
