@@ -15,7 +15,7 @@ LM_PLAYER_NAME_BYTE_LENGTH = 64
 # inside the DOL file itself.
 def update_dol_offsets(gcm: GCM, dol: DOL, seed: str, start_inv: list[str],
     walk_speed: int, slot_name: str, random_spawn: str, king_boo_health: int, fear_anim_enabled: bool,
-    pickup_anim_enabled: bool, boo_rand_on: bool, dool_model_rando_on: bool) -> (GCM, DOL):
+    pickup_anim_enabled: bool, boo_rand_on: bool, dool_model_rando_on: bool):
 
     random.seed(seed)
 
@@ -146,5 +146,3 @@ def update_dol_offsets(gcm: GCM, dol: DOL, seed: str, start_inv: list[str],
     # Save all changes to the DOL itself.
     dol.save_changes()
     gcm.changed_files["sys/main.dol"] = dol.data
-
-    return gcm, dol
