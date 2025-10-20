@@ -173,7 +173,8 @@ class LMWorld(World):
 
     def __init__(self, *args, **kwargs):
         super(LMWorld, self).__init__(*args, **kwargs)
-        self.ghost_affected_regions: dict[str, str] = copy.deepcopy(GHOST_TO_ROOM)
+        self.ghost_affected_regions: dict[str, str] = copy.deepcopy({key: val.element_type for (key, val) in
+            REGION_LIST.items() if val.element_type})
         self.open_doors: dict[int, int] = copy.deepcopy(vanilla_door_state)
         self.origin_region_name: str = "Foyer"
         self.finished_hints = threading.Event()
