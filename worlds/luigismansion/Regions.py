@@ -1,8 +1,10 @@
 from typing import Optional, Callable, TYPE_CHECKING, NamedTuple
 from BaseClasses import Region, MultiWorld
 
+from . import Rules
+
 if TYPE_CHECKING:
-    from . import Rules, LMWorld
+    from . import LMWorld
 
 
 class LMRegionInfo(NamedTuple):
