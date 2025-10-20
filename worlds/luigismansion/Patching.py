@@ -3,10 +3,9 @@ import re
 from math import ceil
 from random import choice, randint
 
-from . import WDYM_LOCATION_TABLE, LMLocationData, LMRegionInfo
-from .Regions import REGION_LIST
+from .Regions import REGION_LIST, LMRegionInfo
 from .Items import ALL_ITEMS_TABLE, filler_items, LMItemData, CurrencyItemData
-from .Locations import FLIP_BALCONY_BOO_EVENT_LIST, ALL_LOCATION_TABLE
+from .Locations import FLIP_BALCONY_BOO_EVENT_LIST, ALL_LOCATION_TABLE, LMLocationData, WDYM_LOCATION_TABLE
 from .game.Currency import CURRENCY_NAME, CURRENCIES
 
 speedy_observer_index: list[int] = [183, 182, 179, 178, 177, 101, 100, 99, 98, 97, 21, 19]
