@@ -17,7 +17,7 @@ class JMPFieldHeader:
     # The second to last byte represents the shift bits, which is required when reading certain field data.
     # The last byte represents the data type, which for this project's purposes include:
     #   Integer, String, and Float.
-    def _init_(self, name: str, header_bytes: BytesIO):
+    def __init__(self, name: str, header_bytes: BytesIO):
         self._field_name = name
         self._field_hash, self._field_bitmask, self._field_start_bit, self._field_shift_bit, data_type = (
             struct.unpack(">I I H B B", header_bytes.read(IMPORTANT_HEADER_BYTE_LENGTH)))
