@@ -1,7 +1,10 @@
 from typing import NamedTuple, Optional
+from pathlib import Path
 
 from gclib.rarc import RARCFileEntry, RARC
 
+
+PROJECT_ROOT: Path = Path(__file__).resolve().parent
 
 class LMRamData(NamedTuple):
     ram_addr: Optional[int] = None

@@ -6,7 +6,7 @@ from pathlib import Path
 
 from gclib.rarc import RARC
 from .JMP_Field_Header import JMPFieldHeader
-from ..Helper_Functions import StringByteFunction as sbf, find_rarc_file_entry
+from ..Helper_Functions import StringByteFunction as sbf, find_rarc_file_entry, PROJECT_ROOT
 
 IMPORTANT_HEADER_BYTE_LENGTH = 16
 FIELD_DATA_BYTE_LENGTH = 12
@@ -33,7 +33,7 @@ class JMPInfoFile:
         if self.info_file_entry is None:
             raise Exception("Unable to find an info file with name '" + name_of_info_file + "' in provided RARC file.")
 
-        names_json_path: Path = Path(__file__).resolve().parent.parent.joinpath('data', 'names.json')
+        names_json_path: Path = PROJECT_ROOT.joinpath('data', 'names.json')
         json_data: dict = json.loads(names_json_path.read_text(encoding='utf-8'))
 
         if name_of_info_file not in json_data:
