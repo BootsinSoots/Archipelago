@@ -40,6 +40,7 @@ class LuigisMansionRandomizer:
         self._check_server_version(self.output_data.get(AP_WORLD_VERSION_NAME, "<0.5.6"))
 
         # Set the random's seed for uses in other files.
+        self.random = Random()
         self.random.seed(self.output_data["Seed"])
 
         # After verifying, this will also read the entire iso, including system files and their content
@@ -48,11 +49,11 @@ class LuigisMansionRandomizer:
         self.dol = DOL()
 
         # Change game ID so save files are different
-        self._update_game_id(self.output_data["Seed"])
+        self._update_game_id(str(self.output_data["Seed"]))
 
         # Updates the Game USA folder to have the correct ghost file we expect.
         logger.info("Updating game_usa.szp to import the ghost files as we expect.")
-        self.gcm = update_game_usa(self.gcm)
+        update_game_usa(self.gcm)
 
         # Important note: SZP are just RARC / Arc files that are yay0 compressed, at least for Luigi's Mansion
         # Get Arc automatically handles decompressing RARC data from yay0, but compressing is on us later.
