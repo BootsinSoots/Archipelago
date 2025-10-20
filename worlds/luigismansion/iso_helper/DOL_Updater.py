@@ -5,7 +5,7 @@ from pkgutil import get_data
 from gclib.dol import DOL, DOLSection
 from gclib.gcm import GCM
 
-from ..Regions import spawn_locations, REGION_LIST, LMRegionInfo
+from ..Regions import REGION_LIST, LMRegionInfo
 from ..Helper_Functions import StringByteFunction as sbf
 
 CUSTOM_CODE_OFFSET_START = 0x39FA20
