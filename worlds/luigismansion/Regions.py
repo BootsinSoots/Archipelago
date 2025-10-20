@@ -133,6 +133,8 @@ REGION_LIST: dict[str, LMRegionInfo] = {
     "Clockwork Room": LMRegionInfo(2, 3, 56, 59, ["Clockwork Key", "Telephone Room Key"], ["Clockwork Key"], [53],
         True, 10.759588, 1100.000000, -1649.743900),
     "Roof": LMRegionInfo(2, 4, 60, 63, []),
+    "Training Room": LMRegionInfo(3, 1, 0, 0, []),
+    "Gallery": LMRegionInfo(6, 1, 0, 0, [])
 }
 
 
