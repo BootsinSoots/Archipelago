@@ -1,63 +1,46 @@
 from gclib.gcm import GCM
-from gclib.rarc import RARC
 from gclib.yaz0_yay0 import Yay0
+
 from CommonClient import logger
 
-def update_game_usa(given_gcm: GCM) -> GCM:
-    obake_copy = __get_arc(given_gcm, "files/model/obake01.szp")
-    game_usa_edit = __get_arc(given_gcm, "files/Game/game_usa.szp")
+from ..Helper_Functions import get_arc, find_rarc_file_entry
+
+def update_game_usa(gcm: GCM):
+    obake_copy = get_arc(gcm, "files/model/obake01.szp")
+    game_usa_edit = get_arc(gcm, "files/Game/game_usa.szp")
 
     logger.info("Deleting Unused Skybox (vrbox) in iwamoto")
-    vrbox_data = next(sub_file for sub_file in next(game_usa_nodes for game_usa_nodes in game_usa_edit.nodes if
-        game_usa_nodes.name == "iwamoto").files if sub_file.name == "vrbox")
+    vrbox_data = find_rarc_file_entry(game_usa_edit, "iwamoto", "vrbox")
     game_usa_edit.delete_directory(vrbox_data)
 
     logger.info("Deleting Unused Textbox in kawano")
-    unused_window = next(sub_file for sub_file in (next(sub_folder for sub_folder in next(game_usa_nodes for
-        game_usa_nodes in game_usa_edit.nodes if game_usa_nodes.name == "kawano").files if
-        sub_folder.name == "dmman").node.files) if sub_file.name == "m_window3.bti")
+    unused_window = find_rarc_file_entry(game_usa_edit, "dmman", "m_window3.bti")
     game_usa_edit.delete_file(unused_window)
 
     logger.info("Deleting Unused Image File in kawano")
-    unused_image = next(sub_file for sub_file in (next(sub_folder for sub_folder in next(game_usa_nodes for
-        game_usa_nodes in game_usa_edit.nodes if game_usa_nodes.name == "kawano").files if
-        sub_folder.name == "base").node.files) if sub_file.name == "cgbk_v.tim")
+    unused_image = find_rarc_file_entry(game_usa_edit, "base", "cgbk_v.tim")
     game_usa_edit.delete_file(unused_image)
 
     logger.info("Deleting Unused param File in iyapoo2")
-    unused_params = list(sub_file for sub_file in (next(sub_folder for sub_folder in next(game_usa_nodes for
-        game_usa_nodes in game_usa_edit.nodes if game_usa_nodes.name == "param").files if
-        sub_folder.name == "ctp").node.files) if sub_file.name.startswith("iyapoo2") and sub_file.name
-        not in ("iyapoo2.prm", 'iyapoo20.prm'))
-    for prm_file in unused_params:
+    unused_params: list[str] = ["iyapoo21.prm", "iyapoo22.prm", "iyapoo23.prm", "iyapoo24.prm", "iyapoo25.prm"]
+    for unused_prm in unused_params:
+        prm_file = find_rarc_file_entry(game_usa_edit, "ctp", unused_prm)
         game_usa_edit.delete_file(prm_file)
 
     logger.info("Deleting Unused Image File in kt_static")
-    unused_second_image = next(sub_folder for sub_folder in next(game_usa_nodes for
-        game_usa_nodes in game_usa_edit.nodes if game_usa_nodes.name == "kt_static").files if
-        sub_folder.name == "test.bti")
+    unused_second_image = find_rarc_file_entry(game_usa_edit, "kt_static", "test.bti")
     game_usa_edit.delete_file(unused_second_image)
 
     logger.info("Deleting Unused Image File in model")
-    unused_model = next(sub_folder for sub_folder in next(game_usa_nodes for game_usa_nodes in game_usa_edit.nodes if
-        game_usa_nodes.name == "model").files if sub_folder.name == "takara1.arc")
+    unused_model = find_rarc_file_entry(game_usa_edit, "model", "takara1.arc")
     game_usa_edit.delete_file(unused_model)
 
     logger.info("Adding Gold Ghost image into the model folder")
-    game_usa_edit.add_new_file("obake01.arc", obake_copy.data, next((game_usa_nodes for
-         game_usa_nodes in game_usa_edit.nodes if game_usa_nodes.name == "model")))
+    game_usa_edit.add_new_file("obake01.arc", obake_copy.data, game_usa_edit.get_node_by_path("model"))
 
     logger.info("Overwriting game_uza.szp with the new re-created file...")
-    given_gcm.delete_file(given_gcm.files_by_path["files/Game/game_usa.szp"])
-    given_gcm.add_new_file("files/Game/game_usa.szp", game_usa_edit)
+    gcm.delete_file(gcm.files_by_path["files/Game/game_usa.szp"])
+    gcm.add_new_file("files/Game/game_usa.szp", game_usa_edit)
     game_usa_edit.save_changes()
     logger.info("game_uza.szp Yay0 check...")
-    given_gcm.changed_files["files/Game/game_usa.szp"] = Yay0.compress(game_usa_edit.data)
-    return given_gcm
-
-def __get_arc(gcm, arc_path) -> RARC:
-    arc_path = arc_path.replace("\\", "/")
-    data = gcm.read_file_data(arc_path)
-    arc = RARC(data)  # Automatically decompresses Yay0
-    arc.read()
-    return arc
+    gcm.changed_files["files/Game/game_usa.szp"] = Yay0.compress(game_usa_edit.data)
