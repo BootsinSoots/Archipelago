@@ -3,10 +3,9 @@ import re
 from math import ceil
 from random import choice, randint
 
-from . import WDYM_LOCATION_TABLE, LMLocationData, LMRegionInfo
-from .Regions import REGION_LIST
+from .Regions import REGION_LIST, LMRegionInfo
 from .Items import ALL_ITEMS_TABLE, filler_items, LMItemData, CurrencyItemData
-from .Locations import FLIP_BALCONY_BOO_EVENT_LIST, ALL_LOCATION_TABLE
+from .Locations import FLIP_BALCONY_BOO_EVENT_LIST, ALL_LOCATION_TABLE, LMLocationData, WDYM_LOCATION_TABLE
 from .game.Currency import CURRENCY_NAME, CURRENCIES
 
 speedy_observer_index: list[int] = [183, 182, 179, 178, 177, 101, 100, 99, 98, 97, 21, 19]
@@ -245,10 +244,10 @@ def update_event_info(event_info, boo_checks: bool, output_data):
             x["PlayerStop"] = 1
             x["EventLock"] = 1
             x["event_parameter"] = 0
-            x["room_no"] = spawn_data["room_no"]
-            x["pos_y"] = spawn_data["pos_y"]
-            x["pos_x"] = spawn_data["pos_x"]
-            x["pos_z"] = spawn_data["pos_z"]
+            x["room_no"] = spawn_data.room_id
+            x["pos_y"] = spawn_data.pos_y
+            x["pos_x"] = spawn_data.pos_x
+            x["pos_z"] = spawn_data.pos_z
 
         # Change Training room second visit to always be on
         if x["EventNo"] == 10:
@@ -263,9 +262,9 @@ def update_event_info(event_info, boo_checks: bool, output_data):
                 x["EventArea"] = 330
                 x["EventIf"] = 1
                 x["PlayerStop"] = 1
-                x["pos_y"] = spawn_data["pos_y"]
-                x["pos_z"] = int(spawn_data["pos_z"]) - 150
-                x["pos_x"] = int(spawn_data["pos_x"]) - 150 + 2
+                x["pos_y"] = spawn_data.pos_y
+                x["pos_z"] = int(spawn_data.pos_z) - 150
+                x["pos_x"] = int(spawn_data.pos_x) - 150 + 2
 
 # def update_gallery_character_info(character_info):
 #     for x in character_info.info_file_field_entries:
