@@ -15,7 +15,7 @@ from .Regions import REGION_LIST
 from .iso_helper.lm_rom import LMUSAAPPatch
 from .Items import *
 from .Locations import ALL_LOCATION_TABLE, SELF_LOCATIONS_TO_RECV
-from .Helper_Functions import StringByteFunction as sbf
+from .Helper_Functions import StringByteFunction as sbf, RANDOMIZER_NAME
 from .client.links.energy_link.energy_link import EnergyLinkConstants
 from .client.links.energy_link.energy_link_command_processor import EnergyLinkCommandProcessor
 from .client.constants import *
@@ -127,7 +127,7 @@ class LMCommandProcessor(EnergyLinkCommandProcessor):
 
 class LMContext(BaseContext):
     command_processor = LMCommandProcessor
-    game = "Luigi's Mansion"
+    game = RANDOMIZER_NAME
     items_handling = 0b111
 
     def __init__(self, server_address, password):
@@ -232,7 +232,7 @@ class LMContext(BaseContext):
                 if not slot_data["apworld version"] == CLIENT_VERSION:
                     local_version = str(slot_data["apworld version"]) if (
                         str(slot_data["apworld version"])) else "N/A"
-                    raise Utils.VersionException("Error! Server was generated with a different Luigi's Mansion " +
+                    raise Utils.VersionException(f"Error! Server was generated with a different {RANDOMIZER_NAME} " +
                         f"APWorld version.\nThe client version is {CLIENT_VERSION}!\nPlease verify you are using the " +
                         f"same APWorld as the generator, which is '{local_version}'")
 
@@ -368,7 +368,7 @@ class LMContext(BaseContext):
 
     async def get_debug_info(self):
         if not (dme.is_hooked() and self.dolphin_status == CONNECTION_CONNECTED_STATUS) or not self.check_ingame():
-            logger.info("Unable to use this command until you are in a Luigi's Mansion ROM, loaded and connected.")
+            logger.info(f"Unable to use this command until you are in a {RANDOMIZER_NAME} ROM, loaded and connected.")
             return
 
         flag_addr_start = 0x803D3399
@@ -763,7 +763,7 @@ class LMContext(BaseContext):
             logger.error("While trying to display an item in game, an unknown issue occurred. Details: " + str(genericEx))
 
     async def dolphin_sync_main_task(self):
-        logger.info(f"Using Luigi's Mansion client {CLIENT_VERSION}")
+        logger.info(f"Using {RANDOMIZER_NAME} client {CLIENT_VERSION}")
         logger.info("Starting Dolphin connector. Use /dolphin for status information.")
 
         try:
@@ -818,7 +818,7 @@ class LMContext(BaseContext):
                         arg_seed = read_string(0x80000001, len(str(self.arg_seed)))
                         if arg_seed != self.arg_seed:
                             raise Exception(
-                                "Incorrect Randomized Luigi's Mansion ISO file selected. The seed does not match." +
+                                f"Incorrect Randomized {RANDOMIZER_NAME} ISO file selected. The seed does not match." +
                                 "Please verify that you are using the right ISO/seed/APLM file.")
 
                     # At this point, we are verified as connected. Update UI elements in the LMCLient tab.
@@ -874,8 +874,8 @@ def main(*launch_args: str):
             server_address = lm_usa_manifest["server"]
             rom_path= lm_usa_patch.patch(args.aplm_file)
         except Exception as ex:
-            logger.error("Unable to patch your Luigi's Mansion ROM as expected. Additional details:\n" + str(ex))
-            Utils.messagebox("Cannot Patch Luigi's Mansion", "Unable to patch your Luigi's Mansion ROM as " +
+            logger.error(f"Unable to patch your {RANDOMIZER_NAME} ROM as expected. Additional details:\n" + str(ex))
+            Utils.messagebox(f"Cannot Patch {RANDOMIZER_NAME}", f"Unable to patch your {RANDOMIZER_NAME} ROM as " +
                 "expected. Additional details:\n" + str(ex), True)
             raise ex
 
