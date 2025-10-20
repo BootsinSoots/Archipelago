@@ -395,7 +395,7 @@ def _update_custom_event(gcm: GCM, event_number: str, delete_all_other_files: bo
         if event_csv:
             files_to_keep += [event_csv_file]
 
-        files_to_delete: {RARCFileEntry} = set(list(sub_path for sub_path in custom_event.file_entries if
+        files_to_delete: set[RARCFileEntry] = set(list(sub_path for sub_path in custom_event.file_entries if
             not sub_path.is_dir and sub_path.name not in files_to_keep))
 
         for delete_file in files_to_delete:
