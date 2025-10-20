@@ -67,7 +67,8 @@ REGION_LIST: dict[str, LMRegionInfo] = {
     "Billiards Room": LMRegionInfo(2, 1, 12, 12, ["Billiards Room Key", "Heart Key"],
                                    ["Billiards Room Key", "Projection room Key"], [17, 18], True,
                                    -963.755737, 0.000000, -3055.808110),
-    "Basement Stairwell": 65,
+    "Basement Stairwell": LMRegionInfo(2, 0, 65, 67, []),
+    "Altar Hallway": LMRegionInfo(2, 0, 68, 71, []),
     "Projection Room": LMRegionInfo(2, 1, 13, 13, ["Projection Room Key", "Billiards Room Key"],
                                     ["Projection Room Key", "Billiards Room Key"], [18], True,
                                     281.914215, 0.000000, -3137.967530),
@@ -130,7 +131,6 @@ REGION_LIST: dict[str, LMRegionInfo] = {
     "Clockwork Room": LMRegionInfo(2, 3, 56, 59, ["Clockwork Key", "Telephone Room Key"], ["Clockwork Key"], [53],
         True, 10.759588, 1100.000000, -1649.743900),
     "Roof": LMRegionInfo(2, 4, 60, 63, []),
-    "Altar Hallway": LMRegionInfo(2, 0, 68, 71, [])
 }
 
 
