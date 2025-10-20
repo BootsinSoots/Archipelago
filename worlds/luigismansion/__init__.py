@@ -793,21 +793,22 @@ class LMWorld(World):
             self.finished_boo_scaling.wait()
 
         # Output which item has been placed at each location
-        locations = self.get_locations()
+        locations = list(lmloc for lmloc in self.get_locations() if isinstance(lmloc, LMLocation))
         for location in locations:
             if location.address is not None or (location.name in ROOM_BOO_LOCATION_TABLE.keys()):
                 if location.item:
+                    lm_item: "LMItem" = location.item #TODO fix this type hint warning.
                     itemid = 0
-                    if location.item.player == self.player:
+                    if lm_item.player == self.player:
                         if location.address:
-                            if location.item.type == "Door Key":
-                                itemid = location.item.doorid
+                            if lm_item.type == "Door Key":
+                                itemid = lm_item.doorid
                         roomid = REGION_LIST[location.parent_region.name].room_id
                         item_info = {
-                            "player": location.item.player,
-                            "name": location.item.name,
-                            "game": location.item.game,
-                            "classification": location.item.classification.name,
+                            "player": lm_item.player,
+                            "name": lm_item.name,
+                            "game": lm_item.game,
+                            "classification": lm_item.classification.name,
                             "door_id": itemid,
                             "room_no": roomid,
                             "type": location.type,
@@ -820,10 +821,10 @@ class LMWorld(World):
                     else:
                         roomid = REGION_LIST[location.parent_region.name].room_id
                         item_info = {
-                            "player": location.item.player,
-                            "name": location.item.name,
-                            "game": location.item.game,
-                            "classification": location.item.classification.name,
+                            "player": lm_item.player,
+                            "name": lm_item.name,
+                            "game": lm_item.game,
+                            "classification": lm_item.classification.name,
                             "door_id": itemid,
                             "room_no": roomid,
                             "type": location.type,
