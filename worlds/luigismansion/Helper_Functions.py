@@ -79,6 +79,9 @@ def find_rarc_file_entry(rarc_file: RARC, directory_name: str, name_of_file: str
 # Get an ARC / RARC / SZP file from within the ISO / ROM
 def get_arc(gcm: GCM, arc_path):
     arc_path = arc_path.replace("\\", "/")
-    arc = RARC(gcm.read_file_data(arc_path))  # Automatically decompresses Yay0
+    if arc_path in gcm.changed_files:
+        arc = RARC(gcm.get_changed_file_data(arc_path))
+    else:
+        arc = RARC(gcm.read_file_data(arc_path))  # Automatically decompresses Yay0
     arc.read()
     return arc
