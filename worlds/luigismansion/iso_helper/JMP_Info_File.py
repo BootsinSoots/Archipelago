@@ -6,7 +6,7 @@ from pathlib import Path
 
 from gclib.rarc import RARC
 from .JMP_Field_Header import JMPFieldHeader
-from ..Helper_Functions import StringByteFunction as sbf
+from ..Helper_Functions import StringByteFunction as sbf, find_rarc_file_entry
 
 IMPORTANT_HEADER_BYTE_LENGTH = 16
 FIELD_DATA_BYTE_LENGTH = 12
@@ -29,9 +29,7 @@ class JMPInfoFile:
 
         # RARC files can have multiple sub-file entries / fragments associated with it.
         # This project cares about the JMP File Info entries, which will only work if they exist
-        self.info_file_entry = next((info_files for info_files in main_rarc_file.file_entries if
-                                info_files.name == name_of_info_file), None)
-
+        self.info_file_entry = find_rarc_file_entry(main_rarc_file, "jmp", name_of_info_file)
         if self.info_file_entry is None:
             raise Exception("Unable to find an info file with name '" + name_of_info_file + "' in provided RARC file.")
 
@@ -136,7 +134,6 @@ class JMPInfoFile:
               "; # of Fields: " + str(len(self._info_file_headers)) + "; Header Byte Length: " +
               str(self._header_byte_length) + "; Single Data Line Byte Length: " + str(self._data_line_byte_length))
 
-
     # Using the original BytesIO stream, we will write back to the original data as needed.
     # This allows us to ensure the important data bits are unchanged.
     def update_info_file_bytes(self):
@@ -159,8 +156,8 @@ class JMPInfoFile:
                     case "Int":
                         old_val = struct.unpack(">I", self.info_file_entry.data.read(INTEGER_BYTE_LENGTH))[0]
                         new_val = ((old_val & ~jmp_header.get_field_bitmask) |
-                                   ((data_line[jmp_header.get_field_name] << jmp_header.get_field_shift_bit) &
-                                    jmp_header.get_field_bitmask))
+                            ((data_line[jmp_header.get_field_name] << jmp_header.get_field_shift_bit) &
+                            jmp_header.get_field_bitmask))
                         self.info_file_entry.data.seek(data_field_offset + jmp_header.get_field_start_bit)
                         self.info_file_entry.data.write(struct.pack(">I", new_val))
                     case "Str":
