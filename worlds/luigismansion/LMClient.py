@@ -9,10 +9,9 @@ from CommonClient import get_base_parser, gui_enabled, server_loop
 # 3rd Party related imports
 import dolphin_memory_engine as dme
 
-from worlds.luigismansion import REGION_LIST
 # Local related imports
 from .client.contexts.base_context import BaseContext, logger
-from .Regions import spawn_locations
+from .Regions import REGION_LIST
 from .iso_helper.lm_rom import LMUSAAPPatch
 from .Items import *
 from .Locations import ALL_LOCATION_TABLE, SELF_LOCATIONS_TO_RECV
