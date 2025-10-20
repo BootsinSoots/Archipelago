@@ -447,6 +447,8 @@ class LMWorld(World):
         add_rule(loc, lambda state: state.has("Poltergust 3000", self.player), "and")
 
     def generate_early(self):
+        passthrough = {}
+
         if self.options.energy_link == 1 and self.options.ring_link == 1:
             raise Options.OptionError("In Luigi's Mansion, both energy_link and ring_link cannot be enabled.\n"
                                       f"This error was found in {self.player_name}'s Luigi's Mansion world."
