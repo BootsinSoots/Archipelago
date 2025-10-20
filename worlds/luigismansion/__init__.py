@@ -457,9 +457,9 @@ class LMWorld(World):
                                       f"This error was found in {self.player_name}'s Luigi's Mansion world."
                                       f"Their YAML must be fixed")
         if hasattr(self.multiworld, "re_gen_passthrough"):
-            if "Luigi's Mansion" in self.multiworld.re_gen_passthrough:
+            if self.game in self.multiworld.re_gen_passthrough:
                 self.using_ut = True
-                passthrough = self.multiworld.re_gen_passthrough["Luigi's Mansion"]
+                passthrough = self.multiworld.re_gen_passthrough[self.game]
                 self.options.rank_requirement.value = passthrough["rank requirement"]
                 self.options.game_mode.value = passthrough["game mode"]
                 self.options.vacuum_upgrades.value = passthrough["better vacuum"]
