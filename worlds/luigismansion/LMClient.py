@@ -11,7 +11,7 @@ import dolphin_memory_engine as dme
 
 # Local related imports
 from .client.contexts.base_context import BaseContext, logger
-from .Regions import spawn_locations
+from .Regions import REGION_LIST
 from .iso_helper.lm_rom import LMUSAAPPatch
 from .Items import *
 from .Locations import ALL_LOCATION_TABLE, SELF_LOCATIONS_TO_RECV
@@ -440,7 +440,7 @@ class LMContext(BaseContext):
                 if current_map_id == 2:
                     # If special moving Toad, room_to_check should be the spawn room id
                     if lm_loc_data.code == 617:
-                        room_to_check: int = spawn_locations[self.spawn]["in_game_room_id"]
+                        room_to_check: int = REGION_LIST[self.spawn].in_game_room_id
                     else:
                         room_to_check = loc_addr.in_game_room_id if not loc_addr.in_game_room_id is None else current_room_id
                     if not room_to_check == current_room_id:
