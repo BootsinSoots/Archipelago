@@ -1940,35 +1940,6 @@ def update_furniture_info(furniture_info, item_appear_info, output_data):
             furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate_num"] = 0
 
 
-# Dictionary of Room names and their ID. Used for the Enemizer.
-ROOM_ID_TO_NAME = {
-    39: "Anteroom",
-    35: "Parlor",
-    27: "Sitting Room",
-    16: "Graveyard",
-    4: "Mirror Room",
-    38: "Wardrobe",
-    5: "Laundry Room",
-    1: "Hidden Room",
-    14: "Storage Room",
-    8: "Kitchen",
-    20: "1F Bathroom",
-    23: "Courtyard",
-    47: "Tea Room",
-    42: "2F Washroom",
-    13: "Projection Room",
-    52: "Safari Room",
-    63: "Cellar",
-    50: "Telephone Room",
-    60: "Roof",
-    36: "Sealed Room",
-    48: "Armory",
-    66: "Pipe Room",
-    10: "Ballroom",
-    57: "Artist's Studio"
-}
-
-
 def update_teiden_enemy_info(enemy_info, teiden_enemy_info):
 
     for entry_no in speedy_enemy_index:
@@ -1978,6 +1949,7 @@ def update_teiden_enemy_info(enemy_info, teiden_enemy_info):
 
 
 def update_enemy_info(enemy_info, output_data):
+    # TODO Randomize Blackout enemies as well.
     # A list of all the ghost actors of the game we want to replace.
     # It excludes the "waiter" ghost as that is needed for Mr. Luggs to work properly.
     ghost_list = ["yapoo1", "mapoo1", "mopoo1",
@@ -1991,28 +1963,17 @@ def update_enemy_info(enemy_info, output_data):
 
     # If randomize ghosts options are enabled
     if output_data["Options"]["enemizer"] > 0:
-        for x in enemy_info.info_file_field_entries:
-            if not ROOM_ID_TO_NAME.keys().__contains__(x["room_no"]):
-                continue
-            room_enemy_entry = next(((key, val) for (key, val) in output_data["Room Enemies"].items() if
-                                     ROOM_ID_TO_NAME[x["room_no"]] == key and x["name"] in ghost_list), None)
+        for key, val in output_data["Room Enemies"].items():
+            room_id: int = REGION_LIST[key].room_id
+            for enemy_to_change in enemy_info.info_file_field_entries:
+                if enemy_to_change["room_no"] != room_id:
+                    continue
 
-            if "16_1" in x["create_name"]:
-                x["pos_y"] = 30.000000
+                if "16_1" in enemy_to_change["create_name"]:
+                    enemy_to_change["pos_y"] = 30.000000
 
-            if not room_enemy_entry is None or x["room_no"] == 35 or x["room_no"] == 27:
-                apply_new_ghost(x, "No Element" if (x["room_no"] == 35 or x["room_no"] == 27) else room_enemy_entry[1])
-
-        # Disables enemies in furniture to allow them to spawn properly if an item is hidden inside said furniture.
-        # if x["access_name"] != "(null)":
-        # if "_99" in x["access_name"]:
-        # TODO: Speedies do not seem to block items, only normal ghosts
-        # owo = True
-        # else:
-        # x["create_name"] = "(null)"
-        # x["access_name"] = "(null)"
-        # if x["cond_type"] == 17:
-        # x["do_type"] = 6
+                room_element: str = "No Element" if (room_id in [27, 35, 40]) else val
+                apply_new_ghost(enemy_to_change, room_element)
 
 
 def update_boo_table(telesa_info, output_data):
