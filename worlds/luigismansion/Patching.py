@@ -440,7 +440,6 @@ def update_observer_info(observer_info, output_data):
                 observer_info.info_file_field_entries.append(new_x)
 
 
-
         # Allows the Master Bedroom to be lit after clearing it, even if Neville hasn't been caught.
         if x["room_no"] == 33:
             x["appear_flag"] = 0
@@ -461,9 +460,6 @@ def update_observer_info(observer_info, output_data):
         elif x["name"] == "iphone" and x["pos_x"] == 0.000000:
             x["code_name"] = "tel1"
 
-        # Ignore me, I am the observers that spawn ghosts for Vincent
-        # if x["string_arg0"] in ["57_1", "57_2", "57_3", "57_4", "57_5", "57_6", "57_7"]:
-        #    x["string_arg0"] = "(null)"
 
     # This one checks for the candles being lit in the Fortune-Teller's Room, flagging that key spawn
     observer_info.info_file_field_entries.append({
