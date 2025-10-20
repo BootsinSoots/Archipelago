@@ -10,10 +10,11 @@ from typing import Any
 import json, logging, sys, os, zipfile, tempfile
 import urllib.request
 
+from ..Helper_Functions import RANDOMIZER_NAME
+
 logger = logging.getLogger()
 MAIN_PKG_NAME = "worlds.luigismansion.LMGenerator"
 
-RANDOMIZER_NAME = "Luigi's Mansion"
 LM_USA_MD5 = 0x6e3d9ae0ed2fbd2f77fa1ca09a60c494
 
 class InvalidCleanISOError(Exception):
@@ -56,7 +57,7 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
     def __init__(self, *args: Any, **kwargs: Any):
         super(LMUSAAPPatch, self).__init__(*args, **kwargs)
 
-    def __get_archive_name(self) -> str:
+    def _get_archive_name(self) -> str:
         if not (Utils.is_linux or Utils.is_windows):
             message = f"Your OS is not supported with this randomizer {sys.platform}."
             logger.error(message)
@@ -71,7 +72,7 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
         logger.info(f"Dependency archive name to use: {lib_path}")
         return lib_path
 
-    def __get_temp_folder_name(self) -> str:
+    def _get_temp_folder_name(self) -> str:
         from ..LMClient import CLIENT_VERSION
         temp_path = os.path.join(tempfile.gettempdir(), "luigis_mansion", CLIENT_VERSION, "libs")
         return temp_path
@@ -79,7 +80,7 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
     def patch(self, aplm_patch: str) -> str:
         # Get the AP Path for the base ROM
         lm_clean_iso = self.get_base_rom_path()
-        logger.info("Provided Luigi's Mansion ISO Path was: " + lm_clean_iso)
+        logger.info(f"Provided {RANDOMIZER_NAME} ISO Path was: " + lm_clean_iso)
 
         base_path = os.path.splitext(aplm_patch)[0]
         output_file = base_path + self.result_file_ending
@@ -94,7 +95,7 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
                 aplm_bytes = zf.read("patch.aplm")
             LuigisMansionRandomizer(lm_clean_iso, output_file, aplm_bytes)
         except ImportError:
-            self.__get_remote_dependencies_and_create_iso(aplm_patch, output_file, lm_clean_iso)
+            self._get_remote_dependencies_and_create_iso(aplm_patch, output_file, lm_clean_iso)
         return output_file
 
     def read_contents(self, aplm_patch: str) -> dict[str, Any]:
@@ -117,7 +118,7 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
     @classmethod
     def verify_base_rom(cls, lm_rom_path: str, throw_on_missing_speedups: bool = False):
         # Verifies we have a valid installation of Luigi's Mansion USA. There are some regional file differences.
-        logger.info("Verifying if the provided ISO is a valid copy of Luigi's Mansion USA edition.")
+        logger.info(f"Verifying if the provided ISO is a valid copy of {RANDOMIZER_NAME} USA edition.")
         logger.info("Checking GCLib and speedup libs.")
         # We try importing speedups (pyfastyaz0yay0) to make sure speedups is accessible.
         import pyfastyaz0yay0
@@ -132,7 +133,7 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
             logger.info("Python module paths: %s", sys.path)
             if throw_on_missing_speedups:
                 logger.info("Speedups not detected, attempting to pull remote release.")
-                raise ImportError("Cannot continue patching Luigi's Mansion due to missing libraries.")
+                raise ImportError(f"Cannot continue patching {RANDOMIZER_NAME} due to missing libraries.")
             logger.info("Continuing patching without speedups.")
 
         base_md5 = md5()
@@ -171,7 +172,7 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
         logger.info("Getting missing dependencies for Luigi's Mansion from remote source.")
 
         from ..LMClient import CLIENT_VERSION
-        lib_path = self.__get_archive_name()
+        lib_path = self._get_archive_name()
         lib_path_base = f"https://github.com/BootsinSoots/Archipelago/releases/download/{CLIENT_VERSION}"
         download_path = f"{lib_path_base}/{lib_path}.zip"
 
@@ -197,9 +198,9 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
             aplm_bytes = zf.read("patch.aplm")
         LuigisMansionRandomizer(vanilla_iso_path, output_iso_path, aplm_bytes)
 
-    def __get_remote_dependencies_and_create_iso(self, aplm_patch: str, output_file: str, lm_clean_iso: str):
+    def _get_remote_dependencies_and_create_iso(self, aplm_patch: str, output_file: str, lm_clean_iso: str):
         try:
-            local_dir_path = self.__get_temp_folder_name()
+            local_dir_path = self._get_temp_folder_name()
             # If temp directory exists, and we failed to patch the ISO, we want to remove the directory
             #   and instead get a fresh installation.
             if os.path.isdir(local_dir_path):
