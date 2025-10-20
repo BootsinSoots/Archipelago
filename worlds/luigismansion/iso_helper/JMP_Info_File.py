@@ -2,7 +2,6 @@ import re
 import struct
 import io
 import json
-from pathlib import Path
 
 from gclib.rarc import RARC
 from .JMP_Field_Header import JMPFieldHeader
@@ -33,8 +32,7 @@ class JMPInfoFile:
         if self.info_file_entry is None:
             raise Exception("Unable to find an info file with name '" + name_of_info_file + "' in provided RARC file.")
 
-        names_json_path: Path = PROJECT_ROOT.joinpath('data', 'names.json')
-        json_data: dict = json.loads(names_json_path.read_text(encoding='utf-8'))
+        json_data: dict = json.loads(PROJECT_ROOT.joinpath('data', 'names.json').read_text(encoding='utf-8'))
 
         if name_of_info_file not in json_data:
             raise Exception("Unable to load info file headers for '" + name_of_info_file + "'.")
