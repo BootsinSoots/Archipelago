@@ -172,7 +172,6 @@ class JMPInfoFile:
                         if length_to_use < STRING_BYTE_LENGTH:
                             current_val = sbf.string_to_bytes(current_val, length_to_use+1)
 
-
                         self.info_file_entry.data.seek(data_field_offset + jmp_header.get_field_start_bit)
                         self.info_file_entry.data.write(current_val)
                     case "Flt":
