@@ -1,5 +1,6 @@
 import json
-import os, yaml
+import os
+
 import Utils
 
 from CommonClient import logger
@@ -59,10 +60,13 @@ class LuigisMansionRandomizer:
         # Important note: SZP are just RARC / Arc files that are yay0 compressed, at least for Luigi's Mansion
         # Get Arc automatically handles decompressing RARC data from yay0, but compressing is on us later.
         logger.info("Loading all of the main mansion map files into memory.")
+        self.map_one_file = self.get_arc("files/Map/map1.szp")
         self.map_two_file = self.get_arc("files/Map/map2.szp")
         self.map_three_file = self.get_arc("files/Map/map3.szp")
+        if self.output_data["Options"]["WDYM_checks"] == 1:
+            self.map_six_file = self.get_arc("files/Map/map6.szp")
 
-        # Loads all the specific JMP tables AP may potentially change / update.
+        # Loads all the specific JMP tables AP may potentially change / update in map 2.
         # Although some events are not changed by AP directly, they are changed here to remove un-necessary cutscenes,
         # set certain flag values, and remove un-necessary script tags.
         self.jmp_item_info_table = self.load_map_info_table(self.map_two_file,"iteminfotable")
@@ -84,7 +88,17 @@ class LuigisMansionRandomizer:
         self.jmp_iyapoo_table = self.load_map_info_table(self.map_two_file,"iyapootable")
         if self.output_data["Options"]["spookiness"] != 0:
             self.jmp_room_info_table = self.load_map_info_table(self.map_two_file, "roominfo")
+
+        # Map 1 JMP tables
+        self.jmp_map1_event_info_table = self.load_map_info_table(self.map_one_file, "eventinfo")
+
+        # Map 3 JMP tables
         self.jmp_map3_event_info_table = self.load_map_info_table(self.map_three_file,"eventinfo")
+
+        # Map 6 JMP tables
+        if self.output_data["Options"]["WDYM_checks"] == 1:
+            self.jmp_map6_furniture_info_table = self.load_map_info_table(self.map_six_file,"furnitureinfo")
+            self.jmp_map6_character_info_table = self.load_map_info_table(self.map_six_file, "characterinfo")
 
         # Saves the randomized iso file, with all files updated.
         self.save_randomized_iso()
@@ -161,6 +175,11 @@ class LuigisMansionRandomizer:
         if int_spookiness != 0:
             update_room_info(self.jmp_room_info_table, int_spookiness)
         update_event_info(self.jmp_map3_event_info_table, bool_boo_checks, self.output_data)
+        if self.output_data["Options"]["WDYM_checks"] == 1:
+            update_gallery_furniture_info(self.jmp_map6_furniture_info_table, self.jmp_item_appear_table, self.output_data)
+            # update_gallery_character_info(self.jmp_map6_character_info_table)
+
+        update_map_one_event_info(self.jmp_map1_event_info_table)
 
         # Updates all the data entries in each jmp table in the szp file.
         logger.info("Saving all jmp tables back into their respective map files...")
@@ -183,7 +202,21 @@ class LuigisMansionRandomizer:
         self.update_map_info_table(self.map_two_file,self.jmp_iyapoo_table)
         if int_spookiness != 0:
             self.update_map_info_table(self.map_two_file, self.jmp_room_info_table)
+
+        # Update Map 1 JMP Tables
+        self.update_map_info_table(self.map_one_file, self.jmp_map1_event_info_table)
+
+        # Update Map 3 JMP Tables
         self.update_map_info_table(self.map_three_file, self.jmp_map3_event_info_table)
+
+        # Update Map 6 JMP Tables, need to copy item appear table and item info table first.
+        if self.output_data["Options"]["WDYM_checks"] == 1:
+            self.map_six_file.add_new_file("iteminfotable", self.jmp_item_info_table.info_file_entry.data,
+                self.jmp_map6_furniture_info_table.info_file_entry.parent_node)
+            self.map_six_file.add_new_file("itemappeartable", self.jmp_item_appear_table.info_file_entry.data,
+                self.jmp_map6_furniture_info_table.info_file_entry.parent_node)
+            self.update_map_info_table(self.map_six_file, self.jmp_map6_furniture_info_table)
+            # self.update_map_info_table(self.map_six_file, self.jmp_map6_character_info_table)
 
     def save_randomized_iso(self):
         # Get Output data required information
@@ -268,15 +301,29 @@ class LuigisMansionRandomizer:
             logger.info("Randomized Music is enabled, updating all events with various in-game music.")
             self.gcm = randomize_music(self.gcm, self.seed)
 
+        logger.info("Updating the in-game tables for chests, furniture, ghosts, etc.")
         self.update_map_jmp_tables()
 
         # Save the map two file changes
         # As mentioned before, these szp files need to be compressed again in order to be properly read by Dolphin/GC.
         # If you forget this, you will get an Invalid read error on a certain memory address typically.
         logger.info("Saving all files back into the main mansion file, then generating the new ISO file...")
+        self.map_one_file.save_changes()
         self.map_two_file.save_changes()
+        self.map_three_file.save_changes()
+
+        logger.info("map1.szp Yay0 check...")
+        self.gcm.changed_files["files/Map/map1.szp"] = Yay0.compress(self.map_one_file.data)
         logger.info("map2.szp Yay0 check...")
         self.gcm.changed_files["files/Map/map2.szp"] = Yay0.compress(self.map_two_file.data)
+        logger.info("map3.szp Yay0 check...")
+        self.gcm.changed_files["files/Map/map3.szp"] = Yay0.compress(self.map_three_file.data)
+
+        if self.output_data["Options"]["WDYM_checks"] == 1:
+            logger.info("Saving WDYM map changes...")
+            self.map_six_file.save_changes()
+            logger.info("map6.szp Yay0 check...")
+            self.gcm.changed_files["files/Map/map6.szp"] = Yay0.compress(self.map_six_file.data)
 
         # Generator function to combine all necessary files into an ISO file.
         # Returned information is ignored.

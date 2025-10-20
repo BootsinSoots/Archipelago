@@ -50,7 +50,8 @@ class LMWeb(WebWorld):
             LuigiOptions.Portrification,
             LuigiOptions.SpeedySpirits,
             LuigiOptions.Lightsanity,
-            LuigiOptions.Walksanity
+            LuigiOptions.Walksanity,
+            LuigiOptions.WhatDoYouMean,
         ]),
         Options.OptionGroup("Access Options", [
             LuigiOptions.RankRequirement,
@@ -190,6 +191,14 @@ class LMWorld(World):
     def _set_optional_locations(self):
 
         # Set the flags for progression location by checking player's settings
+        if self.options.WDYM_checks:
+            for location, data in WDYM_LOCATION_TABLE.items():
+                region = self.get_region(data.region)
+                entry = LMLocation(self.player, location, region, data)
+                if data.require_poltergust:
+                    add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
+                set_element_rules(self, entry, False)
+                region.locations.append(entry)
         if self.options.toadsanity:
             for location, data in TOAD_LOCATION_TABLE.items():
                 # If location is starting room toad, assign to starting room. Otherwise proceed as normal
@@ -564,7 +573,7 @@ class LMWorld(World):
         # Assign each location to their region
         for location, data in BASE_LOCATION_TABLE.items():
             # Set our special spawn locations to the spawn regions
-            if data.code in (708, 853, 925, 926, 927):
+            if data.code in (708, 853):
                 region = self.get_region(self.origin_region_name)
             else:
                 region = self.get_region(data.region)
@@ -854,6 +863,7 @@ class LMWorld(World):
             "speedy spirits": self.options.speedy_spirits.value,
             "lightsanity": self.options.lightsanity.value,
             "walksanity": self.options.walksanity.value,
+            "WDYM": self.options.WDYM_checks.value,
             "clairvoya requirement": self.options.mario_items.value,
             "boo gates": self.options.boo_gates.value,
             "boolossus_difficulty": self.options.boolossus_difficulty.value,

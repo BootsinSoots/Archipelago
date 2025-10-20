@@ -3,6 +3,7 @@ import re
 from math import ceil
 from random import choice, randint
 
+from . import WDYM_LOCATION_TABLE, LMLocationData
 from .Regions import spawn_locations
 from .Items import ALL_ITEMS_TABLE, filler_items, LMItemData, CurrencyItemData
 from .Locations import FLIP_BALCONY_BOO_EVENT_LIST, ALL_LOCATION_TABLE
@@ -97,6 +98,10 @@ def __get_item_name(item_data, slot: int):
 
     return "nothing"
 
+def update_map_one_event_info(event_info):
+    for x in event_info.info_file_field_entries:
+        if x["EventNo"] == 8:
+            x["EventIf"] = 5
 
 def update_event_info(event_info, boo_checks: bool, output_data):
     # Removes events that we don't want to trigger at all in the mansion, such as some E. Gadd calls, warps after
@@ -262,6 +267,11 @@ def update_event_info(event_info, boo_checks: bool, output_data):
                 x["pos_z"] = int(spawn_data["pos_z"]) - 150
                 x["pos_x"] = int(spawn_data["pos_x"]) - 150 + 2
 
+# def update_gallery_character_info(character_info):
+#     for x in character_info.info_file_field_entries:
+#         if x["name"] == "lohakase":
+#             x["pos_z"] = -31.651000
+#             x["invisible"] = 1
 
 def update_character_info(character_info, output_data):
     # Removes useless cutscene objects and the vacuum in the Parlor under the closet.
@@ -1774,6 +1784,60 @@ def __set_key_info_entry(key_info_single_entry, item_data, slot: int):
         key_info_single_entry["invisible"] = 0
     key_info_single_entry["appear_flag"] = 0
     key_info_single_entry["disappear_flag"] = 0
+
+def update_gallery_furniture_info(furniture_info, item_appear_info, output_data):
+    ceiling_furniture_list: list[int] = [0, 1]
+    for furniture_jmp_id in ceiling_furniture_list:
+        current_y_offset = furniture_info.info_file_field_entries[furniture_jmp_id]["item_offset_y"]
+        adjust_y_offset = 225.0
+        furniture_info.info_file_field_entries[furniture_jmp_id]["item_offset_y"] = current_y_offset - adjust_y_offset
+
+    for item_name, item_data in output_data["Locations"].items():
+        location_data: LMLocationData = ALL_LOCATION_TABLE[item_name]
+        if not (location_data.region == "Gallery" and item_data["type"] == "Furniture"):
+            continue
+
+        actor_item_name = __get_item_name(item_data, int(output_data["Slot"]))
+
+        # Replace the furnitureinfo entry to spawn an item from the "itemappeartable".
+        # If the entry is supposed to be money, then generate a random amount of coins and/or bills from it.
+        filtered_item_appear = list(item_appear_entry for item_appear_entry in
+            item_appear_info.info_file_field_entries if  item_appear_entry["item0"] == actor_item_name)
+        item_appear_entry_idx = filtered_item_appear[len(filtered_item_appear) - 1]
+
+        furniture_info.info_file_field_entries[item_data["loc_enum"]]["item_table"] = (
+            item_appear_info.info_file_field_entries.index(item_appear_entry_idx))
+
+        # TODO update using ALL items table instead
+        if any((key, val) for (key, val) in filler_items.items() if
+               key == item_data["name"] and key != "Diamond" and val.type == "Money") \
+                and item_data["player"] == output_data["Slot"]:
+            furniture_info.info_file_field_entries[item_data["loc_enum"]]["item_table"] = 11
+            int_money_amt = 1
+            if re.search(r"^\d+", item_data["name"]):
+                int_money_amt = int(re.search(r"^\d+", item_data["name"]).group())
+            furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate_num"] = int_money_amt
+            if "Coins" in item_data["name"]:
+                if "Bills" in item_data["name"]:
+                    furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 3
+                else:
+                    furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 1
+            elif "Bills" in item_data["name"]:
+                furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 2
+            elif "Sapphire" in item_data["name"]:
+                furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 4
+            elif "Emerald" in item_data["name"]:
+                furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 6
+            elif "Ruby" in item_data["name"]:
+                furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 5
+            elif "Gold Bar" in item_data["name"]:
+                furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 7
+            else:
+                furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 0
+                furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate_num"] = 0
+        else:
+            furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 0
+            furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate_num"] = 0
 
 
 def update_furniture_info(furniture_info, item_appear_info, output_data):
