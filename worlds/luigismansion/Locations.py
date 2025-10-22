@@ -2212,7 +2212,8 @@ ALL_LOCATION_TABLE = {**BASE_LOCATION_TABLE,
                       **TOAD_LOCATION_TABLE,
                       **PORTRAIT_LOCATION_TABLE,
                       **WALK_LOCATION_TABLE,
-                      **LIGHT_LOCATION_TABLE}
+                      **LIGHT_LOCATION_TABLE,
+                      **MEME_LOCATION_TABLE}
 
 
 

@@ -51,7 +51,8 @@ class LMWeb(WebWorld):
             LuigiOptions.Portrification,
             LuigiOptions.SpeedySpirits,
             LuigiOptions.Lightsanity,
-            LuigiOptions.Walksanity
+            LuigiOptions.Walksanity,
+            LuigiOptions.Grassanity,
         ]),
         Options.OptionGroup("Access Options", [
             LuigiOptions.RankRequirement,
@@ -355,6 +356,14 @@ class LMWorld(World):
                 region.locations.append(entry)
         if self.options.walksanity:
             for location, data in WALK_LOCATION_TABLE.items():
+                region = self.get_region(data.region)
+                entry = LMLocation(self.player, location, region, data)
+                if data.require_poltergust:
+                    add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
+                set_element_rules(self, entry, False)
+                region.locations.append(entry)
+        if self.options.grassanity:
+            for location, data in MEME_LOCATION_TABLE.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
                 if data.require_poltergust:
@@ -854,6 +863,7 @@ class LMWorld(World):
             "speedy spirits": self.options.speedy_spirits.value,
             "lightsanity": self.options.lightsanity.value,
             "walksanity": self.options.walksanity.value,
+            "grassanity": self.options.grassanity.value,
             "clairvoya requirement": self.options.mario_items.value,
             "boo gates": self.options.boo_gates.value,
             "boolossus_difficulty": self.options.boolossus_difficulty.value,

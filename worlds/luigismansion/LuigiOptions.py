@@ -734,6 +734,13 @@ class TrapLinkClientMsgs(DefaultOnToggle):
     display_name = "Enable Trap Link Client Message"
     internal_name = "enable_trap_client_msg"
 
+class Grassanity(Toggle):
+    """
+    Add grass locations to the location pool
+    """
+    display_name = "Grassanity"
+    internal_name = "grassanity"
+
 @dataclass
 class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     rank_requirement: RankRequirement
@@ -763,6 +770,7 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     lightsanity: Lightsanity
     walksanity: Walksanity
     speedy_spirits: SpeedySpirits
+    grassanity: Grassanity
     boo_gates: BooGates
     self_item_messages: ShowSelfReceivedItems
     mario_items: MarioItems
