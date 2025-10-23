@@ -142,6 +142,8 @@ class LMContext(BaseContext):
         # Handle various Dolphin connection related tasks
         self.instance_id = None
         self.dolphin_sync_task: Optional[asyncio.Task[None]] = None
+        self.rom_loaded = False
+        self.password_required = False
         self.dolphin_status = CONNECTION_INITIAL_STATUS
         self.item_display_queue: list[NetUtils.NetworkItem] = []
 
@@ -199,22 +201,7 @@ class LMContext(BaseContext):
         dme.un_hook()
         self.dolphin_status = CONNECTION_LOST_STATUS
         self.already_fired_events = False
-
-    async def server_auth(self, password_requested: bool = False):
-        """
-        Authenticate with the Archipelago server.
-
-        :param password_requested: Whether the server requires a password. Defaults to `False`.
-        """
-        if password_requested and not self.password:
-            await super(LMContext, self).server_auth(password_requested)
-        if not self.auth:
-            return
-        await self.send_connect()
-
-        if self.slot:
-            logger.info(CONNECTION_CONNECTED_STATUS)
-            self.dolphin_status = CONNECTION_CONNECTED_STATUS
+        self.rom_loaded = False
 
     def on_package(self, cmd: str, args: dict):
         """
@@ -269,11 +256,35 @@ class LMContext(BaseContext):
                     self.instance_id = time.time()
                 self.trap_link.on_bounced(args, self.get_item_count_by_id(8148))
                 self.ring_link.on_bounced(args)
+
             case "SetReply":
                 if not (self.check_ingame() and self.check_alive()):
                     return
 
                 self.energy_link.try_update_energy_request(args)
+
+            case "ConnectionRefused":
+                self.dolphin_status = AP_REFUSED_STATUS
+                logger.error(self.dolphin_status)
+
+            case "RoomInfo":
+                self.password_required = bool(args['password'])
+
+    async def server_auth(self, password_requested: bool = False):
+        """
+        Authenticate with the Archipelago server. This function will be called as part of the init RoomInfo call
+        in CommonClient, however we will exit if the rom is not loaded yet.
+
+        :param password_requested: Whether the server requires a password. Defaults to `False`.
+        """
+        if not self.rom_loaded:
+            logger.info("ROM is not loaded yet, waiting for dolphin to be connected before trying again.")
+            return
+
+        if password_requested and not self.password:
+            logger.info('Enter the password required to join this game:')
+            self.password = await self.console_input()
+        await self.send_connect()
 
     def on_deathlink(self, data: dict[str, Any]):
         """
@@ -806,10 +817,11 @@ class LMContext(BaseContext):
                         self.locations_checked = set()
 
                         # Inform the player we are ready and waiting for them to connect.
-                        if not self.dolphin_status == CONNECTION_VERIFY_SERVER:
+                        if not self.rom_loaded:
                             self.dolphin_status = CONNECTION_VERIFY_SERVER
                             logger.info(self.dolphin_status)
-                        await self.server_auth()
+                            self.rom_loaded = True
+                            await self.server_auth(self.password_required)
 
                         if not self.slot:
                             await self.wait_for_next_loop(WAIT_TIMER_LONG_TIMEOUT)
@@ -820,6 +832,9 @@ class LMContext(BaseContext):
                             raise Exception(
                                 f"Incorrect Randomized {RANDOMIZER_NAME} ISO file selected. The seed does not match." +
                                 "Please verify that you are using the right ISO/seed/APLM file.")
+
+                        logger.info(CONNECTION_CONNECTED_STATUS)
+                        self.dolphin_status = CONNECTION_CONNECTED_STATUS
 
                     # At this point, we are verified as connected. Update UI elements in the LMCLient tab.
                     if self.ui:

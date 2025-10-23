@@ -13,6 +13,7 @@ NO_SLOT_NAME_STATUS = "No slot name was detected. Ensure a randomized ROM is loa
 CONNECTION_VERIFY_SERVER = "Dolphin was confirmed to be opened and ready, Connect to the server when ready..."
 CONNECTION_INITIAL_STATUS = "Dolphin emulator was not detected to be running. Retrying in 5 seconds..."
 CONNECTION_CONNECTED_STATUS = "Dolphin is connected, AP is connected, Ready to play LM!"
+AP_REFUSED_STATUS = "AP Refused to connect for one or more reasons, see above for more details."
 
 # Static time to wait for health and death checks
 CHECKS_WAIT = 3
