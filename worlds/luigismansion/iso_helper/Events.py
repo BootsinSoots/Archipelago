@@ -3,7 +3,6 @@ from io import BytesIO
 from typing import TYPE_CHECKING
 
 from gclib.gcm import GCM
-from gclib.rarc import RARCFileEntry
 from gclib.yaz0_yay0 import Yay0
 
 from ..Helper_Functions import get_arc, PROJECT_ROOT
@@ -392,13 +391,24 @@ def _update_custom_event(gcm: GCM, event_number: str, delete_all_other_files: bo
         if event_csv:
             files_to_keep += [event_csv_file]
 
-        files_to_delete: set[RARCFileEntry] = set(list(sub_path for sub_path in custom_event.file_entries if
-            not sub_path.is_dir and sub_path.name not in files_to_keep))
+        node_list = list(reversed([node for node in custom_event.nodes[1:]]))
+        for node in node_list:
+            node_files: list[str] = [rarc_file.name for rarc_file in node.files]
+            files_to_delete: list[str] = list(set(node_files) - (set(files_to_keep)))
+            node_files_left_after_delete: list[str] = list(set(node_files) - (set(files_to_delete)))
+            if not len(files_to_delete):
+                continue
 
-        for delete_file in files_to_delete:
-            custom_event.delete_file(delete_file)
+            # If there is only the current directory entry / parent directory entry left, delete the directory.
+            # Note: Removing the directory automatically removes the file entries as well.
+            elif set(node_files_left_after_delete).issubset({".", ".."}):
+                custom_event.delete_directory(node.dir_entry)
+                continue
 
-        #TODO check for all directories being empty and delete them.
+            # Assuming there will always be at least one file to delete in this node, but other files remain.
+            for node_file in node.files:
+                if node_file.name in files_to_delete:
+                    custom_event.delete_file(node_file)
 
     logger.info(f"Event{event_number} Yay0 check...")
     custom_event.save_changes()
@@ -411,8 +421,6 @@ def _read_custom_file(file_type: str, file_name: str) -> str:
     :param file_type: Indicates which sub-folder in data to retrieve the file.
     :param file_name: Reads the provided file name in the sub-folder and decodes it via UTF-8
     """
-    sub_folder = ""
-
     match file_type:
         case "csv":
             sub_folder = "custom_csvs"
