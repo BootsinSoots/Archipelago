@@ -200,22 +200,6 @@ class LMContext(BaseContext):
         self.dolphin_status = CONNECTION_LOST_STATUS
         self.already_fired_events = False
 
-    async def server_auth(self, password_requested: bool = False):
-        """
-        Authenticate with the Archipelago server.
-
-        :param password_requested: Whether the server requires a password. Defaults to `False`.
-        """
-        if password_requested and not self.password:
-            await super(LMContext, self).server_auth(password_requested)
-        if not self.auth:
-            return
-        await self.send_connect()
-
-        if self.slot:
-            logger.info(CONNECTION_CONNECTED_STATUS)
-            self.dolphin_status = CONNECTION_CONNECTED_STATUS
-
     def on_package(self, cmd: str, args: dict):
         """
         Handle incoming packages from the server.
@@ -269,11 +253,27 @@ class LMContext(BaseContext):
                     self.instance_id = time.time()
                 self.trap_link.on_bounced(args, self.get_item_count_by_id(8148))
                 self.ring_link.on_bounced(args)
+
             case "SetReply":
                 if not (self.check_ingame() and self.check_alive()):
                     return
 
                 self.energy_link.try_update_energy_request(args)
+
+            case "ConnectionRefused":
+                self.dolphin_status = AP_REFUSED_STATUS
+                logger.error(self.dolphin_status)
+
+    async def server_auth(self, password_requested: bool = False):
+        """
+        Authenticate with the Archipelago server.
+
+        :param password_requested: Whether the server requires a password. Defaults to `False`.
+        """
+        if password_requested and not self.password:
+            logger.info('Enter the password required to join this game:')
+            self.password = await self.console_input()
+        await self.send_connect()
 
     def on_deathlink(self, data: dict[str, Any]):
         """
@@ -809,7 +809,6 @@ class LMContext(BaseContext):
                         if not self.dolphin_status == CONNECTION_VERIFY_SERVER:
                             self.dolphin_status = CONNECTION_VERIFY_SERVER
                             logger.info(self.dolphin_status)
-                        await self.server_auth()
 
                         if not self.slot:
                             await self.wait_for_next_loop(WAIT_TIMER_LONG_TIMEOUT)
@@ -820,6 +819,9 @@ class LMContext(BaseContext):
                             raise Exception(
                                 "Incorrect Randomized Luigi's Mansion ISO file selected. The seed does not match." +
                                 "Please verify that you are using the right ISO/seed/APLM file.")
+
+                        logger.info(CONNECTION_CONNECTED_STATUS)
+                        self.dolphin_status = CONNECTION_CONNECTED_STATUS
 
                     # At this point, we are verified as connected. Update UI elements in the LMCLient tab.
                     if self.ui:
