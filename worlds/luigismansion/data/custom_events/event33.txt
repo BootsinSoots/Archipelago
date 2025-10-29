@@ -141,7 +141,7 @@
 ---------------------------------
 <CASE>"novac"
 <WINDOW>(0)<COLOR>(18)
-<SAY><COLOR>(2)I don't want to play with you anymore.\n<COLOR>(2)Come back with a vacuum.
+<SAY><COLOR>(2)I don't want to play with you anymore.\n<COLOR>(2)How can you spray me\nwith no vacuum?.
 <ANYKEY>
 <CLOSEWINDOW>(0)
 <END>

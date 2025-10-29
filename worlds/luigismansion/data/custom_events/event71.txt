@@ -19,7 +19,8 @@
 ----------------------
 <CASE>"novac"
 <WINDOW>(0)<COLOR>(4)
-<SAY><COLOR>(2)Insert Boots Text Here
+<SAY><COLOR>(2)Look at Luigi,\ncoming here unarmed!
 <ANYKEY>
+<SAY><COLOR>(2)Run along now, Luigi\nor we'll eat you up!
 <CLOSEWINDOW>(0)
 <END>
