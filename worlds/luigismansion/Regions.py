@@ -117,7 +117,7 @@ REGION_LIST: dict[str, LMRegionInfo] = {
     "West Attic Hallway": LMRegionInfo(2, 3, 49, 57, []),
     "Artist's Studio": LMRegionInfo(2, 3, 57, 60, [], element_type="No Element"),
     "Balcony": LMRegionInfo(2, 3, 59, 62, []),
-    "Armory": LMRegionInfo(2, 3, 48, 51, ["Armory Key", "Balcony Key", "Telephone Room Key"],
+    "Armory": LMRegionInfo(2, 3, 48, 51, ["Armory Key", "Diamond Key", "Telephone Room Key"],
         ["Armory Key", "Ceramics Studio Key"], [50, 51], True, -2541.662600, 1100.000000, -40.361595, "No Element"),
     "Ceramics Studio": LMRegionInfo(2, 3, 55, 58, ["Ceramics Studio Key", "Armory Key", "Telephone Room Key"],
         ["Ceramics Studio Key", "Armory Key"], [50], True, -2397.3373540, 1100.000000, -1579.717410),
