@@ -189,10 +189,11 @@ vanilla_door_state = {
     }
 
 def set_ghost_type(world: "LMWorld", ghost_list: dict):
+    types = ["Fire", "Water", "Ice", "No Element"]
+    weights = [2, 2, 2, 8]
+
     for region_name in ghost_list:
-        types = ["Fire", "Water", "Ice", "No Element"]
-        weights = [2, 2, 2, 8]
-        ghost_type = world.random.choices(types, weights, k=1)[0]
+        ghost_type = world.random.choices(sorted(types), weights, k=1)[0]
         ghost_list.update({region_name: ghost_type})
 
 
