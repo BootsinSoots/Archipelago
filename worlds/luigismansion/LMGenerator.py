@@ -1,5 +1,6 @@
-import json
-import os, yaml
+import json, os
+from random import Random
+
 import Utils
 
 from CommonClient import logger
@@ -42,6 +43,10 @@ class LuigisMansionRandomizer:
         self.gcm = GCM(self.clean_iso_path)
         self.gcm.read_entire_disc()
         self.dol = DOL()
+
+        # Set the random's seed for uses in other files.
+        self.random = Random()
+        self.random.seed(self.output_data["Seed"])
 
         # Change game ID so save files are different
         logger.info("Updating the ISO game id with the AP generated seed.")
