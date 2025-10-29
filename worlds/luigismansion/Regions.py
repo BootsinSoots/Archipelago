@@ -117,7 +117,7 @@ spawn_locations = {
                               "key": ["Butler's Room Key", "Laundry Room Key", "Heart Key"], "door_keys": [],
                               "door_ids": [1], "in_game_room_id": 0}, # Butler
     "Conservatory":          {"room_no": 21, "pos_x": 780.405884, "pos_y": 0, "pos_z": -4662.089840,
-                              "key": ["Conservatory Key", "Lower 2F Stairwell Key","Heart Key"], "door_keys": ["Conservatory Key"],
+                              "key": ["Conservatory Key", "Lower 2F Stairwell Key", "Heart Key"], "door_keys": ["Conservatory Key"],
                               "door_ids": [21], "in_game_room_id": 22}, # Conservatory
     "Billiards Room":        {"room_no": 12, "pos_x": -963.755737, "pos_y": 0, "pos_z": -3055.808110,
                               "key": ["Billiards Room Key", "Heart Key"], "door_keys": ["Billiards Room Key", "Projection Room Key"],
@@ -156,13 +156,13 @@ spawn_locations = {
                               "key": ["Safari Room Key", "East Attic Hallway Key", "Balcony Key"],
                               "door_keys": ["Safari Room Key", "East Attic Hallway Key"], "door_ids": [55, 56], "in_game_room_id": 55}, # safari
     "Ceramics Studio":       {"room_no": 55, "pos_x": -2397.3373540, "pos_y": 1100, "pos_z": -1579.717410,
-                              "key": ["Ceramics Studio Key", "Armory Key", "Diamond Key", "Telephone Room Key"], "door_keys": ["Armory Key"],
+                              "key": ["Ceramics Studio Key", "Armory Key", "Telephone Room Key"], "door_keys": ["Armory Key"],
                               "door_ids": [50], "in_game_room_id": 58}, # ceramics
     "Anteroom":              {"room_no": 39, "pos_x": -1.503195, "pos_y": 550, "pos_z": -3087.626950,
                               "key": ["Wardrobe Key", "Anteroom Key", "Parlor Key"],
                               "door_keys": ["Wardrobe Key", "Anteroom Key"], "door_ids": [43, 38], "in_game_room_id": 42}, # Anteroom
     "Wardrobe":              {"room_no": 38, "pos_x": -1789.859250, "pos_y": 550, "pos_z": -3303.123780,
-                              "key": ["Wardrobe Key","Anteroom Key", "Parlor Key", "Heart Key"],
+                              "key": ["Wardrobe Key", "Anteroom Key", "Parlor Key", "Heart Key"],
                               "door_keys": ["Wardrobe Key", "Wardrobe Balcony Key"], "door_ids": [43, 41], "in_game_room_id": 40}, # Wardrobe
     "Projection Room":       {"room_no": 13, "pos_x": 281.914215, "pos_y": 0, "pos_z": -3137.967530,
                               "key": ["Projection Room Key", "Billiards Room Key"], "door_keys": ["Projection Room Key"],
@@ -189,7 +189,7 @@ spawn_locations = {
                               "key": ["Dining Room Key", "Kitchen Key"], "door_keys": ["Dining Room Key", "Kitchen Key"],
                               "door_ids": [11, 14], "in_game_room_id": 8}, # Dining
     "Armory":                {"room_no": 48, "pos_x": -2541.662600, "pos_y": 1100.000000, "pos_z": -40.361595,
-                              "key": ["Armory Key", "Balcony Key", "Telephone Room Key"],
+                              "key": ["Armory Key", "Diamond Key", "Telephone Room Key"],
                               "door_keys": ["Armory Key", "Ceramics Studio Key"], "door_ids": [50, 51], "in_game_room_id": 51}, # Armory
     "Pipe Room":             {"room_no": 66, "pos_x": 1235, "pos_y": -480.000000, "pos_z": -1433.000000,
                              "key": ["Pipe Room Key", "Cellar Key"],
