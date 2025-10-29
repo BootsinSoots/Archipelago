@@ -521,13 +521,12 @@ class LMWorld(World):
             self.open_doors = passthrough["door rando list"]  # this should be the same list from slot data
             self.open_doors = {int(k): v for k, v in self.open_doors.items()}
         elif self.options.door_rando == 1 or self.options.door_rando == 2:
-            k = list(self.open_doors.keys())
-            v = list(self.open_doors.values())
-            self.open_doors = dict(zip(self.random.sample(k, k=len(self.open_doors)),
-                                       v))
-            if self.options.door_rando.value == 2:
-                for door_num in [3, 42, 59, 72]: # If door is a suite_door, lock it in this option
-                    self.open_doors[door_num] = 0
+            for key in  self.open_doors.keys():
+                # If door is a suite_door, lock it in this option
+                if self.options.door_rando.value == 2 and key in [3, 42, 59, 72]:
+                    self.open_doors[key] = 0
+                    continue
+                self.open_doors[key] = self.random.choice(sorted([0,1]))
             spawn_doors = copy.deepcopy(REGION_LIST[self.origin_region_name].door_ids)
             if spawn_doors:
                 for door in REGION_LIST[self.origin_region_name].door_ids:
@@ -688,12 +687,12 @@ class LMWorld(World):
         self.multiworld.itempool += loc_itempool
 
     def get_trap_item_name(self, trap_filler, filler_weights) -> str:
-        return self.random.choices(trap_filler, weights=filler_weights, k=1)[0]
+        return self.random.choices(sorted(trap_filler), weights=filler_weights, k=1)[0]
 
 
     def get_other_filler_item(self,other_filler, filler_weights) -> str:
         if sum(filler_weights) != 0:
-            return self.random.choices(other_filler, weights=filler_weights, k=1)[0]
+            return self.random.choices(sorted(other_filler), weights=filler_weights, k=1)[0]
         else:
             return "Dust"
 
@@ -718,7 +717,7 @@ class LMWorld(World):
                           self.options.ghost_weight.value, self.options.fear_weight.value,
                           self.options.spooky_weight.value, self.options.squash_weight.value, self.options.vac_trap_weight.value]  # 15bill, 25bill, 1bar, 2bar
         if sum(filler_weights) != 0:
-            return self.random.choices(filler, weights=filler_weights, k=1)[0]
+            return self.random.choices(sorted(filler), weights=filler_weights, k=1)[0]
         else:
             return "Dust"
 
