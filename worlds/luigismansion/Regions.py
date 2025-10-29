@@ -156,7 +156,7 @@ spawn_locations = {
                               "key": ["Safari Room Key", "East Attic Hallway Key", "Balcony Key"],
                               "door_keys": ["Safari Room Key", "East Attic Hallway Key"], "door_ids": [55, 56], "in_game_room_id": 55}, # safari
     "Ceramics Studio":       {"room_no": 55, "pos_x": -2397.3373540, "pos_y": 1100, "pos_z": -1579.717410,
-                              "key": ["Armory Key", "Diamond Key", "Telephone Room Key"], "door_keys": ["Armory Key"],
+                              "key": ["Ceramics Studio Key", "Armory Key", "Diamond Key", "Telephone Room Key"], "door_keys": ["Armory Key"],
                               "door_ids": [50], "in_game_room_id": 58}, # ceramics
     "Anteroom":              {"room_no": 39, "pos_x": -1.503195, "pos_y": 550, "pos_z": -3087.626950,
                               "key": ["Wardrobe Key", "Anteroom Key", "Parlor Key"],
