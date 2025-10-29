@@ -182,7 +182,7 @@ def write_portrait_hints(lm_gen: "LuigisMansionRandomizer", hint_distribution_ch
     if hint_distribution_choice == 1:
         for portrait_name in PORTRAIT_HINTS.keys():
             jokes = PROJECT_ROOT.joinpath('data', 'jokes.txt').read_text(encoding="utf-8")
-            joke_hint = lm_gen.random.choice(str.splitlines(jokes)).replace("{BreakHere}", "\n")
+            joke_hint = lm_gen.random.choice(sorted(str.splitlines(jokes))).replace("{BreakHere}", "\n")
             csv_lines = csv_lines.replace(f"{portrait_name}", joke_hint)
     else:
         for portrait_name, portrait_hint in all_hints.items():
@@ -239,7 +239,7 @@ def randomize_clairvoya(lm_gen: "LuigisMansionRandomizer", req_mario_count: str,
             case_type = "DisabledHint"
         case 1:
             jokes = PROJECT_ROOT.joinpath('data', 'jokes.txt').read_text(encoding="utf-8")
-            joke_hint = lm_gen.random.choice(str.splitlines(jokes))
+            joke_hint = lm_gen.random.choice(sorted(str.splitlines(jokes)))
             csv_lines = csv_lines.replace("{JokeText}", joke_hint)
             case_type = "JokeHint"
         case _:
@@ -332,7 +332,7 @@ def write_in_game_hints(lm_gen: "LuigisMansionRandomizer", hint_distribution_cho
                 case_type = "DisabledHint"
             case 1:
                 jokes = PROJECT_ROOT.joinpath('data', 'jokes.txt').read_text(encoding="utf-8")
-                joke_hint = lm_gen.random.choice(str.splitlines(jokes))
+                joke_hint = lm_gen.random.choice(sorted(str.splitlines(jokes)))
                 csv_lines = csv_lines.replace("{JokeText}", joke_hint)
                 case_type = "JokeHint"
             case _:
