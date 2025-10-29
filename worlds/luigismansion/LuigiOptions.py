@@ -212,7 +212,21 @@ class PortraitHints(Toggle):
 
 
 class HintDistribution(Choice):
-    """Choose the level of hint from in-game hints. Will affect Portrait Ghost hints if the option is on."""
+    """
+    Choose the level of hint from in-game hints. Will affect Portrait Ghost hints if the option is on.
+
+    Junk hints will  not hint any items and instead provide funny lines
+
+    Strong hints will favor hinting progression items when choosing hints
+
+    Balanced will pick between progression items or other items to hint, but slightly favor progression items
+
+    Chaos wil pick items completely at random, with no favoring of progression or not
+
+    Vague hints will tell you the game the item is in, but not where
+
+    Disabled hints disables hint text completely
+    """
     display_name = "Hint Distribution"
     internal_name = "hint_distribution"
     option_balanced = 0
