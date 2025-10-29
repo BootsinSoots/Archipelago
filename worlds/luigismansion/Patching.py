@@ -22,7 +22,7 @@ blueish_item_names: list[str] = ["Small Key", "Blue", "Ocean", "Sea", "Magic"]
 
 
 # Converts AP readable name to in-game name
-def __get_item_name(item_data, slot: int):
+def _get_item_name(item_data, slot: int):
     if int(item_data["player"]) != slot:
         return "nothing"  # TODO return AP item(s) here
 
@@ -293,7 +293,7 @@ def update_character_info(character_info, output_data):
     for x in character_info.info_file_field_entries:
         # Replace the mstar Observatory item with its randomized item.
         if x["name"] == "mstar":
-            x["name"] = __get_item_name(output_data["Locations"]["Observatory Shoot the Moon"], int(output_data["Slot"]))
+            x["name"] = _get_item_name(output_data["Locations"]["Observatory Shoot the Moon"], int(output_data["Slot"]))
             x["appear_flag"] = 50
             x["invisible"] = 1
             x["pos_y"] = 600.000000
@@ -1456,7 +1456,7 @@ def update_obj_info(obj_info):
 
 
 # Indicates the chest size that will be loaded in game based on item provided. 0 = small, 1 = medium, 2 = large
-def __get_chest_size_from_item(lm_gen: "LuigisMansionRandomizer", item_name, chest_option, classification, trap_option, slot, iplayer):
+def _get_chest_size_from_item(lm_gen: "LuigisMansionRandomizer", item_name, chest_option, classification, trap_option, slot, iplayer):
     if chest_option == 1 or chest_option == 3:
         if "Boo" in item_name and slot == iplayer:
             return 0
@@ -1547,7 +1547,7 @@ def update_item_info_table(item_info, output_data):
     # Adds the special items, so they can spawn in furniture or chests.
     items_to_add = ["rdiamond", "itembomb", "ice", "mstar", "banana", "diamond", "gameboy", "vbody"]
     for new_item in items_to_add:
-        __add_info_item(item_info, None, info_item_name=new_item, slot=int(output_data["Slot"]))
+        _add_info_item(item_info, None, info_item_name=new_item, slot=int(output_data["Slot"]))
 
     heart_amounts_to_fix = {"sheart": 20, "lheart": 50}
     for heart_item in heart_amounts_to_fix.keys():
@@ -1559,16 +1559,16 @@ def update_item_info_table(item_info, output_data):
                           str(item_entry["name"]).startswith("key_")]
 
     for item_name, item_data in output_data["Locations"].items():
-        current_item = __get_item_name(item_data, int(output_data["Slot"]))
+        current_item = _get_item_name(item_data, int(output_data["Slot"]))
         if item_data["door_id"] > 0 and current_item not in already_added_keys:
-            __add_info_item(item_info, item_data, slot=int(output_data["Slot"]))
+            _add_info_item(item_info, item_data, slot=int(output_data["Slot"]))
 
 
-def __add_info_item(item_info, item_data, open_door_no=0, hp_amount=0, is_escape=0, info_item_name=None, slot=0):
+def _add_info_item(item_info, item_data, open_door_no=0, hp_amount=0, is_escape=0, info_item_name=None, slot=0):
     if info_item_name is None:
-        info_name = __get_item_name(item_data, slot)
-        char_name = __get_item_name(item_data, slot) if not item_data["door_id"] > 0 else (
-            __get_key_name(item_data["door_id"]))
+        info_name = _get_item_name(item_data, slot)
+        char_name = _get_item_name(item_data, slot) if not item_data["door_id"] > 0 else (
+            _get_key_name(item_data["door_id"]))
         open_no = 0 if not item_data["door_id"] > 0 else item_data["door_id"]
     else:
         info_name = info_item_name
@@ -1585,7 +1585,7 @@ def __add_info_item(item_info, item_data, open_door_no=0, hp_amount=0, is_escape
 
 
 # Indicates the key model to use when spawning the item.
-def __get_key_name(door_id):
+def _get_key_name(door_id):
     match door_id:
         case 3:
             return "key02"
@@ -1604,7 +1604,7 @@ def update_item_appear_table(item_appear_info, output_data):
     items_to_add = ["mkinoko", "itembomb", "ice", "elffst", "elwfst", "elifst", "mstar", "mglove", "mshoes", "sheart",
                     "lheart", "banana", "rdiamond", "diamond", "ruby", "emerald", "sapphire", "gameboy", "vbody"]
     for new_item in items_to_add:
-        __add_appear_item(item_appear_info, new_item)
+        _add_appear_item(item_appear_info, new_item)
 
     # Gets the list of keys already added in the item appear table
     already_added_keys = [item_entry["item0"] for item_entry in item_appear_info.info_file_field_entries if
@@ -1612,12 +1612,12 @@ def update_item_appear_table(item_appear_info, output_data):
 
     # For every key found in the generation output, add an entry for it in "itemappeartable".
     for item_name, item_data in output_data["Locations"].items():
-        current_item = __get_item_name(item_data, int(output_data["Slot"]))
+        current_item = _get_item_name(item_data, int(output_data["Slot"]))
         if item_data["door_id"] > 0 and current_item not in already_added_keys:
-            __add_appear_item(item_appear_info, current_item)
+            _add_appear_item(item_appear_info, current_item)
 
 
-def __add_appear_item(item_appear_table_entry, item_name):
+def _add_appear_item(item_appear_table_entry, item_name):
     new_item = {}
     for itemid in range(20):
         new_item["item" + str(itemid)] = item_name
@@ -1650,16 +1650,16 @@ def update_treasure_table(lm_gen: "LuigisMansionRandomizer", treasure_info, char
             # Change chest appearance based of player cosmetic choices
             chest_size = int(treasure_info.info_file_field_entries[item_data["loc_enum"]]["size"])
             if item_data["room_no"] != 11 and chest_option > 0:
-                char_entry["name"] = __get_item_chest_visual(lm_gen, item_data["name"], chest_option,
+                char_entry["name"] = _get_item_chest_visual(lm_gen, item_data["name"], chest_option,
                     item_data["classification"], trap_option, slot_num, item_data["player"])
                 if item_data["door_id"] == 0:
-                    chest_size = __get_chest_size_from_item(lm_gen, item_data["name"], chest_option,
+                    chest_size = _get_chest_size_from_item(lm_gen, item_data["name"], chest_option,
                         item_data["classification"], trap_option, slot_num, item_data["player"])
                 else:
-                    chest_size = __get_chest_size_from_key(item_data["door_id"])
+                    chest_size = _get_chest_size_from_key(item_data["door_id"])
 
             # Define the actor name to use from the Location in the generation output. Act differently if it's a key.
-            treasure_item_name = __get_item_name(item_data, slot_num) #nothing
+            treasure_item_name = _get_item_name(item_data, slot_num) #nothing
 
             # Setting all curriences to 0 value by default.
             for currency_name in CURRENCIES:
@@ -1682,7 +1682,7 @@ def update_treasure_table(lm_gen: "LuigisMansionRandomizer", treasure_info, char
 
 
 # Indicates the chest size that will be loaded in game based on key type. 0 = small, 1 = medium, 2 = large
-def __get_chest_size_from_key(key_id):
+def _get_chest_size_from_key(key_id):
     match key_id:
         case 3 | 42 | 59 | 72:
             return 2
@@ -1691,7 +1691,7 @@ def __get_chest_size_from_key(key_id):
 
 
 # Changes the type of chest loaded in game based on the type of item that is hidden inside
-def __get_item_chest_visual(lm_gen: "LuigisMansionRandomizer", item_name, chest_option, classification, trap_option, slot, iplayer):
+def _get_item_chest_visual(lm_gen: "LuigisMansionRandomizer", item_name, chest_option, classification, trap_option, slot, iplayer):
     if chest_option == 1:
         if "Boo" in item_name and slot == iplayer:
             return "wtakara1"
@@ -1803,18 +1803,18 @@ def update_key_info(key_info, output_data):
         if not item_data["type"] == "Freestanding":
             continue
 
-        __set_key_info_entry(key_info.info_file_field_entries[LOCATION_TO_INDEX[item_name]], item_data,
+        _set_key_info_entry(key_info.info_file_field_entries[LOCATION_TO_INDEX[item_name]], item_data,
                              int(output_data["Slot"]))
 
     # Remove the cutscene HD key from the Foyer, which only appears in the cutscene.
     key_info.info_file_field_entries.remove(key_info.info_file_field_entries[2])
 
 
-def __set_key_info_entry(key_info_single_entry, item_data, slot: int):
+def _set_key_info_entry(key_info_single_entry, item_data, slot: int):
     # Disable the item's invisible status by default.
     # This is needed since we change the appear_type to 0, which makes items other than keys not spawn out of bounds.
-    key_info_single_entry["name"] = __get_item_name(item_data, slot) if not (item_data["door_id"] > 0) else \
-        (__get_key_name(item_data["door_id"]))
+    key_info_single_entry["name"] = _get_item_name(item_data, slot) if not (item_data["door_id"] > 0) else \
+        (_get_key_name(item_data["door_id"]))
     key_info_single_entry["open_door_no"] = item_data["door_id"]
     if key_info_single_entry["code_name"] == "demo_key2":
         key_info_single_entry["invisible"] = 0
@@ -1833,7 +1833,7 @@ def update_gallery_furniture_info(furniture_info, item_appear_info, output_data)
         if not (location_data.region == "Gallery" and item_data["type"] == "Furniture"):
             continue
 
-        actor_item_name = __get_item_name(item_data, int(output_data["Slot"]))
+        actor_item_name = _get_item_name(item_data, int(output_data["Slot"]))
 
         # Replace the furnitureinfo entry to spawn an item from the "itemappeartable".
         # If the entry is supposed to be money, then generate a random amount of coins and/or bills from it.
@@ -1928,7 +1928,7 @@ def update_furniture_info(furniture_info, item_appear_info, output_data):
             furniture_info.info_file_field_entries[item_data["loc_enum"]]["item_table"] = 0
             continue
 
-        actor_item_name = __get_item_name(item_data, int(output_data["Slot"]))
+        actor_item_name = _get_item_name(item_data, int(output_data["Slot"]))
 
         # Replace the furnitureinfo entry to spawn an item from the "itemappeartable".
         # If the entry is supposed to be money, then generate a random amount of coins and/or bills from it.
@@ -2109,7 +2109,7 @@ def update_iyapoo_table(iyapoo_table, output_data):
             case "goldrat9":
                 item_data = output_loc["Safari Room Cheese Mouse"]
 
-        treasure_item_name = __get_item_name(item_data, slot_num)
+        treasure_item_name = _get_item_name(item_data, slot_num)
         coin_amount = 0
         bill_amount = 0
         gold_bar_amount = 0
