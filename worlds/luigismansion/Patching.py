@@ -131,6 +131,7 @@ def update_event_info(event_info, boo_checks: bool, output_data):
             x["pos_y"] = 1100.000000
             x["pos_z"] = -25.000000
 
+        # Telephone room event for the telephones, make an A press and make always on
         if x["EventNo"] == 94:
             x["EventFlag"] = 0
             x["disappear_flag"] = 0
@@ -141,6 +142,7 @@ def update_event_info(event_info, boo_checks: bool, output_data):
             x["pos_y"] = 1100.000000
             x["pos_z"] = -25.000000
 
+        # Telephone room event for the telephones, make an A press and make always on
         if x["EventNo"] == 93:
             x["EventFlag"] = 0
             x["disappear_flag"] = 0
