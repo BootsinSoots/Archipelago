@@ -575,7 +575,7 @@ class LMContext(BaseContext):
                     curr_val = min(flower_count + 234, 237)
                     ram_offset = None
                 elif item.item == 8064:  # If it's a vacuum upgrade
-                    curr_val: int = self.get_item_count_by_id(8064)
+                    curr_val: int = min(self.get_item_count_by_id(8064), 5)
                     ram_offset = None
                 elif not addr_to_update.item_count is None:
                     if not ram_offset is None:
@@ -619,7 +619,7 @@ class LMContext(BaseContext):
         try:
             # Always adjust the Vacuum speed as saving and quitting or going to E. Gadds lab could reset it back to normal.
             vac_count = self.get_item_count_by_id(8148)
-            vac_speed = max(min(self.get_item_count_by_id(8064), 5),0)
+            vac_speed = min(self.get_item_count_by_id(8064), 5)
 
             if not self.trap_link.check_vac_trap_active():
                 for item in [8064, 8148]:
@@ -629,6 +629,9 @@ class LMContext(BaseContext):
                         if addr_to_update.ram_addr == 0x804dda54 and vac_count > 0:  # If we're checking against our vacuum-on address
                             curr_val = 1
                             dme.write_bytes(addr_to_update.ram_addr, curr_val.to_bytes(addr_to_update.ram_byte_size, 'big'))
+                            vacc_flag = dme.read_byte(0x803D33A3)
+                            vacc_flag = (vacc_flag | (1 << 2))
+                            dme.write_byte(0x803D33A3, vacc_flag)
                         else:
                             dme.write_bytes(addr_to_update.ram_addr, vac_speed.to_bytes(addr_to_update.ram_byte_size, 'big'))
 
