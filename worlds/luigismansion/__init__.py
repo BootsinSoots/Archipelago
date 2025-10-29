@@ -527,19 +527,20 @@ class LMWorld(World):
                     self.open_doors[key] = 0
                     continue
                 self.open_doors[key] = self.random.choice(sorted([0,1]))
-            spawn_doors = copy.deepcopy(REGION_LIST[self.origin_region_name].door_ids)
-            if spawn_doors:
-                for door in REGION_LIST[self.origin_region_name].door_ids:
-                    if self.open_doors[door] == 1:
-                        spawn_doors.remove(door)
-                if not spawn_doors:
-                    self.spawn_full_locked: bool = True
         elif self.options.door_rando.value == 3:
             for door_id in self.open_doors.keys():
                 self.open_doors[door_id] = 1
         elif self.options.door_rando.value == 4:
             for door_id in self.open_doors.keys():
                 self.open_doors[door_id] = 0
+
+        spawn_doors = copy.deepcopy(REGION_LIST[self.origin_region_name].door_ids)
+        if spawn_doors:
+            for door in REGION_LIST[self.origin_region_name].door_ids:
+                if self.open_doors[door] == 1:
+                    spawn_doors.remove(door)
+            if not spawn_doors:
+                self.spawn_full_locked: bool = True
 
         # If player wants to start with boo radar or good vacuum
         if self.options.boo_radar == 0:
