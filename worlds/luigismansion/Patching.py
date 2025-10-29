@@ -157,6 +157,7 @@ def update_event_info(event_info, boo_checks: bool, output_data):
         # This prevents being soft locked in Boolossus and having to reset the game without saving.
         if x["EventNo"] == 71:
             x["EventFlag"] = 45
+            x["EventLoad"] = 0
 
         # Allows Jarvis' (Ceramics Room) to only appear when the Ice Medal has been collected.
         # This prevents being kicked out by Jarvis' and being unable to participate in his game.
