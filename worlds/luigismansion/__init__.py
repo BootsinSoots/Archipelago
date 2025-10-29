@@ -504,8 +504,8 @@ class LMWorld(World):
             # We know we're in second gen
             self.origin_region_name = passthrough["spawn_region"]  # this should be the same region from slot data
         elif self.options.random_spawn.value > 0:
-            self.origin_region_name = self.random.choice([region_name for (region_name, region_data) in REGION_LIST if
-                region_data.allow_random_spawn])
+            self.origin_region_name = self.random.choice(sorted([region_name for (region_name, region_data) in
+                REGION_LIST.items() if region_data.allow_random_spawn]))
 
         if self.using_ut:
             # We know we're in second gen
