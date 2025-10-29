@@ -146,7 +146,7 @@ FREESTANDING_KEY_TABLE = {
     "Fortune Teller Candles": LMLocationData("Fortune-Teller's Room", 6, "Freestanding", 4, ["Fire Element Medal"],
         remote_only=True, update_ram_addr=[LMRamData(0x803D33A6, bit_position=6, in_game_room_id=3)]),
     "The Well Key": LMLocationData("The Well", 21, "Freestanding", 0, [], remote_only=True,
-        update_ram_addr=[LMRamData(0x803CDFDA, bit_position=1, in_game_room_id=72, ram_byte_size=2)]),
+        update_ram_addr=[LMRamData(0x803CDFDA, bit_position=1, ram_byte_size=2)]),
     "Wardrobe Shelf Key": LMLocationData("Wardrobe", 50, "Freestanding", 5, [], remote_only=True,
         update_ram_addr=[LMRamData(0x803D33A6, bit_position=6, in_game_room_id=41)]),
     "1F Bathroom Shelf Key": LMLocationData("1F Bathroom", 54, "Freestanding", 3, [], remote_only=True,
