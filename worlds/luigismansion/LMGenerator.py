@@ -38,18 +38,13 @@ class LuigisMansionRandomizer:
         # Make sure that the server and client versions match before attempting to patch ISO.
         self._check_server_version(self.output_data.get(AP_WORLD_VERSION_NAME, "<0.5.6"))
 
-        # Set the random's seed for uses in other files.
-        self.random = Random()
-        self.random.seed(self.output_data["Seed"])
-
         # After verifying, this will also read the entire iso, including system files and their content
         self.gcm = GCM(self.clean_iso_path)
         self.gcm.read_entire_disc()
 
-        # Set the random's seed for uses in other files.
+        # Set the random's seed for use in other files.
         self.random = Random()
-        local_seed: str = str(self.output_data["Seed"])
-        self.random.seed(local_seed)
+        self.random.seed(self.output_data["Seed"])
 
         # Change game ID so save files are different
         self._update_game_id(str(self.output_data["Seed"]))
