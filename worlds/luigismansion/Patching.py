@@ -131,6 +131,7 @@ def update_event_info(event_info, boo_checks: bool, output_data):
             x["pos_y"] = 1100.000000
             x["pos_z"] = -25.000000
 
+        # Telephone room event for the telephones, make an A press and make always on
         if x["EventNo"] == 94:
             x["EventFlag"] = 0
             x["disappear_flag"] = 0
@@ -141,6 +142,7 @@ def update_event_info(event_info, boo_checks: bool, output_data):
             x["pos_y"] = 1100.000000
             x["pos_z"] = -25.000000
 
+        # Telephone room event for the telephones, make an A press and make always on
         if x["EventNo"] == 93:
             x["EventFlag"] = 0
             x["disappear_flag"] = 0
@@ -154,6 +156,12 @@ def update_event_info(event_info, boo_checks: bool, output_data):
         # Allows the Ring of Boos on the 3F Balcony to only appear when the Ice Medal has been collected.
         # This prevents being soft locked in Boolossus and having to reset the game without saving.
         if x["EventNo"] == 71:
+            x["EventFlag"] = 45
+            x["EventLoad"] = 0
+
+        # Allows Jarvis' (Ceramics Room) to only appear when the Ice Medal has been collected.
+        # This prevents being kicked out by Jarvis' and being unable to participate in his game.
+        if x["EventNo"] == 33:
             x["EventFlag"] = 45
 
         # Since we have a custom blackout event, we need to update event 44's trigger condition to be A-pressed based.
@@ -454,10 +462,6 @@ def update_observer_info(observer_info, output_data):
             x["code_name"] = "tel3"
         elif x["name"] == "iphone" and x["pos_x"] == 0.000000:
             x["code_name"] = "tel1"
-
-        # Ignore me, I am the observers that spawn ghosts for Vincent
-        # if x["string_arg0"] in ["57_1", "57_2", "57_3", "57_4", "57_5", "57_6", "57_7"]:
-        #    x["string_arg0"] = "(null)"
 
     # This one checks for the candles being lit in the Fortune-Teller's Room, flagging that key spawn
     observer_info.info_file_field_entries.append({

@@ -491,7 +491,7 @@ class LMWorld(World):
             # We know we're in second gen
             self.origin_region_name = passthrough["spawn_region"]  # this should be the same region from slot data
         elif self.options.random_spawn.value > 0:
-            self.origin_region_name = self.random.choice(list(spawn_locations.keys()))
+            self.origin_region_name = self.random.choice(sorted(spawn_locations.keys()))
 
         if self.using_ut:
             # We know we're in second gen
@@ -674,12 +674,12 @@ class LMWorld(World):
         self.multiworld.itempool += loc_itempool
 
     def get_trap_item_name(self, trap_filler, filler_weights) -> str:
-        return self.random.choices(trap_filler, weights=filler_weights, k=1)[0]
+        return self.random.choices(sorted(trap_filler), weights=filler_weights, k=1)[0]
 
 
     def get_other_filler_item(self,other_filler, filler_weights) -> str:
         if sum(filler_weights) != 0:
-            return self.random.choices(other_filler, weights=filler_weights, k=1)[0]
+            return self.random.choices(sorted(other_filler), weights=filler_weights, k=1)[0]
         else:
             return "Dust"
 
@@ -704,7 +704,7 @@ class LMWorld(World):
                           self.options.ghost_weight.value, self.options.fear_weight.value,
                           self.options.spooky_weight.value, self.options.squash_weight.value, self.options.vac_trap_weight.value]  # 15bill, 25bill, 1bar, 2bar
         if sum(filler_weights) != 0:
-            return self.random.choices(filler, weights=filler_weights, k=1)[0]
+            return self.random.choices(sorted(filler), weights=filler_weights, k=1)[0]
         else:
             return "Dust"
 

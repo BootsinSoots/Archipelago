@@ -132,8 +132,10 @@ def update_intro_and_lab_events(lm_gen: "LuigisMansionRandomizer", hidden_mansio
     lines = lines.replace("{MANSION_TYPE}", "<URALUIGI>" if hidden_mansion else "<OMOTELUIGI>")
     if not starting_vac:
         lines = lines.replace("{WEAPON}", "<NOWEAPON>")
+        lines = lines.replace("{VacStartFlag}", "<FLAGOFF>(82)")
     else:
         lines = lines.replace("{WEAPON}", "<WEAPON>")
+        lines = lines.replace("{VacStartFlag}", "<FLAGON>(82)")
 
     include_radar = ""
     if any("Boo Radar" in key for key in start_inv) or start_radar:
