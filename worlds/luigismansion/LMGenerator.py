@@ -141,8 +141,8 @@ class LuigisMansionRandomizer:
         update_character_info(self.jmp_character_info_table, self.output_data)
         update_item_info_table(self.jmp_item_info_table, self.output_data)
         update_item_appear_table(self.jmp_item_appear_table, self.output_data)
-        update_treasure_table(self.jmp_treasure_table, self.jmp_character_info_table, self.output_data)
-        update_treasure_table(self.jmp_treasure_table, self.jmp_teiden_character_info_table, self.output_data)
+        update_treasure_table(self, self.jmp_treasure_table, self.jmp_character_info_table, self.output_data)
+        update_treasure_table(self, self.jmp_treasure_table, self.jmp_teiden_character_info_table, self.output_data)
         update_furniture_info(self.jmp_furniture_info_table, self.jmp_item_appear_table, self.output_data)
         update_event_info(self.jmp_event_info_table, bool_boo_checks, self.output_data)
 
@@ -151,17 +151,17 @@ class LuigisMansionRandomizer:
         update_key_info(self.jmp_key_info_table, self.output_data)
         update_obj_info(self.jmp_obj_info_table)
         update_generator_info(self.jmp_generator_info_table)
-        update_enemy_info(self.jmp_enemy_info_table, self.output_data)
+        update_enemy_info(self, self.jmp_enemy_info_table, self.output_data)
         update_teiden_observer_info(self.jmp_observer_info_table,
             self.jmp_teiden_observer_info_table, bool_speedy_spirits)
         if bool_speedy_spirits:
             update_teiden_enemy_info(self.jmp_enemy_info_table, self.jmp_teiden_enemy_info_table)
 
         logger.info("Updating Boos, other iyapoos, and rooms/events...")
-        update_boo_table(self.jmp_boo_table, self.output_data)
+        update_boo_table(self, self.jmp_boo_table, self.output_data)
         update_iyapoo_table(self.jmp_iyapoo_table, self.output_data)
         if int_spookiness != 0:
-            update_room_info(self.jmp_room_info_table, int_spookiness)
+            update_room_info(self, self.jmp_room_info_table, int_spookiness)
         update_event_info(self.jmp_map3_event_info_table, bool_boo_checks, self.output_data)
 
         # Updates all the data entries in each jmp table in the szp file.
