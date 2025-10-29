@@ -1,4 +1,16 @@
+<CHECKFLAG>(82)"hasvac""novac"
+----------------------
+<CASE>"hasvac"
 <CHECKFLAG>(61)"blackout""normal"
+----------------------
+<CASE>"blackout"
+<WINDOW>(0)<COLOR>(3)
+<SAY><COLOR>(3)It is too scary to fight them\nin the dark!
+<ANYKEY>
+<SAY><COLOR>(3)Maybe I should turn the\nbreaker back on!
+<CLOSEWINDOW>(0)
+<END>
+----------------------
 <CASE>"normal"
 <FLAGOFF>(34)
 <FLAGON>(171)
@@ -6,10 +18,11 @@
 <WIPEKIND>(3)
 <WARP>(11)
 <END>
-<CASE>"blackout"
-<WINDOW>(0)<COLOR>(3)
-<SAY><COLOR>(3)It is too scary to fight them\nin the dark!
+----------------------
+<CASE>"novac"
+<WINDOW>(0)<COLOR>(4)
+<SAY><COLOR>(2)Look at Luigi,\n <COLOR>(2)coming here unarmed!
 <ANYKEY>
-<SAY><COLOR>(3)Maybe I should turn the\nbreaker back on!
+<SAY><COLOR>(2)Run along now, Luigi\n <COLOR>(2)or we'll eat you up!
 <CLOSEWINDOW>(0)
 <END>

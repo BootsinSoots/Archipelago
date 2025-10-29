@@ -6,7 +6,6 @@ import Utils
 from CommonClient import logger
 
 from gclib.gcm import GCM
-from gclib.dol import DOL
 from gclib.rarc import RARC
 from gclib.yaz0_yay0 import Yay0
 
@@ -46,7 +45,11 @@ class LuigisMansionRandomizer:
         # After verifying, this will also read the entire iso, including system files and their content
         self.gcm = GCM(self.clean_iso_path)
         self.gcm.read_entire_disc()
-        self.dol = DOL()
+
+        # Set the random's seed for uses in other files.
+        self.random = Random()
+        local_seed: str = str(self.output_data["Seed"])
+        self.random.seed(local_seed)
 
         # Change game ID so save files are different
         self._update_game_id(str(self.output_data["Seed"]))
@@ -159,8 +162,8 @@ class LuigisMansionRandomizer:
         update_character_info(self.jmp_character_info_table, self.output_data)
         update_item_info_table(self.jmp_item_info_table, self.output_data)
         update_item_appear_table(self.jmp_item_appear_table, self.output_data)
-        update_treasure_table(self.jmp_treasure_table, self.jmp_character_info_table, self.output_data)
-        update_treasure_table(self.jmp_treasure_table, self.jmp_teiden_character_info_table, self.output_data)
+        update_treasure_table(self, self.jmp_treasure_table, self.jmp_character_info_table, self.output_data)
+        update_treasure_table(self, self.jmp_treasure_table, self.jmp_teiden_character_info_table, self.output_data)
         update_furniture_info(self.jmp_furniture_info_table, self.jmp_item_appear_table, self.output_data)
         update_event_info(self.jmp_event_info_table, bool_boo_checks, self.output_data)
 
@@ -169,17 +172,17 @@ class LuigisMansionRandomizer:
         update_key_info(self.jmp_key_info_table, self.output_data)
         update_obj_info(self.jmp_obj_info_table)
         update_generator_info(self.jmp_generator_info_table)
-        update_enemy_info(self.jmp_enemy_info_table, self.output_data)
+        update_enemy_info(self, self.jmp_enemy_info_table, self.output_data)
         update_teiden_observer_info(self.jmp_observer_info_table,
             self.jmp_teiden_observer_info_table, bool_speedy_spirits)
         if bool_speedy_spirits:
             update_teiden_enemy_info(self.jmp_enemy_info_table, self.jmp_teiden_enemy_info_table)
 
         logger.info("Updating Boos, other iyapoos, and rooms/events...")
-        update_boo_table(self.jmp_boo_table, self.output_data)
+        update_boo_table(self, self.jmp_boo_table, self.output_data)
         update_iyapoo_table(self.jmp_iyapoo_table, self.output_data)
         if int_spookiness != 0:
-            update_room_info(self.jmp_room_info_table, int_spookiness)
+            update_room_info(self, self.jmp_room_info_table, int_spookiness)
         update_event_info(self.jmp_map3_event_info_table, bool_boo_checks, self.output_data)
         if self.output_data["Options"]["WDYM_checks"] == 1:
             update_gallery_furniture_info(self.jmp_map6_furniture_info_table, self.jmp_item_appear_table, self.output_data)
@@ -240,13 +243,6 @@ class LuigisMansionRandomizer:
         bool_randomize_mice: bool = bool(self.output_data["Options"]["gold_mice"])
         bool_hidden_mansion: bool = bool(self.output_data["Options"]["hidden_mansion"])
         bool_start_boo_radar: bool = not bool(self.output_data["Options"]["boo_radar"])
-        walk_speed: int = int(self.output_data["Options"]["walk_speed"])
-        bool_fear_anim_enabled: bool =  bool(self.output_data["Options"]["enable_fear_animation"])
-        bool_pickup_anim_enabled: bool = bool(self.output_data["Options"]["enable_pickup_animation"])
-        player_name: str = str(self.output_data["Name"])
-        king_boo_health: int = int(self.output_data["Options"]["king_boo_health"])
-        random_spawn: str = str(self.output_data["Options"]["spawn"])
-        door_model_rando_on: bool = bool(self.output_data["Options"]["door_model_rando"])
 
         # Boo related options
         bool_boo_checks: bool = True if self.output_data["Options"]["boo_gates"] == 1 else False
@@ -261,15 +257,14 @@ class LuigisMansionRandomizer:
         bool_portrait_hints: bool = True if self.output_data["Options"]["portrait_hints"] == 1 else False
 
         logger.info("Updating all the main.dol offsets with their appropriate values.")
-        update_dol_offsets(self, start_inv_list, walk_speed, player_name, random_spawn, king_boo_health,
-            bool_fear_anim_enabled, bool_pickup_anim_enabled, bool_boo_rando_enabled, door_model_rando_on)
+        update_dol_offsets(self)
 
         logger.info("Updating all of the common events with the customized version.")
-        update_common_events(self.gcm, bool_randomize_mice, bool_start_vacuum)
+        update_common_events(self, bool_randomize_mice, bool_start_vacuum)
 
         logger.info("Updating the intro and lab events with the customized version.")
-        update_intro_and_lab_events(self.gcm, bool_hidden_mansion, max_health, start_inv_list,
-            bool_start_boo_radar, door_to_close_list, bool_start_vacuum)
+        update_intro_and_lab_events(self, bool_hidden_mansion, max_health, start_inv_list, bool_start_boo_radar,
+            door_to_close_list, bool_start_vacuum)
 
         if bool_boo_checks:
             logger.info("Boo Gates was enabled, updating all of the common events with the customized version.")
@@ -287,10 +282,10 @@ class LuigisMansionRandomizer:
                     self.jmp_event_info_table.info_file_field_entries = list(filter(lambda info_entry: not (
                         info_entry["EventNo"] == int(event_no)), self.jmp_event_info_table.info_file_field_entries))
                     continue
-                update_boo_gates(self.gcm, event_no, required_boo_count, bool_boo_rando_enabled, str_move_type)
+                update_boo_gates(self, event_no, required_boo_count, bool_boo_rando_enabled, str_move_type)
 
         logger.info("Updating the blackout event with the customized version.")
-        update_blackout_event(self.gcm)
+        update_blackout_event(self)
 
         logger.info("Updating Clairvoya's event with the customized version.")
         randomize_clairvoya(self, req_mario_count, hint_dist, madam_hint_dict)
@@ -299,7 +294,7 @@ class LuigisMansionRandomizer:
         write_in_game_hints(self, hint_dist, hint_list, max_health)
 
         logger.info("Updating the spawn event...")
-        update_spawn_events(self.gcm)
+        update_spawn_events(self)
 
         if bool_portrait_hints:
             logger.info("Portrait Hints are enabled, updating portrait ghost hearts with the generated in-game hints.")

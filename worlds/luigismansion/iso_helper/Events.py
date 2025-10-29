@@ -1,6 +1,6 @@
 import re
 from io import BytesIO
-from typing import TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 
 from gclib.gcm import GCM
 from gclib.yaz0_yay0 import Yay0
@@ -13,7 +13,8 @@ if TYPE_CHECKING:
     from ..LMGenerator import LuigisMansionRandomizer
 
 
-def update_boo_gates(gcm: GCM, event_no: str, req_boo_count: int, boo_rando_enabled: bool, move_luigi: str):
+def update_boo_gates(lm_gen: "LuigisMansionRandomizer", event_no: str, req_boo_count: int, boo_rando_enabled: bool,
+    move_luigi: Optional[str]):
 
     lines = _read_custom_file("txt", "event" + event_no + ".txt")
     if move_luigi:
@@ -23,7 +24,7 @@ def update_boo_gates(gcm: GCM, event_no: str, req_boo_count: int, boo_rando_enab
         lines = lines.replace("{Count0}", str(0)).replace("{Count1}", str(0))
         lines = lines.replace("{Count2}", str(0)).replace("{Count3}", str(0))
         lines = lines.replace("{Count4}", str(req_boo_count)).replace("{CaseBegin}", str_begin_case)
-        _update_custom_event(gcm, event_no, True, lines, None)
+        _update_custom_event(lm_gen.gcm, event_no, True, lines, None)
         return
 
     str_begin_case = "CheckBoos"
@@ -77,16 +78,16 @@ def update_boo_gates(gcm: GCM, event_no: str, req_boo_count: int, boo_rando_enab
             lines = lines.replace("{Case3}", str_not_enough)
             lines = lines.replace("{Case4}", str_boo_captured)
 
-    _update_custom_event(gcm, event_no, True, lines, None)
+    _update_custom_event(lm_gen.gcm, event_no, True, lines, None)
 
 # Updates the event txt and csv for blackout
-def update_blackout_event(gcm: GCM):
+def update_blackout_event(lm_gen: "LuigisMansionRandomizer"):
     lines = _read_custom_file("txt", "event44.txt")
     csv_lines = _read_custom_file("csv", "message44.csv")
-    _update_custom_event(gcm, "44", True, lines, csv_lines)
+    _update_custom_event(lm_gen.gcm, "44", True, lines, csv_lines)
 
 # Updates all common events
-def update_common_events(gcm: GCM, randomize_mice: bool, starting_vac: bool):
+def update_common_events(lm_gen: "LuigisMansionRandomizer", randomize_mice: bool, starting_vac: bool):
     list_custom_events = ["03", "10", "13", "22", "23", "24", "29", "33", "35", "37", "38", "50", "61", "64",
         "65", "66", "67", "68", "71", "72", "74", "75", "82", "86", "87", "88", "89", "90"]
     if randomize_mice:
@@ -96,29 +97,31 @@ def update_common_events(gcm: GCM, randomize_mice: bool, starting_vac: bool):
         lines = _read_custom_file("txt", "event" + custom_event + ".txt")
         if custom_event == "10" and not starting_vac:
             lines = lines.replace("<WEAPON>", "<NOWEAPON>")
-        _update_custom_event(gcm, custom_event, True, lines, None)
+        _update_custom_event(lm_gen.gcm, custom_event, True, lines, None)
 
 # Update the intro event and E. Gadd event as needed.
-def update_intro_and_lab_events(gcm: GCM, hidden_mansion: bool, max_health: str, start_inv: list[str],
+def update_intro_and_lab_events(lm_gen: "LuigisMansionRandomizer", hidden_mansion: bool, max_health: str, start_inv: list[str],
     start_radar: bool,doors_to_open: dict[int, int], starting_vac: bool):
     # Update the custom Gallery Event
     lines = _read_custom_file("txt", "event28.txt")
     csv_lines = _read_custom_file("csv", "message28.csv")
-    _update_custom_event(gcm, "28", True, lines, csv_lines)
+    _update_custom_event(lm_gen.gcm, "28", True, lines, csv_lines)
 
     # Update the custom E. Gadd's lab event.
     lines = _read_custom_file("txt", "event08.txt")
     lines = lines.replace("{LUIGIMAXHP}", max_health)
     csv_lines = _read_custom_file("csv", "message8.csv")
-    _update_custom_event(gcm, "08", True, lines, csv_lines)
+    _update_custom_event(lm_gen.gcm, "08", True, lines, csv_lines)
 
     # Update the main intro event.
     lines = _read_custom_file("txt", "event48.txt")
     lines = lines.replace("{MANSION_TYPE}", "<URALUIGI>" if hidden_mansion else "<OMOTELUIGI>")
     if not starting_vac:
         lines = lines.replace("{WEAPON}", "<NOWEAPON>")
+        lines = lines.replace("{VacStartFlag}", "<FLAGOFF>(82)")
     else:
         lines = lines.replace("{WEAPON}", "<WEAPON>")
+        lines = lines.replace("{VacStartFlag}", "<FLAGON>(82)")
 
     include_radar = ""
     if any("Boo Radar" in key for key in start_inv) or start_radar:
@@ -134,7 +137,7 @@ def update_intro_and_lab_events(gcm: GCM, hidden_mansion: bool, max_health: str,
     lines = lines.replace("{DOOR_LIST}", ''.join(event_door_list))
     lines = lines.replace("{LUIGIMAXHP}", max_health)
 
-    _update_custom_event(gcm, "48", False, lines, None)
+    _update_custom_event(lm_gen.gcm, "48", False, lines, None)
 
 # Randomizes all the music in all the event.txt files.
 def randomize_music(lm_gen: "LuigisMansionRandomizer"):
@@ -358,9 +361,9 @@ def write_in_game_hints(lm_gen: "LuigisMansionRandomizer", hint_distribution_cho
             _update_custom_event(lm_gen.gcm, str(event_no), True, lines, csv_lines)
 
 # Update the spawn event info
-def update_spawn_events(gcm: GCM):
+def update_spawn_events(lm_gen: "LuigisMansionRandomizer"):
     lines = _read_custom_file("txt", "event11.txt")
-    _update_custom_event(gcm, "11", True, lines, None)
+    _update_custom_event(lm_gen.gcm, "11", True, lines, None)
 
 # Using the provided txt or csv lines for a given event file, updates the actual szp file in memory with this data.
 def _update_custom_event(gcm: GCM, event_number: str, delete_all_other_files: bool,
