@@ -688,7 +688,7 @@ class LMContext(BaseContext):
         return
 
     async def check_death(self):
-        if not self.last_not_ingame or (self.check_ingame() and self.check_alive()):
+        if not (self.check_ingame() and self.check_alive()):
             return
 
         if not self.is_luigi_dead and time.time() >= float(self.last_death_link + (CHECKS_WAIT * LONGER_MODIFIER * 3)):
