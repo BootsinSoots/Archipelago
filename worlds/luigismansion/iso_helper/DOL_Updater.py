@@ -24,7 +24,7 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
     king_boo_health: int = int(lm_gen.output_data["Options"]["king_boo_health"])
     fear_anim_enabled: bool = bool(lm_gen.output_data["Options"]["enable_fear_animation"])
     pickup_anim_enabled: bool = bool(lm_gen.output_data["Options"]["enable_pickup_animation"])
-    boo_rando_enabled: bool = not bool(lm_gen.output_data["Options"]["boo_radar"])
+    boo_rando_enabled: bool = bool(lm_gen.output_data["Options"]["boosanity"])
     door_model_enabled: bool = bool(lm_gen.output_data["Options"]["door_model_rando"])
 
     # Find the main DOL file and read it.
