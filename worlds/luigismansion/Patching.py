@@ -5,8 +5,7 @@ from typing import TYPE_CHECKING
 
 from .Regions import REGION_LIST, LMRegionInfo
 from .Items import ALL_ITEMS_TABLE, filler_items, LMItemData, CurrencyItemData
-from .Locations import FLIP_BALCONY_BOO_EVENT_LIST, ALL_LOCATION_TABLE, LMLocationData, WDYM_LOCATION_TABLE
-from .game.Currency import CURRENCY_NAME, CURRENCIES
+from .Locations import LMLocationData
 from .Locations import FLIP_BALCONY_BOO_EVENT_LIST, ALL_LOCATION_TABLE
 from .game.Currency import CURRENCIES
 
