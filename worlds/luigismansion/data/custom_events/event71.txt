@@ -19,8 +19,8 @@
 ----------------------
 <CASE>"novac"
 <WINDOW>(0)<COLOR>(4)
-<SAY><COLOR>(2)Look at Luigi,\ncoming here unarmed!
+<SAY><COLOR>(2)Look at Luigi,\n <COLOR>(2)coming here unarmed!
 <ANYKEY>
-<SAY><COLOR>(2)Run along now, Luigi\nor we'll eat you up!
+<SAY><COLOR>(2)Run along now, Luigi\n <COLOR>(2)or we'll eat you up!
 <CLOSEWINDOW>(0)
 <END>
