@@ -1,3 +1,6 @@
+<CHECKFLAG>(82)"hasvac""novac"
+---------------------------------
+<CASE>"hasvac"
 <MENUOFF>
 <CHECKFLAG>(40)"get""no_get"
 ---------------------------------
@@ -134,4 +137,11 @@
   <WARPMOVE>(8)
 <FRAMEEND>
 <MENUON>
+<END>
+---------------------------------
+<CASE>"novac"
+<WINDOW>(0)<COLOR>(18)
+<SAY><COLOR>(2)I don't want to play with you anymore.\n<COLOR>(2)Come back with a vacuum.
+<ANYKEY>
+<CLOSEWINDOW>(0)
 <END>
