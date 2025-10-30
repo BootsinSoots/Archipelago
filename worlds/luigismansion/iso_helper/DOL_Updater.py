@@ -134,11 +134,11 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
     if not random_spawn == "Foyer":
         spawn_info: LMRegionInfo = REGION_LIST[random_spawn]
         lm_dol.data.seek(0x3A05E0)
-        lm_dol.data.write(struct.pack(">f", spawn_info["pos_x"]))
+        lm_dol.data.write(struct.pack(">f", spawn_info.pos_x))
         lm_dol.data.seek(0x3A05E4)
-        lm_dol.data.write(struct.pack(">f", spawn_info["pos_y"]))
+        lm_dol.data.write(struct.pack(">f", spawn_info.pos_y))
         lm_dol.data.seek(0x3A05E8)
-        lm_dol.data.write(struct.pack(">f", spawn_info["pos_z"]))
+        lm_dol.data.write(struct.pack(">f", spawn_info.pos_z))
 
     if door_model_enabled:
         door_model_offsets: list[int] = [0x2FFFBE, 0x2FFFDA, 0x2FFFF6, 0x300012, 0x30004A, 0x300066, 0x300082,
