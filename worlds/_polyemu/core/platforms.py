@@ -63,11 +63,26 @@ class SNES(PlatformBase):
     MISC = 0x08
 
 
+class GC(PlatformBase):
+    _ID = 0x05
+
+    ROM = 0x01
+    VRAM = 0x02
+
+
+class WII(PlatformBase):
+    _ID = 0x06
+
+    ROM = 0x01
+    VRAM = 0x02
+
 class PLATFORMS:
     GB = GB
     GBC = GBC
     GBA = GBA
     SNES = SNES
+    WII = WII
+    GC = GC
 
     @staticmethod
     def cast_to_int(value: int | type[PlatformBase]):
