@@ -306,7 +306,7 @@ class LMContext(BaseContext):
         if dme.read_word(CURR_MAP_ID_ADDR) == 1:
             return True
 
-        if get_luigi_health() > 0:
+        if self.get_luigi_health() > 0:
             self.last_health_checked = time.time()
             self.is_luigi_dead = False
             return True
@@ -683,7 +683,7 @@ class LMContext(BaseContext):
         return
 
     async def check_death(self):
-        if not self.check_ingame() or get_luigi_health > 0:
+        if not self.check_ingame() or self.get_luigi_health() > 0:
             return
 
         # If this is 0 and our health is 0, it means are health address pointer could have changed
