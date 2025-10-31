@@ -1,6 +1,6 @@
 """ Collection of commonly used constants for Luigi's Mansion. """
 
-CLIENT_VERSION = "V0.5.12"
+CLIENT_VERSION = "V0.5.13"
 CLIENT_NAME = "Luigi's Mansion Client"
 
 AP_LOGGER_NAME = "Client"
