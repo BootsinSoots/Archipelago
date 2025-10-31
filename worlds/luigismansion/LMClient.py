@@ -686,8 +686,8 @@ class LMContext(BaseContext):
         if not self.check_ingame() or get_luigi_health > 0:
             return
 
-        # If this is not 0, it means are health address pointer could have changed between using a mouse hole
-        # or teleporting to a new map, so we may not actually be dead.
+        # If this is 0 and our health is 0, it means are health address pointer could have changed
+        # between using a mouse hole or teleporting to a new map, so Luigi may not actually be dead.
         is_luigi_dead: int = dme.read_byte(CHECK_DEATH_ACTIVE)
         if is_luigi_dead == 0:
             return
