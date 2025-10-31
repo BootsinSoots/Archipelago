@@ -377,16 +377,14 @@ def _update_custom_event(gcm: GCM, event_number: str, delete_all_other_files: bo
     if event_txt:
         if not any(info_files for info_files in custom_event.file_entries if info_files.name == event_txt_file):
             raise Exception(f"Unable to find an info file with name '{event_txt_file}' in provided RARC file.")
-        lines = BytesIO(event_txt.encode('utf-8'))
         next((info_files for info_files in custom_event.file_entries if
-              info_files.name == event_txt_file)).data = lines
+              info_files.name == event_txt_file)).data = BytesIO(event_txt.encode('utf-8'))
 
     if event_csv:
         if not any(info_files for info_files in custom_event.file_entries if info_files.name == event_csv_file):
             raise Exception(f"Unable to find an info file with name '{event_csv_file}' in provided RARC file.")
-        csv_lines = BytesIO(event_csv.encode('utf-8'))
         next((info_files for info_files in custom_event.file_entries if
-              info_files.name == event_csv_file)).data = csv_lines
+              info_files.name == event_csv_file)).data = BytesIO(event_csv.encode('utf-8'))
 
     if delete_all_other_files:
         files_to_keep: list[str] = [event_txt_file, ".", ".."]
@@ -425,10 +423,10 @@ def _read_custom_file(file_type: str, file_name: str) -> str:
     """
     match file_type:
         case "csv":
-            sub_folder = "custom_csvs"
+            file_data = PROJECT_ROOT.joinpath('data', "custom_csvs", file_name).read_text(encoding='utf-8').replace("\n", "\r\n")
         case "txt":
-            sub_folder = "custom_events"
+            file_data = PROJECT_ROOT.joinpath('data', "custom_events", file_name).read_text(encoding='utf-8')
         case _:
             raise Exception(f"Unhandled custom type provided: {file_type}")
 
-    return PROJECT_ROOT.joinpath('data', sub_folder, file_name).read_text(encoding='utf-8')
+    return file_data
