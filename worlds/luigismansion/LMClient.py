@@ -32,6 +32,7 @@ CURR_MAP_ID_ADDR = 0x804D80A4
 
 # This address is used to check/set the player's health for DeathLink. (2 bytes / Half word)
 CURR_HEALTH_ADDR = 0x803D8B40
+CHECK_DEATH_ACTIVE = 0x804D07FB
 CURR_HEALTH_OFFSET = 0xB8
 
 # This Furniture address table contains the start of the addresses used for currently loaded in Furniture.
@@ -297,21 +298,15 @@ class LMContext(BaseContext):
         self.set_luigi_dead()
         return
 
+    def get_luigi_health(self) -> int:
+        return read_short(dme.follow_pointers(CURR_HEALTH_ADDR, [CURR_HEALTH_OFFSET]))
 
     def check_alive(self):
         # Our health gets messed up in the Lab, so we can just ignore that location altogether.
         if dme.read_word(CURR_MAP_ID_ADDR) == 1:
             return True
 
-        lm_curr_health = read_short(dme.follow_pointers(CURR_HEALTH_ADDR, [CURR_HEALTH_OFFSET]))
-        if "DeathLink" in self.tags:
-            # Get the pointer of Luigi's health, as this changes when warping to bosses or climbing into mouse holes.
-            if lm_curr_health == 0:
-                if time.time() > self.last_health_checked + CHECKS_WAIT:
-                    return False
-                return True
-
-        if lm_curr_health > 0:
+        if self.get_luigi_health() > 0:
             self.last_health_checked = time.time()
             self.is_luigi_dead = False
             return True
@@ -688,7 +683,13 @@ class LMContext(BaseContext):
         return
 
     async def check_death(self):
-        if not (self.check_ingame() and self.check_alive()):
+        if self.is_luigi_dead or self.get_luigi_health() > 0:
+            return
+
+        # If this is 0 and our health is 0, it means are health address pointer could have changed
+        # between using a mouse hole or teleporting to a new map, so Luigi may not actually be dead.
+        death_screen_check: int = dme.read_byte(CHECK_DEATH_ACTIVE)
+        if death_screen_check > 0x20:
             return
 
         if not self.is_luigi_dead and time.time() >= float(self.last_death_link + (CHECKS_WAIT * LONGER_MODIFIER * 3)):
@@ -710,16 +711,22 @@ class LMContext(BaseContext):
     async def non_essentials_async_tasks(self):
         try:
             while self.slot:
-                if not (self.check_ingame() and self.check_alive()):
+                if not self.check_ingame():
+                    await self.wait_for_next_loop(0.5)
+                    continue
+
+                # Since DeathLink has to check in_game separately but not health, we will do this outside of
+                # the below statements
+                if "DeathLink" in self.tags:
+                    await self.check_death()
+
+                if not self.check_alive():
                     await self.wait_for_next_loop(0.5)
                     # Resets the logic for determining the currency differences,
                     # needs to be updated to reset inside of wallet_manager.
                     # self.ring_link.reset_ringlink()
                     continue
 
-                # All Link related activities
-                if "DeathLink" in self.tags:
-                    await self.check_death()
                 if self.trap_link.is_enabled():
                     await self.trap_link.handle_traplink_async()
                 if self.ring_link.is_enabled():
