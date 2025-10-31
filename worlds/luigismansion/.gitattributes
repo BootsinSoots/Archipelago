@@ -1,2 +1,2 @@
-data/custom_csvs/** -text
+data/custom_csvs/** text eol=crlf
 data/custom_events/** -text
