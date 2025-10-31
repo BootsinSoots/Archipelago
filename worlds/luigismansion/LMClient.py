@@ -683,13 +683,13 @@ class LMContext(BaseContext):
         return
 
     async def check_death(self):
-        if not self.check_ingame() or self.get_luigi_health() > 0:
+        if self.is_luigi_dead or self.get_luigi_health() > 0:
             return
 
         # If this is 0 and our health is 0, it means are health address pointer could have changed
         # between using a mouse hole or teleporting to a new map, so Luigi may not actually be dead.
-        is_luigi_dead: int = dme.read_byte(CHECK_DEATH_ACTIVE)
-        if is_luigi_dead > 0x20:
+        death_screen_check: int = dme.read_byte(CHECK_DEATH_ACTIVE)
+        if death_screen_check > 0x20:
             return
 
         if not self.is_luigi_dead and time.time() >= float(self.last_death_link + (CHECKS_WAIT * LONGER_MODIFIER * 3)):
@@ -711,16 +711,22 @@ class LMContext(BaseContext):
     async def non_essentials_async_tasks(self):
         try:
             while self.slot:
-                if not (self.check_ingame() and self.check_alive()):
+                if not self.check_ingame():
+                    await self.wait_for_next_loop(0.5)
+                    continue
+
+                # Since DeathLink has to check in_game separately but not health, we will do this outside of
+                # the below statements
+                if "DeathLink" in self.tags:
+                    await self.check_death()
+
+                if not self.check_alive():
                     await self.wait_for_next_loop(0.5)
                     # Resets the logic for determining the currency differences,
                     # needs to be updated to reset inside of wallet_manager.
                     # self.ring_link.reset_ringlink()
                     continue
 
-                # All Link related activities
-                if "DeathLink" in self.tags:
-                    await self.check_death()
                 if self.trap_link.is_enabled():
                     await self.trap_link.handle_traplink_async()
                 if self.ring_link.is_enabled():
