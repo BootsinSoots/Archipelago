@@ -32,6 +32,7 @@ CURR_MAP_ID_ADDR = 0x804D80A4
 
 # This address is used to check/set the player's health for DeathLink. (2 bytes / Half word)
 CURR_HEALTH_ADDR = 0x803D8B40
+CHECK_DEATH_ACTIVE = 0x01346770
 CURR_HEALTH_OFFSET = 0xB8
 
 # This Furniture address table contains the start of the addresses used for currently loaded in Furniture.
@@ -297,21 +298,15 @@ class LMContext(BaseContext):
         self.set_luigi_dead()
         return
 
+    def get_luigi_health(self) -> int:
+        return read_short(dme.follow_pointers(CURR_HEALTH_ADDR, [CURR_HEALTH_OFFSET]))
 
     def check_alive(self):
         # Our health gets messed up in the Lab, so we can just ignore that location altogether.
         if dme.read_word(CURR_MAP_ID_ADDR) == 1:
             return True
 
-        lm_curr_health = read_short(dme.follow_pointers(CURR_HEALTH_ADDR, [CURR_HEALTH_OFFSET]))
-        if "DeathLink" in self.tags:
-            # Get the pointer of Luigi's health, as this changes when warping to bosses or climbing into mouse holes.
-            if lm_curr_health == 0:
-                if time.time() > self.last_health_checked + CHECKS_WAIT:
-                    return False
-                return True
-
-        if lm_curr_health > 0:
+        if get_luigi_health() > 0:
             self.last_health_checked = time.time()
             self.is_luigi_dead = False
             return True
@@ -688,7 +683,13 @@ class LMContext(BaseContext):
         return
 
     async def check_death(self):
-        if not (self.check_ingame() and self.check_alive()):
+        if not self.check_ingame() or get_luigi_health > 0:
+            return
+
+        # If this is not 0, it means are health address pointer could have changed between using a mouse hole
+        # or teleporting to a new map, so we may not actually be dead.
+        is_luigi_dead: int = dme.read_byte(CHECK_DEATH_ACTIVE)
+        if is_luigi_dead == 0:
             return
 
         if not self.is_luigi_dead and time.time() >= float(self.last_death_link + (CHECKS_WAIT * LONGER_MODIFIER * 3)):
