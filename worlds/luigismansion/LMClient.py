@@ -32,7 +32,7 @@ CURR_MAP_ID_ADDR = 0x804D80A4
 
 # This address is used to check/set the player's health for DeathLink. (2 bytes / Half word)
 CURR_HEALTH_ADDR = 0x803D8B40
-CHECK_DEATH_ACTIVE = 0x81346770
+CHECK_DEATH_ACTIVE = 0x804D07FB
 CURR_HEALTH_OFFSET = 0xB8
 
 # This Furniture address table contains the start of the addresses used for currently loaded in Furniture.
@@ -689,7 +689,7 @@ class LMContext(BaseContext):
         # If this is 0 and our health is 0, it means are health address pointer could have changed
         # between using a mouse hole or teleporting to a new map, so Luigi may not actually be dead.
         is_luigi_dead: int = dme.read_byte(CHECK_DEATH_ACTIVE)
-        if is_luigi_dead == 0:
+        if is_luigi_dead > 0x20:
             return
 
         if not self.is_luigi_dead and time.time() >= float(self.last_death_link + (CHECKS_WAIT * LONGER_MODIFIER * 3)):
