@@ -161,10 +161,9 @@ def randomize_music(lm_gen: "LuigisMansionRandomizer"):
 
         if music_to_replace:
             for music_match in music_to_replace:
-                list_of_bad_music = [-1, 13, 17, 21, 24, 28, 41]
-                int_music_selection: int = -1
-                while int_music_selection in list_of_bad_music:
-                    int_music_selection = lm_gen.random.randint(0, 52)
+                list_of_bad_music: list[int] = [13, 17, 21, 24, 28, 41]
+                music_list: list[int] = [i for i in range(0, 53) if i not in list_of_bad_music]
+                int_music_selection: int = lm_gen.random.choice(sorted(music_list))
                 event_str = event_str.replace(music_match, "<BGM>(" + str(int_music_selection) + ")")
 
         updated_event = BytesIO(event_str.encode('utf-8'))
