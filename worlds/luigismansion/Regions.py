@@ -188,7 +188,7 @@ spawn_locations = {
     "Dining Room":           {"room_no": 9, "pos_x": -393.851349, "pos_y": 0, "pos_z": -1416.557500,
                               "key": ["Dining Room Key", "Kitchen Key"], "door_keys": ["Dining Room Key", "Kitchen Key"],
                               "door_ids": [11, 14], "in_game_room_id": 8}, # Dining
-    "Armory":                {"room_no": 48, "pos_x": -2541.662600, "pos_y": 1100.000000, "pos_z": -40.361595,
+    "Armory":                {"room_no": 48, "pos_x": -3119.19385, "pos_y": 1100.000000, "pos_z": 235.000000,
                               "key": ["Armory Key", "Diamond Key", "Telephone Room Key"],
                               "door_keys": ["Armory Key", "Ceramics Studio Key"], "door_ids": [50, 51], "in_game_room_id": 51}, # Armory
     "Pipe Room":             {"room_no": 66, "pos_x": 1235, "pos_y": -480.000000, "pos_z": -1433.000000,
