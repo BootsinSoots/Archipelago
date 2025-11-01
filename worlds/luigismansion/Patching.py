@@ -1993,7 +1993,7 @@ def update_teiden_enemy_info(enemy_info, teiden_enemy_info):
         enemy_info.info_file_field_entries.remove(x)
 
 
-def update_enemy_info(lm_gen: "LuigisMansionRandomizer", enemy_info, output_data):
+def update_enemy_info(lm_gen: "LuigisMansionRandomizer", enemy_info, teiden_enemy_info, output_data):
     # TODO Randomize Blackout enemies as well.
     # A list of all the ghost actors of the game we want to replace.
     # It excludes the "waiter" ghost as that is needed for Mr. Luggs to work properly.
@@ -2019,6 +2019,15 @@ def update_enemy_info(lm_gen: "LuigisMansionRandomizer", enemy_info, output_data
 
                 room_element: str = "No Element" if (room_id in [27, 35, 40]) else val
                 apply_new_ghost(lm_gen, enemy_to_change, room_element)
+
+    # If randomize ghosts options are enabled
+    if output_data["Options"]["enemizer"] > 0:
+        for key, val in output_data["Room Enemies"].items():
+            room_id: int = REGION_LIST[key].room_id
+            for enemy_to_change in teiden_enemy_info.info_file_field_entries:
+                if enemy_to_change["room_no"] != room_id or not enemy_to_change["name"] in ghost_list:
+                    continue
+                apply_new_ghost(lm_gen, enemy_to_change, val)
 
 
 def update_boo_table(lm_gen: "LuigisMansionRandomizer", telesa_info, output_data):
