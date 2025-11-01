@@ -2007,27 +2007,25 @@ def update_enemy_info(lm_gen: "LuigisMansionRandomizer", enemy_info, teiden_enem
                   "tenjyo", "tenjyo2"]
 
     # If randomize ghosts options are enabled
-    if output_data["Options"]["enemizer"] > 0:
-        for key, val in output_data["Room Enemies"].items():
-            room_id: int = REGION_LIST[key].room_id
-            for enemy_to_change in enemy_info.info_file_field_entries:
-                if enemy_to_change["room_no"] != room_id or not enemy_to_change["name"] in ghost_list:
-                    continue
+    if output_data["Options"]["enemizer"] == 0:
+        return
 
-                if "16_1" in enemy_to_change["create_name"]:
-                    enemy_to_change["pos_y"] = 30.000000
+    for key, val in output_data["Room Enemies"].items():
+        room_id: int = REGION_LIST[key].room_id
+        for enemy_to_change in enemy_info.info_file_field_entries:
+            if enemy_to_change["room_no"] != room_id or not enemy_to_change["name"] in ghost_list:
+                continue
 
-                room_element: str = "No Element" if (room_id in [27, 35, 40]) else val
-                apply_new_ghost(lm_gen, enemy_to_change, room_element)
+            if "16_1" in enemy_to_change["create_name"]:
+                enemy_to_change["pos_y"] = 30.000000
 
-    # If randomize ghosts options are enabled
-    if output_data["Options"]["enemizer"] > 0:
-        for key, val in output_data["Room Enemies"].items():
-            room_id: int = REGION_LIST[key].room_id
-            for enemy_to_change in teiden_enemy_info.info_file_field_entries:
-                if enemy_to_change["room_no"] != room_id or not enemy_to_change["name"] in ghost_list:
-                    continue
-                apply_new_ghost(lm_gen, enemy_to_change, val)
+            room_element: str = "No Element" if (room_id in [27, 35, 40]) else val
+            apply_new_ghost(lm_gen, enemy_to_change, room_element)
+
+        for enemy_to_change in teiden_enemy_info.info_file_field_entries:
+            if enemy_to_change["room_no"] != room_id or not enemy_to_change["name"] in ghost_list:
+                continue
+            apply_new_ghost(lm_gen, enemy_to_change, val)
 
 
 def update_boo_table(lm_gen: "LuigisMansionRandomizer", telesa_info, output_data):
