@@ -716,7 +716,7 @@ class LMWorld(World):
         if sum(filler_weights) != 0:
             return self.random.choices(filler, weights=filler_weights, k=1)[0]
         else:
-            return "Dust"
+            return "Grass"
 
     def set_rules(self):
         self.multiworld.completion_condition[self.player] = lambda state: state.has("Mario's Painting", self.player)
