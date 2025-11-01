@@ -173,6 +173,9 @@ class LMWorld(World):
     open_doors: dict[int, int] = {}
     hints: dict[str, dict[str, str]] = {}
 
+    # Adding all filler dict to be used later on
+    all_filler_dict: dict[str, int] = {}
+
     def __init__(self, *args, **kwargs):
         super(LMWorld, self).__init__(*args, **kwargs)
         self.ghost_affected_regions: dict[str, str] = copy.deepcopy({key: val.element_type for (key, val) in
@@ -654,71 +657,69 @@ class LMWorld(World):
         n_filler_items = n_locations - n_items
         n_trap_items = math.ceil(n_filler_items*(self.options.trap_percentage.value/100))
         n_other_filler = n_filler_items - n_trap_items
-        filler_trap_weights = [self.options.poss_trap_weight.value, self.options.bonk_trap_weight.value,
-                          self.options.bomb_trap_weight.value, self.options.ice_trap_weight.value,  # bomb, ice
-                          self.options.banana_trap_weight.value, self.options.poison_trap_weight.value,
-                          self.options.ghost_weight.value, self.options.fear_weight.value,
-                          self.options.spooky_weight.value, self.options.squash_weight.value, self.options.vac_trap_weight.value]
-        thircoin = max(0,self.options.coin_weight.value - 10)
-        twencoin = max(0,self.options.coin_weight.value - 5)
-        twenbill = max(0,self.options.bill_weight.value - 5)
-        morebar = max(0,self.options.bars_weight.value - 5)
-        diamweight = math.ceil(self.options.gems_weight.value * 0.4)
-        lheart = max(0,self.options.heart_weight.value - 5)
-        other_filler_weights = [self.options.bundle_weight.value, self.options.gems_weight.value,  # coins & bills, sapphire
-                          self.options.gems_weight.value, self.options.gems_weight.value, diamweight,
-                          # emerald, ruby, diamond
-                          self.options.dust_weight.value, self.options.heart_weight.value, lheart,  # poison mush, nothing, sm heart, l heart
-                          self.options.coin_weight.value, twencoin, thircoin,
-                          # banana, 10coin, 20coin, 30coin
-                          self.options.bill_weight.value, twenbill, self.options.bars_weight.value,
-                          morebar]
-        other_filler = list(other_filler_items.keys())
-        trap_filler = list(trap_filler_items.keys())
-        if sum(filler_trap_weights) > 0:# Add filler items to the item pool. Add traps if they are on.
+
+        trap_filler_dict: dict[str, int] = {
+            "Possession Trap": self.options.poss_trap_weight.value,
+            "Bonk Trap": self.options.bonk_trap_weight.value,
+            "Bomb": self.options.bomb_trap_weight.value,
+            "Ice Trap": self.options.ice_trap_weight.value,
+            "Banana Trap":  self.options.banana_trap_weight.value,
+            "Poison Mushroom": self.options.poison_trap_weight.value,
+            "Ghost": self.options.ghost_weight.value,
+            "Fear Trap": self.options.fear_weight.value,
+            "Spooky Time": self.options.spooky_weight.value,
+            "Squash Trap": self.options.squash_weight.value,
+            "No Vac Trap": self.options.vac_trap_weight.value,
+        }
+
+        other_filler_dict: dict[str, int] = {
+            "20 Coins & Bills": self.options.bundle_weight.value,
+            "Sapphire": self.options.gems_weight.value,
+            "Emerald": self.options.gems_weight.value,
+            "Ruby": self.options.gems_weight.value,
+            "Diamond": math.ceil(self.options.gems_weight.value * 0.4),
+            "Dust": self.options.dust_weight.value,
+            "Small Heart": self.options.heart_weight.value,
+            "Large Heart":  max(0,self.options.heart_weight.value - 5),
+            "10 Coins": self.options.coin_weight.value,
+            "20 Coins": max(0,self.options.coin_weight.value - 5),
+            "30 Coins": max(0,self.options.coin_weight.value - 10),
+            "15 Bills": self.options.bill_weight.value,
+            "25 Bills": max(0,self.options.bill_weight.value - 5),
+            "1 Gold Bar": self.options.bars_weight.value,
+            "2 Gold Bars": max(0,self.options.bars_weight.value - 5),
+        }
+
+        self.all_filler_dict = {**trap_filler_dict, **other_filler_dict}
+
+        if sum(trap_filler_dict.values()) > 0:# Add filler items to the item pool. Add traps if they are on.
             for _ in range(n_trap_items):
-                loc_itempool.append(self.create_item(self.get_trap_item_name(trap_filler, filler_trap_weights)))
+                loc_itempool.append(self.create_item(self.get_trap_item_name(trap_filler_dict)))
 
             for _ in range(n_other_filler):
-                loc_itempool.append(self.create_item((self.get_other_filler_item(other_filler, other_filler_weights))))
+                loc_itempool.append(self.create_item((self.get_other_filler_item(other_filler_dict))))
         else:
             for _ in range(n_filler_items):
-                loc_itempool.append(self.create_item((self.get_other_filler_item(other_filler, other_filler_weights))))
+                loc_itempool.append(self.create_item((self.get_other_filler_item(other_filler_dict))))
 
         self.multiworld.itempool += loc_itempool
 
-    def get_trap_item_name(self, trap_filler, filler_weights) -> str:
-        return self.random.choices(trap_filler, weights=filler_weights, k=1)[0]
+    def get_trap_item_name(self, filler_traps: dict[str, int]) -> str:
+        filler_traps = dict(sorted(filler_traps.items()))
+        return self.random.choices(list(filler_traps.keys()), weights=list(filler_traps.values()), k=1)[0]
 
 
-    def get_other_filler_item(self,other_filler, filler_weights) -> str:
-        if sum(filler_weights) != 0:
-            return self.random.choices(other_filler, weights=filler_weights, k=1)[0]
+    def get_other_filler_item(self, other_filler: dict[str, int]) -> str:
+        if sum(other_filler.values()) != 0:
+            other_filler = dict(sorted(other_filler.items()))
+            return self.random.choices(list(other_filler.keys()), weights=list(other_filler.values()), k=1)[0]
         else:
             return "Dust"
 
     def get_filler_item_name(self) -> str:
-        filler = list(filler_items.keys())
-        thircoin = max(0, self.options.coin_weight.value - 10 <= 0)
-        twencoin = max(0, self.options.coin_weight.value - 5 <= 0)
-        twenbill = max(0, self.options.bill_weight.value - 5 <= 0)
-        morebar = max(0, self.options.bars_weight.value - 5 <= 0)
-        diamweight = math.ceil(self.options.gems_weight.value * 0.4)
-        lheart = max(0, self.options.heart_weight.value - 5 <= 0)
-        filler_weights = [self.options.bundle_weight.value, self.options.gems_weight.value,  # coins & bills, sapphire
-                          self.options.gems_weight.value, self.options.gems_weight.value, diamweight,
-                          # emerald, ruby, diamond
-                          self.options.dust_weight.value, self.options.heart_weight.value, lheart,  # poison mush, nothing, sm heart, l heart
-                          self.options.coin_weight.value, twencoin, thircoin,
-                          # banana, 10coin, 20coin, 30coin
-                          self.options.bill_weight.value, twenbill, self.options.bars_weight.value,
-                          morebar, self.options.poss_trap_weight.value, self.options.bonk_trap_weight.value,
-                          self.options.bomb_trap_weight.value, self.options.ice_trap_weight.value,  # bomb, ice
-                          self.options.banana_trap_weight.value, self.options.poison_trap_weight.value,
-                          self.options.ghost_weight.value, self.options.fear_weight.value,
-                          self.options.spooky_weight.value, self.options.squash_weight.value, self.options.vac_trap_weight.value]  # 15bill, 25bill, 1bar, 2bar
-        if sum(filler_weights) != 0:
-            return self.random.choices(filler, weights=filler_weights, k=1)[0]
+        if sum(self.all_filler_dict.values()) != 0:
+            self.all_filler_dict = dict(sorted(self.all_filler_dict.items()))
+            return self.random.choices(list(self.all_filler_dict.keys()), weights=list(self.all_filler_dict.values()), k=1)[0]
         else:
             return "Dust"
 
