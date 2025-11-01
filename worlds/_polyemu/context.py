@@ -42,14 +42,12 @@ class PolyEmuClientContext(CommonContext):
     watcher_timeout: float
     """The maximum amount of time the game watcher loop will wait for an update from the server before executing"""
 
-    def __init__(self, server_address: str | None, password: str | None):
+    def __init__(self, server_address: str | None, password: str | None, adapter_name: str | None):
         super().__init__(server_address, password)
         self.auth_status = AuthStatus.NOT_AUTHENTICATED
         self.password_requested = False
         self.client_handler = None
-        # TODO: Add a way to swap these based on a user command or something
-        self.polyemu_ctx = PolyEmuContext(AutoAdapterRegister.get_adapter("Default Adapter"))
-        # self.polyemu_ctx = PolyEmuContext(AutoAdapterRegister.get_adapter("SNI Adapter"))
+        self.polyemu_ctx = PolyEmuContext(AutoAdapterRegister.get_adapter("Default Adapter" if None else adapter_name))
         self.watcher_timeout = 0.5
 
     def make_gui(self):
