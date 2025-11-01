@@ -2011,7 +2011,7 @@ def update_enemy_info(lm_gen: "LuigisMansionRandomizer", enemy_info, output_data
         for key, val in output_data["Room Enemies"].items():
             room_id: int = REGION_LIST[key].room_id
             for enemy_to_change in enemy_info.info_file_field_entries:
-                if enemy_to_change["room_no"] != room_id:
+                if enemy_to_change["room_no"] != room_id or not enemy_to_change["name"] in ghost_list:
                     continue
 
                 if "16_1" in enemy_to_change["create_name"]:
