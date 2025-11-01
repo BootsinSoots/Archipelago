@@ -1868,6 +1868,10 @@ def update_gallery_furniture_info(furniture_info, item_appear_info, output_data)
                 furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 5
             elif "Gold Bar" in item_data["name"]:
                 furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 7
+            elif item_data["name"] == "Diamond":
+                furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 9
+            elif item_data["name"] == "Gold Diamond":
+                furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 10
             else:
                 furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 0
                 furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate_num"] = 0
@@ -1969,6 +1973,10 @@ def update_furniture_info(furniture_info, item_appear_info, output_data):
                 furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 5
             elif "Gold Bar" in item_data["name"]:
                 furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 7
+            elif item_data["name"] == "Diamond":
+                furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 9
+            elif item_data["name"] == "Gold Diamond":
+                furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 10
             else:
                 furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 0
                 furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate_num"] = 0
