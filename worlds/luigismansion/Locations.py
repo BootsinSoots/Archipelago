@@ -2194,11 +2194,11 @@ WALK_LOCATION_TABLE: dict[str, LMLocationData] = {
 }
 
 MEME_LOCATION_TABLE = {
-    "Touch Courtyard Grass": LMLocationData("Courtyard", 838, "Walk", 0, [], remote_only=True,
+    "Touch Courtyard Grass": LMLocationData("Courtyard", 880, "Walk", 0, [], remote_only=True,
         update_ram_addr=[LMRamData(0x803CDF7E, bit_position=0, in_game_room_id=24, ram_byte_size=2)], require_poltergust=False),
-    "Touch Boneyard Grass":  LMLocationData("Boneyard", 836, "Walk", 0, [], remote_only=True,
+    "Touch Boneyard Grass":  LMLocationData("Boneyard", 881, "Walk", 0, [], remote_only=True,
         update_ram_addr=[LMRamData(0x803CDF66, bit_position=0, in_game_room_id=11, ram_byte_size=2)]),
-    "Touch Graveyard Grass": LMLocationData("Graveyard", 837, "Walk", 0, [], remote_only=True,
+    "Touch Graveyard Grass": LMLocationData("Graveyard", 882, "Walk", 0, [], remote_only=True,
         update_ram_addr=[LMRamData(0x803CDF70, bit_position=0, in_game_room_id=15, ram_byte_size=2)]),
 }
 
