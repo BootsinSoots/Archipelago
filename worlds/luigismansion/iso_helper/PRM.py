@@ -104,7 +104,7 @@ class PRM:
             entry_name_length: int = int(struct.unpack(">H", self.data.read(2))[0])
             entry_name: str = struct.unpack(f">{entry_name_length}s", self.data.read(entry_name_length))[0].decode("shift_jis")
 
-            entry_size: int = struct.unpack(">I", self.data.read(4))[0]
+            entry_size: int = int(struct.unpack(">I", self.data.read(4))[0])
             entry_bytes: bytes = self.data.read(entry_size)
             match entry_size:
                 case PRMType.Byte:
