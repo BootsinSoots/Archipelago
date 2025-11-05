@@ -291,7 +291,7 @@ IMPORTANT_ITEM_AP_LIST: list[int] = [LMItem.get_apid(value.code) for value in IT
     not value.code == 65]
 
 # Mario items + Elemental Medals + Traps + Boo Radar + Super Vac + Progressive Flower + Certain Traps
-RECV_OWN_GAME_ITEMS: list[int] = BOO_AP_ID_LIST + IMPORTANT_ITEM_AP_LIST + [8126, 8141, 8142]
+RECV_OWN_GAME_ITEMS: list[int] = BOO_AP_ID_LIST + IMPORTANT_ITEM_AP_LIST + [8126, 8141, 8142, 8143, 8145, 8146, 8147]
 
 # List of received items to ignore because they are handled elsewhere
 RECV_ITEMS_IGNORE: list[int] = [8127]

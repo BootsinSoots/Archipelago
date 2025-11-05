@@ -1,12 +1,15 @@
 import copy
 import re
 from math import ceil
-from random import choice, randint
+from typing import TYPE_CHECKING
 
 from .Regions import spawn_locations
 from .Items import ALL_ITEMS_TABLE, filler_items, LMItemData, CurrencyItemData
 from .Locations import FLIP_BALCONY_BOO_EVENT_LIST, ALL_LOCATION_TABLE
-from .game.Currency import CURRENCY_NAME, CURRENCIES
+from .game.Currency import CURRENCIES
+
+if TYPE_CHECKING:
+    from .LMGenerator import LuigisMansionRandomizer
 
 speedy_observer_index: list[int] = [183, 182, 179, 178, 177, 101, 100, 99, 98, 97, 21, 19]
 speedy_enemy_index: list[int] = [128, 125, 115, 114, 113, 67, 66, 60, 59, 58, 7, 6]
@@ -128,6 +131,7 @@ def update_event_info(event_info, boo_checks: bool, output_data):
             x["pos_y"] = 1100.000000
             x["pos_z"] = -25.000000
 
+        # Telephone room event for the telephones, make an A press and make always on
         if x["EventNo"] == 94:
             x["EventFlag"] = 0
             x["disappear_flag"] = 0
@@ -138,6 +142,7 @@ def update_event_info(event_info, boo_checks: bool, output_data):
             x["pos_y"] = 1100.000000
             x["pos_z"] = -25.000000
 
+        # Telephone room event for the telephones, make an A press and make always on
         if x["EventNo"] == 93:
             x["EventFlag"] = 0
             x["disappear_flag"] = 0
@@ -151,6 +156,12 @@ def update_event_info(event_info, boo_checks: bool, output_data):
         # Allows the Ring of Boos on the 3F Balcony to only appear when the Ice Medal has been collected.
         # This prevents being soft locked in Boolossus and having to reset the game without saving.
         if x["EventNo"] == 71:
+            x["EventFlag"] = 45
+            x["EventLoad"] = 0
+
+        # Allows Jarvis' (Ceramics Room) to only appear when the Ice Medal has been collected.
+        # This prevents being kicked out by Jarvis' and being unable to participate in his game.
+        if x["EventNo"] == 33:
             x["EventFlag"] = 45
 
         # Since we have a custom blackout event, we need to update event 44's trigger condition to be A-pressed based.
@@ -452,10 +463,6 @@ def update_observer_info(observer_info, output_data):
         elif x["name"] == "iphone" and x["pos_x"] == 0.000000:
             x["code_name"] = "tel1"
 
-        # Ignore me, I am the observers that spawn ghosts for Vincent
-        # if x["string_arg0"] in ["57_1", "57_2", "57_3", "57_4", "57_5", "57_6", "57_7"]:
-        #    x["string_arg0"] = "(null)"
-
     # This one checks for the candles being lit in the Fortune-Teller's Room, flagging that key spawn
     observer_info.info_file_field_entries.append({
         "name": "observer",
@@ -606,7 +613,7 @@ def update_observer_info(observer_info, output_data):
         "invisible": 1,
         "(Undocumented)": 0,
     })
-    # This one checks for lights on in the Wardrobe, flagging that key spawn
+    # This one checks for lights on in the Dining Room, to prevent Luggs Respawning
     observer_info.info_file_field_entries.append({
         "name": "observer",
         "code_name": "(null)",
@@ -758,7 +765,36 @@ def update_observer_info(observer_info, output_data):
         "invisible": 1,
         "(Undocumented)": 0,
     })
-
+    # Check that Shivers is caught to turn on Conservatory Hallway Light
+    observer_info.info_file_field_entries.append({
+        "name": "observer",
+        "code_name": "(null)",
+        "string_arg0": "(null)",
+        "cond_string_arg0": "(null)",
+        "pos_x": -3500.000000,
+        "pos_y": 0.000000,
+        "pos_z": -100.000000,
+        "dir_x": 0.000000,
+        "dir_y": 0.000000,
+        "dir_z": 0.000000,
+        "scale_x": 0.000000,
+        "scale_y": 0.000000,
+        "scale_z": 0.000000,
+        "room_no": 0,
+        "cond_arg0": 0,
+        "arg0": 60,
+        "arg1": 0,
+        "arg2": 0,
+        "arg3": 0,
+        "arg4": 0,
+        "arg5": 0,
+        "appear_flag": 0,
+        "disappear_flag": 0,
+        "cond_type": 13,
+        "do_type": 7,
+        "invisible": 1,
+        "(Undocumented)": 0,
+    })
     # This one enables the Conservatory 1F hallway after catching Shivers / Butler
     observer_info.info_file_field_entries.append({
         "name": "observer",
@@ -1410,7 +1446,7 @@ def update_obj_info(obj_info):
 
 
 # Indicates the chest size that will be loaded in game based on item provided. 0 = small, 1 = medium, 2 = large
-def __get_chest_size_from_item(item_name, chest_option, classification, trap_option, slot, iplayer):
+def __get_chest_size_from_item(lm_gen: "LuigisMansionRandomizer", item_name, chest_option, classification, trap_option, slot, iplayer):
     if chest_option == 1 or chest_option == 3:
         if "Boo" in item_name and slot == iplayer:
             return 0
@@ -1449,10 +1485,10 @@ def __get_chest_size_from_item(item_name, chest_option, classification, trap_opt
             elif trap_option == 1:
                 return 2
             else:
-                return choice([0,1,2])
+                return lm_gen.random.choice(sorted([0,1,2]))
 
     elif chest_option == 2:
-        return choice([0,1,2])
+        return lm_gen.random.choice(sorted([0,1,2]))
 
     elif chest_option == 5:
         if "Boo" in item_name and slot == iplayer:
@@ -1473,7 +1509,7 @@ def __get_chest_size_from_item(item_name, chest_option, classification, trap_opt
                 elif trap_option == 1:
                     return 2
                 else:
-                    return choice([0, 1, 2])
+                    return lm_gen.random.choice(sorted([0, 1, 2]))
 
         match item_name:
             case "Mario's Hat" | "Mario's Letter" | "Mario's Shoe" | "Mario's Glove" | "Mario's Star":
@@ -1578,7 +1614,7 @@ def __add_appear_item(item_appear_table_entry, item_name):
     item_appear_table_entry.info_file_field_entries.append(new_item)
 
 
-def update_treasure_table(treasure_info, character_info, output_data):
+def update_treasure_table(lm_gen: "LuigisMansionRandomizer", treasure_info, character_info, output_data):
     chest_option: int = int(output_data["Options"]["chest_types"])
     trap_option: int = int(output_data["Options"]["trap_chests"])
     slot_num: int = int(output_data["Slot"])
@@ -1604,10 +1640,10 @@ def update_treasure_table(treasure_info, character_info, output_data):
             # Change chest appearance based of player cosmetic choices
             chest_size = int(treasure_info.info_file_field_entries[item_data["loc_enum"]]["size"])
             if item_data["room_no"] != 11 and chest_option > 0:
-                char_entry["name"] = __get_item_chest_visual(item_data["name"], chest_option,
+                char_entry["name"] = __get_item_chest_visual(lm_gen, item_data["name"], chest_option,
                     item_data["classification"], trap_option, slot_num, item_data["player"])
                 if item_data["door_id"] == 0:
-                    chest_size = __get_chest_size_from_item(item_data["name"], chest_option,
+                    chest_size = __get_chest_size_from_item(lm_gen, item_data["name"], chest_option,
                         item_data["classification"], trap_option, slot_num, item_data["player"])
                 else:
                     chest_size = __get_chest_size_from_key(item_data["door_id"])
@@ -1645,7 +1681,7 @@ def __get_chest_size_from_key(key_id):
 
 
 # Changes the type of chest loaded in game based on the type of item that is hidden inside
-def __get_item_chest_visual(item_name, chest_option, classification, trap_option, slot, iplayer):
+def __get_item_chest_visual(lm_gen: "LuigisMansionRandomizer", item_name, chest_option, classification, trap_option, slot, iplayer):
     if chest_option == 1:
         if "Boo" in item_name and slot == iplayer:
             return "wtakara1"
@@ -1693,10 +1729,10 @@ def __get_item_chest_visual(item_name, chest_option, classification, trap_option
             elif trap_option == 1:
                 return "ytakara1"
             else:
-                return choice(["ytakara1", "rtakara1", "btakara1", "wtakara1", "gtakara1"])
+                return lm_gen.random.choice(sorted(["ytakara1", "rtakara1", "btakara1", "wtakara1", "gtakara1"]))
 
     elif chest_option == 2:
-        return choice(["ytakara1", "rtakara1", "btakara1", "wtakara1", "gtakara1"])
+        return lm_gen.random.choice(sorted(["ytakara1", "rtakara1", "btakara1", "wtakara1", "gtakara1"]))
 
     elif chest_option == 5:
         if "Boo" in item_name and slot == iplayer:
@@ -1717,7 +1753,7 @@ def __get_item_chest_visual(item_name, chest_option, classification, trap_option
                 elif trap_option == 1:
                     return "ytakara1"
                 else:
-                    return choice(["ytakara1", "rtakara1", "btakara1", "wtakara1", "gtakara1"])
+                    return lm_gen.random.choice(sorted(["ytakara1", "rtakara1", "btakara1", "wtakara1", "gtakara1"]))
         match item_name:
             case "Heart Key" | "Club Key" | "Diamond Key" | "Spade Key" :
                 return "ytakara1"
@@ -1914,7 +1950,7 @@ def update_teiden_enemy_info(enemy_info, teiden_enemy_info):
         enemy_info.info_file_field_entries.remove(x)
 
 
-def update_enemy_info(enemy_info, output_data):
+def update_enemy_info(lm_gen: "LuigisMansionRandomizer", enemy_info, output_data):
     # A list of all the ghost actors of the game we want to replace.
     # It excludes the "waiter" ghost as that is needed for Mr. Luggs to work properly.
     ghost_list = ["yapoo1", "mapoo1", "mopoo1",
@@ -1938,7 +1974,7 @@ def update_enemy_info(enemy_info, output_data):
                 x["pos_y"] = 30.000000
 
             if not room_enemy_entry is None or x["room_no"] == 35 or x["room_no"] == 27:
-                apply_new_ghost(x, "No Element" if (x["room_no"] == 35 or x["room_no"] == 27) else room_enemy_entry[1])
+                apply_new_ghost(lm_gen, x, "No Element" if (x["room_no"] == 35 or x["room_no"] == 27) else room_enemy_entry[1])
 
         # Disables enemies in furniture to allow them to spawn properly if an item is hidden inside said furniture.
         # if x["access_name"] != "(null)":
@@ -1952,7 +1988,7 @@ def update_enemy_info(enemy_info, output_data):
         # x["do_type"] = 6
 
 
-def update_boo_table(telesa_info, output_data):
+def update_boo_table(lm_gen: "LuigisMansionRandomizer", telesa_info, output_data):
     if output_data["Options"]["boo_health_option"] == 3:
         return
     hp_unit = 0
@@ -1970,7 +2006,7 @@ def update_boo_table(telesa_info, output_data):
         if output_data["Options"]["boo_health_option"] == 0:
             x["str_hp"] = output_data["Options"]["boo_health_value"]
         elif output_data["Options"]["boo_health_option"] == 1:
-            x["str_hp"] = randint(1,output_data["Options"]["boo_health_value"])
+            x["str_hp"] = lm_gen.random.randint(1,output_data["Options"]["boo_health_value"])
         elif output_data["Options"]["boo_health_option"] == 2:
             for loc_name, loc_info in output_data["Locations"].items():
                 if loc_info["room_no"] != x["init_room"] or loc_info["type"] != "Boo":
@@ -2090,7 +2126,7 @@ def update_iyapoo_table(iyapoo_table, output_data):
         iyapoo_table.info_file_field_entries[index].update({"other": treasure_item_name})
 
 
-def apply_new_ghost(enemy_info_entry, element):
+def apply_new_ghost(lm_gen: "LuigisMansionRandomizer", enemy_info_entry, element):
     # The list of ghosts that can replace the vanilla ones. Only includes the ones without elements.
     # Excludes Skul ghosts as well unless the railinfo jmp table is updated.
     random_ghosts_to_patch = [["yapoo1"], ["mapoo1"], ["mopoo1"], ["banaoba"],
@@ -2113,17 +2149,17 @@ def apply_new_ghost(enemy_info_entry, element):
             enemy_info_entry["name"] = "yapoo2"
         case "No Element":
             if enemy_info_entry["room_no"] == 23:
-                no_shy_ghosts = random_ghosts_to_patch
+                no_shy_ghosts = copy.deepcopy(random_ghosts_to_patch)
                 no_shy_ghosts.pop(5)
-                enemy_info_entry["name"] = choice(choice(no_shy_ghosts))
+                enemy_info_entry["name"] = lm_gen.random.choice(sorted(list(lm_gen.random.choice(sorted(no_shy_ghosts)))))
             else:
-                enemy_info_entry["name"] = choice(choice(random_ghosts_to_patch))
+                enemy_info_entry["name"] = lm_gen.random.choice(sorted(list(lm_gen.random.choice(sorted(random_ghosts_to_patch)))))
 
     # If the new ghost is a Ceiling Ghost, increase its spawning Y position so it spawns in the air.
     if "tenjyo" in enemy_info_entry["name"]:
         enemy_info_entry["pos_y"] += 200.000
 
-def update_room_info(room_info, spooky_rating: int):
+def update_room_info(lm_gen: "LuigisMansionRandomizer", room_info, spooky_rating: int):
     if spooky_rating == 1:
         for room in room_info.info_file_field_entries:
             room["Thunder"] = 3 # MANY THUNDER
@@ -2131,7 +2167,7 @@ def update_room_info(room_info, spooky_rating: int):
             room["sound_room_code"] = 5 # CREAKY CREAKY
     elif spooky_rating == 2:
         for room in room_info.info_file_field_entries:
-            coin_flip = choice([0,1])
+            coin_flip = lm_gen.random.choice(sorted([0,1]))
             if coin_flip == 1:
                 room["Thunder"] = 3  # MANY THUNDER
                 room["sound_echo_parameter"] = 20  # LONG ECHO

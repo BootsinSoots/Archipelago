@@ -32,6 +32,7 @@ CURR_MAP_ID_ADDR = 0x804D80A4
 
 # This address is used to check/set the player's health for DeathLink. (2 bytes / Half word)
 CURR_HEALTH_ADDR = 0x803D8B40
+CHECK_DEATH_ACTIVE = 0x804D07FB
 CURR_HEALTH_OFFSET = 0xB8
 
 # This Furniture address table contains the start of the addresses used for currently loaded in Furniture.
@@ -142,6 +143,8 @@ class LMContext(BaseContext):
         # Handle various Dolphin connection related tasks
         self.instance_id = None
         self.dolphin_sync_task: Optional[asyncio.Task[None]] = None
+        self.rom_loaded = False
+        self.password_required = False
         self.dolphin_status = CONNECTION_INITIAL_STATUS
         self.item_display_queue: list[NetUtils.NetworkItem] = []
 
@@ -199,22 +202,7 @@ class LMContext(BaseContext):
         dme.un_hook()
         self.dolphin_status = CONNECTION_LOST_STATUS
         self.already_fired_events = False
-
-    async def server_auth(self, password_requested: bool = False):
-        """
-        Authenticate with the Archipelago server.
-
-        :param password_requested: Whether the server requires a password. Defaults to `False`.
-        """
-        if password_requested and not self.password:
-            await super(LMContext, self).server_auth(password_requested)
-        if not self.auth:
-            return
-        await self.send_connect()
-
-        if self.slot:
-            logger.info(CONNECTION_CONNECTED_STATUS)
-            self.dolphin_status = CONNECTION_CONNECTED_STATUS
+        self.rom_loaded = False
 
     def on_package(self, cmd: str, args: dict):
         """
@@ -269,11 +257,35 @@ class LMContext(BaseContext):
                     self.instance_id = time.time()
                 self.trap_link.on_bounced(args, self.get_item_count_by_id(8148))
                 self.ring_link.on_bounced(args)
+
             case "SetReply":
                 if not (self.check_ingame() and self.check_alive()):
                     return
 
                 self.energy_link.try_update_energy_request(args)
+
+            case "ConnectionRefused":
+                self.dolphin_status = AP_REFUSED_STATUS
+                logger.error(self.dolphin_status)
+
+            case "RoomInfo":
+                self.password_required = bool(args['password'])
+
+    async def server_auth(self, password_requested: bool = False):
+        """
+        Authenticate with the Archipelago server. This function will be called as part of the init RoomInfo call
+        in CommonClient, however we will exit if the rom is not loaded yet.
+
+        :param password_requested: Whether the server requires a password. Defaults to `False`.
+        """
+        if not self.rom_loaded:
+            logger.info("ROM is not loaded yet, waiting for dolphin to be connected before trying again.")
+            return
+
+        if password_requested and not self.password:
+            logger.info('Enter the password required to join this game:')
+            self.password = await self.console_input()
+        await self.send_connect()
 
     def on_deathlink(self, data: dict[str, Any]):
         """
@@ -286,21 +298,15 @@ class LMContext(BaseContext):
         self.set_luigi_dead()
         return
 
+    def get_luigi_health(self) -> int:
+        return read_short(dme.follow_pointers(CURR_HEALTH_ADDR, [CURR_HEALTH_OFFSET]))
 
     def check_alive(self):
         # Our health gets messed up in the Lab, so we can just ignore that location altogether.
         if dme.read_word(CURR_MAP_ID_ADDR) == 1:
             return True
 
-        lm_curr_health = read_short(dme.follow_pointers(CURR_HEALTH_ADDR, [CURR_HEALTH_OFFSET]))
-        if "DeathLink" in self.tags:
-            # Get the pointer of Luigi's health, as this changes when warping to bosses or climbing into mouse holes.
-            if lm_curr_health == 0:
-                if time.time() > self.last_health_checked + CHECKS_WAIT:
-                    return False
-                return True
-
-        if lm_curr_health > 0:
+        if self.get_luigi_health() > 0:
             self.last_health_checked = time.time()
             self.is_luigi_dead = False
             return True
@@ -564,7 +570,7 @@ class LMContext(BaseContext):
                     curr_val = min(flower_count + 234, 237)
                     ram_offset = None
                 elif item.item == 8064:  # If it's a vacuum upgrade
-                    curr_val: int = self.get_item_count_by_id(8064)
+                    curr_val: int = min(self.get_item_count_by_id(8064), 5)
                     ram_offset = None
                 elif not addr_to_update.item_count is None:
                     if not ram_offset is None:
@@ -608,7 +614,7 @@ class LMContext(BaseContext):
         try:
             # Always adjust the Vacuum speed as saving and quitting or going to E. Gadds lab could reset it back to normal.
             vac_count = self.get_item_count_by_id(8148)
-            vac_speed = max(min(self.get_item_count_by_id(8064), 5),0)
+            vac_speed = min(self.get_item_count_by_id(8064), 5)
 
             if not self.trap_link.check_vac_trap_active():
                 for item in [8064, 8148]:
@@ -618,6 +624,9 @@ class LMContext(BaseContext):
                         if addr_to_update.ram_addr == 0x804dda54 and vac_count > 0:  # If we're checking against our vacuum-on address
                             curr_val = 1
                             dme.write_bytes(addr_to_update.ram_addr, curr_val.to_bytes(addr_to_update.ram_byte_size, 'big'))
+                            vacc_flag = dme.read_byte(0x803D33A3)
+                            vacc_flag = (vacc_flag | (1 << 2))
+                            dme.write_byte(0x803D33A3, vacc_flag)
                         else:
                             dme.write_bytes(addr_to_update.ram_addr, vac_speed.to_bytes(addr_to_update.ram_byte_size, 'big'))
 
@@ -674,7 +683,13 @@ class LMContext(BaseContext):
         return
 
     async def check_death(self):
-        if not self.last_not_ingame or (self.check_ingame() and self.check_alive()):
+        if self.is_luigi_dead or self.get_luigi_health() > 0:
+            return
+
+        # If this is 0 and our health is 0, it means are health address pointer could have changed
+        # between using a mouse hole or teleporting to a new map, so Luigi may not actually be dead.
+        death_screen_check: int = dme.read_byte(CHECK_DEATH_ACTIVE)
+        if death_screen_check > 0x20:
             return
 
         if not self.is_luigi_dead and time.time() >= float(self.last_death_link + (CHECKS_WAIT * LONGER_MODIFIER * 3)):
@@ -696,16 +711,22 @@ class LMContext(BaseContext):
     async def non_essentials_async_tasks(self):
         try:
             while self.slot:
-                if not (self.check_ingame() and self.check_alive()):
+                if not self.check_ingame():
+                    await self.wait_for_next_loop(0.5)
+                    continue
+
+                # Since DeathLink has to check in_game separately but not health, we will do this outside of
+                # the below statements
+                if "DeathLink" in self.tags:
+                    await self.check_death()
+
+                if not self.check_alive():
                     await self.wait_for_next_loop(0.5)
                     # Resets the logic for determining the currency differences,
                     # needs to be updated to reset inside of wallet_manager.
                     # self.ring_link.reset_ringlink()
                     continue
 
-                # All Link related activities
-                if "DeathLink" in self.tags:
-                    await self.check_death()
                 if self.trap_link.is_enabled():
                     await self.trap_link.handle_traplink_async()
                 if self.ring_link.is_enabled():
@@ -806,10 +827,11 @@ class LMContext(BaseContext):
                         self.locations_checked = set()
 
                         # Inform the player we are ready and waiting for them to connect.
-                        if not self.dolphin_status == CONNECTION_VERIFY_SERVER:
+                        if not self.rom_loaded:
                             self.dolphin_status = CONNECTION_VERIFY_SERVER
                             logger.info(self.dolphin_status)
-                        await self.server_auth()
+                            self.rom_loaded = True
+                            await self.server_auth(self.password_required)
 
                         if not self.slot:
                             await self.wait_for_next_loop(WAIT_TIMER_LONG_TIMEOUT)
@@ -820,6 +842,9 @@ class LMContext(BaseContext):
                             raise Exception(
                                 "Incorrect Randomized Luigi's Mansion ISO file selected. The seed does not match." +
                                 "Please verify that you are using the right ISO/seed/APLM file.")
+
+                        logger.info(CONNECTION_CONNECTED_STATUS)
+                        self.dolphin_status = CONNECTION_CONNECTED_STATUS
 
                     # At this point, we are verified as connected. Update UI elements in the LMCLient tab.
                     if self.ui:
