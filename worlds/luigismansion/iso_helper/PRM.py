@@ -69,7 +69,7 @@ class PRMFileEntry:
     field_value_offset: int
 
     def __init__(self, idx: int, entry_hash: int, entry_name: str,
-        entry_value: bytes | int | float | PRMColor | PRMVector, entry_offset: int):
+        entry_value: bytes | str | PRMColor | PRMVector, entry_offset: int):
         self.field_idx = idx
         self.field_hash = entry_hash
         self.field_name = entry_name
