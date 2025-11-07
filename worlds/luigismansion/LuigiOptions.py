@@ -379,8 +379,6 @@ class Enemizer(Choice):
 class VacuumStart(DefaultOnToggle):
     """
     Enable Luigi to have the Poltergust 3000 at the start.
-
-    If you start with an upgrade on a no-poltergust start, you will receive the base poltergust instead
     """
     display_name = "Starting Vacuum"
     internal_name = "vacuum_start"
