@@ -10,7 +10,7 @@ from .Locations import FLIP_BALCONY_BOO_EVENT_LIST, ALL_LOCATION_TABLE
 from .game.Currency import CURRENCIES
 
 if TYPE_CHECKING:
-    from .LMGenerator import LuigisMansionRandomizer
+    from .LM_ISO_Modifier import LuigisMansionRandomizer
 
 speedy_observer_index: list[int] = [183, 182, 179, 178, 177, 101, 100, 99, 98, 97, 21, 19]
 speedy_enemy_index: list[int] = [128, 125, 115, 114, 113, 67, 66, 60, 59, 58, 7, 6]
@@ -109,7 +109,7 @@ def update_map_one_event_info(event_info):
 def update_event_info(event_info, boo_checks: bool, output_data):
     # Removes events that we don't want to trigger at all in the mansion, such as some E. Gadd calls, warps after
     # boss battles / grabbing boss keys, and various cutscenes etc. Also remove Mario Items/Elemental Item events
-    events_to_remove = [7, 9, 15, 18, 19, 20, 21, 41, 42, 45, 47, 54, 69, 70, 73, 80, 81, 85, 91]
+    events_to_remove = [7, 9, 15, 18, 19, 20, 21, 31, 41, 42, 45, 47, 51, 54, 69, 70, 73, 80, 81, 85, 91]
 
     # Only remove the boo checks if the player does not want them.
     if not boo_checks:
@@ -1868,6 +1868,10 @@ def update_gallery_furniture_info(furniture_info, item_appear_info, output_data)
                 furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 5
             elif "Gold Bar" in item_data["name"]:
                 furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 7
+            elif item_data["name"] == "Diamond":
+                furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 9
+            elif item_data["name"] == "Gold Diamond":
+                furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 10
             else:
                 furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 0
                 furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate_num"] = 0
@@ -1969,6 +1973,10 @@ def update_furniture_info(furniture_info, item_appear_info, output_data):
                 furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 5
             elif "Gold Bar" in item_data["name"]:
                 furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 7
+            elif item_data["name"] == "Diamond":
+                furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 9
+            elif item_data["name"] == "Gold Diamond":
+                furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 10
             else:
                 furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate"] = 0
                 furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate_num"] = 0
@@ -1985,7 +1993,7 @@ def update_teiden_enemy_info(enemy_info, teiden_enemy_info):
         enemy_info.info_file_field_entries.remove(x)
 
 
-def update_enemy_info(lm_gen: "LuigisMansionRandomizer", enemy_info, output_data):
+def update_enemy_info(lm_gen: "LuigisMansionRandomizer", enemy_info, teiden_enemy_info, output_data):
     # TODO Randomize Blackout enemies as well.
     # A list of all the ghost actors of the game we want to replace.
     # It excludes the "waiter" ghost as that is needed for Mr. Luggs to work properly.
@@ -1999,18 +2007,25 @@ def update_enemy_info(lm_gen: "LuigisMansionRandomizer", enemy_info, output_data
                   "tenjyo", "tenjyo2"]
 
     # If randomize ghosts options are enabled
-    if output_data["Options"]["enemizer"] > 0:
-        for key, val in output_data["Room Enemies"].items():
-            room_id: int = REGION_LIST[key].room_id
-            for enemy_to_change in enemy_info.info_file_field_entries:
-                if enemy_to_change["room_no"] != room_id:
-                    continue
+    if output_data["Options"]["enemizer"] == 0:
+        return
 
-                if "16_1" in enemy_to_change["create_name"]:
-                    enemy_to_change["pos_y"] = 30.000000
+    for key, val in output_data["Room Enemies"].items():
+        room_id: int = REGION_LIST[key].room_id
+        for enemy_to_change in enemy_info.info_file_field_entries:
+            if enemy_to_change["room_no"] != room_id or not enemy_to_change["name"] in ghost_list:
+                continue
 
-                room_element: str = "No Element" if (room_id in [27, 35, 40]) else val
-                apply_new_ghost(lm_gen, enemy_to_change, room_element)
+            if "16_1" in enemy_to_change["create_name"]:
+                enemy_to_change["pos_y"] = 30.000000
+
+            room_element: str = "No Element" if (room_id in [27, 35, 40]) else val
+            apply_new_ghost(lm_gen, enemy_to_change, room_element)
+
+        for enemy_to_change in teiden_enemy_info.info_file_field_entries:
+            if enemy_to_change["room_no"] != room_id or not enemy_to_change["name"] in ghost_list:
+                continue
+            apply_new_ghost(lm_gen, enemy_to_change, val)
 
 
 def update_boo_table(lm_gen: "LuigisMansionRandomizer", telesa_info, output_data):

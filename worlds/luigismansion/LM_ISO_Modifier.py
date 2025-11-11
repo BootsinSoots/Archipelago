@@ -12,7 +12,7 @@ from gclib.yaz0_yay0 import Yay0
 from .iso_helper.DOL_Updater import update_dol_offsets
 from .iso_helper.Update_GameUSA import update_game_usa
 from .iso_helper.JMP_Info_File import JMPInfoFile
-from .Patching import *
+from .LM_Table_Scrambler import *
 from .Helper_Functions import StringByteFunction as sbf, get_arc, RANDOMIZER_NAME
 from .iso_helper.Events import *
 from .client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME
@@ -167,7 +167,7 @@ class LuigisMansionRandomizer:
         update_key_info(self.jmp_key_info_table, self.output_data)
         update_obj_info(self.jmp_obj_info_table)
         update_generator_info(self.jmp_generator_info_table)
-        update_enemy_info(self, self.jmp_enemy_info_table, self.output_data)
+        update_enemy_info(self, self.jmp_enemy_info_table, self.jmp_teiden_enemy_info_table, self.output_data)
         update_teiden_observer_info(self.jmp_observer_info_table,
             self.jmp_teiden_observer_info_table, bool_speedy_spirits)
         if bool_speedy_spirits:

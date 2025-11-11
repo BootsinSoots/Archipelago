@@ -10,7 +10,7 @@ from ..Hints import ALWAYS_HINT, PORTRAIT_HINTS
 from CommonClient import logger
 
 if TYPE_CHECKING:
-    from ..LMGenerator import LuigisMansionRandomizer
+    from ..LM_ISO_Modifier import LuigisMansionRandomizer
 
 
 def update_boo_gates(lm_gen: "LuigisMansionRandomizer", event_no: str, req_boo_count: int, boo_rando_enabled: bool,

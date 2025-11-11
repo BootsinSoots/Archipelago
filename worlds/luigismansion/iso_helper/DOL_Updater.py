@@ -1,14 +1,13 @@
 import struct
-from pkgutil import get_data
 from typing import TYPE_CHECKING
 
 from gclib.dol import DOL, DOLSection
 
 from ..Regions import REGION_LIST, LMRegionInfo
-from ..Helper_Functions import StringByteFunction as sbf
+from ..Helper_Functions import StringByteFunction as sbf, PROJECT_ROOT
 
 if TYPE_CHECKING:
-    from ..LMGenerator import LuigisMansionRandomizer
+    from ..LM_ISO_Modifier import LuigisMansionRandomizer
 
 CUSTOM_CODE_OFFSET_START = 0x39FA20
 LM_PLAYER_NAME_BYTE_LENGTH = 64
@@ -121,11 +120,11 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
     lm_dol.data.write(blank_data)
 
     # Read in all the other custom DOL changes and update their values to the new value as expected.
-    custom_dol_code = get_data(__name__, "LM_custom_code.lmco")
+    custom_dol_code = PROJECT_ROOT.joinpath("LM_custom_code.lmco").read_bytes()
     lm_dol.data.seek(CUSTOM_CODE_OFFSET_START)
     lm_dol.data.write(custom_dol_code)
 
-    dol_csv_offsets = get_data(__name__, "dol_diff.csv").decode("utf-8").splitlines()
+    dol_csv_offsets = PROJECT_ROOT.joinpath("dol_diff.csv").read_text(encoding="utf-8").splitlines()
     for csv_line in dol_csv_offsets:
         dol_addr, dol_val, _ = csv_line.split(",")
         lm_dol.data.seek(int(dol_addr, 16))
