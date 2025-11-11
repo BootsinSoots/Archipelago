@@ -42,12 +42,12 @@ class PolyEmuClientContext(CommonContext):
     watcher_timeout: float
     """The maximum amount of time the game watcher loop will wait for an update from the server before executing"""
 
-    def __init__(self, server_address: str | None, password: str | None, adapter_name: str | None):
+    def __init__(self, server_address: str | None, password: str | None, adapter_name: str = "Default Adapter"):
         super().__init__(server_address, password)
         self.auth_status = AuthStatus.NOT_AUTHENTICATED
         self.password_requested = False
         self.client_handler = None
-        self.polyemu_ctx = PolyEmuContext(AutoAdapterRegister.get_adapter("Default Adapter" if None else adapter_name))
+        self.polyemu_ctx = PolyEmuContext(AutoAdapterRegister.get_adapter(adapter_name))
         self.watcher_timeout = 0.5
 
     def make_gui(self):
@@ -258,7 +258,7 @@ def launch(*launch_args: str) -> None:
             if "server" in metadata:
                 args.connect = metadata["server"]
 
-        ctx = PolyEmuClientContext(args.connect, args.password)
+        ctx = PolyEmuClientContext(args.connect, args.password, "DME Adapter")
         ctx.server_task = asyncio.create_task(server_loop(ctx), name="ServerLoop")
 
         if gui_enabled:
