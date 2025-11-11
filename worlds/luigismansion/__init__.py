@@ -726,6 +726,14 @@ class LMWorld(World):
     def set_rules(self):
         self.multiworld.completion_condition[self.player] = lambda state: state.has("Mario's Painting", self.player)
 
+    def post_fill(self) -> None:
+        if self.options.boosanity:
+            boolossus_locations = []
+            for location in BOOLOSSUS_LOCATION_TABLE.keys():
+                boolossus_locations += self.get_location(location)
+            # Count number of trap items on these locations. Determine difference between total trap count and 8
+            # then repick using other filler listing if difference is positive, equal to difference, and replace those items
+
     @classmethod # output_directory is required even though we don't use it
     def stage_generate_output(cls, multiworld: MultiWorld, output_directory: str):
         # Filter for any Luigi's Mansion worlds that need hints or have boo health by sphere turned on
