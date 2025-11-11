@@ -731,6 +731,29 @@ class LMWorld(World):
             boolossus_locations = []
             for location in BOOLOSSUS_LOCATION_TABLE.keys():
                 boolossus_locations += self.get_location(location)
+            trap_boolossus_list = [lm_loc for lm_loc in boolossus_locations if lm_loc.item.classification == IC.trap]
+            if len(trap_boolossus_list) > 8:
+                other_filler_dict: dict[str, int] = {
+                    "20 Coins & Bills": self.options.bundle_weight.value,
+                    "Sapphire": self.options.gems_weight.value,
+                    "Emerald": self.options.gems_weight.value,
+                    "Ruby": self.options.gems_weight.value,
+                    "Diamond": math.ceil(self.options.gems_weight.value * 0.4),
+                    "Dust": self.options.dust_weight.value,
+                    "Small Heart": self.options.heart_weight.value,
+                    "Large Heart": max(0, self.options.heart_weight.value - 5),
+                    "10 Coins": self.options.coin_weight.value,
+                    "20 Coins": max(0, self.options.coin_weight.value - 5),
+                    "30 Coins": max(0, self.options.coin_weight.value - 10),
+                    "15 Bills": self.options.bill_weight.value,
+                    "25 Bills": max(0, self.options.bill_weight.value - 5),
+                    "1 Gold Bar": self.options.bars_weight.value,
+                    "2 Gold Bars": max(0, self.options.bars_weight.value - 5),
+                }
+                trap_count = len(trap_boolossus_list) - 8
+                for _ in range(trap_count):
+                    loc = self.random.choice(trap_boolossus_list)
+                    loc.item = self.create_item(self.get_other_filler_item(other_filler_dict))
             # Count number of trap items on these locations. Determine difference between total trap count and 8
             # then repick using other filler listing if difference is positive, equal to difference, and replace those items
 
