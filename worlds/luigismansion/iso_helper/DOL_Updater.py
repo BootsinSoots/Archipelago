@@ -7,7 +7,7 @@ from ..Regions import REGION_LIST, LMRegionInfo
 from ..Helper_Functions import StringByteFunction as sbf, PROJECT_ROOT
 
 if TYPE_CHECKING:
-    from ..LMGenerator import LuigisMansionRandomizer
+    from ..LM_ISO_Modifier import LuigisMansionRandomizer
 
 CUSTOM_CODE_OFFSET_START = 0x39FA20
 LM_PLAYER_NAME_BYTE_LENGTH = 64

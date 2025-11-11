@@ -10,7 +10,7 @@ from .Locations import FLIP_BALCONY_BOO_EVENT_LIST, ALL_LOCATION_TABLE
 from .game.Currency import CURRENCIES
 
 if TYPE_CHECKING:
-    from .LMGenerator import LuigisMansionRandomizer
+    from .LM_ISO_Modifier import LuigisMansionRandomizer
 
 speedy_observer_index: list[int] = [183, 182, 179, 178, 177, 101, 100, 99, 98, 97, 21, 19]
 speedy_enemy_index: list[int] = [128, 125, 115, 114, 113, 67, 66, 60, 59, 58, 7, 6]
