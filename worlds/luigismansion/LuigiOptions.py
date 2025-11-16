@@ -1,8 +1,9 @@
+import copy
 from dataclasses import dataclass
 
 from Options import Toggle, Range, PerGameCommonOptions, Choice, StartInventoryPool, DeathLinkMixin, OptionSet, \
-    DefaultOnToggle
-
+    DefaultOnToggle, OptionCounter
+from .Items import trap_filler_items
 
 class LuigiWalkSpeed(Choice):
     """Choose how fast Luigi moves. Speeds above normal may cause OoB issues"""
@@ -726,6 +727,22 @@ class DoorModelRando(Toggle):
     """
     display_name = "Randomized Door Model"
     internal_name = "door_model_rando"
+
+class TrapWeights(OptionCounter):
+    """
+    Set Trap Weights for traps chosen as filler items, if Trap Percentage is greater than 0
+    Each weight represents a number of balls in a lottery roller with that trap on it.
+    So if you had Banana Trap set to 3, and Ice Trap set to 7, and the rest set to 0,
+    you would have a 3/10 for a Banana Trap to be chosen when rolling for trap fillers
+    Must be between 0 and 100
+    """
+    display_name = "Trap Weights"
+    internal_name = "trap_weights"
+    min = 0
+    max = 100
+    valid_keys = trap_filler_items.keys()
+    default = {item: data.default_weight for item, data in trap_filler_items.items()}
+
 
 
 class TrapPercentage(Range):
