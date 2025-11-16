@@ -175,6 +175,8 @@ class LMWorld(World):
 
     # Adding all filler dict to be used later on
     all_filler_dict: dict[str, int] = {}
+    trap_filler_dict: dict[str, int] = {}
+    other_filler_dict: dict[str, int] = {}
 
     def __init__(self, *args, **kwargs):
         super(LMWorld, self).__init__(*args, **kwargs)
@@ -573,6 +575,40 @@ class LMWorld(World):
                 self.local_early_key = early_key
                 self.multiworld.local_early_items[self.player].update({early_key: 1})
 
+        self.trap_filler_dict: dict[str, int] = {
+            "Possession Trap": self.options.poss_trap_weight.value,
+            "Bonk Trap": self.options.bonk_trap_weight.value,
+            "Bomb": self.options.bomb_trap_weight.value,
+            "Ice Trap": self.options.ice_trap_weight.value,
+            "Banana Trap": self.options.banana_trap_weight.value,
+            "Poison Mushroom": self.options.poison_trap_weight.value,
+            "Ghost": self.options.ghost_weight.value,
+            "Fear Trap": self.options.fear_weight.value,
+            "Spooky Time": self.options.spooky_weight.value,
+            "Squash Trap": self.options.squash_weight.value,
+            "No Vac Trap": self.options.vac_trap_weight.value,
+        }
+
+        self.other_filler_dict: dict[str, int] = {
+            "20 Coins & Bills": self.options.bundle_weight.value,
+            "Sapphire": self.options.gems_weight.value,
+            "Emerald": self.options.gems_weight.value,
+            "Ruby": self.options.gems_weight.value,
+            "Diamond": math.ceil(self.options.gems_weight.value * 0.4),
+            "Dust": self.options.dust_weight.value,
+            "Small Heart": self.options.heart_weight.value,
+            "Large Heart":  max(0,self.options.heart_weight.value - 5),
+            "10 Coins": self.options.coin_weight.value,
+            "20 Coins": max(0,self.options.coin_weight.value - 5),
+            "30 Coins": max(0,self.options.coin_weight.value - 10),
+            "15 Bills": self.options.bill_weight.value,
+            "25 Bills": max(0,self.options.bill_weight.value - 5),
+            "1 Gold Bar": self.options.bars_weight.value,
+            "2 Gold Bars": max(0,self.options.bars_weight.value - 5),
+        }
+
+        self.all_filler_dict = {**self.trap_filler_dict, **self.other_filler_dict}
+
     def create_regions(self):
         # Add all randomizable regions
         for region_name in REGION_LIST.keys():
@@ -658,68 +694,35 @@ class LMWorld(World):
         n_trap_items = math.ceil(n_filler_items*(self.options.trap_percentage.value/100))
         n_other_filler = n_filler_items - n_trap_items
 
-        trap_filler_dict: dict[str, int] = {
-            "Possession Trap": self.options.poss_trap_weight.value,
-            "Bonk Trap": self.options.bonk_trap_weight.value,
-            "Bomb": self.options.bomb_trap_weight.value,
-            "Ice Trap": self.options.ice_trap_weight.value,
-            "Banana Trap":  self.options.banana_trap_weight.value,
-            "Poison Mushroom": self.options.poison_trap_weight.value,
-            "Ghost": self.options.ghost_weight.value,
-            "Fear Trap": self.options.fear_weight.value,
-            "Spooky Time": self.options.spooky_weight.value,
-            "Squash Trap": self.options.squash_weight.value,
-            "No Vac Trap": self.options.vac_trap_weight.value,
-        }
-
-        other_filler_dict: dict[str, int] = {
-            "20 Coins & Bills": self.options.bundle_weight.value,
-            "Sapphire": self.options.gems_weight.value,
-            "Emerald": self.options.gems_weight.value,
-            "Ruby": self.options.gems_weight.value,
-            "Diamond": math.ceil(self.options.gems_weight.value * 0.4),
-            "Dust": self.options.dust_weight.value,
-            "Small Heart": self.options.heart_weight.value,
-            "Large Heart":  max(0,self.options.heart_weight.value - 5),
-            "10 Coins": self.options.coin_weight.value,
-            "20 Coins": max(0,self.options.coin_weight.value - 5),
-            "30 Coins": max(0,self.options.coin_weight.value - 10),
-            "15 Bills": self.options.bill_weight.value,
-            "25 Bills": max(0,self.options.bill_weight.value - 5),
-            "1 Gold Bar": self.options.bars_weight.value,
-            "2 Gold Bars": max(0,self.options.bars_weight.value - 5),
-        }
-
-        self.all_filler_dict = {**trap_filler_dict, **other_filler_dict}
-
-        if sum(trap_filler_dict.values()) > 0:# Add filler items to the item pool. Add traps if they are on.
+        if sum(self.trap_filler_dict.values()) > 0:# Add filler items to the item pool. Add traps if they are on.
             for _ in range(n_trap_items):
-                loc_itempool.append(self.create_item(self.get_trap_item_name(trap_filler_dict)))
+                loc_itempool.append(self.create_item(self.get_trap_item_name()))
 
             for _ in range(n_other_filler):
-                loc_itempool.append(self.create_item((self.get_other_filler_item(other_filler_dict))))
+                loc_itempool.append(self.create_item((self.get_other_filler_item())))
         else:
             for _ in range(n_filler_items):
-                loc_itempool.append(self.create_item((self.get_other_filler_item(other_filler_dict))))
+                loc_itempool.append(self.create_item((self.get_other_filler_item())))
 
         self.multiworld.itempool += loc_itempool
 
-    def get_trap_item_name(self, filler_traps: dict[str, int]) -> str:
-        filler_traps = dict(sorted(filler_traps.items()))
+    def get_trap_item_name(self) -> str:
+        filler_traps = dict(sorted(self.trap_filler_dict.items()))
         return self.random.choices(list(filler_traps.keys()), weights=list(filler_traps.values()), k=1)[0]
 
 
-    def get_other_filler_item(self, other_filler: dict[str, int]) -> str:
-        if sum(other_filler.values()) != 0:
-            other_filler = dict(sorted(other_filler.items()))
+    def get_other_filler_item(self) -> str:
+        if sum(self.other_filler_dict.values()) != 0:
+            other_filler = dict(sorted(self.other_filler_dict.items()))
             return self.random.choices(list(other_filler.keys()), weights=list(other_filler.values()), k=1)[0]
         else:
             return "Dust"
 
+    # Used for ItemLink and overrides the one used by AP.
     def get_filler_item_name(self) -> str:
         if sum(self.all_filler_dict.values()) != 0:
-            self.all_filler_dict = dict(sorted(self.all_filler_dict.items()))
-            return self.random.choices(list(self.all_filler_dict.keys()), weights=list(self.all_filler_dict.values()), k=1)[0]
+            filler_dict = dict(sorted(self.all_filler_dict.items()))
+            return self.random.choices(list(filler_dict.keys()), weights=list(filler_dict.values()), k=1)[0]
         else:
             return "Dust"
 
@@ -733,27 +736,10 @@ class LMWorld(World):
                 boolossus_locations += self.get_location(location)
             trap_boolossus_list = [lm_loc for lm_loc in boolossus_locations if lm_loc.item.classification == IC.trap]
             if len(trap_boolossus_list) > 8:
-                other_filler_dict: dict[str, int] = {
-                    "20 Coins & Bills": self.options.bundle_weight.value,
-                    "Sapphire": self.options.gems_weight.value,
-                    "Emerald": self.options.gems_weight.value,
-                    "Ruby": self.options.gems_weight.value,
-                    "Diamond": math.ceil(self.options.gems_weight.value * 0.4),
-                    "Dust": self.options.dust_weight.value,
-                    "Small Heart": self.options.heart_weight.value,
-                    "Large Heart": max(0, self.options.heart_weight.value - 5),
-                    "10 Coins": self.options.coin_weight.value,
-                    "20 Coins": max(0, self.options.coin_weight.value - 5),
-                    "30 Coins": max(0, self.options.coin_weight.value - 10),
-                    "15 Bills": self.options.bill_weight.value,
-                    "25 Bills": max(0, self.options.bill_weight.value - 5),
-                    "1 Gold Bar": self.options.bars_weight.value,
-                    "2 Gold Bars": max(0, self.options.bars_weight.value - 5),
-                }
                 trap_count = len(trap_boolossus_list) - 8
                 for _ in range(trap_count):
                     loc = self.random.choice(trap_boolossus_list)
-                    loc.item = self.create_item(self.get_other_filler_item(other_filler_dict))
+                    loc.item = self.create_item(self.get_other_filler_item())
                     trap_boolossus_list.remove(loc)
             # Count number of trap items on these locations. Determine difference between total trap count and 8
             # then repick using other filler listing if difference is positive, equal to difference, and replace those items
