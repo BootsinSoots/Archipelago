@@ -448,7 +448,6 @@ class LMWorld(World):
         add_rule(loc, lambda state: state.has("Poltergust 3000", self.player), "and")
 
     def generate_early(self):
-        self.options.grassanity.value = 1
         if self.options.energy_link == 1 and self.options.ring_link == 1:
             raise Options.OptionError("In Luigi's Mansion, both energy_link and ring_link cannot be enabled.\n"
                                       f"This error was found in {self.player_name}'s Luigi's Mansion world."
@@ -691,7 +690,7 @@ class LMWorld(World):
         if sum(filler_weights) != 0:
             return self.random.choices(other_filler, weights=filler_weights, k=1)[0]
         else:
-            return "Grass"
+            return "Dust"
 
     def get_filler_item_name(self) -> str:
         filler = list(filler_items.keys())
@@ -716,7 +715,7 @@ class LMWorld(World):
         if sum(filler_weights) != 0:
             return self.random.choices(filler, weights=filler_weights, k=1)[0]
         else:
-            return "Grass"
+            return "Dust"
 
     def set_rules(self):
         self.multiworld.completion_condition[self.player] = lambda state: state.has("Mario's Painting", self.player)
