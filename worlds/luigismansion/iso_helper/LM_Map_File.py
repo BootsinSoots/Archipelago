@@ -3,10 +3,10 @@ from gclib.gcm import GCM
 from gclib.rarc import RARC, RARCFileEntry
 from gclib.yaz0_yay0 import Yay0
 
-from ...Helper_Functions import get_arc
+from ..Helper_Functions import get_arc
 
 
-class JMPMapFile:
+class LMMapFile:
     _arc_data: RARC = None
     _arc_name: str = None
     jmp_files: dict[str, JMP] = {}
