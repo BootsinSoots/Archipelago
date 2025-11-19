@@ -6,7 +6,6 @@ from gclib.gcm import GCM
 
 
 PROJECT_ROOT: Path = Path(__file__).resolve().parent
-RANDOMIZER_NAME = "Luigi's Mansion"
 
 class LMRamData(NamedTuple):
     ram_addr: Optional[int] = None
