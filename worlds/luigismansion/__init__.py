@@ -14,7 +14,6 @@ from worlds.AutoWorld import WebWorld, World
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess, icon_paths
 
 # Relative Imports
-from .Helper_Functions import RANDOMIZER_NAME
 from .Items import *
 from .Locations import *
 from .LuigiOptions import *
@@ -23,9 +22,9 @@ from .Presets import lm_options_presets
 from .Regions import *
 from .Rules import *
 from .Rules import set_element_rules
-from .iso_helper.lm_rom import LMPlayerContainer
+from .iso_helper.LM_Rom import LMPlayerContainer
 from .client.luigismansion_settings import LuigisMansionSettings
-from .client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME
+from .client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME, RANDOMIZER_NAME
 
 if TYPE_CHECKING:
     from NetUtils import MultiData
