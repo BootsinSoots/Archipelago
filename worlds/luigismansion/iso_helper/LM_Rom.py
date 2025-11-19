@@ -1,5 +1,3 @@
-import logging
-
 from worlds.Files import APPatch, APPlayerContainer, AutoPatchRegister
 from settings import get_settings, Settings
 from NetUtils import convert_to_base_types
@@ -7,7 +5,7 @@ import Utils
 
 from hashlib import md5
 from typing import Any
-from logging import Logger
+from logging import Logger, getLogger
 import json, sys, os, zipfile, tempfile, shutil
 import urllib.request
 
@@ -55,7 +53,7 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
 
     def __init__(self, *args: Any, **kwargs: Any):
         super(LMUSAAPPatch, self).__init__(*args, **kwargs)
-        self.client_logger = logging.getLogger(CLIENT_NAME)
+        self.client_logger = getLogger(CLIENT_NAME)
 
     def _get_archive_name(self) -> str:
         if not (Utils.is_linux or Utils.is_windows):
