@@ -2,6 +2,7 @@
 
 CLIENT_VERSION = "V0.6.0"
 CLIENT_NAME = "Luigi's Mansion Client"
+RANDOMIZER_NAME = "Luigi's Mansion"
 
 AP_LOGGER_NAME = "Client"
 AP_WORLD_VERSION_NAME = "APWorldVersion"
