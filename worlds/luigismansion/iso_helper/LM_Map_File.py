@@ -25,7 +25,7 @@ class LMMapFile:
 
     def get_all_jmp_files(self):
         """
-        Loads all JMP files into self.jmp_files object.
+        Loads all JMP files found within the arc file into self.jmp_files object.
         """
         self.load_jmp_files(list(jmp.name for jmp in self._jmp_arc_files))
 
