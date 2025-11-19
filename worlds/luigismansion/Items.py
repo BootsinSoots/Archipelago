@@ -11,6 +11,7 @@ class LMItemData(NamedTuple):
     classification: IC
     doorid: Optional[int] = None
     update_ram_addr: Optional[list[LMRamData]] = None
+    default_weight: int = 0
 
 class CurrencyItemData(LMItemData):
     currencies: dict[str, int]
@@ -254,28 +255,28 @@ other_filler_items: Dict[str, LMItemData] = {
 
 trap_filler_items: Dict[str, LMItemData] = {
     "Possession Trap": LMItemData("Trap", 141, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=5)]),
+        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=5)], default_weight=5),
     "Bonk Trap": LMItemData("Trap", 142, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=4)]),
+        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=4)],default_weight=15),
     "Bomb": LMItemData("Trap", 130, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=1)]), # value of 1
+        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=1)], default_weight=15), # value of 1
     "Ice Trap": LMItemData("Trap", 131, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=3)]), # value of 3
+        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=3)], default_weight=15), # value of 3
     "Banana Trap": LMItemData("Trap", 132, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=2)]), # value of 2
+        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=2)], default_weight=15), # value of 2
     "Poison Mushroom": LMItemData("Trap", 125, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=6)]), # value of 6
+        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=6)], default_weight=15), # value of 6
     "Ghost": LMItemData("Trap", 126, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDA50, ram_byte_size=4, item_count=1)]),
+        update_ram_addr=[LMRamData(0x804DDA50, ram_byte_size=4, item_count=1)], default_weight=15),
     "Fear Trap": LMItemData("Trap", 143, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=8)]), #Crawling
+        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=8)], default_weight=25), #Crawling
     # "Drag Trap": LMItemData("Trap", 144, IC.trap, update_ram_addr=),
     "Spooky Time": LMItemData("Trap", 145, IC.trap,
-        update_ram_addr=[LMRamData(0x804de470, ram_byte_size=4, item_count=150)]),
+        update_ram_addr=[LMRamData(0x804de470, ram_byte_size=4, item_count=150)], default_weight=25),
     "Squash Trap": LMItemData("Trap", 146, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=7)]),
+        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=7)], default_weight=15),
     "No Vac Trap": LMItemData("Trap", 147, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=9)])
+        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=9)], default_weight=5)
 }
 
 filler_items = {**other_filler_items,
@@ -302,12 +303,12 @@ HEALTH_RELATED_ITEMS: list[int] = [8128, 8129]
 ICE_TRAP_EQUIV = ["Freeze Trap", "Frozen Trap", "Ice Trap", "Paralyze Trap", "Chaos Control Trap", "Bubble Trap", "Ice Floor Trap"]
 BOMB_EQUIV = ["TNT Barrel Trap", "Bomb", "Fire Trap", "Items to Bombs"]
 BANANA_TRAP_EQUIV = ["Stun Trap", "Banana Trap", "Thwimp Trap", "Hiccup Trap", "Push Trap", "Pie Trap", "Banana Peel Trap", "Slip Trap"]
-GHOST_EQUIV = ["OmoTrap", "Ghost", "Bee Trap", "Police Trap", "Nut Trap", "Army Trap", "Buyon Trap", "Animal Trap"]
+GHOST_EQUIV = ["OmoTrap", "Ghost", "Bee Trap", "Police Trap", "Nut Trap", "Army Trap", "Buyon Trap", "Animal Trap", "Fishin' Boo Trap"]
 POISON_MUSH_EQUIV = [ "Tiny Trap", "Poison Mushroom", "Iron Boots Trap", "Poison Trap", "Electrocution Trap", "Slow Trap", "Frog Trap", "Slowness Trap"]
 BONK_EQUIV = ["Spring Trap", "Damage Trap", "Bonk Trap", "Jumping Jacks Trap"]
 POSSESION_EQUIV = ["Possession Trap", "Laughter Trap", "My Turn! Trap", "Blue Balls Curse", "Controller Drift Trap"]
 FEAR_EQUIV = ["Fear Trap", "Confuse Trap", "Confound Trap", "Confusion Trap", "Icy Hot Pants Trap"]
-SPOOKY_EQUIV = ["Spooky Time", "Deisometric Trap", "Fake Transition", "Ghost Chat", "SvC Effect", "Pixellation Trap", "144p Trap"]
+SPOOKY_EQUIV = ["Spooky Time", "Deisometric Trap", "Fake Transition", "Ghost Chat", "SvC Effect", "Pixellation Trap", "144p Trap", "Spotlight Trap", "Pixelate Trap"]
 SQUASH_EQUIV = ["Squash Trap", "W I D E Trap", "Meteor Trap", "Spike Ball Trap", "Whoops! Trap", "Paper Trap", "Rockfall Trap"]
 NOVAC_EQUIV = ["No Vac Trap", "Eject Ability", "Depletion trap", "Disable B Trap", "Disable Z Trap", "Dry Trap", "Cursed Ball Trap"]
 
