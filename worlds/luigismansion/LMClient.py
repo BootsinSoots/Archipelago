@@ -12,10 +12,10 @@ import dolphin_memory_engine as dme
 # Local related imports
 from .client.contexts.base_context import BaseContext, logger
 from .Regions import REGION_LIST
-from .iso_helper.lm_rom import LMUSAAPPatch
+from .iso_helper.LM_Rom import LMUSAAPPatch
 from .Items import *
 from .Locations import ALL_LOCATION_TABLE, SELF_LOCATIONS_TO_RECV
-from .Helper_Functions import StringByteFunction as sbf, RANDOMIZER_NAME
+from .Helper_Functions import StringByteFunction as sbf
 from .client.links.energy_link.energy_link import EnergyLinkConstants
 from .client.links.energy_link.energy_link_command_processor import EnergyLinkCommandProcessor
 from .client.constants import *
@@ -43,7 +43,7 @@ CURR_HEALTH_OFFSET = 0xB8
 # A Flag with value 0x00 indicates no interaction, 0x01 indicates it has been interacted with and has either
 # dropped something or had dust, and 0x02 indicates an important item, such as a Mario Item or Elemental Medal.
 FURNITURE_MAIN_TABLE_ID = 0x803CD760
-FURNITURE_ADDR_COUNT = 760
+FURNITURE_ADDR_COUNT = 800
 FURN_FLAG_OFFSET = 0x8C
 FURN_ID_OFFSET = 0xBC
 

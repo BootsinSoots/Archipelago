@@ -1,4 +1,4 @@
-import shutil
+import logging
 
 from worlds.Files import APPatch, APPlayerContainer, AutoPatchRegister
 from settings import get_settings, Settings
@@ -7,12 +7,11 @@ import Utils
 
 from hashlib import md5
 from typing import Any
-import json, logging, sys, os, zipfile, tempfile
+from logging import Logger
+import json, sys, os, zipfile, tempfile, shutil
 import urllib.request
 
-from ..Helper_Functions import RANDOMIZER_NAME
-
-logger = logging.getLogger()
+from ..client.constants import CLIENT_VERSION, RANDOMIZER_NAME, CLIENT_NAME
 
 LM_USA_MD5 = 0x6e3d9ae0ed2fbd2f77fa1ca09a60c494
 
@@ -50,16 +49,18 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
     hash = LM_USA_MD5
     patch_file_ending = ".aplm"
     result_file_ending = ".iso"
+    client_logger: Logger = None
 
     procedure = ["custom"]
 
     def __init__(self, *args: Any, **kwargs: Any):
         super(LMUSAAPPatch, self).__init__(*args, **kwargs)
+        self.client_logger = logging.getLogger(CLIENT_NAME)
 
     def _get_archive_name(self) -> str:
         if not (Utils.is_linux or Utils.is_windows):
             message = f"Your OS is not supported with this randomizer {sys.platform}."
-            logger.error(message)
+            self.client_logger.error(message)
             raise RuntimeError(message)
 
         lib_path = ""
@@ -68,18 +69,17 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
         elif Utils.is_linux:
             lib_path = "lib-linux"
 
-        logger.info(f"Dependency archive name to use: {lib_path}")
+        self.client_logger.info(f"Dependency archive name to use: {lib_path}")
         return lib_path
 
     def _get_temp_folder_name(self) -> str:
-        from ..LMClient import CLIENT_VERSION
         temp_path = os.path.join(tempfile.gettempdir(), "luigis_mansion", CLIENT_VERSION, "libs")
         return temp_path
 
     def patch(self, aplm_patch: str) -> str:
         # Get the AP Path for the base ROM
         lm_clean_iso = self.get_base_rom_path()
-        logger.info(f"Provided {RANDOMIZER_NAME} ISO Path was: " + lm_clean_iso)
+        self.client_logger.info(f"Provided {RANDOMIZER_NAME} ISO Path was: " + lm_clean_iso)
 
         base_path = os.path.splitext(aplm_patch)[0]
         output_file = base_path + self.result_file_ending
@@ -87,6 +87,7 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
         try:
             self.create_iso(aplm_patch, output_file, lm_clean_iso, True)
         except ImportError:
+            self.client_logger.info("Speedups not detected, attempting to pull remote release.")
             self._get_remote_dependencies_and_create_iso(aplm_patch, output_file, lm_clean_iso)
         return output_file
 
@@ -99,34 +100,31 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
                             f"for this handler (version: {self.version})")
         return manifest
 
-    @classmethod
-    def get_base_rom_path(cls) -> str:
+    def get_base_rom_path(self) -> str:
         options: Settings = get_settings()
         file_name = options["luigismansion_options"]["iso_file"]
         if not os.path.exists(file_name):
             file_name = Utils.user_path(file_name)
         return file_name
 
-    @classmethod
-    def verify_base_rom(cls, lm_rom_path: str, throw_on_missing_speedups: bool = False):
+    def verify_base_rom(self, lm_rom_path: str, throw_on_missing_speedups: bool = False):
         # Verifies we have a valid installation of Luigi's Mansion USA. There are some regional file differences.
-        logger.info(f"Verifying if the provided ISO is a valid copy of {RANDOMIZER_NAME} USA edition.")
-        logger.info("Checking GCLib and speedup libs.")
+        self.client_logger.info(f"Verifying if the provided ISO is a valid copy of {RANDOMIZER_NAME} USA edition.")
+        self.client_logger.info("Checking GCLib and speedup libs.")
         # We try importing speedups (pyfastyaz0yay0) to make sure speedups is accessible.
         import pyfastyaz0yay0
         from gclib import fs_helpers as fs, yaz0_yay0
-        logger.info("Using GCLib from path: %s.", fs.__file__)
-        logger.info("Using speedups from path: %s.", pyfastyaz0yay0.__file__)
-        logger.info(sys.modules["gclib.yaz0_yay0"])
+        self.client_logger.info(f"Using GCLib from path: {str(fs.__file__)}")
+        self.client_logger.info(f"Using speedups from path: {str(pyfastyaz0yay0.__file__)}")
+        self.client_logger.info(sys.modules["gclib.yaz0_yay0"])
 
         if yaz0_yay0.PY_FAST_YAZ0_YAY0_INSTALLED:
-            logger.info("Speedups detected.")
+            self.client_logger.info("Speedups detected.")
         else:
-            logger.info("Python module paths: %s", sys.path)
+            self.client_logger.info("Python module paths: %s", sys.path)
             if throw_on_missing_speedups:
-                logger.info("Speedups not detected, attempting to pull remote release.")
                 raise ImportError(f"Cannot continue patching {RANDOMIZER_NAME} due to missing libraries.")
-            logger.info("Continuing patching without speedups.")
+            self.client_logger.info("Continuing patching without speedups.")
 
         base_md5 = md5()
         with open(lm_rom_path, "rb") as f:
@@ -136,8 +134,7 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
             # Grab the Magic Code and Game_ID with the file still open
             magic = fs.try_read_str(f, 0, 4)
             game_id = fs.try_read_str(f, 0, 6)
-            logger.info(f"Magic Code: {magic}")
-            logger.info(f"LM Game ID: {game_id}")
+            self.client_logger.info(f"LM Magic Code: {magic}; LM Game ID: {game_id}")
 
         # Verify that the file has the right has first, as the wrong file could have been loaded.
         md5_conv = int(base_md5.hexdigest(), 16)
@@ -153,17 +150,16 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
         if game_id != "GLME01":
             if game_id and game_id.startswith("GLM"):
                 raise InvalidCleanISOError(f"Invalid version of {RANDOMIZER_NAME}. " +
-                                           "Currently, only the North American version is supported by this randomizer.")
+                    "Currently, only the North American version is supported by this randomizer.")
             else:
                 raise InvalidCleanISOError("Invalid game given as the vanilla ISO. You must specify a " +
-                                           f"{RANDOMIZER_NAME}'s ISO (North American version).")
+                    f"{RANDOMIZER_NAME}'s ISO (North American version).")
         return
 
 
     def download_lib_zip(self, tmp_dir_path: str) -> None:
-        logger.info("Getting missing dependencies for Luigi's Mansion from remote source.")
+        self.client_logger.info("Getting missing dependencies for Luigi's Mansion from remote source.")
 
-        from ..LMClient import CLIENT_VERSION
         lib_path = self._get_archive_name()
         lib_path_base = f"https://github.com/BootsinSoots/Archipelago/releases/download/{CLIENT_VERSION}"
         download_path = f"{lib_path_base}/{lib_path}.zip"
@@ -194,16 +190,16 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
             # If temp directory exists, and we failed to patch the ISO, we want to remove the directory
             #   and instead get a fresh installation.
             if os.path.isdir(local_dir_path):
-                logger.info("Found temporary directory after unsuccessful attempt of generating seed, deleting %s.", local_dir_path)
+                self.client_logger.info("Found temporary directory after unsuccessful attempt of generating seed, deleting %s.", local_dir_path)
                 shutil.rmtree(local_dir_path)
             os.makedirs(local_dir_path, exist_ok=True)
             # Load the external dependencies based on OS
-            logger.info("Temporary Directory created as: %s", local_dir_path)
+            self.client_logger.info("Temporary Directory created as: %s", local_dir_path)
             self.download_lib_zip(local_dir_path)
 
-            logger.info(f"Appending the following to sys path to get dependencies correctly: {local_dir_path}")
+            self.client_logger.info(f"Appending the following to sys path to get dependencies correctly: {local_dir_path}")
             sys.path.insert(0, local_dir_path)
 
             self.create_iso(aplm_patch, output_file, lm_clean_iso, False)
         except PermissionError:
-            logger.warning("Failed to cleanup temp folder, %s ignoring delete.", local_dir_path)
+            self.client_logger.warning("Failed to cleanup temp folder, %s ignoring delete.", local_dir_path)
