@@ -12,10 +12,10 @@ import dolphin_memory_engine as dme
 # Local related imports
 from .client.contexts.base_context import BaseContext, logger
 from .Regions import REGION_LIST
-from .iso_helper.lm_rom import LMUSAAPPatch
+from .iso_helper.LM_Rom import LMUSAAPPatch
 from .Items import *
 from .Locations import ALL_LOCATION_TABLE, SELF_LOCATIONS_TO_RECV
-from .Helper_Functions import StringByteFunction as sbf, RANDOMIZER_NAME
+from .Helper_Functions import StringByteFunction as sbf
 from .client.links.energy_link.energy_link import EnergyLinkConstants
 from .client.links.energy_link.energy_link_command_processor import EnergyLinkCommandProcessor
 from .client.constants import *
