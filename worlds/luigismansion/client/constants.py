@@ -18,6 +18,10 @@ AP_REFUSED_STATUS: str = "AP Refused to connect for one or more reasons, see abo
 
 # GC Regional String ID length
 GC_REGION_ID_LEGNTH: int = 6
+LM_USA_GC_IDENTIFIER: str = "GLME01"
+LM_JP_GC_IDENTIFIER: str = "GLMJ01"
+LM_PAL_GC_IDENTIFIER: str = "GLMP01"
+LM_GC_IDENTIFIERS: list[str] = [LM_USA_GC_IDENTIFIER, LM_JP_GC_IDENTIFIER, LM_PAL_GC_IDENTIFIER]
 
 # Static time to wait for health and death checks
 CHECKS_WAIT: int = 3
