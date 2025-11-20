@@ -1,11 +1,11 @@
+from importlib.resources.abc import Traversable
 from typing import NamedTuple, Optional
-from pathlib import Path
+import importlib.resources as resources
 
 from gclib.rarc import RARCFileEntry, RARC
 from gclib.gcm import GCM
 
-
-PROJECT_ROOT: Path = Path(__file__).resolve().parent
+PROJECT_ROOT: Traversable = resources.files(__name__)
 
 class LMRamData(NamedTuple):
     ram_addr: Optional[int] = None
