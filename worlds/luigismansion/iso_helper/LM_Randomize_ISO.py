@@ -8,10 +8,11 @@ import Utils
 
 # 3rd Party related imports
 from gclib.gcm import GCM
-from gclib.fs_helpers import write_str
+from gclib.fs_helpers import read_str, write_str
 
 # Internal Related imports.
-from ..client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME, RANDOMIZER_NAME, CLIENT_NAME
+from ..client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME, RANDOMIZER_NAME, CLIENT_NAME, LM_GC_IDs
+from .Update_GameUSA import LMGameUSAArc
 
 class LuigisMansionRandomizer:
     random: Random
@@ -19,7 +20,7 @@ class LuigisMansionRandomizer:
     clean_iso_path: str = None
     output_file_path: str = None
     output_data: dict = None
-    gcm: GCM = None
+    lm_gcm: GCM = None
     client_logger: Logger = None
 
     _seed: str = None
@@ -51,7 +52,15 @@ class LuigisMansionRandomizer:
         self._check_server_version(self.output_data.get(AP_WORLD_VERSION_NAME, "<0.5.6"))
 
         # Change game ID so save files are different
-        self._update_game_id()
+        lm_regional_id: str = self._get_and_update_game_id()
+
+        # After verifying, this will also read the entire iso, including system files and their content
+        self.lm_gcm = GCM(self.clean_iso_path)
+        self.lm_gcm.read_entire_disc()
+
+        # Update the relevant Game RARC archive
+        self._update_game_archive(lm_regional_id)
+
 
     def _check_server_version(self, ap_world_version: str):
         """
@@ -64,12 +73,23 @@ class LuigisMansionRandomizer:
                                          f"APWorld version.\nThe client version is {CLIENT_VERSION}!\nPlease verify you are using the " +
                                          f"same APWorld as the generator, which is '{ap_world_version}'")
 
-    def _update_game_id(self):
+    def _get_and_update_game_id(self) -> str:
         """
         Updates the ISO's game id to use AP's seed that was generated.
         This allows LM to have 3 brand new save files every time.
         """
         self.client_logger.info("Updating the ISO game id with the AP generated seed.")
-        bin_data = self.gcm.read_file_data("sys/boot.bin")
+        bin_data = self.lm_gcm.read_file_data("sys/boot.bin")
+        regional_id: str = read_str(bin_data, 0x00, 6)
         write_str(bin_data, 0x01, self._seed, len(self._seed))
-        self.gcm.changed_files["sys/boot.bin"] = bin_data
+        self.lm_gcm.changed_files["sys/boot.bin"] = bin_data
+
+        return regional_id
+
+    def _update_game_archive(self, regional_id: str):
+        # Load game_usa and prepare those changes. Leaves wiggle room for support to other LM regions (potentially)
+        match regional_id:
+            case LM_GC_IDs.USA_ID:
+                game_arc: LMGameUSAArc = LMGameUSAArc(self.lm_gcm, "files/Game/game_usa.szp")
+                game_arc.add_gold_ghost(self.lm_gcm)
+                game_arc.update_game_usa(self.lm_gcm)
