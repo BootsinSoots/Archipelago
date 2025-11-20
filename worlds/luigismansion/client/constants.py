@@ -1,4 +1,5 @@
 """ Collection of commonly used constants for Luigi's Mansion. """
+from enum import StrEnum
 
 CLIENT_VERSION: str = "V0.6.0"
 CLIENT_NAME: str = "Luigi's Mansion Client"
@@ -16,13 +17,6 @@ CONNECTION_INITIAL_STATUS: str = "Dolphin emulator was not detected to be runnin
 CONNECTION_CONNECTED_STATUS: str = "Dolphin is connected, AP is connected, Ready to play LM!"
 AP_REFUSED_STATUS: str = "AP Refused to connect for one or more reasons, see above for more details."
 
-# GC Regional String ID length
-GC_REGION_ID_LEGNTH: int = 6
-LM_USA_GC_IDENTIFIER: str = "GLME01"
-LM_JP_GC_IDENTIFIER: str = "GLMJ01"
-LM_PAL_GC_IDENTIFIER: str = "GLMP01"
-LM_GC_IDENTIFIERS: list[str] = [LM_USA_GC_IDENTIFIER, LM_JP_GC_IDENTIFIER, LM_PAL_GC_IDENTIFIER]
-
 # Static time to wait for health and death checks
 CHECKS_WAIT: int = 3
 LONGER_MODIFIER: int = 2
@@ -35,6 +29,14 @@ ROOM_ID_OFFSET: int = 0x35C
 WAIT_TIMER_SHORT_TIMEOUT: float = 0.125
 WAIT_TIMER_MEDIUM_TIMEOUT: float = 1.5
 WAIT_TIMER_LONG_TIMEOUT: float = 5
+
+# GC Regional String ID length
+GC_REGION_ID_LEGNTH: int = 6
+
+class LM_GC_IDs(StrEnum):
+    USA_ID = "GLME01"
+    JP_ID = "GLMJ01"
+    PAL_ID = "GLMP01"
 
 class MEMORY_CONSTANTS:
     """ Constants which reference Luigi's Mansion memory allocations. """
