@@ -1,21 +1,33 @@
+from enum import StrEnum
 from logging import getLogger, Logger
 
 from gclib.gcm import GCM
-from gclib.rarc import RARC
+from gclib.rarc import RARC, RARCFileEntry
 from gclib.yaz0_yay0 import Yay0
+from gcbrickwork.PRM import PRM
 
 from ..Helper_Functions import get_arc, find_rarc_file_entry
 from ..client.constants import CLIENT_NAME
+
+class _ParamType(StrEnum):
+    TH = "TH"
+    CTP = "CTP"
 
 class LMGameUSAArc:
     _arc_path: str = None
     game_usa_arc: RARC = None
     _client_logger: Logger = None
+    _ctp_files: list[RARCFileEntry] = None
+    _th_files: list[RARCFileEntry] = None
+    ctp_params: dict[str, PRM] = {}
+    th_params: dict[str, PRM] = {}
 
     def __init__(self, lm_gcm: GCM, arc_path: str):
         self._arc_path = arc_path
         self.game_usa_arc: RARC = get_arc(lm_gcm, arc_path)
         self._client_logger = getLogger(CLIENT_NAME)
+        self._ctp_files = self.game_usa_arc.get_node_by_path("param/ctp").files
+        self._th_files = self.game_usa_arc.get_node_by_path("param/th").files
 
     def add_gold_ghost(self, lm_gcm: GCM):
         """
@@ -63,9 +75,64 @@ class LMGameUSAArc:
         """
         Updates the game_usa arc into the GCM
         """
+        self._client_logger.info("Updating all parameter files...")
+        self._update_parameters()
         self._client_logger.info("Overwriting game_uza.szp with the new re-created file...")
-        lm_gcm.delete_file(lm_gcm.files_by_path[self._arc_path])
-        lm_gcm.add_new_file(self._arc_path, self.game_usa_arc)
+        # lm_gcm.delete_file(lm_gcm.files_by_path[self._arc_path])
+        # lm_gcm.add_new_file(self._arc_path, self.game_usa_arc)
         self.game_usa_arc.save_changes()
         self._client_logger.info("game_uza.szp Yay0 check...")
         lm_gcm.changed_files[self._arc_path] = Yay0.compress(self.game_usa_arc.data)
+
+    def load_ctp_list_parameters(self, ctp_params: list[str]):
+        for ctp_param in ctp_params:
+            self.ctp_params[ctp_param] = self._load_prm(_ParamType.CTP, ctp_param)
+
+    def load_th_list_parameters(self, th_params: list[str]):
+        for th_param in th_params:
+            self.ctp_params[th_param] = self._load_prm(_ParamType.TH, th_param)
+
+    def load_ctp_parameter(self, ctp_param_name: str):
+        self.th_params[ctp_param_name] = self._load_prm(_ParamType.CTP, ctp_param_name)
+
+    def load_th_parameter(self, th_param_name: str):
+        self.th_params[th_param_name] = self._load_prm(_ParamType.TH, th_param_name)
+
+    def _load_prm(self, param_folder: str, param_name: str) -> PRM:
+        match param_folder:
+            case _ParamType.TH:
+                if param_name in self.th_params:
+                    return self.th_params[param_name]
+
+                prm_file: RARCFileEntry = next(arc_prm for arc_prm in self._th_files if arc_prm.name == param_name)
+                prm_data: PRM = PRM(prm_file.data)
+                prm_data.load_file()
+            case _ParamType.CTP:
+                if param_name in self.ctp_params:
+                    return self.ctp_params[param_name]
+
+                prm_file: RARCFileEntry = next(arc_prm for arc_prm in self._ctp_files if arc_prm.name == param_name)
+                prm_data: PRM = PRM(prm_file.data)
+                prm_data.load_file()
+
+            case _:
+                raise Exception("Unknown type of PRM file provided: " + param_folder)
+
+        return prm_data
+
+    def _update_parameters(self):
+        for th_param in self._th_files:
+            if not th_param.name in self.th_params:
+                continue
+
+            th_file: PRM = self.th_params[th_param.name]
+            th_file.update_file()
+            th_param.data = th_file.data
+
+        for ctp_param in self._ctp_files:
+            if not ctp_param.name in self.ctp_params:
+                continue
+
+            ctp_file: PRM = self.ctp_params[ctp_param.name]
+            ctp_file.update_file()
+            ctp_param.data = ctp_file.data
