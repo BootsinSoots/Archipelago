@@ -48,7 +48,7 @@ class LMMapFile:
         jmp_file_data.load_file()
         return jmp_file_data
 
-    def _update_all_jmp_files(self) -> RARC:
+    def _update_all_jmp_files(self):
         """
         Updates all jmp files data back into their arc file
         """
@@ -59,8 +59,6 @@ class LMMapFile:
             jmp_file: JMP = self.jmp_files[arc_jmp.name]
             jmp_file.update_file()
             arc_jmp.data = jmp_file.data
-
-        return self._arc_data
 
     def update_and_save_map(self, lm_gcm: GCM):
         """
