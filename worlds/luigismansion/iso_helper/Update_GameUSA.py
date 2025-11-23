@@ -85,20 +85,36 @@ class LMGameUSAArc:
         lm_gcm.changed_files[self._arc_path] = Yay0.compress(self.game_usa_arc.data)
 
     def load_ctp_list_parameters(self, ctp_params: list[str]):
+        """
+        Loads several parameter files in the "CTP" folder based on a user provided input list.
+        """
         for ctp_param in ctp_params:
             self.ctp_params[ctp_param] = self._load_prm(_ParamType.CTP, ctp_param)
 
     def load_th_list_parameters(self, th_params: list[str]):
+        """
+        Loads several parameter files in the "TH" folder based on a user provided input list.
+        """
         for th_param in th_params:
             self.ctp_params[th_param] = self._load_prm(_ParamType.TH, th_param)
 
     def load_ctp_parameter(self, ctp_param_name: str):
+        """
+        Loads a single parameter files from the "CTP" folder.
+        """
         self.th_params[ctp_param_name] = self._load_prm(_ParamType.CTP, ctp_param_name)
 
     def load_th_parameter(self, th_param_name: str):
+        """
+        Loads a single parameter files from the "TH" folder.
+        """
         self.th_params[th_param_name] = self._load_prm(_ParamType.TH, th_param_name)
 
     def _load_prm(self, param_folder: str, param_name: str) -> PRM:
+        """
+        Returns a PRM file if it is already loaded in memory, otherwise searches for the relevant file in the right folder
+            and loads it as a PRM type.
+        """
         match param_folder:
             case _ParamType.TH:
                 if param_name in self.th_params:
@@ -121,6 +137,9 @@ class LMGameUSAArc:
         return prm_data
 
     def _update_parameters(self):
+        """
+        Updates all parameter files in both CTP and TH folders and re-add the data back into the GameUSA RARC.
+        """
         for th_param in self._th_files:
             if not th_param.name in self.th_params:
                 continue
