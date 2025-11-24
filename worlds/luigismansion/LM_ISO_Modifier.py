@@ -10,7 +10,7 @@ from gclib.rarc import RARC
 from gclib.yaz0_yay0 import Yay0
 
 from .iso_helper.DOL_Updater import update_dol_offsets
-from .iso_helper.Update_GameUSA import update_game_usa
+from .iso_helper.LM_GameUSA_Arc import update_game_usa
 from .iso_helper.JMP_Info_File import JMPInfoFile
 from .LM_Table_Scrambler import *
 from .Helper_Functions import StringByteFunction as sbf, get_arc

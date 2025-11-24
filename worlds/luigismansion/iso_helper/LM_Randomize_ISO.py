@@ -13,7 +13,7 @@ from gclib.fs_helpers import read_str, write_str
 # Internal Related imports.
 from .LM_Map_File import LMMapFile
 from ..client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME, RANDOMIZER_NAME, CLIENT_NAME, LM_GC_IDs
-from .Update_GameUSA import LMGameUSAArc
+from .LM_GameUSA_Arc import LMGameUSAArc
 
 class LuigisMansionRandomizer:
     random: Random
