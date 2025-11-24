@@ -1988,18 +1988,6 @@ def update_teiden_enemy_info(enemy_info, teiden_enemy_info):
 
 
 def update_enemy_info(lm_gen: "LuigisMansionRandomizer", enemy_info, teiden_enemy_info, output_data):
-    # TODO Randomize Blackout enemies as well.
-    # A list of all the ghost actors of the game we want to replace.
-    # It excludes the "waiter" ghost as that is needed for Mr. Luggs to work properly.
-    ghost_list = ["yapoo1", "mapoo1", "mopoo1",
-                  "yapoo2", "mapoo2", "mopoo2",
-                  "banaoba",
-                  "topoo1", "topoo2", "topoo3", "topoo4",
-                  "heypo1", "heypo2", "heypo3", "heypo4", "heypo5", "heypo6", "heypo7", "heypo8",
-                  "skul",
-                  "putcher1",
-                  "tenjyo", "tenjyo2"]
-
     # If randomize ghosts options are enabled
     if output_data["Options"]["enemizer"] == 0:
         return
@@ -2161,6 +2149,7 @@ def update_iyapoo_table(iyapoo_table, output_data):
 
 
 def apply_new_ghost(lm_gen: "LuigisMansionRandomizer", enemy_info_entry, element):
+    # TODO add a default heigh for ghosts on each floor to re-adjust things moving up and down.
     # The list of ghosts that can replace the vanilla ones. Only includes the ones without elements.
     # Excludes Skul ghosts as well unless the railinfo jmp table is updated.
     random_ghosts_to_patch = [["yapoo1"], ["mapoo1"], ["mopoo1"], ["banaoba"],
