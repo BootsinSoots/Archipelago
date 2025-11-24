@@ -63,6 +63,9 @@ class LuigisMansionRandomizer:
         # Update the relevant Game RARC archive
         self._update_game_archive(lm_regional_id)
 
+        # Loads all the relevant map files and their JMP files into memory.
+        self._load_map_files()
+
 
     def _check_server_version(self, ap_world_version: str):
         """
@@ -95,3 +98,36 @@ class LuigisMansionRandomizer:
                 game_arc: LMGameUSAArc = LMGameUSAArc(self.lm_gcm, "files/Game/game_usa.szp")
                 game_arc.add_gold_ghost(self.lm_gcm)
                 game_arc.update_game_usa(self.lm_gcm)
+
+    def _load_map_files(self):
+        map2_jmp_list = ["iteminfotable", "itemappeartable", "treasuretable", "furnitureinfo", "characterinfo",
+                         "eventinfo", "observerinfo", "keyinfo", "objinfo", "generatorinfo", "enemyinfo", "telesa",
+                         "teidenobserverinfo", "teidencharacterinfo", "iyapootable"]
+
+        if bool(self.output_data["Options"]["speedy_spirits"]):
+            map2_jmp_list.append("teidenenemyinfo")
+
+        if self.output_data["Options"]["spookiness"] != 0:
+            map2_jmp_list.append("roominfo")
+
+        map2: LMMapFile = LMMapFile(self.lm_gcm, "map2.szp")
+        map2.load_jmp_files(map2_jmp_list)
+        self.map_files["map2"] = map2
+
+        map1: LMMapFile = LMMapFile(self.lm_gcm, "map1.szp")
+        map1.load_jmp_files(["eventinfo"])
+        self.map_files["map1"] = map1
+
+        map3: LMMapFile = LMMapFile(self.lm_gcm, "map3.szp")
+        map3.load_jmp_files(["eventinfo"])
+        self.map_files["map3"] = map3
+
+        if bool(self.output_data["Options"]["WDYM_checks"]):
+            map6: LMMapFile = LMMapFile(self.lm_gcm, "map6.szp")
+            map6.load_jmp_files(["furnitureinfo", "characterinfo"])
+            self.map_files["map6"] = map6
+
+
+    def _update_map_files(self):
+        for map_file in self.map_files.values():
+            map_file.update_and_save_map(self.lm_gcm)
