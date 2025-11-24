@@ -11,6 +11,7 @@ from gclib.gcm import GCM
 from gclib.fs_helpers import read_str, write_str
 
 # Internal Related imports.
+from .LM_Map_File import LMMapFile
 from ..client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME, RANDOMIZER_NAME, CLIENT_NAME, LM_GC_IDs
 from .Update_GameUSA import LMGameUSAArc
 
@@ -21,8 +22,9 @@ class LuigisMansionRandomizer:
     output_file_path: str = None
     output_data: dict = None
     lm_gcm: GCM = None
-    client_logger: Logger = None
+    map_files: dict[str, LMMapFile] = []
 
+    _client_logger: Logger = None
     _seed: str = None
 
     def __init__(self, clean_iso_path: str, randomized_output_file_path: str, ap_output_data: bytes, debug_flag=False):
@@ -32,7 +34,7 @@ class LuigisMansionRandomizer:
         self.output_data = json.loads(ap_output_data.decode('utf-8'))
 
         # Init the logger based on the existing client name.
-        self.client_logger = getLogger(CLIENT_NAME)
+        self._client_logger = getLogger(CLIENT_NAME)
 
         # Set the random's seed for use in other files.
         self._seed = self.output_data["Seed"]
@@ -70,15 +72,15 @@ class LuigisMansionRandomizer:
         """
         if ap_world_version != CLIENT_VERSION:
             raise Utils.VersionException(f"Error! Server was generated with a different {RANDOMIZER_NAME} " +
-                                         f"APWorld version.\nThe client version is {CLIENT_VERSION}!\nPlease verify you are using the " +
-                                         f"same APWorld as the generator, which is '{ap_world_version}'")
+                 f"APWorld version.\nThe client version is {CLIENT_VERSION}!\nPlease verify you are using the " +
+                 f"same APWorld as the generator, which is '{ap_world_version}'")
 
     def _get_and_update_game_id(self) -> str:
         """
         Updates the ISO's game id to use AP's seed that was generated.
         This allows LM to have 3 brand new save files every time.
         """
-        self.client_logger.info("Updating the ISO game id with the AP generated seed.")
+        self._client_logger.info("Updating the ISO game id with the AP generated seed.")
         bin_data = self.lm_gcm.read_file_data("sys/boot.bin")
         regional_id: str = read_str(bin_data, 0x00, 6)
         write_str(bin_data, 0x01, self._seed, len(self._seed))
