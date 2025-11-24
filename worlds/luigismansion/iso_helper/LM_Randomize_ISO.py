@@ -22,6 +22,7 @@ class LuigisMansionRandomizer:
     output_file_path: str = None
     output_data: dict = None
     lm_gcm: GCM = None
+    game_region_arc: LMGameUSAArc = None
     map_files: dict[str, LMMapFile] = []
 
     _client_logger: Logger = None
@@ -61,7 +62,7 @@ class LuigisMansionRandomizer:
         self.lm_gcm.read_entire_disc()
 
         # Update the relevant Game RARC archive
-        self._update_game_archive(lm_regional_id)
+        self._load_game_archive(lm_regional_id)
 
         # Loads all the relevant map files and their JMP files into memory.
         self._load_map_files()
@@ -91,13 +92,13 @@ class LuigisMansionRandomizer:
 
         return regional_id
 
-    def _update_game_archive(self, regional_id: str):
+    def _load_game_archive(self, regional_id: str):
         # Load game_usa and prepare those changes. Leaves wiggle room for support to other LM regions (potentially)
         match regional_id:
             case LM_GC_IDs.USA_ID:
-                game_arc: LMGameUSAArc = LMGameUSAArc(self.lm_gcm, "files/Game/game_usa.szp")
-                game_arc.add_gold_ghost(self.lm_gcm)
-                game_arc.update_game_usa(self.lm_gcm)
+                self.game_region_arc: LMGameUSAArc = LMGameUSAArc(self.lm_gcm, "files/Game/game_usa.szp")
+                self.game_region_arc.add_gold_ghost(self.lm_gcm)
+                #game_arc.update_game_usa(self.lm_gcm) # Move this to a relevant updater function
 
     def _load_map_files(self):
         map2_jmp_list = ["iteminfotable", "itemappeartable", "treasuretable", "furnitureinfo", "characterinfo",
