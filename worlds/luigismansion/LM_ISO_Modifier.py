@@ -13,9 +13,9 @@ from .iso_helper.DOL_Updater import update_dol_offsets
 from .iso_helper.Update_GameUSA import update_game_usa
 from .iso_helper.JMP_Info_File import JMPInfoFile
 from .LM_Table_Scrambler import *
-from .Helper_Functions import StringByteFunction as sbf, get_arc, RANDOMIZER_NAME
+from .Helper_Functions import StringByteFunction as sbf, get_arc
 from .iso_helper.Events import *
-from .client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME
+from .client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME, RANDOMIZER_NAME
 
 class LuigisMansionRandomizer:
     random: Random
