@@ -158,7 +158,6 @@ def create_observer_entry(pos_x: float, pos_y: float, pos_z: float, room_no: int
     }
 
 # Indicates the chest size that will be loaded in game based on item provided. 0 = small, 1 = medium, 2 = large
-# TODO Consolidate arguments since most come from the item object anyways.
 def get_chest_size_from_item(lm_gen: "LuigisMansionRandomizer", item_data: dict, current_size: int) -> int:
     chest_option: int = int(lm_gen.output_data["Options"]["chest_types"])
     door_id: int = int(item_data["door_id"])
