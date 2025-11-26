@@ -1,5 +1,7 @@
 from typing import Any
 
+from ..LM_Randomize_ISO import LuigisMansionRandomizer
+
 # Used to update speedy spirit observers that spawn them in and switch them to the blackout only table instead.
 SPEEDY_OBSERVER_INDEX: list[int] = [183, 182, 179, 178, 177, 101, 100, 99, 98, 97, 21, 19]
 SPEEDY_ENEMY_INDEX: list[int] = [128, 125, 115, 114, 113, 67, 66, 60, 59, 58, 7, 6]
@@ -41,7 +43,7 @@ LOCATION_TO_INDEX = {
 }
 
 # Converts AP readable name to in-game name
-def get_item_name(item_data: dict, slot: int):
+def get_item_name(item_data: dict, slot: int) -> str:
     if int(item_data["player"]) != slot:
         return "nothing"  # TODO return AP item(s) here
 
