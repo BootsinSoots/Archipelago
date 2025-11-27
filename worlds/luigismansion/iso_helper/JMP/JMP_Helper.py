@@ -260,7 +260,7 @@ def get_item_chest_visual(lm_gen: "LuigisMansionRandomizer", item_data: dict, cu
 
     # Match the item represents in vanilla
     if chest_option == 1:
-        return _chest_visual_match_name(item_name, True)
+        return _chest_visual_match_name(item_name, True, is_for_slot)
 
     # Chest Visual are determined by AP item classification
     elif chest_option == 3 or chest_option == 4:
@@ -270,7 +270,7 @@ def get_item_chest_visual(lm_gen: "LuigisMansionRandomizer", item_data: dict, cu
     elif chest_option == 5:
         if not is_for_slot:
             return _chest_visual_item_class(lm_gen, item_class)
-        return _chest_visual_match_name(item_name, False)
+        return _chest_visual_match_name(item_name, False, is_for_slot)
 
     # Full random, or something equivalent was chosen (Like Option 2)
     else:
@@ -294,9 +294,9 @@ def _chest_visual_item_class(lm_gen: "LuigisMansionRandomizer", item_class: str)
     else:
         return "gtakara1"
 
-def _chest_visual_match_name(item_name: str, fuzzy_match: bool) -> str:
+def _chest_visual_match_name(item_name: str, fuzzy_match: bool, is_for_slot: bool) -> str:
     # Avoids situations where "Boo" may be in other games
-    if " Boo " in item_name or "MiniBoo" in item_name:
+    if "Boo" in item_name and is_for_slot:
         return "wtakara1"
 
     if fuzzy_match:
