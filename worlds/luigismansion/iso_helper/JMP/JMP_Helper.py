@@ -222,10 +222,12 @@ def _chest_size_item_class(lm_gen: "LuigisMansionRandomizer", item_class: str) -
         return 0
 
 def _chest_size_match_name(item_name: str, is_for_slot: bool) -> int:
+    # Avoids situations where "Boo" may be in other games
     if "Boo" in item_name and is_for_slot:
         return 0
 
-    if any(iname in item_name for iname in MONEY_ITEM_NAMES):
+    # "Money" is easier to handle than all types of money/bundles
+    if any(money_name for money_name in MONEY_ITEM_NAMES if money_name in item_name):
         item_name = "Money"
     match item_name:
         case "Mario's Hat" | "Mario's Letter" | "Mario's Shoe" | "Mario's Glove" | "Mario's Star":
@@ -293,11 +295,16 @@ def _chest_visual_item_class(lm_gen: "LuigisMansionRandomizer", item_class: str)
         return "gtakara1"
 
 def _chest_visual_match_name(item_name: str, fuzzy_match: bool) -> str:
+    # Avoids situations where "Boo" may be in other games
     if " Boo " in item_name or "MiniBoo" in item_name:
         return "wtakara1"
 
     if fuzzy_match:
         item_name = _fuzzy_math_item_name(item_name)
+    else:
+        # "Money" is easier to handle than all types of money/bundles
+        if any(money_name for money_name in MONEY_ITEM_NAMES if money_name in item_name):
+            item_name = "Money"
     match item_name:
         case "Heart Key" | "Club Key" | "Diamond Key" | "Spade Key":
             return "ytakara1"
