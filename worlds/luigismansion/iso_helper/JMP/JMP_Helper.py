@@ -42,6 +42,8 @@ LOCATION_TO_INDEX = {
     "Wardrobe Shelf Key": 5,
 }
 
+CHEST_NAMES: list[str] = ["ytakara1", "rtakara1", "btakara1", "wtakara1", "gtakara1"]
+
 # Converts AP readable name to in-game name
 def get_item_name(item_data: dict, slot: int) -> str:
     if int(item_data["player"]) != slot:
@@ -183,7 +185,7 @@ def get_chest_size_from_item(lm_gen: "LuigisMansionRandomizer", item_data: dict,
 
     # Both size and color are matched against AP item class
     elif chest_option == 4:
-        return _chest_size_match_name(item_name, is_for_slot)
+        return _chest_size_item_class_check(lm_gen, item_class)
 
     # Uses receiving player's item class to prioritize size
     elif chest_option == 5:
@@ -191,7 +193,7 @@ def get_chest_size_from_item(lm_gen: "LuigisMansionRandomizer", item_data: dict,
             return 0
 
         if not is_for_slot:
-            return _chest_size_item_class_check(item_class, lm_gen)
+            return _chest_size_item_class_check(lm_gen, item_class)
 
         return _chest_size_match_name(item_name, is_for_slot)
 
@@ -207,7 +209,7 @@ def _get_chest_size_from_key(key_id) -> int:
         case _:
             return 0
 
-def _chest_size_item_class_check(item_class: str, lm_gen: "LuigisMansionRandomizer") -> int:
+def _chest_size_item_class_check(lm_gen: "LuigisMansionRandomizer", item_class: str, ) -> int:
     trap_option: int = int(lm_gen.output_data["Options"]["trap_chests"])
 
     if "progression" in item_class:
