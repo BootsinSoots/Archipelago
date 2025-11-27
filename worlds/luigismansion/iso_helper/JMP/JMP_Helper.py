@@ -119,7 +119,7 @@ def get_item_name(item_data: dict, slot: int) -> str:
 
         case "Boo Radar":
             return "gameboy"
-        case "Vacuum Upgrade"|"Poltergust 3000":
+        case "Vacuum Upgrade" | "Poltergust 3000":
             return "vbody"
 
     return "nothing"
