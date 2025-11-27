@@ -20,10 +20,15 @@ class LuigisMansionRandomizer:
     debug: bool = False
     clean_iso_path: str = None
     output_file_path: str = None
-    output_data: dict = None
+
+    # GC Lib related vars
     lm_gcm: GCM = None
     game_region_arc: LMGameUSAArc = None
     map_files: dict[str, LMMapFile] = []
+
+    # Output data related vars
+    output_data: dict = None
+    slot: int = None
 
     _client_logger: Logger = None
     _seed: str = None
@@ -41,6 +46,7 @@ class LuigisMansionRandomizer:
         self._seed = self.output_data["Seed"]
         self.random = Random()
         self.random.seed(self._seed)
+        self.slot = self.output_data["Slot"]
 
     def create_randomized_iso(self):
         # Check if the file is in use and return an error if so.
