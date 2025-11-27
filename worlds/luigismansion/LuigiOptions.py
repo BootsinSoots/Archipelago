@@ -843,7 +843,9 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     energy_link: EnergyLink
     ring_link: RingLink
     enable_ring_client_msg: RingLinkClientMsgs
+    filler_weights: FillerWeights
     trap_percentage: TrapPercentage
+    trap_weights: TrapWeights
     bundle_weight: BundleWeight
     coin_weight: CoinWeight
     bill_weight: BillWeight

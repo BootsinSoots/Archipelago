@@ -106,7 +106,9 @@ class LMWeb(WebWorld):
             LuigiOptions.CallMario,
         ]),
         Options.OptionGroup("Filler Weights", [
+            LuigiOptions.FillerWeights,
             LuigiOptions.TrapPercentage,
+            LuigiOptions.TrapWeights,
             LuigiOptions.BundleWeight,
             LuigiOptions.CoinWeight,
             LuigiOptions.BillWeight,
@@ -574,36 +576,24 @@ class LMWorld(World):
                 self.local_early_key = early_key
                 self.multiworld.local_early_items[self.player].update({early_key: 1})
 
-        self.trap_filler_dict: dict[str, int] = {
-            "Possession Trap": self.options.poss_trap_weight.value,
-            "Bonk Trap": self.options.bonk_trap_weight.value,
-            "Bomb": self.options.bomb_trap_weight.value,
-            "Ice Trap": self.options.ice_trap_weight.value,
-            "Banana Trap": self.options.banana_trap_weight.value,
-            "Poison Mushroom": self.options.poison_trap_weight.value,
-            "Ghost": self.options.ghost_weight.value,
-            "Fear Trap": self.options.fear_weight.value,
-            "Spooky Time": self.options.spooky_weight.value,
-            "Squash Trap": self.options.squash_weight.value,
-            "No Vac Trap": self.options.vac_trap_weight.value,
-        }
+        self.trap_filler_dict: dict[str, int] = self.options.trap_weights.value
 
         self.other_filler_dict: dict[str, int] = {
-            "20 Coins & Bills": self.options.bundle_weight.value,
-            "Sapphire": self.options.gems_weight.value,
-            "Emerald": self.options.gems_weight.value,
-            "Ruby": self.options.gems_weight.value,
-            "Diamond": math.ceil(self.options.gems_weight.value * 0.4),
-            "Dust": self.options.dust_weight.value,
-            "Small Heart": self.options.heart_weight.value,
-            "Large Heart":  max(0,self.options.heart_weight.value - 5),
-            "10 Coins": self.options.coin_weight.value,
-            "20 Coins": max(0,self.options.coin_weight.value - 5),
-            "30 Coins": max(0,self.options.coin_weight.value - 10),
-            "15 Bills": self.options.bill_weight.value,
-            "25 Bills": max(0,self.options.bill_weight.value - 5),
-            "1 Gold Bar": self.options.bars_weight.value,
-            "2 Gold Bars": max(0,self.options.bars_weight.value - 5),
+            "20 Coins & Bills": self.options.filler_weights["Bundles"],
+            "Sapphire": self.options.filler_weights["Gems"],
+            "Emerald": self.options.filler_weights["Gems"],
+            "Ruby": self.options.filler_weights["Gems"],
+            "Diamond": math.ceil(self.options.filler_weights["Gems"] * 0.4),
+            "Dust": self.options.filler_weights["Dust"],
+            "Small Heart": self.options.filler_weights["Hearts"],
+            "Large Heart":  max(0,self.options.filler_weights["Hearts"] - 5),
+            "10 Coins": self.options.filler_weights["Coins"],
+            "20 Coins": max(0,self.options.filler_weights["Coins"] - 5),
+            "30 Coins": max(0,self.options.filler_weights["Coins"] - 10),
+            "15 Bills": self.options.filler_weights["Bills"],
+            "25 Bills": max(0,self.options.filler_weights["Bills"] - 5),
+            "1 Gold Bar": self.options.filler_weights["Bars"],
+            "2 Gold Bars": max(0,self.options.filler_weights["Bars"] - 5),
         }
 
         self.all_filler_dict = {**self.trap_filler_dict, **self.other_filler_dict}
@@ -931,27 +921,27 @@ def _get_disabled_traps(options: LuigiOptions.LMOptions) -> int:
 
     # We cast the flag values to an int to reduce amount of data being sent to the server.
     trap_flags: int = 0
-    if _is_disabled(options.poison_trap_weight.value):
+    if _is_disabled(options.trap_weights["Poison Mushroom"]):
         trap_flags += TrapLinkType.POISON.value
-    if _is_disabled(options.banana_trap_weight.value):
+    if _is_disabled(options.trap_weights["Banana Trap"]):
         trap_flags += TrapLinkType.BANANA.value
-    if _is_disabled(options.bomb_trap_weight.value):
+    if _is_disabled(options.trap_weights["Bomb"]):
         trap_flags += TrapLinkType.BOMB.value
-    if _is_disabled(options.bonk_trap_weight.value):
+    if _is_disabled(options.trap_weights["Bonk Trap"]):
         trap_flags += TrapLinkType.BONK.value
-    if _is_disabled(options.ice_trap_weight.value):
+    if _is_disabled(options.trap_weights["Ice Trap"]):
         trap_flags += TrapLinkType.ICE.value
-    if _is_disabled(options.poss_trap_weight.value):
+    if _is_disabled(options.trap_weights["Possession Trap"]):
         trap_flags += TrapLinkType.POSSESSION.value
-    if _is_disabled(options.vac_trap_weight.value):
+    if _is_disabled(options.trap_weights["No Vac Trap"]):
         trap_flags += TrapLinkType.NOVAC.value
-    if _is_disabled(options.fear_weight.value):
+    if _is_disabled(options.trap_weights["Fear Trap"]):
         trap_flags += TrapLinkType.FEAR.value
-    if _is_disabled(options.squash_weight.value):
+    if _is_disabled(options.trap_weights["Squash Trap"]):
         trap_flags += TrapLinkType.SQUASH.value
-    if _is_disabled(options.spooky_weight.value):
+    if _is_disabled(options.trap_weights["Spooky Time"]):
         trap_flags += TrapLinkType.SPOOKY.value
-    if _is_disabled(options.ghost_weight.value):
+    if _is_disabled(options.trap_weights["Ghost"]):
         trap_flags += TrapLinkType.GHOST.value
 
     return trap_flags
