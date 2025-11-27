@@ -3,14 +3,13 @@ from gclib.gcm import GCM
 from gclib.rarc import RARC, RARCFileEntry
 from gclib.yaz0_yay0 import Yay0
 
-from ..Helper_Functions import get_arc
+from ..Helper_Functions import get_arc, find_rarc_file_entry
 
 
 class LMMapFile:
     _arc_data: RARC = None
     _arc_name: str = None
     jmp_files: dict[str, JMP] = {}
-    _jmp_arc_files: list[RARCFileEntry] = None
 
     def __init__(self, lm_gcm: GCM, name_of_rarc: str):
         """
@@ -21,7 +20,6 @@ class LMMapFile:
         """
         self._arc_name = name_of_rarc
         self._arc_data = get_arc(lm_gcm, name_of_rarc)
-        self._jmp_arc_files = self._arc_data.get_node_by_path("jmp").files
 
     def get_all_jmp_files(self):
         """
@@ -43,7 +41,10 @@ class LMMapFile:
         if jmp_file_name in self.jmp_files:
             return self.jmp_files[jmp_file_name]
 
-        jmp_file: RARCFileEntry = next(arc_jmp for arc_jmp in self._jmp_arc_files if arc_jmp.name == jmp_file_name)
+        jmp_file: RARCFileEntry = find_rarc_file_entry(self._arc_data, "jmp", jmp_file_name)
+        if jmp_file is None:
+            raise Exception(f"Unable to find the jmp file: '{jmp_file_name}'")
+
         jmp_file_data: JMP = JMP(jmp_file.data)
         jmp_file_data.load_file()
         return jmp_file_data
@@ -52,11 +53,11 @@ class LMMapFile:
         """
         Updates all jmp files data back into their arc file
         """
-        for arc_jmp in self._jmp_arc_files:
-            if not arc_jmp.name in self.jmp_files:
-                continue
+        for jmp_name, jmp_file in self.jmp_files.items():
+            arc_jmp: RARCFileEntry = find_rarc_file_entry(self._arc_data, "jmp", jmp_name)
+            if jmp_file is None:
+                raise Exception(f"Unable to find the jmp file: '{jmp_name}'")
 
-            jmp_file: JMP = self.jmp_files[arc_jmp.name]
             jmp_file.update_file()
             arc_jmp.data = jmp_file.data
 
