@@ -165,7 +165,7 @@ def get_chest_size_from_item(lm_gen: "LuigisMansionRandomizer", item_data: dict,
     door_id: int = int(item_data["door_id"])
 
     # Vanilla chest options were chosen
-    if chest_option == 0:
+    if chest_option == 0 or item_data["room_no"] == 11:
         return current_size
 
     # This is a door and should select based on the key size
@@ -178,26 +178,20 @@ def get_chest_size_from_item(lm_gen: "LuigisMansionRandomizer", item_data: dict,
 
     # Match either what the item represents in vanilla or match against AP item classification
     if chest_option == 1 or chest_option == 3:
-        if "Boo" in item_name and is_for_slot:
-            return 0
-
-        return _chest_size_match_name(item_name, is_for_slot)
+        return _chest_size_match_name(item_name, True)
 
     # Both size and color are matched against AP item class
     elif chest_option == 4:
-        return _chest_size_item_class_check(lm_gen, item_class)
+        return _chest_size_item_class(lm_gen, item_class)
 
     # Uses receiving player's item class to prioritize size
     elif chest_option == 5:
-        if "Boo" in item_name and is_for_slot:
-            return 0
-
         if not is_for_slot:
-            return _chest_size_item_class_check(lm_gen, item_class)
+            return _chest_size_item_class(lm_gen, item_class)
 
-        return _chest_size_match_name(item_name, is_for_slot)
+        return _chest_size_match_name(item_name, False)
 
-    # Full random, or something equivalent was chosen
+    # Full random, or something equivalent was chosen (Like Option 2)
     else:
         return lm_gen.random.choice(sorted([0, 1, 2]))
 
@@ -209,7 +203,7 @@ def _get_chest_size_from_key(key_id) -> int:
         case _:
             return 0
 
-def _chest_size_item_class_check(lm_gen: "LuigisMansionRandomizer", item_class: str, ) -> int:
+def _chest_size_item_class(lm_gen: "LuigisMansionRandomizer", item_class: str) -> int:
     trap_option: int = int(lm_gen.output_data["Options"]["trap_chests"])
 
     if "progression" in item_class:
@@ -227,122 +221,110 @@ def _chest_size_item_class_check(lm_gen: "LuigisMansionRandomizer", item_class: 
     else:
         return 0
 
-def _chest_size_match_name(item_name: str, is_for_slot: bool) -> int:
-    if any(money_name for money_name in MONEY_ITEM_NAMES if money_name in item_name) and is_for_slot:
-        item_name = "Money"
+def _chest_size_match_name(item_name: str, fuzzy_match: bool) -> int:
+    if " Boo " in item_name or "MiniBoo" in item_name:
+        return 0
+
+    if fuzzy_match:
+        item_name = _fuzzy_math_item_name(item_name)
     match item_name:
         case "Mario's Hat" | "Mario's Letter" | "Mario's Shoe" | "Mario's Glove" | "Mario's Star":
             return 0
-
         case "Small Heart" | "Money":
             return 0
         case "Large Heart":
             return 1
-
         case "Poison Mushroom" | "Bomb" | "Ice Trap" | "Gold Diamond" | "Banana Trap":
             return 2
-
         case "Fire Element Medal" | "Water Element Medal" | "Ice Element Medal":
             return 2
-
         case "Sapphire" | "Emerald" | "Ruby" | "Diamond":
             return 1
 
     return 0
 
+
 # Changes the type of chest loaded in game based on the type of item that is hidden inside
-# TODO consolidate arguments since most come from the item object anyways.
-def get_item_chest_visual(lm_gen: "LuigisMansionRandomizer", item_name, chest_option, classification, trap_option, slot, iplayer):
+def get_item_chest_visual(lm_gen: "LuigisMansionRandomizer", item_data: dict, current_visual: str) -> str:
+    chest_option: int = int(lm_gen.output_data["Options"]["chest_types"])
+
+    # Vanilla chest options were chosen
+    if chest_option == 0 or item_data["room_no"] == 11:
+        return current_visual
+
+    item_name: str = str(item_data["name"])
+    is_for_slot: bool = lm_gen.slot == int(item_data["player"])
+    item_class: str = str(item_data["classification"])
+
+    # Match the item represents in vanilla
     if chest_option == 1:
-        if "Boo" in item_name and slot == iplayer:
-            return "wtakara1"
-        if any(iname in item_name for iname in MONEY_ITEM_NAMES):
-            item_name = "Money"
-        elif any(iname in item_name for iname in EXPLODE_ITEM_NAMES):
-            item_name = "Bomb"
-        elif any(iname in item_name for iname in LIGHT_ITEM_NAMES):
-            item_name = "Banana Trap"
-        elif any(iname in item_name for iname in BLUEISH_ITEM_NAMES):
-            item_name = "Sapphire"
-        elif any(iname in item_name for iname in ICY_ITEM_NAMES):
-            item_name = "Ice Trap"
-        match item_name:
-            case "Heart Key" | "Club Key" | "Diamond Key" | "Spade Key" :
-                return "ytakara1"
+        return _chest_visual_match_name(item_name, True)
 
-            case "Small Heart" | "Large Heart" | "Banana Trap" :
-                return "ytakara1"
-
-            case "Fire Element Medal" | "Bomb" | "Ruby":
-                return "rtakara1"
-            case "Water Element Medal" | "Poison Mushroom" | "Sapphire":
-                return "btakara1"
-            case "Ice Element Medal" | "Ice Trap" | "Diamond":
-                return "wtakara1"
-
-            case "Mario's Hat" | "Mario's Letter" | "Mario's Shoe" | "Mario's Glove" | "Mario's Star":
-                return "rtakara1"
-
-            case "Gold Diamond" | "Emerald" | "Money":
-                return "gtakara1"
-
-        return "btakara1"
+    # Chest Visual are determined by AP item classification
     elif chest_option == 3 or chest_option == 4:
-        if "progression" in classification:
-            return "ytakara1"
-        elif "useful" in classification:
-            return "btakara1"
-        elif "filler" in classification:
-            return "gtakara1"
-        elif "trap" in classification:
-            if trap_option == 0:
-                return "rtakara1"
-            elif trap_option == 1:
-                return "ytakara1"
-            else:
-                return lm_gen.random.choice(sorted(["ytakara1", "rtakara1", "btakara1", "wtakara1", "gtakara1"]))
+        return _chest_visual_item_class(lm_gen, item_class)
 
-    elif chest_option == 2:
-        return lm_gen.random.choice(sorted(["ytakara1", "rtakara1", "btakara1", "wtakara1", "gtakara1"]))
-
+    # Uses receiving player's item class to prioritize visual
     elif chest_option == 5:
-        if "Boo" in item_name and slot == iplayer:
-            return "wtakara1"
-        if any(iname in item_name for iname in MONEY_ITEM_NAMES) and slot == iplayer:
-            item_name = "Money"
+        if not is_for_slot:
+            return _chest_visual_item_class(lm_gen, item_class)
+        return _chest_visual_match_name(item_name, False)
 
-        if slot != iplayer:
-            if "progression" in classification:
-                return "ytakara1"
-            elif "useful" in classification:
-                return "btakara1"
-            elif "filler" in classification:
-                return "gtakara1"
-            elif "trap" in classification:
-                if trap_option == 0:
-                    return "rtakara1"
-                elif trap_option == 1:
-                    return "ytakara1"
-                else:
-                    return lm_gen.random.choice(sorted(["ytakara1", "rtakara1", "btakara1", "wtakara1", "gtakara1"]))
-        match item_name:
-            case "Heart Key" | "Club Key" | "Diamond Key" | "Spade Key" :
-                return "ytakara1"
+    # Full random, or something equivalent was chosen (Like Option 2)
+    else:
+        return lm_gen.random.choice(sorted(CHEST_NAMES))
 
-            case "Small Heart" | "Large Heart" | "Banana Trap" :
-                return "ytakara1"
+def _chest_visual_item_class(lm_gen: "LuigisMansionRandomizer", item_class: str) -> str:
+    trap_option: int = int(lm_gen.output_data["Options"]["trap_chests"])
 
-            case "Fire Element Medal" | "Bomb" | "Ruby":
-                return "rtakara1"
-            case "Water Element Medal" | "Poison Mushroom" | "Sapphire":
-                return "btakara1"
-            case "Ice Element Medal" | "Ice Trap" | "Diamond":
-                return "wtakara1"
-
-            case "Mario's Hat" | "Mario's Letter" | "Mario's Shoe" | "Mario's Glove" | "Mario's Star":
-                return "rtakara1"
-
-            case "Gold Diamond" | "Emerald" | "Money":
-                return "gtakara1"
-
+    if "progression" in item_class:
+        return "ytakara1"
+    elif "useful" in item_class:
         return "btakara1"
+    elif "trap" in item_class:
+        if trap_option == 0:
+            return "rtakara1"
+        elif trap_option == 1:
+            return "ytakara1"
+        else:
+            return lm_gen.random.choice(sorted(CHEST_NAMES))
+    # Filler or something else
+    else:
+        return "gtakara1"
+
+def _chest_visual_match_name(item_name: str, fuzzy_match: bool) -> str:
+    if " Boo " in item_name or "MiniBoo" in item_name:
+        return "wtakara1"
+
+    if fuzzy_match:
+        item_name = _fuzzy_math_item_name(item_name)
+    match item_name:
+        case "Heart Key" | "Club Key" | "Diamond Key" | "Spade Key":
+            return "ytakara1"
+        case "Small Heart" | "Large Heart" | "Banana Trap":
+            return "ytakara1"
+        case "Fire Element Medal" | "Bomb" | "Ruby":
+            return "rtakara1"
+        case "Water Element Medal" | "Poison Mushroom" | "Sapphire":
+            return "btakara1"
+        case "Ice Element Medal" | "Ice Trap" | "Diamond":
+            return "wtakara1"
+        case "Mario's Hat" | "Mario's Letter" | "Mario's Shoe" | "Mario's Glove" | "Mario's Star":
+            return "rtakara1"
+        case "Gold Diamond" | "Emerald" | "Money":
+            return "gtakara1"
+
+    return "btakara1"
+
+def _fuzzy_math_item_name(item_name: str) -> str:
+    if any(money_name for money_name in MONEY_ITEM_NAMES if money_name in item_name):
+        item_name = "Money"
+    elif any(explode_name for explode_name in EXPLODE_ITEM_NAMES if explode_name in item_name):
+        item_name = "Bomb"
+    elif any(iname in item_name for iname in LIGHT_ITEM_NAMES):
+        item_name = "Banana Trap"
+    elif any(iname in item_name for iname in BLUEISH_ITEM_NAMES):
+        item_name = "Sapphire"
+    elif any(iname in item_name for iname in ICY_ITEM_NAMES):
+        item_name = "Ice Trap"
+    return item_name
