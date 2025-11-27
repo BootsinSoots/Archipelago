@@ -328,3 +328,52 @@ def _fuzzy_math_item_name(item_name: str) -> str:
     elif any(iname in item_name for iname in ICY_ITEM_NAMES):
         item_name = "Ice Trap"
     return item_name
+
+# Adds an entry into the iteminfotable
+def _add_info_item(item_info, item_data: dict, info_item_name: str):
+    open_no: int = int(item_data["door_id"])
+    if item_data["door_id"] > 0:
+        char_name: str = _get_key_name(item_data["door_id"])
+    else:
+        char_name = info_item_name
+
+    item_info.info_file_field_entries.append({
+        "name": info_item_name,
+        "character_name": char_name,
+        "open_door_no": open_no,
+        "hp_amount": 0,
+        "is_escape": 0
+    })
+
+# Indicates the key model to use when spawning the item.
+def _get_key_name(door_id):
+    match door_id:
+        case 3:
+            return "key02"
+        case 42:
+            return "key03"
+        case 59:
+            return "key04"
+        case 72:
+            return "key05"
+        case _:
+            return "key01"
+
+# Adds an entry into the itemappeartable
+def _add_appear_item(item_appear_table_entry, item_name):
+    new_item = {}
+    for itemid in range(20):
+        new_item["item" + str(itemid)] = item_name
+    item_appear_table_entry.info_file_field_entries.append(new_item)
+
+# Adds an entry into the keyinfo / teidenkeyinfo
+def _set_key_info_entry(key_info_single_entry, item_data):
+    # Disable the item's invisible status by default.
+    # This is needed since we change the appear_type to 0, which makes items other than keys not spawn out of bounds.
+    key_info_single_entry["name"] = _get_item_name(item_data, slot) if not (item_data["door_id"] > 0) else \
+        (_get_key_name(item_data["door_id"]))
+    key_info_single_entry["open_door_no"] = item_data["door_id"]
+    if key_info_single_entry["code_name"] == "demo_key2":
+        key_info_single_entry["invisible"] = 0
+    key_info_single_entry["appear_flag"] = 0
+    key_info_single_entry["disappear_flag"] = 0
