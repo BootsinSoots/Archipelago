@@ -49,6 +49,13 @@ class LMMapFile:
         jmp_file_data.load_file()
         return jmp_file_data
 
+    def update_jmp_names(self, jmp_names: dict):
+        for jmp_file_name in jmp_names.keys():
+            if not jmp_file_name in self.jmp_files:
+                continue
+
+            self.jmp_files[jmp_file_name].map_hash_to_name(jmp_names[jmp_file_name])
+
     def _update_all_jmp_files(self):
         """
         Updates all jmp files data back into their arc file
