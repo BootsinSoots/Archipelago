@@ -124,40 +124,6 @@ def get_item_name(item_data: dict, slot: int) -> str:
 
     return "nothing"
 
-def create_observer_entry(pos_x: float, pos_y: float, pos_z: float, room_no: int, cond_type: int, do_type: int,
-    arg0: int = 0, arg1: int = 0, arg2: int = 0, arg3: int = 0, arg4: int = 0, arg5: int = 0, code_name: str = "(null)",
-    string_arg0: str = "(null)", cond_string_arg0: str = "(null)", cond_arg0: int = 0,
-    appear_flag: int = 0, disappear_flag: int = 0) -> dict[str, Any]:
-
-    return {
-        "name": "observer", # Arbitrary, can be whatever
-        "code_name": code_name,
-        "string_arg0": string_arg0,
-        "cond_string_arg0": cond_string_arg0,
-        "pos_x": pos_x,
-        "pos_y": pos_y,
-        "pos_z": pos_z,
-        "dir_x": 0.000000, # Useless, does not function in game
-        "dir_y": 0.000000, # Useless, does not function in game
-        "dir_z": 0.000000, # Useless, does not function in game
-        "scale_x": 1.000000, # Useless, does not function in game
-        "scale_y": 1.000000, # Useless, does not function in game
-        "scale_z": 1.000000, # Useless, does not function in game
-        "room_no": room_no,
-        "cond_arg0": cond_arg0,
-        "arg0": arg0,
-        "arg1": arg1,
-        "arg2": arg2,
-        "arg3": arg3,
-        "arg4": arg4,
-        "arg5": arg5,
-        "appear_flag": appear_flag,
-        "disappear_flag": disappear_flag,
-        "cond_type": cond_type,
-        "do_type": do_type,
-        "invisible": 1, # This makes the observer not visible in game.
-        "(Undocumented)": 0 # This currently does not do anything but is recommended to be set to 0
-    }
 
 # Indicates the chest size that will be loaded in game based on item provided. 0 = small, 1 = medium, 2 = large
 def get_chest_size_from_item(lm_gen: "LuigisMansionRandomizer", item_data: dict, current_size: int) -> int:
@@ -336,22 +302,6 @@ def _fuzzy_match_item_name(item_name: str) -> str:
         item_name = "Ice Trap"
     return item_name
 
-# Adds an entry into the iteminfotable
-def _add_info_item(item_info, item_data: dict, info_item_name: str):
-    open_no: int = int(item_data["door_id"])
-    if item_data["door_id"] > 0:
-        char_name: str = _get_key_name(item_data["door_id"])
-    else:
-        char_name = info_item_name
-
-    item_info.info_file_field_entries.append({
-        "name": info_item_name,
-        "character_name": char_name,
-        "open_door_no": open_no,
-        "hp_amount": 0,
-        "is_escape": 0
-    })
-
 # Indicates the key model to use when spawning the item.
 def _get_key_name(door_id):
     match door_id:
@@ -366,20 +316,71 @@ def _get_key_name(door_id):
         case _:
             return "key01"
 
+# Adds an entry into the iteminfotable
+def _add_info_item(item_data: dict, info_item_name: str) -> dict:
+    open_no: int = int(item_data["door_id"])
+    if item_data["door_id"] > 0:
+        char_name: str = _get_key_name(item_data["door_id"])
+    else:
+        char_name = info_item_name
+
+    return {
+        "name": info_item_name,
+        "character_name": char_name,
+        "open_door_no": open_no,
+        "hp_amount": 0,
+        "is_escape": 0
+    }
+
+def create_observer_entry(pos_x: float, pos_y: float, pos_z: float, room_no: int, cond_type: int, do_type: int,
+    arg0: int = 0, arg1: int = 0, arg2: int = 0, arg3: int = 0, arg4: int = 0, arg5: int = 0, code_name: str = "(null)",
+    string_arg0: str = "(null)", cond_string_arg0: str = "(null)", cond_arg0: int = 0,
+    appear_flag: int = 0, disappear_flag: int = 0) -> dict[str, Any]:
+
+    return {
+        "name": "observer", # Arbitrary, can be whatever
+        "code_name": code_name,
+        "string_arg0": string_arg0,
+        "cond_string_arg0": cond_string_arg0,
+        "pos_x": pos_x,
+        "pos_y": pos_y,
+        "pos_z": pos_z,
+        "dir_x": 0.000000, # Useless, does not function in game
+        "dir_y": 0.000000, # Useless, does not function in game
+        "dir_z": 0.000000, # Useless, does not function in game
+        "scale_x": 1.000000, # Useless, does not function in game
+        "scale_y": 1.000000, # Useless, does not function in game
+        "scale_z": 1.000000, # Useless, does not function in game
+        "room_no": room_no,
+        "cond_arg0": cond_arg0,
+        "arg0": arg0,
+        "arg1": arg1,
+        "arg2": arg2,
+        "arg3": arg3,
+        "arg4": arg4,
+        "arg5": arg5,
+        "appear_flag": appear_flag,
+        "disappear_flag": disappear_flag,
+        "cond_type": cond_type,
+        "do_type": do_type,
+        "invisible": 1, # This makes the observer not visible in game.
+        "(Undocumented)": 0 # This currently does not do anything but is recommended to be set to 0
+    }
+
 # Adds an entry into the itemappeartable
-def _add_appear_item(item_appear_table_entry, item_name):
+def _add_appear_item(item_name: str) -> dict:
     new_item = {}
     for itemid in range(20):
         new_item["item" + str(itemid)] = item_name
-    item_appear_table_entry.info_file_field_entries.append(new_item)
+    return new_item
 
-# Adds an entry into the keyinfo / teidenkeyinfo
-def _set_key_info_entry(key_info_single_entry, item_data):
-    # Disable the item's invisible status by default.
+# Updates an existing entry in keyinfo / teidenkeyinfo
+def _update_key_info_entry(key_info_single_entry: dict, item_name: str, door_id: int):
     # This is needed since we change the appear_type to 0, which makes items other than keys not spawn out of bounds.
-    key_info_single_entry["name"] = _get_item_name(item_data, slot) if not (item_data["door_id"] > 0) else \
-        (_get_key_name(item_data["door_id"]))
-    key_info_single_entry["open_door_no"] = item_data["door_id"]
+    # _get_item_name(item_data, slot) if not (item_data["door_id"] > 0) else \
+    #         (_get_key_name(item_data["door_id"]))
+    key_info_single_entry["name"] = item_name
+    key_info_single_entry["open_door_no"] = door_id
     if key_info_single_entry["code_name"] == "demo_key2":
         key_info_single_entry["invisible"] = 0
     key_info_single_entry["appear_flag"] = 0
