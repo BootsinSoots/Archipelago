@@ -51,13 +51,14 @@ class LuigisMansionRandomizer:
         self.random.seed(self._seed)
 
         self.slot = self.output_data["Slot"]
-        self.jmp_names_json = self._get_jmp_list()
+        self.jmp_names_json = self._get_jmp_name_list()
 
-    def _get_jmp_name_list(self):
+    def _get_jmp_name_list(self) -> dict:
         name_list: dict = json.loads(read_text(PROJECT_ROOT.joinpath("data").name, "jmp_names.json"))
         for jmp_file_name in name_list.keys():
             hash_and_names: dict = name_list[jmp_file_name]
             name_list[jmp_file_name] = {int(key): value for key, value in hash_and_names.items()}
+        return name_list
 
     def create_randomized_iso(self):
         # Check if the file is in use and return an error if so.
