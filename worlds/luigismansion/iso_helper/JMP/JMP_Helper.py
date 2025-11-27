@@ -178,7 +178,7 @@ def get_chest_size_from_item(lm_gen: "LuigisMansionRandomizer", item_data: dict,
 
     # Match either what the item represents in vanilla or match against AP item classification
     if chest_option == 1 or chest_option == 3:
-        return _chest_size_match_name(item_name, True)
+        return _chest_size_match_name(item_name)
 
     # Both size and color are matched against AP item class
     elif chest_option == 4:
@@ -189,7 +189,7 @@ def get_chest_size_from_item(lm_gen: "LuigisMansionRandomizer", item_data: dict,
         if not is_for_slot:
             return _chest_size_item_class(lm_gen, item_class)
 
-        return _chest_size_match_name(item_name, False)
+        return _chest_size_match_name(item_name)
 
     # Full random, or something equivalent was chosen (Like Option 2)
     else:
@@ -221,12 +221,10 @@ def _chest_size_item_class(lm_gen: "LuigisMansionRandomizer", item_class: str) -
     else:
         return 0
 
-def _chest_size_match_name(item_name: str, fuzzy_match: bool) -> int:
+def _chest_size_match_name(item_name: str) -> int:
     if " Boo " in item_name or "MiniBoo" in item_name:
         return 0
 
-    if fuzzy_match:
-        item_name = _fuzzy_math_item_name(item_name)
     match item_name:
         case "Mario's Hat" | "Mario's Letter" | "Mario's Shoe" | "Mario's Glove" | "Mario's Star":
             return 0
