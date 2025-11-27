@@ -227,7 +227,7 @@ def _chest_size_match_name(item_name: str, is_for_slot: bool) -> int:
         return 0
 
     # "Money" is easier to handle than all types of money/bundles
-    if any(money_name for money_name in MONEY_ITEM_NAMES if money_name in item_name):
+    if any(iname in item_name for iname in MONEY_ITEM_NAMES):
         item_name = "Money"
     match item_name:
         case "Mario's Hat" | "Mario's Letter" | "Mario's Shoe" | "Mario's Glove" | "Mario's Star":
@@ -300,7 +300,7 @@ def _chest_visual_match_name(item_name: str, fuzzy_match: bool) -> str:
         return "wtakara1"
 
     if fuzzy_match:
-        item_name = _fuzzy_math_item_name(item_name)
+        item_name = _fuzzy_match_item_name(item_name)
     else:
         # "Money" is easier to handle than all types of money/bundles
         if any(money_name for money_name in MONEY_ITEM_NAMES if money_name in item_name):
@@ -323,10 +323,10 @@ def _chest_visual_match_name(item_name: str, fuzzy_match: bool) -> str:
 
     return "btakara1"
 
-def _fuzzy_math_item_name(item_name: str) -> str:
-    if any(money_name for money_name in MONEY_ITEM_NAMES if money_name in item_name):
+def _fuzzy_match_item_name(item_name: str) -> str:
+    if any(iname in item_name for iname in MONEY_ITEM_NAMES):
         item_name = "Money"
-    elif any(explode_name for explode_name in EXPLODE_ITEM_NAMES if explode_name in item_name):
+    elif any(iname in item_name for iname in EXPLODE_ITEM_NAMES):
         item_name = "Bomb"
     elif any(iname in item_name for iname in LIGHT_ITEM_NAMES):
         item_name = "Banana Trap"
