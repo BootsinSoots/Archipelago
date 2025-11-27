@@ -2,6 +2,7 @@
 import json, os
 from logging import Logger, getLogger
 from random import Random
+from importlib.resources import read_text
 
 # AP Related Imports
 import Utils
@@ -14,6 +15,7 @@ from gclib.fs_helpers import read_str, write_str
 from .LM_Map_File import LMMapFile
 from ..client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME, RANDOMIZER_NAME, CLIENT_NAME, LM_GC_IDs
 from .LM_GameUSA_Arc import LMGameUSAArc
+from ..Helper_Functions import PROJECT_ROOT
 
 class LuigisMansionRandomizer:
     random: Random
@@ -21,10 +23,11 @@ class LuigisMansionRandomizer:
     clean_iso_path: str = None
     output_file_path: str = None
 
-    # GC Lib related vars
+    # GCLib related vars
     lm_gcm: GCM = None
     game_region_arc: LMGameUSAArc = None
     map_files: dict[str, LMMapFile] = []
+    jmp_names_json: dict = None
 
     # Output data related vars
     output_data: dict = None
@@ -46,7 +49,13 @@ class LuigisMansionRandomizer:
         self._seed = self.output_data["Seed"]
         self.random = Random()
         self.random.seed(self._seed)
+
         self.slot = self.output_data["Slot"]
+        self.jmp_names_json = self._get_jmp_list()
+
+    def _get_jmp_list(self) -> dict:
+        name_list: dict = json.loads(read_text(PROJECT_ROOT.joinpath("data").name, "jmp_names.json"))
+        return {int(key): value for key, value in name_list.items()}
 
     def create_randomized_iso(self):
         # Check if the file is in use and return an error if so.
@@ -133,7 +142,6 @@ class LuigisMansionRandomizer:
             map6: LMMapFile = LMMapFile(self.lm_gcm, "map6.szp")
             map6.load_jmp_files(["furnitureinfo", "characterinfo"])
             self.map_files["map6"] = map6
-
 
     def _update_map_files(self):
         for map_file in self.map_files.values():
