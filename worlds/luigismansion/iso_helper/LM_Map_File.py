@@ -8,24 +8,24 @@ from ..Helper_Functions import get_arc, find_rarc_file_entry
 
 class LMMapFile:
     _arc_data: RARC = None
-    _arc_name: str = None
+    _arc_path: str = None
     jmp_files: dict[str, JMP] = {}
 
-    def __init__(self, lm_gcm: GCM, name_of_rarc: str):
+    def __init__(self, lm_gcm: GCM, map_rarc_path: str):
         """
         Creates an object representation of an LM Map file, which can contain several directories/files such as:
             JMP (JUMP) object tables, Path files (which describe literal paths characters take), and J3D effect/animation files.
         Automatically caches all JMP table RARCFileEntries to make it easier to query later.
         Automatically also decompresses from Yay0 format.
         """
-        self._arc_name = name_of_rarc
-        self._arc_data = get_arc(lm_gcm, name_of_rarc)
+        self._arc_path = map_rarc_path
+        self._arc_data = get_arc(lm_gcm, map_rarc_path)
 
     def get_all_jmp_files(self):
         """
         Loads all JMP files found within the arc file into self.jmp_files object.
         """
-        self.load_jmp_files(list(jmp.name for jmp in self._jmp_arc_files))
+        self.load_jmp_files(list(jmp.name for jmp in self._arc_data.get_node_by_path("jmp").files))
 
     def load_jmp_files(self, jmp_file_names: list[str]):
         """
@@ -74,4 +74,4 @@ class LMMapFile:
         """
         self._update_all_jmp_files()
         self._arc_data.save_changes()
-        lm_gcm.changed_files[self._arc_name] = Yay0.compress(self._arc_data.data)
+        lm_gcm.changed_files[self._arc_path] = Yay0.compress(self._arc_data.data)
