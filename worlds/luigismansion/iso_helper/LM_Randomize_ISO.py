@@ -1,4 +1,5 @@
 # Python related imports.
+import copy
 import json, os
 from logging import Logger, getLogger
 from random import Random
@@ -10,6 +11,7 @@ import Utils
 # 3rd Party related imports
 from gclib.gcm import GCM
 from gclib.fs_helpers import read_str, write_str
+from gcbrickwork import JMP
 
 # Internal Related imports.
 from .LM_Map_File import LMMapFile
@@ -52,6 +54,7 @@ class LuigisMansionRandomizer:
 
         self.slot = self.output_data["Slot"]
         self.jmp_names_json = self._get_jmp_name_list()
+        self.empty_jmp_files: dict[str, JMP] = self.
 
     def _get_jmp_name_list(self) -> dict:
         name_list: dict = json.loads(read_text(PROJECT_ROOT.joinpath("data").name, "jmp_names.json"))
@@ -133,6 +136,7 @@ class LuigisMansionRandomizer:
         map2.load_jmp_files(map2_jmp_list)
         map2.update_jmp_names(self.jmp_names_json)
         self.map_files["map2"] = map2
+        self._get_empty_jmp_files()
 
         map1: LMMapFile = LMMapFile(self.lm_gcm, "map1.szp")
         map1.load_jmp_files(["eventinfo"])
@@ -149,6 +153,13 @@ class LuigisMansionRandomizer:
             map6.load_jmp_files(["furnitureinfo", "characterinfo"])
             map6.update_jmp_names(self.jmp_names_json)
             self.map_files["map6"] = map6
+
+    def _get_empty_jmp_files(self):
+        temp_map2: LMMapFile = copy.deepcopy(self.map_files["map2"])
+        temp_map2.get_all_jmp_files()
+        for jmp_name, jmp_entry in temp_map2.jmp_files.items():
+            temp_map2.jmp_files[jmp_name].data_entries = []
+        self.empty_jmp_files = copy.deepcopy(temp_map2.jmp_files)
 
     def _update_map_files(self):
         for map_file in self.map_files.values():
