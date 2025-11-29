@@ -30,6 +30,7 @@ class LuigisMansionRandomizer:
     game_region_arc: LMGameUSAArc = None
     map_files: dict[str, LMMapFile] = []
     jmp_names_json: dict = None
+    empty_jmp_files: dict[str, JMP] = {}
 
     # Output data related vars
     output_data: dict = None
@@ -54,7 +55,6 @@ class LuigisMansionRandomizer:
 
         self.slot = self.output_data["Slot"]
         self.jmp_names_json = self._get_jmp_name_list()
-        self.empty_jmp_files: dict[str, JMP] = self.
 
     def _get_jmp_name_list(self) -> dict:
         name_list: dict = json.loads(read_text(PROJECT_ROOT.joinpath("data").name, "jmp_names.json"))
