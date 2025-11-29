@@ -45,8 +45,7 @@ class LMMapFile:
         if jmp_file is None:
             raise Exception(f"Unable to find the jmp file: '{jmp_file_name}'")
 
-        jmp_file_data: JMP = JMP(jmp_file.data)
-        jmp_file_data.load_file()
+        jmp_file_data: JMP = JMP.load_jmp(jmp_file.data)
         return jmp_file_data
 
     def update_jmp_names(self, jmp_names: dict):
@@ -65,8 +64,7 @@ class LMMapFile:
             if jmp_file is None:
                 raise Exception(f"Unable to find the jmp file: '{jmp_name}'")
 
-            jmp_file.update_file()
-            arc_jmp.data = jmp_file.data
+            arc_jmp.data = jmp_file.create_new_jmp()
 
     def update_and_save_map(self, lm_gcm: GCM):
         """
