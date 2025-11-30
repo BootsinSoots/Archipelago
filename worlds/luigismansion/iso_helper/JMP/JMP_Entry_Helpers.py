@@ -317,10 +317,11 @@ def _get_key_name(door_id):
             return "key01"
 
 # Adds an entry into the iteminfotable
-def _add_info_item(item_data: dict, info_item_name: str) -> dict:
-    open_no: int = int(item_data["door_id"])
-    if item_data["door_id"] > 0:
-        char_name: str = _get_key_name(item_data["door_id"])
+def _add_info_item(item_door_id: int, info_item_name: str) -> dict:
+    # item_data["door_id"]
+    open_no: int = item_door_id
+    if open_no > 0:
+        char_name: str = _get_key_name(open_no)
     else:
         char_name = info_item_name
 
