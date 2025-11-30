@@ -829,8 +829,6 @@ class LMWorld(World):
                         }
                         if self.options.boo_health_option.value == 2 and location.name in ROOM_BOO_LOCATION_TABLE.keys():
                             item_info.update({"boo_sphere": self.boo_spheres[location.name]})
-
-                        output_data["Locations"][location.name] = item_info
                     else:
                         roomid = REGION_LIST[location.parent_region.name].room_id
                         item_info = {
@@ -843,7 +841,6 @@ class LMWorld(World):
                             "type": location.type,
                             "loc_enum": location.jmpentry,
                         }
-                        output_data["Locations"][location.name] = item_info
                         if self.options.boo_health_option.value == 2 and location.name in ROOM_BOO_LOCATION_TABLE.keys():
                                 item_info.update({"boo_sphere": self.boo_spheres[location.name]})
                 else:
