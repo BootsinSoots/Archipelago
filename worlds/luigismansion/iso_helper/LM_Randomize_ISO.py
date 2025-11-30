@@ -57,6 +57,7 @@ class LuigisMansionRandomizer:
         self.jmp_names_json = self._get_jmp_name_list()
 
     def _get_jmp_name_list(self) -> dict:
+        """Gets the jmp dictionary name list and re-maps it from a string to int."""
         name_list: dict = json.loads(read_text(PROJECT_ROOT.joinpath("data").name, "jmp_names.json"))
         for jmp_file_name in name_list.keys():
             hash_and_names: dict = name_list[jmp_file_name]
@@ -122,6 +123,8 @@ class LuigisMansionRandomizer:
                 #game_arc.update_game_usa(self.lm_gcm) # Move this to a relevant updater function
 
     def _load_map_files(self):
+        """Loads all the map file data, including JMP files.
+        Some maps do not have the same jmp files available, so empty map2 data is also loaded."""
         map2_jmp_list = ["iteminfotable", "itemappeartable", "treasuretable", "furnitureinfo", "characterinfo",
                          "eventinfo", "observerinfo", "keyinfo", "objinfo", "generatorinfo", "enemyinfo", "telesa",
                          "teidenobserverinfo", "teidencharacterinfo", "iyapootable"]
@@ -155,6 +158,8 @@ class LuigisMansionRandomizer:
             self.map_files["map6"] = map6
 
     def _get_empty_jmp_files(self):
+        """Loads all jmp files from Map2, excepts removes any JMP entries and loads a default one that can
+        be used/manipulated."""
         temp_map2: LMMapFile = copy.deepcopy(self.map_files["map2"])
         temp_map2.get_all_jmp_files()
         for jmp_name, jmp_entry in temp_map2.jmp_files.items():
@@ -162,5 +167,6 @@ class LuigisMansionRandomizer:
         self.empty_jmp_files = copy.deepcopy(temp_map2.jmp_files)
 
     def _update_map_files(self):
+        """Updates and saves all that map data back into the GCM"""
         for map_file in self.map_files.values():
             map_file.update_and_save_map(self.lm_gcm)
