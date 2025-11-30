@@ -806,46 +806,30 @@ class LMWorld(World):
             self.finished_boo_scaling.wait()
 
         # Output which item has been placed at each location
-        locations = list(lmloc for lmloc in self.get_locations() if isinstance(lmloc, LMLocation))
-        for location in locations:
-            if location.address is not None or (location.name in ROOM_BOO_LOCATION_TABLE.keys()):
-                if location.item:
-                    lm_item: "LMItem" = location.item #TODO fix this type hint warning.
-                    itemid = 0
-                    if lm_item.player == self.player:
-                        if location.address:
-                            if lm_item.type == "Door Key":
-                                itemid = lm_item.doorid
-                        roomid = REGION_LIST[location.parent_region.name].room_id
-                        item_info = {
-                            "player": lm_item.player,
-                            "name": lm_item.name,
-                            "game": lm_item.game,
-                            "classification": lm_item.classification.name,
-                            "door_id": itemid,
-                            "room_no": roomid,
-                            "type": location.type,
-                            "loc_enum": location.jmpentry
-                        }
-                        if self.options.boo_health_option.value == 2 and location.name in ROOM_BOO_LOCATION_TABLE.keys():
-                            item_info.update({"boo_sphere": self.boo_spheres[location.name]})
-                    else:
-                        roomid = REGION_LIST[location.parent_region.name].room_id
-                        item_info = {
-                            "player": lm_item.player,
-                            "name": lm_item.name,
-                            "game": lm_item.game,
-                            "classification": lm_item.classification.name,
-                            "door_id": itemid,
-                            "room_no": roomid,
-                            "type": location.type,
-                            "loc_enum": location.jmpentry,
-                        }
-                        if self.options.boo_health_option.value == 2 and location.name in ROOM_BOO_LOCATION_TABLE.keys():
-                                item_info.update({"boo_sphere": self.boo_spheres[location.name]})
-                else:
-                    item_info = {"name": "Nothing", "game": self.game, "classification": "filler"}
-                output_data["Locations"][location.name] = item_info
+        for location in list(lmloc for lmloc in self.get_locations() if isinstance(lmloc, LMLocation)):
+            if location.address is None and not (location.name in ROOM_BOO_LOCATION_TABLE.keys()):
+                continue
+
+            if location.item:
+                lm_item: "LMItem" = self.create_item(location.item.name)
+                doorid = lm_item.doorid if (lm_item.type and location.address and lm_item.player == self.player) else 0
+                roomid = REGION_LIST[location.parent_region.name].room_id
+                item_info = {
+                    "player": lm_item.player,
+                    "name": lm_item.name,
+                    "game": lm_item.game,
+                    "classification": lm_item.classification.name,
+                    "door_id": doorid,  # There is no door id for another player's game
+                    "room_no": roomid,
+                    "type": location.type,
+                    "loc_enum": location.jmpentry,
+                }
+                if self.options.boo_health_option.value == 2 and location.name in ROOM_BOO_LOCATION_TABLE.keys():
+                    item_info.update({"boo_sphere": self.boo_spheres[location.name]})
+            else:
+                item_info = {"name": "Nothing", "game": self.game, "classification": "filler"}
+
+            output_data["Locations"][location.type][location.name] = item_info
 
         # Outputs the plando details to our expected output file
         # Create the output path based on the current player + expected patch file ending.
