@@ -316,8 +316,8 @@ def _get_key_name(door_id):
         case _:
             return "key01"
 
-# Adds an entry into the iteminfotable
-def _add_info_item(item_door_id: int, info_item_name: str) -> dict:
+def create_item_info_entry(item_door_id: int, info_item_name: str) -> dict:
+    """Creates a dictionary for use in the iteminfotable"""
     # item_data["door_id"]
     open_no: int = item_door_id
     if open_no > 0:
