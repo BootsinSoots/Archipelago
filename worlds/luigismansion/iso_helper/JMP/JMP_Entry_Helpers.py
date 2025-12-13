@@ -316,7 +316,7 @@ def _get_key_name(door_id):
         case _:
             return "key01"
 
-def create_item_info_entry(item_door_id: int, info_item_name: str) -> dict:
+def create_iteminfo_entry(item_door_id: int, info_item_name: str) -> dict:
     """Creates a dictionary for use in the iteminfotable"""
     # item_data["door_id"]
     open_no: int = item_door_id
@@ -368,8 +368,8 @@ def create_observer_entry(pos_x: float, pos_y: float, pos_z: float, room_no: int
         "(Undocumented)": 0 # This currently does not do anything but is recommended to be set to 0
     }
 
-# Adds an entry into the itemappeartable
-def _add_appear_item(item_name: str) -> dict:
+# Creates an entry dict for the itemappeartable
+def create_itemappear_entry(item_name: str) -> dict:
     new_item = {}
     for itemid in range(20):
         new_item["item" + str(itemid)] = item_name
