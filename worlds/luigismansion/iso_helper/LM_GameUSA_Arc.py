@@ -121,20 +121,16 @@ class LMGameUSAArc:
                     return self.th_params[param_name]
 
                 prm_file: RARCFileEntry = next(arc_prm for arc_prm in self._th_files if arc_prm.name == param_name)
-                prm_data: PRM = PRM(prm_file.data)
-                prm_data.load_file()
+                return PRM.load_prm(prm_file.data)
             case _ParamType.CTP:
                 if param_name in self.ctp_params:
                     return self.ctp_params[param_name]
 
                 prm_file: RARCFileEntry = next(arc_prm for arc_prm in self._ctp_files if arc_prm.name == param_name)
-                prm_data: PRM = PRM(prm_file.data)
-                prm_data.load_file()
+                return PRM.load_prm(prm_file.data)
 
             case _:
                 raise Exception("Unknown type of PRM file provided: " + param_folder)
-
-        return prm_data
 
     def _update_parameters(self):
         """
@@ -145,13 +141,11 @@ class LMGameUSAArc:
                 continue
 
             th_file: PRM = self.th_params[th_param.name]
-            th_file.update_file()
-            th_param.data = th_file.data
+            th_param.data = th_file.create_new_prm()
 
         for ctp_param in self._ctp_files:
             if not ctp_param.name in self.ctp_params:
                 continue
 
             ctp_file: PRM = self.ctp_params[ctp_param.name]
-            ctp_file.update_file()
-            ctp_param.data = ctp_file.data
+            ctp_param.data = ctp_file.create_new_prm()
