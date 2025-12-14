@@ -1,16 +1,17 @@
 import copy
+import re
 from math import ceil
 
 from gcbrickwork.JMP import JMP, JMPEntry
 
-from JMP_Entry_Helpers import (LOCATION_TO_INDEX, SPEEDY_OBSERVER_INDEX, SPEEDY_ENEMY_INDEX, GHOST_LIST, get_item_name,
-    create_iteminfo_entry, add_new_jmp_data_entry, create_itemappear_entry, create_observer_entry, apply_new_ghost,
-    get_item_chest_visual, get_chest_size_from_item)
+from JMP_Entry_Helpers import (LOCATION_TO_INDEX, SPEEDY_OBSERVER_INDEX, SPEEDY_ENEMY_INDEX, GHOST_LIST,
+    CEILING_FURNITURE_LIST, MEDIUM_HEIGHT_FURNITURE_LIST, get_item_name, apply_new_ghost, add_new_jmp_data_entry,
+    create_iteminfo_entry, create_itemappear_entry, create_observer_entry, get_item_chest_visual, get_chest_size_from_item)
 
 from ..LM_Randomize_ISO import LuigisMansionRandomizer
-from ...Items import ALL_ITEMS_TABLE, LMItemData, CurrencyItemData
+from ...Items import ALL_ITEMS_TABLE, LMItemData, CurrencyItemData, filler_items
 from ...Regions import REGION_LIST, TOAD_SPAWN_LIST
-from ...Locations import FLIP_BALCONY_BOO_EVENT_LIST
+from ...Locations import FLIP_BALCONY_BOO_EVENT_LIST, ALL_LOCATION_TABLE
 from ...game.Currency import CURRENCIES
 
 
@@ -42,6 +43,7 @@ class RandomizeJMPTables:
         self._map_two_character_changes()
         self._map_two_treasure_changes()
         self._map_two_iyapoo_changes()
+        self._map_two_furniture_changes()
 
 
     def _map_two_generator_changes(self):
@@ -773,9 +775,6 @@ class RandomizeJMPTables:
 
 
     def _map_two_treasure_changes(self):
-        chest_option: int = int(self.lm_rando.output_data["Options"]["chest_types"])
-        trap_option: int = int(self.lm_rando.output_data["Options"]["trap_chests"])
-
         map_two_characters: JMP = self.lm_rando.map_files.get("map2").jmp_files["characterinfo"]
         map_two_treasure: JMP = self.lm_rando.map_files.get("map2").jmp_files["treasuretable"]
 
@@ -828,3 +827,105 @@ class RandomizeJMPTables:
 
                 # Define the actor name to use from the Location in the generation output. Act differently if it's a key.
                 map_two_characters.update_jmp_header_name_value(treasure_entry, "other", get_item_name(item_data, self.lm_rando.slot))
+
+
+    def _map_two_furniture_changes(self):
+        """Updates the items that will appear out of the relevant furniture."""
+        extra_boo_spots: bool = bool(self.lm_rando.output_data["Options"]["extra_boo_spots"])
+
+        map_two_furniture: JMP = self.lm_rando.map_files.get("map2").jmp_files["furnitureinfo"]
+        map_two_item_appear: JMP = self.lm_rando.map_files.get("map2").jmp_files["itemappeartable"]
+
+        for furniture_jmp_id in (CEILING_FURNITURE_LIST + MEDIUM_HEIGHT_FURNITURE_LIST):
+            curr_y_offset: int = int(map_two_furniture.get_jmp_header_name_value(
+                map_two_furniture.data_entries[furniture_jmp_id], "item_offset_y"))
+            adjust_y_offset = 125.0
+            if furniture_jmp_id in CEILING_FURNITURE_LIST:
+                adjust_y_offset += 100.0
+            map_two_furniture.update_jmp_header_name_value(map_two_furniture.data_entries[furniture_jmp_id],
+                "item_offset_y",  curr_y_offset - adjust_y_offset)
+
+        # Foyer Chandelier will never ever hurt anyone ever again.
+        map_two_furniture.update_jmp_header_name_value(map_two_furniture.data_entries[101], "move", 7)
+        map_two_furniture.update_jmp_header_name_value(map_two_furniture.data_entries[277], "move", 23)
+
+        for furn_entry in map_two_furniture.data_entries:
+            # If this is a book/bookshelf, set it to just shake, no book interaction.
+            # Make sure to exclude Nana's knit ball bowl so they can drop on the floor properly.
+
+            if (int(map_two_furniture.get_jmp_header_name_value(furn_entry, "move")) == 16 and
+                map_two_furniture.get_jmp_header_name_value(furn_entry, "dmd_name") != "o_tuku1"):
+                map_two_furniture.update_jmp_header_name_value(furn_entry, "move", 0)
+
+            # Removes the red diamond from furniture as this will break our custom code fix we have for king boo.
+            if int(map_two_furniture.get_jmp_header_name_value(furn_entry, "generate")) == 8:
+                map_two_furniture.update_jmp_header_name_value(furn_entry, "item_table", 0)
+                map_two_furniture.update_jmp_header_name_value(furn_entry, "generate", 0)
+                map_two_furniture.update_jmp_header_name_value(furn_entry, "generate_num", 0)
+
+        for item_name, item_data in {**self.lm_rando.output_data["Locations"]["Furniture"],
+            **self.lm_rando.output_data["Locations"]["Plant"]}.items():
+            furniture_entry: JMPEntry = map_two_furniture.data_entries[item_data["loc_enum"]]
+
+            if ((item_data["type"] == "Furniture" and item_name != "Kitchen Oven") and
+                    extra_boo_spots):
+                map_two_furniture.update_jmp_header_name_value(furniture_entry, "telesa_hide", 10)
+
+            # If our furniture location is remote only, do not add any values to the table and make sure it remains blank
+            if ALL_LOCATION_TABLE[item_name].remote_only:
+                map_two_furniture.update_jmp_header_name_value(furniture_entry, "generate", 0)
+                map_two_furniture.update_jmp_header_name_value(furniture_entry, "generate_num", 0)
+                map_two_furniture.update_jmp_header_name_value(furniture_entry, "item_table", 0)
+                continue
+
+            actor_item_name = get_item_name(item_data, self.lm_rando.slot)
+
+            # Replace the furnitureinfo entry to spawn an item from the "itemappeartable".
+            # If the entry is supposed to be money, then generate a random amount of coins and/or bills from it.
+            filtered_item_appear = list(map_two_item_appear.get_jmp_header_name_value(item_appear_entry, "item0")
+                for item_appear_entry in map_two_item_appear.data_entries if map_two_item_appear.get_jmp_header_name_value(
+                item_appear_entry, "item0") == actor_item_name)
+            map_two_furniture.update_jmp_header_name_value(furniture_entry, "item_table",
+                filtered_item_appear.index(filtered_item_appear[len(filtered_item_appear)-1]))
+
+            # Adjust move types for WDYM furniture items. Trees require water, obviously
+            if item_data["loc_enum"] in [184, 185, 138, 139, 140, 141]:
+                map_two_furniture.update_jmp_header_name_value(furniture_entry, "move", 34)
+            elif item_data["loc_enum"] in [9, 23, 314, 538, 539, 628, 629, 683]:
+                map_two_furniture.update_jmp_header_name_value(furniture_entry, "move", 0)
+
+            # TODO update using ALL items table instead
+            if any((key, val) for (key, val) in filler_items.items() if
+                key == item_data["name"] and key != "Diamond" and val.type == "Money") \
+                and item_data["player"] == self.lm_rando.slot:
+
+                map_two_furniture.update_jmp_header_name_value(furniture_entry, "item_table", 11)
+                int_money_amt = 1
+                if re.search(r"^\d+", item_data["name"]):
+                    int_money_amt = int(re.search(r"^\d+", item_data["name"]).group())
+                map_two_furniture.update_jmp_header_name_value(furniture_entry, "generate_num", int_money_amt)
+                if "Coins" in item_data["name"]:
+                    if "Bills" in item_data["name"]:
+                        map_two_furniture.update_jmp_header_name_value(furniture_entry, "generate", 3)
+                    else:
+                        map_two_furniture.update_jmp_header_name_value(furniture_entry, "generate", 1)
+                elif "Bills" in item_data["name"]:
+                    map_two_furniture.update_jmp_header_name_value(furniture_entry, "generate", 2)
+                elif "Sapphire" in item_data["name"]:
+                    map_two_furniture.update_jmp_header_name_value(furniture_entry, "generate", 4)
+                elif "Emerald" in item_data["name"]:
+                    map_two_furniture.update_jmp_header_name_value(furniture_entry, "generate", 6)
+                elif "Ruby" in item_data["name"]:
+                    map_two_furniture.update_jmp_header_name_value(furniture_entry, "generate", 5)
+                elif "Gold Bar" in item_data["name"]:
+                    map_two_furniture.update_jmp_header_name_value(furniture_entry, "generate", 7)
+                elif item_data["name"] == "Diamond":
+                    map_two_furniture.update_jmp_header_name_value(furniture_entry, "generate", 9)
+                elif item_data["name"] == "Gold Diamond":
+                    map_two_furniture.update_jmp_header_name_value(furniture_entry, "generate", 10)
+                else:
+                    map_two_furniture.update_jmp_header_name_value(furniture_entry, "generate", 0)
+                    map_two_furniture.update_jmp_header_name_value(furniture_entry, "generate_num", 0)
+            else:
+                map_two_furniture.update_jmp_header_name_value(furniture_entry, "generate", 0)
+                map_two_furniture.update_jmp_header_name_value(furniture_entry, "generate_num", 0)
