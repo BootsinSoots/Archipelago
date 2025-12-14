@@ -1455,18 +1455,6 @@ def update_treasure_table(lm_gen: "LuigisMansionRandomizer", treasure_info, char
             treasure_info.info_file_field_entries[item_data["loc_enum"]]["effect"] = 0
             treasure_info.info_file_field_entries[item_data["loc_enum"]]["camera"] = 0
 
-
-def _set_key_info_entry(key_info_single_entry, item_data, slot: int):
-    # Disable the item's invisible status by default.
-    # This is needed since we change the appear_type to 0, which makes items other than keys not spawn out of bounds.
-    key_info_single_entry["name"] = _get_item_name(item_data, slot) if not (item_data["door_id"] > 0) else \
-        (_get_key_name(item_data["door_id"]))
-    key_info_single_entry["open_door_no"] = item_data["door_id"]
-    if key_info_single_entry["code_name"] == "demo_key2":
-        key_info_single_entry["invisible"] = 0
-    key_info_single_entry["appear_flag"] = 0
-    key_info_single_entry["disappear_flag"] = 0
-
 def update_gallery_furniture_info(furniture_info, item_appear_info, output_data):
     ceiling_furniture_list: list[int] = [0, 1]
     for furniture_jmp_id in ceiling_furniture_list:
