@@ -350,7 +350,7 @@ class LMWorld(World):
                 region.locations.append(entry)
         if self.options.lightsanity:
             for location, data in LIGHT_LOCATION_TABLE.items():
-                region = self.get_region(data.region)
+                region = self.get_region(str(data.region))
                 entry = LMLocation(self.player, location, region, data)
                 if entry.code not in (771, 775, 776): # If not a room that turns on automatically
                     add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
@@ -372,7 +372,7 @@ class LMWorld(World):
                 region.locations.append(entry)
         if self.options.walksanity:
             for location, data in WALK_LOCATION_TABLE.items():
-                region = self.get_region(data.region)
+                region = self.get_region(str(data.region))
                 entry = LMLocation(self.player, location, region, data)
                 if data.require_poltergust:
                     add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
@@ -380,7 +380,7 @@ class LMWorld(World):
                 region.locations.append(entry)
         if self.options.boosanity:
             for location, data in ROOM_BOO_LOCATION_TABLE.items():
-                region: Region = self.get_region(data.region)
+                region: Region = self.get_region(str(data.region))
                 entry: LMLocation = LMLocation(self.player, location, region, data)
                 add_rule(entry, lambda state: state.has("Boo Radar", self.player), "and")
                 add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
@@ -400,14 +400,14 @@ class LMWorld(World):
                 set_element_rules(self, entry, True)
                 region.locations.append(entry)
             for location, data in BOOLOSSUS_LOCATION_TABLE.items():
-                region = self.get_region(data.region)
+                region = self.get_region(str(data.region))
                 entry = LMLocation(self.player, location, region, data)
                 add_rule(entry, lambda state: state.has("Ice Element Medal", self.player), "and")
                 add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
                 region.locations.append(entry)
         else:
             for location, data in ROOM_BOO_LOCATION_TABLE.items():
-                region = self.get_region(data.region)
+                region = self.get_region(str(data.region))
                 entry = LMLocation(self.player, location, region, data)
                 entry.address = None
                 entry.place_locked_item(Item("Boo", ItemClassification.progression, None, self.player))
@@ -431,7 +431,7 @@ class LMWorld(World):
                 set_element_rules(self, entry, True)
                 region.locations.append(entry)
             for location, data in BOOLOSSUS_LOCATION_TABLE.items():
-                region = self.get_region(data.region)
+                region = self.get_region(str(data.region))
                 entry = LMLocation(self.player, location, region, data)
                 entry.address = None
                 entry.code = None
@@ -806,49 +806,44 @@ class LMWorld(World):
             self.finished_boo_scaling.wait()
 
         # Output which item has been placed at each location
-        locations = list(lmloc for lmloc in self.get_locations() if isinstance(lmloc, LMLocation))
-        for location in locations:
-            if location.address is not None or (location.name in ROOM_BOO_LOCATION_TABLE.keys()):
-                if location.item:
-                    lm_item: "LMItem" = location.item #TODO fix this type hint warning.
-                    itemid = 0
-                    if lm_item.player == self.player:
-                        if location.address:
-                            if lm_item.type == "Door Key":
-                                itemid = lm_item.doorid
-                        roomid = REGION_LIST[location.parent_region.name].room_id
-                        item_info = {
-                            "player": lm_item.player,
-                            "name": lm_item.name,
-                            "game": lm_item.game,
-                            "classification": lm_item.classification.name,
-                            "door_id": itemid,
-                            "room_no": roomid,
-                            "type": location.type,
-                            "loc_enum": location.jmpentry
-                        }
-                        if self.options.boo_health_option.value == 2 and location.name in ROOM_BOO_LOCATION_TABLE.keys():
-                            item_info.update({"boo_sphere": self.boo_spheres[location.name]})
+        for location in list(lmloc for lmloc in self.get_locations() if isinstance(lmloc, LMLocation)):
+            if location.address is None and not (location.name in ROOM_BOO_LOCATION_TABLE.keys()):
+                continue
 
-                        output_data["Locations"][location.name] = item_info
-                    else:
-                        roomid = REGION_LIST[location.parent_region.name].room_id
-                        item_info = {
-                            "player": lm_item.player,
-                            "name": lm_item.name,
-                            "game": lm_item.game,
-                            "classification": lm_item.classification.name,
-                            "door_id": itemid,
-                            "room_no": roomid,
-                            "type": location.type,
-                            "loc_enum": location.jmpentry,
-                        }
-                        output_data["Locations"][location.name] = item_info
-                        if self.options.boo_health_option.value == 2 and location.name in ROOM_BOO_LOCATION_TABLE.keys():
-                                item_info.update({"boo_sphere": self.boo_spheres[location.name]})
-                else:
-                    item_info = {"name": "Nothing", "game": self.game, "classification": "filler"}
-                output_data["Locations"][location.name] = item_info
+            if location.item.code is None:
+                item_info = {
+                    "player": location.item.player,
+                    "name": location.item.name,
+                    "game": self.game,
+                    "classification": location.item.classification,
+                    "door_id": 0, # Will always be 0 as an event item
+                    "room_no": 0, # Will always be 0 as an event item
+                    "type": location.type,
+                    "loc_enum": location.jmpentry, # Will always be 0 as an event item
+                }
+            elif location.item:
+                lm_item: "LMItem" = self.create_item(location.item.name)
+                doorid = lm_item.doorid if (lm_item.type and location.address and lm_item.player == self.player) else 0
+                roomid = REGION_LIST[location.parent_region.name].room_id
+                item_info = {
+                    "player": lm_item.player,
+                    "name": lm_item.name,
+                    "game": lm_item.game,
+                    "classification": lm_item.classification.name,
+                    "door_id": doorid,  # There is no door id for another player's game
+                    "room_no": roomid,
+                    "type": location.type,
+                    "loc_enum": location.jmpentry,
+                }
+            else:
+                item_info = {"name": "Nothing", "game": self.game, "classification": "filler"}
+
+            if self.options.boo_health_option.value == 2 and location.name in ROOM_BOO_LOCATION_TABLE.keys():
+                item_info.update({"boo_sphere": self.boo_spheres[location.name]})
+
+            if not location.type in output_data["Locations"].keys():
+                output_data["Locations"][location.type] = {}
+            output_data["Locations"][location.type][location.name] = item_info
 
         # Outputs the plando details to our expected output file
         # Create the output path based on the current player + expected patch file ending.

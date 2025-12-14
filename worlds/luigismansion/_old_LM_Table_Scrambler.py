@@ -10,96 +10,7 @@ from .Locations import FLIP_BALCONY_BOO_EVENT_LIST, ALL_LOCATION_TABLE
 from .game.Currency import CURRENCIES
 
 if TYPE_CHECKING:
-    from .LM_ISO_Modifier import LuigisMansionRandomizer
-
-speedy_observer_index: list[int] = [183, 182, 179, 178, 177, 101, 100, 99, 98, 97, 21, 19]
-speedy_enemy_index: list[int] = [128, 125, 115, 114, 113, 67, 66, 60, 59, 58, 7, 6]
-money_item_names: list[str] = ["Bills", "Coin", "Gold Bar", "Rupee", "Leaf", "Green", "Gold", "Jewel"]
-explode_item_names: list[str] = ["Bomb", "Missile", "Glove", "Red", "Tunic", "Cloth", "Armor", "Boot", "Shoe"]
-icy_item_names: list[str] = ["Ice Trap", "White", "Ice Beam", "Icy", "Freeze"]
-light_item_names: list[str] = ["Light", "Big Key", "Yellow", "Banana", "Boss Key", "Sun", "Laser"]
-blueish_item_names: list[str] = ["Small Key", "Blue", "Ocean", "Sea", "Magic"]
-
-
-# Converts AP readable name to in-game name
-def _get_item_name(item_data, slot: int):
-    if int(item_data["player"]) != slot:
-        return "nothing"  # TODO return AP item(s) here
-
-    if item_data["door_id"] != 0:
-        return "key_" + str(item_data["door_id"])
-    elif "Bills" in item_data["name"] or "Coins" in item_data["name"] or "Gold Bar" in item_data["name"]:
-        if item_data["type"] in ("Freestanding", "Chest", "BSpeedy", "Mouse"):
-            return "nothing" # Do not spawn the money physically let it be handled remotely
-        return "money"
-
-    match item_data["name"]:
-        case "Fire Element Medal":
-            return "elffst"
-        case "Water Element Medal":
-            return "elwfst"
-        case "Ice Element Medal":
-            return "elifst"
-
-        case "Mario's Hat":
-            return "mcap"
-        case "Mario's Letter":
-            return "mletter"
-        case "Mario's Shoe":
-            return "mshoes"
-        case "Mario's Glove":
-            return "mglove"
-        case "Mario's Star":
-            return "mstar"
-
-        case "Gold Diamond":
-            if item_data["type"] == "Freestanding" or item_data["type"] == "Chest":
-                return "nothing"  # Do not spawn the gem physically let it be handled remotely
-            return "rdiamond"
-        case "Sapphire":
-            if item_data["type"] in ("Freestanding", "Chest", "BSpeedy", "Mouse"):
-                return "nothing"  # Do not spawn the gem physically let it be handled remotely
-            return "sapphire"
-        case "Emerald":
-            if item_data["type"] in ("Freestanding", "Chest", "BSpeedy", "Mouse"):
-                return "nothing"  # Do not spawn the gem physically let it be handled remotely
-            return "emerald"
-        case "Ruby":
-            if item_data["type"] in ("Freestanding", "Chest", "BSpeedy", "Mouse"):
-                return "nothing"  # Do not spawn the gem physically let it be handled remotely
-            return "ruby"
-        case "Diamond":
-            if item_data["type"] == "Freestanding" or item_data["type"] == "Chest":
-                return "nothing"  # Do not spawn the gem physically let it be handled remotely
-            return "diamond"
-
-        case "Poison Mushroom":
-            if item_data["type"] == "Freestanding":
-                return "nothing"
-            return "mkinoko"
-        case "Small Heart":
-            return "sheart"
-        case "Large Heart":
-            return "lheart"
-        case "Bomb":
-            if item_data["type"] == "Freestanding":
-                return "nothing"
-            return "itembomb"
-        case "Ice Trap":
-            if item_data["type"] == "Freestanding":
-                return "nothing"
-            return "ice"
-        case "Banana Trap":
-            if item_data["type"] == "Freestanding":
-                return "nothing"
-            return "banana"
-
-        case "Boo Radar":
-            return "gameboy"
-        case "Vacuum Upgrade"|"Poltergust 3000":
-            return "vbody"
-
-    return "nothing"
+    from .iso_helper.LM_Randomize_ISO import LuigisMansionRandomizer
 
 def update_map_one_event_info(event_info):
     for x in event_info.info_file_field_entries:
@@ -277,12 +188,6 @@ def update_event_info(event_info, boo_checks: bool, output_data):
                 x["pos_y"] = spawn_data.pos_y
                 x["pos_z"] = int(spawn_data.pos_z) - 150
                 x["pos_x"] = int(spawn_data.pos_x) - 150 + 2
-
-# def update_gallery_character_info(character_info):
-#     for x in character_info.info_file_field_entries:
-#         if x["name"] == "lohakase":
-#             x["pos_z"] = -31.651000
-#             x["invisible"] = 1
 
 def update_character_info(character_info, output_data):
     # Removes useless cutscene objects and the vacuum in the Parlor under the closet.
@@ -1438,167 +1343,6 @@ def update_observer_info(observer_info, output_data):
     })
 
 
-def update_generator_info(generator_info):
-    for x in generator_info.info_file_field_entries:
-        # Allows the Ring of Boos on the 3F Balcony to only appear when the Ice Medal has been collected.
-        # This prevents being softlocked in Boolossus and having to reset the game without saving.
-        if x["type"] == "demotel2":
-            x["appear_flag"] = 45
-            x["disappear_flag"] = 81
-
-
-def update_obj_info(obj_info):
-    # Removes the vines on Area doors, as those require the Area Number of the game to be changed
-    # to have them disappear.
-    bad_objects_to_remove = ["eldoor07", "eldoor08", "eldoor09", "eldoor10"]
-    obj_info.info_file_field_entries = list(filter(
-        lambda info_entry: not info_entry["name"] in bad_objects_to_remove, obj_info.info_file_field_entries))
-
-
-# Indicates the chest size that will be loaded in game based on item provided. 0 = small, 1 = medium, 2 = large
-def _get_chest_size_from_item(lm_gen: "LuigisMansionRandomizer", item_name, chest_option, classification, trap_option, slot, iplayer):
-    if chest_option == 1 or chest_option == 3:
-        if "Boo" in item_name and slot == iplayer:
-            return 0
-        if any(iname in item_name for iname in money_item_names):
-            item_name = "Money"
-        match item_name:
-            case "Mario's Hat" | "Mario's Letter" | "Mario's Shoe" | "Mario's Glove" | "Mario's Star":
-                return 0
-
-            case "Small Heart" | "Money":
-                return 0
-            case "Large Heart":
-                return 1
-
-            case "Poison Mushroom" | "Bomb" | "Ice Trap" | "Gold Diamond" | "Banana Trap":
-                return 2
-
-            case "Fire Element Medal" | "Water Element Medal" | "Ice Element Medal":
-                return 2
-
-            case "Sapphire" | "Emerald" | "Ruby" | "Diamond":
-                return 1
-
-        return 0
-
-    elif chest_option == 4:
-        if "progression" in classification:
-            return 2
-        elif "useful" in classification:
-            return 1
-        elif "filler" in classification:
-            return 0
-        elif "trap" in classification:
-            if trap_option == 0:
-                return 0
-            elif trap_option == 1:
-                return 2
-            else:
-                return lm_gen.random.choice(sorted([0,1,2]))
-
-    elif chest_option == 2:
-        return lm_gen.random.choice(sorted([0,1,2]))
-
-    elif chest_option == 5:
-        if "Boo" in item_name and slot == iplayer:
-            return 0
-        if any(iname in item_name for iname in money_item_names) and slot == iplayer:
-            item_name = "Money"
-
-        if slot != iplayer:
-            if "progression" in classification:
-                return 2
-            elif "useful" in classification:
-                return 1
-            elif "filler" in classification:
-                return 0
-            elif "trap" in classification:
-                if trap_option == 0:
-                    return 0
-                elif trap_option == 1:
-                    return 2
-                else:
-                    return lm_gen.random.choice(sorted([0, 1, 2]))
-
-        match item_name:
-            case "Mario's Hat" | "Mario's Letter" | "Mario's Shoe" | "Mario's Glove" | "Mario's Star":
-                return 0
-
-            case "Small Heart" | "Money":
-                return 0
-            case "Large Heart":
-                return 1
-
-            case "Poison Mushroom" | "Bomb" | "Ice Trap" | "Gold Diamond" | "Banana Trap":
-                return 2
-
-            case "Fire Element Medal" | "Water Element Medal" | "Ice Element Medal":
-                return 2
-
-            case "Sapphire" | "Emerald" | "Ruby" | "Diamond":
-                return 1
-
-        return 0
-
-
-# For every key found in the generation output, add an entry for it in "iteminfotable".
-def update_item_info_table(item_info, output_data):
-    # Adds the special items, so they can spawn in furniture or chests.
-    items_to_add = ["rdiamond", "itembomb", "ice", "mstar", "banana", "diamond", "gameboy", "vbody"]
-    for new_item in items_to_add:
-        _add_info_item(item_info, None, info_item_name=new_item, slot=int(output_data["Slot"]))
-
-    heart_amounts_to_fix = {"sheart": 20, "lheart": 50}
-    for heart_item in heart_amounts_to_fix.keys():
-        next(item_info_entry for item_info_entry in item_info.info_file_field_entries if
-              item_info_entry["name"] == heart_item)["hp_amount"] = heart_amounts_to_fix[heart_item]
-
-    # Gets the list of keys already added in the item info table
-    already_added_keys = [item_entry["name"] for item_entry in item_info.info_file_field_entries if
-                          str(item_entry["name"]).startswith("key_")]
-
-    for item_name, item_data in output_data["Locations"].items():
-        current_item = _get_item_name(item_data, int(output_data["Slot"]))
-        if item_data["door_id"] > 0 and current_item not in already_added_keys:
-            _add_info_item(item_info, item_data, slot=int(output_data["Slot"]))
-
-
-def _add_info_item(item_info, item_data, open_door_no=0, hp_amount=0, is_escape=0, info_item_name=None, slot=0):
-    if info_item_name is None:
-        info_name = _get_item_name(item_data, slot)
-        char_name = _get_item_name(item_data, slot) if not item_data["door_id"] > 0 else (
-            _get_key_name(item_data["door_id"]))
-        open_no = 0 if not item_data["door_id"] > 0 else item_data["door_id"]
-    else:
-        info_name = info_item_name
-        char_name = info_item_name
-        open_no = open_door_no
-
-    item_info.info_file_field_entries.append({
-        "name": info_name,
-        "character_name": char_name,
-        "open_door_no": open_no,
-        "hp_amount": hp_amount,
-        "is_escape": is_escape
-    })
-
-
-# Indicates the key model to use when spawning the item.
-def _get_key_name(door_id):
-    match door_id:
-        case 3:
-            return "key02"
-        case 42:
-            return "key03"
-        case 59:
-            return "key04"
-        case 72:
-            return "key05"
-        case _:
-            return "key01"
-
-
 def update_item_appear_table(item_appear_info, output_data):
     # Add the special items, so they can be spawned from treasure chests or furniture in game.
     items_to_add = ["mkinoko", "itembomb", "ice", "elffst", "elwfst", "elifst", "mstar", "mglove", "mshoes", "sheart",
@@ -1615,14 +1359,6 @@ def update_item_appear_table(item_appear_info, output_data):
         current_item = _get_item_name(item_data, int(output_data["Slot"]))
         if item_data["door_id"] > 0 and current_item not in already_added_keys:
             _add_appear_item(item_appear_info, current_item)
-
-
-def _add_appear_item(item_appear_table_entry, item_name):
-    new_item = {}
-    for itemid in range(20):
-        new_item["item" + str(itemid)] = item_name
-    item_appear_table_entry.info_file_field_entries.append(new_item)
-
 
 def update_treasure_table(lm_gen: "LuigisMansionRandomizer", treasure_info, character_info, output_data):
     chest_option: int = int(output_data["Options"]["chest_types"])
@@ -1679,147 +1415,6 @@ def update_treasure_table(lm_gen: "LuigisMansionRandomizer", treasure_info, char
             treasure_info.info_file_field_entries[item_data["loc_enum"]]["size"] = chest_size
             treasure_info.info_file_field_entries[item_data["loc_enum"]]["effect"] = 0
             treasure_info.info_file_field_entries[item_data["loc_enum"]]["camera"] = 0
-
-
-# Indicates the chest size that will be loaded in game based on key type. 0 = small, 1 = medium, 2 = large
-def _get_chest_size_from_key(key_id):
-    match key_id:
-        case 3 | 42 | 59 | 72:
-            return 2
-        case _:
-            return 0
-
-
-# Changes the type of chest loaded in game based on the type of item that is hidden inside
-def _get_item_chest_visual(lm_gen: "LuigisMansionRandomizer", item_name, chest_option, classification, trap_option, slot, iplayer):
-    if chest_option == 1:
-        if "Boo" in item_name and slot == iplayer:
-            return "wtakara1"
-        if any(iname in item_name for iname in money_item_names):
-            item_name = "Money"
-        elif any(iname in item_name for iname in explode_item_names):
-            item_name = "Bomb"
-        elif any(iname in item_name for iname in light_item_names):
-            item_name = "Banana Trap"
-        elif any(iname in item_name for iname in blueish_item_names):
-            item_name = "Sapphire"
-        elif any(iname in item_name for iname in icy_item_names):
-            item_name = "Ice Trap"
-        match item_name:
-            case "Heart Key" | "Club Key" | "Diamond Key" | "Spade Key" :
-                return "ytakara1"
-
-            case "Small Heart" | "Large Heart" | "Banana Trap" :
-                return "ytakara1"
-
-            case "Fire Element Medal" | "Bomb" | "Ruby":
-                return "rtakara1"
-            case "Water Element Medal" | "Poison Mushroom" | "Sapphire":
-                return "btakara1"
-            case "Ice Element Medal" | "Ice Trap" | "Diamond":
-                return "wtakara1"
-
-            case "Mario's Hat" | "Mario's Letter" | "Mario's Shoe" | "Mario's Glove" | "Mario's Star":
-                return "rtakara1"
-
-            case "Gold Diamond" | "Emerald" | "Money":
-                return "gtakara1"
-
-        return "btakara1"
-    elif chest_option == 3 or chest_option == 4:
-        if "progression" in classification:
-            return "ytakara1"
-        elif "useful" in classification:
-            return "btakara1"
-        elif "filler" in classification:
-            return "gtakara1"
-        elif "trap" in classification:
-            if trap_option == 0:
-                return "rtakara1"
-            elif trap_option == 1:
-                return "ytakara1"
-            else:
-                return lm_gen.random.choice(sorted(["ytakara1", "rtakara1", "btakara1", "wtakara1", "gtakara1"]))
-
-    elif chest_option == 2:
-        return lm_gen.random.choice(sorted(["ytakara1", "rtakara1", "btakara1", "wtakara1", "gtakara1"]))
-
-    elif chest_option == 5:
-        if "Boo" in item_name and slot == iplayer:
-            return "wtakara1"
-        if any(iname in item_name for iname in money_item_names) and slot == iplayer:
-            item_name = "Money"
-
-        if slot != iplayer:
-            if "progression" in classification:
-                return "ytakara1"
-            elif "useful" in classification:
-                return "btakara1"
-            elif "filler" in classification:
-                return "gtakara1"
-            elif "trap" in classification:
-                if trap_option == 0:
-                    return "rtakara1"
-                elif trap_option == 1:
-                    return "ytakara1"
-                else:
-                    return lm_gen.random.choice(sorted(["ytakara1", "rtakara1", "btakara1", "wtakara1", "gtakara1"]))
-        match item_name:
-            case "Heart Key" | "Club Key" | "Diamond Key" | "Spade Key" :
-                return "ytakara1"
-
-            case "Small Heart" | "Large Heart" | "Banana Trap" :
-                return "ytakara1"
-
-            case "Fire Element Medal" | "Bomb" | "Ruby":
-                return "rtakara1"
-            case "Water Element Medal" | "Poison Mushroom" | "Sapphire":
-                return "btakara1"
-            case "Ice Element Medal" | "Ice Trap" | "Diamond":
-                return "wtakara1"
-
-            case "Mario's Hat" | "Mario's Letter" | "Mario's Shoe" | "Mario's Glove" | "Mario's Star":
-                return "rtakara1"
-
-            case "Gold Diamond" | "Emerald" | "Money":
-                return "gtakara1"
-
-        return "btakara1"
-
-
-# Dictionary of Location names and their index in keyinfo.
-LOCATION_TO_INDEX = {
-    "The Well Key": 0,
-    "Ghost Foyer Key": 1,
-    "1F Bathroom Shelf Key": 3,
-    "Fortune Teller Candles": 4,
-    "Wardrobe Shelf Key": 5,
-}
-
-
-def update_key_info(key_info, output_data):
-    # For every Freestanding Key in the game, replace its entry with the proper item from the generation output.
-    for item_name, item_data in output_data["Locations"].items():
-        if not item_data["type"] == "Freestanding":
-            continue
-
-        _set_key_info_entry(key_info.info_file_field_entries[LOCATION_TO_INDEX[item_name]], item_data,
-                             int(output_data["Slot"]))
-
-    # Remove the cutscene HD key from the Foyer, which only appears in the cutscene.
-    key_info.info_file_field_entries.remove(key_info.info_file_field_entries[2])
-
-
-def _set_key_info_entry(key_info_single_entry, item_data, slot: int):
-    # Disable the item's invisible status by default.
-    # This is needed since we change the appear_type to 0, which makes items other than keys not spawn out of bounds.
-    key_info_single_entry["name"] = _get_item_name(item_data, slot) if not (item_data["door_id"] > 0) else \
-        (_get_key_name(item_data["door_id"]))
-    key_info_single_entry["open_door_no"] = item_data["door_id"]
-    if key_info_single_entry["code_name"] == "demo_key2":
-        key_info_single_entry["invisible"] = 0
-    key_info_single_entry["appear_flag"] = 0
-    key_info_single_entry["disappear_flag"] = 0
 
 def update_gallery_furniture_info(furniture_info, item_appear_info, output_data):
     ceiling_furniture_list: list[int] = [0, 1]
@@ -1881,15 +1476,6 @@ def update_gallery_furniture_info(furniture_info, item_appear_info, output_data)
 
 
 def update_furniture_info(furniture_info, item_appear_info, output_data):
-    # Adjust the item spawn height based on if the item spawns from the ceiling or high up on the wall.
-    # Otherwise items are sent into the floor above or out of bounds, which makes it almost impossible to get.
-    ceiling_furniture_list = [4, 38, 43, 62, 63, 76, 77, 81, 84, 85, 91, 92, 101, 110, 111, 137, 156, 158, 159, 163,
-        173, 174, 189, 190, 195, 199, 200, 228, 240, 266, 310, 342, 352, 354, 355, 356, 357, 358, 359, 373, 374,
-        378, 379, 380, 381, 399, 423, 426, 445, 446, 454, 459, 460, 463, 467, 485, 547, 595, 596, 631, 632, 636,
-        657, 671, 672]
-    medium_height_furniture_list = [0, 1, 104, 112, 113, 114, 124, 125, 135, 136, 204, 206, 210, 232, 234, 235,
-        264, 265, 270, 315, 343, 344, 345, 346, 347, 353, 361, 362, 363, 368, 369, 370, 376, 388, 397, 398,
-        411, 418, 431, 438, 444, 520, 526, 544, 552, 553, 554, 555, 557, 602, 603, 634, 635]
     for furniture_jmp_id in (ceiling_furniture_list + medium_height_furniture_list):
         current_y_offset = furniture_info.info_file_field_entries[furniture_jmp_id]["item_offset_y"]
         adjust_y_offset = 125.0
@@ -1994,18 +1580,6 @@ def update_teiden_enemy_info(enemy_info, teiden_enemy_info):
 
 
 def update_enemy_info(lm_gen: "LuigisMansionRandomizer", enemy_info, teiden_enemy_info, output_data):
-    # TODO Randomize Blackout enemies as well.
-    # A list of all the ghost actors of the game we want to replace.
-    # It excludes the "waiter" ghost as that is needed for Mr. Luggs to work properly.
-    ghost_list = ["yapoo1", "mapoo1", "mopoo1",
-                  "yapoo2", "mapoo2", "mopoo2",
-                  "banaoba",
-                  "topoo1", "topoo2", "topoo3", "topoo4",
-                  "heypo1", "heypo2", "heypo3", "heypo4", "heypo5", "heypo6", "heypo7", "heypo8",
-                  "skul",
-                  "putcher1",
-                  "tenjyo", "tenjyo2"]
-
     # If randomize ghosts options are enabled
     if output_data["Options"]["enemizer"] == 0:
         return
@@ -2167,12 +1741,9 @@ def update_iyapoo_table(iyapoo_table, output_data):
 
 
 def apply_new_ghost(lm_gen: "LuigisMansionRandomizer", enemy_info_entry, element):
+    # TODO add a default heigh for ghosts on each floor to re-adjust things moving up and down.
     # The list of ghosts that can replace the vanilla ones. Only includes the ones without elements.
     # Excludes Skul ghosts as well unless the railinfo jmp table is updated.
-    random_ghosts_to_patch = [["yapoo1"], ["mapoo1"], ["mopoo1"], ["banaoba"],
-                              ["topoo1", "topoo2", "topoo3", "topoo4"],
-                              ["heypo1", "heypo2", "heypo3", "heypo4", "heypo5", "heypo6", "heypo7", "heypo8"],
-                              ["putcher1"], ["tenjyo", "tenjyo2"]]
 
     # If the vanilla ghost is a Ceiling Ghost, reduce its spawning Y position so the new ghost spawns on the floor.
     if "tenjyo" in enemy_info_entry["name"]:

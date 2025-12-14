@@ -3,31 +3,29 @@ from gclib.gcm import GCM
 from gclib.rarc import RARC, RARCFileEntry
 from gclib.yaz0_yay0 import Yay0
 
-from ..Helper_Functions import get_arc
+from ..Helper_Functions import get_arc, find_rarc_file_entry
 
 
 class LMMapFile:
     _arc_data: RARC = None
-    _arc_name: str = None
+    _arc_path: str = None
     jmp_files: dict[str, JMP] = {}
-    _jmp_arc_files: list[RARCFileEntry] = None
 
-    def __init__(self, lm_gcm: GCM, name_of_rarc: str):
+    def __init__(self, lm_gcm: GCM, map_rarc_path: str):
         """
         Creates an object representation of an LM Map file, which can contain several directories/files such as:
             JMP (JUMP) object tables, Path files (which describe literal paths characters take), and J3D effect/animation files.
         Automatically caches all JMP table RARCFileEntries to make it easier to query later.
         Automatically also decompresses from Yay0 format.
         """
-        self._arc_name = name_of_rarc
-        self._arc_data = get_arc(lm_gcm, name_of_rarc)
-        self._jmp_arc_files = self._arc_data.get_node_by_path("jmp").files
+        self._arc_path = map_rarc_path
+        self._arc_data = get_arc(lm_gcm, map_rarc_path)
 
     def get_all_jmp_files(self):
         """
-        Loads all JMP files into self.jmp_files object.
+        Loads all JMP files found within the arc file into self.jmp_files object.
         """
-        self.load_jmp_files(list(jmp.name for jmp in self._jmp_arc_files))
+        self.load_jmp_files(list(jmp.name for jmp in self._arc_data.get_node_by_path("jmp").files))
 
     def load_jmp_files(self, jmp_file_names: list[str]):
         """
@@ -43,24 +41,30 @@ class LMMapFile:
         if jmp_file_name in self.jmp_files:
             return self.jmp_files[jmp_file_name]
 
-        jmp_file: RARCFileEntry = next(arc_jmp for arc_jmp in self._jmp_arc_files if arc_jmp.name == jmp_file_name)
-        jmp_file_data: JMP = JMP(jmp_file.data)
-        jmp_file_data.load_file()
+        jmp_file: RARCFileEntry = find_rarc_file_entry(self._arc_data, "jmp", jmp_file_name)
+        if jmp_file is None:
+            raise Exception(f"Unable to find the jmp file: '{jmp_file_name}'")
+
+        jmp_file_data: JMP = JMP.load_jmp(jmp_file.data)
         return jmp_file_data
 
-    def _update_all_jmp_files(self) -> RARC:
+    def update_jmp_names(self, jmp_names: dict):
+        for jmp_file_name in jmp_names.keys():
+            if not jmp_file_name in self.jmp_files:
+                continue
+
+            self.jmp_files[jmp_file_name].map_hash_to_name(jmp_names[jmp_file_name])
+
+    def _update_all_jmp_files(self):
         """
         Updates all jmp files data back into their arc file
         """
-        for arc_jmp in self._jmp_arc_files:
-            if not arc_jmp.name in self.jmp_files:
-                continue
+        for jmp_name, jmp_file in self.jmp_files.items():
+            arc_jmp: RARCFileEntry = find_rarc_file_entry(self._arc_data, "jmp", jmp_name)
+            if jmp_file is None:
+                raise Exception(f"Unable to find the jmp file: '{jmp_name}'")
 
-            jmp_file: JMP = self.jmp_files[arc_jmp.name]
-            jmp_file.update_file()
-            arc_jmp.data = jmp_file.data
-
-        return self._arc_data
+            arc_jmp.data = jmp_file.create_new_jmp()
 
     def update_and_save_map(self, lm_gcm: GCM):
         """
@@ -68,4 +72,4 @@ class LMMapFile:
         """
         self._update_all_jmp_files()
         self._arc_data.save_changes()
-        lm_gcm.changed_files[self._arc_name] = Yay0.compress(self._arc_data.data)
+        lm_gcm.changed_files[self._arc_path] = Yay0.compress(self._arc_data.data)

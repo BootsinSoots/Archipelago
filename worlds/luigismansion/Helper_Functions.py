@@ -1,11 +1,11 @@
+from importlib.resources.abc import Traversable
 from typing import NamedTuple, Optional
-from pathlib import Path
+import importlib.resources as resources
 
 from gclib.rarc import RARCFileEntry, RARC
 from gclib.gcm import GCM
 
-
-PROJECT_ROOT: Path = Path(__file__).resolve().parent
+PROJECT_ROOT: Traversable = resources.files(__name__)
 
 class LMRamData(NamedTuple):
     ram_addr: Optional[int] = None
@@ -69,14 +69,17 @@ class StringByteFunction:
     def byte_string_strip_null_terminator(bytes_input: bytes):
         return bytes_input.decode().strip("\0")
 
+
 def find_rarc_file_entry(rarc_file: RARC, directory_name: str, name_of_file: str) -> RARCFileEntry | None:
+    """Gets a file/if its from a specific directory."""
     for file_entry in rarc_file.file_entries:
       if file_entry.name == name_of_file and file_entry.parent_node.name == directory_name:
         return file_entry
     return None
 
-# Get an ARC / RARC / SZP file from within the ISO / ROM
+
 def get_arc(gcm: GCM, arc_path) -> RARC:
+    """Get an ARC / RARC / SZP file from within the ISO / ROM"""
     arc_path = arc_path.replace("\\", "/")
     if arc_path in gcm.changed_files:
         arc = RARC(gcm.get_changed_file_data(arc_path))
