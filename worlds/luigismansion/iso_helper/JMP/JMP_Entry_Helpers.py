@@ -318,7 +318,6 @@ def _get_key_name(door_id):
 
 def create_iteminfo_entry(item_door_id: int, info_item_name: str) -> dict:
     """Creates a dictionary for use in the iteminfotable"""
-    # item_data["door_id"]
     open_no: int = item_door_id
     if open_no > 0:
         char_name: str = _get_key_name(open_no)
