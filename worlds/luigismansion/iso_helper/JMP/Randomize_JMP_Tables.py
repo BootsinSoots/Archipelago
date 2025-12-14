@@ -517,10 +517,16 @@ class RandomizeJMPTables:
         boo_checks: bool = bool(self.lm_rando.output_data["Options"]["boo_gates"])
         spawn_area: str = self.lm_rando.output_data["Options"]["spawn"]
         spawn_data = REGION_LIST[spawn_area]
+        balcony_boo_count: int = int(self.lm_rando.output_data["Options"]["balcony_boo_count"])
+        final_boo_count: int = int(self.lm_rando.output_data["Options"]["final_boo_count"])
 
         # Only remove the boo checks if the player does not want them.
         if not boo_checks:
             events_to_remove += [16, 96]
+        elif balcony_boo_count == 0:
+            events_to_remove += [96]
+        elif final_boo_count == 0:
+            events_to_remove += [16]
         if spawn_area in TOAD_SPAWN_LIST:
             events_to_remove += [12]
 
