@@ -1364,41 +1364,6 @@ def update_item_info_table(item_info, output_data):
             _add_info_item(item_info, item_data, slot=int(output_data["Slot"]))
 
 
-def _add_info_item(item_info, item_data, open_door_no=0, hp_amount=0, is_escape=0, info_item_name=None, slot=0):
-    if info_item_name is None:
-        info_name = _get_item_name(item_data, slot)
-        char_name = _get_item_name(item_data, slot) if not item_data["door_id"] > 0 else (
-            _get_key_name(item_data["door_id"]))
-        open_no = 0 if not item_data["door_id"] > 0 else item_data["door_id"]
-    else:
-        info_name = info_item_name
-        char_name = info_item_name
-        open_no = open_door_no
-
-    item_info.info_file_field_entries.append({
-        "name": info_name,
-        "character_name": char_name,
-        "open_door_no": open_no,
-        "hp_amount": hp_amount,
-        "is_escape": is_escape
-    })
-
-
-# Indicates the key model to use when spawning the item.
-def _get_key_name(door_id):
-    match door_id:
-        case 3:
-            return "key02"
-        case 42:
-            return "key03"
-        case 59:
-            return "key04"
-        case 72:
-            return "key05"
-        case _:
-            return "key01"
-
-
 def update_treasure_table(lm_gen: "LuigisMansionRandomizer", treasure_info, character_info, output_data):
     chest_option: int = int(output_data["Options"]["chest_types"])
     trap_option: int = int(output_data["Options"]["trap_chests"])
