@@ -1399,31 +1399,6 @@ def _get_key_name(door_id):
             return "key01"
 
 
-def update_item_appear_table(item_appear_info, output_data):
-    # Add the special items, so they can be spawned from treasure chests or furniture in game.
-    items_to_add = ["mkinoko", "itembomb", "ice", "elffst", "elwfst", "elifst", "mstar", "mglove", "mshoes", "sheart",
-                    "lheart", "banana", "rdiamond", "diamond", "ruby", "emerald", "sapphire", "gameboy", "vbody"]
-    for new_item in items_to_add:
-        _add_appear_item(item_appear_info, new_item)
-
-    # Gets the list of keys already added in the item appear table
-    already_added_keys = [item_entry["item0"] for item_entry in item_appear_info.info_file_field_entries if
-                          str(item_entry["item0"]).startswith("key_")]
-
-    # For every key found in the generation output, add an entry for it in "itemappeartable".
-    for item_name, item_data in output_data["Locations"].items():
-        current_item = _get_item_name(item_data, int(output_data["Slot"]))
-        if item_data["door_id"] > 0 and current_item not in already_added_keys:
-            _add_appear_item(item_appear_info, current_item)
-
-
-def _add_appear_item(item_appear_table_entry, item_name):
-    new_item = {}
-    for itemid in range(20):
-        new_item["item" + str(itemid)] = item_name
-    item_appear_table_entry.info_file_field_entries.append(new_item)
-
-
 def update_treasure_table(lm_gen: "LuigisMansionRandomizer", treasure_info, character_info, output_data):
     chest_option: int = int(output_data["Options"]["chest_types"])
     trap_option: int = int(output_data["Options"]["trap_chests"])
