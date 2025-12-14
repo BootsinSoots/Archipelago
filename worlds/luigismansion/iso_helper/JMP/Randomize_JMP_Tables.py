@@ -2,7 +2,8 @@ from math import ceil
 
 from gcbrickwork.JMP import JMP, JMPEntry
 
-from JMP_Entry_Helpers import LOCATION_TO_INDEX, get_item_name, create_iteminfo_entry, add_new_jmp_data_entry, create_itemappear_entry
+from JMP_Entry_Helpers import (LOCATION_TO_INDEX, SPEEDY_OBSERVER_INDEX, get_item_name, create_iteminfo_entry,
+    add_new_jmp_data_entry, create_itemappear_entry, create_observer_entry)
 
 from ..LM_Randomize_ISO import LuigisMansionRandomizer
 
@@ -25,6 +26,8 @@ class RandomizeJMPTables:
         self._map_two_obj_changes()
         self._map_two_room_info_changes()
         self._map_two_boo_table_changes()
+        self._map_two_teiden_observer_changes()
+
         self._map_two_item_info_changes()
         self._map_two_key_info_changes()
 
@@ -159,3 +162,28 @@ class RandomizeJMPTables:
                     map_two_telesa.update_jmp_header_name_value(curr_boo_entry, "str_hp", boo_sphere_hp)
                 case _:
                     continue
+
+
+    def _map_two_teiden_observer_changes(self):
+        """Updates the observers that are created during the blackout sequence."""
+        enable_speedy_spirits = bool(self.lm_rando.output_data["Options"]["speedy_spirits"])
+        map_two_teiden_observer: JMP = self.lm_rando.map_files.get("map2").jmp_files["teidenobserverinfo"]
+        map_two_normal_observer: JMP = self.lm_rando.map_files.get("map2").jmp_files["observerinfo"]
+
+        if enable_speedy_spirits:
+            for entry_no in SPEEDY_OBSERVER_INDEX:
+                speedy_entry: JMPEntry = map_two_normal_observer.data_entries[entry_no]
+                map_two_teiden_observer.data_entries.append(speedy_entry)
+                map_two_normal_observer.data_entries.remove(speedy_entry)
+
+        # This one checks for luigi entering the wardrobe in blackout, triggering the Grimmly hint
+        add_new_jmp_data_entry(map_two_teiden_observer, create_observer_entry(-2040.000000, 760.000000, -3020.000000,
+            38, 15, 7, arg0=157))
+
+        # Adds an observer in Blackout Breaker room (event44) to turn on spikes on the doors when room flag 115 is on.
+        add_new_jmp_data_entry(map_two_teiden_observer, create_observer_entry(3250.000000, -500.000000, -1480.000000,
+            67, 18, 11, cond_arg0=115))
+
+        # Adds a teiden observer in Blackout Breaker room (event44) to turn off spikes on the doors when room flag 120 on.
+        add_new_jmp_data_entry(map_two_teiden_observer, create_observer_entry(3250.000000, -500.000000, -1480.000000,
+            67, 18, 12, cond_arg0=120))
