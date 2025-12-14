@@ -1,6 +1,6 @@
 from gcbrickwork.JMP import JMP, JMPEntry
 
-from JMP_Entry_Helpers import LOCATION_TO_INDEX, get_item_name, create_iteminfo_entry, add_new_jmp_data_entry
+from JMP_Entry_Helpers import LOCATION_TO_INDEX, get_item_name, create_iteminfo_entry, add_new_jmp_data_entry, create_itemappear_entry
 
 from ..LM_Randomize_ISO import LuigisMansionRandomizer
 
@@ -107,3 +107,19 @@ class RandomizeJMPTables:
                         map_two_room.update_jmp_header_name_value(room_entry, "Thunder", 3)  # MANY THUNDER
                         map_two_room.update_jmp_header_name_value(room_entry, "sound_echo_parameter", 20)  # LONG ECHO
                         map_two_room.update_jmp_header_name_value(room_entry, "sound_room_code", 5)  # CREAKY CREAKY
+
+
+    def _map_two_item_appear_changes(self):
+        """Updates the items that can appear from various objects, like chests or furniture."""
+        map_two_item_appear: JMP = self.lm_rando.map_files.get("map2").jmp_files["itemappeartable"]
+
+        # Gets the list of keys already added in the item appear table
+        already_exist_items: list[str] = list(set([map_two_item_appear.get_jmp_header_name_value(item_entry,
+            "item0") for item_entry in map_two_item_appear.data_entries]))
+
+        for location_type in self.lm_rando.output_data["Locations"].keys():
+            for item_data in self.lm_rando.output_data["Locations"][location_type].vals():
+                lm_item_name: str = get_item_name(item_data, self.lm_rando.slot)
+                if not lm_item_name in already_exist_items:
+                    add_new_jmp_data_entry(map_two_item_appear, create_itemappear_entry(lm_item_name))
+                    already_exist_items.append(lm_item_name)
