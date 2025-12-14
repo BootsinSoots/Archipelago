@@ -13,6 +13,7 @@ from gclib.gcm import GCM
 from gclib.fs_helpers import read_str, write_str
 from gcbrickwork import JMP
 
+from .JMP.Randomize_JMP_Tables import RandomizeJMPTables
 # Internal Related imports.
 from .LM_Map_File import LMMapFile
 from ..client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME, RANDOMIZER_NAME, CLIENT_NAME, LM_GC_IDs
@@ -88,6 +89,15 @@ class LuigisMansionRandomizer:
 
         # Loads all the relevant map files and their JMP files into memory.
         self._load_map_files()
+
+        # Updates all the JMP Tables to have their relevant changes
+        jmp_tables: RandomizeJMPTables = RandomizeJMPTables(self)
+        jmp_tables.randomize_jmp_tables()
+
+        # Generator function to combine all necessary files into an ISO file.
+        # Returned information is ignored.
+        for _, _ in self._export_files_from_memory():
+            continue
 
 
     def _check_server_version(self, ap_world_version: str):
@@ -170,3 +180,7 @@ class LuigisMansionRandomizer:
         """Updates and saves all that map data back into the GCM"""
         for map_file in self.map_files.values():
             map_file.update_and_save_map(self.lm_gcm)
+
+    def _export_files_from_memory(self):
+        """Saves the files to export them into their expected output location."""
+        yield from self.lm_gcm.export_disc_to_iso_with_changed_files(self.output_file_path)
