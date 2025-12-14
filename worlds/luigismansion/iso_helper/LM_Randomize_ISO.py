@@ -13,9 +13,12 @@ from gclib.gcm import GCM
 from gclib.fs_helpers import read_str, write_str
 from gcbrickwork import JMP
 
-from .JMP.Randomize_JMP_Tables import RandomizeJMPTables
 # Internal Related imports.
+from .DOL_Updater import update_dol_offsets
+from .Events import *
+from .JMP.Randomize_JMP_Tables import RandomizeJMPTables
 from .LM_Map_File import LMMapFile
+from ..Locations import FLIP_BALCONY_BOO_EVENT_LIST
 from ..client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME, RANDOMIZER_NAME, CLIENT_NAME, LM_GC_IDs
 from .LM_GameUSA_Arc import LMGameUSAArc
 from ..Helper_Functions import PROJECT_ROOT
@@ -86,6 +89,12 @@ class LuigisMansionRandomizer:
 
         # Update the relevant Game RARC archive
         self._load_game_archive(lm_regional_id)
+
+        self._client_logger.info("Updating all the main.dol offsets with their appropriate values.")
+        update_dol_offsets(self)
+
+        self._client_logger.info("Updating all the in-game events with their appropriate triggers, hints, etc.")
+        self._update_events()
 
         # Loads all the relevant map files and their JMP files into memory.
         self._load_map_files()
@@ -180,6 +189,72 @@ class LuigisMansionRandomizer:
         """Updates and saves all that map data back into the GCM"""
         for map_file in self.map_files.values():
             map_file.update_and_save_map(self.lm_gcm)
+
+    def _update_events(self):
+        """Updates all the event files to include hint info, new triggers, etc."""
+        bool_randomize_music: bool = bool(self.output_data["Options"]["random_music"])
+        bool_boo_checks: bool = bool(self.output_data["Options"]["boo_gates"])
+        bool_start_vacuum: bool = bool(self.output_data["Options"]["vacuum_start"])
+        bool_randomize_mice: bool = bool(self.output_data["Options"]["gold_mice"])
+        bool_hidden_mansion: bool = bool(self.output_data["Options"]["hidden_mansion"])
+        bool_start_boo_radar: bool = not bool(self.output_data["Options"]["boo_radar"])
+        bool_boo_rando_enabled: bool = bool(self.output_data["Options"]["boosanity"])
+
+        req_mario_count: str = str(self.output_data["Options"]["mario_items"])
+        max_health: str = str(self.output_data["Options"]["luigi_max_health"])
+        door_to_close_list: dict[int, int] = dict(self.output_data["Entrances"])
+        start_inv_list: list[str] = list(self.output_data["Options"]["start_inventory"])
+        balcony_boo_count: int = int(self.output_data["Options"]["balcony_boo_count"])
+        final_boo_count: int = int(self.output_data["Options"]["final_boo_count"])
+
+        # Hint options
+        hint_dist: int = int(self.output_data["Options"]["hint_distribution"])
+        hint_list: dict[str, dict[str, str]] = self.output_data["Hints"]
+        madam_hint_dict: dict[str, str] = hint_list["Madame Clairvoya"] if "Madame Clairvoya" in hint_list else None
+        bool_portrait_hints: bool = bool(self.output_data["Options"]["portrait_hints"])
+
+        self._client_logger.info("Updating all of the common events with the customized version.")
+        update_common_events(self, bool_randomize_mice, bool_start_vacuum)
+
+        self._client_logger.info("Updating the intro and lab events with the customized version.")
+        update_intro_and_lab_events(self, bool_hidden_mansion, max_health, start_inv_list, bool_start_boo_radar,
+                                    door_to_close_list, bool_start_vacuum)
+
+        if bool_boo_checks:
+            self._client_logger.info("Boo Gates was enabled, updating all of the common events with the customized version.")
+            boo_list_events = ["16", "96"]
+            str_move_type = None
+            for event_no in boo_list_events:
+                if event_no == "96":
+                    required_boo_count = final_boo_count
+                else:
+                    required_boo_count = balcony_boo_count
+                    str_move_type = "MOVEOUTSIDE" if str(self.output_data["Options"]["spawn"]) in \
+                                                     FLIP_BALCONY_BOO_EVENT_LIST else "MOVEINSIDE"
+
+                if required_boo_count == 0:
+                    continue
+                update_boo_gates(self, event_no, required_boo_count, bool_boo_rando_enabled, str_move_type)
+
+        self._client_logger.info("Updating the blackout event with the customized version.")
+        update_blackout_event(self)
+
+        self._client_logger.info("Updating Clairvoya's event with the customized version.")
+        randomize_clairvoya(self, req_mario_count, hint_dist, madam_hint_dict)
+
+        self._client_logger.info("Updating common events with the generated in-game hints.")
+        write_in_game_hints(self, hint_dist, hint_list, max_health)
+
+        self._client_logger.info("Updating the spawn event...")
+        update_spawn_events(self)
+
+        if bool_portrait_hints:
+            self._client_logger.info("Portrait Hints are enabled, updating portrait ghost hearts with the generated in-game hints.")
+            write_portrait_hints(self, hint_dist, hint_list)
+
+        if bool_randomize_music:
+            self._client_logger.info("Randomized Music is enabled, updating all events with various in-game music.")
+            randomize_music(self)
 
     def _export_files_from_memory(self):
         """Saves the files to export them into their expected output location."""
