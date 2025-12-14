@@ -1,5 +1,4 @@
-import copy
-import re
+import copy, re
 from math import ceil
 
 from gcbrickwork.JMP import JMP, JMPEntry
