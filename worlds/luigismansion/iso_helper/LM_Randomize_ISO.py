@@ -138,29 +138,29 @@ class LuigisMansionRandomizer:
         map2: LMMapFile = LMMapFile(self.lm_gcm, "map2.szp")
         map2.load_jmp_files(map2_jmp_list)
         map2.update_jmp_names(self.jmp_names_json)
-        self.map_files["map2"] = map2
+        self.map_files.update({"map2": map2})
         self._get_empty_jmp_files()
 
         map1: LMMapFile = LMMapFile(self.lm_gcm, "map1.szp")
         map1.load_jmp_files(["eventinfo"])
         map1.update_jmp_names(self.jmp_names_json)
-        self.map_files["map1"] = map1
+        self.map_files.update({"map1": map1})
 
         map3: LMMapFile = LMMapFile(self.lm_gcm, "map3.szp")
         map3.load_jmp_files(["eventinfo"])
         map3.update_jmp_names(self.jmp_names_json)
-        self.map_files["map3"] = map3
+        self.map_files.update({"map3": map3})
 
         if bool(self.output_data["Options"]["WDYM_checks"]):
             map6: LMMapFile = LMMapFile(self.lm_gcm, "map6.szp")
             map6.load_jmp_files(["furnitureinfo", "characterinfo"])
             map6.update_jmp_names(self.jmp_names_json)
-            self.map_files["map6"] = map6
+            self.map_files.update({"map6": map6})
 
     def _get_empty_jmp_files(self):
         """Loads all jmp files from Map2, excepts removes any JMP entries and loads a default one that can
         be used/manipulated."""
-        temp_map2: LMMapFile = copy.deepcopy(self.map_files["map2"])
+        temp_map2: LMMapFile = copy.deepcopy(self.map_files.get("map2"))
         temp_map2.get_all_jmp_files()
         for jmp_name, jmp_entry in temp_map2.jmp_files.items():
             temp_map2.jmp_files[jmp_name].data_entries = []
