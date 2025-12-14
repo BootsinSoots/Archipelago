@@ -36,6 +36,7 @@ class RandomizeJMPTables:
 
         self._map_two_item_info_changes()
         self._map_two_key_info_changes()
+        self._map_two_character_changes()
 
 
     def _map_two_generator_changes(self):
@@ -101,7 +102,7 @@ class RandomizeJMPTables:
 
     def _map_two_room_info_changes(self):
         """Updates the spookiness ambience noises in all the rooms."""
-        spooky_rating: int = int(self.lm_rando.output_data["spookiness"])
+        spooky_rating: int = int(self.lm_rando.output_data["Options"]["spookiness"])
         if spooky_rating == 0:
             return
 
@@ -197,10 +198,12 @@ class RandomizeJMPTables:
 
     def _map_two_observer_changes(self):
         """Updates the observers that are created during normal gameplay."""
-        spawn_region_name: str = str(self.lm_rando.output_data["Options"]["spawn"])
+        spawn_area: str = self.lm_rando.output_data["Options"]["spawn"]
+        spawn_data = REGION_LIST[spawn_area]
 
         map_two_normal_observer: JMP = self.lm_rando.map_files.get("map2").jmp_files["observerinfo"]
         temp_new_entries: list[JMPEntry] = []
+        toad_char_name_list: list[str] = ["dm_kinopio5", "dm_kinopio4", "dm_kinopio3", "dm_kinopio2"]
 
         for observer_entry in map_two_normal_observer.data_entries:
             # Allows the Toads to spawn by default.
@@ -211,15 +214,15 @@ class RandomizeJMPTables:
             do_num: int = int(map_two_normal_observer.get_jmp_header_name_value(observer_entry, "do_type"))
 
             if observer_name == "kinopio":
-                if code_name in ["dm_kinopio5", "dm_kinopio4", "dm_kinopio3", "dm_kinopio2"]:
+                if code_name in toad_char_name_list:
                     continue
                 map_two_normal_observer.update_jmp_header_name_value(observer_entry, "cond_arg0", 0)
                 map_two_normal_observer.update_jmp_header_name_value(observer_entry, "appear_flag", 0)
                 map_two_normal_observer.update_jmp_header_name_value(observer_entry, "cond_type", 13)
 
                 new_entry: JMPEntry = copy.deepcopy(observer_entry)
-                if not spawn_region_name in TOAD_SPAWN_LIST:
-                    spawn_data = REGION_LIST[spawn_region_name]
+                if not spawn_area in TOAD_SPAWN_LIST:
+
                     map_two_normal_observer.update_jmp_header_name_value(new_entry, "room_no", spawn_data.room_id)
                     map_two_normal_observer.update_jmp_header_name_value(new_entry,"pos_y", spawn_data.pos_y)
                     map_two_normal_observer.update_jmp_header_name_value(new_entry, "pos_z", int(spawn_data.pos_z) - 150)
@@ -383,13 +386,15 @@ class RandomizeJMPTables:
         map_two_teiden_enemy: JMP = self.lm_rando.map_files.get("map2").jmp_files["teidenenemyinfo"]
         map_two_normal_enemy: JMP = self.lm_rando.map_files.get("map2").jmp_files["enemyinfo"]
 
+        enemizer_enabled: int = int(self.lm_rando.output_data["Options"]["enemizer"])
+
         for entry_no in SPEEDY_ENEMY_INDEX:
             speedy_entry: JMPEntry = map_two_normal_enemy.data_entries[entry_no]
             map_two_teiden_enemy.data_entries.append(speedy_entry)
             map_two_normal_enemy.data_entries.remove(speedy_entry)
 
         # If randomize ghosts options are enabled
-        if self.lm_rando.output_data["Options"]["enemizer"] == 0:
+        if enemizer_enabled == 0:
             return
 
         for key, val in self.lm_rando.output_data["Room Enemies"].items():
@@ -415,13 +420,14 @@ class RandomizeJMPTables:
 
 
     def _map_two_event_changes(self):
-        # Removes events that we don't want to trigger at all in the mansion, such as some E. Gadd calls, warps after
-        # boss battles / grabbing boss keys, and various cutscenes etc. Also remove Mario Items/Elemental Item events
+        """Removes events that we don't want to trigger at all in the mansion, such as some E. Gadd calls, warps after
+        boss battles / grabbing boss keys, and various cutscenes etc. Also remove Mario Items/Elemental Item events"""
         events_to_remove: list[int] = [7, 9, 15, 18, 19, 20, 21, 31, 41, 42, 45, 47, 51, 54, 69, 70, 73, 80, 81, 85, 91]
         map_two_events: JMP = self.lm_rando.map_files.get("map2").jmp_files["eventinfo"]
 
         boo_checks: bool = bool(self.lm_rando.output_data["Options"]["boo_gates"])
         spawn_area: str = self.lm_rando.output_data["Options"]["spawn"]
+        spawn_data = REGION_LIST[spawn_area]
 
         # Only remove the boo checks if the player does not want them.
         if not boo_checks:
@@ -429,12 +435,12 @@ class RandomizeJMPTables:
         if spawn_area in TOAD_SPAWN_LIST:
             events_to_remove += [12]
 
-        map_two_events.data_entries = [event_entry for event_entry in map_two_events.data_entries
-            if not map_two_events.get_jmp_header_name_value(event_entry, "EventNo") in events_to_remove
-            or (int(map_two_events.get_jmp_header_name_value(event_entry, "EventNo")) == 93 and
-            float(map_two_events.get_jmp_header_name_value(event_entry, "pos_x")) == 0.000000)]
+        map_two_events.data_entries = [event_entry for event_entry in map_two_events.data_entries if not
+            map_two_events.get_jmp_header_name_value(event_entry, "EventNo") in events_to_remove]
 
-        spawn_data = REGION_LIST[spawn_area]
+        map_two_events.data_entries = [event_entry for event_entry in map_two_events.data_entries if not
+            (int(map_two_events.get_jmp_header_name_value(event_entry, "EventNo")) == 93 and
+            float(map_two_events.get_jmp_header_name_value(event_entry, "pos_x")) == 0.000000)]
 
         for event_info in map_two_events.data_entries:
             event_num: int = int(map_two_events.get_jmp_header_name_value(event_info, "EventNo"))
@@ -591,3 +597,60 @@ class RandomizeJMPTables:
                 map_two_events.update_jmp_header_name_value(event_info, "pos_x", int(spawn_data.pos_x) - 150 + 2)
                 map_two_events.update_jmp_header_name_value(event_info, "pos_y", spawn_data.pos_y)
                 map_two_events.update_jmp_header_name_value(event_info, "pos_z", int(spawn_data.pos_z) - 150)
+
+
+    def _map_two_character_changes(self):
+        """Updates the character info table to remove un-necessary actors. Also update existing spawns to new items."""
+        map_two_characters: JMP = self.lm_rando.map_files.get("map2").jmp_files["characterinfo"]
+
+        spawn_data = REGION_LIST[self.lm_rando.output_data["Options"]["spawn"]]
+
+        bad_actors_to_remove: list[str] = ["vhead", "vbody", "dhakase", "demobak1", "dluige01"]
+        update_spawn_actors: list[str] = ["baby", "mother", "dboy", "dboy2"]
+
+        # Removes useless cutscene objects and the vacuum in the Parlor under the closet.
+        map_two_characters.data_entries = [char_entry for char_entry in map_two_characters.data_entries if not
+            map_two_characters.get_jmp_header_name_value(char_entry, "name") in bad_actors_to_remove]
+
+        # Also removes King Boo in the hallway, since his event was removed.
+        map_two_characters.data_entries = [char_entry for char_entry in map_two_characters.data_entries if
+            not (map_two_characters.get_jmp_header_name_value(char_entry, "name") == "dltelesa" and
+            int(map_two_characters.get_jmp_header_name_value(char_entry, "room_no")) == 68)]
+
+        for character_entry in map_two_characters.data_entries:
+            char_name: str = map_two_characters.get_jmp_header_name_value(character_entry, "name")
+            char_room_num: int = int(map_two_characters.get_jmp_header_name_value(character_entry, "room_no"))
+            # Replace the mstar Observatory item with its randomized item.
+            if char_name == "mstar":
+                shoot_moon_char: dict = self.lm_rando.output_data["Locations"]["Special"]["Observatory Shoot the Moon"]
+                map_two_characters.update_jmp_header_name_value(character_entry, "name", get_item_name(shoot_moon_char, self.lm_rando.slot))
+                map_two_characters.update_jmp_header_name_value(character_entry, "appear_flag", 50)
+                map_two_characters.update_jmp_header_name_value(character_entry, "invisible", 1)
+                map_two_characters.update_jmp_header_name_value(character_entry, "pos_y", 600.000000)
+
+            # Allow Chauncey, Lydia, and the Twins to spawn as soon as a new game is created.
+            elif char_name in update_spawn_actors:
+                map_two_characters.update_jmp_header_name_value(character_entry, "appear_flag", 0)
+
+            # Fix a Nintendo mistake where the Cellar chest has a room ID of 0 instead of 63.
+            elif char_name == "63_2":
+                map_two_characters.update_jmp_header_name_value(character_entry, "room_no", 63)
+
+            # Remove Miss Petunia to never disappear, unless captured.
+            elif char_name == "fat" and char_room_num == 45:
+                map_two_characters.update_jmp_header_name_value(character_entry, "disappear_flag", 0)
+
+            # Make Shivers / Butler not disappear by doing a different appear flag.
+            elif char_name == "situji":
+                map_two_characters.update_jmp_header_name_value(character_entry, "appear_flag", 7)
+
+            # Make Luggs stay gone if the light are on in the room
+            elif char_name == "eater":
+                map_two_characters.update_jmp_header_name_value(character_entry, "disappear_flag", 31)
+
+            # Editing the starting room spawn coordinates (regardless of it random spawn is turned on).
+            elif char_name == "luige" and char_room_num == 2:
+                map_two_characters.update_jmp_header_name_value(character_entry, "room_no", spawn_data.room_id)
+                map_two_characters.update_jmp_header_name_value(character_entry, "pos_x", spawn_data.pos_x)
+                map_two_characters.update_jmp_header_name_value(character_entry, "pos_y", spawn_data.pos_y)
+                map_two_characters.update_jmp_header_name_value(character_entry, "pos_z", spawn_data.pos_z)
