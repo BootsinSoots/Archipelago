@@ -1,3 +1,4 @@
+import copy
 from typing import Any
 
 from gcbrickwork.JMP import JMP, JMPEntry
@@ -381,3 +382,38 @@ def create_itemappear_entry(item_name: str) -> dict:
     for itemid in range(20):
         new_item["item" + str(itemid)] = item_name
     return new_item
+
+def apply_new_ghost(lm_rando: "LuigisMansionRandomizer", jmp_file: JMP, enemy_entry: JMPEntry, element: str):
+    # TODO add a default heigh for ghosts on each floor to re-adjust things moving up and down.
+    # The list of ghosts that can replace the vanilla ones. Only includes the ones without elements.
+    # Excludes Skul ghosts as well unless the railinfo jmp table is updated.
+
+    # If the vanilla ghost is a Ceiling Ghost, reduce its spawning Y position so the new ghost spawns on the floor.
+    curr_enemy_name: str = jmp_file.get_jmp_header_name_value(enemy_entry, "name")
+    curr_pos_y: float = float(jmp_file.get_jmp_header_name_value(enemy_entry, "pos_y"))
+    if "tenjyo" in curr_enemy_name:
+        jmp_file.update_jmp_header_name_value(enemy_entry, "pos_y", curr_pos_y - 200.000000)
+
+    # If a room is supposed to have an element, replace all the ghosts in it to be only ghosts with that element.
+    # Otherwise, randomize the ghosts between the non-element ones from the list.
+    match element:
+        case "Ice":
+            jmp_file.update_jmp_header_name_value(enemy_entry, "name", "mapoo2")
+        case "Water":
+            jmp_file.update_jmp_header_name_value(enemy_entry, "name", "mopoo2")
+        case "Fire":
+            jmp_file.update_jmp_header_name_value(enemy_entry, "name", "yapoo2")
+        case "No Element":
+            enemy_room_num: int = int(jmp_file.get_jmp_header_name_value(enemy_entry, "room_no"))
+            if enemy_room_num  == 23:
+                no_shy_ghosts = copy.deepcopy(RANDOM_GHOST_LISTS)
+                no_shy_ghosts.pop(5)
+                new_enemy = lm_rando.random.choice(sorted(list(lm_rando.random.choice(sorted(no_shy_ghosts)))))
+            else:
+                new_enemy = lm_rando.random.choice(sorted(list(lm_rando.random.choice(sorted(RANDOM_GHOST_LISTS)))))
+            jmp_file.update_jmp_header_name_value(enemy_entry, "name", new_enemy)
+
+    # If the new ghost is a Ceiling Ghost, increase its spawning Y position so it spawns in the air.
+    new_pos_y: float = float(jmp_file.get_jmp_header_name_value(enemy_entry, "pos_y"))
+    if "tenjyo" in curr_enemy_name:
+        jmp_file.update_jmp_header_name_value(enemy_entry, "pos_y", new_pos_y + 200.000000)
