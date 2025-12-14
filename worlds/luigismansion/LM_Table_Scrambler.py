@@ -1342,27 +1342,6 @@ def update_observer_info(observer_info, output_data):
         "(Undocumented)": 0,
     })
 
-# For every key found in the generation output, add an entry for it in "iteminfotable".
-def update_item_info_table(item_info, output_data):
-    # Adds the special items, so they can spawn in furniture or chests.
-    items_to_add = ["rdiamond", "itembomb", "ice", "mstar", "banana", "diamond", "gameboy", "vbody"]
-    for new_item in items_to_add:
-        _add_info_item(item_info, None, info_item_name=new_item, slot=int(output_data["Slot"]))
-
-    heart_amounts_to_fix = {"sheart": 20, "lheart": 50}
-    for heart_item in heart_amounts_to_fix.keys():
-        next(item_info_entry for item_info_entry in item_info.info_file_field_entries if
-              item_info_entry["name"] == heart_item)["hp_amount"] = heart_amounts_to_fix[heart_item]
-
-    # Gets the list of keys already added in the item info table
-    already_added_keys = [item_entry["name"] for item_entry in item_info.info_file_field_entries if
-                          str(item_entry["name"]).startswith("key_")]
-
-    for item_name, item_data in output_data["Locations"].items():
-        current_item = _get_item_name(item_data, int(output_data["Slot"]))
-        if item_data["door_id"] > 0 and current_item not in already_added_keys:
-            _add_info_item(item_info, item_data, slot=int(output_data["Slot"]))
-
 
 def update_treasure_table(lm_gen: "LuigisMansionRandomizer", treasure_info, character_info, output_data):
     chest_option: int = int(output_data["Options"]["chest_types"])
