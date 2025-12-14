@@ -176,10 +176,11 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
         self.verify_base_rom(vanilla_iso_path, throw_error)
 
         # Use our randomize function to patch the file into an ISO.
-        from ..LM_ISO_Modifier import LuigisMansionRandomizer
+        from .LM_Randomize_ISO import LuigisMansionRandomizer
         with zipfile.ZipFile(patch_file_path, "r") as zf:
             aplm_bytes = zf.read("patch.aplm")
-        LuigisMansionRandomizer(vanilla_iso_path, output_iso_path, aplm_bytes)
+        lm_rando: LuigisMansionRandomizer = LuigisMansionRandomizer(vanilla_iso_path, output_iso_path, aplm_bytes)
+        lm_rando.create_randomized_iso()
 
     def _get_remote_dependencies_and_create_iso(self, aplm_patch: str, output_file: str, lm_clean_iso: str):
         local_dir_path: str = "N/A"
