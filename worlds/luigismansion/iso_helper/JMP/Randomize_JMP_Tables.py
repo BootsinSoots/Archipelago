@@ -1,5 +1,7 @@
 from gcbrickwork.JMP import JMP, JMPEntry
-from JMP_Entry_Helpers import LOCATION_TO_INDEX, get_item_name
+
+from JMP_Entry_Helpers import LOCATION_TO_INDEX, get_item_name, create_iteminfo_entry, add_new_jmp_data_entry
+
 from ..LM_Randomize_ISO import LuigisMansionRandomizer
 
 
@@ -47,7 +49,7 @@ class RandomizeJMPTables:
     def _map_two_item_info_changes(self):
         """Updates/Adds items that can be spawned in via the other JMP tables.
         To avoid item row duplication, items are only added once."""
-        already_added_keys: list[str] = []
+        already_exist_items: list[str] = []
         hp_item_names: dict[str, int] = {"sheart": 20, "lheart": 50}
         map_two_info: JMP = self.lm_rando.map_files.get("map2").jmp_files["iteminfotable"]
 
@@ -55,19 +57,15 @@ class RandomizeJMPTables:
             item_name: str = map_two_info.get_jmp_header_name_value(info_entry, "name")
             if map_two_info.get_jmp_header_name_value(info_entry, "name") in hp_item_names.keys():
                 map_two_info.update_jmp_header_name_value(info_entry, "name", hp_item_names[item_name])
-            elif item_name.startswith("key_") and not item_name in already_added_keys:
-                already_added_keys.append(item_name)
+            if not item_name in already_exist_items:
+                already_exist_items.append(item_name)
 
-        # Get all the keys to add from the location data if door_id is greater than 0 AND
-        # item is for current player.
-        items_to_add: list[str] = ["key_" + str(item_data["door_id"]) for item_name, item_data in
-            self.lm_rando.output_data["Locations"].items() if (int(item_data["door_id"]) > 0 and
-            self.lm_rando.slot == int(item_data[item_data["player"]]))]
-        items_to_add += ["rdiamond", "itembomb", "ice", "mstar", "banana", "diamond", "gameboy", "vbody"]
-
-        for new_item in items_to_add:
-            pass
-            # TODO need to make a keyword function of some sort then add items appropriately to the data entry.
+        for location_type in self.lm_rando.output_data["Locations"].keys():
+            for item_data in self.lm_rando.output_data["Locations"][location_type].vals():
+                lm_item_name: str = get_item_name(item_data, self.lm_rando.slot)
+                if not lm_item_name in already_exist_items:
+                    add_new_jmp_data_entry(map_two_info, create_iteminfo_entry(item_data["room_no"], lm_item_name))
+                    already_exist_items.append(lm_item_name)
 
 
     def _map_two_key_info_changes(self):
