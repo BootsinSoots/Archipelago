@@ -7,6 +7,7 @@ from JMP_Entry_Helpers import (LOCATION_TO_INDEX, SPEEDY_OBSERVER_INDEX, SPEEDY_
     create_iteminfo_entry, add_new_jmp_data_entry, create_itemappear_entry, create_observer_entry, apply_new_ghost)
 
 from ..LM_Randomize_ISO import LuigisMansionRandomizer
+from ...Items import ALL_ITEMS_TABLE
 from ...Regions import REGION_LIST, TOAD_SPAWN_LIST
 from ...Locations import FLIP_BALCONY_BOO_EVENT_LIST
 
@@ -37,6 +38,7 @@ class RandomizeJMPTables:
         self._map_two_item_info_changes()
         self._map_two_key_info_changes()
         self._map_two_character_changes()
+        self._map_two_iyapoo_changes()
 
 
     def _map_two_generator_changes(self):
@@ -654,3 +656,114 @@ class RandomizeJMPTables:
                 map_two_characters.update_jmp_header_name_value(character_entry, "pos_x", spawn_data.pos_x)
                 map_two_characters.update_jmp_header_name_value(character_entry, "pos_y", spawn_data.pos_y)
                 map_two_characters.update_jmp_header_name_value(character_entry, "pos_z", spawn_data.pos_z)
+
+
+    def _map_two_iyapoo_changes(self):
+        speedy_enabled: bool = bool(self.lm_rando.output_data["Options"]["speedy_spirits"])
+        mice_enabled: bool = bool(self.lm_rando.output_data["Options"]["gold_mice"])
+        if not (speedy_enabled and mice_enabled):
+            return
+
+        map_two_iyapoo: JMP = self.lm_rando.map_files.get("map2").jmp_files["iyapootable"]
+
+        for iyapoo_entry in map_two_iyapoo.data_entries:
+            iyapoo_name = map_two_iyapoo.get_jmp_header_name_value(iyapoo_entry, "name")
+            item_data: dict = {}
+
+            if speedy_enabled and "iyapoo" in iyapoo_name:
+                match iyapoo_name:
+                    case "iyapoo1":
+                        item_data = self.lm_rando.output_data["Locations"]["BSpeedy"]["Storage Room Speedy Spirit"]
+                    case "iyapoo2":
+                        item_data = self.lm_rando.output_data["Locations"]["BSpeedy"]["Billiards Room Speedy Spirit"]
+                    case "iyapoo3":
+                        item_data = self.lm_rando.output_data["Locations"]["BSpeedy"]["Dining Room Speedy Spirit"]
+                    case "iyapoo4":
+                        item_data = self.lm_rando.output_data["Locations"]["BSpeedy"]["Study Speedy Spirit"]
+                    case "iyapoo5":
+                        item_data = self.lm_rando.output_data["Locations"]["BSpeedy"]["Twins' Room Speedy Spirit"]
+                    case "iyapoo6":
+                        item_data = self.lm_rando.output_data["Locations"]["BSpeedy"]["Nana's Room Speedy Spirit"]
+                    case "iyapoo7":
+                        item_data = self.lm_rando.output_data["Locations"]["BSpeedy"]["Kitchen Speedy Spirit"]
+                    case "iyapoo8":
+                        item_data = self.lm_rando.output_data["Locations"]["BSpeedy"]["Sealed Room Speedy Spirit"]
+                    case "iyapoo9":
+                        item_data = self.lm_rando.output_data["Locations"]["BSpeedy"]["Rec Room Speedy Spirit"]
+                    case "iyapoo10":
+                        item_data = self.lm_rando.output_data["Locations"]["BSpeedy"]["Wardrobe Speedy Spirit"]
+                    case "iyapoo11":
+                        item_data = self.lm_rando.output_data["Locations"]["BSpeedy"]["Cellar Speedy Spirit"]
+                    case "iyapoo12":
+                        item_data = self.lm_rando.output_data["Locations"]["BSpeedy"]["Breaker Room Speedy Spirit"]
+                    case "iyapoo13":
+                        item_data = self.lm_rando.output_data["Locations"]["BSpeedy"]["Hidden Room Speedy Spirit"]
+                    case "iyapoo14":
+                        item_data = self.lm_rando.output_data["Locations"]["BSpeedy"]["Conservatory Speedy Spirit"]
+                    case "iyapoo15":
+                        item_data = self.lm_rando.output_data["Locations"]["BSpeedy"]["Nursery Speedy Spirit"]
+
+            if mice_enabled and "goldrat" in iyapoo_name:
+                match iyapoo_name:
+                    case "goldrat0":
+                        item_data = self.lm_rando.output_data["Locations"]["Mouse"]["1F Hallway Chance Mouse"]
+                    case "goldrat1":
+                        item_data = self.lm_rando.output_data["Locations"]["Mouse"]["2F Rear Hallway Chance Mouse"]
+                    case "goldrat2":
+                        item_data = self.lm_rando.output_data["Locations"]["Mouse"]["Kitchen Chance Mouse"]
+                    case "goldrat3":
+                        item_data = self.lm_rando.output_data["Locations"]["Mouse"]["Tea Room Chance Mouse"]
+                    case "goldrat4":
+                        item_data = self.lm_rando.output_data["Locations"]["Mouse"]["Sealed Room Chance Mouse"]
+                    case "goldrat5":
+                        item_data = self.lm_rando.output_data["Locations"]["Mouse"]["Dining Room Cheese Mouse"]
+                    case "goldrat6":
+                        item_data = self.lm_rando.output_data["Locations"]["Mouse"]["Fortune Teller Cheese Mouse"]
+                    case "goldrat7":
+                        item_data = self.lm_rando.output_data["Locations"]["Mouse"]["Study Cheese Gold Mouse"]
+                    case "goldrat8":
+                        item_data = self.lm_rando.output_data["Locations"]["Mouse"]["Tea Room Cheese Mouse"]
+                    case "goldrat9":
+                        item_data = self.lm_rando.output_data["Locations"]["Mouse"]["Safari Room Cheese Mouse"]
+
+            if not item_data:
+                continue
+
+            coin_amount = 0
+            bill_amount = 0
+            gold_bar_amount = 0
+            sapphire_amount = 0
+            emerald_amount = 0
+            ruby_amount = 0
+
+            if int(item_data["player"]) == self.lm_rando.slot and item_data["name"] in ALL_ITEMS_TABLE.keys():
+                lm_item_data = ALL_ITEMS_TABLE[item_data["name"]]
+                if lm_item_data.update_ram_addr and any(update_addr.item_count for update_addr in
+                                                        lm_item_data.update_ram_addr if
+                                                        update_addr.item_count and update_addr.item_count > 0):
+                    item_amt = next(update_addr.item_count for update_addr in lm_item_data.update_ram_addr if
+                                    update_addr.item_count and update_addr.item_count > 0)
+
+                    if "Coins" in item_data["name"]:
+                        if "Bills" in item_data["name"]:
+                            coin_amount = item_amt
+                            bill_amount = item_amt
+                        else:
+                            coin_amount = item_amt
+                    elif "Bills" in item_data["name"]:
+                        bill_amount = item_amt
+                    elif "Gold Bar" in item_data["name"]:
+                        gold_bar_amount = item_amt
+                    elif "Sapphire" in item_data["name"]:
+                        sapphire_amount = item_amt
+                    elif "Emerald" in item_data["name"]:
+                        emerald_amount = item_amt
+                    elif "Ruby" in item_data["name"]:
+                        ruby_amount = item_amt
+
+            map_two_iyapoo.update_jmp_header_name_value(iyapoo_entry, "coin", coin_amount)
+            map_two_iyapoo.update_jmp_header_name_value(iyapoo_entry, "bill", bill_amount)
+            map_two_iyapoo.update_jmp_header_name_value(iyapoo_entry, "gold", gold_bar_amount)
+            map_two_iyapoo.update_jmp_header_name_value(iyapoo_entry, "sapphire", sapphire_amount)
+            map_two_iyapoo.update_jmp_header_name_value(iyapoo_entry, "emerald", emerald_amount)
+            map_two_iyapoo.update_jmp_header_name_value(iyapoo_entry, "ruby", ruby_amount)
