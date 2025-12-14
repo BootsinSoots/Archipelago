@@ -21,6 +21,7 @@ class RandomizeJMPTables:
     def _map_two_changes(self):
         self._map_two_generator_changes()
         self._map_two_obj_changes()
+        self._map_two_room_info_changes()
         self._map_two_item_info_changes()
         self._map_two_key_info_changes()
 
@@ -69,6 +70,7 @@ class RandomizeJMPTables:
 
 
     def _map_two_key_info_changes(self):
+        """Updates all the key item information, which is used for spawning free-standing items."""
         map_two_key: JMP = self.lm_rando.map_files.get("map2").jmp_files["keyinfo"]
 
         # For every Freestanding Key in the game, replace its entry with the proper item from the generation output.
@@ -83,3 +85,25 @@ class RandomizeJMPTables:
 
         # Remove the cutscene HD key from the Foyer, which only appears in the cutscene.
         map_two_key.data_entries.remove(map_two_key.data_entries[2])
+
+
+    def _map_two_room_info_changes(self):
+        """Updates the spookiness ambience noises in all the rooms."""
+        spooky_rating: int = int(self.lm_rando.output_data["spookiness"])
+        if spooky_rating == 0:
+            return
+
+        map_two_room: JMP = self.lm_rando.map_files.get("map2").jmp_files["roominfo"]
+        match spooky_rating:
+            case 1:
+                for room_entry in map_two_room.data_entries:
+                    map_two_room.update_jmp_header_name_value(room_entry, "Thunder", 3) # MANY THUNDER
+                    map_two_room.update_jmp_header_name_value(room_entry, "sound_echo_parameter", 20) # LONG ECHO
+                    map_two_room.update_jmp_header_name_value(room_entry, "sound_room_code", 5)  # CREAKY CREAKY
+            case 2:
+                for room_entry in map_two_room.data_entries:
+                    coin_flip = self.lm_rando.random.choice(sorted([0, 1]))
+                    if coin_flip == 1:
+                        map_two_room.update_jmp_header_name_value(room_entry, "Thunder", 3)  # MANY THUNDER
+                        map_two_room.update_jmp_header_name_value(room_entry, "sound_echo_parameter", 20)  # LONG ECHO
+                        map_two_room.update_jmp_header_name_value(room_entry, "sound_room_code", 5)  # CREAKY CREAKY
