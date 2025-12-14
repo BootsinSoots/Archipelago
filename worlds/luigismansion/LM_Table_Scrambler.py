@@ -455,37 +455,6 @@ def update_furniture_info(furniture_info, item_appear_info, output_data):
             furniture_info.info_file_field_entries[item_data["loc_enum"]]["generate_num"] = 0
 
 
-def update_teiden_enemy_info(enemy_info, teiden_enemy_info):
-
-    for entry_no in speedy_enemy_index:
-        x = enemy_info.info_file_field_entries[entry_no]
-        teiden_enemy_info.info_file_field_entries.append(x)
-        enemy_info.info_file_field_entries.remove(x)
-
-
-def update_enemy_info(lm_gen: "LuigisMansionRandomizer", enemy_info, teiden_enemy_info, output_data):
-    # If randomize ghosts options are enabled
-    if output_data["Options"]["enemizer"] == 0:
-        return
-
-    for key, val in output_data["Room Enemies"].items():
-        room_id: int = REGION_LIST[key].room_id
-        for enemy_to_change in enemy_info.info_file_field_entries:
-            if enemy_to_change["room_no"] != room_id or not enemy_to_change["name"] in ghost_list:
-                continue
-
-            if "16_1" in enemy_to_change["create_name"]:
-                enemy_to_change["pos_y"] = 30.000000
-
-            room_element: str = "No Element" if (room_id in [27, 35, 40]) else val
-            apply_new_ghost(lm_gen, enemy_to_change, room_element)
-
-        for enemy_to_change in teiden_enemy_info.info_file_field_entries:
-            if enemy_to_change["room_no"] != room_id or not enemy_to_change["name"] in ghost_list:
-                continue
-            apply_new_ghost(lm_gen, enemy_to_change, val)
-
-
 def update_iyapoo_table(iyapoo_table, output_data):
     if output_data["Options"]["speedy_spirits"] == 0 and output_data["Options"]["gold_mice"] == 0:
         return
@@ -594,34 +563,3 @@ def update_iyapoo_table(iyapoo_table, output_data):
         iyapoo_table.info_file_field_entries[index]["emerald"] = emerald_amount
         iyapoo_table.info_file_field_entries[index]["ruby"] = ruby_amount
         iyapoo_table.info_file_field_entries[index].update({"other": treasure_item_name})
-
-
-def apply_new_ghost(lm_gen: "LuigisMansionRandomizer", enemy_info_entry, element):
-    # TODO add a default heigh for ghosts on each floor to re-adjust things moving up and down.
-    # The list of ghosts that can replace the vanilla ones. Only includes the ones without elements.
-    # Excludes Skul ghosts as well unless the railinfo jmp table is updated.
-
-    # If the vanilla ghost is a Ceiling Ghost, reduce its spawning Y position so the new ghost spawns on the floor.
-    if "tenjyo" in enemy_info_entry["name"]:
-        enemy_info_entry["pos_y"] -= 200.000
-
-    # If a room is supposed to have an element, replace all the ghosts in it to be only ghosts with that element.
-    # Otherwise, randomize the ghosts between the non-element ones from the list.
-    match element:
-        case "Ice":
-            enemy_info_entry["name"] = "mapoo2"
-        case "Water":
-            enemy_info_entry["name"] = "mopoo2"
-        case "Fire":
-            enemy_info_entry["name"] = "yapoo2"
-        case "No Element":
-            if enemy_info_entry["room_no"] == 23:
-                no_shy_ghosts = copy.deepcopy(random_ghosts_to_patch)
-                no_shy_ghosts.pop(5)
-                enemy_info_entry["name"] = lm_gen.random.choice(sorted(list(lm_gen.random.choice(sorted(no_shy_ghosts)))))
-            else:
-                enemy_info_entry["name"] = lm_gen.random.choice(sorted(list(lm_gen.random.choice(sorted(random_ghosts_to_patch)))))
-
-    # If the new ghost is a Ceiling Ghost, increase its spawning Y position so it spawns in the air.
-    if "tenjyo" in enemy_info_entry["name"]:
-        enemy_info_entry["pos_y"] += 200.000
