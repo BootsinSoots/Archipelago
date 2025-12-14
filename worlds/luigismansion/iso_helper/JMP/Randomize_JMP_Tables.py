@@ -1,3 +1,5 @@
+from math import ceil
+
 from gcbrickwork.JMP import JMP, JMPEntry
 
 from JMP_Entry_Helpers import LOCATION_TO_INDEX, get_item_name, create_iteminfo_entry, add_new_jmp_data_entry, create_itemappear_entry
@@ -22,6 +24,7 @@ class RandomizeJMPTables:
         self._map_two_generator_changes()
         self._map_two_obj_changes()
         self._map_two_room_info_changes()
+        self._map_two_boo_table_changes()
         self._map_two_item_info_changes()
         self._map_two_key_info_changes()
 
@@ -123,3 +126,36 @@ class RandomizeJMPTables:
                 if not lm_item_name in already_exist_items:
                     add_new_jmp_data_entry(map_two_item_appear, create_itemappear_entry(lm_item_name))
                     already_exist_items.append(lm_item_name)
+
+
+    def _map_two_boo_table_changes(self):
+        """Updates boos health, speed, acceleration, anger, and time to escape rooms."""
+        boo_health_choice: int = int(self.lm_rando.output_data["Options"]["boo_health_option"])
+        boo_speed: int = int(self.lm_rando.output_data["Options"]["boo_speed"])
+        boo_escape_time: int = int(self.lm_rando.output_data["Options"]["boo_escape_time"])
+        boo_anger: int = int(self.lm_rando.output_data["Options"]["boo_anger"])
+        boo_chosen_hp: int = int(self.lm_rando.output_data["Options"]["boo_health_value"])
+
+        map_two_telesa: JMP = self.lm_rando.map_files.get("map2").jmp_files["telesa"]
+        boo_hp_unit: int = 0
+
+        if boo_health_choice == 2:
+            boo_hp_unit = max([int(boo_loc["boo_sphere"]) for boo_loc in self.lm_rando.output_data["Locations"]["Boo"].vals()])
+        for boo_entry in self.lm_rando.output_data["Locations"]["Boo"].vals():
+            curr_boo_entry: JMPEntry = map_two_telesa.data_entries[int(boo_entry["loc_enum"])]
+            map_two_telesa.update_jmp_header_name_value(curr_boo_entry, "accel", 3.000000)
+            map_two_telesa.update_jmp_header_name_value(curr_boo_entry, "max_speed", boo_speed)
+            map_two_telesa.update_jmp_header_name_value(curr_boo_entry, "move_time", boo_escape_time)
+            map_two_telesa.update_jmp_header_name_value(curr_boo_entry, "attack", boo_anger)
+            match boo_health_choice:
+                case 0:
+                    map_two_telesa.update_jmp_header_name_value(curr_boo_entry, "str_hp", boo_chosen_hp)
+                case 1:
+                    boo_random_hp: int = self.lm_rando.random.randint(1, boo_chosen_hp)
+                    map_two_telesa.update_jmp_header_name_value(curr_boo_entry, "str_hp", boo_random_hp)
+                case 2:
+                    boo_sphere_hp: int = ceil(boo_hp_unit * boo_entry["boo_sphere"]) if ceil(
+                        boo_hp_unit * boo_entry["boo_sphere"]) <= boo_chosen_hp else boo_chosen_hp
+                    map_two_telesa.update_jmp_header_name_value(curr_boo_entry, "str_hp", boo_sphere_hp)
+                case _:
+                    continue
