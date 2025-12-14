@@ -1,5 +1,7 @@
 from typing import Any
 
+from gcbrickwork.JMP import JMP, JMPFieldHeader, JMPValue
+
 from ..LM_Randomize_ISO import LuigisMansionRandomizer
 
 # Used to update speedy spirit observers that spawn them in and switch them to the blackout only table instead.
@@ -315,6 +317,12 @@ def _get_key_name(door_id):
             return "key05"
         case _:
             return "key01"
+
+def add_new_jmp_data_entry(jmp_file: JMP, values_to_add: dict):
+    jmp_entry: dict[JMPFieldHeader, JMPValue] = {}
+    for jmp_header in jmp_file.fields:
+        jmp_entry[jmp_header] = values_to_add[jmp_header.field_name]
+    jmp_file.data_entries.append(jmp_entry)
 
 def create_iteminfo_entry(item_door_id: int, info_item_name: str) -> dict:
     """Creates a dictionary for use in the iteminfotable"""
