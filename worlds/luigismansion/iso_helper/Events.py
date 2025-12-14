@@ -10,7 +10,7 @@ from ..Hints import ALWAYS_HINT, PORTRAIT_HINTS
 from CommonClient import logger
 
 if TYPE_CHECKING:
-    from ..LM_ISO_Modifier import LuigisMansionRandomizer
+    from .LM_Randomize_ISO import LuigisMansionRandomizer
 
 
 def update_boo_gates(lm_gen: "LuigisMansionRandomizer", event_no: str, req_boo_count: int, boo_rando_enabled: bool,
@@ -24,7 +24,7 @@ def update_boo_gates(lm_gen: "LuigisMansionRandomizer", event_no: str, req_boo_c
         lines = lines.replace("{Count0}", str(0)).replace("{Count1}", str(0))
         lines = lines.replace("{Count2}", str(0)).replace("{Count3}", str(0))
         lines = lines.replace("{Count4}", str(req_boo_count)).replace("{CaseBegin}", str_begin_case)
-        _update_custom_event(lm_gen.gcm, event_no, True, lines, None)
+        _update_custom_event(lm_gen.lm_gcm, event_no, True, lines, None)
         return
 
     str_begin_case = "CheckBoos"
@@ -78,13 +78,13 @@ def update_boo_gates(lm_gen: "LuigisMansionRandomizer", event_no: str, req_boo_c
             lines = lines.replace("{Case3}", str_not_enough)
             lines = lines.replace("{Case4}", str_boo_captured)
 
-    _update_custom_event(lm_gen.gcm, event_no, True, lines, None)
+    _update_custom_event(lm_gen.lm_gcm, event_no, True, lines, None)
 
 # Updates the event txt and csv for blackout
 def update_blackout_event(lm_gen: "LuigisMansionRandomizer"):
     lines = _read_custom_file("txt", "event44.txt")
     csv_lines = _read_custom_file("csv", "message44.csv")
-    _update_custom_event(lm_gen.gcm, "44", True, lines, csv_lines)
+    _update_custom_event(lm_gen.lm_gcm, "44", True, lines, csv_lines)
 
 # Updates all common events
 def update_common_events(lm_gen: "LuigisMansionRandomizer", randomize_mice: bool, starting_vac: bool):
@@ -97,7 +97,7 @@ def update_common_events(lm_gen: "LuigisMansionRandomizer", randomize_mice: bool
         lines = _read_custom_file("txt", "event" + custom_event + ".txt")
         if custom_event == "10" and not starting_vac:
             lines = lines.replace("<WEAPON>", "<NOWEAPON>")
-        _update_custom_event(lm_gen.gcm, custom_event, True, lines, None)
+        _update_custom_event(lm_gen.lm_gcm, custom_event, True, lines, None)
 
 # Update the intro event and E. Gadd event as needed.
 def update_intro_and_lab_events(lm_gen: "LuigisMansionRandomizer", hidden_mansion: bool, max_health: str, start_inv: list[str],
@@ -105,13 +105,13 @@ def update_intro_and_lab_events(lm_gen: "LuigisMansionRandomizer", hidden_mansio
     # Update the custom Gallery Event
     lines = _read_custom_file("txt", "event28.txt")
     csv_lines = _read_custom_file("csv", "message28.csv")
-    _update_custom_event(lm_gen.gcm, "28", True, lines, csv_lines)
+    _update_custom_event(lm_gen.lm_gcm, "28", True, lines, csv_lines)
 
     # Update the custom E. Gadd's lab event.
     lines = _read_custom_file("txt", "event08.txt")
     lines = lines.replace("{LUIGIMAXHP}", max_health)
     csv_lines = _read_custom_file("csv", "message8.csv")
-    _update_custom_event(lm_gen.gcm, "08", True, lines, csv_lines)
+    _update_custom_event(lm_gen.lm_gcm, "08", True, lines, csv_lines)
 
     # Update the main intro event.
     lines = _read_custom_file("txt", "event48.txt")
@@ -137,18 +137,18 @@ def update_intro_and_lab_events(lm_gen: "LuigisMansionRandomizer", hidden_mansio
     lines = lines.replace("{DOOR_LIST}", ''.join(event_door_list))
     lines = lines.replace("{LUIGIMAXHP}", max_health)
 
-    _update_custom_event(lm_gen.gcm, "48", False, lines, None)
+    _update_custom_event(lm_gen.lm_gcm, "48", False, lines, None)
 
 # Randomizes all the music in all the event.txt files.
 def randomize_music(lm_gen: "LuigisMansionRandomizer"):
     list_ignore_events = ["event00.szp"]
-    event_dir = lm_gen.gcm.get_or_create_dir_file_entry("files/Event")
+    event_dir = lm_gen.lm_gcm.get_or_create_dir_file_entry("files/Event")
 
     for lm_event in [event_file for event_file in event_dir.children if not event_file.is_dir]:
         if lm_event.name in list_ignore_events or not re.match(r"event\d+\.szp", lm_event.name):
             continue
 
-        event_arc = get_arc(lm_gen.gcm, lm_event.file_path)
+        event_arc = get_arc(lm_gen.lm_gcm, lm_event.file_path)
         name_to_find = lm_event.name.replace(".szp", ".txt")
 
         if not any(event_file for event_file in event_arc.file_entries if event_file.name == name_to_find):
@@ -173,11 +173,13 @@ def randomize_music(lm_gen: "LuigisMansionRandomizer"):
 
         event_arc.save_changes()
         logger.info("Randomize music Yay0 check...")
-        lm_gen.gcm.changed_files[lm_event.file_path] = Yay0.compress(event_arc.data)
+        lm_gen.lm_gcm.changed_files[lm_event.file_path] = Yay0.compress(event_arc.data)
 
 # Updates all portrait ghost hints, if the option is turned on.
 def write_portrait_hints(lm_gen: "LuigisMansionRandomizer", hint_distribution_choice: int, all_hints: dict[str, dict[str,str]]):
     csv_lines = _read_custom_file("csv", "message78.csv")
+    item_color = None
+
     if hint_distribution_choice == 1:
         for portrait_name in PORTRAIT_HINTS.keys():
             jokes = PROJECT_ROOT.joinpath('data', 'jokes.txt').read_text(encoding="utf-8")
@@ -211,13 +213,15 @@ def write_portrait_hints(lm_gen: "LuigisMansionRandomizer", hint_distribution_ch
                               "\n<COLOR>(0) can be found at \n<COLOR>(1)"+portrait_hint["Send Player"]+"'s \n"+portrait_hint["Location"])
                     csv_lines = csv_lines.replace(f"{portrait_name}", hintfo)
 
-    _update_custom_event(lm_gen.gcm, "78", True, None, csv_lines)
+    _update_custom_event(lm_gen.lm_gcm, "78", True, None, csv_lines)
 
 # Updates clairvoya's hints and mario item information based on the options selected.
 def randomize_clairvoya(lm_gen: "LuigisMansionRandomizer", req_mario_count: str, hint_distribution_choice: int,
     madame_hint: dict[str, str]):
     lines = _read_custom_file("txt", "event36.txt")
     csv_lines = _read_custom_file("csv", "message36.csv")
+    case_type = None
+    item_color = None
 
     match hint_distribution_choice:
         case 4:
@@ -270,7 +274,7 @@ def randomize_clairvoya(lm_gen: "LuigisMansionRandomizer", req_mario_count: str,
         else:
             lines = lines.replace(cases_to_replace[i], str_bad_end)
 
-    _update_custom_event(lm_gen.gcm, "36", True, lines, csv_lines)
+    _update_custom_event(lm_gen.lm_gcm, "36", True, lines, csv_lines)
 
 # Writes all the in game hints for everything except clairvoya
 def write_in_game_hints(lm_gen: "LuigisMansionRandomizer", hint_distribution_choice: int,
@@ -281,7 +285,9 @@ def write_in_game_hints(lm_gen: "LuigisMansionRandomizer", hint_distribution_cho
     lines = _read_custom_file("txt", "event12.txt")
     csv_lines = _read_custom_file("csv", "message12.csv")
     lines = lines.replace("{LUIGIMAXHP}", maxhp)
-    _update_custom_event(lm_gen.gcm, "12", True, lines, csv_lines)
+    _update_custom_event(lm_gen.lm_gcm, "12", True, lines, csv_lines)
+    item_color = None
+    case_type = None
 
     #Add various hints to their specific hint spots
     for hint_name in ALWAYS_HINT.keys():
@@ -355,14 +361,14 @@ def write_in_game_hints(lm_gen: "LuigisMansionRandomizer", hint_distribution_cho
             lines = lines.replace("{LUIGIMAXHP}", maxhp)
 
         if event_no == 4:
-            _update_custom_event(lm_gen.gcm, "04", True, lines, csv_lines)
+            _update_custom_event(lm_gen.lm_gcm, "04", True, lines, csv_lines)
         else:
-            _update_custom_event(lm_gen.gcm, str(event_no), True, lines, csv_lines)
+            _update_custom_event(lm_gen.lm_gcm, str(event_no), True, lines, csv_lines)
 
 # Update the spawn event info
 def update_spawn_events(lm_gen: "LuigisMansionRandomizer"):
     lines = _read_custom_file("txt", "event11.txt")
-    _update_custom_event(lm_gen.gcm, "11", True, lines, None)
+    _update_custom_event(lm_gen.lm_gcm, "11", True, lines, None)
 
 # Using the provided txt or csv lines for a given event file, updates the actual szp file in memory with this data.
 def _update_custom_event(gcm: GCM, event_number: str, delete_all_other_files: bool,
@@ -421,6 +427,8 @@ def _read_custom_file(file_type: str, file_name: str) -> str:
     :param file_type: Indicates which sub-folder in data to retrieve the file.
     :param file_name: Reads the provided file name in the sub-folder and decodes it via UTF-8
     """
+    file_data = None
+
     match file_type:
         case "csv":
             file_data = PROJECT_ROOT.joinpath('data', "custom_csvs", file_name).read_text(encoding='utf-8').replace("\n", "\r\n")

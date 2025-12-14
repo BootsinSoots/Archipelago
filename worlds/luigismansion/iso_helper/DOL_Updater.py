@@ -7,7 +7,7 @@ from ..Regions import REGION_LIST, LMRegionInfo
 from ..Helper_Functions import StringByteFunction as sbf, PROJECT_ROOT
 
 if TYPE_CHECKING:
-    from ..LM_ISO_Modifier import LuigisMansionRandomizer
+    from .LM_Randomize_ISO import LuigisMansionRandomizer
 
 CUSTOM_CODE_OFFSET_START = 0x39FA20
 LM_PLAYER_NAME_BYTE_LENGTH = 64
@@ -28,7 +28,7 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
 
     # Find the main DOL file and read it.
     lm_dol = DOL()
-    dol_data = lm_gen.gcm.read_file_data("sys/main.dol")
+    dol_data = lm_gen.lm_gcm.read_file_data("sys/main.dol")
     lm_dol.read(dol_data)
 
     # Walk Speed
@@ -38,11 +38,7 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
 
     # Vacuum Speed
     vac_count = len(list("Vacuum Upgrade" in key for key in start_inv))
-    match vac_count:
-        case x if vac_count >= 1:
-            vac_speed = "3800000F"
-        case _:
-            vac_speed = "800D0160"
+    vac_speed = "3800000F" if vac_count >= 1 else "800D0160"
 
     lm_dol.data.seek(0x7EA28)
     lm_dol.data.write(bytes.fromhex(vac_speed))
@@ -153,4 +149,4 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
 
     # Save all changes to the DOL itself.
     lm_dol.save_changes()
-    lm_gen.gcm.changed_files["sys/main.dol"] = lm_dol.data
+    lm_gen.lm_gcm.changed_files["sys/main.dol"] = lm_dol.data
