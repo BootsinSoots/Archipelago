@@ -17,52 +17,6 @@ def update_map_one_event_info(event_info):
         if x["EventNo"] == 8:
             x["EventIf"] = 5
 
-def update_character_info(character_info, output_data):
-    # Removes useless cutscene objects and the vacuum in the Parlor under the closet.
-    bad_actors_to_remove = ["vhead", "vbody", "dhakase", "demobak1", "dluige01"]
-    character_info.info_file_field_entries = list(filter(
-        lambda info_entry: not info_entry["name"] in bad_actors_to_remove, character_info.info_file_field_entries))
-
-    for x in character_info.info_file_field_entries:
-        # Replace the mstar Observatory item with its randomized item.
-        if x["name"] == "mstar":
-            x["name"] = _get_item_name(output_data["Locations"]["Observatory Shoot the Moon"], int(output_data["Slot"]))
-            x["appear_flag"] = 50
-            x["invisible"] = 1
-            x["pos_y"] = 600.000000
-
-        # Allow Chauncey, Lydia, and the Twins to spawn as soon as a new game is created.
-        if x["name"] in ("baby", "mother", "dboy", "dboy2"):
-            x["appear_flag"] = 0
-
-        # Fix a Nintendo mistake where the Cellar chest has a room ID of 0 instead of 63.
-        if x["create_name"] == "63_2":
-            x["room_no"] = 63
-
-        # Remove King Boo in the hallway, since his event was removed.
-        if x["name"] == "dltelesa" and x["room_no"] == 68:
-            character_info.info_file_field_entries.remove(x)
-
-        # Remove Miss Petunia to never disappear, unless captured.
-        if x["name"] == "fat" and x["room_no"] == 45:
-            x["disappear_flag"] = 0
-
-        # Make Shivers / Butler not disappear by doing a different appear flag.
-        if x["name"] == "situji":
-            x["appear_flag"] = 7
-
-        # Make Luggs stay gone if the light are on in the room
-        if x["name"] == "eater":
-            x["disappear_flag"] = 31
-
-        # Editing the starting room spawn coordinates (regardless of it random spawn is turned on).
-        if x["room_no"] == 2 and x["name"] == "luige":
-            spawn_region: LMRegionInfo = REGION_LIST[output_data["Options"]["spawn"]]
-            x["room_no"] = spawn_region.room_id
-            x["pos_y"] = spawn_region.pos_y
-            x["pos_x"] = spawn_region.pos_x
-            x["pos_z"] = spawn_region.pos_z
-
 def update_treasure_table(lm_gen: "LuigisMansionRandomizer", treasure_info, character_info, output_data):
     chest_option: int = int(output_data["Options"]["chest_types"])
     trap_option: int = int(output_data["Options"]["trap_chests"])
