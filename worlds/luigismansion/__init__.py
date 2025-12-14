@@ -810,7 +810,18 @@ class LMWorld(World):
             if location.address is None and not (location.name in ROOM_BOO_LOCATION_TABLE.keys()):
                 continue
 
-            if location.item:
+            if location.item.code is None:
+                item_info = {
+                    "player": location.item.player,
+                    "name": location.item.name,
+                    "game": self.game,
+                    "classification": location.item.classification,
+                    "door_id": 0, # Will always be 0 as an event item
+                    "room_no": 0, # Will always be 0 as an event item
+                    "type": location.type,
+                    "loc_enum": location.jmpentry, # Will always be 0 as an event item
+                }
+            elif location.item:
                 lm_item: "LMItem" = self.create_item(location.item.name)
                 doorid = lm_item.doorid if (lm_item.type and location.address and lm_item.player == self.player) else 0
                 roomid = REGION_LIST[location.parent_region.name].room_id
@@ -824,10 +835,11 @@ class LMWorld(World):
                     "type": location.type,
                     "loc_enum": location.jmpentry,
                 }
-                if self.options.boo_health_option.value == 2 and location.name in ROOM_BOO_LOCATION_TABLE.keys():
-                    item_info.update({"boo_sphere": self.boo_spheres[location.name]})
             else:
                 item_info = {"name": "Nothing", "game": self.game, "classification": "filler"}
+
+            if self.options.boo_health_option.value == 2 and location.name in ROOM_BOO_LOCATION_TABLE.keys():
+                item_info.update({"boo_sphere": self.boo_spheres[location.name]})
 
             if not location.type in output_data["Locations"].keys():
                 output_data["Locations"][location.type] = {}
