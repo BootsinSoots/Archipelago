@@ -1,6 +1,6 @@
 from typing import Any
 
-from gcbrickwork.JMP import JMP, JMPFieldHeader, JMPValue
+from gcbrickwork.JMP import JMP, JMPEntry
 
 from ..LM_Randomize_ISO import LuigisMansionRandomizer
 
@@ -319,7 +319,7 @@ def _get_key_name(door_id):
             return "key01"
 
 def add_new_jmp_data_entry(jmp_file: JMP, values_to_add: dict):
-    jmp_entry: dict[JMPFieldHeader, JMPValue] = {}
+    jmp_entry: JMPEntry = {}
     for jmp_header in jmp_file.fields:
         jmp_entry[jmp_header] = values_to_add[jmp_header.field_name]
     jmp_file.data_entries.append(jmp_entry)
