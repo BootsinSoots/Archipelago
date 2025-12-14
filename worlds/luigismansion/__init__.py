@@ -829,6 +829,8 @@ class LMWorld(World):
             else:
                 item_info = {"name": "Nothing", "game": self.game, "classification": "filler"}
 
+            if not location.type in output_data["Locations"].keys():
+                output_data["Locations"][location.type] = {}
             output_data["Locations"][location.type][location.name] = item_info
 
         # Outputs the plando details to our expected output file
