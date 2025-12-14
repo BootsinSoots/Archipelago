@@ -11,7 +11,7 @@ from JMP_Entry_Helpers import (LOCATION_TO_INDEX, SPEEDY_OBSERVER_INDEX, SPEEDY_
 from ..LM_Randomize_ISO import LuigisMansionRandomizer
 from ...Items import ALL_ITEMS_TABLE, LMItemData, CurrencyItemData, filler_items
 from ...Regions import REGION_LIST, TOAD_SPAWN_LIST
-from ...Locations import FLIP_BALCONY_BOO_EVENT_LIST, ALL_LOCATION_TABLE
+from ...Locations import FLIP_BALCONY_BOO_EVENT_LIST, ALL_LOCATION_TABLE, LMLocationData
 from ...game.Currency import CURRENCIES
 
 
@@ -25,10 +25,92 @@ class RandomizeJMPTables:
 
 
     def randomize_jmp_tables(self):
+        self._map_one_changes()
         self._map_two_changes()
+        self._map_six_changes()
+
+
+    def _map_one_changes(self):
+        """Updates all the jmp files with their relevant changes on the Lab map"""
+        map_one_events: JMP = self.lm_rando.map_files.get("map1").jmp_files["eventinfo"]
+
+        for event_entry in map_one_events.data_entries:
+            if int(map_one_events.get_jmp_header_name_value(event_entry, "EventNo")) == 8:
+                map_one_events.update_jmp_header_name_value(event_entry, "EventIf", 5)
+
+
+    def _map_six_changes(self):
+        """Updates all the jmp files with their relevant changes on the Gallery map"""
+        wdym_enabled: bool = bool(self.lm_rando.output_data["Options"]["WDYM_checks"])
+        if not wdym_enabled:
+            return
+
+        ceiling_furniture_list: list[int] = [0, 1]
+
+        map_six_furniture: JMP = self.lm_rando.map_files.get("map6").jmp_files["furnitureinfo"]
+        for furniture_jmp_id in ceiling_furniture_list:
+            curr_y_offset: int = int(map_six_furniture.get_jmp_header_name_value(
+                map_six_furniture.data_entries[furniture_jmp_id], "item_offset_y"))
+            adjust_y_offset = 225.0
+            map_six_furniture.update_jmp_header_name_value(map_six_furniture.data_entries[furniture_jmp_id],
+                "item_offset_y", curr_y_offset - adjust_y_offset)
+
+        for item_name, item_data in self.lm_rando.output_data["Locations"]["Furniture"].items():
+            location_data: LMLocationData = ALL_LOCATION_TABLE[item_name]
+            if not location_data.region == "Gallery":
+                continue
+
+            actor_item_name = get_item_name(item_data, self.lm_rando.slot)
+
+            furniture_entry: JMPEntry = map_six_furniture.data_entries[item_data["loc_enum"]]
+
+            # Replace the furnitureinfo entry to spawn an item from the "itemappeartable".
+            # If the entry is supposed to be money, then generate a random amount of coins and/or bills from it.
+            filtered_item_appear = list(map_six_furniture.get_jmp_header_name_value(item_appear_entry, "item0")
+                for item_appear_entry in map_six_furniture.data_entries if map_six_furniture.get_jmp_header_name_value(
+                item_appear_entry, "item0") == actor_item_name)
+            map_six_furniture.update_jmp_header_name_value(furniture_entry, "item_table",
+                filtered_item_appear.index(filtered_item_appear[len(filtered_item_appear) - 1]))
+
+            # TODO update using ALL items table instead
+            if any((key, val) for (key, val) in filler_items.items() if
+                   key == item_data["name"] and key != "Diamond" and val.type == "Money") \
+                    and item_data["player"] == self.lm_rando.slot:
+
+                map_six_furniture.update_jmp_header_name_value(furniture_entry, "item_table", 11)
+                int_money_amt = 1
+                if re.search(r"^\d+", item_data["name"]):
+                    int_money_amt = int(re.search(r"^\d+", item_data["name"]).group())
+                map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate_num", int_money_amt)
+                if "Coins" in item_data["name"]:
+                    if "Bills" in item_data["name"]:
+                        map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate", 3)
+                    else:
+                        map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate", 1)
+                elif "Bills" in item_data["name"]:
+                    map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate", 2)
+                elif "Sapphire" in item_data["name"]:
+                    map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate", 4)
+                elif "Emerald" in item_data["name"]:
+                    map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate", 6)
+                elif "Ruby" in item_data["name"]:
+                    map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate", 5)
+                elif "Gold Bar" in item_data["name"]:
+                    map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate", 7)
+                elif item_data["name"] == "Diamond":
+                    map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate", 9)
+                elif item_data["name"] == "Gold Diamond":
+                    map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate", 10)
+                else:
+                    map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate", 0)
+                    map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate_num", 0)
+            else:
+                map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate", 0)
+                map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate_num", 0)
 
 
     def _map_two_changes(self):
+        """Updates all the jmp files with their relevant changes on the main mainsion map"""
         self._map_two_generator_changes()
         self._map_two_obj_changes()
         self._map_two_room_info_changes()
@@ -865,6 +947,11 @@ class RandomizeJMPTables:
 
         for item_name, item_data in {**self.lm_rando.output_data["Locations"]["Furniture"],
             **self.lm_rando.output_data["Locations"]["Plant"]}.items():
+            # Ignore any Gallery region locations
+            location_data: LMLocationData = ALL_LOCATION_TABLE[item_name]
+            if location_data.region == "Gallery":
+                continue
+
             furniture_entry: JMPEntry = map_two_furniture.data_entries[item_data["loc_enum"]]
 
             if ((item_data["type"] == "Furniture" and item_name != "Kitchen Oven") and
