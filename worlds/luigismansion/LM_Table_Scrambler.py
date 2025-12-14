@@ -1481,19 +1481,6 @@ def update_treasure_table(lm_gen: "LuigisMansionRandomizer", treasure_info, char
             treasure_info.info_file_field_entries[item_data["loc_enum"]]["camera"] = 0
 
 
-def update_key_info(key_info, output_data):
-    # For every Freestanding Key in the game, replace its entry with the proper item from the generation output.
-    for item_name, item_data in output_data["Locations"].items():
-        if not item_data["type"] == "Freestanding":
-            continue
-
-        _set_key_info_entry(key_info.info_file_field_entries[LOCATION_TO_INDEX[item_name]], item_data,
-                             int(output_data["Slot"]))
-
-    # Remove the cutscene HD key from the Foyer, which only appears in the cutscene.
-    key_info.info_file_field_entries.remove(key_info.info_file_field_entries[2])
-
-
 def _set_key_info_entry(key_info_single_entry, item_data, slot: int):
     # Disable the item's invisible status by default.
     # This is needed since we change the appear_type to 0, which makes items other than keys not spawn out of bounds.
