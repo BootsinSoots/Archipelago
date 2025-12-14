@@ -381,15 +381,3 @@ def create_itemappear_entry(item_name: str) -> dict:
     for itemid in range(20):
         new_item["item" + str(itemid)] = item_name
     return new_item
-
-# Updates an existing entry in keyinfo / teidenkeyinfo
-def _update_key_info_entry(key_info_single_entry: dict, item_name: str, door_id: int):
-    # This is needed since we change the appear_type to 0, which makes items other than keys not spawn out of bounds.
-    # _get_item_name(item_data, slot) if not (item_data["door_id"] > 0) else \
-    #         (_get_key_name(item_data["door_id"]))
-    key_info_single_entry["name"] = item_name
-    key_info_single_entry["open_door_no"] = door_id
-    if key_info_single_entry["code_name"] == "demo_key2":
-        key_info_single_entry["invisible"] = 0
-    key_info_single_entry["appear_flag"] = 0
-    key_info_single_entry["disappear_flag"] = 0
