@@ -3,8 +3,8 @@ from math import ceil
 
 from gcbrickwork.JMP import JMP, JMPEntry
 
-from JMP_Entry_Helpers import (LOCATION_TO_INDEX, SPEEDY_OBSERVER_INDEX, get_item_name, create_iteminfo_entry,
-    add_new_jmp_data_entry, create_itemappear_entry, create_observer_entry)
+from JMP_Entry_Helpers import (LOCATION_TO_INDEX, SPEEDY_OBSERVER_INDEX, SPEEDY_ENEMY_INDEX, GHOST_LIST, get_item_name,
+    create_iteminfo_entry, add_new_jmp_data_entry, create_itemappear_entry, create_observer_entry, apply_new_ghost)
 
 from ..LM_Randomize_ISO import LuigisMansionRandomizer
 from ...Regions import REGION_LIST
@@ -30,6 +30,7 @@ class RandomizeJMPTables:
         self._map_two_boo_table_changes()
         self._map_two_teiden_observer_changes()
         self._map_two_observer_changes()
+        self._map_two_enemy_changes()
 
         self._map_two_item_info_changes()
         self._map_two_key_info_changes()
@@ -373,3 +374,39 @@ class RandomizeJMPTables:
         # This one checks for luigi entering the cold storage, triggering the snowman hint
         add_new_jmp_data_entry(map_two_normal_observer, create_observer_entry(1180.000000, -445.000000, -690.000000,
             61, 15, 7, arg0=157))
+
+
+    def _map_two_enemy_changes(self):
+        """Handles changes to enemy table for both normal and blackout."""
+        map_two_teiden_enemy: JMP = self.lm_rando.map_files.get("map2").jmp_files["teidenenemyinfo"]
+        map_two_normal_enemy: JMP = self.lm_rando.map_files.get("map2").jmp_files["enemyinfo"]
+
+        for entry_no in SPEEDY_ENEMY_INDEX:
+            speedy_entry: JMPEntry = map_two_normal_enemy.data_entries[entry_no]
+            map_two_teiden_enemy.data_entries.append(speedy_entry)
+            map_two_normal_enemy.data_entries.remove(speedy_entry)
+
+        # If randomize ghosts options are enabled
+        if self.lm_rando.output_data["Options"]["enemizer"] == 0:
+            return
+
+        for key, val in self.lm_rando.output_data["Room Enemies"].items():
+            room_id: int = REGION_LIST[key].room_id
+            for normal_enemy in map_two_normal_enemy.data_entries:
+                curr_room_no: int = int(map_two_normal_enemy.get_jmp_header_name_value(normal_enemy, "room_no"))
+                curr_enemy_name: str = map_two_normal_enemy.get_jmp_header_name_value(normal_enemy, "name")
+                if curr_room_no != room_id or not curr_enemy_name in GHOST_LIST:
+                    continue
+
+                if "16_1" in curr_enemy_name:
+                    map_two_normal_enemy.update_jmp_header_name_value(normal_enemy, "pos_y", 30.000000)
+
+                room_element: str = "No Element" if (room_id in [27, 35, 40]) else val
+                apply_new_ghost(self.lm_rando, map_two_normal_enemy, normal_enemy, room_element)
+
+            for blackout_enemy in map_two_teiden_enemy.data_entries:
+                curr_room_no: int = int(map_two_normal_enemy.get_jmp_header_name_value(blackout_enemy, "room_no"))
+                curr_enemy_name: str = map_two_normal_enemy.get_jmp_header_name_value(blackout_enemy, "name")
+                if curr_room_no != room_id or not curr_enemy_name in GHOST_LIST:
+                    continue
+                apply_new_ghost(self.lm_rando, map_two_teiden_enemy, blackout_enemy, val)
