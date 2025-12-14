@@ -1342,23 +1342,6 @@ def update_observer_info(observer_info, output_data):
         "(Undocumented)": 0,
     })
 
-
-def update_generator_info(generator_info):
-    for x in generator_info.info_file_field_entries:
-        # Allows the Ring of Boos on the 3F Balcony to only appear when the Ice Medal has been collected.
-        # This prevents being softlocked in Boolossus and having to reset the game without saving.
-        if x["type"] == "demotel2":
-            x["appear_flag"] = 45
-            x["disappear_flag"] = 81
-
-
-def update_obj_info(obj_info):
-    # Removes the vines on Area doors, as those require the Area Number of the game to be changed
-    # to have them disappear.
-    bad_objects_to_remove = ["eldoor07", "eldoor08", "eldoor09", "eldoor10"]
-    obj_info.info_file_field_entries = list(filter(
-        lambda info_entry: not info_entry["name"] in bad_objects_to_remove, obj_info.info_file_field_entries))
-
 # For every key found in the generation output, add an entry for it in "iteminfotable".
 def update_item_info_table(item_info, output_data):
     # Adds the special items, so they can spawn in furniture or chests.
@@ -1884,17 +1867,3 @@ def apply_new_ghost(lm_gen: "LuigisMansionRandomizer", enemy_info_entry, element
     # If the new ghost is a Ceiling Ghost, increase its spawning Y position so it spawns in the air.
     if "tenjyo" in enemy_info_entry["name"]:
         enemy_info_entry["pos_y"] += 200.000
-
-def update_room_info(lm_gen: "LuigisMansionRandomizer", room_info, spooky_rating: int):
-    if spooky_rating == 1:
-        for room in room_info.info_file_field_entries:
-            room["Thunder"] = 3 # MANY THUNDER
-            room["sound_echo_parameter"] = 20 # LONG ECHO
-            room["sound_room_code"] = 5 # CREAKY CREAKY
-    elif spooky_rating == 2:
-        for room in room_info.info_file_field_entries:
-            coin_flip = lm_gen.random.choice(sorted([0,1]))
-            if coin_flip == 1:
-                room["Thunder"] = 3  # MANY THUNDER
-                room["sound_echo_parameter"] = 20  # LONG ECHO
-                room["sound_room_code"] = 5  # CREAKY CREAKY
