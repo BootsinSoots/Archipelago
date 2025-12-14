@@ -1662,34 +1662,6 @@ def update_enemy_info(lm_gen: "LuigisMansionRandomizer", enemy_info, teiden_enem
             apply_new_ghost(lm_gen, enemy_to_change, val)
 
 
-def update_boo_table(lm_gen: "LuigisMansionRandomizer", telesa_info, output_data):
-    if output_data["Options"]["boo_health_option"] == 3:
-        return
-    hp_unit = 0
-    if output_data["Options"]["boo_health_option"] == 2:
-        max_sphere = 0
-        for loc_name, loc_info in output_data["Locations"].items():
-            if loc_info["type"] != "Boo":
-                continue
-            if max_sphere < loc_info["boo_sphere"]:
-                max_sphere = loc_info["boo_sphere"]
-        hp_unit = output_data["Options"]["boo_health_value"]/max_sphere
-    for x in telesa_info.info_file_field_entries:
-        x["accel"] = 3.000000
-        x["max_speed"] = output_data["Options"]["boo_speed"]
-        if output_data["Options"]["boo_health_option"] == 0:
-            x["str_hp"] = output_data["Options"]["boo_health_value"]
-        elif output_data["Options"]["boo_health_option"] == 1:
-            x["str_hp"] = lm_gen.random.randint(1,output_data["Options"]["boo_health_value"])
-        elif output_data["Options"]["boo_health_option"] == 2:
-            for loc_name, loc_info in output_data["Locations"].items():
-                if loc_info["room_no"] != x["init_room"] or loc_info["type"] != "Boo":
-                    continue
-                x["str_hp"] = ceil(hp_unit*loc_info["boo_sphere"]) if ceil(hp_unit*loc_info["boo_sphere"]) <= output_data["Options"]["boo_health_value"] else output_data["Options"]["boo_health_value"]
-        x["move_time"] = output_data["Options"]["boo_escape_time"]
-        x["attack"] = output_data["Options"]["boo_anger"]
-
-
 def update_iyapoo_table(iyapoo_table, output_data):
     if output_data["Options"]["speedy_spirits"] == 0 and output_data["Options"]["gold_mice"] == 0:
         return
