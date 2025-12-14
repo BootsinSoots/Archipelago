@@ -720,9 +720,9 @@ class LMWorld(World):
 
     def post_fill(self) -> None:
         if self.options.boosanity:
-            boolossus_locations = []
+            boolossus_locations: list[LMLocation] = []
             for location in BOOLOSSUS_LOCATION_TABLE.keys():
-                boolossus_locations += self.get_location(location)
+                boolossus_locations += [self.get_location(location)]
             trap_boolossus_list = [lm_loc for lm_loc in boolossus_locations if lm_loc.item.classification == IC.trap]
             if len(trap_boolossus_list) > 8:
                 trap_count = len(trap_boolossus_list) - 8
