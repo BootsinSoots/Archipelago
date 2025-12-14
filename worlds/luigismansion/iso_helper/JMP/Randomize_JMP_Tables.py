@@ -4,12 +4,14 @@ from math import ceil
 from gcbrickwork.JMP import JMP, JMPEntry
 
 from JMP_Entry_Helpers import (LOCATION_TO_INDEX, SPEEDY_OBSERVER_INDEX, SPEEDY_ENEMY_INDEX, GHOST_LIST, get_item_name,
-    create_iteminfo_entry, add_new_jmp_data_entry, create_itemappear_entry, create_observer_entry, apply_new_ghost)
+    create_iteminfo_entry, add_new_jmp_data_entry, create_itemappear_entry, create_observer_entry, apply_new_ghost,
+    get_item_chest_visual, get_chest_size_from_item)
 
 from ..LM_Randomize_ISO import LuigisMansionRandomizer
-from ...Items import ALL_ITEMS_TABLE
+from ...Items import ALL_ITEMS_TABLE, LMItemData, CurrencyItemData
 from ...Regions import REGION_LIST, TOAD_SPAWN_LIST
 from ...Locations import FLIP_BALCONY_BOO_EVENT_LIST
+from ...game.Currency import CURRENCIES
 
 
 class RandomizeJMPTables:
@@ -38,6 +40,7 @@ class RandomizeJMPTables:
         self._map_two_item_info_changes()
         self._map_two_key_info_changes()
         self._map_two_character_changes()
+        self._map_two_treasure_changes()
         self._map_two_iyapoo_changes()
 
 
@@ -767,3 +770,61 @@ class RandomizeJMPTables:
             map_two_iyapoo.update_jmp_header_name_value(iyapoo_entry, "sapphire", sapphire_amount)
             map_two_iyapoo.update_jmp_header_name_value(iyapoo_entry, "emerald", emerald_amount)
             map_two_iyapoo.update_jmp_header_name_value(iyapoo_entry, "ruby", ruby_amount)
+
+
+    def _map_two_treasure_changes(self):
+        chest_option: int = int(self.lm_rando.output_data["Options"]["chest_types"])
+        trap_option: int = int(self.lm_rando.output_data["Options"]["trap_chests"])
+
+        map_two_characters: JMP = self.lm_rando.map_files.get("map2").jmp_files["characterinfo"]
+        map_two_treasure: JMP = self.lm_rando.map_files.get("map2").jmp_files["treasuretable"]
+
+        for item_name, item_data in self.lm_rando.output_data["Locations"]["Chest"].items():
+            for char_entry in map_two_characters.data_entries:
+                char_name: str = map_two_characters.get_jmp_header_name_value(char_entry, "name")
+                char_room: int = int(map_two_characters.get_jmp_header_name_value(char_entry, "room_no"))
+                # If the name is not a chest or the outside flower/nut
+                if not ("takara" in char_name or char_name == "nut"):
+                    continue
+                # If the character is not the same room as the current chest.
+                elif not char_room == int(item_data["room_no"]):
+                    continue
+
+                # Special Case: Move the Laundry room chest back from Butler door
+                if char_room == 5:
+                    map_two_characters.update_jmp_header_name_value(char_entry, "poz_z", -1100.000000)
+
+                # Special Case: Move 2F Bathroom chest back from wall
+                elif char_room == 45:
+                    map_two_characters.update_jmp_header_name_value(char_entry, "pos_x", -1900.000000)
+                    map_two_characters.update_jmp_header_name_value(char_entry, "poz_z", -4830.000000)
+
+                treasure_entry: JMPEntry = map_two_treasure.data_entries[item_data["loc_enum"]]
+
+                # Change chest appearance and size based of player cosmetic choices
+                map_two_characters.update_jmp_header_name_value(char_entry, "name",
+                    get_item_chest_visual(self.lm_rando, item_data, char_name))
+
+                # Setting all curriences to 0 value by default.
+                for currency_name in CURRENCIES:
+                    map_two_treasure.update_jmp_header_name_value(treasure_entry, currency_name, 0)
+
+                # Don't give any items that are not from our game, leave those 0 / blank.
+                if int(item_data["player"]) == self.lm_rando.slot and item_data["name"] in ALL_ITEMS_TABLE.keys():
+                    lm_item_data: type[LMItemData | CurrencyItemData] = ALL_ITEMS_TABLE[item_data["name"]]
+
+                    # If it's a money item, set the currencies based on our defined bundles
+                    if hasattr(lm_item_data, 'currencies'):
+                        for currency_name, currency_amount in lm_item_data.currencies.items():
+                            map_two_treasure.update_jmp_header_name_value(treasure_entry, currency_name, currency_amount)
+
+                map_two_treasure.update_jmp_header_name_value(treasure_entry, "cdiamond", 0)
+                map_two_treasure.update_jmp_header_name_value(treasure_entry, "effect", 0)
+                map_two_treasure.update_jmp_header_name_value(treasure_entry, "camera", 0)
+
+                chest_size = int(map_two_treasure.get_jmp_header_name_value(treasure_entry, "size"))
+                map_two_characters.update_jmp_header_name_value(treasure_entry, "size",
+                    get_chest_size_from_item(self.lm_rando, item_data, chest_size))
+
+                # Define the actor name to use from the Location in the generation output. Act differently if it's a key.
+                map_two_characters.update_jmp_header_name_value(treasure_entry, "other", get_item_name(item_data, self.lm_rando.slot))
