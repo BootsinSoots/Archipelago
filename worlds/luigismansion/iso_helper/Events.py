@@ -28,6 +28,7 @@ class EventChanges:
         self._update_intro_and_lab_events()
         self._update_boo_gates()
         self._update_blackout_event()
+        self._randomize_clairvoya()
 
 
     def _update_common_events(self):
@@ -188,6 +189,73 @@ class EventChanges:
         csv_lines = _read_custom_file("csv", "message44.csv")
         _update_custom_event(self.lm_rando.lm_gcm, "44", True, lines, csv_lines)
 
+
+    def _randomize_clairvoya(self):
+        """Updates clairvoya's hints and mario item information based on the options selected."""
+        self.lm_rando.client_logger.info("Updating Clairvoya's event with the customized version.")
+        req_mario_count: int = int(self.lm_rando.output_data["Options"]["mario_items"])
+        hint_dist: int = int(self.lm_rando.output_data["Options"]["hint_distribution"])
+        hint_list: dict[str, dict[str, str]] = self.lm_rando.output_data["Hints"]
+        madame_hint: dict[str, str] = hint_list["Madame Clairvoya"] if "Madame Clairvoya" in hint_list else None
+
+        lines = _read_custom_file("txt", "event36.txt")
+        csv_lines = _read_custom_file("csv", "message36.csv")
+        case_type = None
+        item_color = None
+
+        match hint_dist:
+            case 4:
+                match madame_hint["Class"]:
+                    case "Prog":
+                        item_color = "5"
+                    case "Trap":
+                        item_color = "2"
+                    case _:
+                        item_color = "6"
+                csv_lines = csv_lines.replace("{RecPlayer}", madame_hint["Rec Player"])
+                csv_lines = csv_lines.replace("{ItemColor}", item_color)
+                csv_lines = csv_lines.replace("{ItemName}", madame_hint["Item"])
+                csv_lines = csv_lines.replace("{SendPlayer}", madame_hint["Send Player"])
+                csv_lines = csv_lines.replace("{WorldOrLoc}", madame_hint["Game"])
+                case_type = "VagueHint"
+            case 5:
+                case_type = "DisabledHint"
+            case 1:
+                jokes = PROJECT_ROOT.joinpath('data', 'jokes.txt').read_text(encoding="utf-8")
+                joke_hint = self.lm_rando.random.choice(sorted(str.splitlines(jokes)))
+                csv_lines = csv_lines.replace("{JokeText}", joke_hint)
+                case_type = "JokeHint"
+            case _:
+                match madame_hint["Class"]:
+                    case "Prog":
+                        item_color = "5"
+                    case "Trap":
+                        item_color = "2"
+                    case _:
+                        item_color = "6"
+                csv_lines = csv_lines.replace("{RecPlayer}", madame_hint["Rec Player"])
+                csv_lines = csv_lines.replace("{ItemColor}", item_color)
+                csv_lines = csv_lines.replace("{ItemName}", madame_hint["Item"])
+                csv_lines = csv_lines.replace("{SendPlayer}", madame_hint["Send Player"])
+                csv_lines = csv_lines.replace("{WorldOrLoc}", madame_hint["Location"])
+                case_type = "SpecificHint"
+
+        csv_lines = csv_lines.replace("{MarioCount}", str(req_mario_count))
+        csv_lines = csv_lines.replace("{BreakHere}", "\n")
+        lines = lines.replace("{HintType}", case_type)
+
+        cases_to_replace = ["{CaseZero}", "{CaseOne}", "{CaseTwo}", "{CaseThree}", "{CaseFour}", "{CaseFive}"]
+        str_good_end = "GoodEnd"
+        str_bad_end = "MissingItems"
+
+        for i in range(0, 6):
+            if i >= req_mario_count:
+                lines = lines.replace(cases_to_replace[i], str_good_end)
+            else:
+                lines = lines.replace(cases_to_replace[i], str_bad_end)
+
+        _update_custom_event(self.lm_rando.lm_gcm, "36", True, lines, csv_lines)
+
 # Randomizes all the music in all the event.txt files.
 def randomize_music(lm_gen: "LuigisMansionRandomizer"):
     list_ignore_events = ["event00.szp"]
@@ -263,67 +331,6 @@ def write_portrait_hints(lm_gen: "LuigisMansionRandomizer", hint_distribution_ch
                     csv_lines = csv_lines.replace(f"{portrait_name}", hintfo)
 
     _update_custom_event(lm_gen.lm_gcm, "78", True, None, csv_lines)
-
-# Updates clairvoya's hints and mario item information based on the options selected.
-def randomize_clairvoya(lm_gen: "LuigisMansionRandomizer", req_mario_count: str, hint_distribution_choice: int,
-    madame_hint: dict[str, str]):
-    lines = _read_custom_file("txt", "event36.txt")
-    csv_lines = _read_custom_file("csv", "message36.csv")
-    case_type = None
-    item_color = None
-
-    match hint_distribution_choice:
-        case 4:
-            match madame_hint["Class"]:
-                case "Prog":
-                    item_color = "5"
-                case "Trap":
-                    item_color = "2"
-                case _:
-                    item_color = "6"
-            csv_lines = csv_lines.replace("{RecPlayer}", madame_hint["Rec Player"])
-            csv_lines = csv_lines.replace("{ItemColor}", item_color)
-            csv_lines = csv_lines.replace("{ItemName}", madame_hint["Item"])
-            csv_lines = csv_lines.replace("{SendPlayer}", madame_hint["Send Player"])
-            csv_lines = csv_lines.replace("{WorldOrLoc}", madame_hint["Game"])
-            case_type = "VagueHint"
-        case 5:
-            case_type = "DisabledHint"
-        case 1:
-            jokes = PROJECT_ROOT.joinpath('data', 'jokes.txt').read_text(encoding="utf-8")
-            joke_hint = lm_gen.random.choice(sorted(str.splitlines(jokes)))
-            csv_lines = csv_lines.replace("{JokeText}", joke_hint)
-            case_type = "JokeHint"
-        case _:
-            match madame_hint["Class"]:
-                case "Prog":
-                    item_color = "5"
-                case "Trap":
-                    item_color = "2"
-                case _:
-                    item_color = "6"
-            csv_lines = csv_lines.replace("{RecPlayer}", madame_hint["Rec Player"])
-            csv_lines = csv_lines.replace("{ItemColor}", item_color)
-            csv_lines = csv_lines.replace("{ItemName}", madame_hint["Item"])
-            csv_lines = csv_lines.replace("{SendPlayer}", madame_hint["Send Player"])
-            csv_lines = csv_lines.replace("{WorldOrLoc}", madame_hint["Location"])
-            case_type = "SpecificHint"
-
-    csv_lines = csv_lines.replace("{MarioCount}", req_mario_count)
-    csv_lines = csv_lines.replace("{BreakHere}", "\n")
-    lines = lines.replace("{HintType}", case_type)
-
-    cases_to_replace = ["{CaseZero}", "{CaseOne}", "{CaseTwo}", "{CaseThree}", "{CaseFour}", "{CaseFive}"]
-    str_good_end = "GoodEnd"
-    str_bad_end = "MissingItems"
-
-    for i in range(0, 6):
-        if i >= int(req_mario_count):
-            lines = lines.replace(cases_to_replace[i], str_good_end)
-        else:
-            lines = lines.replace(cases_to_replace[i], str_bad_end)
-
-    _update_custom_event(lm_gen.lm_gcm, "36", True, lines, csv_lines)
 
 # Writes all the in game hints for everything except clairvoya
 def write_in_game_hints(lm_gen: "LuigisMansionRandomizer", hint_distribution_choice: int,
