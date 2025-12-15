@@ -26,6 +26,7 @@ class EventChanges:
         self.lm_rando.client_logger.info("Now updating all in-game events of various types...")
         self._update_common_events()
         self._update_intro_and_lab_events()
+        self._update_blackout_event()
         self._update_boo_gates()
 
 
@@ -179,11 +180,13 @@ class EventChanges:
 
             _update_custom_event(self.lm_rando.lm_gcm, event_no, True, lines, None)
 
-# Updates the event txt and csv for blackout
-def update_blackout_event(lm_gen: "LuigisMansionRandomizer"):
-    lines = _read_custom_file("txt", "event44.txt")
-    csv_lines = _read_custom_file("csv", "message44.csv")
-    _update_custom_event(lm_gen.lm_gcm, "44", True, lines, csv_lines)
+
+    def _update_blackout_event(self):
+        """Updates the event txt and csv for the blackout."""
+        self.lm_rando.client_logger.info("Updating the blackout event with the customized version.")
+        lines = _read_custom_file("txt", "event44.txt")
+        csv_lines = _read_custom_file("csv", "message44.csv")
+        _update_custom_event(self.lm_rando.lm_gcm, "44", True, lines, csv_lines)
 
 # Randomizes all the music in all the event.txt files.
 def randomize_music(lm_gen: "LuigisMansionRandomizer"):
