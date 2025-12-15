@@ -26,8 +26,8 @@ class EventChanges:
         self.lm_rando.client_logger.info("Now updating all in-game events of various types...")
         self._update_common_events()
         self._update_intro_and_lab_events()
-        self._update_blackout_event()
         self._update_boo_gates()
+        self._update_blackout_event()
 
 
     def _update_common_events(self):
