@@ -16,10 +16,16 @@ from .LM_Randomize_ISO import LuigisMansionRandomizer
 class EventChanges:
 
     lm_rando: LuigisMansionRandomizer = None
+    hint_dist: int = None
+    luigi_max_hp: str = None
+    hint_list: dict[str, dict[str, str]] = None
 
 
     def __init__(self, rando_obj: LuigisMansionRandomizer):
         self.lm_rando = rando_obj
+        self.hint_dist = int(self.lm_rando.output_data["Options"]["hint_distribution"])
+        self.luigi_max_hp = str(self.lm_rando.output_data["Options"]["luigi_max_health"])
+        self.hint_list = self.lm_rando.output_data["Hints"]
 
 
     def update_in_game_events(self):
@@ -55,7 +61,6 @@ class EventChanges:
         bool_start_vacuum: bool = bool(self.lm_rando.output_data["Options"]["vacuum_start"])
         bool_hidden_mansion: bool = bool(self.lm_rando.output_data["Options"]["hidden_mansion"])
         bool_start_boo_radar: bool = not bool(self.lm_rando.output_data["Options"]["boo_radar"])
-        luigi_max_health: str = str(self.lm_rando.output_data["Options"]["luigi_max_health"])
         doors_to_close: dict[int, int] = dict(self.lm_rando.output_data["Entrances"])
 
         self.lm_rando.client_logger.info("Updating the Gallery event with the customized version.")
@@ -65,7 +70,7 @@ class EventChanges:
 
         self.lm_rando.client_logger.info("Updating the E. Gadd's lab event with the customized version.")
         lines = _read_custom_file("txt", "event08.txt")
-        lines = lines.replace("{LUIGIMAXHP}", luigi_max_health)
+        lines = lines.replace("{LUIGIMAXHP}", self.luigi_max_hp)
         csv_lines = _read_custom_file("csv", "message8.csv")
         _update_custom_event(self.lm_rando.lm_gcm, "08", True, lines, csv_lines)
 
@@ -90,7 +95,7 @@ class EventChanges:
             event_door_list.append(("<KEYLOCK>" if doors_to_close.get(event_door) == 0 else "<KEYUNLOCK>") + f"({event_door})\r\n")
 
         lines = lines.replace("{DOOR_LIST}", ''.join(event_door_list))
-        lines = lines.replace("{LUIGIMAXHP}", luigi_max_health)
+        lines = lines.replace("{LUIGIMAXHP}", self.luigi_max_hp)
 
         _update_custom_event(self.lm_rando.lm_gcm, "48", False, lines, None)
 
@@ -194,16 +199,14 @@ class EventChanges:
         """Updates clairvoya's hints and mario item information based on the options selected."""
         self.lm_rando.client_logger.info("Updating Clairvoya's event with the customized version.")
         req_mario_count: int = int(self.lm_rando.output_data["Options"]["mario_items"])
-        hint_dist: int = int(self.lm_rando.output_data["Options"]["hint_distribution"])
-        hint_list: dict[str, dict[str, str]] = self.lm_rando.output_data["Hints"]
-        madame_hint: dict[str, str] = hint_list["Madame Clairvoya"] if "Madame Clairvoya" in hint_list else None
+        madame_hint: dict[str, str] = self.hint_list["Madame Clairvoya"] if "Madame Clairvoya" in self.hint_list else None
 
         lines = _read_custom_file("txt", "event36.txt")
         csv_lines = _read_custom_file("csv", "message36.csv")
         case_type = None
         item_color = None
 
-        match hint_dist:
+        match self.hint_dist:
             case 4:
                 match madame_hint["Class"]:
                     case "Prog":
@@ -255,6 +258,97 @@ class EventChanges:
                 lines = lines.replace(cases_to_replace[i], str_bad_end)
 
         _update_custom_event(self.lm_rando.lm_gcm, "36", True, lines, csv_lines)
+
+
+    def write_in_game_hints(self):
+        """Writes all the in game hints for everything except clairvoya"""
+        self.lm_rando.client_logger.info("Updating common events with the generated in-game hints.")
+        hint_data: dict[str, str] = {}
+
+        # Add new event and csv to our special spawn toad
+        lines = _read_custom_file("txt", "event12.txt")
+        csv_lines = _read_custom_file("csv", "message12.csv")
+        lines = lines.replace("{LUIGIMAXHP}", self.luigi_max_hp)
+        _update_custom_event(self.lm_rando.lm_gcm, "12", True, lines, csv_lines)
+
+        # Add various hints to their specific hint spots
+        item_color = None
+        case_type = None
+        for hint_name in ALWAYS_HINT.keys():
+            if hint_name == "Madame Clairvoya":
+                continue
+            event_no: int = 0
+            match hint_name:
+                case "Courtyard Toad":
+                    event_no = 4
+                case "Foyer Toad":
+                    event_no = 17
+                case "Wardrobe Balcony Toad":
+                    event_no = 32
+                case "1F Washroom Toad":
+                    event_no = 63
+                case "Center Telephone":
+                    event_no = 92
+                case "Left Telephone":
+                    event_no = 93
+                case "Right Telephone":
+                    event_no = 94
+            if self.hint_dist != 1 and self.hint_dist != 5:
+                hint_data = self.hint_list[hint_name]
+
+            if event_no == 4:
+                lines = _read_custom_file("txt", "event04.txt")
+            else:
+                lines = _read_custom_file("txt", "event" + str(event_no) + ".txt")
+            csv_lines = _read_custom_file("csv", "message" + str(event_no) + ".csv")
+
+            match self.hint_dist:
+                case 4:
+                    match hint_data["Class"]:
+                        case "Prog":
+                            item_color = "5"
+                        case "Trap":
+                            item_color = "2"
+                        case _:
+                            item_color = "6"
+                    csv_lines = csv_lines.replace("{RecPlayer}", hint_data["Rec Player"])
+                    csv_lines = csv_lines.replace("{ItemColor}", item_color)
+                    csv_lines = csv_lines.replace("{ItemName}", hint_data["Item"])
+                    csv_lines = csv_lines.replace("{SendPlayer}", hint_data["Send Player"])
+                    csv_lines = csv_lines.replace("{WorldOrLoc}", hint_data["Game"])
+                    case_type = "VagueHint"
+                case 5:
+                    case_type = "DisabledHint"
+                case 1:
+                    jokes = PROJECT_ROOT.joinpath('data', 'jokes.txt').read_text(encoding="utf-8")
+                    joke_hint = self.lm_rando.random.choice(sorted(str.splitlines(jokes)))
+                    csv_lines = csv_lines.replace("{JokeText}", joke_hint)
+                    case_type = "JokeHint"
+                case _:
+                    match hint_data["Class"]:
+                        case "Prog":
+                            item_color = "5"
+                        case "Trap":
+                            item_color = "2"
+                        case _:
+                            item_color = "6"
+                    csv_lines = csv_lines.replace("{RecPlayer}", hint_data["Rec Player"])
+                    csv_lines = csv_lines.replace("{ItemColor}", item_color)
+                    csv_lines = csv_lines.replace("{ItemName}", hint_data["Item"])
+                    csv_lines = csv_lines.replace("{SendPlayer}", hint_data["Send Player"])
+                    csv_lines = csv_lines.replace("{WorldOrLoc}", hint_data["Location"])
+                    case_type = "SpecificHint"
+
+            csv_lines = csv_lines.replace("{BreakHere}", "\n")
+            lines = lines.replace("{HintType}", case_type)
+            if event_no in (4, 17, 32, 63):
+                lines = lines.replace("{LUIGIMAXHP}", self.luigi_max_hp)
+
+            if event_no == 4:
+                _update_custom_event(self.lm_rando.lm_gcm, "04", True, lines, csv_lines)
+            else:
+                _update_custom_event(self.lm_rando.lm_gcm, str(event_no), True, lines, csv_lines)
+
 
 # Randomizes all the music in all the event.txt files.
 def randomize_music(lm_gen: "LuigisMansionRandomizer"):
@@ -332,94 +426,6 @@ def write_portrait_hints(lm_gen: "LuigisMansionRandomizer", hint_distribution_ch
 
     _update_custom_event(lm_gen.lm_gcm, "78", True, None, csv_lines)
 
-# Writes all the in game hints for everything except clairvoya
-def write_in_game_hints(lm_gen: "LuigisMansionRandomizer", hint_distribution_choice: int,
-    all_hints: dict[str, dict[str, str]], maxhp: str):
-    hint_data: dict[str, str] = {}
-
-    # Add new event and csv to our special spawn toad
-    lines = _read_custom_file("txt", "event12.txt")
-    csv_lines = _read_custom_file("csv", "message12.csv")
-    lines = lines.replace("{LUIGIMAXHP}", maxhp)
-    _update_custom_event(lm_gen.lm_gcm, "12", True, lines, csv_lines)
-    item_color = None
-    case_type = None
-
-    #Add various hints to their specific hint spots
-    for hint_name in ALWAYS_HINT.keys():
-        if hint_name == "Madame Clairvoya":
-            continue
-        event_no: int = 0
-        match hint_name:
-            case "Courtyard Toad":
-                event_no = 4
-            case "Foyer Toad":
-                event_no = 17
-            case "Wardrobe Balcony Toad":
-                event_no = 32
-            case "1F Washroom Toad":
-                event_no = 63
-            case "Center Telephone":
-                event_no = 92
-            case "Left Telephone":
-                event_no = 93
-            case "Right Telephone":
-                event_no = 94
-        if hint_distribution_choice != 1 and hint_distribution_choice != 5:
-            hint_data = all_hints[hint_name]
-
-        if event_no == 4:
-            lines = _read_custom_file("txt", "event04.txt")
-        else:
-            lines = _read_custom_file("txt", "event"+str(event_no)+".txt")
-        csv_lines = _read_custom_file("csv", "message"+str(event_no)+".csv")
-
-        match hint_distribution_choice:
-            case 4:
-                match hint_data["Class"]:
-                    case "Prog":
-                        item_color = "5"
-                    case "Trap":
-                        item_color = "2"
-                    case _:
-                        item_color = "6"
-                csv_lines = csv_lines.replace("{RecPlayer}", hint_data["Rec Player"])
-                csv_lines = csv_lines.replace("{ItemColor}", item_color)
-                csv_lines = csv_lines.replace("{ItemName}", hint_data["Item"])
-                csv_lines = csv_lines.replace("{SendPlayer}", hint_data["Send Player"])
-                csv_lines = csv_lines.replace("{WorldOrLoc}", hint_data["Game"])
-                case_type = "VagueHint"
-            case 5:
-                case_type = "DisabledHint"
-            case 1:
-                jokes = PROJECT_ROOT.joinpath('data', 'jokes.txt').read_text(encoding="utf-8")
-                joke_hint = lm_gen.random.choice(sorted(str.splitlines(jokes)))
-                csv_lines = csv_lines.replace("{JokeText}", joke_hint)
-                case_type = "JokeHint"
-            case _:
-                match hint_data["Class"]:
-                    case "Prog":
-                        item_color = "5"
-                    case "Trap":
-                        item_color = "2"
-                    case _:
-                        item_color = "6"
-                csv_lines = csv_lines.replace("{RecPlayer}", hint_data["Rec Player"])
-                csv_lines = csv_lines.replace("{ItemColor}", item_color)
-                csv_lines = csv_lines.replace("{ItemName}", hint_data["Item"])
-                csv_lines = csv_lines.replace("{SendPlayer}", hint_data["Send Player"])
-                csv_lines = csv_lines.replace("{WorldOrLoc}", hint_data["Location"])
-                case_type = "SpecificHint"
-
-        csv_lines = csv_lines.replace("{BreakHere}", "\n")
-        lines = lines.replace("{HintType}", case_type)
-        if event_no in (4, 17, 32, 63):
-            lines = lines.replace("{LUIGIMAXHP}", maxhp)
-
-        if event_no == 4:
-            _update_custom_event(lm_gen.lm_gcm, "04", True, lines, csv_lines)
-        else:
-            _update_custom_event(lm_gen.lm_gcm, str(event_no), True, lines, csv_lines)
 
 # Update the spawn event info
 def update_spawn_events(lm_gen: "LuigisMansionRandomizer"):
