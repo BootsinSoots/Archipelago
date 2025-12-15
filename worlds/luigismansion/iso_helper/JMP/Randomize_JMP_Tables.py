@@ -649,7 +649,7 @@ class RandomizeJMPTables:
             #     x["EventLoad"] = 0
 
             # Update the King Boo event trigger to be area entry based
-            elif boo_checks and event_num == 16:
+            elif boo_gates_enabled and event_num == 16:
                 map_two_events.update_jmp_header_name_value(event_info, "EventIf", 5)
                 map_two_events.update_jmp_header_name_value(event_info, "EventArea", 200)
                 map_two_events.update_jmp_header_name_value(event_info, "EventLock", 1)
@@ -660,7 +660,7 @@ class RandomizeJMPTables:
                 map_two_events.update_jmp_header_name_value(event_info, "pos_z", -5300.000000)
 
             # Update the Balcony Boo event trigger to be area entry based
-            elif boo_checks and event_num == 96:
+            elif boo_gates_enabled and event_num == 96:
                 if spawn_area in FLIP_BALCONY_BOO_EVENT_LIST:
                     map_two_events.update_jmp_header_name_value(event_info, "pos_x", 1800.000000)
                     map_two_events.update_jmp_header_name_value(event_info, "pos_y", 1200.000000)
