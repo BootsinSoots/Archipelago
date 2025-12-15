@@ -24,10 +24,30 @@ class EventChanges:
 
     def update_in_game_events(self):
         self.lm_rando.client_logger.info("Now updating all in-game events of various types...")
+        self._update_common_events()
         self._update_boo_gates()
 
 
+    def _update_common_events(self):
+        """Updates all the common events to have their custom event text."""
+        self.lm_rando.client_logger.info("Updating all of the common events with the customized version.")
+        bool_randomize_mice: bool = bool(self.lm_rando.output_data["Options"]["gold_mice"])
+        bool_start_vacuum: bool = bool(self.lm_rando.output_data["Options"]["vacuum_start"])
+
+        list_custom_events = ["03", "10", "13", "22", "23", "24", "29", "33", "35", "37", "38", "50", "61", "64",
+                              "65", "66", "67", "68", "71", "72", "74", "75", "82", "86", "87", "88", "89", "90"]
+        if bool_randomize_mice:
+            list_custom_events += ["95", "97", "98", "99", "100"]
+
+        for custom_event in list_custom_events:
+            lines = _read_custom_file("txt", "event" + custom_event + ".txt")
+            if custom_event == "10" and not bool_start_vacuum:
+                lines = lines.replace("<WEAPON>", "<NOWEAPON>")
+            _update_custom_event(self.lm_rando.lm_gcm, custom_event, True, lines, None)
+
+
     def _update_boo_gates(self):
+        """Updates the boo gates events to ensure they have proper counts/triggers."""
         boo_gates_enabled: bool = bool(self.lm_rando.output_data["Options"]["boo_gates"])
         boosanity_enabled: bool = bool(self.lm_rando.output_data["Options"]["boosanity"])
         balcony_boo_count: int = int(self.lm_rando.output_data["Options"]["balcony_boo_count"])
@@ -117,19 +137,6 @@ def update_blackout_event(lm_gen: "LuigisMansionRandomizer"):
     lines = _read_custom_file("txt", "event44.txt")
     csv_lines = _read_custom_file("csv", "message44.csv")
     _update_custom_event(lm_gen.lm_gcm, "44", True, lines, csv_lines)
-
-# Updates all common events
-def update_common_events(lm_gen: "LuigisMansionRandomizer", randomize_mice: bool, starting_vac: bool):
-    list_custom_events = ["03", "10", "13", "22", "23", "24", "29", "33", "35", "37", "38", "50", "61", "64",
-        "65", "66", "67", "68", "71", "72", "74", "75", "82", "86", "87", "88", "89", "90"]
-    if randomize_mice:
-        list_custom_events += ["95", "97", "98", "99", "100"]
-
-    for custom_event in list_custom_events:
-        lines = _read_custom_file("txt", "event" + custom_event + ".txt")
-        if custom_event == "10" and not starting_vac:
-            lines = lines.replace("<WEAPON>", "<NOWEAPON>")
-        _update_custom_event(lm_gen.lm_gcm, custom_event, True, lines, None)
 
 # Update the intro event and E. Gadd event as needed.
 def update_intro_and_lab_events(lm_gen: "LuigisMansionRandomizer", hidden_mansion: bool, max_health: str, start_inv: list[str],
