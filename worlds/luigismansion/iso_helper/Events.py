@@ -38,6 +38,7 @@ class EventChanges:
         self._write_in_game_hints()
         self._update_spawn_event()
         self._write_portrait_hints()
+        self._randomize_music()
 
 
     def _update_common_events(self):
@@ -410,41 +411,47 @@ class EventChanges:
         _update_custom_event(self.lm_rando.lm_gcm, "78", True, None, csv_lines)
 
 
-# Randomizes all the music in all the event.txt files.
-def randomize_music(lm_gen: "LuigisMansionRandomizer"):
-    list_ignore_events = ["event00.szp"]
-    event_dir = lm_gen.lm_gcm.get_or_create_dir_file_entry("files/Event")
+    def _randomize_music(self):
+        """Randomizes all the music in all the event.txt files."""
+        bool_randomize_music: bool = bool(self.lm_rando.output_data["Options"]["random_music"])
+        if not bool_randomize_music:
+            return
 
-    for lm_event in [event_file for event_file in event_dir.children if not event_file.is_dir]:
-        if lm_event.name in list_ignore_events or not re.match(r"event\d+\.szp", lm_event.name):
-            continue
+        self.lm_rando.client_logger.info("Randomized Music is enabled, updating all events with various in-game music.")
+        list_ignore_events = ["event00.szp"]
+        event_dir = self.lm_rando.lm_gcm.get_or_create_dir_file_entry("files/Event")
 
-        event_arc = get_arc(lm_gen.lm_gcm, lm_event.file_path)
-        name_to_find = lm_event.name.replace(".szp", ".txt")
+        for lm_event in [event_file for event_file in event_dir.children if not event_file.is_dir]:
+            if lm_event.name in list_ignore_events or not re.match(r"event\d+\.szp", lm_event.name):
+                continue
 
-        if not any(event_file for event_file in event_arc.file_entries if event_file.name == name_to_find):
-            continue
+            event_arc = get_arc(self.lm_rando.lm_gcm, lm_event.file_path)
+            name_to_find = lm_event.name.replace(".szp", ".txt")
 
-        event_text_data = next(event_file for event_file in event_arc.file_entries if
-                                event_file.name == name_to_find).data
-        event_str = event_text_data.getvalue().decode('utf-8', errors='replace')
-        music_to_replace = re.findall(r'<BGM>\(\d+\)', event_str)
+            if not any(event_file for event_file in event_arc.file_entries if event_file.name == name_to_find):
+                continue
 
-        if music_to_replace:
-            for music_match in music_to_replace:
-                list_of_bad_music: list[int] = [13, 17, 21, 24, 28, 41]
-                music_list: list[int] = [i for i in range(0, 53) if i not in list_of_bad_music]
-                int_music_selection: int = lm_gen.random.choice(sorted(music_list))
-                event_str = event_str.replace(music_match, "<BGM>(" + str(int_music_selection) + ")")
+            event_text_data = next(event_file for event_file in event_arc.file_entries if
+                                    event_file.name == name_to_find).data
+            event_str = event_text_data.getvalue().decode('utf-8', errors='replace')
+            music_to_replace = re.findall(r'<BGM>\(\d+\)', event_str)
 
-        updated_event = BytesIO(event_str.encode('utf-8'))
+            if music_to_replace:
+                for music_match in music_to_replace:
+                    list_of_bad_music: list[int] = [13, 17, 21, 24, 28, 41]
+                    music_list: list[int] = [i for i in range(0, 53) if i not in list_of_bad_music]
+                    int_music_selection: int = self.lm_rando.random.choice(sorted(music_list))
+                    event_str = event_str.replace(music_match, "<BGM>(" + str(int_music_selection) + ")")
 
-        next(event_file for event_file in event_arc.file_entries if
-             event_file.name == name_to_find).data = updated_event
+            updated_event = BytesIO(event_str.encode('utf-8'))
 
-        event_arc.save_changes()
-        logger.info("Randomize music Yay0 check...")
-        lm_gen.lm_gcm.changed_files[lm_event.file_path] = Yay0.compress(event_arc.data)
+            next(event_file for event_file in event_arc.file_entries if
+                 event_file.name == name_to_find).data = updated_event
+
+            event_arc.save_changes()
+            logger.info("Randomize music Yay0 check...")
+            self.lm_rando.lm_gcm.changed_files[lm_event.file_path] = Yay0.compress(event_arc.data)
+
 
 # Using the provided txt or csv lines for a given event file, updates the actual szp file in memory with this data.
 def _update_custom_event(gcm: GCM, event_number: str, delete_all_other_files: bool,
