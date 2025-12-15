@@ -39,7 +39,7 @@ class LuigisMansionRandomizer:
     output_data: dict = None
     slot: int = None
 
-    _client_logger: Logger = None
+    client_logger: Logger = None
     _seed: str = None
 
     def __init__(self, clean_iso_path: str, randomized_output_file_path: str, ap_output_data: bytes, debug_flag=False):
@@ -49,7 +49,7 @@ class LuigisMansionRandomizer:
         self.output_data = json.loads(ap_output_data.decode('utf-8'))
 
         # Init the logger based on the existing client name.
-        self._client_logger = getLogger(CLIENT_NAME)
+        self.client_logger = getLogger(CLIENT_NAME)
 
         # Set the random's seed for use in other files.
         self._seed = self.output_data["Seed"]
@@ -89,10 +89,10 @@ class LuigisMansionRandomizer:
         # Update the relevant Game RARC archive
         self._load_game_archive(lm_regional_id)
 
-        self._client_logger.info("Updating all the main.dol offsets with their appropriate values.")
+        self.client_logger.info("Updating all the main.dol offsets with their appropriate values.")
         update_dol_offsets(self)
 
-        self._client_logger.info("Updating all the in-game events with their appropriate triggers, hints, etc.")
+        self.client_logger.info("Updating all the in-game events with their appropriate triggers, hints, etc.")
         self._update_events()
 
         # Loads all the relevant map files and their JMP files into memory.
@@ -124,7 +124,7 @@ class LuigisMansionRandomizer:
         Updates the ISO's game id to use AP's seed that was generated.
         This allows LM to have 3 brand new save files every time.
         """
-        self._client_logger.info("Updating the ISO game id with the AP generated seed.")
+        self.client_logger.info("Updating the ISO game id with the AP generated seed.")
         bin_data = self.lm_gcm.read_file_data("sys/boot.bin")
         regional_id: str = read_str(bin_data, 0x00, 6)
         write_str(bin_data, 0x01, self._seed, len(self._seed))
@@ -212,15 +212,15 @@ class LuigisMansionRandomizer:
         madam_hint_dict: dict[str, str] = hint_list["Madame Clairvoya"] if "Madame Clairvoya" in hint_list else None
         bool_portrait_hints: bool = bool(self.output_data["Options"]["portrait_hints"])
 
-        self._client_logger.info("Updating all of the common events with the customized version.")
+        self.client_logger.info("Updating all of the common events with the customized version.")
         update_common_events(self, bool_randomize_mice, bool_start_vacuum)
 
-        self._client_logger.info("Updating the intro and lab events with the customized version.")
+        self.client_logger.info("Updating the intro and lab events with the customized version.")
         update_intro_and_lab_events(self, bool_hidden_mansion, max_health, start_inv_list, bool_start_boo_radar,
                                     door_to_close_list, bool_start_vacuum)
 
         if bool_boo_checks:
-            self._client_logger.info("Boo Gates was enabled, updating all of the common events with the customized version.")
+            self.client_logger.info("Boo Gates was enabled, updating all of the common events with the customized version.")
             boo_list_events = ["16", "96"]
             str_move_type = None
             for event_no in boo_list_events:
@@ -235,24 +235,24 @@ class LuigisMansionRandomizer:
                     continue
                 update_boo_gates(self, event_no, required_boo_count, bool_boo_rando_enabled, str_move_type)
 
-        self._client_logger.info("Updating the blackout event with the customized version.")
+        self.client_logger.info("Updating the blackout event with the customized version.")
         update_blackout_event(self)
 
-        self._client_logger.info("Updating Clairvoya's event with the customized version.")
+        self.client_logger.info("Updating Clairvoya's event with the customized version.")
         randomize_clairvoya(self, req_mario_count, hint_dist, madam_hint_dict)
 
-        self._client_logger.info("Updating common events with the generated in-game hints.")
+        self.client_logger.info("Updating common events with the generated in-game hints.")
         write_in_game_hints(self, hint_dist, hint_list, max_health)
 
-        self._client_logger.info("Updating the spawn event...")
+        self.client_logger.info("Updating the spawn event...")
         update_spawn_events(self)
 
         if bool_portrait_hints:
-            self._client_logger.info("Portrait Hints are enabled, updating portrait ghost hearts with the generated in-game hints.")
+            self.client_logger.info("Portrait Hints are enabled, updating portrait ghost hearts with the generated in-game hints.")
             write_portrait_hints(self, hint_dist, hint_list)
 
         if bool_randomize_music:
-            self._client_logger.info("Randomized Music is enabled, updating all events with various in-game music.")
+            self.client_logger.info("Randomized Music is enabled, updating all events with various in-game music.")
             randomize_music(self)
 
     def _export_files_from_memory(self):
