@@ -36,6 +36,7 @@ class EventChanges:
         self._update_blackout_event()
         self._randomize_clairvoya()
         self._write_in_game_hints()
+        self._update_spawn_event()
 
 
     def _update_common_events(self):
@@ -351,6 +352,13 @@ class EventChanges:
                 _update_custom_event(self.lm_rando.lm_gcm, str(event_no), True, lines, csv_lines)
 
 
+    def _update_spawn_event(self):
+        """Adds and updates the new custom spawn event"""
+        self.lm_rando.client_logger.info("Updating the spawn event...")
+        lines = _read_custom_file("txt", "event11.txt")
+        _update_custom_event(self.lm_rando.lm_gcm, "11", True, lines, None)
+
+
 # Randomizes all the music in all the event.txt files.
 def randomize_music(lm_gen: "LuigisMansionRandomizer"):
     list_ignore_events = ["event00.szp"]
@@ -426,12 +434,6 @@ def write_portrait_hints(lm_gen: "LuigisMansionRandomizer", hint_distribution_ch
                     csv_lines = csv_lines.replace(f"{portrait_name}", hintfo)
 
     _update_custom_event(lm_gen.lm_gcm, "78", True, None, csv_lines)
-
-
-# Update the spawn event info
-def update_spawn_events(lm_gen: "LuigisMansionRandomizer"):
-    lines = _read_custom_file("txt", "event11.txt")
-    _update_custom_event(lm_gen.lm_gcm, "11", True, lines, None)
 
 # Using the provided txt or csv lines for a given event file, updates the actual szp file in memory with this data.
 def _update_custom_event(gcm: GCM, event_number: str, delete_all_other_files: bool,
