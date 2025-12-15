@@ -35,6 +35,7 @@ class EventChanges:
         self._update_boo_gates()
         self._update_blackout_event()
         self._randomize_clairvoya()
+        self._write_in_game_hints()
 
 
     def _update_common_events(self):
@@ -260,7 +261,7 @@ class EventChanges:
         _update_custom_event(self.lm_rando.lm_gcm, "36", True, lines, csv_lines)
 
 
-    def write_in_game_hints(self):
+    def _write_in_game_hints(self):
         """Writes all the in game hints for everything except clairvoya"""
         self.lm_rando.client_logger.info("Updating common events with the generated in-game hints.")
         hint_data: dict[str, str] = {}
