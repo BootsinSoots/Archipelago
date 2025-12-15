@@ -1,84 +1,116 @@
 import re
 from io import BytesIO
-from typing import Optional, TYPE_CHECKING
 
 from gclib.gcm import GCM
 from gclib.yaz0_yay0 import Yay0
 
+from ..Locations import FLIP_BALCONY_BOO_EVENT_LIST
 from ..Helper_Functions import get_arc, PROJECT_ROOT
 from ..Hints import ALWAYS_HINT, PORTRAIT_HINTS
 from CommonClient import logger
 
-if TYPE_CHECKING:
-    from .LM_Randomize_ISO import LuigisMansionRandomizer
+from .LM_Randomize_ISO import LuigisMansionRandomizer
 
 
-def update_boo_gates(lm_gen: "LuigisMansionRandomizer", event_no: str, req_boo_count: int, boo_rando_enabled: bool,
-    move_luigi: Optional[str]):
 
-    lines = _read_custom_file("txt", "event" + event_no + ".txt")
-    if move_luigi:
-        lines = lines.replace("{MoveType}", move_luigi)
-    if boo_rando_enabled:
-        str_begin_case = "not_enough"
-        lines = lines.replace("{Count0}", str(0)).replace("{Count1}", str(0))
-        lines = lines.replace("{Count2}", str(0)).replace("{Count3}", str(0))
-        lines = lines.replace("{Count4}", str(req_boo_count)).replace("{CaseBegin}", str_begin_case)
-        _update_custom_event(lm_gen.lm_gcm, event_no, True, lines, None)
-        return
+class EventChanges:
 
-    str_begin_case = "CheckBoos"
-    lines = lines.replace("{CaseBegin}", str_begin_case)
+    lm_rando: LuigisMansionRandomizer = None
 
-    str_not_enough = "not_enough"
-    str_boo_captured = "boos_captured"
-    match req_boo_count:
-        case 1:
-            lines = lines.replace("{Count0}", "0")
-            lines = lines.replace("{Count1}", str(req_boo_count))
-            lines = lines.replace("{Count2}", str(req_boo_count))
-            lines = lines.replace("{Count3}", str(req_boo_count))
-            lines = lines.replace("{Count4}", str(req_boo_count))
-            lines = lines.replace("{Case0}", str_not_enough)
-            lines = lines.replace("{Case1}", str_boo_captured)
-            lines = lines.replace("{Case2}", str_boo_captured)
-            lines = lines.replace("{Case3}", str_boo_captured)
-            lines = lines.replace("{Case4}", str_boo_captured)
-        case 2:
-            lines = lines.replace("{Count0}", "0")
-            lines = lines.replace("{Count1}", "1")
-            lines = lines.replace("{Count2}", str(req_boo_count))
-            lines = lines.replace("{Count3}", str(req_boo_count))
-            lines = lines.replace("{Count4}", str(req_boo_count))
-            lines = lines.replace("{Case0}", str_not_enough)
-            lines = lines.replace("{Case1}", str_not_enough)
-            lines = lines.replace("{Case2}", str_boo_captured)
-            lines = lines.replace("{Case3}", str_boo_captured)
-            lines = lines.replace("{Case4}", str_boo_captured)
-        case 3:
-            lines = lines.replace("{Count0}", "0")
-            lines = lines.replace("{Count1}", "1")
-            lines = lines.replace("{Count2}", "2")
-            lines = lines.replace("{Count3}", str(req_boo_count))
-            lines = lines.replace("{Count4}", str(req_boo_count))
-            lines = lines.replace("{Case0}", str_not_enough)
-            lines = lines.replace("{Case1}", str_not_enough)
-            lines = lines.replace("{Case2}", str_not_enough)
-            lines = lines.replace("{Case3}", str_boo_captured)
-            lines = lines.replace("{Case4}", str_boo_captured)
-        case _:
-            lines = lines.replace("{Count0}", str(req_boo_count - 4))
-            lines = lines.replace("{Count1}", str(req_boo_count - 3))
-            lines = lines.replace("{Count2}", str(req_boo_count - 2))
-            lines = lines.replace("{Count3}", str(req_boo_count - 1))
-            lines = lines.replace("{Count4}", str(req_boo_count))
-            lines = lines.replace("{Case0}", str_not_enough)
-            lines = lines.replace("{Case1}", str_not_enough)
-            lines = lines.replace("{Case2}", str_not_enough)
-            lines = lines.replace("{Case3}", str_not_enough)
-            lines = lines.replace("{Case4}", str_boo_captured)
 
-    _update_custom_event(lm_gen.lm_gcm, event_no, True, lines, None)
+    def __init__(self, rando_obj: LuigisMansionRandomizer):
+        self.lm_rando = rando_obj
+
+
+    def update_in_game_events(self):
+        self.lm_rando.client_logger.info("Now updating all in-game events of various types...")
+        self._update_boo_gates()
+
+
+    def _update_boo_gates(self):
+        boo_gates_enabled: bool = bool(self.lm_rando.output_data["Options"]["boo_gates"])
+        boosanity_enabled: bool = bool(self.lm_rando.output_data["Options"]["boosanity"])
+        balcony_boo_count: int = int(self.lm_rando.output_data["Options"]["balcony_boo_count"])
+        final_boo_count: int = int(self.lm_rando.output_data["Options"]["final_boo_count"])
+        spawn_area: str = self.lm_rando.output_data["Options"]["spawn"]
+        if not boo_gates_enabled:
+            return
+
+        self.lm_rando.client_logger.info("Boo Gates was enabled, updating all of the common events with the customized version.")
+        boo_list_events = ["16", "96"]
+        for event_no in boo_list_events:
+            lines = _read_custom_file("txt", "event" + event_no + ".txt")
+
+            if event_no == "96":
+                req_boo_count = final_boo_count
+            else:
+                req_boo_count = balcony_boo_count
+                str_move_type = "MOVEOUTSIDE" if spawn_area in FLIP_BALCONY_BOO_EVENT_LIST else "MOVEINSIDE"
+                lines = lines.replace("{MoveType}", str_move_type)
+
+            if req_boo_count == 0:
+                continue
+
+            if boosanity_enabled:
+                str_begin_case = "not_enough"
+                lines = lines.replace("{Count0}", str(0)).replace("{Count1}", str(0))
+                lines = lines.replace("{Count2}", str(0)).replace("{Count3}", str(0))
+                lines = lines.replace("{Count4}", str(req_boo_count)).replace("{CaseBegin}", str_begin_case)
+                _update_custom_event(self.lm_rando.lm_gcm, event_no, True, lines, None)
+                return
+
+            str_begin_case = "CheckBoos"
+            lines = lines.replace("{CaseBegin}", str_begin_case)
+
+            str_not_enough = "not_enough"
+            str_boo_captured = "boos_captured"
+            match req_boo_count:
+                case 1:
+                    lines = lines.replace("{Count0}", "0")
+                    lines = lines.replace("{Count1}", str(req_boo_count))
+                    lines = lines.replace("{Count2}", str(req_boo_count))
+                    lines = lines.replace("{Count3}", str(req_boo_count))
+                    lines = lines.replace("{Count4}", str(req_boo_count))
+                    lines = lines.replace("{Case0}", str_not_enough)
+                    lines = lines.replace("{Case1}", str_boo_captured)
+                    lines = lines.replace("{Case2}", str_boo_captured)
+                    lines = lines.replace("{Case3}", str_boo_captured)
+                    lines = lines.replace("{Case4}", str_boo_captured)
+                case 2:
+                    lines = lines.replace("{Count0}", "0")
+                    lines = lines.replace("{Count1}", "1")
+                    lines = lines.replace("{Count2}", str(req_boo_count))
+                    lines = lines.replace("{Count3}", str(req_boo_count))
+                    lines = lines.replace("{Count4}", str(req_boo_count))
+                    lines = lines.replace("{Case0}", str_not_enough)
+                    lines = lines.replace("{Case1}", str_not_enough)
+                    lines = lines.replace("{Case2}", str_boo_captured)
+                    lines = lines.replace("{Case3}", str_boo_captured)
+                    lines = lines.replace("{Case4}", str_boo_captured)
+                case 3:
+                    lines = lines.replace("{Count0}", "0")
+                    lines = lines.replace("{Count1}", "1")
+                    lines = lines.replace("{Count2}", "2")
+                    lines = lines.replace("{Count3}", str(req_boo_count))
+                    lines = lines.replace("{Count4}", str(req_boo_count))
+                    lines = lines.replace("{Case0}", str_not_enough)
+                    lines = lines.replace("{Case1}", str_not_enough)
+                    lines = lines.replace("{Case2}", str_not_enough)
+                    lines = lines.replace("{Case3}", str_boo_captured)
+                    lines = lines.replace("{Case4}", str_boo_captured)
+                case _:
+                    lines = lines.replace("{Count0}", str(req_boo_count - 4))
+                    lines = lines.replace("{Count1}", str(req_boo_count - 3))
+                    lines = lines.replace("{Count2}", str(req_boo_count - 2))
+                    lines = lines.replace("{Count3}", str(req_boo_count - 1))
+                    lines = lines.replace("{Count4}", str(req_boo_count))
+                    lines = lines.replace("{Case0}", str_not_enough)
+                    lines = lines.replace("{Case1}", str_not_enough)
+                    lines = lines.replace("{Case2}", str_not_enough)
+                    lines = lines.replace("{Case3}", str_not_enough)
+                    lines = lines.replace("{Case4}", str_boo_captured)
+
+            _update_custom_event(self.lm_rando.lm_gcm, event_no, True, lines, None)
 
 # Updates the event txt and csv for blackout
 def update_blackout_event(lm_gen: "LuigisMansionRandomizer"):
