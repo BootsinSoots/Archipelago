@@ -31,6 +31,7 @@ class RandomizeJMPTables:
 
     def _map_one_changes(self):
         """Updates all the jmp files with their relevant changes on the Lab map"""
+        self.lm_rando.client_logger.info("Now updating all changes for the Lab map. Starting with events...")
         map_one_events: JMP = self.lm_rando.map_files.get("map1").jmp_files["eventinfo"]
 
         for event_entry in map_one_events.data_entries:
@@ -44,6 +45,7 @@ class RandomizeJMPTables:
         if not wdym_enabled:
             return
 
+        self.lm_rando.client_logger.info("Now updating all changes for the Gallery map. Starting with furniture...")
         ceiling_furniture_list: list[int] = [0, 1]
 
         map_six_furniture: JMP = self.lm_rando.map_files.get("map6").jmp_files["furnitureinfo"]
@@ -109,7 +111,9 @@ class RandomizeJMPTables:
 
 
     def _map_two_changes(self):
-        """Updates all the jmp files with their relevant changes on the main mainsion map"""
+        """Updates all the jmp files with their relevant changes on the main mansion map"""
+        self.lm_rando.client_logger.info("Now updating all changes for the main Mansion map (map2).")
+
         self._map_two_generator_changes()
         self._map_two_obj_changes()
         self._map_two_room_info_changes()
@@ -129,6 +133,7 @@ class RandomizeJMPTables:
 
     def _map_two_generator_changes(self):
         """Updates various actors (such as enemies, items, elements, portraits) that will be spawned in/generated."""
+        self.lm_rando.client_logger.info("Now updating all generator changes for map2.")
         map_two_gen: JMP = self.lm_rando.map_files.get("map2").jmp_files["generatorinfo"]
         for gen_entry in map_two_gen.data_entries:
             # Allows the Ring of Boos on the 3F Balcony to only appear when the Ice Medal has been collected.
@@ -140,6 +145,7 @@ class RandomizeJMPTables:
 
     def _map_two_obj_changes(self):
         """Updates various objects found on map 2, alot of which have very hardcoded behaviours."""
+        self.lm_rando.client_logger.info("Now updating all object changes for map2.")
         # Removes the vines on Area doors, as those require the Area Number of the game to be changed
         # to have them disappear.
         bad_objects_to_remove: list[str] = ["eldoor07", "eldoor08", "eldoor09", "eldoor10"]
@@ -151,6 +157,7 @@ class RandomizeJMPTables:
     def _map_two_item_info_changes(self):
         """Updates/Adds items that can be spawned in via the other JMP tables.
         To avoid item row duplication, items are only added once."""
+        self.lm_rando.client_logger.info("Now updating all item_info changes for map2.")
         already_exist_items: list[str] = []
         hp_item_names: dict[str, int] = {"sheart": 20, "lheart": 50}
         map_two_info: JMP = self.lm_rando.map_files.get("map2").jmp_files["iteminfotable"]
@@ -172,6 +179,7 @@ class RandomizeJMPTables:
 
     def _map_two_key_info_changes(self):
         """Updates all the key item information, which is used for spawning free-standing items."""
+        self.lm_rando.client_logger.info("Now updating all keyinfo changes for map2.")
         map_two_key: JMP = self.lm_rando.map_files.get("map2").jmp_files["keyinfo"]
 
         # For every Freestanding Key in the game, replace its entry with the proper item from the generation output.
@@ -190,6 +198,7 @@ class RandomizeJMPTables:
 
     def _map_two_room_info_changes(self):
         """Updates the spookiness ambience noises in all the rooms."""
+        self.lm_rando.client_logger.info("Now updating all room changes for map2.")
         spooky_rating: int = int(self.lm_rando.output_data["Options"]["spookiness"])
         if spooky_rating == 0:
             return
@@ -212,6 +221,7 @@ class RandomizeJMPTables:
 
     def _map_two_item_appear_changes(self):
         """Updates the items that can appear from various objects, like chests or furniture."""
+        self.lm_rando.client_logger.info("Now updating all item_appear changes for map2.")
         map_two_item_appear: JMP = self.lm_rando.map_files.get("map2").jmp_files["itemappeartable"]
 
         # Gets the list of keys already added in the item appear table
@@ -228,6 +238,7 @@ class RandomizeJMPTables:
 
     def _map_two_boo_table_changes(self):
         """Updates boos health, speed, acceleration, anger, and time to escape rooms."""
+        self.lm_rando.client_logger.info("Now updating all boo/telesa changes for map2.")
         boo_health_choice: int = int(self.lm_rando.output_data["Options"]["boo_health_option"])
         boo_speed: int = int(self.lm_rando.output_data["Options"]["boo_speed"])
         boo_escape_time: int = int(self.lm_rando.output_data["Options"]["boo_escape_time"])
@@ -261,6 +272,7 @@ class RandomizeJMPTables:
 
     def _map_two_teiden_observer_changes(self):
         """Updates the observers that are created during the blackout sequence."""
+        self.lm_rando.client_logger.info("Now updating all blackout observer changes for map2.")
         enable_speedy_spirits: bool = bool(self.lm_rando.output_data["Options"]["speedy_spirits"])
         map_two_teiden_observer: JMP = self.lm_rando.map_files.get("map2").jmp_files["teidenobserverinfo"]
         map_two_normal_observer: JMP = self.lm_rando.map_files.get("map2").jmp_files["observerinfo"]
@@ -286,6 +298,7 @@ class RandomizeJMPTables:
 
     def _map_two_observer_changes(self):
         """Updates the observers that are created during normal gameplay."""
+        self.lm_rando.client_logger.info("Now updating all normal observer changes for map2.")
         spawn_area: str = self.lm_rando.output_data["Options"]["spawn"]
         spawn_data = REGION_LIST[spawn_area]
 
@@ -471,6 +484,7 @@ class RandomizeJMPTables:
 
     def _map_two_enemy_changes(self):
         """Handles changes to enemy table for both normal and blackout."""
+        self.lm_rando.client_logger.info("Now updating all enemy changes (both normal and blackout) for map2.")
         map_two_teiden_enemy: JMP = self.lm_rando.map_files.get("map2").jmp_files["teidenenemyinfo"]
         map_two_normal_enemy: JMP = self.lm_rando.map_files.get("map2").jmp_files["enemyinfo"]
 
@@ -510,6 +524,7 @@ class RandomizeJMPTables:
     def _map_two_event_changes(self):
         """Removes events that we don't want to trigger at all in the mansion, such as some E. Gadd calls, warps after
         boss battles / grabbing boss keys, and various cutscenes etc. Also remove Mario Items/Elemental Item events"""
+        self.lm_rando.client_logger.info("Now updating all event changes for map2.")
         events_to_remove: list[int] = [7, 9, 15, 18, 19, 20, 21, 31, 41, 42, 45, 47, 51, 54, 69, 70, 73, 80, 81, 85, 91]
         map_two_events: JMP = self.lm_rando.map_files.get("map2").jmp_files["eventinfo"]
 
@@ -695,6 +710,7 @@ class RandomizeJMPTables:
 
     def _map_two_character_changes(self):
         """Updates the character info table to remove un-necessary actors. Also update existing spawns to new items."""
+        self.lm_rando.client_logger.info("Now updating all character changes for map2.")
         map_two_characters: JMP = self.lm_rando.map_files.get("map2").jmp_files["characterinfo"]
 
         spawn_data = REGION_LIST[self.lm_rando.output_data["Options"]["spawn"]]
@@ -751,6 +767,8 @@ class RandomizeJMPTables:
 
 
     def _map_two_iyapoo_changes(self):
+        """Updates what the speedy spirits/golden rats drop upon capturing them."""
+        self.lm_rando.client_logger.info("Now updating all speedy spirits/golden mice changes for map2.")
         speedy_enabled: bool = bool(self.lm_rando.output_data["Options"]["speedy_spirits"])
         mice_enabled: bool = bool(self.lm_rando.output_data["Options"]["gold_mice"])
         if not (speedy_enabled and mice_enabled):
@@ -862,6 +880,8 @@ class RandomizeJMPTables:
 
 
     def _map_two_treasure_changes(self):
+        """Updates the treasure chests drop (and updates visuals/size)"""
+        self.lm_rando.client_logger.info("Now updating all treasure chest contents/size/visual changes for map2.")
         map_two_characters: JMP = self.lm_rando.map_files.get("map2").jmp_files["characterinfo"]
         map_two_treasure: JMP = self.lm_rando.map_files.get("map2").jmp_files["treasuretable"]
 
@@ -918,6 +938,7 @@ class RandomizeJMPTables:
 
     def _map_two_furniture_changes(self):
         """Updates the items that will appear out of the relevant furniture."""
+        self.lm_rando.client_logger.info("Now updating all furniture changes for map2.")
         extra_boo_spots: bool = bool(self.lm_rando.output_data["Options"]["extra_boo_spots"])
 
         map_two_furniture: JMP = self.lm_rando.map_files.get("map2").jmp_files["furnitureinfo"]
