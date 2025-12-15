@@ -37,6 +37,7 @@ class EventChanges:
         self._randomize_clairvoya()
         self._write_in_game_hints()
         self._update_spawn_event()
+        self._write_portrait_hints()
 
 
     def _update_common_events(self):
@@ -359,6 +360,56 @@ class EventChanges:
         _update_custom_event(self.lm_rando.lm_gcm, "11", True, lines, None)
 
 
+    def _write_portrait_hints(self):
+        """Updates all portrait ghost hints, if the option is turned on."""
+        bool_portrait_hints: bool = bool(self.lm_rando.output_data["Options"]["portrait_hints"])
+        if not bool_portrait_hints:
+            return
+
+        self.lm_rando.client_logger.info("Portrait Hints are enabled, updating portrait ghost hearts with the generated in-game hints.")
+        csv_lines = _read_custom_file("csv", "message78.csv")
+        item_color = None
+
+        if self.hint_dist == 1:
+            for portrait_name in PORTRAIT_HINTS.keys():
+                jokes = PROJECT_ROOT.joinpath('data', 'jokes.txt').read_text(encoding="utf-8")
+                joke_hint = self.lm_rando.random.choice(sorted(str.splitlines(jokes))).replace("{BreakHere}", "\n")
+                csv_lines = csv_lines.replace(f"{portrait_name}", joke_hint)
+        else:
+            for portrait_name, portrait_hint in self.hint_list.items():
+                if portrait_name not in PORTRAIT_HINTS.keys():
+                    continue
+                match self.hint_dist:
+                    case 4:
+                        match portrait_hint["Class"]:
+                            case "Prog":
+                                item_color = "5"
+                            case "Trap":
+                                item_color = "2"
+                            case _:
+                                item_color = "6"
+                        hintfo = (portrait_hint["Rec Player"] + "'s \n<COLOR>(" + item_color + ") " + portrait_hint[
+                            "Item"] +
+                                  "\n<COLOR>(0) is somewhere in \n<COLOR>(3)" + portrait_hint["Send Player"] + "'s \n" +
+                                  portrait_hint["Game"])
+                        csv_lines = csv_lines.replace(f"{portrait_name}", hintfo)
+                    case _:
+                        match portrait_hint["Class"]:
+                            case "Prog":
+                                item_color = "5"
+                            case "Trap":
+                                item_color = "2"
+                            case _:
+                                item_color = "6"
+                        hintfo = (portrait_hint["Rec Player"] + "'s \n<COLOR>(" + item_color + ")" + portrait_hint[
+                            "Item"] +
+                                  "\n<COLOR>(0) can be found at \n<COLOR>(1)" + portrait_hint["Send Player"] + "'s \n" +
+                                  portrait_hint["Location"])
+                        csv_lines = csv_lines.replace(f"{portrait_name}", hintfo)
+
+        _update_custom_event(self.lm_rando.lm_gcm, "78", True, None, csv_lines)
+
+
 # Randomizes all the music in all the event.txt files.
 def randomize_music(lm_gen: "LuigisMansionRandomizer"):
     list_ignore_events = ["event00.szp"]
@@ -394,46 +445,6 @@ def randomize_music(lm_gen: "LuigisMansionRandomizer"):
         event_arc.save_changes()
         logger.info("Randomize music Yay0 check...")
         lm_gen.lm_gcm.changed_files[lm_event.file_path] = Yay0.compress(event_arc.data)
-
-# Updates all portrait ghost hints, if the option is turned on.
-def write_portrait_hints(lm_gen: "LuigisMansionRandomizer", hint_distribution_choice: int, all_hints: dict[str, dict[str,str]]):
-    csv_lines = _read_custom_file("csv", "message78.csv")
-    item_color = None
-
-    if hint_distribution_choice == 1:
-        for portrait_name in PORTRAIT_HINTS.keys():
-            jokes = PROJECT_ROOT.joinpath('data', 'jokes.txt').read_text(encoding="utf-8")
-            joke_hint = lm_gen.random.choice(sorted(str.splitlines(jokes))).replace("{BreakHere}", "\n")
-            csv_lines = csv_lines.replace(f"{portrait_name}", joke_hint)
-    else:
-        for portrait_name, portrait_hint in all_hints.items():
-            if portrait_name not in PORTRAIT_HINTS.keys():
-                continue
-            match hint_distribution_choice:
-                case 4:
-                    match portrait_hint["Class"]:
-                        case "Prog":
-                            item_color = "5"
-                        case "Trap":
-                            item_color = "2"
-                        case _:
-                            item_color = "6"
-                    hintfo = (portrait_hint["Rec Player"]+"'s \n<COLOR>("+item_color+") "+portrait_hint["Item"]+
-                              "\n<COLOR>(0) is somewhere in \n<COLOR>(3)"+portrait_hint["Send Player"]+"'s \n"+portrait_hint["Game"])
-                    csv_lines = csv_lines.replace(f"{portrait_name}", hintfo)
-                case _:
-                    match portrait_hint["Class"]:
-                        case "Prog":
-                            item_color = "5"
-                        case "Trap":
-                            item_color = "2"
-                        case _:
-                            item_color = "6"
-                    hintfo = (portrait_hint["Rec Player"]+"'s \n<COLOR>("+item_color+")"+portrait_hint["Item"]+
-                              "\n<COLOR>(0) can be found at \n<COLOR>(1)"+portrait_hint["Send Player"]+"'s \n"+portrait_hint["Location"])
-                    csv_lines = csv_lines.replace(f"{portrait_name}", hintfo)
-
-    _update_custom_event(lm_gen.lm_gcm, "78", True, None, csv_lines)
 
 # Using the provided txt or csv lines for a given event file, updates the actual szp file in memory with this data.
 def _update_custom_event(gcm: GCM, event_number: str, delete_all_other_files: bool,
