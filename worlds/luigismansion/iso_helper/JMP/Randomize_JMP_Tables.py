@@ -528,14 +528,14 @@ class RandomizeJMPTables:
         events_to_remove: list[int] = [7, 9, 15, 18, 19, 20, 21, 31, 41, 42, 45, 47, 51, 54, 69, 70, 73, 80, 81, 85, 91]
         map_two_events: JMP = self.lm_rando.map_files.get("map2").jmp_files["eventinfo"]
 
-        boo_checks: bool = bool(self.lm_rando.output_data["Options"]["boo_gates"])
+        boo_gates_enabled: bool = bool(self.lm_rando.output_data["Options"]["boo_gates"])
         spawn_area: str = self.lm_rando.output_data["Options"]["spawn"]
         spawn_data = REGION_LIST[spawn_area]
         balcony_boo_count: int = int(self.lm_rando.output_data["Options"]["balcony_boo_count"])
         final_boo_count: int = int(self.lm_rando.output_data["Options"]["final_boo_count"])
 
         # Only remove the boo checks if the player does not want them.
-        if not boo_checks:
+        if not boo_gates_enabled:
             events_to_remove += [16, 96]
         elif balcony_boo_count == 0:
             events_to_remove += [96]
