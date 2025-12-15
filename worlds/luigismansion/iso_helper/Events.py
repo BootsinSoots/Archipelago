@@ -12,7 +12,6 @@ from CommonClient import logger
 from .LM_Randomize_ISO import LuigisMansionRandomizer
 
 
-
 class EventChanges:
 
     lm_rando: LuigisMansionRandomizer = None
