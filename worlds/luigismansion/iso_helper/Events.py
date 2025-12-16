@@ -1,7 +1,6 @@
 import re
 from io import BytesIO
 
-from gclib.gcm import GCM
 from gclib.yaz0_yay0 import Yay0
 
 from ..Locations import FLIP_BALCONY_BOO_EVENT_LIST
@@ -55,7 +54,7 @@ class EventChanges:
             lines = read_custom_file("txt", "event" + custom_event + ".txt")
             if custom_event == "10" and not bool_start_vacuum:
                 lines = lines.replace("<WEAPON>", "<NOWEAPON>")
-            _update_custom_event(self.lm_rando.lm_gcm, custom_event, True, lines, None)
+            self._update_custom_event(custom_event, True, lines, None)
 
 
     def _update_intro_and_lab_events(self):
@@ -69,13 +68,13 @@ class EventChanges:
         self.lm_rando.client_logger.info("Updating the Gallery event with the customized version.")
         lines = read_custom_file("txt", "event28.txt")
         csv_lines = read_custom_file("csv", "message28.csv")
-        _update_custom_event(self.lm_rando.lm_gcm, "28", True, lines, csv_lines)
+        self._update_custom_event("28", True, lines, csv_lines)
 
         self.lm_rando.client_logger.info("Updating the E. Gadd's lab event with the customized version.")
         lines = read_custom_file("txt", "event08.txt")
         lines = lines.replace("{LUIGIMAXHP}", self.luigi_max_hp)
         csv_lines = read_custom_file("csv", "message8.csv")
-        _update_custom_event(self.lm_rando.lm_gcm, "08", True, lines, csv_lines)
+        self._update_custom_event("08", True, lines, csv_lines)
 
         self.lm_rando.client_logger.info("Updating the main intro event with the customized version.")
         lines = read_custom_file("txt", "event48.txt")
@@ -100,7 +99,7 @@ class EventChanges:
         lines = lines.replace("{DOOR_LIST}", ''.join(event_door_list))
         lines = lines.replace("{LUIGIMAXHP}", self.luigi_max_hp)
 
-        _update_custom_event(self.lm_rando.lm_gcm, "48", False, lines, None)
+        self._update_custom_event("48", False, lines, None)
 
 
     def _update_boo_gates(self):
@@ -133,7 +132,7 @@ class EventChanges:
                 lines = lines.replace("{Count0}", str(0)).replace("{Count1}", str(0))
                 lines = lines.replace("{Count2}", str(0)).replace("{Count3}", str(0))
                 lines = lines.replace("{Count4}", str(req_boo_count)).replace("{CaseBegin}", str_begin_case)
-                _update_custom_event(self.lm_rando.lm_gcm, event_no, True, lines, None)
+                self._update_custom_event(event_no, True, lines, None)
                 return
 
             str_begin_case = "CheckBoos"
@@ -187,7 +186,7 @@ class EventChanges:
                     lines = lines.replace("{Case3}", str_not_enough)
                     lines = lines.replace("{Case4}", str_boo_captured)
 
-            _update_custom_event(self.lm_rando.lm_gcm, event_no, True, lines, None)
+            self._update_custom_event(event_no, True, lines, None)
 
 
     def _update_blackout_event(self):
@@ -195,7 +194,7 @@ class EventChanges:
         self.lm_rando.client_logger.info("Updating the blackout event with the customized version.")
         lines = read_custom_file("txt", "event44.txt")
         csv_lines = read_custom_file("csv", "message44.csv")
-        _update_custom_event(self.lm_rando.lm_gcm, "44", True, lines, csv_lines)
+        self._update_custom_event("44", True, lines, csv_lines)
 
 
     def _randomize_clairvoya(self):
@@ -260,7 +259,7 @@ class EventChanges:
             else:
                 lines = lines.replace(cases_to_replace[i], str_bad_end)
 
-        _update_custom_event(self.lm_rando.lm_gcm, "36", True, lines, csv_lines)
+        self._update_custom_event("36", True, lines, csv_lines)
 
 
     def _write_in_game_hints(self):
@@ -272,7 +271,7 @@ class EventChanges:
         lines = read_custom_file("txt", "event12.txt")
         csv_lines = read_custom_file("csv", "message12.csv")
         lines = lines.replace("{LUIGIMAXHP}", self.luigi_max_hp)
-        _update_custom_event(self.lm_rando.lm_gcm, "12", True, lines, csv_lines)
+        self._update_custom_event("12", True, lines, csv_lines)
 
         # Add various hints to their specific hint spots
         item_color = None
@@ -348,16 +347,16 @@ class EventChanges:
                 lines = lines.replace("{LUIGIMAXHP}", self.luigi_max_hp)
 
             if event_no == 4:
-                _update_custom_event(self.lm_rando.lm_gcm, "04", True, lines, csv_lines)
+                self._update_custom_event("04", True, lines, csv_lines)
             else:
-                _update_custom_event(self.lm_rando.lm_gcm, str(event_no), True, lines, csv_lines)
+                self._update_custom_event(str(event_no), True, lines, csv_lines)
 
 
     def _update_spawn_event(self):
         """Adds and updates the new custom spawn event"""
         self.lm_rando.client_logger.info("Updating the spawn event...")
         lines = read_custom_file("txt", "event11.txt")
-        _update_custom_event(self.lm_rando.lm_gcm, "11", True, lines, None)
+        self._update_custom_event("11", True, lines, None)
 
 
     def _write_portrait_hints(self):
@@ -407,7 +406,7 @@ class EventChanges:
                                   portrait_hint["Location"])
                         csv_lines = csv_lines.replace(f"{portrait_name}", hintfo)
 
-        _update_custom_event(self.lm_rando.lm_gcm, "78", True, None, csv_lines)
+        self._update_custom_event("78", True, None, csv_lines)
 
 
     def _randomize_music(self):
@@ -452,52 +451,52 @@ class EventChanges:
             self.lm_rando.lm_gcm.changed_files[lm_event.file_path] = Yay0.compress(event_arc.data)
 
 
-# Using the provided txt or csv lines for a given event file, updates the actual szp file in memory with this data.
-def _update_custom_event(gcm: GCM, event_number: str, delete_all_other_files: bool,
-    event_txt=None, event_csv=None):
-    if not event_txt and not event_csv:
-        raise Exception("Cannot have both the event text and csv text be null/empty.")
+    def _update_custom_event(self, event_number: str, delete_all_other_files: bool,
+        event_txt=None, event_csv=None):
+        """Using the provided txt or csv lines for a given event file, updates the actual szp file in memory with this data."""
+        if not event_txt and not event_csv:
+            raise Exception("Cannot have both the event text and csv text be null/empty.")
 
-    custom_event = get_arc(gcm, "files/Event/event" + event_number + ".szp")
-    event_txt_file = "event" + event_number + ".txt"
-    event_csv_file = "message" + (event_number if not event_number.startswith("0") else event_number[1:]) + ".csv"
+        custom_event = get_arc(self.lm_rando.lm_gcm, "files/Event/event" + event_number + ".szp")
+        event_txt_file = "event" + event_number + ".txt"
+        event_csv_file = "message" + (event_number if not event_number.startswith("0") else event_number[1:]) + ".csv"
 
-    if event_txt:
-        if not any(info_files for info_files in custom_event.file_entries if info_files.name == event_txt_file):
-            raise Exception(f"Unable to find an info file with name '{event_txt_file}' in provided RARC file.")
-        next((info_files for info_files in custom_event.file_entries if
-              info_files.name == event_txt_file)).data = BytesIO(event_txt.encode('utf-8'))
+        if event_txt:
+            if not any(info_files for info_files in custom_event.file_entries if info_files.name == event_txt_file):
+                raise Exception(f"Unable to find an info file with name '{event_txt_file}' in provided RARC file.")
+            next((info_files for info_files in custom_event.file_entries if
+                  info_files.name == event_txt_file)).data = BytesIO(event_txt.encode('utf-8'))
 
-    if event_csv:
-        if not any(info_files for info_files in custom_event.file_entries if info_files.name == event_csv_file):
-            raise Exception(f"Unable to find an info file with name '{event_csv_file}' in provided RARC file.")
-        next((info_files for info_files in custom_event.file_entries if
-              info_files.name == event_csv_file)).data = BytesIO(event_csv.encode('utf-8'))
-
-    if delete_all_other_files:
-        files_to_keep: list[str] = [event_txt_file, ".", ".."]
         if event_csv:
-            files_to_keep += [event_csv_file]
+            if not any(info_files for info_files in custom_event.file_entries if info_files.name == event_csv_file):
+                raise Exception(f"Unable to find an info file with name '{event_csv_file}' in provided RARC file.")
+            next((info_files for info_files in custom_event.file_entries if
+                  info_files.name == event_csv_file)).data = BytesIO(event_csv.encode('utf-8'))
 
-        node_list = list(reversed([node for node in custom_event.nodes[1:]]))
-        for node in node_list:
-            node_files: list[str] = [rarc_file.name for rarc_file in node.files]
-            files_to_delete: list[str] = list(set(node_files) - (set(files_to_keep)))
-            node_files_left_after_delete: list[str] = list(set(node_files) - (set(files_to_delete)))
-            if not len(files_to_delete):
-                continue
+        if delete_all_other_files:
+            files_to_keep: list[str] = [event_txt_file, ".", ".."]
+            if event_csv:
+                files_to_keep += [event_csv_file]
 
-            # If there is only the current directory entry / parent directory entry left, delete the directory.
-            # Note: Removing the directory automatically removes the file entries as well.
-            elif set(node_files_left_after_delete).issubset({".", ".."}):
-                custom_event.delete_directory(node.dir_entry)
-                continue
+            node_list = list(reversed([node for node in custom_event.nodes[1:]]))
+            for node in node_list:
+                node_files: list[str] = [rarc_file.name for rarc_file in node.files]
+                files_to_delete: list[str] = list(set(node_files) - (set(files_to_keep)))
+                node_files_left_after_delete: list[str] = list(set(node_files) - (set(files_to_delete)))
+                if not len(files_to_delete):
+                    continue
 
-            # Assuming there will always be at least one file to delete in this node, but other files remain.
-            for node_file in node.files:
-                if node_file.name in files_to_delete:
-                    custom_event.delete_file(node_file)
+                # If there is only the current directory entry / parent directory entry left, delete the directory.
+                # Note: Removing the directory automatically removes the file entries as well.
+                elif set(node_files_left_after_delete).issubset({".", ".."}):
+                    custom_event.delete_directory(node.dir_entry)
+                    continue
 
-    logger.info(f"Event{event_number} Yay0 check...")
-    custom_event.save_changes()
-    gcm.changed_files["files/Event/event" + event_number + ".szp"] = Yay0.compress(custom_event.data)
+                # Assuming there will always be at least one file to delete in this node, but other files remain.
+                for node_file in node.files:
+                    if node_file.name in files_to_delete:
+                        custom_event.delete_file(node_file)
+
+        logger.info(f"Event{event_number} Yay0 check...")
+        custom_event.save_changes()
+        self.lm_rando.lm_gcm.changed_files["files/Event/event" + event_number + ".szp"] = Yay0.compress(custom_event.data)
