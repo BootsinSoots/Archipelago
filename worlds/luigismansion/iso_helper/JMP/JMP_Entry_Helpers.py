@@ -336,9 +336,9 @@ def create_iteminfo_entry(item_door_id: int, info_item_name: str) -> dict:
     return {
         "name": info_item_name,
         "character_name": char_name,
-        "open_door_no": open_no,
-        "hp_amount": 0,
-        "is_escape": 0
+        "OpenDoorNo": open_no,
+        "HPAmount": 0,
+        "IsEscape": 0
     }
 
 def create_observer_entry(pos_x: float, pos_y: float, pos_z: float, room_no: int, cond_type: int, do_type: int,
