@@ -189,7 +189,7 @@ class RandomizeJMPTables:
             map_two_key.update_jmp_header_name_value(curr_entry, "open_door_no", int(item_data["door_id"]))
             map_two_key.update_jmp_header_name_value(curr_entry, "appear_flag", 0)
             map_two_key.update_jmp_header_name_value(curr_entry, "disappear_flag", 0)
-            if map_two_key.get_jmp_header_name_value(curr_entry, "code_name") == "demo_key2":
+            if map_two_key.get_jmp_header_name_value(curr_entry, "CodeName") == "demo_key2":
                 map_two_key.update_jmp_header_name_value(curr_entry, "invisible", 0)
 
         # Remove the cutscene HD key from the Foyer, which only appears in the cutscene.
