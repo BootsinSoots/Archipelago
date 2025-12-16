@@ -5,7 +5,7 @@ from gclib.gcm import GCM
 from gclib.yaz0_yay0 import Yay0
 
 from ..Locations import FLIP_BALCONY_BOO_EVENT_LIST
-from ..Helper_Functions import get_arc, PROJECT_ROOT
+from ..Helper_Functions import get_arc, PROJECT_ROOT, read_custom_file
 from ..Hints import ALWAYS_HINT, PORTRAIT_HINTS
 from CommonClient import logger
 
@@ -52,7 +52,7 @@ class EventChanges:
             list_custom_events += ["95", "97", "98", "99", "100"]
 
         for custom_event in list_custom_events:
-            lines = _read_custom_file("txt", "event" + custom_event + ".txt")
+            lines = read_custom_file("txt", "event" + custom_event + ".txt")
             if custom_event == "10" and not bool_start_vacuum:
                 lines = lines.replace("<WEAPON>", "<NOWEAPON>")
             _update_custom_event(self.lm_rando.lm_gcm, custom_event, True, lines, None)
@@ -67,18 +67,18 @@ class EventChanges:
         doors_to_close: dict[int, int] = dict(self.lm_rando.output_data["Entrances"])
 
         self.lm_rando.client_logger.info("Updating the Gallery event with the customized version.")
-        lines = _read_custom_file("txt", "event28.txt")
-        csv_lines = _read_custom_file("csv", "message28.csv")
+        lines = read_custom_file("txt", "event28.txt")
+        csv_lines = read_custom_file("csv", "message28.csv")
         _update_custom_event(self.lm_rando.lm_gcm, "28", True, lines, csv_lines)
 
         self.lm_rando.client_logger.info("Updating the E. Gadd's lab event with the customized version.")
-        lines = _read_custom_file("txt", "event08.txt")
+        lines = read_custom_file("txt", "event08.txt")
         lines = lines.replace("{LUIGIMAXHP}", self.luigi_max_hp)
-        csv_lines = _read_custom_file("csv", "message8.csv")
+        csv_lines = read_custom_file("csv", "message8.csv")
         _update_custom_event(self.lm_rando.lm_gcm, "08", True, lines, csv_lines)
 
         self.lm_rando.client_logger.info("Updating the main intro event with the customized version.")
-        lines = _read_custom_file("txt", "event48.txt")
+        lines = read_custom_file("txt", "event48.txt")
         lines = lines.replace("{MANSION_TYPE}", "<URALUIGI>" if bool_hidden_mansion else "<OMOTELUIGI>")
         if not bool_start_vacuum:
             lines = lines.replace("{WEAPON}", "<NOWEAPON>")
@@ -116,7 +116,7 @@ class EventChanges:
         self.lm_rando.client_logger.info("Boo Gates was enabled, updating all of the common events with the customized version.")
         boo_list_events = ["16", "96"]
         for event_no in boo_list_events:
-            lines = _read_custom_file("txt", "event" + event_no + ".txt")
+            lines = read_custom_file("txt", "event" + event_no + ".txt")
 
             if event_no == "96":
                 req_boo_count = final_boo_count
@@ -193,8 +193,8 @@ class EventChanges:
     def _update_blackout_event(self):
         """Updates the event txt and csv for the blackout."""
         self.lm_rando.client_logger.info("Updating the blackout event with the customized version.")
-        lines = _read_custom_file("txt", "event44.txt")
-        csv_lines = _read_custom_file("csv", "message44.csv")
+        lines = read_custom_file("txt", "event44.txt")
+        csv_lines = read_custom_file("csv", "message44.csv")
         _update_custom_event(self.lm_rando.lm_gcm, "44", True, lines, csv_lines)
 
 
@@ -204,8 +204,8 @@ class EventChanges:
         req_mario_count: int = int(self.lm_rando.output_data["Options"]["mario_items"])
         madame_hint: dict[str, str] = self.hint_list["Madame Clairvoya"] if "Madame Clairvoya" in self.hint_list else None
 
-        lines = _read_custom_file("txt", "event36.txt")
-        csv_lines = _read_custom_file("csv", "message36.csv")
+        lines = read_custom_file("txt", "event36.txt")
+        csv_lines = read_custom_file("csv", "message36.csv")
         case_type = None
         item_color = None
 
@@ -269,8 +269,8 @@ class EventChanges:
         hint_data: dict[str, str] = {}
 
         # Add new event and csv to our special spawn toad
-        lines = _read_custom_file("txt", "event12.txt")
-        csv_lines = _read_custom_file("csv", "message12.csv")
+        lines = read_custom_file("txt", "event12.txt")
+        csv_lines = read_custom_file("csv", "message12.csv")
         lines = lines.replace("{LUIGIMAXHP}", self.luigi_max_hp)
         _update_custom_event(self.lm_rando.lm_gcm, "12", True, lines, csv_lines)
 
@@ -300,10 +300,10 @@ class EventChanges:
                 hint_data = self.hint_list[hint_name]
 
             if event_no == 4:
-                lines = _read_custom_file("txt", "event04.txt")
+                lines = read_custom_file("txt", "event04.txt")
             else:
-                lines = _read_custom_file("txt", "event" + str(event_no) + ".txt")
-            csv_lines = _read_custom_file("csv", "message" + str(event_no) + ".csv")
+                lines = read_custom_file("txt", "event" + str(event_no) + ".txt")
+            csv_lines = read_custom_file("csv", "message" + str(event_no) + ".csv")
 
             match self.hint_dist:
                 case 4:
@@ -356,7 +356,7 @@ class EventChanges:
     def _update_spawn_event(self):
         """Adds and updates the new custom spawn event"""
         self.lm_rando.client_logger.info("Updating the spawn event...")
-        lines = _read_custom_file("txt", "event11.txt")
+        lines = read_custom_file("txt", "event11.txt")
         _update_custom_event(self.lm_rando.lm_gcm, "11", True, lines, None)
 
 
@@ -367,7 +367,7 @@ class EventChanges:
             return
 
         self.lm_rando.client_logger.info("Portrait Hints are enabled, updating portrait ghost hearts with the generated in-game hints.")
-        csv_lines = _read_custom_file("csv", "message78.csv")
+        csv_lines = read_custom_file("csv", "message78.csv")
         item_color = None
 
         if self.hint_dist == 1:
@@ -501,22 +501,3 @@ def _update_custom_event(gcm: GCM, event_number: str, delete_all_other_files: bo
     logger.info(f"Event{event_number} Yay0 check...")
     custom_event.save_changes()
     gcm.changed_files["files/Event/event" + event_number + ".szp"] = Yay0.compress(custom_event.data)
-
-def _read_custom_file(file_type: str, file_name: str) -> str:
-    """
-    Reads the provided file name from its provided sub_folder type and loads it as a txt file.
-
-    :param file_type: Indicates which sub-folder in data to retrieve the file.
-    :param file_name: Reads the provided file name in the sub-folder and decodes it via UTF-8
-    """
-    file_data = None
-
-    match file_type:
-        case "csv":
-            file_data = PROJECT_ROOT.joinpath('data', "custom_csvs", file_name).read_text(encoding='utf-8').replace("\n", "\r\n")
-        case "txt":
-            file_data = PROJECT_ROOT.joinpath('data', "custom_events", file_name).read_text(encoding='utf-8')
-        case _:
-            raise Exception(f"Unhandled custom type provided: {file_type}")
-
-    return file_data

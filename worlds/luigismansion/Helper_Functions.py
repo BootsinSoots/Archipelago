@@ -87,3 +87,23 @@ def get_arc(gcm: GCM, arc_path) -> RARC:
         arc = RARC(gcm.read_file_data(arc_path))  # Automatically decompresses Yay0
     arc.read()
     return arc
+
+
+def read_custom_file(file_type: str, file_name: str) -> str:
+    """
+    Reads the provided file name from its provided sub_folder type and loads it as a txt file.
+
+    :param file_type: Indicates which sub-folder in data to retrieve the file.
+    :param file_name: Reads the provided file name in the sub-folder and decodes it via UTF-8
+    """
+    file_data = None
+
+    match file_type:
+        case "csv":
+            file_data = PROJECT_ROOT.joinpath('data', "custom_csvs", file_name).read_text(encoding='utf-8').replace("\n", "\r\n")
+        case "txt":
+            file_data = PROJECT_ROOT.joinpath('data', "custom_events", file_name).read_text(encoding='utf-8')
+        case _:
+            raise Exception(f"Unhandled custom type provided: {file_type}")
+
+    return file_data
