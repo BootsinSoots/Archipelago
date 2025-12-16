@@ -2,9 +2,10 @@ import struct
 from typing import TYPE_CHECKING
 
 from gclib.dol import DOL, DOLSection
+from gclib.fs_helpers import write_magic_str
 
 from ..Regions import REGION_LIST, LMRegionInfo
-from ..Helper_Functions import StringByteFunction as sbf, PROJECT_ROOT
+from ..Helper_Functions import PROJECT_ROOT
 
 if TYPE_CHECKING:
     from .LM_Randomize_ISO import LuigisMansionRandomizer
@@ -98,8 +99,7 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
 
     # Store Player name
     lm_player_name = str(slot_name).strip()
-    lm_dol.data.seek(0x324740)
-    lm_dol.data.write(sbf.string_to_bytes_with_limit(lm_player_name, LM_PLAYER_NAME_BYTE_LENGTH))
+    write_magic_str(lm_dol.data, 0x324740, lm_player_name, LM_PLAYER_NAME_BYTE_LENGTH)
 
     # Change King Boo's Health
     lm_dol.data.seek(0x399228)
