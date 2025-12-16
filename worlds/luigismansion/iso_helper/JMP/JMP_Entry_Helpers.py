@@ -1,9 +1,10 @@
 import copy
-from typing import Any
+from typing import Any, TYPE_CHECKING
 
 from gcbrickwork.JMP import JMP, JMPEntry
 
-from ..LM_Randomize_ISO import LuigisMansionRandomizer
+if TYPE_CHECKING:
+    from ..LM_Randomize_ISO import LuigisMansionRandomizer
 
 # Used to update speedy spirit observers that spawn them in and switch them to the blackout only table instead.
 SPEEDY_OBSERVER_INDEX: list[int] = [183, 182, 179, 178, 177, 101, 100, 99, 98, 97, 21, 19]
