@@ -84,7 +84,8 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
 
         try:
             self.create_iso(aplm_patch, output_file, lm_clean_iso, True)
-        except ImportError:
+        except ImportError as ex:
+            self._client_logger.warning("Error while trying to import third party dependencies. Details: " + str(ex))
             self._client_logger.info("Speedups not detected, attempting to pull remote release.")
             self._get_remote_dependencies_and_create_iso(aplm_patch, output_file, lm_clean_iso)
         return output_file

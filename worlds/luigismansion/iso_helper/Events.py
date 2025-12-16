@@ -1,5 +1,6 @@
 import re
 from io import BytesIO
+from typing import TYPE_CHECKING
 
 from gclib.yaz0_yay0 import Yay0
 
@@ -8,18 +9,19 @@ from ..Helper_Functions import get_arc, PROJECT_ROOT, read_custom_file
 from ..Hints import ALWAYS_HINT, PORTRAIT_HINTS
 from CommonClient import logger
 
-from .LM_Randomize_ISO import LuigisMansionRandomizer
+if TYPE_CHECKING:
+    from .LM_Randomize_ISO import LuigisMansionRandomizer
 
 
 class EventChanges:
 
-    lm_rando: LuigisMansionRandomizer = None
+    lm_rando: "LuigisMansionRandomizer" = None
     hint_dist: int = None
     luigi_max_hp: str = None
     hint_list: dict[str, dict[str, str]] = None
 
 
-    def __init__(self, rando_obj: LuigisMansionRandomizer):
+    def __init__(self, rando_obj: "LuigisMansionRandomizer"):
         self.lm_rando = rando_obj
         self.hint_dist = int(self.lm_rando.output_data["Options"]["hint_distribution"])
         self.luigi_max_hp = str(self.lm_rando.output_data["Options"]["luigi_max_health"])

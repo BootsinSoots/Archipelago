@@ -1,25 +1,27 @@
 import copy, re
 from math import ceil
+from typing import TYPE_CHECKING
 
 from gcbrickwork.JMP import JMP, JMPEntry
 
-from JMP_Entry_Helpers import (LOCATION_TO_INDEX, SPEEDY_OBSERVER_INDEX, SPEEDY_ENEMY_INDEX, GHOST_LIST,
-    CEILING_FURNITURE_LIST, MEDIUM_HEIGHT_FURNITURE_LIST, get_item_name, apply_new_ghost, add_new_jmp_data_entry,
-    create_iteminfo_entry, create_itemappear_entry, create_observer_entry, get_item_chest_visual, get_chest_size_from_item)
+from .JMP_Entry_Helpers import (LOCATION_TO_INDEX, SPEEDY_OBSERVER_INDEX, SPEEDY_ENEMY_INDEX, CEILING_FURNITURE_LIST,
+    GHOST_LIST, MEDIUM_HEIGHT_FURNITURE_LIST, apply_new_ghost, add_new_jmp_data_entry, create_observer_entry,
+    create_iteminfo_entry, create_itemappear_entry, get_item_chest_visual, get_chest_size_from_item, get_item_name)
 
-from ..LM_Randomize_ISO import LuigisMansionRandomizer
 from ...Items import ALL_ITEMS_TABLE, LMItemData, CurrencyItemData, filler_items
 from ...Regions import REGION_LIST, TOAD_SPAWN_LIST
 from ...Locations import FLIP_BALCONY_BOO_EVENT_LIST, ALL_LOCATION_TABLE, LMLocationData
 from ...game.Currency import CURRENCIES
 
+if TYPE_CHECKING:
+    from ..LM_Randomize_ISO import LuigisMansionRandomizer
 
 class RandomizeJMPTables:
 
-    lm_rando: LuigisMansionRandomizer = None
+    lm_rando: "LuigisMansionRandomizer" = None
 
 
-    def __init__(self, rando_obj: LuigisMansionRandomizer):
+    def __init__(self, rando_obj: "LuigisMansionRandomizer"):
         self.lm_rando = rando_obj
 
 
