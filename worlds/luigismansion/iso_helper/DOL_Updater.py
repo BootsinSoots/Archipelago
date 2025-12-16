@@ -13,9 +13,10 @@ if TYPE_CHECKING:
 CUSTOM_CODE_OFFSET_START = 0x39FA20
 LM_PLAYER_NAME_BYTE_LENGTH = 64
 
-# Updates the main DOL file, which is the main file used for GC and Wii games. This section includes some custom code
-# inside the DOL file itself.
+
 def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
+    """ Updates the main DOL file, which is the main file used for GC and Wii games. This section includes some
+    custom code inside the DOL file itself."""
     # Define all variables from the output data
     start_inv: list[str] = list(lm_gen.output_data["Options"]["start_inventory"])
     walk_speed: int = int(lm_gen.output_data["Options"]["walk_speed"])
