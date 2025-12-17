@@ -78,12 +78,12 @@ class LuigisMansionRandomizer:
         # Make sure that the server and client versions match before attempting to patch ISO.
         self._check_server_version(self.output_data.get(AP_WORLD_VERSION_NAME, "<0.5.6"))
 
-        # Change game ID so save files are different
-        lm_regional_id: str = self._get_and_update_game_id()
-
         # After verifying, this will also read the entire iso, including system files and their content
         self.lm_gcm = GCM(self.clean_iso_path)
         self.lm_gcm.read_entire_disc()
+
+        # Change game ID so save files are different
+        lm_regional_id: str = self._get_and_update_game_id()
 
         # Update the relevant Game RARC archive
         self._load_game_archive(lm_regional_id)
