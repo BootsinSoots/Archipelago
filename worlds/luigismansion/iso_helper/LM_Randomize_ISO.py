@@ -152,24 +152,24 @@ class LuigisMansionRandomizer:
         if self.output_data["Options"]["spookiness"] != 0:
             map2_jmp_list.append("roominfo")
 
-        map2: LMMapFile = LMMapFile(self.lm_gcm, "map2.szp")
+        map2: LMMapFile = LMMapFile(self.lm_gcm, "files/Map/map2.szp")
         map2.load_jmp_files(map2_jmp_list)
         map2.update_jmp_names(self.jmp_names_json)
         self.map_files.update({"map2": map2})
         self._get_empty_jmp_files()
 
-        map1: LMMapFile = LMMapFile(self.lm_gcm, "map1.szp")
+        map1: LMMapFile = LMMapFile(self.lm_gcm, "files/Map/map1.szp")
         map1.load_jmp_files(["eventinfo"])
         map1.update_jmp_names(self.jmp_names_json)
         self.map_files.update({"map1": map1})
 
-        map3: LMMapFile = LMMapFile(self.lm_gcm, "map3.szp")
+        map3: LMMapFile = LMMapFile(self.lm_gcm, "files/Map/map3.szp")
         map3.load_jmp_files(["eventinfo"])
         map3.update_jmp_names(self.jmp_names_json)
         self.map_files.update({"map3": map3})
 
         if bool(self.output_data["Options"]["WDYM_checks"]):
-            map6: LMMapFile = LMMapFile(self.lm_gcm, "map6.szp")
+            map6: LMMapFile = LMMapFile(self.lm_gcm, "files/Map/map6.szp")
             map6.load_jmp_files(["furnitureinfo", "characterinfo"])
             map6.update_jmp_names(self.jmp_names_json)
             self.map_files.update({"map6": map6})
