@@ -153,6 +153,7 @@ jobs:
         python-version: '3.12'
         runs: 15000
         yamls-per-run: 3
+        meta: "${{github.workspace}}/worlds/luigismansion/luigis-mansion-meta.yml"
     - name: Fuzzer-Check-1-yml
       uses: Eijebong/ap-actions/fuzz@main
       with:
@@ -161,6 +162,7 @@ jobs:
         python-version: '3.12'
         runs: 15000
         yamls-per-run: 1
+        meta: "${{github.workspace}}/worlds/luigismansion/luigis-mansion-meta.yml"
 
   package:
     needs: [windows-deps-311, windows-deps-312, windows-deps-313, linux-deps-311, linux-deps-312, linux-deps-313]
