@@ -117,7 +117,7 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
     lm_dol.data.write(blank_data)
 
     # Read in all the other custom DOL changes and update their values to the new value as expected.
-    custom_dol_code = PROJECT_ROOT.joinpath("LM_custom_code.lmco").read_bytes()
+    custom_dol_code = PROJECT_ROOT.joinpath("iso_helper").joinpath("LM_custom_code.lmco").read_bytes()
     lm_dol.data.seek(CUSTOM_CODE_OFFSET_START)
     lm_dol.data.write(custom_dol_code)
 
