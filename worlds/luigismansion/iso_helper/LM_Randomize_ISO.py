@@ -20,7 +20,6 @@ from .JMP.Randomize_JMP_Tables import RandomizeJMPTables
 from .LM_Map_File import LMMapFile
 from ..client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME, RANDOMIZER_NAME, CLIENT_NAME, LM_GC_IDs
 from .LM_GameUSA_Arc import LMGameUSAArc
-from ..Helper_Functions import PROJECT_ROOT
 
 class LuigisMansionRandomizer:
     random: Random
@@ -61,7 +60,7 @@ class LuigisMansionRandomizer:
 
     def _get_jmp_name_list(self) -> dict:
         """Gets the jmp dictionary name list and re-maps it from a string to int."""
-        name_list: dict = json.loads(read_text(PROJECT_ROOT.joinpath("data").name, "jmp_names.json"))
+        name_list: dict = json.loads(read_text("worlds.luigismansion.data", "jmp_names.json"))
         for jmp_file_name in name_list.keys():
             hash_and_names: dict = name_list[jmp_file_name]
             name_list[jmp_file_name] = {int(key): value for key, value in hash_and_names.items()}
