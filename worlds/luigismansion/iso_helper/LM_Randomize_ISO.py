@@ -126,7 +126,7 @@ class LuigisMansionRandomizer:
         self.client_logger.info("Updating the ISO game id with the AP generated seed.")
         bin_data = self.lm_gcm.read_file_data("sys/boot.bin")
         regional_id: str = read_str(bin_data, 0x00, 6)
-        write_str(bin_data, 0x01, self._seed, len(self._seed))
+        write_str(bin_data, 0x01, str(self._seed), len(str(self._seed))+1)
         self.lm_gcm.changed_files["sys/boot.bin"] = bin_data
 
         return regional_id
