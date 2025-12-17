@@ -121,7 +121,7 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
     lm_dol.data.seek(CUSTOM_CODE_OFFSET_START)
     lm_dol.data.write(custom_dol_code)
 
-    dol_csv_offsets = PROJECT_ROOT.joinpath("dol_diff.csv").read_text(encoding="utf-8").splitlines()
+    dol_csv_offsets = PROJECT_ROOT.joinpath("iso_helper").joinpath("dol_diff.csv").read_text(encoding="utf-8").splitlines()
     for csv_line in dol_csv_offsets:
         dol_addr, dol_val, _ = csv_line.split(",")
         lm_dol.data.seek(int(dol_addr, 16))
