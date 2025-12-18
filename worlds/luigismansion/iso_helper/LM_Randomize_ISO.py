@@ -101,6 +101,9 @@ class LuigisMansionRandomizer:
         jmp_tables: RandomizeJMPTables = RandomizeJMPTables(self)
         jmp_tables.randomize_jmp_tables()
 
+        # Updates the game archive file
+        self._update_game_archive()
+
         # Generator function to combine all necessary files into an ISO file.
         # Returned information is ignored.
         for _, _ in self._export_files_from_memory():
@@ -136,8 +139,7 @@ class LuigisMansionRandomizer:
         match regional_id:
             case LM_GC_IDs.USA_ID:
                 self.game_region_arc: LMGameUSAArc = LMGameUSAArc(self.lm_gcm, "files/Game/game_usa.szp")
-                self.game_region_arc.add_gold_ghost(self.lm_gcm)
-                #game_arc.update_game_usa(self.lm_gcm) # Move this to a relevant updater function
+                self.game_region_arc.add_gold_ghost()
 
     def _load_map_files(self):
         """Loads all the map file data, including JMP files.
@@ -192,11 +194,13 @@ class LuigisMansionRandomizer:
         self.empty_jmp_files = temp_map2.jmp_files
 
     def _update_map_files(self):
-        """Updates and saves all that map data back into the GCM"""
+        """Updates and saves all that map data back into the GCM."""
         for map_file in self.map_files.values():
             map_file.update_and_save_map(self.lm_gcm)
 
     def _update_game_archive(self):
+        """Updates the game archive file back into the GCM."""
+        self.game_region_arc.update_game_usa()
 
     def _update_events(self):
         """Updates all the event files to include hint info, new triggers, etc."""
