@@ -251,6 +251,6 @@ jobs:
         with:
           draft: true
           prerelease: false
-          name: Luigis Mansion AP ${LM-VERS}
+          name: Luigis Mansion AP ${{LM-VERS}}
           files: |
             tmp-artifacts/*
