@@ -251,8 +251,8 @@ class RandomizeJMPTables:
         boo_hp_unit: int = 0
 
         if boo_health_choice == 2:
-            boo_hp_unit = max([int(boo_loc["boo_sphere"]) for boo_loc in self.lm_rando.output_data["Locations"]["Boo"].vals()])
-        for boo_entry in self.lm_rando.output_data["Locations"]["Boo"].vals():
+            boo_hp_unit = max([int(boo_loc["boo_sphere"]) for boo_loc in self.lm_rando.output_data["Locations"]["Boo"].values()])
+        for boo_entry in self.lm_rando.output_data["Locations"]["Boo"].values():
             curr_boo_entry: JMPEntry = map_two_telesa.data_entries[int(boo_entry["loc_enum"])]
             map_two_telesa.update_jmp_header_name_value(curr_boo_entry, "accel", 3.000000)
             map_two_telesa.update_jmp_header_name_value(curr_boo_entry, "max_speed", boo_speed)
