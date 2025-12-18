@@ -185,7 +185,7 @@ jobs:
     permissions:
       contents: write
     env:
-      LM-NAME: ${{ inputs.tag == '' && ${{github.ref_name}} || ${{inputs.tag}} }}
+      LM-NAME: ${{ inputs.tag == '' && github.ref_name || inputs.tag }}
     steps:
       - name: Create Local Artifact Folder
         run: mkdir tmp-artifacts
