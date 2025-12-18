@@ -26,7 +26,7 @@ jobs:
         run: pip install -r ${{github.workspace}}/worlds/luigismansion/requirements.txt --target $env:LIB_WINDOWS_311 --verbose
       - uses: actions/upload-artifact@v4
         with:
-          name: Upload lib-windows3-11
+          name: $env:LIB_WINDOWS_311
           path: ./$env:LIB_WINDOWS_311/**
     env:
       LIB_WINDOWS_311: "lib-windows3-11"
@@ -47,7 +47,7 @@ jobs:
       run: pip install -r ${{github.workspace}}/worlds/luigismansion/requirements.txt --target $env:LIB_WINDOWS_312 --verbose
     - uses: actions/upload-artifact@v4
       with:
-        name: Upload lib-windows3-12
+        name: $env:LIB_WINDOWS_312
         path: ./$env:LIB_WINDOWS_312/**
     env:
       LIB_WINDOWS_312: "lib-windows3-12"
@@ -68,7 +68,7 @@ jobs:
         run: pip install -r ${{github.workspace}}/worlds/luigismansion/requirements.txt --target $env:LIB_WINDOWS_313 --verbose
       - uses: actions/upload-artifact@v4
         with:
-          name: Upload lib-windows3-13
+          name: $env:LIB_WINDOWS_313
           path: ./$env:LIB_WINDOWS_313/**
     env:
       LIB_WINDOWS_313: "lib-windows3-13"
@@ -89,7 +89,7 @@ jobs:
         run: pip install -r ${{github.workspace}}/worlds/luigismansion/requirements.txt --target ./${LIB-LINUX-311} --verbose
       - uses: actions/upload-artifact@v4
         with:
-          name: Upload lib-linux3-11
+          name: lib-linux3-11
           path: ./${LIB-LINUX-311}/**
     env:
       LIB-LINUX-311: "lib-linux3-11"
@@ -110,7 +110,7 @@ jobs:
       run: pip install -r ${{github.workspace}}/worlds/luigismansion/requirements.txt --target ./${LIB-LINUX-312} --verbose
     - uses: actions/upload-artifact@v4
       with:
-        name: Upload lib-linux3-12
+        name: lib-linux3-12
         path: ./${LIB-LINUX-312}/**
     env:
       LIB-LINUX-312: "lib-linux3-12"
@@ -131,7 +131,7 @@ jobs:
         run: pip install -r ${{github.workspace}}/worlds/luigismansion/requirements.txt --target ./${LIB-LINUX-313} --verbose
       - uses: actions/upload-artifact@v4
         with:
-          name: Upload lib-linux3-13
+          name: lib-linux3-13
           path: ./${LIB-LINUX-313}/**
     env:
       LIB-LINUX-313: "lib-linux3-13"
@@ -218,42 +218,42 @@ jobs:
       
       - uses: actions/download-artifact@v4
         with:
-          name: Tmp Windows 3.11
+          name: $env:LIB_WINDOWS_311
           path: tmp-$env:LIB_WINDOWS_311
       - name: Zip Lib Windows folder 3.11
         run: cd tmp-$env:LIB_WINDOWS_311 && zip -r ../tmp-artifacts/$env:LIB_WINDOWS_311.zip * && cd ../
 
       - uses: actions/download-artifact@v4
         with:
-          name: Tmp Windows 3.12
+          name: $env:LIB_WINDOWS_312
           path: tmp-$env:LIB_WINDOWS_312
       - name: Zip Lib Windows folder 3.12
         run: cd tmp-$env:LIB_WINDOWS_312 && zip -r ../tmp-artifacts/$env:LIB_WINDOWS_312.zip * && cd ../
 
       - uses: actions/download-artifact@v4
         with:
-          name: Tmp Windows 3.13
+          name: $env:LIB_WINDOWS_313
           path: tmp-$env:LIB_WINDOWS_313
       - name: Zip Lib Windows folder 3.13
         run: cd tmp-$env:LIB_WINDOWS_313 && zip -r ../tmp-artifacts/$env:LIB_WINDOWS_313.zip * && cd ../
 
       - uses: actions/download-artifact@v4
         with:
-          name: Tmp Windows 3.11
+          name: $env:LIB-LINUX-311
           path: tmp-${LIB-LINUX-311}
       - name: Zip Lib Linux folder 3.11
         run: cd tmp-${LIB-LINUX-311} && zip -r ../tmp-artifacts/${LIB-LINUX-311}.zip * && cd ../
 
       - uses: actions/download-artifact@v4
         with:
-          name: Tmp Windows 3.12
+          name: $env:LIB-LINUX-312
           path: tmp-${LIB-LINUX-312}
       - name: Zip Lib Linux folder 3.12
         run: cd tmp-${LIB-LINUX-312} && zip -r ../tmp-artifacts/${LIB-LINUX-312}.zip * && cd ../
 
       - uses: actions/download-artifact@v4
         with:
-          name: Tmp Windows 3.13
+          name: $env:LIB-LINUX-313
           path: tmp-${LIB-LINUX-313}
       - name: Zip Lib Linux folder 3.13
         run: cd tmp-${LIB-LINUX-313} && zip -r ../tmp-artifacts/${LIB-LINUX-313}.zip * && cd ../
