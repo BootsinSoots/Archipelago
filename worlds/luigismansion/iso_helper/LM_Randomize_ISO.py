@@ -30,7 +30,7 @@ class LuigisMansionRandomizer:
     # GCLib related vars
     lm_gcm: GCM = None
     game_region_arc: LMGameUSAArc = None
-    map_files: dict[str, LMMapFile] = []
+    map_files: dict[str, LMMapFile] = {}
     jmp_names_json: dict = None
     empty_jmp_files: dict[str, JMP] = {}
 
