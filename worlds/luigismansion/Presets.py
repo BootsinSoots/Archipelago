@@ -31,6 +31,7 @@ all_random_settings = {
     LMOptions.Walksanity.internal_name:                "random",
     LMOptions.SpeedySpirits.internal_name:             "random",
     LMOptions.WhatDoYouMean.internal_name:             "random",
+    LMOptions.Grassanity.internal_name:                "random",
     LMOptions.BooGates.internal_name:                  "random",
     LMOptions.KingBooHealth.internal_name:             "random",
     LMOptions.BoolossusDifficulty.internal_name:       "random",
@@ -85,6 +86,7 @@ allsanity_settings = {
     LMOptions.Walksanity.internal_name:                "true",
     LMOptions.SpeedySpirits.internal_name:             "true",
     LMOptions.WhatDoYouMean.internal_name:             "true",
+    LMOptions.Grassanity.internal_name:                "true",
 }
 
 money_settings = {
