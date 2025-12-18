@@ -176,7 +176,7 @@ jobs:
       - name: Clear pip cache Build-AP
         run: pip cache purge
       - name: Install Dependencies Build-AP
-        run: pip install -r ${{github.workspace}}/requirements.txt
+        run: python ${{github.workspace}}/ModuleUpdate.py -y -f
 
       - name: Build AP-World
         run: python ${{github.workspace}}/Launcher.py "Build APWorlds" "luigismansion"
