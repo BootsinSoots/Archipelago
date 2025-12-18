@@ -185,16 +185,18 @@ class LuigisMansionRandomizer:
     def _get_empty_jmp_files(self):
         """Loads all jmp files from Map2, excepts removes any JMP entries and loads a default one that can
         be used/manipulated."""
-        temp_map2: LMMapFile = copy.deepcopy(self.map_files.get("map2"))
+        temp_map2: LMMapFile = copy.deepcopy(LMMapFile(self.lm_gcm, "files/Map/map2.szp"))
         temp_map2.get_all_jmp_files()
         for jmp_name, jmp_entry in temp_map2.jmp_files.items():
             temp_map2.jmp_files[jmp_name].data_entries = []
-        self.empty_jmp_files = copy.deepcopy(temp_map2.jmp_files)
+        self.empty_jmp_files = temp_map2.jmp_files
 
     def _update_map_files(self):
         """Updates and saves all that map data back into the GCM"""
         for map_file in self.map_files.values():
             map_file.update_and_save_map(self.lm_gcm)
+
+    def _update_game_archive(self):
 
     def _update_events(self):
         """Updates all the event files to include hint info, new triggers, etc."""
