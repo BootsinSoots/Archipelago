@@ -21,13 +21,13 @@ jobs:
       - name: Clear pip cache 3.11
         run: pip cache purge
       - name: Create Lib-Windows3-11
-        run: mkdir ${LIB-WINDOWS-311}
+        run: mkdir -p ${{github.workspace}}/${LIB-WINDOWS-311}
       - name: Install Windows-Deps 3.11
-        run: pip install -r ${{github.workspace}}/worlds/luigismansion/requirements.txt --target ./${LIB-WINDOWS-311} --verbose
+        run: pip install -r ${{github.workspace}}/worlds/luigismansion/requirements.txt --target ${{github.workspace}}/${LIB-WINDOWS-311} --verbose
       - uses: actions/upload-artifact@v4
         with:
           name: Upload lib-windows3-11
-          path: ./${LIB-WINDOWS-311}/**
+          path: ${{github.workspace}}/${LIB-WINDOWS-311}/**
     env:
       LIB-WINDOWS-311: "lib-windows3-11"
 
@@ -42,13 +42,13 @@ jobs:
     - name: Clear pip cache 3.12
       run: pip cache purge
     - name: Create Lib-Windows3-12
-      run: mkdir ${LIB-WINDOWS-312}
+      run: mkdir -p ${{github.workspace}}/${LIB-WINDOWS-312}
     - name: Install Windows-Deps3-12
-      run: pip install -r ${{github.workspace}}/worlds/luigismansion/requirements.txt --target ./${LIB-WINDOWS-312} --verbose
+      run: pip install -r ${{github.workspace}}/worlds/luigismansion/requirements.txt --target ${{github.workspace}}/${LIB-WINDOWS-312} --verbose
     - uses: actions/upload-artifact@v4
       with:
         name: Upload lib-windows3-12
-        path: ./${LIB-WINDOWS-312}/**
+        path: ${{github.workspace}}/${LIB-WINDOWS-312}/**
     env:
       LIB-WINDOWS-312: "lib-windows3-12"
 
@@ -63,13 +63,13 @@ jobs:
       - name: Clear pip cache 3.13
         run: pip cache purge
       - name: Create Lib-Windows3-13
-        run: mkdir ${LIB-WINDOWS-313}
+        run: mkdir -p ${{github.workspace}}/${LIB-WINDOWS-313}
       - name: Install Windows-Deps3-13
-        run: pip install -r ${{github.workspace}}/worlds/luigismansion/requirements.txt --target ./${LIB-WINDOWS-313} --verbose
+        run: pip install -r ${{github.workspace}}/worlds/luigismansion/requirements.txt --target ${{github.workspace}}/${LIB-WINDOWS-313} --verbose
       - uses: actions/upload-artifact@v4
         with:
           name: Upload lib-windows3-13
-          path: ./${LIB-WINDOWS-313}/**
+          path: ${{github.workspace}}/${LIB-WINDOWS-313}/**
     env:
       LIB-WINDOWS-313: "lib-windows3-13"
 
