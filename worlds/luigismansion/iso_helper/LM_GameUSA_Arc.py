@@ -14,6 +14,7 @@ class _ParamType(StrEnum):
     CTP = "CTP"
 
 class LMGameUSAArc:
+    lm_gcm: GCM = None
     _arc_path: str = None
     game_usa_arc: RARC = None
     _client_logger: Logger = None
@@ -22,21 +23,22 @@ class LMGameUSAArc:
     ctp_params: dict[str, PRM] = {}
     th_params: dict[str, PRM] = {}
 
-    def __init__(self, lm_gcm: GCM, arc_path: str):
+    def __init__(self, user_gcm: GCM, arc_path: str):
+        self.lm_gcm = user_gcm
         self._arc_path = arc_path
-        self.game_usa_arc: RARC = get_arc(lm_gcm, arc_path)
+        self.game_usa_arc: RARC = get_arc(self.lm_gcm, arc_path)
         self._client_logger = getLogger(CLIENT_NAME)
         self._ctp_files = self.game_usa_arc.get_node_by_path("param/ctp").files
         self._th_files = self.game_usa_arc.get_node_by_path("param/th").files
 
-    def add_gold_ghost(self, lm_gcm: GCM):
+    def add_gold_ghost(self):
         """
         In order to trigger the Gold Ghost trap properly, we need to copy its file into the game_usa archive.
         However, since game_usa is very full, we must also delete and remove some unused files, otherwise game_usa
             is too large to load and will crash the emulator.
         """
         self._remove_unused_files()
-        obake_copy = get_arc(lm_gcm, "files/model/obake01.szp")
+        obake_copy = get_arc(self.lm_gcm, "files/model/obake01.szp")
         self._client_logger.info("Adding Gold Ghost image into the model folder")
         self.game_usa_arc.add_new_file("obake01.arc", obake_copy.data, self.game_usa_arc.get_node_by_path("model"))
 
@@ -71,7 +73,7 @@ class LMGameUSAArc:
         unused_model = find_rarc_file_entry(self.game_usa_arc, "model", "takara1.arc")
         self.game_usa_arc.delete_file(unused_model)
 
-    def update_game_usa(self, lm_gcm: GCM):
+    def update_game_usa(self):
         """
         Updates the game_usa arc into the GCM
         """
@@ -82,7 +84,7 @@ class LMGameUSAArc:
         # lm_gcm.add_new_file(self._arc_path, self.game_usa_arc)
         self.game_usa_arc.save_changes()
         self._client_logger.info("game_uza.szp Yay0 check...")
-        lm_gcm.changed_files[self._arc_path] = Yay0.compress(self.game_usa_arc.data)
+        self.lm_gcm.changed_files[self._arc_path] = Yay0.compress(self.game_usa_arc.data)
 
     def load_ctp_list_parameters(self, ctp_params: list[str]):
         """
