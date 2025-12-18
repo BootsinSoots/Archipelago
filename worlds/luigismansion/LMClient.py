@@ -899,9 +899,10 @@ def main(*launch_args: str):
             server_address = lm_usa_manifest["server"]
             rom_path= lm_usa_patch.patch(args.aplm_file)
         except Exception as ex:
-            logger.error("Unable to patch your Luigi's Mansion ROM as expected. Additional details:\n" + str(ex))
-            Utils.messagebox("Cannot Patch Luigi's Mansion", "Unable to patch your Luigi's Mansion ROM as " +
-                "expected. Additional details:\n" + str(ex), True)
+            err_msg: str = f"Unable to patch your Luigi's Mansion ROM as expected.\n" + \
+                f"APWorld Version: '{CLIENT_VERSION}'\nAdditional details:{str(ex)}"
+            logger.error(err_msg)
+            Utils.messagebox("Cannot Patch Luigi's Mansion", err_msg, True)
             raise ex
 
     async def _main(connect, password):

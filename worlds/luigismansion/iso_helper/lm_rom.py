@@ -171,9 +171,10 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
         logger.info("Getting missing dependencies for Luigi's Mansion from remote source.")
 
         from ..LMClient import CLIENT_VERSION
+        from sys import version_info
         lib_path = self.__get_archive_name()
         lib_path_base = f"https://github.com/BootsinSoots/Archipelago/releases/download/{CLIENT_VERSION}"
-        download_path = f"{lib_path_base}/{lib_path}.zip"
+        download_path = f"{lib_path_base}/{lib_path}{version_info.major}-{version_info.minor}.zip"
 
         temp_zip_path = os.path.join(tmp_dir_path, "temp.zip")
         with urllib.request.urlopen(download_path) as response, open(temp_zip_path, 'wb') as created_zip:
