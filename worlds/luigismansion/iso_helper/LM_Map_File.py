@@ -25,7 +25,8 @@ class LMMapFile:
         """
         Loads all JMP files found within the arc file into self.jmp_files object.
         """
-        self.load_jmp_files(list(jmp.name for jmp in self._arc_data.get_node_by_path("jmp").files))
+        bad_jmp_names: list[str] = [".", ".."]
+        self.load_jmp_files([jmp.name for jmp in self._arc_data.get_node_by_path("jmp").files if not jmp.name in bad_jmp_names])
 
     def load_jmp_files(self, jmp_file_names: list[str]):
         """
