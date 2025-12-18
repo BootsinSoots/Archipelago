@@ -53,6 +53,7 @@ class LMWeb(WebWorld):
             LuigiOptions.SpeedySpirits,
             LuigiOptions.Lightsanity,
             LuigiOptions.Walksanity,
+            LuigiOptions.Grassanity,
             LuigiOptions.WhatDoYouMean,
         ]),
         Options.OptionGroup("Access Options", [
@@ -379,6 +380,14 @@ class LMWorld(World):
                     add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
                 set_element_rules(self, entry, False)
                 region.locations.append(entry)
+        if self.options.grassanity:
+            for location, data in MEME_LOCATION_TABLE.items():
+                region = self.get_region(data.region)
+                entry = LMLocation(self.player, location, region, data)
+                if data.require_poltergust:
+                    add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
+                set_element_rules(self, entry, False)
+                region.locations.append(entry)
         if self.options.boosanity:
             for location, data in ROOM_BOO_LOCATION_TABLE.items():
                 region: Region = self.get_region(data.region)
@@ -387,17 +396,16 @@ class LMWorld(World):
                 add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
                 if entry.region == "Twins' Room" and self.open_doors.get(28) == 0:
                     add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
-                if data.region == "Nursery" and self.open_doors.get(27) == 0:
+                elif data.region == "Nursery" and self.open_doors.get(27) == 0:
                     add_rule(entry, lambda state: state.has("Nursery Key", self.player), "and")
-                if data.region == "Fortune-Teller's Room": # If it's Clairvoya's room, should match Mario item count
+                elif data.region == "Fortune-Teller's Room": # If it's Clairvoya's room, should match Mario item count
                     add_rule(entry,
                              lambda state: state.has_group("Mario Item", self.player, self.options.mario_items.value),
                              "and")
                 if entry.parent_region.name == self.origin_region_name:
                     if self.spawn_full_locked:
                         keys = REGION_LIST[self.origin_region_name].door_keys
-                        for key in keys:
-                            add_rule(entry, lambda state, k=key: state.has(k, self.player), "or")
+                        add_rule(entry, lambda state: state.has_any(keys, self.player), "and")
                 set_element_rules(self, entry, True)
                 region.locations.append(entry)
             for location, data in BOOLOSSUS_LOCATION_TABLE.items():
@@ -417,17 +425,16 @@ class LMWorld(World):
                 add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
                 if entry.region == "Twins' Room" and self.open_doors.get(28) == 0:
                     add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
-                if data.region == "Nursery" and self.open_doors.get(27) == 0:
+                elif data.region == "Nursery" and self.open_doors.get(27) == 0:
                     add_rule(entry, lambda state: state.has("Nursery Key", self.player), "and")
-                if data.region == "Fortune-Teller's Room": # If it's Clairvoya's room, should match Mario item count
+                elif data.region == "Fortune-Teller's Room": # If it's Clairvoya's room, should match Mario item count
                     add_rule(entry,
                              lambda state: state.has_group("Mario Item", self.player, self.options.mario_items.value),
                              "and")
                 if entry.parent_region.name == self.origin_region_name:
                     if self.spawn_full_locked:
                         keys = REGION_LIST[self.origin_region_name].door_keys
-                        for key in keys:
-                            add_rule(entry, lambda state, k=key: state.has(k, self.player), "or")
+                        add_rule(entry, lambda state: state.has_any(keys, self.player), "and")
                 entry.code = None
                 set_element_rules(self, entry, True)
                 region.locations.append(entry)
@@ -879,6 +886,7 @@ class LMWorld(World):
             "lightsanity": self.options.lightsanity.value,
             "walksanity": self.options.walksanity.value,
             "WDYM": self.options.WDYM_checks.value,
+            "grassanity": self.options.grassanity.value,
             "clairvoya requirement": self.options.mario_items.value,
             "boo gates": self.options.boo_gates.value,
             "boolossus_difficulty": self.options.boolossus_difficulty.value,
