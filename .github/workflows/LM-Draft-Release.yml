@@ -21,15 +21,13 @@ jobs:
       - name: Clear pip cache 3.11
         run: pip cache purge
       - name: Create Lib-Windows3-11
-        run: mkdir $env:LIB_WINDOWS_311
+        run: mkdir lib-windows3-11
       - name: Install Windows-Deps 3.11
-        run: pip install -r ${{github.workspace}}/worlds/luigismansion/requirements.txt --target ./$env:LIB_WINDOWS_311 --verbose
+        run: pip install -r ${{github.workspace}}/worlds/luigismansion/requirements.txt --target ./lib-windows3-11 --verbose
       - uses: actions/upload-artifact@v4
         with:
           name: lib-windows3-11
-          path: ./${LIB_WINDOWS_311}/**
-    env:
-      LIB_WINDOWS_311: "lib-windows3-11"
+          path: ./lib-windows3-11/**
 
   windows-deps-312:
     runs-on: windows-latest
@@ -44,7 +42,7 @@ jobs:
     - name: Create Lib-Windows3-12
       run: mkdir lib-windows3-12
     - name: Install Windows-Deps3-12
-      run: pip install -r ${{github.workspace}}/worlds/luigismansion/requirements.txt --target ./lib-windows3-12--verbose
+      run: pip install -r ${{github.workspace}}/worlds/luigismansion/requirements.txt --target ./lib-windows3-12 --verbose
     - uses: actions/upload-artifact@v4
       with:
         name: lib-windows3-12
@@ -80,15 +78,13 @@ jobs:
       - name: Clear pip cache 3.11
         run: pip cache purge
       - name: Create Lib-Linux3-11
-        run: mkdir ${LIB-LINUX-311}
+        run: mkdir lib-linux3-11
       - name: Install Linux-Deps3-11
-        run: pip install -r ${{github.workspace}}/worlds/luigismansion/requirements.txt --target ./${LIB-LINUX-311} --verbose
+        run: pip install -r ${{github.workspace}}/worlds/luigismansion/requirements.txt --target ./lib-linux3-11 --verbose
       - uses: actions/upload-artifact@v4
         with:
           name: lib-linux3-11
-          path: ./${LIB-LINUX-311}/**
-    env:
-      LIB-LINUX-311: "lib-linux3-11"
+          path: ./lib-linux3-11/**
 
   linux-deps-312:
     runs-on: ubuntu-latest
@@ -101,15 +97,13 @@ jobs:
     - name: Clear pip cache 3.12
       run: pip cache purge
     - name: Create Lib-Linux3-12
-      run: mkdir ${LIB-LINUX-312}
+      run: mkdir lib-linux3-12
     - name: Install Linux-Deps3-12
-      run: pip install -r ${{github.workspace}}/worlds/luigismansion/requirements.txt --target ./${LIB-LINUX-312} --verbose
+      run: pip install -r ${{github.workspace}}/worlds/luigismansion/requirements.txt --target ./lib-linux3-12 --verbose
     - uses: actions/upload-artifact@v4
       with:
         name: lib-linux3-12
-        path: ./${LIB-LINUX-312}/**
-    env:
-      LIB-LINUX-312: "lib-linux3-12"
+        path: ./lib-linux3-12/**
 
   linux-deps-313:
     runs-on: ubuntu-latest
@@ -122,15 +116,13 @@ jobs:
       - name: Clear pip cache 3.13
         run: pip cache purge
       - name: Create Lib-Linux3-13
-        run: mkdir ${LIB-LINUX-313}
+        run: mkdir lib-linux3-13
       - name: Install Linux-Deps3-13
-        run: pip install -r ${{github.workspace}}/worlds/luigismansion/requirements.txt --target ./${LIB-LINUX-313} --verbose
+        run: pip install -r ${{github.workspace}}/worlds/luigismansion/requirements.txt --target ./lib-linux3-13 --verbose
       - uses: actions/upload-artifact@v4
         with:
           name: lib-linux3-13
-          path: ./${LIB-LINUX-313}/**
-    env:
-      LIB-LINUX-313: "lib-linux3-13"
+          path: ./lib-linux3-13/**
 
   fuzz:
     needs: [windows-deps-311, windows-deps-312, windows-deps-313, linux-deps-311, linux-deps-312, linux-deps-313]
@@ -190,12 +182,6 @@ jobs:
       contents: write
     env:
       LM-VERS: ${{ inputs.tag == '' && github.ref_name || inputs.tag }}
-      LIB_WINDOWS_311: "lib-windows3-11"
-      LIB_WINDOWS_312: "lib-windows3-12"
-      LIB_WINDOWS_313: "lib-windows3-13"
-      LIB-LINUX-311: "lib-linux3-11"
-      LIB-LINUX-312: "lib-linux3-12"
-      LIB-LINUX-313: "lib-linux3-13"
     steps:
       - name: Create Local Artifact Folder
         run: mkdir tmp-artifacts
@@ -221,44 +207,44 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: lib-windows3-11
-          path: tmp-$env:LIB_WINDOWS_311
+          path: tmp-lib-windows3-11
       - name: Zip Lib Windows folder 3.11
-        run: cd tmp-$env:LIB_WINDOWS_311 && zip -r ../tmp-artifacts/$env:LIB_WINDOWS_311.zip * && cd ../
+        run: cd tmp-lib-windows3-11 && zip -r ../tmp-artifacts/lib-windows3-11.zip * && cd ../
 
       - uses: actions/download-artifact@v4
         with:
           name: lib-windows3-12
-          path: tmp-$env:LIB_WINDOWS_312
+          path: tmp-lib-windows3-12
       - name: Zip Lib Windows folder 3.12
-        run: cd tmp-$env:LIB_WINDOWS_312 && zip -r ../tmp-artifacts/$env:LIB_WINDOWS_312.zip * && cd ../
+        run: cd tmp-lib-windows3-12 && zip -r ../tmp-artifacts/lib-windows3-12.zip * && cd ../
 
       - uses: actions/download-artifact@v4
         with:
           name: lib-windows3-13
-          path: tmp-$env:LIB_WINDOWS_313
+          path: tmp-lib-windows3-13
       - name: Zip Lib Windows folder 3.13
-        run: cd tmp-$env:LIB_WINDOWS_313 && zip -r ../tmp-artifacts/$env:LIB_WINDOWS_313.zip * && cd ../
+        run: cd tmp-lib-windows3-13 && zip -r ../tmp-artifacts/lib-windows3-13.zip * && cd ../
 
       - uses: actions/download-artifact@v4
         with:
           name: lib-linux3-11
-          path: tmp-${LIB-LINUX-311}
+          path: tmp-lib-linux3-11
       - name: Zip Lib Linux folder 3.11
-        run: cd tmp-${LIB-LINUX-311} && zip -r ../tmp-artifacts/${LIB-LINUX-311}.zip * && cd ../
+        run: cd tmp-lib-linux3-11 && zip -r ../tmp-artifacts/lib-linux3-11.zip * && cd ../
 
       - uses: actions/download-artifact@v4
         with:
           name: lib-linux3-12
-          path: tmp-${LIB-LINUX-312}
+          path: tmp-lib-linux3-12
       - name: Zip Lib Linux folder 3.12
-        run: cd tmp-${LIB-LINUX-312} && zip -r ../tmp-artifacts/${LIB-LINUX-312}.zip * && cd ../
+        run: cd tmp-lib-linux3-12 && zip -r ../tmp-artifacts/lib-linux3-12.zip * && cd ../
 
       - uses: actions/download-artifact@v4
         with:
           name: lib-linux3-13
-          path: tmp-${LIB-LINUX-313}
+          path: tmp-lib-linux3-13
       - name: Zip Lib Linux folder 3.13
-        run: cd tmp-${LIB-LINUX-313} && zip -r ../tmp-artifacts/${LIB-LINUX-313}.zip * && cd ../
+        run: cd tmp-lib-linux3-13 && zip -r ../tmp-artifacts/lib-linux3-13.zip * && cd ../
 
       - name: Create Manual Release
         uses: softprops/action-gh-release@v2.3.2
