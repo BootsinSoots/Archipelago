@@ -179,13 +179,13 @@ jobs:
         run: python ${{github.workspace}}/ModuleUpdate.py -y -f
 
       - name: Build AP-World
-        run: python ${{github.workspace}}/Launcher.py "Build APWorlds" "luigismansion"
+        run: python ${{github.workspace}}/Launcher.py "Build APWorlds" "Luigi's Mansion"
         shell: pwsh 
       
       - uses: actions/upload-artifact@v4
         with:
           name: apworld
-          path: ${{github.workspace}}/build/apworlds/**
+          path: ${{github.workspace}}/build/apworlds/luigismansion.apworld
 
   publish:
     runs-on: ubuntu-latest
