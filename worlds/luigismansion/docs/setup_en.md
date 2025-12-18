@@ -67,7 +67,9 @@ to continue later.
    - The field should read `archipelago.gg:<port number>`
 9. Once you have loaded into the game, click the `Connect` button at the top of the LMClient. You are now connected and ready to play!
    - The client takes around 10 seconds to finish connecting, and only connects once you are actually in the mansion
-   - Unfortunately, due to the nature of some checks, you must be connected to a server while playing
+   - Unfortunately, due to the nature of some checks, you must be connected to a server while playing. Please keep a link to the webpage on hand
+10. To rejoin the room later, you need to open the webpage, open the LM Client through the Archipelago Launcher, and open the patched ISO with Dolphin.
+Then you can click connect on the LM Client so long as the port matches what is shown on the webpage.
 
 ## Joining a MultiWorld Game
 

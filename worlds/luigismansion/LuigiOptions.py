@@ -398,8 +398,6 @@ class Enemizer(Choice):
 class VacuumStart(DefaultOnToggle):
     """
     Enable Luigi to have the Poltergust 3000 at the start.
-
-    If you start with an upgrade on a no-poltergust start, you will receive the base poltergust instead
     """
     display_name = "Starting Vacuum"
     internal_name = "vacuum_start"
@@ -790,6 +788,13 @@ class TrapLinkClientMsgs(DefaultOnToggle):
     display_name = "Enable Trap Link Client Message"
     internal_name = "enable_trap_client_msg"
 
+class Grassanity(Toggle):
+    """
+    Add grass locations to the location pool
+    """
+    display_name = "Grassanity"
+    internal_name = "grassanity"
+
 @dataclass
 class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     rank_requirement: RankRequirement
@@ -820,6 +825,7 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     walksanity: Walksanity
     speedy_spirits: SpeedySpirits
     WDYM_checks: WhatDoYouMean
+    grassanity: Grassanity
     boo_gates: BooGates
     self_item_messages: ShowSelfReceivedItems
     mario_items: MarioItems

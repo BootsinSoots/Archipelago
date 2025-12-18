@@ -493,7 +493,7 @@ class Context:
         self.read_data["race_mode"] = lambda: decoded_obj.get("race_mode", 0)
         mdata_ver = decoded_obj["minimum_versions"]["server"]
         if mdata_ver > version_tuple:
-            raise RuntimeError(f"Supplied Multidata (.archipelago) requires a server of at least version {mdata_ver},"
+            raise RuntimeError(f"Supplied Multidata (.archipelago) requires a server of at least version {mdata_ver}, "
                                f"however this server is of version {version_tuple}")
         self.generator_version = Version(*decoded_obj["version"])
         clients_ver = decoded_obj["minimum_versions"].get("clients", {})
@@ -1200,16 +1200,17 @@ def collect_hints(ctx: Context, team: int, slot: int, item: typing.Union[int, st
             found = location_id in ctx.location_checks[team, finding_player]
             entrance = ctx.er_hint_data.get(finding_player, {}).get(location_id, "")
 
+            hint_status = status  # Assign again because we're in a for loop
             if found:
-                status = HintStatus.HINT_FOUND
-            elif status is None:
+                hint_status = HintStatus.HINT_FOUND
+            elif hint_status is None:
                 if item_flags & ItemClassification.trap:
-                    status = HintStatus.HINT_AVOID
+                    hint_status = HintStatus.HINT_AVOID
                 else:
-                    status = HintStatus.HINT_PRIORITY
+                    hint_status = HintStatus.HINT_PRIORITY
 
             hints.append(
-                Hint(receiving_player, finding_player, location_id, item_id, found, entrance, item_flags, status)
+                Hint(receiving_player, finding_player, location_id, item_id, found, entrance, item_flags, hint_status)
             )
 
     return hints

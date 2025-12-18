@@ -616,7 +616,7 @@ class LMContext(BaseContext):
             vac_count = self.get_item_count_by_id(8148)
             vac_speed = min(self.get_item_count_by_id(8064), 5)
 
-            if not self.trap_link.check_vac_trap_active():
+            if not self.trap_link.check_vac_trap_active() and vac_count > 0:
                 for item in [8064, 8148]:
                     lm_item_name = self.item_names.lookup_in_game(item)
                     lm_item = ALL_ITEMS_TABLE[lm_item_name]
@@ -899,9 +899,10 @@ def main(*launch_args: str):
             server_address = lm_usa_manifest["server"]
             rom_path= lm_usa_patch.patch(args.aplm_file)
         except Exception as ex:
-            logger.error(f"Unable to patch your {RANDOMIZER_NAME} ROM as expected. Additional details:\n" + str(ex))
-            Utils.messagebox(f"Cannot Patch {RANDOMIZER_NAME}", f"Unable to patch your {RANDOMIZER_NAME} ROM as " +
-                "expected. Additional details:\n" + str(ex), True)
+            err_msg: str = (f"Unable to patch your {RANDOMIZER_NAME} ROM as expected.\n" +
+                f"APWorld Version: '{CLIENT_VERSION}'\nAdditional details:\n") + str(ex)
+            logger.error(err_msg)
+            Utils.messagebox(f"Cannot Patch {RANDOMIZER_NAME}", err_msg, True)
             raise ex
 
     async def _main(connect, password):
