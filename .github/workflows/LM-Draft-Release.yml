@@ -26,7 +26,7 @@ jobs:
         run: pip install -r ${{github.workspace}}/worlds/luigismansion/requirements.txt --target $env:LIB_WINDOWS_311 --verbose
       - uses: actions/upload-artifact@v4
         with:
-          name: $env:LIB_WINDOWS_311
+          name: "lib-windows3-11"
           path: ./$env:LIB_WINDOWS_311/**
     env:
       LIB_WINDOWS_311: "lib-windows3-11"
@@ -47,7 +47,7 @@ jobs:
       run: pip install -r ${{github.workspace}}/worlds/luigismansion/requirements.txt --target $env:LIB_WINDOWS_312 --verbose
     - uses: actions/upload-artifact@v4
       with:
-        name: $env:LIB_WINDOWS_312
+        name: "lib-windows3-12"
         path: ./$env:LIB_WINDOWS_312/**
     env:
       LIB_WINDOWS_312: "lib-windows3-12"
@@ -68,7 +68,7 @@ jobs:
         run: pip install -r ${{github.workspace}}/worlds/luigismansion/requirements.txt --target $env:LIB_WINDOWS_313 --verbose
       - uses: actions/upload-artifact@v4
         with:
-          name: $env:LIB_WINDOWS_313
+          name: "lib-windows3-13"
           path: ./$env:LIB_WINDOWS_313/**
     env:
       LIB_WINDOWS_313: "lib-windows3-13"
@@ -224,42 +224,42 @@ jobs:
       
       - uses: actions/download-artifact@v4
         with:
-          name: ${LIB_WINDOWS_311}
+          name: "lib-windows3-11"
           path: tmp-$env:LIB_WINDOWS_311
       - name: Zip Lib Windows folder 3.11
         run: cd tmp-$env:LIB_WINDOWS_311 && zip -r ../tmp-artifacts/$env:LIB_WINDOWS_311.zip * && cd ../
 
       - uses: actions/download-artifact@v4
         with:
-          name: ${LIB_WINDOWS_312}
+          name: "lib-windows3-12"
           path: tmp-$env:LIB_WINDOWS_312
       - name: Zip Lib Windows folder 3.12
         run: cd tmp-$env:LIB_WINDOWS_312 && zip -r ../tmp-artifacts/$env:LIB_WINDOWS_312.zip * && cd ../
 
       - uses: actions/download-artifact@v4
         with:
-          name: ${LIB_WINDOWS_313}
+          name: "lib-windows3-13"
           path: tmp-$env:LIB_WINDOWS_313
       - name: Zip Lib Windows folder 3.13
         run: cd tmp-$env:LIB_WINDOWS_313 && zip -r ../tmp-artifacts/$env:LIB_WINDOWS_313.zip * && cd ../
 
       - uses: actions/download-artifact@v4
         with:
-          name: ${LIB-LINUX-311}
+          name: "lib-linux3-11"
           path: tmp-${LIB-LINUX-311}
       - name: Zip Lib Linux folder 3.11
         run: cd tmp-${LIB-LINUX-311} && zip -r ../tmp-artifacts/${LIB-LINUX-311}.zip * && cd ../
 
       - uses: actions/download-artifact@v4
         with:
-          name: ${LIB-LINUX-312}
+          name: "lib-linux3-12"
           path: tmp-${LIB-LINUX-312}
       - name: Zip Lib Linux folder 3.12
         run: cd tmp-${LIB-LINUX-312} && zip -r ../tmp-artifacts/${LIB-LINUX-312}.zip * && cd ../
 
       - uses: actions/download-artifact@v4
         with:
-          name: ${LIB-LINUX-313}
+          name: "lib-linux3-13"
           path: tmp-${LIB-LINUX-313}
       - name: Zip Lib Linux folder 3.13
         run: cd tmp-${LIB-LINUX-313} && zip -r ../tmp-artifacts/${LIB-LINUX-313}.zip * && cd ../
