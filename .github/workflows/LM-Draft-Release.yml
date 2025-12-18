@@ -218,42 +218,42 @@ jobs:
       
       - uses: actions/download-artifact@v4
         with:
-          name: $env:LIB_WINDOWS_311
+          name: ${LIB_WINDOWS_311}
           path: tmp-$env:LIB_WINDOWS_311
       - name: Zip Lib Windows folder 3.11
         run: cd tmp-$env:LIB_WINDOWS_311 && zip -r ../tmp-artifacts/$env:LIB_WINDOWS_311.zip * && cd ../
 
       - uses: actions/download-artifact@v4
         with:
-          name: $env:LIB_WINDOWS_312
+          name: ${LIB_WINDOWS_312}
           path: tmp-$env:LIB_WINDOWS_312
       - name: Zip Lib Windows folder 3.12
         run: cd tmp-$env:LIB_WINDOWS_312 && zip -r ../tmp-artifacts/$env:LIB_WINDOWS_312.zip * && cd ../
 
       - uses: actions/download-artifact@v4
         with:
-          name: $env:LIB_WINDOWS_313
+          name: ${LIB_WINDOWS_313}
           path: tmp-$env:LIB_WINDOWS_313
       - name: Zip Lib Windows folder 3.13
         run: cd tmp-$env:LIB_WINDOWS_313 && zip -r ../tmp-artifacts/$env:LIB_WINDOWS_313.zip * && cd ../
 
       - uses: actions/download-artifact@v4
         with:
-          name: $env:LIB-LINUX-311
+          name: ${LIB-LINUX-311}
           path: tmp-${LIB-LINUX-311}
       - name: Zip Lib Linux folder 3.11
         run: cd tmp-${LIB-LINUX-311} && zip -r ../tmp-artifacts/${LIB-LINUX-311}.zip * && cd ../
 
       - uses: actions/download-artifact@v4
         with:
-          name: $env:LIB-LINUX-312
+          name: ${LIB-LINUX-312}
           path: tmp-${LIB-LINUX-312}
       - name: Zip Lib Linux folder 3.12
         run: cd tmp-${LIB-LINUX-312} && zip -r ../tmp-artifacts/${LIB-LINUX-312}.zip * && cd ../
 
       - uses: actions/download-artifact@v4
         with:
-          name: $env:LIB-LINUX-313
+          name: ${LIB-LINUX-313}
           path: tmp-${LIB-LINUX-313}
       - name: Zip Lib Linux folder 3.13
         run: cd tmp-${LIB-LINUX-313} && zip -r ../tmp-artifacts/${LIB-LINUX-313}.zip * && cd ../
