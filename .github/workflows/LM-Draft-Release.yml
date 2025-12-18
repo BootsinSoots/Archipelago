@@ -194,6 +194,12 @@ jobs:
       contents: write
     env:
       LM-VERS: ${{ inputs.tag == '' && github.ref_name || inputs.tag }}
+      LIB_WINDOWS_311: "lib-windows3-11"
+      LIB_WINDOWS_312: "lib-windows3-12"
+      LIB_WINDOWS_313: "lib-windows3-13"
+      LIB-LINUX-311: "lib-linux3-11"
+      LIB-LINUX-312: "lib-linux3-12"
+      LIB-LINUX-313: "lib-linux3-13"
     steps:
       - name: Create Local Artifact Folder
         run: mkdir tmp-artifacts
