@@ -171,7 +171,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build AP-World
-        run: python -m ${{github.workspace}}/Launcher "Build APWorlds" "luigismansion"
+        run: python ${{github.workspace}}/Launcher.py "Build APWorlds" "luigismansion"
         shell: pwsh 
       
       - uses: actions/upload-artifact@v4
