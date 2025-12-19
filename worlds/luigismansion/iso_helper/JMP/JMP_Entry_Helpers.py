@@ -1,7 +1,7 @@
 import copy
 from typing import Any, TYPE_CHECKING
 
-from gcbrickwork.JMP import JMP, JMPEntry
+from gcbrickwork.JMP import JMP, JMPEntry, JMPValue
 
 if TYPE_CHECKING:
     from ..LM_Randomize_ISO import LuigisMansionRandomizer
@@ -325,6 +325,12 @@ def add_new_jmp_data_entry(jmp_file: JMP, values_to_add: dict):
     for jmp_header in jmp_file.fields:
         jmp_entry[jmp_header] = values_to_add[jmp_header.field_name]
     jmp_file.data_entries.append(jmp_entry)
+
+def get_jmp_value(jmp_file: JMP, jmp_entry: JMPEntry, field_name: str):
+    jmp_file.get_jmp_header_name_value(jmp_entry, field_name)
+
+def update_jmp_value(jmp_file: JMP, jmp_entry: JMPEntry, field_name: str, field_value: JMPValue):
+    jmp_file.update_jmp_header_name_value(jmp_entry, field_name, field_value)
 
 def create_iteminfo_entry(item_door_id: int, info_item_name: str) -> dict:
     """Creates a dictionary for use in the iteminfotable"""
