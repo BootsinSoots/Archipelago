@@ -1,5 +1,4 @@
 # Python related Imports
-import copy
 import math
 import os
 import threading
