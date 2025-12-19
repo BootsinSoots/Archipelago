@@ -56,15 +56,15 @@ class LuigisMansionRandomizer:
         self.random.seed(self._seed)
 
         self.slot = self.output_data["Slot"]
-        self.jmp_names_json = self._get_jmp_name_list()
+        self._get_jmp_name_list()
 
-    def _get_jmp_name_list(self) -> dict:
+    def _get_jmp_name_list(self):
         """Gets the jmp dictionary name list and re-maps it from a string to int."""
         name_list: dict = json.loads(read_text("worlds.luigismansion.data", "jmp_names.json"))
         for jmp_file_name in name_list.keys():
             hash_and_names: dict = name_list[jmp_file_name]
             name_list[jmp_file_name] = {int(key): value for key, value in hash_and_names.items()}
-        return name_list
+        self.jmp_names_json = name_list
 
     def create_randomized_iso(self):
         # Check if the file is in use and return an error if so.
@@ -76,7 +76,7 @@ class LuigisMansionRandomizer:
             raise Exception(f"'{self.output_file_path}' is currently in use by another program.")
 
         # Make sure that the server and client versions match before attempting to patch ISO.
-        self._check_server_version(self.output_data.get(AP_WORLD_VERSION_NAME, "<0.5.6"))
+        self._check_server_version()
 
         # After verifying, this will also read the entire iso, including system files and their content
         self.lm_gcm = GCM(self.clean_iso_path)
@@ -110,12 +110,10 @@ class LuigisMansionRandomizer:
             continue
 
 
-    def _check_server_version(self, ap_world_version: str):
-        """
-        Compares the version provided in the patch manifest against the client's version.
+    def _check_server_version(self):
+        """Compares the version provided in the patch manifest against the client's version."""
 
-        :param ap_world_version: The output data's generated version.
-        """
+        ap_world_version: str = self.output_data.get(AP_WORLD_VERSION_NAME, "<0.5.6")
         if ap_world_version != CLIENT_VERSION:
             raise Utils.VersionException(f"Error! Server was generated with a different {RANDOMIZER_NAME} " +
                  f"APWorld version.\nThe client version is {CLIENT_VERSION}!\nPlease verify you are using the " +
@@ -161,7 +159,7 @@ class LuigisMansionRandomizer:
         map2: LMMapFile = LMMapFile(self.lm_gcm, "files/Map/map2.szp")
         map2.load_jmp_files(map2_jmp_list)
         map2.update_jmp_names(self.jmp_names_json)
-        self.map_files.update({"map2": map2})
+        self.map_files["map2"] = map2
         self.client_logger.info(f"Now creating empty jmp files based on map2...")
         self._get_empty_jmp_files()
 
@@ -169,20 +167,20 @@ class LuigisMansionRandomizer:
         map1: LMMapFile = LMMapFile(self.lm_gcm, "files/Map/map1.szp")
         map1.load_jmp_files(map1_jmp_list)
         map1.update_jmp_names(self.jmp_names_json)
-        self.map_files.update({"map1": map1})
+        self.map_files["map1"] = map1
 
         self.client_logger.info(f"Now loading map3.szp with the following jmp list: {'; '.join(map3_jmp_list)}")
         map3: LMMapFile = LMMapFile(self.lm_gcm, "files/Map/map3.szp")
         map3.load_jmp_files(map3_jmp_list)
         map3.update_jmp_names(self.jmp_names_json)
-        self.map_files.update({"map3": map3})
+        self.map_files["map3"] = map3
 
         if bool(self.output_data["Options"]["WDYM_checks"]):
             self.client_logger.info(f"Now loading map6.szp with the following jmp list: {'; '.join(map6_jmp_list)}")
             map6: LMMapFile = LMMapFile(self.lm_gcm, "files/Map/map6.szp")
             map6.load_jmp_files(map6_jmp_list)
             map6.update_jmp_names(self.jmp_names_json)
-            self.map_files.update({"map6": map6})
+            self.map_files["map6"] = map6
 
     def _get_empty_jmp_files(self):
         """Loads all jmp files from Map2, excepts removes any JMP entries and loads a default one that can
