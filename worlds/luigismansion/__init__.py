@@ -7,17 +7,17 @@ from typing import ClassVar
 
 # AP Related Imports
 import Options
-from BaseClasses import Tutorial, ItemClassification
+from BaseClasses import ItemClassification
 from Utils import visualize_regions, local_path
-from worlds.AutoWorld import WebWorld, World
+from worlds.AutoWorld import World
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess, icon_paths
 
 # Relative Imports
 from .Items import *
+from .LM_Web import LMWeb
 from .Locations import *
 from .LuigiOptions import *
 from .Hints import get_hints_by_option, ALWAYS_HINT, PORTRAIT_HINTS
-from .Presets import lm_options_presets
 from .Regions import *
 from .Rules import *
 from .Rules import set_element_rules
@@ -37,110 +37,6 @@ components.append(
     Component("LM Client", func=run_client, component_type=Type.CLIENT,
         file_identifier=SuffixIdentifier(".aplm"), icon="archiboolego"))
 icon_paths["archiboolego"] = f"ap:{__name__}/data/archiboolego.png"
-
-class LMWeb(WebWorld):
-    theme = "stone"
-    options_presets = lm_options_presets
-    option_groups = [
-        Options.OptionGroup("Extra Locations", [
-            LuigiOptions.Furnisanity,
-            LuigiOptions.Toadsanity,
-            LuigiOptions.GoldMice,
-            LuigiOptions.Boosanity,
-            LuigiOptions.Portrification,
-            LuigiOptions.SpeedySpirits,
-            LuigiOptions.Lightsanity,
-            LuigiOptions.Walksanity,
-            LuigiOptions.Grassanity,
-            LuigiOptions.WhatDoYouMean,
-        ]),
-        Options.OptionGroup("Access Options", [
-            LuigiOptions.RankRequirement,
-            LuigiOptions.GameMode,
-            LuigiOptions.VacuumStart,
-            LuigiOptions.MarioItems,
-            LuigiOptions.BooGates,
-            # LuigiOptions.WashroomBooCount,
-            LuigiOptions.BalconyBooCount,
-            LuigiOptions.FinalBooCount,
-            LuigiOptions.Enemizer,
-            LuigiOptions.DoorRando,
-            LuigiOptions.RandomSpawn,
-            LuigiOptions.EarlyFirstKey,
-        ]),
-        Options.OptionGroup("QOL Changes", [
-            LuigiOptions.LuigiWalkSpeed,
-            LuigiOptions.LuigiMaxHealth,
-            LuigiOptions.LuigiFearAnim,
-            LuigiOptions.PickupAnim,
-            LuigiOptions.ShowSelfReceivedItems,
-            Options.DeathLink,
-            LuigiOptions.TrapLink,
-            LuigiOptions.TrapLinkClientMsgs,
-            LuigiOptions.EnergyLink,
-            LuigiOptions.RingLink,
-            LuigiOptions.RingLinkClientMsgs,
-            LuigiOptions.BetterVacuum,
-            LuigiOptions.StartWithBooRadar,
-            LuigiOptions.StartHiddenMansion,
-            LuigiOptions.HintDistribution,
-            LuigiOptions.PortraitHints,
-            LuigiOptions.SendHints,
-        ]),
-        Options.OptionGroup("Enemy Stats", [
-            LuigiOptions.KingBooHealth,
-            LuigiOptions.BoolossusDifficulty,
-            LuigiOptions.BooHealthOption,
-            LuigiOptions.BooHealthValue,
-            LuigiOptions.BooSpeed,
-            LuigiOptions.BooEscapeTime,
-            LuigiOptions.BooAnger,
-            LuigiOptions.ExtraBooSpots,
-        ]),
-        Options.OptionGroup("Cosmetics", [
-            LuigiOptions.RandomMusic,
-            LuigiOptions.DoorModelRando,
-            LuigiOptions.ChestTypes,
-            LuigiOptions.TrapChestType,
-            LuigiOptions.Spookiness,
-            LuigiOptions.CallMario,
-        ]),
-        Options.OptionGroup("Filler Weights", [
-            LuigiOptions.FillerWeights,
-            LuigiOptions.TrapPercentage,
-            LuigiOptions.TrapWeights,
-            LuigiOptions.BundleWeight,
-            LuigiOptions.CoinWeight,
-            LuigiOptions.BillWeight,
-            LuigiOptions.BarsWeight,
-            LuigiOptions.GemsWeight,
-            LuigiOptions.PoisonTrapWeight,
-            LuigiOptions.BombWeight,
-            LuigiOptions.IceTrapWeight,
-            LuigiOptions.BananaTrapWeight,
-            LuigiOptions.PossTrapWeight,
-            LuigiOptions.BonkTrapWeight,
-            LuigiOptions.GhostTrapWeight,
-            LuigiOptions.FearWeight,
-            LuigiOptions.SpookyWeight,
-            LuigiOptions.SquashWeight,
-            LuigiOptions.VacTrapWeight,
-            LuigiOptions.NothingWeight,
-            LuigiOptions.HeartWeight,
-        ]),
-    ]
-
-    tutorials = [
-        Tutorial(
-            "Multiworld Setup Guide",
-            "A guide to setting up the Luigi's Mansion randomizer connected to an Archipelago Multiworld",
-            "English",
-            "setup_en.md",
-            "setup/en",
-            ["BootsinSoots", "SomeJakeGuy"],
-        )
-    ]
-
 
 class LMWorld(World):
     """
