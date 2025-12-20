@@ -1,7 +1,5 @@
 # Python related Imports
-import math
-import os
-import threading
+import math, os, threading
 from dataclasses import fields
 from typing import ClassVar
 
