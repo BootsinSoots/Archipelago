@@ -1,8 +1,5 @@
 # Python related Imports
-import copy
-import math
-import os
-import threading
+import math, os, threading
 from dataclasses import fields
 from typing import ClassVar
 
@@ -23,7 +20,7 @@ from .Presets import lm_options_presets
 from .Regions import *
 from .Rules import *
 from .Rules import set_element_rules
-from .iso_helper.lm_rom import LMPlayerContainer
+from .iso_helper.LM_Rom import LMPlayerContainer
 from .client.luigismansion_settings import LuigisMansionSettings
 from .client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME
 
