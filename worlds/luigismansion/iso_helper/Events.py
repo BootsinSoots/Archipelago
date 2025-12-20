@@ -2,10 +2,11 @@ import re
 from io import BytesIO
 from typing import TYPE_CHECKING
 
+from gclib.rarc import RARCFileEntry
 from gclib.yaz0_yay0 import Yay0
 
 from ..Locations import FLIP_BALCONY_BOO_EVENT_LIST
-from ..Helper_Functions import get_arc, PROJECT_ROOT, read_custom_file
+from ..Helper_Functions import get_arc, PROJECT_ROOT, read_custom_file, is_rarc_dir_empty
 from ..Hints import ALWAYS_HINT, PORTRAIT_HINTS
 from CommonClient import logger
 
@@ -476,28 +477,31 @@ class EventChanges:
                   info_files.name == event_csv_file)).data = BytesIO(event_csv.encode('utf-8'))
 
         if delete_all_other_files:
-            files_to_keep: list[str] = [event_txt_file, ".", ".."]
+            nodes_to_ignore: set = {".", ".."}
+            files_to_keep: list[str] = [event_txt_file] + list(nodes_to_ignore)
             if event_csv:
                 files_to_keep += [event_csv_file]
 
-            node_list = list(reversed([node for node in custom_event.nodes[1:]]))
+            node_list = list(reversed([node for node in custom_event.nodes if node.name not in nodes_to_ignore]))
             for node in node_list:
-                node_files: list[str] = [rarc_file.name for rarc_file in node.files]
+                node_files: list[str] = [rarc_file.name for rarc_file in node.files if rarc_file.name not in nodes_to_ignore]
                 files_to_delete: list[str] = list(set(node_files) - (set(files_to_keep)))
-                node_files_left_after_delete: list[str] = list(set(node_files) - (set(files_to_delete)))
                 if not len(files_to_delete):
                     continue
 
-                # If there is only the current directory entry / parent directory entry left, delete the directory.
-                # Note: Removing the directory automatically removes the file entries as well.
-                elif set(node_files_left_after_delete).issubset({".", ".."}):
-                    custom_event.delete_directory(node.dir_entry)
-                    continue
-
+                node_dirs_to_delete: list[RARCFileEntry] = []
                 # Assuming there will always be at least one file to delete in this node, but other files remain.
                 for node_file in node.files:
                     if node_file.name in files_to_delete:
                         custom_event.delete_file(node_file)
+                    if node_file.is_dir and is_rarc_dir_empty(node_file):
+                        node_dirs_to_delete.append(node_file)
+
+                # If there is only the current directory entry / parent directory entry left, delete the directory.
+                # Note: Removing the directory automatically removes the file entries as well.
+                for node_dir in node_dirs_to_delete:
+                    custom_event.delete_directory(node_dir)
+                    continue
 
         logger.info(f"Event{event_number} Yay0 check...")
         custom_event.save_changes()
