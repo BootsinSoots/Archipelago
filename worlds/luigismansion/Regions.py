@@ -51,7 +51,7 @@ REGION_LIST: dict[str, LMRegionInfo] = {
         -3331.658690, 550.000000, -198.970337),
     "Twins' Room": LMRegionInfo(2, 2, 25, 27, ["Twins Bedroom Key", "Family Hallway Key"], ["Twins Bedroom Key"], [28],
         True, -1729.586790, 550.000000, 116.055779),
-    "Laundry Room": LMRegionInfo(2, 1, 5, 5, ["Laundry Key", "Butler's Room Key", "Heart Key"],
+    "Laundry Room": LMRegionInfo(2, 1, 5, 5, ["Laundry Room Key", "Butler's Room Key", "Heart Key"],
         ["Laundry Key", "Butler's Room Key"], [1, 7], False, -3165.112550, 0.000000, -804.770508, "No Element"),
     "Butler's Room": LMRegionInfo(2, 1, 0, 0, ["Butler's Room Key", "Laundry Key", "Heart Key"], ["Butler's Room Key"],
         [1], True, -3800.646000, 0.000000, -327.291077),
