@@ -109,3 +109,12 @@ def read_custom_file(file_type: str, file_name: str) -> str:
             raise Exception(f"Unhandled custom type provided: {file_type}")
 
     return file_data
+
+
+def is_rarc_dir_empty(rarc_file: RARCFileEntry) -> bool:
+    empty_dir_list: list[str] = [".", ".."]
+    assert rarc_file.name not in empty_dir_list
+    assert rarc_file.node is not None
+    assert rarc_file.is_dir
+
+    return not len(rarc_file.node.files) or set([nfile.name for nfile in rarc_file.node.files]).issubset(empty_dir_list)
