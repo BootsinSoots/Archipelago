@@ -180,8 +180,6 @@ jobs:
     needs: [package]
     permissions:
       contents: write
-    env:
-      LM-VERS: ${{ inputs.tag == '' && github.ref_name || inputs.tag }}
     steps:
       - name: Create Local Artifact Folder
         run: mkdir tmp-artifacts
@@ -251,6 +249,6 @@ jobs:
         with:
           draft: true
           prerelease: false
-          name: Luigis Mansion AP ${{LM-VERS}}
+          name: Luigis Mansion AP ${{ inputs.tag == '' && github.ref_name || inputs.tag }}
           files: |
             tmp-artifacts/*
