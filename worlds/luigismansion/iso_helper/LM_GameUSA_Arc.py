@@ -14,14 +14,18 @@ class _ParamType(StrEnum):
     CTP = "CTP"
 
 class LMGameUSAArc:
-    lm_gcm: GCM = None
-    _arc_path: str = None
-    game_usa_arc: RARC = None
-    _client_logger: Logger = None
-    _ctp_files: list[RARCFileEntry] = None
-    _th_files: list[RARCFileEntry] = None
-    ctp_params: dict[str, PRM] = {}
-    th_params: dict[str, PRM] = {}
+
+    # GCLib related vars
+    lm_gcm: GCM
+    game_usa_arc: RARC
+    _ctp_files: list[RARCFileEntry]
+    _th_files: list[RARCFileEntry]
+
+    # Other Class Vars
+    _arc_path: str
+    _client_logger: Logger
+    ctp_params: dict[str, PRM]
+    th_params: dict[str, PRM]
 
     def __init__(self, user_gcm: GCM, arc_path: str):
         self.lm_gcm = user_gcm
@@ -30,6 +34,8 @@ class LMGameUSAArc:
         self._client_logger = getLogger(CLIENT_NAME)
         self._ctp_files = self.game_usa_arc.get_node_by_path("param/ctp").files
         self._th_files = self.game_usa_arc.get_node_by_path("param/th").files
+        self.ctp_params = {}
+        self.th_params = {}
 
     def add_gold_ghost(self):
         """

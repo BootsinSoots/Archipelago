@@ -18,7 +18,7 @@ if TYPE_CHECKING:
 
 class RandomizeJMPTables:
 
-    lm_rando: "LuigisMansionRandomizer" = None
+    lm_rando: "LuigisMansionRandomizer"
 
 
     def __init__(self, rando_obj: "LuigisMansionRandomizer"):

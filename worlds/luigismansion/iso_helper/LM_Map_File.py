@@ -7,9 +7,9 @@ from ..Helper_Functions import get_arc, find_rarc_file_entry
 
 
 class LMMapFile:
-    _arc_data: RARC = None
-    _arc_path: str = None
-    jmp_files: dict[str, JMP] = {}
+    _arc_data: RARC
+    _arc_path: str
+    jmp_files: dict[str, JMP]
 
     def __init__(self, lm_gcm: GCM, map_rarc_path: str):
         """
@@ -20,6 +20,7 @@ class LMMapFile:
         """
         self._arc_path = map_rarc_path
         self._arc_data = get_arc(lm_gcm, map_rarc_path)
+        self.jmp_files = {}
 
     def get_all_jmp_files(self):
         """

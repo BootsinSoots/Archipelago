@@ -16,10 +16,10 @@ if TYPE_CHECKING:
 
 class EventChanges:
 
-    lm_rando: "LuigisMansionRandomizer" = None
-    hint_dist: int = None
-    luigi_max_hp: str = None
-    hint_list: dict[str, dict[str, str]] = None
+    lm_rando: "LuigisMansionRandomizer"
+    hint_dist: int
+    luigi_max_hp: str
+    hint_list: dict[str, dict[str, str]]
 
 
     def __init__(self, rando_obj: "LuigisMansionRandomizer"):
@@ -492,16 +492,19 @@ class EventChanges:
                 node_dirs_to_delete: list[RARCFileEntry] = []
                 # Assuming there will always be at least one file to delete in this node, but other files remain.
                 for node_file in node.files:
-                    if node_file.name in files_to_delete:
+                    if node_file.name in nodes_to_ignore:
+                        continue
+                    elif node_file.name in files_to_delete:
                         custom_event.delete_file(node_file)
+
                     if node_file.is_dir and is_rarc_dir_empty(node_file):
                         node_dirs_to_delete.append(node_file)
 
                 # If there is only the current directory entry / parent directory entry left, delete the directory.
                 # Note: Removing the directory automatically removes the file entries as well.
-                for node_dir in node_dirs_to_delete:
-                    custom_event.delete_directory(node_dir)
-                    continue
+                #for node_dir in node_dirs_to_delete:
+                #    custom_event.delete_directory(node_dir)
+                #    continue
 
         logger.info(f"Event{event_number} Yay0 check...")
         custom_event.save_changes()

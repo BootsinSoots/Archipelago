@@ -22,24 +22,25 @@ from ..client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME, RANDOMIZER
 from .LM_GameUSA_Arc import LMGameUSAArc
 
 class LuigisMansionRandomizer:
-    random: Random
-    debug: bool = False
-    clean_iso_path: str = None
-    output_file_path: str = None
-
-    # GCLib related vars
-    lm_gcm: GCM = None
-    game_region_arc: LMGameUSAArc = None
-    map_files: dict[str, LMMapFile] = {}
-    jmp_names_json: dict = None
-    empty_jmp_files: dict[str, JMP] = {}
 
     # Output data related vars
-    output_data: dict = None
-    slot: int = None
+    output_data: dict
+    slot: int
 
-    client_logger: Logger = None
-    _seed: str = None
+    # GCLib related vars
+    lm_gcm: GCM
+    game_region_arc: LMGameUSAArc
+
+    # Other Class Vars
+    debug: bool
+    clean_iso_path: str
+    output_file_path: str
+    map_files: dict[str, LMMapFile]
+    jmp_names_json: dict
+    empty_jmp_files: dict[str, JMP]
+    client_logger: Logger
+    _seed: str
+    random: Random
 
     def __init__(self, clean_iso_path: str, randomized_output_file_path: str, ap_output_data: bytes, debug_flag=False):
         self.debug = debug_flag
@@ -57,6 +58,8 @@ class LuigisMansionRandomizer:
 
         self.slot = self.output_data["Slot"]
         self._get_jmp_name_list()
+        self.map_files = {}
+        self.empty_jmp_files = {}
 
     def _get_jmp_name_list(self):
         """Gets the jmp dictionary name list and re-maps it from a string to int."""
@@ -185,7 +188,7 @@ class LuigisMansionRandomizer:
     def _get_empty_jmp_files(self):
         """Loads all jmp files from Map2, excepts removes any JMP entries and loads a default one that can
         be used/manipulated."""
-        temp_map2: LMMapFile = copy.deepcopy(LMMapFile(self.lm_gcm, "files/Map/map2.szp"))
+        temp_map2: LMMapFile = copy.deepcopy(self.map_files["map2"])
         temp_map2.get_all_jmp_files()
         for jmp_name, jmp_entry in temp_map2.jmp_files.items():
             temp_map2.jmp_files[jmp_name].data_entries = []
