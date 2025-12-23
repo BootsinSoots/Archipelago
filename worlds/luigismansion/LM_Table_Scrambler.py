@@ -19,7 +19,9 @@ explode_item_names: list[str] = ["Bomb", "Missile", "Glove", "Red", "Tunic", "Cl
 icy_item_names: list[str] = ["Ice Trap", "White", "Ice Beam", "Icy", "Freeze"]
 light_item_names: list[str] = ["Light", "Big Key", "Yellow", "Banana", "Boss Key", "Sun", "Laser"]
 blueish_item_names: list[str] = ["Small Key", "Blue", "Ocean", "Sea", "Magic"]
-
+boo_hiding_spot_bans: list[str] = ["Kitchen Oven", "Artist's Studio Gold Ghost Easel", "Artist's Studio Pink Ghost Easel",
+                                   "Artist's Studio Blue Ghost Easel", "Artist's Studio Red Ghost Easel", "Artist's Studio Shy Guy Ghost Easel",
+                                   "Artist's Studio Green Ghost Easel", "Artist's Studio Purple Ghost Easel"]
 
 # Converts AP readable name to in-game name
 def _get_item_name(item_data, slot: int):
@@ -1922,7 +1924,7 @@ def update_furniture_info(furniture_info, item_appear_info, output_data):
             continue
 
         #TODO prevent Artist's Easels from becoming Boo spots here, probably by name
-        if ((item_data["type"] == "Furniture" and item_name != "Kitchen Oven") and
+        if ((item_data["type"] == "Furniture" and item_name not in boo_hiding_spot_bans) and
             output_data["Options"]["extra_boo_spots"] == 1):
                 furniture_info.info_file_field_entries[item_data["loc_enum"]]["telesa_hide"] = 10
 
