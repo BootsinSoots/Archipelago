@@ -988,7 +988,7 @@ class RandomizeJMPTables:
 
             furniture_entry: JMPEntry = map_two_furniture.data_entries[item_data["loc_enum"]]
 
-            if ((item_data["type"] == "Furniture" and item_name not in BOO_HIDING_SPOT_BANS) and extra_boo_spots):
+            if (item_data["type"] == "Furniture" and item_name not in BOO_HIDING_SPOT_BANS) and extra_boo_spots:
                 map_two_furniture.update_jmp_header_name_value(furniture_entry, "telesa_hide", 10)
 
             # If our furniture location is remote only, do not add any values to the table and make sure it remains blank
