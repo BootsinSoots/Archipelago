@@ -905,7 +905,7 @@ class RandomizeJMPTables:
 
                 # Special Case: Move the Laundry room chest back from Butler door
                 if char_room == 5:
-                    map_two_characters.update_jmp_header_name_value(char_entry, "poz_z", -1100.000000)
+                    map_two_characters.update_jmp_header_name_value(char_entry, "pos_z", -1100.000000)
 
                 # Special Case: Move 2F Bathroom chest back from wall
                 elif char_room == 45:
