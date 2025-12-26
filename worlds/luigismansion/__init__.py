@@ -726,7 +726,7 @@ class LMWorld(World):
                 }
             elif location.item:
                 lm_item: "LMItem" = self.create_item(location.item.name)
-                doorid = lm_item.doorid if (lm_item.type and location.address and lm_item.player == self.player) else 0
+                doorid = lm_item.doorid if (lm_item.type == "Door Key" and location.address and lm_item.player == self.player) else 0
                 roomid = REGION_LIST[location.parent_region.name].room_id
                 item_info = {
                     "player": lm_item.player,
