@@ -173,7 +173,7 @@ class RandomizeJMPTables:
                 already_exist_items.append(item_name)
 
         for location_type in self.lm_rando.output_data["Locations"].keys():
-            for item_data in self.lm_rando.output_data["Locations"][location_type].vals():
+            for item_data in self.lm_rando.output_data["Locations"][location_type].values():
                 lm_item_name: str = get_item_name(item_data, self.lm_rando.slot)
                 if not lm_item_name in already_exist_items:
                     add_new_jmp_data_entry(map_two_info, create_iteminfo_entry(item_data["room_no"], lm_item_name))
