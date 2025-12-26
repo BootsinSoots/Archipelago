@@ -571,6 +571,8 @@ class TrapWeights(OptionCounter):
     max = 100
     valid_keys = trap_filler_items.keys()
     default = {item: data.default_weight for item, data in trap_filler_items.items()}
+    all_on_dict = {item: 100 for item in trap_filler_items.keys()}
+    all_off_dict = {item: 0 for item in trap_filler_items.keys()}
 
 class FillerWeights(OptionCounter):
     """
@@ -594,6 +596,8 @@ class FillerWeights(OptionCounter):
         "Dust": 40,
         "Hearts": 10
     }
+    all_on_dict = {item: 100 for item in valid_keys}
+    all_off_dict = {item: 0 for item in valid_keys}
 
 class TrapPercentage(Range):
     """

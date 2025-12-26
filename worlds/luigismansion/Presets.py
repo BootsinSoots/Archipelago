@@ -3,7 +3,7 @@ from typing import Any, Dict
 import Options as APOptions
 from . import LuigiOptions as LMOptions
 
-all_random_settings = {
+all_random_settings = { #TODO: Rename this because FillerWeights and TrapWeights are no longer fully random
     "progression_balancing":                          "random",
     "accessibility":                                  "random",
     LMOptions.RankRequirement.internal_name:           "random",
@@ -39,27 +39,9 @@ all_random_settings = {
     # LMOptions.WashroomBooCount.internal_name:          "random",
     LMOptions.BalconyBooCount.internal_name:           "random",
     LMOptions.FinalBooCount.internal_name:             "random",
-    LMOptions.BundleWeight.internal_name:              "random",
-    LMOptions.CoinWeight.internal_name:                "random",
-    LMOptions.BillWeight.internal_name:                "random",
-    LMOptions.BarsWeight.internal_name:                "random",
-    LMOptions.GemsWeight.internal_name:                "random",
     LMOptions.TrapLink.internal_name:                  "random",
     LMOptions.EnergyLink.internal_name:                "random",
     LMOptions.RingLink.internal_name:                  "random",
-    LMOptions.PoisonTrapWeight.internal_name:          "random",
-    LMOptions.BombWeight.internal_name:                "random",
-    LMOptions.IceTrapWeight.internal_name:             "random",
-    LMOptions.BananaTrapWeight.internal_name:          "random",
-    LMOptions.PossTrapWeight.internal_name:            "random",
-    LMOptions.BonkTrapWeight.internal_name:            "random",
-    LMOptions.GhostTrapWeight.internal_name:           "random",
-    LMOptions.FearWeight.internal_name:                "random",
-    LMOptions.SpookyWeight.internal_name:              "random",
-    LMOptions.SquashWeight.internal_name:              "random",
-    LMOptions.VacTrapWeight.internal_name:             "random",
-    LMOptions.HeartWeight.internal_name:               "random",
-    LMOptions.NothingWeight.internal_name:             "random",
     LMOptions.ChestTypes.internal_name:                "random",
     LMOptions.TrapChestType.internal_name:             "random",
     LMOptions.Spookiness.internal_name:                "random",
@@ -90,42 +72,14 @@ allsanity_settings = {
 }
 
 money_settings = {
-    LMOptions.BundleWeight.internal_name:              100,
-    LMOptions.CoinWeight.internal_name:                100,
-    LMOptions.BillWeight.internal_name:                100,
-    LMOptions.BarsWeight.internal_name:                100,
-    LMOptions.GemsWeight.internal_name:                100,
-    LMOptions.PoisonTrapWeight.internal_name:          0,
-    LMOptions.BombWeight.internal_name:                0,
-    LMOptions.IceTrapWeight.internal_name:             0,
-    LMOptions.BananaTrapWeight.internal_name:          0,
-    LMOptions.PossTrapWeight.internal_name:            0,
-    LMOptions.BonkTrapWeight.internal_name:            0,
-    LMOptions.GhostTrapWeight.internal_name:           0,
-    LMOptions.FearWeight.internal_name:                0,
-    LMOptions.SpookyWeight.internal_name:              0,
-    LMOptions.SquashWeight.internal_name:              0,
-    LMOptions.VacTrapWeight.internal_name:             0,
+    LMOptions.FillerWeights.internal_name:             LMOptions.FillerWeights.all_on_dict,
+    LMOptions.TrapWeights.internal_name:               LMOptions.TrapWeights.all_off_dict,
     LMOptions.TrapPercentage.internal_name:            0,
 }
 
 trap_settings = {
-    LMOptions.BundleWeight.internal_name:              0,
-    LMOptions.CoinWeight.internal_name:                0,
-    LMOptions.BillWeight.internal_name:                0,
-    LMOptions.BarsWeight.internal_name:                0,
-    LMOptions.GemsWeight.internal_name:                0,
-    LMOptions.PoisonTrapWeight.internal_name:          100,
-    LMOptions.BombWeight.internal_name:                100,
-    LMOptions.IceTrapWeight.internal_name:             100,
-    LMOptions.BananaTrapWeight.internal_name:          100,
-    LMOptions.PossTrapWeight.internal_name:            100,
-    LMOptions.BonkTrapWeight.internal_name:            100,
-    LMOptions.GhostTrapWeight.internal_name:           100,
-    LMOptions.FearWeight.internal_name:                100,
-    LMOptions.SpookyWeight.internal_name:              100,
-    LMOptions.SquashWeight.internal_name:              100,
-    LMOptions.VacTrapWeight.internal_name:             100,
+    LMOptions.FillerWeights.internal_name:             LMOptions.FillerWeights.all_off_dict,
+    LMOptions.TrapWeights.internal_name:               LMOptions.TrapWeights.all_on_dict,
     LMOptions.TrapPercentage.internal_name:            100,
 }
 
