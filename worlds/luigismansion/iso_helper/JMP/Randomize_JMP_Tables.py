@@ -487,18 +487,23 @@ class RandomizeJMPTables:
 
     def _map_two_enemy_changes(self):
         """Handles changes to enemy table for both normal and blackout."""
+        enemizer_enabled: int = int(self.lm_rando.output_data["Options"]["enemizer"])
+        speedy_enabled: bool = bool(self.lm_rando.output_data["Options"]["speedy_spirits"])
+
+        # If randomize ghosts options are not enabled or speedy spirits are not enabled.
+        if not speedy_enabled or enemizer_enabled == 0:
+            return
+
         self.lm_rando.client_logger.info("Now updating all enemy changes (both normal and blackout) for map2.")
         map_two_teiden_enemy: JMP = self.lm_rando.map_files["map2"].jmp_files["teidenenemyinfo"]
         map_two_normal_enemy: JMP = self.lm_rando.map_files["map2"].jmp_files["enemyinfo"]
 
-        enemizer_enabled: int = int(self.lm_rando.output_data["Options"]["enemizer"])
+        if speedy_enabled:
+            for entry_no in SPEEDY_ENEMY_INDEX:
+                speedy_entry: JMPEntry = map_two_normal_enemy.data_entries[entry_no]
+                map_two_teiden_enemy.data_entries.append(speedy_entry)
+                map_two_normal_enemy.data_entries.remove(speedy_entry)
 
-        for entry_no in SPEEDY_ENEMY_INDEX:
-            speedy_entry: JMPEntry = map_two_normal_enemy.data_entries[entry_no]
-            map_two_teiden_enemy.data_entries.append(speedy_entry)
-            map_two_normal_enemy.data_entries.remove(speedy_entry)
-
-        # If randomize ghosts options are enabled
         if enemizer_enabled == 0:
             return
 
