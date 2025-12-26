@@ -37,6 +37,11 @@ RANDOM_GHOST_LISTS: list[list[str]] = [["yapoo1"], ["mapoo1"], ["mopoo1"], ["ban
     ["tenjyo", "tenjyo2"], ["heypo1", "heypo2", "heypo3", "heypo4", "heypo5", "heypo6", "heypo7", "heypo8"],
     ["topoo1", "topoo2", "topoo3", "topoo4"]]
 
+# List of locations that should not have extra boo spots enabled on them.
+boo_hiding_spot_bans: list[str] = ["Kitchen Oven", "Artist's Studio Gold Ghost Easel", "Artist's Studio Pink Ghost Easel",
+    "Artist's Studio Blue Ghost Easel", "Artist's Studio Red Ghost Easel", "Artist's Studio Shy Guy Ghost Easel",
+    "Artist's Studio Green Ghost Easel", "Artist's Studio Purple Ghost Easel"]
+
 # Dictionary of Freestanding Location names and their index in keyinfo.
 LOCATION_TO_INDEX = {
     "The Well Key": 0,
