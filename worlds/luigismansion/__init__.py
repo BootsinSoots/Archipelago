@@ -82,7 +82,7 @@ class LMWorld(World):
         self.finished_hints = threading.Event()
         self.finished_boo_scaling = threading.Event()
         self.boo_spheres = {}
-        self.hints: dict[str, dict[str, str]] = {}
+        self.hints = {}
         self.spawn_full_locked: bool = False
         self.local_early_key: str = ""
         self.all_filler_dict = {}
