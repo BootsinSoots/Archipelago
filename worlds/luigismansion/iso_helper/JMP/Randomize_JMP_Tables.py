@@ -910,7 +910,7 @@ class RandomizeJMPTables:
                 # Special Case: Move 2F Bathroom chest back from wall
                 elif char_room == 45:
                     map_two_characters.update_jmp_header_name_value(char_entry, "pos_x", -1900.000000)
-                    map_two_characters.update_jmp_header_name_value(char_entry, "poz_z", -4830.000000)
+                    map_two_characters.update_jmp_header_name_value(char_entry, "pos_z", -4830.000000)
 
                 # Change chest appearance and size based of player cosmetic choices
                 chest_visual: str = get_item_chest_visual(self.lm_rando, item_data, char_name)
