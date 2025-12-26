@@ -64,27 +64,30 @@ class LMWorld(World):
     ut_can_gen_without_yaml = True  # class var that tells it to ignore the player yaml
 
     # Adding these to be able to grab from other classes, such as test classes
-    ghost_affected_regions: dict[str, str] = {}
-    open_doors: dict[int, int] = {}
-    hints: dict[str, dict[str, str]] = {}
+    ghost_affected_regions: dict[str, str]
+    open_doors: dict[int, int]
+    hints: dict[str, dict[str, str]]
+    boo_spheres: dict[str, int]
 
     # Adding all filler dict to be used later on
-    all_filler_dict: dict[str, int] = {}
-    trap_filler_dict: dict[str, int] = {}
-    other_filler_dict: dict[str, int] = {}
+    all_filler_dict: dict[str, int]
+    trap_filler_dict: dict[str, int]
+    other_filler_dict: dict[str, int]
 
     def __init__(self, *args, **kwargs):
         super(LMWorld, self).__init__(*args, **kwargs)
-        self.ghost_affected_regions: dict[str, str] = copy.deepcopy({key: val.element_type for (key, val) in
-            REGION_LIST.items() if val.element_type})
+        self.ghost_affected_regions = copy.deepcopy({key: val.element_type for (key, val) in REGION_LIST.items() if val.element_type})
         self.open_doors: dict[int, int] = copy.deepcopy(vanilla_door_state)
         self.origin_region_name: str = "Foyer"
         self.finished_hints = threading.Event()
         self.finished_boo_scaling = threading.Event()
-        self.boo_spheres: dict[str, int] = {}
+        self.boo_spheres = {}
         self.hints: dict[str, dict[str, str]] = {}
         self.spawn_full_locked: bool = False
         self.local_early_key: str = ""
+        self.all_filler_dict = {}
+        self.trap_filler_dict = {}
+        self.other_filler_dict = {}
 
     @staticmethod
     def interpret_slot_data(slot_data):
