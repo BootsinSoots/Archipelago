@@ -331,8 +331,8 @@ def add_new_jmp_data_entry(jmp_file: JMP, values_to_add: dict):
         jmp_entry[jmp_header] = values_to_add[jmp_header.field_name]
     jmp_file.data_entries.append(jmp_entry)
 
-def get_jmp_value(jmp_file: JMP, jmp_entry: JMPEntry, field_name: str):
-    jmp_file.get_jmp_header_name_value(jmp_entry, field_name)
+def get_jmp_value(jmp_file: JMP, jmp_entry: JMPEntry, field_name: str) -> JMPValue:
+    return jmp_file.get_jmp_header_name_value(jmp_entry, field_name)
 
 def update_jmp_value(jmp_file: JMP, jmp_entry: JMPEntry, field_name: str, field_value: JMPValue):
     jmp_file.update_jmp_header_name_value(jmp_entry, field_name, field_value)
