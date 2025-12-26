@@ -694,7 +694,6 @@ class RandomizeJMPTables:
                 map_two_events.update_jmp_header_name_value(event_info, "PlayerStop", 1)
                 map_two_events.update_jmp_header_name_value(event_info, "EventLock", 1)
                 map_two_events.update_jmp_header_name_value(event_info, "event_parameter", 0)
-                map_two_events.update_jmp_header_name_value(event_info, "room_no", spawn_data.room_id)
                 map_two_events.update_jmp_header_name_value(event_info, "pos_x", spawn_data.pos_x)
                 map_two_events.update_jmp_header_name_value(event_info, "pos_y", spawn_data.pos_y)
                 map_two_events.update_jmp_header_name_value(event_info, "pos_z", spawn_data.pos_z)
