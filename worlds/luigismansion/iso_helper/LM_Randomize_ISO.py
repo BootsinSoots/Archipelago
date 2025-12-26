@@ -104,6 +104,9 @@ class LuigisMansionRandomizer:
         jmp_tables: RandomizeJMPTables = RandomizeJMPTables(self)
         jmp_tables.randomize_jmp_tables()
 
+        # Saves all the map files back to disc
+        self._update_map_files()
+
         # Updates the game archive file
         self._update_game_archive()
 
