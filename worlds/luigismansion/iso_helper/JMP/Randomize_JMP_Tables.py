@@ -2,7 +2,7 @@ import copy, re
 from math import ceil
 from typing import TYPE_CHECKING
 
-from gcbrickwork.JMP import JMP, JMPEntry
+from gcbrickwork.JMP import JMP, JMPEntry, JMPValue
 
 from .JMP_Entry_Helpers import (LOCATION_TO_INDEX, SPEEDY_OBSERVER_INDEX, SPEEDY_ENEMY_INDEX, CEILING_FURNITURE_LIST,
     GHOST_LIST, MEDIUM_HEIGHT_FURNITURE_LIST, apply_new_ghost, add_new_jmp_data_entry, create_observer_entry,
@@ -70,7 +70,8 @@ class RandomizeJMPTables:
 
             # Replace the furnitureinfo entry to spawn an item from the "itemappeartable".
             # If the entry is supposed to be money, then generate a random amount of coins and/or bills from it.
-            filtered_item_appear = list(map_six_furniture.get_jmp_header_name_value(item_appear_entry, "item0")
+            # TODO Needs to create a copy of empty Item info and item appear for MAP 6, then load it in this function.
+            filtered_item_appear: list[JMPValue] = list(map_six_furniture.get_jmp_header_name_value(item_appear_entry, "item0")
                 for item_appear_entry in map_six_furniture.data_entries if map_six_furniture.get_jmp_header_name_value(
                 item_appear_entry, "item0") == actor_item_name)
             map_six_furniture.update_jmp_header_name_value(furniture_entry, "item_table",
@@ -1005,11 +1006,10 @@ class RandomizeJMPTables:
 
             # Replace the furnitureinfo entry to spawn an item from the "itemappeartable".
             # If the entry is supposed to be money, then generate a random amount of coins and/or bills from it.
-            filtered_item_appear = list(map_two_item_appear.get_jmp_header_name_value(item_appear_entry, "item0")
-                for item_appear_entry in map_two_item_appear.data_entries if map_two_item_appear.get_jmp_header_name_value(
-                item_appear_entry, "item0") == actor_item_name)
+            filtered_item_appear: list[JMPValue] = [index for index, item_appear_entry in enumerate(map_two_item_appear.data_entries)
+                if map_two_item_appear.get_jmp_header_name_value(item_appear_entry, "item0") == actor_item_name]
             map_two_furniture.update_jmp_header_name_value(furniture_entry, "item_table",
-                filtered_item_appear.index(filtered_item_appear[len(filtered_item_appear)-1]))
+                filtered_item_appear.index(filtered_item_appear[0]))
 
             # Adjust move types for WDYM furniture items. Trees require water, obviously
             if item_data["loc_enum"] in [184, 185, 138, 139, 140, 141]:
