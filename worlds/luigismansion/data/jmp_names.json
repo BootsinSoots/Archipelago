@@ -304,6 +304,24 @@
         "24466945": "invisible",
         "24406568": "stay"
     },
+    "treasuretable": {
+        "7393096": "other",
+        "7305244": "room",
+        "23692052": "size",
+        "24080613": "coin",
+        "6910947": "bill",
+        "24081449": "gold",
+        "27693695": "spearl",
+        "27366054": "mpearl",
+        "20025983": "lpearl",
+        "26240517": "sapphire",
+        "7695144": "ruby",
+        "23288771": "diamond",
+        "557034": "cdiamond",
+        "2114538": "rdiamond",
+        "733397": "effect",
+        "14928695": "camera"
+    },
     "telesa": {
         "6990740": "init_room",
         "8863950": "next_room_wait",
