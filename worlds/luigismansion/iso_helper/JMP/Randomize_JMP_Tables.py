@@ -918,7 +918,7 @@ class RandomizeJMPTables:
                 map_two_characters.update_jmp_header_name_value(char_entry, "name",
                     get_item_chest_visual(self.lm_rando, item_data, char_name))
 
-                # Setting all curriences to 0 value by default.
+                # Setting all currencies to 0 value by default.
                 for currency_name in CURRENCIES:
                     map_two_treasure.update_jmp_header_name_value(treasure_entry, currency_name, 0)
 
