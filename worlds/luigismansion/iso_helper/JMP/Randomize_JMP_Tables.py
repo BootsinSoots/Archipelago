@@ -127,6 +127,7 @@ class RandomizeJMPTables:
         self._map_two_event_changes()
 
         self._map_two_item_info_changes()
+        self._map_two_item_appear_changes()
         self._map_two_key_info_changes()
         self._map_two_character_changes()
         self._map_two_treasure_changes()
@@ -232,7 +233,7 @@ class RandomizeJMPTables:
             "item0") for item_entry in map_two_item_appear.data_entries]))
 
         for location_type in self.lm_rando.output_data["Locations"].keys():
-            for item_data in self.lm_rando.output_data["Locations"][location_type].vals():
+            for item_data in self.lm_rando.output_data["Locations"][location_type].values():
                 lm_item_name: str = get_item_name(item_data, self.lm_rando.slot)
                 if not lm_item_name in already_exist_items:
                     add_new_jmp_data_entry(map_two_item_appear, create_itemappear_entry(lm_item_name))
@@ -979,8 +980,10 @@ class RandomizeJMPTables:
                 map_two_furniture.update_jmp_header_name_value(furn_entry, "generate", 0)
                 map_two_furniture.update_jmp_header_name_value(furn_entry, "generate_num", 0)
 
-        for item_name, item_data in {**self.lm_rando.output_data["Locations"]["Furniture"],
-            **self.lm_rando.output_data["Locations"]["Plant"]}.items():
+        furniture_to_patch: dict = {**self.lm_rando.output_data["Locations"]["Furniture"]}
+        if "Plant" in self.lm_rando.output_data["Locations"].keys():
+            furniture_to_patch += {**self.lm_rando.output_data["Locations"]["Plant"]}
+        for item_name, item_data in furniture_to_patch.items():
             # Ignore any Gallery region locations
             location_data: LMLocationData = ALL_LOCATION_TABLE[item_name]
             if location_data.region == "Gallery":
