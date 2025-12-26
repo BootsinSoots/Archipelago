@@ -146,13 +146,15 @@ class LuigisMansionRandomizer:
         """Loads all the map file data, including JMP files.
         Some maps do not have the same jmp files available, so empty map2 data is also loaded."""
         map2_jmp_list: list[str] = ["iteminfotable", "itemappeartable", "treasuretable", "furnitureinfo", "characterinfo",
-                         "eventinfo", "observerinfo", "keyinfo", "objinfo", "generatorinfo", "enemyinfo", "telesa",
-                         "teidenobserverinfo", "teidencharacterinfo", "iyapootable"]
+            "eventinfo", "observerinfo", "keyinfo", "objinfo", "generatorinfo", "telesa", "teidenobserverinfo",
+            "teidencharacterinfo", "iyapootable"]
         map1_jmp_list: list[str] = ["eventinfo"]
         map3_jmp_list: list[str] = ["eventinfo"]
         map6_jmp_list: list[str] = ["furnitureinfo", "characterinfo"]
 
+
         if bool(self.output_data["Options"]["speedy_spirits"]) or int(self.output_data["Options"]["enemizer"]) > 0:
+            map2_jmp_list.append("enemyinfo")
             map2_jmp_list.append("teidenenemyinfo")
 
         if self.output_data["Options"]["spookiness"] != 0:
