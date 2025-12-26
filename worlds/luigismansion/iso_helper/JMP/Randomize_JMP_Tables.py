@@ -912,11 +912,11 @@ class RandomizeJMPTables:
                     map_two_characters.update_jmp_header_name_value(char_entry, "pos_x", -1900.000000)
                     map_two_characters.update_jmp_header_name_value(char_entry, "poz_z", -4830.000000)
 
-                treasure_entry: JMPEntry = map_two_treasure.data_entries[item_data["loc_enum"]]
-
                 # Change chest appearance and size based of player cosmetic choices
-                map_two_characters.update_jmp_header_name_value(char_entry, "name",
-                    get_item_chest_visual(self.lm_rando, item_data, char_name))
+                chest_visual: str = get_item_chest_visual(self.lm_rando, item_data, char_name)
+                map_two_characters.update_jmp_header_name_value(char_entry, "name", chest_visual)
+
+                treasure_entry: JMPEntry = map_two_treasure.data_entries[item_data["loc_enum"]]
 
                 # Setting all currencies to 0 value by default.
                 for currency_name in CURRENCIES:
@@ -935,12 +935,13 @@ class RandomizeJMPTables:
                 map_two_treasure.update_jmp_header_name_value(treasure_entry, "effect", 0)
                 map_two_treasure.update_jmp_header_name_value(treasure_entry, "camera", 0)
 
-                chest_size = int(map_two_treasure.get_jmp_header_name_value(treasure_entry, "size"))
-                map_two_characters.update_jmp_header_name_value(treasure_entry, "size",
-                    get_chest_size_from_item(self.lm_rando, item_data, chest_size))
+                chest_size: int = int(map_two_treasure.get_jmp_header_name_value(treasure_entry, "size"))
+                chest_size = get_chest_size_from_item(self.lm_rando, item_data, chest_size)
+                map_two_treasure.update_jmp_header_name_value(treasure_entry, "size", chest_size)
 
                 # Define the actor name to use from the Location in the generation output. Act differently if it's a key.
-                map_two_characters.update_jmp_header_name_value(treasure_entry, "other", get_item_name(item_data, self.lm_rando.slot))
+                lm_item_name: str = get_item_name(item_data, self.lm_rando.slot)
+                map_two_treasure.update_jmp_header_name_value(treasure_entry, "other", lm_item_name)
 
 
     def _map_two_furniture_changes(self):
