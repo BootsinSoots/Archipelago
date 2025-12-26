@@ -5,8 +5,9 @@ from typing import TYPE_CHECKING
 from gcbrickwork.JMP import JMP, JMPEntry
 
 from .JMP_Entry_Helpers import (LOCATION_TO_INDEX, SPEEDY_OBSERVER_INDEX, SPEEDY_ENEMY_INDEX, CEILING_FURNITURE_LIST,
-    GHOST_LIST, MEDIUM_HEIGHT_FURNITURE_LIST, apply_new_ghost, add_new_jmp_data_entry, create_observer_entry, get_jmp_value,
-    create_iteminfo_entry, create_itemappear_entry, get_item_chest_visual, get_chest_size_from_item, get_item_name, update_jmp_value)
+    GHOST_LIST, MEDIUM_HEIGHT_FURNITURE_LIST, apply_new_ghost, add_new_jmp_data_entry, create_observer_entry,
+    create_iteminfo_entry, create_itemappear_entry, get_item_chest_visual, get_chest_size_from_item, get_item_name,
+    update_jmp_value, BOO_HIDING_SPOT_BANS, get_jmp_value)
 
 from ...Items import ALL_ITEMS_TABLE, LMItemData, CurrencyItemData, filler_items
 from ...Regions import REGION_LIST, TOAD_SPAWN_LIST
@@ -982,7 +983,7 @@ class RandomizeJMPTables:
 
             furniture_entry: JMPEntry = map_two_furniture.data_entries[item_data["loc_enum"]]
 
-            if ((item_data["type"] == "Furniture" and item_name not in boo_hiding_spot_bans) and extra_boo_spots):
+            if ((item_data["type"] == "Furniture" and item_name not in BOO_HIDING_SPOT_BANS) and extra_boo_spots):
                 map_two_furniture.update_jmp_header_name_value(furniture_entry, "telesa_hide", 10)
 
             # If our furniture location is remote only, do not add any values to the table and make sure it remains blank
