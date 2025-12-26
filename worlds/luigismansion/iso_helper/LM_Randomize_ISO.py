@@ -152,7 +152,7 @@ class LuigisMansionRandomizer:
         map3_jmp_list: list[str] = ["eventinfo"]
         map6_jmp_list: list[str] = ["furnitureinfo", "characterinfo"]
 
-        if bool(self.output_data["Options"]["speedy_spirits"]):
+        if bool(self.output_data["Options"]["speedy_spirits"]) or int(self.output_data["Options"]["enemizer"]) > 0:
             map2_jmp_list.append("teidenenemyinfo")
 
         if self.output_data["Options"]["spookiness"] != 0:
