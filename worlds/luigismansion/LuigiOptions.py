@@ -53,105 +53,6 @@ class ShowSelfReceivedItems(Choice):
     option_nothing = 2
     default = 0
 
-class BundleWeight(Range):
-    """Set the weight for how often coin & bill bundles get chosen as filler."""
-    display_name = "Money Bundle Weight"
-    internal_name = "bundle_weight"
-    range_start = 0
-    range_end = 100
-    default = 10
-
-
-class CoinWeight(Range):
-    """Set the weight for how often coins get chosen as filler."""
-    display_name = "Coin Weight"
-    internal_name = "coin_weight"
-    range_start = 0
-    range_end = 100
-    default = 15
-
-
-class BillWeight(Range):
-    """Set the weight for how often bills get chosen as filler."""
-    display_name = "Bill Weight"
-    internal_name = "bill_weight"
-    range_start = 0
-    range_end = 100
-    default = 10
-
-
-class BarsWeight(Range):
-    """Set the weight for how often gold bars get chosen as filler."""
-    display_name = "Gold Bars Weight"
-    internal_name = "bars_weight"
-    range_start = 0
-    range_end = 100
-    default = 10
-
-
-class GemsWeight(Range):
-    """Set the weight for how often gemstones get chosen as filler."""
-    display_name = "Gems Weight"
-    internal_name = "gems_weight"
-    range_start = 0
-    range_end = 100
-    default = 5
-
-
-class PoisonTrapWeight(Range):
-    """Set the weight for how often poison mushrooms get chosen as traps."""
-    display_name = "Poison Trap Weight"
-    internal_name = "poison_trap_weight"
-    range_start = 0
-    range_end = 100
-    default = 15
-
-
-class BombWeight(Range):
-    """Set the weight for how often bombs get chosen as traps."""
-    display_name = "Bomb Weight"
-    internal_name = "bomb_trap_weight"
-    range_start = 0
-    range_end = 100
-    default = 15
-
-
-class IceTrapWeight(Range):
-    """Set the weight for how often ice traps get chosen as traps."""
-    display_name = "Ice Trap Weight"
-    internal_name = "ice_trap_weight"
-    range_start = 0
-    range_end = 100
-    default = 15
-
-
-class BananaTrapWeight(Range):
-    """Set the weight for how often bananas get chosen as traps."""
-    display_name = "Banana Trap Weight"
-    internal_name = "banana_trap_weight"
-    range_start = 0
-    range_end = 100
-    default = 15
-
-
-class NothingWeight(Range):
-    """Set the weight for how often dust is chosen as filler."""
-    display_name = "Dust Weight"
-    internal_name = "dust_weight"
-    range_start = 0
-    range_end = 100
-    default = 40
-
-
-class HeartWeight(Range):
-    """Set the weight for how often hearts get chosen as filler."""
-    display_name = "Heart Weight"
-    internal_name = "heart_weight"
-    range_start = 0
-    range_end = 100
-    default = 10
-
-
 class BetterVacuum(Range):
     """
     Choose how many vacuum upgrades to include, up to 5."""
@@ -630,46 +531,6 @@ class LuigiMaxHealth(Range):
     range_end = 1000
     default = 100
 
-class FearWeight(Range):
-    """
-    Set the weight for how often fear traps get chosen as traps.
-    """
-    display_name = "Fear Trap Weight"
-    internal_name = "fear_weight"
-    range_start = 0
-    range_end = 100
-    default = 25
-
-class SpookyWeight(Range):
-    """
-    Set the weight for how often spooky time gets chosen as a trap.
-    """
-    display_name = "Spooky Time Weight"
-    internal_name = "spooky_weight"
-    range_start = 0
-    range_end = 100
-    default = 25
-
-class SquashWeight(Range):
-    """
-    Set the weight for how often Squash traps get chosen as traps.
-    """
-    display_name = "Squash Trap Weight"
-    internal_name = "squash_weight"
-    range_start = 0
-    range_end = 100
-    default = 15
-
-class VacTrapWeight(Range):
-    """
-    Set the weight for how often No Vac traps get chosen as traps.
-    """
-    display_name = "No Vac Trap Weight"
-    internal_name = "vac_trap_weight"
-    range_start = 0
-    range_end = 100
-    default = 5
-
 class BoolossusDifficulty(Choice):
     """
     Alter the difficulty of the mini-boos in the Boolossus fight. Easy slows them down, Hard speeds them up.
@@ -680,36 +541,6 @@ class BoolossusDifficulty(Choice):
     option_normal = 1
     option_hard = 2
     default = 1
-
-class PossTrapWeight(Range):
-    """
-    Set the weight for how often possession traps get chosen as traps.
-    """
-    display_name = "Possession Trap Weight"
-    internal_name = "poss_trap_weight"
-    range_start = 0
-    range_end = 100
-    default = 5
-
-class BonkTrapWeight(Range):
-    """
-    Set the weight for how often bonk traps get chosen as traps.
-    """
-    display_name = "Bonk Trap Weight"
-    internal_name = "bonk_trap_weight"
-    range_start = 0
-    range_end = 100
-    default = 15
-
-class GhostTrapWeight(Range):
-    """
-    Set the weight for how often ghosts get chosen as traps.
-    """
-    display_name = "Ghost Weight"
-    internal_name = "ghost_weight"
-    range_start = 0
-    range_end = 100
-    default = 15
 
 class CallMario(Toggle):
     """
@@ -852,22 +683,4 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     filler_weights: FillerWeights
     trap_percentage: TrapPercentage
     trap_weights: TrapWeights
-    bundle_weight: BundleWeight
-    coin_weight: CoinWeight
-    bill_weight: BillWeight
-    bars_weight: BarsWeight
-    gems_weight: GemsWeight
-    poison_trap_weight: PoisonTrapWeight
-    bomb_trap_weight: BombWeight
-    ice_trap_weight: IceTrapWeight
-    banana_trap_weight: BananaTrapWeight
-    poss_trap_weight: PossTrapWeight
-    bonk_trap_weight: BonkTrapWeight
-    ghost_weight: GhostTrapWeight
-    fear_weight: FearWeight
-    spooky_weight: SpookyWeight
-    squash_weight: SquashWeight
-    vac_trap_weight: VacTrapWeight
-    dust_weight: NothingWeight
-    heart_weight: HeartWeight
     start_inventory_from_pool: StartInventoryPool

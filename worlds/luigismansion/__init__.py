@@ -57,7 +57,7 @@ class LMWorld(World):
     }
     settings: ClassVar[LuigisMansionSettings]
     item_name_groups = get_item_names_per_category()
-    required_client_version = (0, 6, 2)
+    required_client_version = (0, 6, 5)
     web = LMWeb()
 
     using_ut: bool # so we can check if we're using UT only once
@@ -443,7 +443,7 @@ class LMWorld(World):
         spawn_doors = copy.deepcopy(REGION_LIST[self.origin_region_name].door_ids)
         if spawn_doors:
             for door in REGION_LIST[self.origin_region_name].door_ids:
-                if self.open_doors[door] == 1:
+                if self.open_doors[door] == 0:
                     spawn_doors.remove(door)
             if not spawn_doors:
                 self.spawn_full_locked: bool = True
