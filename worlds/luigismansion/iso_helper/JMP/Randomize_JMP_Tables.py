@@ -170,7 +170,7 @@ class RandomizeJMPTables:
         for info_entry in map_two_info.data_entries:
             item_name: str = map_two_info.get_jmp_header_name_value(info_entry, "name")
             if map_two_info.get_jmp_header_name_value(info_entry, "name") in hp_item_names.keys():
-                map_two_info.update_jmp_header_name_value(info_entry, "name", hp_item_names[item_name])
+                map_two_info.update_jmp_header_name_value(info_entry, "HPAmount", hp_item_names[item_name])
             if not item_name in already_exist_items:
                 already_exist_items.append(item_name)
 
