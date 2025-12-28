@@ -524,8 +524,8 @@ class RandomizeJMPTables:
                 apply_new_ghost(self.lm_rando, map_two_normal_enemy, normal_enemy, room_element)
 
             for blackout_enemy in map_two_teiden_enemy.data_entries:
-                curr_room_no: int = int(map_two_normal_enemy.get_jmp_header_name_value(blackout_enemy, "room_no"))
-                curr_enemy_name: str = map_two_normal_enemy.get_jmp_header_name_value(blackout_enemy, "name")
+                curr_room_no: int = int(map_two_teiden_enemy.get_jmp_header_name_value(blackout_enemy, "room_no"))
+                curr_enemy_name: str = map_two_teiden_enemy.get_jmp_header_name_value(blackout_enemy, "name")
                 if curr_room_no != room_id or not curr_enemy_name in GHOST_LIST:
                     continue
                 apply_new_ghost(self.lm_rando, map_two_teiden_enemy, blackout_enemy, val)
