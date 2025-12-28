@@ -190,7 +190,7 @@ class Furnisanity(OptionSet):
 
     "Treasures" turns on only locations that contain treasure (including all plants) in the vanilla game. Does not create duplicate locations
 
-    "Basement, 1st Floor, 2nd FLoor, Attic, and Roof can be used to turn on all furniture pieces on that level.
+    "Basement, 1st Floor, 2nd Floor, Attic, and Roof can be used to turn on all furniture pieces on that level.
 
     "Full" turns on all furniture locations and will override any other specified groups
     """
