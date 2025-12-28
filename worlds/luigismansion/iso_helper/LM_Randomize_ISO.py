@@ -201,7 +201,8 @@ class LuigisMansionRandomizer:
 
     def _update_map_files(self):
         """Updates and saves all that map data back into the GCM."""
-        for map_file in self.map_files.values():
+        for map_name, map_file in self.map_files.items():
+            self.client_logger.info(f"Now saving map '{map_name}'s data...")
             map_file.update_and_save_map(self.lm_gcm)
 
     def _update_game_archive(self):
