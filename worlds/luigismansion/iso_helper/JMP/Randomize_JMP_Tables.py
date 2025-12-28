@@ -983,7 +983,9 @@ class RandomizeJMPTables:
 
         furniture_to_patch: dict = {**self.lm_rando.output_data["Locations"]["Furniture"]}
         if "Plant" in self.lm_rando.output_data["Locations"].keys():
-            furniture_to_patch += {**self.lm_rando.output_data["Locations"]["Plant"]}
+            furniture_to_patch = {
+                **furniture_to_patch,
+                **self.lm_rando.output_data["Locations"]["Plant"]}
         for item_name, item_data in furniture_to_patch.items():
             # Ignore any Gallery region locations
             location_data: LMLocationData = ALL_LOCATION_TABLE[item_name]
