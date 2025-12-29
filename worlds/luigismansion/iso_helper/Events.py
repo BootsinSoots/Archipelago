@@ -8,7 +8,7 @@ from gclib.yaz0_yay0 import Yay0
 from ..Regions import TOAD_SPAWN_LIST
 from ..Locations import FLIP_BALCONY_BOO_EVENT_LIST
 from ..Helper_Functions import get_arc, PROJECT_ROOT, read_custom_file, IGNORE_RARC_NAMES, is_rarc_node_empty, \
-    find_rarc_file_entry, RARC_FILE_STR_ENCODING, EVENT_FILE_STR_ENCODING
+    find_rarc_file_entry, EVENT_FILE_STR_ENCODING
 from ..Hints import ALWAYS_HINT, PORTRAIT_HINTS
 
 if TYPE_CHECKING:
@@ -77,6 +77,8 @@ class EventChanges:
             lines = read_custom_file("txt", "event" + custom_event + ".txt")
             if custom_event == "10" and not bool_start_vacuum:
                 lines = lines.replace("<WEAPON>", "<NOWEAPON>")
+                self._update_custom_event(custom_event, True, lines, None, keep_csv_anyways=True)
+                continue
             self._update_custom_event(custom_event, True, lines, None)
 
 
@@ -478,7 +480,7 @@ class EventChanges:
 
 
     def _update_custom_event(self, event_number: str, delete_all_other_files: bool,
-        event_txt=None, event_csv=None):
+        event_txt=None, event_csv=None, keep_csv_anyways: bool=False):
         """Using the provided txt or csv lines for a given event file, updates the actual szp file in memory with this data."""
         if not event_txt and not event_csv:
             raise Exception("Cannot have both the event text and csv text be null/empty.")
@@ -488,18 +490,20 @@ class EventChanges:
         event_csv_file = "message" + (event_number if not event_number.startswith("0") else event_number[1:]) + ".csv"
 
         if event_txt:
-            if not any(info_files for info_files in custom_event.file_entries if info_files.name == event_txt_file):
+            txt_file: RARCFileEntry = find_rarc_file_entry(custom_event, "text", event_txt_file)
+            if txt_file is None:
                 raise Exception(f"Unable to find an info file with name '{event_txt_file}' in provided RARC file.")
-            find_rarc_file_entry(custom_event, "text", event_txt_file).data = BytesIO(event_txt.encode(EVENT_FILE_STR_ENCODING))
+            txt_file.data = BytesIO(event_txt.encode(EVENT_FILE_STR_ENCODING))
 
         if event_csv:
-            if not any(info_files for info_files in custom_event.file_entries if info_files.name == event_csv_file):
+            csv_file: RARCFileEntry = find_rarc_file_entry(custom_event, "message", event_csv_file)
+            if csv_file is None:
                 raise Exception(f"Unable to find an info file with name '{event_csv_file}' in provided RARC file.")
-            find_rarc_file_entry(custom_event, "message", event_csv_file).data = BytesIO(event_csv.encode(EVENT_FILE_STR_ENCODING))
+            csv_file.data = BytesIO(event_csv.encode(EVENT_FILE_STR_ENCODING))
 
         if delete_all_other_files:
             files_to_keep: list[str] = [event_txt_file]
-            if event_csv:
+            if event_csv or keep_csv_anyways:
                 files_to_keep += [event_csv_file]
 
             _delete_other_files(custom_event, files_to_keep)
