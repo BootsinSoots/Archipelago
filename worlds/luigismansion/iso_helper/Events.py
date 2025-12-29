@@ -443,14 +443,14 @@ class EventChanges:
         list_ignore_events += ["event" + (str(event_no) if event_no >= 10 else "0"+str(event_no)) + ".szp" for event_no
             in self.events_to_skip]
         event_dir = self.lm_rando.lm_gcm.get_or_create_dir_file_entry("files/Event")
+        # Only get the list of event files that are not directories and have the name eventX.szp
         events_to_update = [event_file for event_file in event_dir.children if not event_file.is_dir and
-            not event_file.name in list_ignore_events and not event_file.name in IGNORE_RARC_NAMES]
+            not event_file.name in list_ignore_events and not event_file.name in IGNORE_RARC_NAMES and
+            re.match(r"event\d+\.szp", event_file.name)]
+        self.lm_rando.client_logger.info(f"Now updating the following events for music '{'; '.join(
+            [efile.name for efile in events_to_update])}'")
 
         for lm_event in events_to_update:
-            # If the current file is not an actual event file, ignore and continue
-            if not re.match(r"event\d+\.szp", lm_event.name):
-                continue
-
             event_arc: RARC = get_arc(self.lm_rando.lm_gcm, lm_event.file_path)
             name_to_find = lm_event.name.replace(".szp", ".txt")
 
@@ -473,7 +473,6 @@ class EventChanges:
             updated_event = BytesIO(event_str.encode(RARC_FILE_STR_ENCODING))
             event_file.data = updated_event
 
-            self.lm_rando.client_logger.info(f"Randomize music '{lm_event.name}' Yay0 check...")
             event_arc.save_changes()
             self.lm_rando.lm_gcm.changed_files[lm_event.file_path] = Yay0.compress(event_arc.data)
 
