@@ -7,7 +7,7 @@ from gcbrickwork.JMP import JMP, JMPEntry, JMPValue
 from .JMP_Entry_Helpers import (LOCATION_TO_INDEX, SPEEDY_OBSERVER_INDEX, SPEEDY_ENEMY_INDEX, CEILING_FURNITURE_LIST,
     GHOST_LIST, MEDIUM_HEIGHT_FURNITURE_LIST, apply_new_ghost, add_new_jmp_data_entry, create_observer_entry,
     create_iteminfo_entry, create_itemappear_entry, get_item_chest_visual, get_chest_size_from_item, get_item_name,
-    update_jmp_value, BOO_HIDING_SPOT_BANS, get_jmp_value)
+    update_jmp_value, BOO_HIDING_SPOT_BANS, get_jmp_value, update_temp_jmp_value)
 
 from ...Items import ALL_ITEMS_TABLE, LMItemData, CurrencyItemData, filler_items
 from ...Regions import REGION_LIST, TOAD_SPAWN_LIST
@@ -327,13 +327,13 @@ class RandomizeJMPTables:
                 update_jmp_value(map_two_nobserver, observer_entry, "appear_flag", 0)
                 update_jmp_value(map_two_nobserver, observer_entry, "cond_type", 0)
 
-                new_entry: JMPEntry = copy.deepcopy(observer_entry)
                 if not spawn_area in TOAD_SPAWN_LIST:
-                    update_jmp_value(map_two_nobserver, new_entry, "room_no", spawn_data.room_id)
-                    update_jmp_value(map_two_nobserver, new_entry, "pos_x", int(spawn_data.pos_x) - 150)
-                    update_jmp_value(map_two_nobserver, new_entry, "pos_y", spawn_data.pos_y)
-                    update_jmp_value(map_two_nobserver, new_entry, "pos_z", int(spawn_data.pos_z) - 150)
-                    update_jmp_value(map_two_nobserver, new_entry, "code_name", "dm_kinopio5")
+                    new_entry: JMPEntry = copy.deepcopy(observer_entry)
+                    update_temp_jmp_value(new_entry, "room_no", spawn_data.room_id)
+                    update_temp_jmp_value(new_entry, "pos_x", int(spawn_data.pos_x) - 150)
+                    update_temp_jmp_value(new_entry, "pos_y", spawn_data.pos_y)
+                    update_temp_jmp_value(new_entry, "pos_z", int(spawn_data.pos_z) - 150)
+                    update_temp_jmp_value(new_entry, "code_name", "dm_kinopio5")
                     temp_new_entries.append(new_entry)
 
             # Allows the Master Bedroom to be lit after clearing it, even if Neville hasn't been caught.

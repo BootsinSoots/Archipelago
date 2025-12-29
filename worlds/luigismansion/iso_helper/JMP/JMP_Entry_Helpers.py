@@ -1,6 +1,7 @@
 import copy
 from typing import Any, TYPE_CHECKING
 
+from gcbrickwork import JMPFieldHeader
 from gcbrickwork.JMP import JMP, JMPEntry, JMPValue
 
 if TYPE_CHECKING:
@@ -336,6 +337,13 @@ def get_jmp_value(jmp_file: JMP, jmp_entry: JMPEntry, field_name: str) -> JMPVal
 
 def update_jmp_value(jmp_file: JMP, jmp_entry: JMPEntry, field_name: str, field_value: JMPValue):
     jmp_file.update_jmp_header_name_value(jmp_entry, field_name, field_value)
+
+def update_temp_jmp_value(jmp_entry: JMPEntry, field_name: str, field_value: JMPValue):
+    jmp_field: JMPFieldHeader = next((jfield for jfield in jmp_entry.keys() if jfield.field_name == field_name), None)
+    if jmp_field is None:
+        raise Exception(f"Unable to find field with name '{field_name}'.")
+
+    jmp_entry[jmp_field] = field_value
 
 def create_iteminfo_entry(item_door_id: int, info_item_name: str) -> dict:
     """Creates a dictionary for use in the iteminfotable"""
