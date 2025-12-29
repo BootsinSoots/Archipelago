@@ -31,6 +31,7 @@ class RandomizeJMPTables:
         self._map_two_changes()
         self._add_hearts_to_other_maps()
         self._map_one_changes()
+        self._map_three_changes()
         self._map_six_changes()
 
 
@@ -43,6 +44,11 @@ class RandomizeJMPTables:
             if int(map_one_events.get_jmp_header_name_value(event_entry, "EventNo")) == 8:
                 map_one_events.update_jmp_header_name_value(event_entry, "EventIf", 5)
 
+    def _map_three_changes(self):
+        """Updates the relevant changes on the training map."""
+        map_three_events: JMP = self.lm_rando.map_files["map3"].jmp_files["eventinfo"]
+        # Remove the event 9 entry and only leave event 10 here.
+        map_three_events.data_entries.remove(map_three_events.data_entries[0])
 
     def _map_six_changes(self):
         """Updates all the jmp files with their relevant changes on the Gallery map"""
