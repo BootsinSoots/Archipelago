@@ -17,7 +17,6 @@ from ...game.Currency import CURRENCIES
 
 if TYPE_CHECKING:
     from ..LM_Randomize_ISO import LuigisMansionRandomizer
-    from ..LM_Map_File import LMMapFile
 
 class RandomizeJMPTables:
 
@@ -1060,6 +1059,7 @@ class RandomizeJMPTables:
 
     def _add_hearts_to_other_maps(self):
         """Adds the necessary heart drop for the ghosts on boss maps and gallery."""
+        from ..LM_Map_File import LMMapFile
         # Copy the existing item_appear entries from map2, as these should be the same for the other map files.
         item_appear: JMP = copy.deepcopy(self.lm_rando.empty_jmp_files["itemappeartable"])
         item_appear.data_entries = self.lm_rando.map_files["map2"].jmp_files["itemappeartable"].data_entries[:15]
@@ -1076,8 +1076,8 @@ class RandomizeJMPTables:
 
         for map_name in ["map6.szp", "map9.szp", "map10.szp", "map11.szp", "map13.szp"]:
             if map_name.replace(".szp", "") in self.lm_rando.map_files.keys():
-                curr_map: "LMMapFile" = self.lm_rando.map_files[map_name.replace(".szp", "")]
+                curr_map: LMMapFile = self.lm_rando.map_files[map_name.replace(".szp", "")]
             else:
-                curr_map: "LMMapFile" = LMMapFile(self.lm_rando.lm_gcm, "files/Map/" + map_name)
+                curr_map: LMMapFile = LMMapFile(self.lm_rando.lm_gcm, "files/Map/" + map_name)
             curr_map.add_new_jmp_file("itemappeartable", item_appear_data)
             curr_map.add_new_jmp_file("iteminfotable", item_info_data)
