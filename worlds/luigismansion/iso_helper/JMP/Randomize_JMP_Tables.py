@@ -1051,7 +1051,7 @@ class RandomizeJMPTables:
                 curr_y_offset: int = int(map_two_furniture.get_jmp_header_name_value(
                     map_two_furniture.data_entries[item_data["loc_enum"]], "item_offset_y"))
                 map_two_furniture.update_jmp_header_name_value(map_two_furniture.data_entries[item_data["loc_enum"]],
-                    "item_offset_y", curr_y_offset + 50)
+                    "item_offset_y", curr_y_offset + 75)
 
             # TODO update using ALL items table instead
             if any((key, val) for (key, val) in filler_items.items() if
