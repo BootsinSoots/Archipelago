@@ -118,7 +118,7 @@ def is_rarc_node_empty(rarc_node: RARCNode, files_to_be_removed: list[str]=None)
     assert rarc_node is not None
 
     # If there are no files in this node, this node is empty
-    if len(rarc_node.files):
+    if len(rarc_node.files) == 0:
         return True
 
     future_removed_files: list[str] = files_to_be_removed if not None else []
