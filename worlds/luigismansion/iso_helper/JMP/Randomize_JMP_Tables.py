@@ -999,7 +999,6 @@ class RandomizeJMPTables:
         for furn_entry in map_two_furniture.data_entries:
             # If this is a book/bookshelf, set it to just shake, no book interaction.
             # Make sure to exclude Nana's knit ball bowl so they can drop on the floor properly.
-
             if (int(map_two_furniture.get_jmp_header_name_value(furn_entry, "move")) == 16 and
                 map_two_furniture.get_jmp_header_name_value(furn_entry, "dmd_name") != "o_tuku1"):
                 map_two_furniture.update_jmp_header_name_value(furn_entry, "move", 0)
