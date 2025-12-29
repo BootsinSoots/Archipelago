@@ -63,6 +63,7 @@ class RandomizeJMPTables:
 
         self.lm_rando.client_logger.info("Now updating all changes for the Gallery map. Starting with furniture...")
         ceiling_furniture_list: list[int] = [0, 1]
+        other_furn_list: list[int] = [3, 4, 5, 6, 7, 8]
 
         map_six_furniture: JMP = self.lm_rando.map_files["map6"].jmp_files["furnitureinfo"]
         map_six_item_appear: JMP = self.lm_rando.map_files["map6"].jmp_files["itemappeartable"]
@@ -72,6 +73,13 @@ class RandomizeJMPTables:
             adjust_y_offset = 225.0
             map_six_furniture.update_jmp_header_name_value(map_six_furniture.data_entries[furniture_jmp_id],
                 "item_offset_y", curr_y_offset - adjust_y_offset)
+
+        for furniture_jmp_id in other_furn_list:
+            curr_y_offset: int = int(map_six_furniture.get_jmp_header_name_value(
+                map_six_furniture.data_entries[furniture_jmp_id], "item_offset_y"))
+            adjust_y_offset = 50.0
+            map_six_furniture.update_jmp_header_name_value(map_six_furniture.data_entries[furniture_jmp_id],
+                "item_offset_y", curr_y_offset + adjust_y_offset)
 
         for item_name, item_data in self.lm_rando.output_data["Locations"]["Furniture"].items():
             location_data: LMLocationData = ALL_LOCATION_TABLE[item_name]
