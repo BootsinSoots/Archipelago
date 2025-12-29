@@ -8,7 +8,7 @@ from gclib.yaz0_yay0 import Yay0
 from ..Regions import TOAD_SPAWN_LIST
 from ..Locations import FLIP_BALCONY_BOO_EVENT_LIST
 from ..Helper_Functions import get_arc, PROJECT_ROOT, read_custom_file, IGNORE_RARC_NAMES, is_rarc_node_empty, \
-    find_rarc_file_entry, RARC_FILE_STR_ENCODING
+    find_rarc_file_entry, RARC_FILE_STR_ENCODING, EVENT_FILE_STR_ENCODING
 from ..Hints import ALWAYS_HINT, PORTRAIT_HINTS
 
 if TYPE_CHECKING:
@@ -460,7 +460,7 @@ class EventChanges:
                 continue
 
             event_text_data = event_file.data
-            event_str = event_text_data.getvalue().decode(RARC_FILE_STR_ENCODING)
+            event_str = event_text_data.getvalue().decode(EVENT_FILE_STR_ENCODING, errors="replace")
             music_to_replace = re.findall(r'<BGM>\(\d+\)', event_str)
 
             if music_to_replace:
@@ -470,7 +470,7 @@ class EventChanges:
                     int_music_selection: int = self.lm_rando.random.choice(sorted(music_list))
                     event_str = event_str.replace(music_match, "<BGM>(" + str(int_music_selection) + ")")
 
-            updated_event = BytesIO(event_str.encode(RARC_FILE_STR_ENCODING))
+            updated_event = BytesIO(event_str.encode(EVENT_FILE_STR_ENCODING))
             event_file.data = updated_event
 
             event_arc.save_changes()
@@ -490,12 +490,12 @@ class EventChanges:
         if event_txt:
             if not any(info_files for info_files in custom_event.file_entries if info_files.name == event_txt_file):
                 raise Exception(f"Unable to find an info file with name '{event_txt_file}' in provided RARC file.")
-            find_rarc_file_entry(custom_event, "text", event_txt_file).data = BytesIO(event_txt.encode(RARC_FILE_STR_ENCODING))
+            find_rarc_file_entry(custom_event, "text", event_txt_file).data = BytesIO(event_txt.encode(EVENT_FILE_STR_ENCODING))
 
         if event_csv:
             if not any(info_files for info_files in custom_event.file_entries if info_files.name == event_csv_file):
                 raise Exception(f"Unable to find an info file with name '{event_csv_file}' in provided RARC file.")
-            find_rarc_file_entry(custom_event, "message", event_csv_file).data = BytesIO(event_csv.encode(RARC_FILE_STR_ENCODING))
+            find_rarc_file_entry(custom_event, "message", event_csv_file).data = BytesIO(event_csv.encode(EVENT_FILE_STR_ENCODING))
 
         if delete_all_other_files:
             files_to_keep: list[str] = [event_txt_file]
