@@ -49,6 +49,7 @@ class RandomizeJMPTables:
         map_three_events: JMP = self.lm_rando.map_files["map3"].jmp_files["eventinfo"]
         # Remove the event 9 entry and only leave event 10 here.
         map_three_events.data_entries.remove(map_three_events.data_entries[0])
+        map_three_events.update_jmp_header_name_value(map_three_events.data_entries[0], "EventFlag", 0)
 
     def _map_six_changes(self):
         """Updates all the jmp files with their relevant changes on the Gallery map"""
