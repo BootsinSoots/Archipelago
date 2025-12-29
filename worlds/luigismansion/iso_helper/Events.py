@@ -59,7 +59,7 @@ class EventChanges:
         self._write_in_game_hints()
         self._update_spawn_event()
         self._write_portrait_hints()
-        # self._randomize_music()
+        self._randomize_music()
 
 
     def _update_common_events(self):
