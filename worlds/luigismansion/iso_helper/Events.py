@@ -59,7 +59,7 @@ class EventChanges:
         self._write_in_game_hints()
         self._update_spawn_event()
         self._write_portrait_hints()
-        self._randomize_music()
+        # self._randomize_music()
 
 
     def _update_common_events(self):
@@ -75,8 +75,9 @@ class EventChanges:
 
         for custom_event in list_custom_events:
             lines = read_custom_file("txt", "event" + custom_event + ".txt")
-            if custom_event == "10" and not bool_start_vacuum:
-                lines = lines.replace("<WEAPON>", "<NOWEAPON>")
+            if custom_event == "10":
+                if not bool_start_vacuum:
+                    lines = lines.replace("<WEAPON>", "<NOWEAPON>")
                 self._update_custom_event(custom_event, True, lines, None, keep_csv_anyways=True)
                 continue
             self._update_custom_event(custom_event, True, lines, None)
@@ -504,7 +505,8 @@ class EventChanges:
         if delete_all_other_files:
             files_to_keep: list[str] = [event_txt_file]
             if event_csv or keep_csv_anyways:
-                files_to_keep += [event_csv_file]
+                massage_csv_file = "massage" + (event_number if int(event_number) >= 10 else event_number[1:]) + ".csv"
+                files_to_keep += [event_csv_file, massage_csv_file]
 
             _delete_other_files(custom_event, files_to_keep)
 
