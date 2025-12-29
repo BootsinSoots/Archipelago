@@ -337,7 +337,7 @@ class RandomizeJMPTables:
                     continue
                 update_jmp_value(map_two_nobserver, observer_entry, "cond_arg0", 0)
                 update_jmp_value(map_two_nobserver, observer_entry, "appear_flag", 0)
-                update_jmp_value(map_two_nobserver, observer_entry, "cond_type", 0)
+                update_jmp_value(map_two_nobserver, observer_entry, "cond_type", 13)
 
                 if not spawn_area in TOAD_SPAWN_LIST:
                     new_entry: JMPEntry = copy.deepcopy(observer_entry)
@@ -547,7 +547,7 @@ class RandomizeJMPTables:
         """Removes events that we don't want to trigger at all in the mansion, such as some E. Gadd calls, warps after
         boss battles / grabbing boss keys, and various cutscenes etc. Also remove Mario Items/Elemental Item events"""
         self.lm_rando.client_logger.info("Now updating all event changes for map2.")
-        events_to_remove: list[int] = [7, 9, 15, 18, 19, 20, 21, 31, 41, 42, 45, 47, 51, 54, 69, 70, 73, 80, 81, 85, 91]
+        events_to_remove: list[int] = [7, 9, 11, 15, 18, 19, 20, 21, 31, 41, 42, 45, 47, 51, 54, 69, 70, 73, 80, 81, 85, 91]
         map_two_events: JMP = self.lm_rando.map_files["map2"].jmp_files["eventinfo"]
 
         boo_gates_enabled: bool = bool(self.lm_rando.output_data["Options"]["boo_gates"])
