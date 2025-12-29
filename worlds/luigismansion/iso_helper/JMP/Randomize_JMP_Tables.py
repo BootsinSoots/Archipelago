@@ -360,6 +360,10 @@ class RandomizeJMPTables:
             if room_num == 33:
                 update_jmp_value(map_two_nobserver, observer_entry, "appear_flag", 0)
 
+            # Update the parlor observer to turn on flag 120 instead, which is a room flag.
+            elif room_num == 35 and do_num == 7:
+                update_jmp_value(map_two_nobserver, observer_entry, "arg0", 120)
+
             # Allows Twins Room to be lit after clearing it, even if Chauncey hasn't been caught.
             elif room_num == 25:
                 update_jmp_value(map_two_nobserver, observer_entry, "appear_flag", 0)
@@ -662,6 +666,11 @@ class RandomizeJMPTables:
                 map_two_events.update_jmp_header_name_value(event_info, "EventLoad", 0)
                 map_two_events.update_jmp_header_name_value(event_info, "disappear_flag", 22)
                 map_two_events.update_jmp_header_name_value(event_info, "EventIf", 2)
+
+            # Make the parlor ghost spawn event be based on flag 120 instead of a saveable flag
+            elif event_num == 61:
+                map_two_events.update_jmp_header_name_value(event_info, "EventFlag", 120)
+                map_two_events.update_jmp_header_name_value(event_info, "EventLoad", 0)
 
             # # Update the Washroom event trigger to be area entry based
             # # Also updates the event disappear trigger to be flag 28
