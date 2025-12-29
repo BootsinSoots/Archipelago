@@ -8,6 +8,7 @@ from gclib.gcm import GCM
 PROJECT_ROOT: Traversable = resources.files(__name__)
 
 IGNORE_RARC_NAMES: list[str] = [".", ".."]
+RARC_FILE_STR_ENCODING: str = "shift_jis"
 
 class LMRamData(NamedTuple):
     ram_addr: Optional[int] = None
