@@ -2,11 +2,13 @@ import re
 from io import BytesIO
 from typing import TYPE_CHECKING
 
-from gclib.rarc import RARCFileEntry
+from gclib.rarc import RARC, RARCFileEntry
 from gclib.yaz0_yay0 import Yay0
 
+from ..Regions import TOAD_SPAWN_LIST
 from ..Locations import FLIP_BALCONY_BOO_EVENT_LIST
-from ..Helper_Functions import get_arc, PROJECT_ROOT, read_custom_file, is_rarc_dir_empty
+from ..Helper_Functions import get_arc, PROJECT_ROOT, read_custom_file, IGNORE_RARC_NAMES, is_rarc_node_empty, \
+    find_rarc_file_entry, RARC_FILE_STR_ENCODING
 from ..Hints import ALWAYS_HINT, PORTRAIT_HINTS
 
 if TYPE_CHECKING:
@@ -19,6 +21,7 @@ class EventChanges:
     hint_dist: int
     luigi_max_hp: str
     hint_list: dict[str, dict[str, str]]
+    events_to_skip: list[int]
 
 
     def __init__(self, rando_obj: "LuigisMansionRandomizer"):
@@ -26,6 +29,24 @@ class EventChanges:
         self.hint_dist = int(self.lm_rando.output_data["Options"]["hint_distribution"])
         self.luigi_max_hp = str(self.lm_rando.output_data["Options"]["luigi_max_health"])
         self.hint_list = self.lm_rando.output_data["Hints"]
+
+        events_to_remove: list[int] = [7, 9, 15, 18, 19, 20, 21, 31, 41, 42, 45, 47, 51, 54, 69, 70, 73, 80, 81, 85, 91]
+        boo_gates_enabled: bool = bool(self.lm_rando.output_data["Options"]["boo_gates"])
+        spawn_area: str = self.lm_rando.output_data["Options"]["spawn"]
+        balcony_boo_count: int = int(self.lm_rando.output_data["Options"]["balcony_boo_count"])
+        final_boo_count: int = int(self.lm_rando.output_data["Options"]["final_boo_count"])
+
+        # Only remove the boo checks if the player does not want them.
+        if not boo_gates_enabled:
+            events_to_remove += [16, 96]
+        elif balcony_boo_count == 0:
+            events_to_remove += [96]
+        elif final_boo_count == 0:
+            events_to_remove += [16]
+        if spawn_area in TOAD_SPAWN_LIST:
+            events_to_remove += [12]
+
+        self.events_to_skip = events_to_remove
 
 
     def update_in_game_events(self):
@@ -419,21 +440,27 @@ class EventChanges:
 
         self.lm_rando.client_logger.info("Randomized Music is enabled, updating all events with various in-game music.")
         list_ignore_events = ["event00.szp"]
+        list_ignore_events += ["event" + (str(event_no) if event_no >= 10 else "0"+str(event_no)) + ".szp" for event_no
+            in self.events_to_skip]
         event_dir = self.lm_rando.lm_gcm.get_or_create_dir_file_entry("files/Event")
+        events_to_update = [event_file for event_file in event_dir.children if not event_file.is_dir and
+            not event_file.name in list_ignore_events and not event_file.name in IGNORE_RARC_NAMES]
 
-        for lm_event in [event_file for event_file in event_dir.children if not event_file.is_dir]:
-            if lm_event.name in list_ignore_events or not re.match(r"event\d+\.szp", lm_event.name):
+        for lm_event in events_to_update:
+            # If the current file is not an actual event file, ignore and continue
+            if not re.match(r"event\d+\.szp", lm_event.name):
                 continue
 
-            event_arc = get_arc(self.lm_rando.lm_gcm, lm_event.file_path)
+            event_arc: RARC = get_arc(self.lm_rando.lm_gcm, lm_event.file_path)
             name_to_find = lm_event.name.replace(".szp", ".txt")
 
-            if not any(event_file for event_file in event_arc.file_entries if event_file.name == name_to_find):
+            event_file = find_rarc_file_entry(event_arc, "text", name_to_find)
+            # Event does not have any txt related, could be an un-used event for example.
+            if event_file is None:
                 continue
 
-            event_text_data = next(event_file for event_file in event_arc.file_entries if
-                                    event_file.name == name_to_find).data
-            event_str = event_text_data.getvalue().decode('utf-8', errors='replace')
+            event_text_data = event_file.data
+            event_str = event_text_data.getvalue().decode(RARC_FILE_STR_ENCODING)
             music_to_replace = re.findall(r'<BGM>\(\d+\)', event_str)
 
             if music_to_replace:
@@ -443,10 +470,8 @@ class EventChanges:
                     int_music_selection: int = self.lm_rando.random.choice(sorted(music_list))
                     event_str = event_str.replace(music_match, "<BGM>(" + str(int_music_selection) + ")")
 
-            updated_event = BytesIO(event_str.encode('utf-8'))
-
-            next(event_file for event_file in event_arc.file_entries if
-                 event_file.name == name_to_find).data = updated_event
+            updated_event = BytesIO(event_str.encode(RARC_FILE_STR_ENCODING))
+            event_file.data = updated_event
 
             self.lm_rando.client_logger.info(f"Randomize music '{lm_event.name}' Yay0 check...")
             event_arc.save_changes()
@@ -459,52 +484,67 @@ class EventChanges:
         if not event_txt and not event_csv:
             raise Exception("Cannot have both the event text and csv text be null/empty.")
 
-        custom_event = get_arc(self.lm_rando.lm_gcm, "files/Event/event" + event_number + ".szp")
+        custom_event: RARC = get_arc(self.lm_rando.lm_gcm, "files/Event/event" + event_number + ".szp")
         event_txt_file = "event" + event_number + ".txt"
         event_csv_file = "message" + (event_number if not event_number.startswith("0") else event_number[1:]) + ".csv"
 
         if event_txt:
             if not any(info_files for info_files in custom_event.file_entries if info_files.name == event_txt_file):
                 raise Exception(f"Unable to find an info file with name '{event_txt_file}' in provided RARC file.")
-            next((info_files for info_files in custom_event.file_entries if
-                  info_files.name == event_txt_file)).data = BytesIO(event_txt.encode('utf-8'))
+            find_rarc_file_entry(custom_event, "text", event_txt_file).data = BytesIO(event_txt.encode(RARC_FILE_STR_ENCODING))
 
         if event_csv:
             if not any(info_files for info_files in custom_event.file_entries if info_files.name == event_csv_file):
                 raise Exception(f"Unable to find an info file with name '{event_csv_file}' in provided RARC file.")
-            next((info_files for info_files in custom_event.file_entries if
-                  info_files.name == event_csv_file)).data = BytesIO(event_csv.encode('utf-8'))
+            find_rarc_file_entry(custom_event, "message", event_csv_file).data = BytesIO(event_csv.encode(RARC_FILE_STR_ENCODING))
 
         if delete_all_other_files:
-            nodes_to_ignore: set = {".", ".."}
-            files_to_keep: list[str] = [event_txt_file] + list(nodes_to_ignore)
+            files_to_keep: list[str] = [event_txt_file]
             if event_csv:
                 files_to_keep += [event_csv_file]
 
-            node_list = list(reversed([node for node in custom_event.nodes if node.name not in nodes_to_ignore]))
-            for node in node_list:
-                node_files: list[str] = [rarc_file.name for rarc_file in node.files if rarc_file.name not in nodes_to_ignore]
-                files_to_delete: list[str] = list(set(node_files) - (set(files_to_keep)))
-                if not len(files_to_delete):
-                    continue
+            _delete_other_files(custom_event, files_to_keep)
 
-                node_dirs_to_delete: list[RARCFileEntry] = []
-                # Assuming there will always be at least one file to delete in this node, but other files remain.
-                for node_file in node.files:
-                    if node_file.name in nodes_to_ignore:
-                        continue
-                    elif node_file.name in files_to_delete:
-                        custom_event.delete_file(node_file)
-
-                    if node_file.is_dir and is_rarc_dir_empty(node_file):
-                        node_dirs_to_delete.append(node_file)
-
-                # If there is only the current directory entry / parent directory entry left, delete the directory.
-                # Note: Removing the directory automatically removes the file entries as well.
-                #for node_dir in node_dirs_to_delete:
-                #    custom_event.delete_directory(node_dir)
-                #    continue
-
-        self.lm_rando.client_logger.info(f"Event{event_number} Yay0 check...")
         custom_event.save_changes()
         self.lm_rando.lm_gcm.changed_files["files/Event/event" + event_number + ".szp"] = Yay0.compress(custom_event.data)
+
+def _delete_other_files(event_arc: RARC, keep_files: list[str]):
+    files_to_delete: list[RARCFileEntry] = []
+    nodes_to_delete: list[RARCFileEntry] = []
+    keep_files += list(IGNORE_RARC_NAMES)
+
+    for event_node in event_arc.nodes:
+        remove_node_file_list: list[RARCFileEntry] = []
+        for node_file in event_node.files:
+            # If the node name is root/current directory or a directory in general, ignore from list.
+            if node_file.name in IGNORE_RARC_NAMES or node_file.is_dir:
+                continue
+            # If we don't need to keep the file, remove this.
+            elif not node_file.name in keep_files:
+                remove_node_file_list += [node_file]
+
+        # If we found no node files to remove
+        if len(remove_node_file_list) == 0:
+            continue
+
+        # If the node is empty in the future, add it to the remove list
+        elif is_rarc_node_empty(event_node, [nfile.name for nfile in remove_node_file_list]):
+            nodes_to_delete += [event_node.dir_entry]
+            continue
+
+        # Otherwise, remove the required files.
+        files_to_delete += remove_node_file_list
+
+    for del_node in nodes_to_delete:
+        del_dir: RARCFileEntry = find_rarc_file_entry(event_arc, del_node.parent_node.name, del_node.name)
+        if del_dir is None:
+            raise Exception(f"Unable to find a file with name '{del_node.name}' to delete in node '{del_node.parent_node.name}'")
+
+        event_arc.delete_directory(del_dir)
+
+    for remove_file in files_to_delete:
+        del_file: RARCFileEntry = find_rarc_file_entry(event_arc, remove_file.parent_node.name, remove_file.name)
+        if del_file is None:
+            raise Exception(f"Unable to find a file with name '{remove_file.name}' to delete in node '{remove_file.parent_node.name}'")
+
+        event_arc.delete_file(del_file)
