@@ -1,3 +1,5 @@
+from io import BytesIO
+
 from gcbrickwork import JMP
 from gclib.gcm import GCM
 from gclib.rarc import RARC, RARCFileEntry
@@ -21,6 +23,10 @@ class LMMapFile:
         self._arc_path = map_rarc_path
         self._arc_data = get_arc(lm_gcm, map_rarc_path)
         self.jmp_files = {}
+
+    def add_new_jmp_file(self, file_name: str, data: BytesIO):
+        """Creates a new JMP file name with the provided name and BytesIO data."""
+        self._arc_data.add_new_file(file_name, data, self._arc_data.get_node_by_path("jmp"))
 
     def get_all_jmp_files(self):
         """
