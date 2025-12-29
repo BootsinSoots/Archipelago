@@ -345,7 +345,7 @@ def update_temp_jmp_value(jmp_entry: JMPEntry, field_name: str, field_value: JMP
 
     jmp_entry[jmp_field] = field_value
 
-def create_iteminfo_entry(item_door_id: int, info_item_name: str) -> dict:
+def create_iteminfo_entry(item_door_id: int, info_item_name: str, hp_amt: int=0, is_escape: int=0) -> dict:
     """Creates a dictionary for use in the iteminfotable"""
     open_no: int = item_door_id
     if open_no > 0:
@@ -357,8 +357,8 @@ def create_iteminfo_entry(item_door_id: int, info_item_name: str) -> dict:
         "name": info_item_name,
         "character_name": char_name,
         "OpenDoorNo": open_no,
-        "HPAmount": 0,
-        "IsEscape": 0
+        "HPAmount": hp_amt,
+        "IsEscape": is_escape
     }
 
 def create_observer_entry(pos_x: float, pos_y: float, pos_z: float, room_no: int, cond_type: int, do_type: int,
