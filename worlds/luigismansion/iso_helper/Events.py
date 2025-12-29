@@ -8,7 +8,6 @@ from gclib.yaz0_yay0 import Yay0
 from ..Locations import FLIP_BALCONY_BOO_EVENT_LIST
 from ..Helper_Functions import get_arc, PROJECT_ROOT, read_custom_file, is_rarc_dir_empty
 from ..Hints import ALWAYS_HINT, PORTRAIT_HINTS
-from CommonClient import logger
 
 if TYPE_CHECKING:
     from .LM_Randomize_ISO import LuigisMansionRandomizer
@@ -449,8 +448,8 @@ class EventChanges:
             next(event_file for event_file in event_arc.file_entries if
                  event_file.name == name_to_find).data = updated_event
 
+            self.lm_rando.client_logger.info(f"Randomize music '{lm_event.name}' Yay0 check...")
             event_arc.save_changes()
-            logger.info("Randomize music Yay0 check...")
             self.lm_rando.lm_gcm.changed_files[lm_event.file_path] = Yay0.compress(event_arc.data)
 
 
@@ -506,6 +505,6 @@ class EventChanges:
                 #    custom_event.delete_directory(node_dir)
                 #    continue
 
-        logger.info(f"Event{event_number} Yay0 check...")
+        self.lm_rando.client_logger.info(f"Event{event_number} Yay0 check...")
         custom_event.save_changes()
         self.lm_rando.lm_gcm.changed_files["files/Event/event" + event_number + ".szp"] = Yay0.compress(custom_event.data)
