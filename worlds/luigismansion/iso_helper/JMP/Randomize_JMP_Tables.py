@@ -547,7 +547,7 @@ class RandomizeJMPTables:
         """Removes events that we don't want to trigger at all in the mansion, such as some E. Gadd calls, warps after
         boss battles / grabbing boss keys, and various cutscenes etc. Also remove Mario Items/Elemental Item events"""
         self.lm_rando.client_logger.info("Now updating all event changes for map2.")
-        events_to_remove: list[int] = [7, 9, 11, 15, 18, 19, 20, 21, 31, 41, 42, 45, 47, 51, 54, 69, 70, 73, 80, 81, 85, 91]
+        events_to_remove: list[int] = [7, 9, 15, 18, 19, 20, 21, 31, 41, 42, 45, 47, 51, 54, 69, 70, 73, 80, 81, 85, 91]
         map_two_events: JMP = self.lm_rando.map_files["map2"].jmp_files["eventinfo"]
 
         boo_gates_enabled: bool = bool(self.lm_rando.output_data["Options"]["boo_gates"])
@@ -701,10 +701,10 @@ class RandomizeJMPTables:
             # Update the Intro event to talk about save anywhere and healing.
             elif event_num == 11:
                 map_two_events.update_jmp_header_name_value(event_info, "EventFlag", 0)
-                map_two_events.update_jmp_header_name_value(event_info, "disappear_flag", 0)
-                map_two_events.update_jmp_header_name_value(event_info, "EventLoad", 1)
+                map_two_events.update_jmp_header_name_value(event_info, "disappear_flag", 53)
+                map_two_events.update_jmp_header_name_value(event_info, "EventLoad", 0)
                 map_two_events.update_jmp_header_name_value(event_info, "EventArea", 65535)
-                map_two_events.update_jmp_header_name_value(event_info, "EventIf", 2)
+                map_two_events.update_jmp_header_name_value(event_info, "EventIf", 3)
                 map_two_events.update_jmp_header_name_value(event_info, "PlayerStop", 1)
                 map_two_events.update_jmp_header_name_value(event_info, "EventLock", 1)
                 map_two_events.update_jmp_header_name_value(event_info, "event_parameter", 0)
