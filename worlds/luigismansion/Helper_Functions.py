@@ -113,8 +113,13 @@ def read_custom_file(file_type: str, file_name: str) -> str:
     return file_data
 
 
-def is_rarc_node_empty(rarc_node: RARCNode) -> bool:
+def is_rarc_node_empty(rarc_node: RARCNode, files_to_be_removed: list[str]=None) -> bool:
     assert rarc_node.name not in IGNORE_RARC_NAMES
     assert rarc_node is not None
 
-    return not len(rarc_node.files) or set([nfile.name for nfile in rarc_node.files]).issubset(IGNORE_RARC_NAMES)
+    # If there are no files in this node, this node is empty
+    if len(rarc_node.files):
+        return True
+
+    future_removed_files: list[str] = files_to_be_removed if not None else []
+    return set([nfile.name for nfile in rarc_node.files if nfile.name not in future_removed_files]).issubset(set(IGNORE_RARC_NAMES))
