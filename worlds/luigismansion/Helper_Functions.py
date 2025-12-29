@@ -2,10 +2,12 @@ from importlib.resources.abc import Traversable
 from typing import NamedTuple, Optional
 import importlib.resources as resources
 
-from gclib.rarc import RARCFileEntry, RARC
+from gclib.rarc import RARCFileEntry, RARC, RARCNode
 from gclib.gcm import GCM
 
 PROJECT_ROOT: Traversable = resources.files(__name__)
+
+IGNORE_RARC_NAMES: list[str] = [".", ".."]
 
 class LMRamData(NamedTuple):
     ram_addr: Optional[int] = None
@@ -111,10 +113,8 @@ def read_custom_file(file_type: str, file_name: str) -> str:
     return file_data
 
 
-def is_rarc_dir_empty(rarc_file: RARCFileEntry) -> bool:
-    empty_dir_list: list[str] = [".", ".."]
-    assert rarc_file.name not in empty_dir_list
-    assert rarc_file.node is not None
-    assert rarc_file.is_dir
+def is_rarc_node_empty(rarc_node: RARCNode) -> bool:
+    assert rarc_node.name not in IGNORE_RARC_NAMES
+    assert rarc_node is not None
 
-    return not len(rarc_file.node.files) or set([nfile.name for nfile in rarc_file.node.files]).issubset(empty_dir_list)
+    return not len(rarc_node.files) or set([nfile.name for nfile in rarc_node.files]).issubset(IGNORE_RARC_NAMES)
