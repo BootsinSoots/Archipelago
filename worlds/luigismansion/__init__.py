@@ -255,28 +255,7 @@ class LMWorld(World):
                     add_rule(entry,
                              lambda state: state.has_group("Mario Item", self.player, self.options.mario_items.value),
                              "and")
-                if len(entry.access) != 0:
-                    for item in entry.access:
-                        if item == "Fire Element Medal":
-                            add_rule(entry, lambda state: Rules.can_fst_fire(state, self.player), "and")
-                        elif item == "Water Element Medal":
-                            add_rule(entry, lambda state: Rules.can_fst_water(state, self.player), "and")
-                        elif item == "Ice Element Medal":
-                            add_rule(entry, lambda state: Rules.can_fst_ice(state, self.player), "and")
-                        else:
-                            add_rule(entry, lambda state, i=item: state.has(i, self.player), "and")
-                if region.name in self.ghost_affected_regions.keys() and location != "Catch Grimmly - Silver":
-                    # if fire, require water
-                    if self.ghost_affected_regions[region.name] == "Fire":
-                        add_rule(entry, lambda state: Rules.can_fst_water(state, self.player), "and")
-                    # if water, require ice
-                    elif self.ghost_affected_regions[region.name] == "Water":
-                        add_rule(entry, lambda state: Rules.can_fst_ice(state, self.player), "and")
-                    # if ice, require fire
-                    elif self.ghost_affected_regions[region.name] == "Ice":
-                        add_rule(entry, lambda state: Rules.can_fst_fire(state, self.player), "and")
-                    else:
-                        pass
+                set_element_rules(self, entry, True)
                 region.locations.append(entry)
         if self.options.gold_ghosts:
             for location, data in GOLD_PORTRAIT_TABLE.items():
@@ -288,28 +267,7 @@ class LMWorld(World):
                     add_rule(entry,
                              lambda state: state.has_group("Mario Item", self.player, self.options.mario_items.value),
                              "and")
-                if len(entry.access) != 0:
-                    for item in entry.access:
-                        if item == "Fire Element Medal":
-                            add_rule(entry, lambda state: Rules.can_fst_fire(state, self.player), "and")
-                        elif item == "Water Element Medal":
-                            add_rule(entry, lambda state: Rules.can_fst_water(state, self.player), "and")
-                        elif item == "Ice Element Medal":
-                            add_rule(entry, lambda state: Rules.can_fst_ice(state, self.player), "and")
-                        else:
-                            add_rule(entry, lambda state, i=item: state.has(i, self.player), "and")
-                if region.name in self.ghost_affected_regions.keys() and location != "Catch Grimmly - Gold":
-                    # if fire, require water
-                    if self.ghost_affected_regions[region.name] == "Fire":
-                        add_rule(entry, lambda state: Rules.can_fst_water(state, self.player), "and")
-                    # if water, require ice
-                    elif self.ghost_affected_regions[region.name] == "Water":
-                        add_rule(entry, lambda state: Rules.can_fst_ice(state, self.player), "and")
-                    # if ice, require fire
-                    elif self.ghost_affected_regions[region.name] == "Ice":
-                        add_rule(entry, lambda state: Rules.can_fst_fire(state, self.player), "and")
-                    else:
-                        pass
+                set_element_rules(self, entry, True)
                 region.locations.append(entry)
         if self.options.lightsanity:
             for location, data in LIGHT_LOCATION_TABLE.items():
