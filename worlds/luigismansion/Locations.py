@@ -1715,6 +1715,18 @@ WDYM_LOCATION_TABLE ={
                                                update_ram_addr=[LMRamData(in_game_room_id=3)], map_id=[6], require_poltergust=False),
     "Left Gallery Dresser": LMLocationData("Gallery", 937, "Furniture", 5, [],
                                                update_ram_addr=[LMRamData(in_game_room_id=3)], map_id=[6], require_poltergust=False),
+    "Basement Stairwell Wall Rails": LMLocationData("Basement Stairwell", 938, "Furniture", 61, [],
+                                           update_ram_addr=[LMRamData(in_game_room_id=67)]),
+    "Pipe Room Metal Rail": LMLocationData("Pipe Room", 939, "Furniture", 69, ["Ice Element Medal"],
+                                               update_ram_addr=[LMRamData(in_game_room_id=68)]),
+    "Fortune Teller Canopy": LMLocationData("Fortune-Teller's Room", 940, "Furniture", 118, [],
+                                               update_ram_addr=[LMRamData(in_game_room_id=3)]),
+    "Hidden Room Upper Chandelier": LMLocationData("Hidden Room", 942, "Furniture", 303, [],
+                                               update_ram_addr=[LMRamData(in_game_room_id=1)]),
+    # "2F Bathroom Ceiling Light": LMLocationData("2F Bathroom", 943, "Furniture", 437, [],
+    #                                                update_ram_addr=[LMRamData(in_game_room_id=48)]),
+    "Telephone Room Central A Frame": LMLocationData("Telephone Room", 944, "Furniture", 698, [],
+                                                update_ram_addr=[LMRamData(in_game_room_id=53)]),
 }
 
 

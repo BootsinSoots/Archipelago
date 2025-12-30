@@ -1042,14 +1042,18 @@ class RandomizeJMPTables:
             map_two_furniture.update_jmp_header_name_value(furniture_entry, "item_table",
                 filtered_item_appear.index(filtered_item_appear[0]))
 
+            # if item_data["loc_enum"] in [229]:
+            #     map_two_furniture.update_jmp_header_name_value(furniture_entry, "move", 0)
+            #     map_two_furniture.update_jmp_header_name_value(furniture_entry, "move_level", 1)
+
             # Adjust move types for WDYM furniture items. Trees require water, obviously
             if wdym_enabled:
                 if item_data["loc_enum"] in [184, 185, 138, 139, 140, 141]:
                     map_two_furniture.update_jmp_header_name_value(furniture_entry, "move", 34)
-                elif item_data["loc_enum"] in [9, 23, 314, 538, 539, 716]:
+                elif item_data["loc_enum"] in [9, 61, 69, 118, 303, 437, 23, 314, 538, 539]:
                     map_two_furniture.update_jmp_header_name_value(furniture_entry, "move", 0)
                     map_two_furniture.update_jmp_header_name_value(furniture_entry, "move_level", 1)
-                elif item_data["loc_enum"] in [628, 629, 683]:
+                elif item_data["loc_enum"] in [628, 629, 683, 698, 716]:
                     map_two_furniture.update_jmp_header_name_value(furniture_entry, "move", 0)
                     map_two_furniture.update_jmp_header_name_value(furniture_entry, "move_level", 1)
                     curr_y_offset: int = int(map_two_furniture.get_jmp_header_name_value(
