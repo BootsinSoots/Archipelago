@@ -86,8 +86,6 @@ class LMGameUSAArc:
         self._client_logger.info("Updating all parameter files...")
         self._update_parameters()
         self._client_logger.info("Overwriting game_uza.szp with the new re-created file...")
-        # lm_gcm.delete_file(lm_gcm.files_by_path[self._arc_path])
-        # lm_gcm.add_new_file(self._arc_path, self.game_usa_arc)
         self.game_usa_arc.save_changes()
         self._client_logger.info("game_uza.szp Yay0 check...")
         self.lm_gcm.changed_files[self._arc_path] = Yay0.compress(self.game_usa_arc.data)
