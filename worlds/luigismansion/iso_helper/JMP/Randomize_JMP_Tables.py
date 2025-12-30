@@ -1046,8 +1046,10 @@ class RandomizeJMPTables:
                 map_two_furniture.update_jmp_header_name_value(furniture_entry, "move", 34)
             elif item_data["loc_enum"] in [9, 23, 314, 538, 539]:
                 map_two_furniture.update_jmp_header_name_value(furniture_entry, "move", 0)
+                map_two_furniture.update_jmp_header_name_value(furniture_entry, "move_level", 1)
             elif item_data["loc_enum"] in [628, 629, 683]:
                 map_two_furniture.update_jmp_header_name_value(furniture_entry, "move", 0)
+                map_two_furniture.update_jmp_header_name_value(furniture_entry, "move_level", 1)
                 curr_y_offset: int = int(map_two_furniture.get_jmp_header_name_value(
                     map_two_furniture.data_entries[item_data["loc_enum"]], "item_offset_y"))
                 map_two_furniture.update_jmp_header_name_value(map_two_furniture.data_entries[item_data["loc_enum"]],
