@@ -1,4 +1,3 @@
-import copy
 from dataclasses import dataclass
 
 from Options import Toggle, Range, PerGameCommonOptions, Choice, StartInventoryPool, DeathLinkMixin, OptionSet, \
@@ -278,6 +277,15 @@ class Portrification(Toggle):
     display_name = "Portrification"
     internal_name = "portrification"
 
+class SilverPortrait(Toggle):
+    """Adds locations on getting a Silver border for catching a portrait ghost"""
+    display_name = "Silver Border Portrait Ghosts"
+    internal_name = "silver_ghosts"
+
+class GoldPortrait(Toggle):
+    """Adds locations on getting a Gold border for catching a portrait ghost"""
+    display_name = "Gold Border Portrait Ghosts"
+    internal_name = "gold_ghosts"
 
 class Enemizer(Choice):
     """
@@ -656,6 +664,8 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     furnisanity: Furnisanity
     boosanity: Boosanity
     portrification: Portrification
+    silver_ghosts: SilverPortrait
+    gold_ghosts: GoldPortrait
     lightsanity: Lightsanity
     walksanity: Walksanity
     speedy_spirits: SpeedySpirits

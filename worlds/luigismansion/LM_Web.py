@@ -15,6 +15,8 @@ class LMWeb(WebWorld):
             LuigiOptions.GoldMice,
             LuigiOptions.Boosanity,
             LuigiOptions.Portrification,
+            LuigiOptions.SilverPortrait,
+            LuigiOptions.GoldPortrait,
             LuigiOptions.SpeedySpirits,
             LuigiOptions.Lightsanity,
             LuigiOptions.Walksanity,
