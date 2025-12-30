@@ -979,6 +979,7 @@ class RandomizeJMPTables:
         """Updates the items that will appear out of the relevant furniture."""
         self.lm_rando.client_logger.info("Now updating all furniture changes for map2.")
         extra_boo_spots: bool = bool(self.lm_rando.output_data["Options"]["extra_boo_spots"])
+        wdym_enabled: bool = bool(self.lm_rando.output_data["Options"]["WDYM_checks"])
 
         map_two_furniture: JMP = self.lm_rando.map_files["map2"].jmp_files["furnitureinfo"]
         map_two_item_appear: JMP = self.lm_rando.map_files["map2"].jmp_files["itemappeartable"]
@@ -1042,18 +1043,19 @@ class RandomizeJMPTables:
                 filtered_item_appear.index(filtered_item_appear[0]))
 
             # Adjust move types for WDYM furniture items. Trees require water, obviously
-            if item_data["loc_enum"] in [184, 185, 138, 139, 140, 141]:
-                map_two_furniture.update_jmp_header_name_value(furniture_entry, "move", 34)
-            elif item_data["loc_enum"] in [9, 23, 314, 538, 539, 716]:
-                map_two_furniture.update_jmp_header_name_value(furniture_entry, "move", 0)
-                map_two_furniture.update_jmp_header_name_value(furniture_entry, "move_level", 1)
-            elif item_data["loc_enum"] in [628, 629, 683]:
-                map_two_furniture.update_jmp_header_name_value(furniture_entry, "move", 0)
-                map_two_furniture.update_jmp_header_name_value(furniture_entry, "move_level", 1)
-                curr_y_offset: int = int(map_two_furniture.get_jmp_header_name_value(
-                    map_two_furniture.data_entries[item_data["loc_enum"]], "item_offset_y"))
-                map_two_furniture.update_jmp_header_name_value(map_two_furniture.data_entries[item_data["loc_enum"]],
-                    "item_offset_y", curr_y_offset + 75)
+            if wdym_enabled:
+                if item_data["loc_enum"] in [184, 185, 138, 139, 140, 141]:
+                    map_two_furniture.update_jmp_header_name_value(furniture_entry, "move", 34)
+                elif item_data["loc_enum"] in [9, 23, 314, 538, 539, 716]:
+                    map_two_furniture.update_jmp_header_name_value(furniture_entry, "move", 0)
+                    map_two_furniture.update_jmp_header_name_value(furniture_entry, "move_level", 1)
+                elif item_data["loc_enum"] in [628, 629, 683]:
+                    map_two_furniture.update_jmp_header_name_value(furniture_entry, "move", 0)
+                    map_two_furniture.update_jmp_header_name_value(furniture_entry, "move_level", 1)
+                    curr_y_offset: int = int(map_two_furniture.get_jmp_header_name_value(
+                        map_two_furniture.data_entries[item_data["loc_enum"]], "item_offset_y"))
+                    map_two_furniture.update_jmp_header_name_value(map_two_furniture.data_entries[item_data["loc_enum"]],
+                        "item_offset_y", curr_y_offset + 75)
 
             # TODO update using ALL items table instead
             if any((key, val) for (key, val) in filler_items.items() if
