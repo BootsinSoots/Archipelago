@@ -1727,6 +1727,12 @@ WDYM_LOCATION_TABLE ={
     #                                                update_ram_addr=[LMRamData(in_game_room_id=48)]),
     "Telephone Room Central A Frame": LMLocationData("Telephone Room", 944, "Furniture", 698, [],
                                                 update_ram_addr=[LMRamData(in_game_room_id=53)]),
+    "Kitchen 4th wall painting near Table": LMLocationData("Kitchen", 945, "Furniture", 321, [],
+        update_ram_addr=[LMRamData(in_game_room_id=7)]),
+    "Kitchen 4th wall painting across from Sink": LMLocationData("Kitchen", 946, "Furniture", 322, [],
+        update_ram_addr=[LMRamData(in_game_room_id=7)]),
+    "Kitchen 4th wall painting near Dining Room Door": LMLocationData("Kitchen", 947, "Furniture", 323, [],
+        update_ram_addr=[LMRamData(in_game_room_id=7)])
 }
 
 
