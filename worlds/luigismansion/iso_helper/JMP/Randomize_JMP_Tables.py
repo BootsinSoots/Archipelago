@@ -1049,8 +1049,12 @@ class RandomizeJMPTables:
             # Adjust move types for WDYM furniture items. Trees require water, obviously
             if wdym_enabled:
                 if item_data["loc_enum"] in [184, 185, 138, 139, 140, 141]:
+                    if item_data["loc_enum"] == 141:
+                        update_jmp_value(map_two_furniture, furniture_entry, "pos_x", -2260.000000)
+                        update_jmp_value(map_two_furniture, furniture_entry, "pos_y", 10.000000)
+                        update_jmp_value(map_two_furniture, furniture_entry, "pos_z", -5950.000000)
                     map_two_furniture.update_jmp_header_name_value(furniture_entry, "move", 34)
-                elif item_data["loc_enum"] in [9, 61, 69, 118, 303, 437, 23, 314, 538, 539]:
+                elif item_data["loc_enum"] in [9, 61, 69, 118, 303, 321, 322, 323, 23, 314, 538, 539]:
                     map_two_furniture.update_jmp_header_name_value(furniture_entry, "move", 0)
                     map_two_furniture.update_jmp_header_name_value(furniture_entry, "move_level", 1)
                 elif item_data["loc_enum"] in [628, 629, 683, 698, 716]:
