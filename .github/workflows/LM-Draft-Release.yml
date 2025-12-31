@@ -16,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "~3.11.9"
+          python-version: "3.11"
           cache: pip
       - name: Clear pip cache 3.11
         run: pip cache purge
@@ -35,7 +35,7 @@ jobs:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v5
       with:
-        python-version: "~3.12.10"
+        python-version: "3.12"
         cache: pip
     - name: Clear pip cache 3.12
       run: pip cache purge
@@ -54,7 +54,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "~3.13.11"
+          python-version: "3.13"
           cache: pip
       - name: Clear pip cache 3.13
         run: pip cache purge
@@ -73,7 +73,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "~3.11.9"
+          python-version: "3.11"
           cache: pip
       - name: Clear pip cache 3.11
         run: pip cache purge
@@ -92,7 +92,7 @@ jobs:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v5
       with:
-        python-version: "~3.12.10"
+        python-version: "3.12"
         cache: pip
     - name: Clear pip cache 3.12
       run: pip cache purge
@@ -111,7 +111,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "~3.13.11"
+          python-version: "3.13"
           cache: pip
       - name: Clear pip cache 3.13
         run: pip cache purge
@@ -131,7 +131,7 @@ jobs:
     - uses: actions/checkout@v4
     - uses: actions/setup-python@v5
       with:
-        python-version: "~3.12.10"
+        python-version: "3.12"
         cache: pip
     - name: Fuzzer-Check-3-yml
       uses: Eijebong/ap-actions/fuzz@main
@@ -159,7 +159,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "~3.12.10"
+          python-version: "3.12"
           cache: pip
       - name: Clear pip cache Build-AP
         run: pip cache purge
