@@ -95,7 +95,6 @@ class LMWorld(World):
         return slot_data  # Tell UT that we have logic to fix
 
     def _set_optional_locations(self):
-
         # Set the flags for progression location by checking player's settings
         if self.options.WDYM_checks:
             for location, data in WDYM_LOCATION_TABLE.items():
@@ -130,7 +129,7 @@ class LMWorld(World):
                     if not loc_data.require_poltergust:
                         LOCATION_DICT.update({name: loc_data})
 
-            for group in self.options.furnisanity.value:
+            for group in sorted(self.options.furnisanity.value):
                 match group:
                     case "Ceiling":
                         LOCATION_DICT = {
