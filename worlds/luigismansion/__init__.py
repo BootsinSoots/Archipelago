@@ -1,28 +1,27 @@
 # Python related Imports
-import math, os, threading
+import math, os, threading, copy
 from dataclasses import fields
 from typing import ClassVar
 
 # AP Related Imports
 import Options
-from BaseClasses import Tutorial, ItemClassification
+from BaseClasses import ItemClassification
 from Utils import visualize_regions, local_path
-from worlds.AutoWorld import WebWorld, World
+from worlds.AutoWorld import World
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess, icon_paths
 
 # Relative Imports
-from .Helper_Functions import RANDOMIZER_NAME
 from .Items import *
+from .LM_Web import LMWeb
 from .Locations import *
 from .LuigiOptions import *
 from .Hints import get_hints_by_option, ALWAYS_HINT, PORTRAIT_HINTS
-from .Presets import lm_options_presets
 from .Regions import *
 from .Rules import *
 from .Rules import set_element_rules
 from .iso_helper.LM_Rom import LMPlayerContainer
 from .client.luigismansion_settings import LuigisMansionSettings
-from .client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME
+from .client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME, RANDOMIZER_NAME
 
 if TYPE_CHECKING:
     from NetUtils import MultiData
@@ -36,110 +35,6 @@ components.append(
     Component("LM Client", func=run_client, component_type=Type.CLIENT,
         file_identifier=SuffixIdentifier(".aplm"), icon="archiboolego"))
 icon_paths["archiboolego"] = f"ap:{__name__}/data/archiboolego.png"
-
-class LMWeb(WebWorld):
-    theme = "stone"
-    options_presets = lm_options_presets
-    option_groups = [
-        Options.OptionGroup("Extra Locations", [
-            LuigiOptions.Furnisanity,
-            LuigiOptions.Toadsanity,
-            LuigiOptions.GoldMice,
-            LuigiOptions.Boosanity,
-            LuigiOptions.Portrification,
-            LuigiOptions.SpeedySpirits,
-            LuigiOptions.Lightsanity,
-            LuigiOptions.Walksanity,
-            LuigiOptions.Grassanity,
-            LuigiOptions.WhatDoYouMean,
-        ]),
-        Options.OptionGroup("Access Options", [
-            LuigiOptions.RankRequirement,
-            LuigiOptions.GameMode,
-            LuigiOptions.VacuumStart,
-            LuigiOptions.MarioItems,
-            LuigiOptions.BooGates,
-            # LuigiOptions.WashroomBooCount,
-            LuigiOptions.BalconyBooCount,
-            LuigiOptions.FinalBooCount,
-            LuigiOptions.Enemizer,
-            LuigiOptions.DoorRando,
-            LuigiOptions.RandomSpawn,
-            LuigiOptions.EarlyFirstKey,
-        ]),
-        Options.OptionGroup("QOL Changes", [
-            LuigiOptions.LuigiWalkSpeed,
-            LuigiOptions.LuigiMaxHealth,
-            LuigiOptions.LuigiFearAnim,
-            LuigiOptions.PickupAnim,
-            LuigiOptions.ShowSelfReceivedItems,
-            Options.DeathLink,
-            LuigiOptions.TrapLink,
-            LuigiOptions.TrapLinkClientMsgs,
-            LuigiOptions.EnergyLink,
-            LuigiOptions.RingLink,
-            LuigiOptions.RingLinkClientMsgs,
-            LuigiOptions.BetterVacuum,
-            LuigiOptions.StartWithBooRadar,
-            LuigiOptions.StartHiddenMansion,
-            LuigiOptions.HintDistribution,
-            LuigiOptions.PortraitHints,
-            LuigiOptions.SendHints,
-        ]),
-        Options.OptionGroup("Enemy Stats", [
-            LuigiOptions.KingBooHealth,
-            LuigiOptions.BoolossusDifficulty,
-            LuigiOptions.BooHealthOption,
-            LuigiOptions.BooHealthValue,
-            LuigiOptions.BooSpeed,
-            LuigiOptions.BooEscapeTime,
-            LuigiOptions.BooAnger,
-            LuigiOptions.ExtraBooSpots,
-        ]),
-        Options.OptionGroup("Cosmetics", [
-            LuigiOptions.RandomMusic,
-            LuigiOptions.DoorModelRando,
-            LuigiOptions.ChestTypes,
-            LuigiOptions.TrapChestType,
-            LuigiOptions.Spookiness,
-            LuigiOptions.CallMario,
-        ]),
-        Options.OptionGroup("Filler Weights", [
-            LuigiOptions.FillerWeights,
-            LuigiOptions.TrapPercentage,
-            LuigiOptions.TrapWeights,
-            LuigiOptions.BundleWeight,
-            LuigiOptions.CoinWeight,
-            LuigiOptions.BillWeight,
-            LuigiOptions.BarsWeight,
-            LuigiOptions.GemsWeight,
-            LuigiOptions.PoisonTrapWeight,
-            LuigiOptions.BombWeight,
-            LuigiOptions.IceTrapWeight,
-            LuigiOptions.BananaTrapWeight,
-            LuigiOptions.PossTrapWeight,
-            LuigiOptions.BonkTrapWeight,
-            LuigiOptions.GhostTrapWeight,
-            LuigiOptions.FearWeight,
-            LuigiOptions.SpookyWeight,
-            LuigiOptions.SquashWeight,
-            LuigiOptions.VacTrapWeight,
-            LuigiOptions.NothingWeight,
-            LuigiOptions.HeartWeight,
-        ]),
-    ]
-
-    tutorials = [
-        Tutorial(
-            "Multiworld Setup Guide",
-            "A guide to setting up the Luigi's Mansion randomizer connected to an Archipelago Multiworld",
-            "English",
-            "setup_en.md",
-            "setup/en",
-            ["BootsinSoots", "SomeJakeGuy"],
-        )
-    ]
-
 
 class LMWorld(World):
     """
@@ -162,34 +57,37 @@ class LMWorld(World):
     }
     settings: ClassVar[LuigisMansionSettings]
     item_name_groups = get_item_names_per_category()
-    required_client_version = (0, 6, 2)
+    required_client_version = (0, 6, 5)
     web = LMWeb()
 
     using_ut: bool # so we can check if we're using UT only once
     ut_can_gen_without_yaml = True  # class var that tells it to ignore the player yaml
 
     # Adding these to be able to grab from other classes, such as test classes
-    ghost_affected_regions: dict[str, str] = {}
-    open_doors: dict[int, int] = {}
-    hints: dict[str, dict[str, str]] = {}
+    ghost_affected_regions: dict[str, str]
+    open_doors: dict[int, int]
+    hints: dict[str, dict[str, str]]
+    boo_spheres: dict[str, int]
 
     # Adding all filler dict to be used later on
-    all_filler_dict: dict[str, int] = {}
-    trap_filler_dict: dict[str, int] = {}
-    other_filler_dict: dict[str, int] = {}
+    all_filler_dict: dict[str, int]
+    trap_filler_dict: dict[str, int]
+    other_filler_dict: dict[str, int]
 
     def __init__(self, *args, **kwargs):
         super(LMWorld, self).__init__(*args, **kwargs)
-        self.ghost_affected_regions: dict[str, str] = copy.deepcopy({key: val.element_type for (key, val) in
-            REGION_LIST.items() if val.element_type})
+        self.ghost_affected_regions = copy.deepcopy({key: val.element_type for (key, val) in REGION_LIST.items() if val.element_type})
         self.open_doors: dict[int, int] = copy.deepcopy(vanilla_door_state)
         self.origin_region_name: str = "Foyer"
         self.finished_hints = threading.Event()
         self.finished_boo_scaling = threading.Event()
-        self.boo_spheres: dict[str, int] = {}
-        self.hints: dict[str, dict[str, str]] = {}
+        self.boo_spheres = {}
+        self.hints = {}
         self.spawn_full_locked: bool = False
         self.local_early_key: str = ""
+        self.all_filler_dict = {}
+        self.trap_filler_dict = {}
+        self.other_filler_dict = {}
 
     @staticmethod
     def interpret_slot_data(slot_data):
@@ -197,7 +95,6 @@ class LMWorld(World):
         return slot_data  # Tell UT that we have logic to fix
 
     def _set_optional_locations(self):
-
         # Set the flags for progression location by checking player's settings
         if self.options.WDYM_checks:
             for location, data in WDYM_LOCATION_TABLE.items():
@@ -232,7 +129,7 @@ class LMWorld(World):
                     if not loc_data.require_poltergust:
                         LOCATION_DICT.update({name: loc_data})
 
-            for group in self.options.furnisanity.value:
+            for group in sorted(self.options.furnisanity.value):
                 match group:
                     case "Ceiling":
                         LOCATION_DICT = {
@@ -347,9 +244,33 @@ class LMWorld(World):
                              "and")
                 set_element_rules(self, entry, True)
                 region.locations.append(entry)
+        if self.options.silver_ghosts:
+            for location, data in SILVER_PORTRAIT_TABLE.items():
+                region = self.get_region(str(data.region))
+                entry = LMLocation(self.player, location, region, data)
+                if entry.code == 880 and self.open_doors.get(28) == 0:
+                    add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
+                if entry.code == 883:
+                    add_rule(entry,
+                             lambda state: state.has_group("Mario Item", self.player, self.options.mario_items.value),
+                             "and")
+                set_element_rules(self, entry, True)
+                region.locations.append(entry)
+        if self.options.gold_ghosts:
+            for location, data in GOLD_PORTRAIT_TABLE.items():
+                region = self.get_region(str(data.region))
+                entry = LMLocation(self.player, location, region, data)
+                if entry.code == 902 and self.open_doors.get(28) == 0:
+                    add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
+                if entry.code == 905:
+                    add_rule(entry,
+                             lambda state: state.has_group("Mario Item", self.player, self.options.mario_items.value),
+                             "and")
+                set_element_rules(self, entry, True)
+                region.locations.append(entry)
         if self.options.lightsanity:
             for location, data in LIGHT_LOCATION_TABLE.items():
-                region = self.get_region(data.region)
+                region = self.get_region(str(data.region))
                 entry = LMLocation(self.player, location, region, data)
                 if entry.code not in (771, 775, 776): # If not a room that turns on automatically
                     add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
@@ -371,7 +292,7 @@ class LMWorld(World):
                 region.locations.append(entry)
         if self.options.walksanity:
             for location, data in WALK_LOCATION_TABLE.items():
-                region = self.get_region(data.region)
+                region = self.get_region(str(data.region))
                 entry = LMLocation(self.player, location, region, data)
                 if data.require_poltergust:
                     add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
@@ -387,7 +308,7 @@ class LMWorld(World):
                 region.locations.append(entry)
         if self.options.boosanity:
             for location, data in ROOM_BOO_LOCATION_TABLE.items():
-                region: Region = self.get_region(data.region)
+                region: Region = self.get_region(str(data.region))
                 entry: LMLocation = LMLocation(self.player, location, region, data)
                 add_rule(entry, lambda state: state.has("Boo Radar", self.player), "and")
                 add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
@@ -406,14 +327,14 @@ class LMWorld(World):
                 set_element_rules(self, entry, True)
                 region.locations.append(entry)
             for location, data in BOOLOSSUS_LOCATION_TABLE.items():
-                region = self.get_region(data.region)
+                region = self.get_region(str(data.region))
                 entry = LMLocation(self.player, location, region, data)
                 add_rule(entry, lambda state: state.has("Ice Element Medal", self.player), "and")
                 add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
                 region.locations.append(entry)
         else:
             for location, data in ROOM_BOO_LOCATION_TABLE.items():
-                region = self.get_region(data.region)
+                region = self.get_region(str(data.region))
                 entry = LMLocation(self.player, location, region, data)
                 entry.address = None
                 entry.place_locked_item(Item("Boo", ItemClassification.progression, None, self.player))
@@ -436,7 +357,7 @@ class LMWorld(World):
                 set_element_rules(self, entry, True)
                 region.locations.append(entry)
             for location, data in BOOLOSSUS_LOCATION_TABLE.items():
-                region = self.get_region(data.region)
+                region = self.get_region(str(data.region))
                 entry = LMLocation(self.player, location, region, data)
                 entry.address = None
                 entry.code = None
@@ -548,7 +469,7 @@ class LMWorld(World):
         spawn_doors = copy.deepcopy(REGION_LIST[self.origin_region_name].door_ids)
         if spawn_doors:
             for door in REGION_LIST[self.origin_region_name].door_ids:
-                if self.open_doors[door] == 1:
+                if self.open_doors[door] == 0:
                     spawn_doors.remove(door)
             if not spawn_doors:
                 self.spawn_full_locked: bool = True
@@ -811,49 +732,44 @@ class LMWorld(World):
             self.finished_boo_scaling.wait()
 
         # Output which item has been placed at each location
-        locations = list(lmloc for lmloc in self.get_locations() if isinstance(lmloc, LMLocation))
-        for location in locations:
-            if location.address is not None or (location.name in ROOM_BOO_LOCATION_TABLE.keys()):
-                if location.item:
-                    lm_item: "LMItem" = location.item #TODO fix this type hint warning.
-                    itemid = 0
-                    if lm_item.player == self.player:
-                        if location.address:
-                            if lm_item.type == "Door Key":
-                                itemid = lm_item.doorid
-                        roomid = REGION_LIST[location.parent_region.name].room_id
-                        item_info = {
-                            "player": lm_item.player,
-                            "name": lm_item.name,
-                            "game": lm_item.game,
-                            "classification": lm_item.classification.name,
-                            "door_id": itemid,
-                            "room_no": roomid,
-                            "type": location.type,
-                            "loc_enum": location.jmpentry
-                        }
-                        if self.options.boo_health_option.value == 2 and location.name in ROOM_BOO_LOCATION_TABLE.keys():
-                            item_info.update({"boo_sphere": self.boo_spheres[location.name]})
+        for location in list(lmloc for lmloc in self.get_locations() if isinstance(lmloc, LMLocation)):
+            if location.address is None and not (location.name in ROOM_BOO_LOCATION_TABLE.keys()):
+                continue
 
-                        output_data["Locations"][location.name] = item_info
-                    else:
-                        roomid = REGION_LIST[location.parent_region.name].room_id
-                        item_info = {
-                            "player": lm_item.player,
-                            "name": lm_item.name,
-                            "game": lm_item.game,
-                            "classification": lm_item.classification.name,
-                            "door_id": itemid,
-                            "room_no": roomid,
-                            "type": location.type,
-                            "loc_enum": location.jmpentry,
-                        }
-                        output_data["Locations"][location.name] = item_info
-                        if self.options.boo_health_option.value == 2 and location.name in ROOM_BOO_LOCATION_TABLE.keys():
-                                item_info.update({"boo_sphere": self.boo_spheres[location.name]})
-                else:
-                    item_info = {"name": "Nothing", "game": self.game, "classification": "filler"}
-                output_data["Locations"][location.name] = item_info
+            if location.item.code is None:
+                item_info = {
+                    "player": location.item.player,
+                    "name": location.item.name,
+                    "game": self.game,
+                    "classification": location.item.classification,
+                    "door_id": 0, # Will always be 0 as an event item
+                    "room_no": 0, # Will always be 0 as an event item
+                    "type": location.type,
+                    "loc_enum": location.jmpentry, # Will always be 0 as an event item
+                }
+            elif location.item:
+                lm_item: "LMItem" = self.create_item(location.item.name)
+                doorid = lm_item.doorid if (lm_item.type == "Door Key" and location.address and lm_item.player == self.player) else 0
+                roomid = REGION_LIST[location.parent_region.name].room_id
+                item_info = {
+                    "player": lm_item.player,
+                    "name": lm_item.name,
+                    "game": lm_item.game,
+                    "classification": lm_item.classification.name,
+                    "door_id": doorid,  # There is no door id for another player's game
+                    "room_no": roomid,
+                    "type": location.type,
+                    "loc_enum": location.jmpentry,
+                }
+            else:
+                item_info = {"name": "Nothing", "game": self.game, "classification": "filler"}
+
+            if self.options.boo_health_option.value == 2 and location.name in ROOM_BOO_LOCATION_TABLE.keys():
+                item_info.update({"boo_sphere": self.boo_spheres[location.name]})
+
+            if not location.type in output_data["Locations"].keys():
+                output_data["Locations"][location.type] = {}
+            output_data["Locations"][location.type][location.name] = item_info
 
         # Outputs the plando details to our expected output file
         # Create the output path based on the current player + expected patch file ending.

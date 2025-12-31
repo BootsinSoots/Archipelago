@@ -15,7 +15,7 @@
 <WAIT>(5)
 <ACTOR>"demo_hakase"<ACT>"WAIT01"
 <ACTOR>"demo_luigi"<ACT>"DM_THINK_01"
-<CHOICE>"back"(1)"urayasiki"(2)"gallery"(3)"minigame"(8)<LISTEND>
+<CHOICE>"back"(1)"urayasiki"(2)"gallery"(3)"minigame"(4)<LISTEND>
 --------------------------
 <CASE>"nextmenu"
 <ACTOR>"demo_hakase"<ACT>"TALK06"

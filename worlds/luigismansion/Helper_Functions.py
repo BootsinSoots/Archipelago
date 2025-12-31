@@ -1,12 +1,15 @@
+from importlib.resources.abc import Traversable
 from typing import NamedTuple, Optional
-from pathlib import Path
+import importlib.resources as resources
 
-from gclib.rarc import RARCFileEntry, RARC
+from gclib.rarc import RARCFileEntry, RARC, RARCNode
 from gclib.gcm import GCM
 
+PROJECT_ROOT: Traversable = resources.files(__name__)
 
-PROJECT_ROOT: Path = Path(__file__).resolve().parent
-RANDOMIZER_NAME = "Luigi's Mansion"
+IGNORE_RARC_NAMES: list[str] = [".", ".."]
+RARC_FILE_STR_ENCODING: str = "shift_jis"
+EVENT_FILE_STR_ENCODING: str = "utf-8"
 
 class LMRamData(NamedTuple):
     ram_addr: Optional[int] = None
@@ -70,14 +73,17 @@ class StringByteFunction:
     def byte_string_strip_null_terminator(bytes_input: bytes):
         return bytes_input.decode().strip("\0")
 
+
 def find_rarc_file_entry(rarc_file: RARC, directory_name: str, name_of_file: str) -> RARCFileEntry | None:
+    """Gets a file/if its from a specific directory."""
     for file_entry in rarc_file.file_entries:
       if file_entry.name == name_of_file and file_entry.parent_node.name == directory_name:
         return file_entry
     return None
 
-# Get an ARC / RARC / SZP file from within the ISO / ROM
+
 def get_arc(gcm: GCM, arc_path) -> RARC:
+    """Get an ARC / RARC / SZP file from within the ISO / ROM"""
     arc_path = arc_path.replace("\\", "/")
     if arc_path in gcm.changed_files:
         arc = RARC(gcm.get_changed_file_data(arc_path))
@@ -85,3 +91,37 @@ def get_arc(gcm: GCM, arc_path) -> RARC:
         arc = RARC(gcm.read_file_data(arc_path))  # Automatically decompresses Yay0
     arc.read()
     return arc
+
+
+def read_custom_file(file_type: str, file_name: str) -> str:
+    """
+    Reads the provided file name from its provided sub_folder type and loads it as a txt file.
+
+    :param file_type: Indicates which sub-folder in data to retrieve the file.
+    :param file_name: Reads the provided file name in the sub-folder and decodes it via UTF-8
+    """
+    file_data = None
+
+    match file_type:
+        case "csv":
+            file_data = (PROJECT_ROOT.joinpath('data', "custom_csvs", file_name)
+                .read_text(encoding='utf-8').replace("\n", "\r\n"))
+        case "txt":
+            file_data = (PROJECT_ROOT.joinpath('data', "custom_events", file_name)
+                .read_text(encoding='utf-8'))
+        case _:
+            raise Exception(f"Unhandled custom type provided: {file_type}")
+
+    return file_data
+
+
+def is_rarc_node_empty(rarc_node: RARCNode, files_to_be_removed: list[str]=None) -> bool:
+    assert rarc_node.name not in IGNORE_RARC_NAMES
+    assert rarc_node is not None
+
+    # If there are no files in this node, this node is empty
+    if len(rarc_node.files) == 0:
+        return True
+
+    future_removed_files: list[str] = files_to_be_removed if not None else []
+    return set([nfile.name for nfile in rarc_node.files if nfile.name not in future_removed_files]).issubset(set(IGNORE_RARC_NAMES))

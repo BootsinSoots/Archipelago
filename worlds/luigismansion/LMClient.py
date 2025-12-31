@@ -803,7 +803,7 @@ class LMContext(BaseContext):
                     if not self.dolphin_status == CONNECTION_CONNECTED_STATUS:
                         # If the Game ID is a standard one, the randomized ISO has not been loaded - so disconnect
                         game_id = read_string(0x80000000, 6)
-                        if game_id in ["GLME01", "GLMJ01", "GLMP01"]:
+                        if game_id in LM_GC_IDs:
                             logger.info(CONNECTION_REFUSED_STATUS)
                             self.dolphin_status = CONNECTION_REFUSED_STATUS
                             dme.un_hook()

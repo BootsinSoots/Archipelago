@@ -131,6 +131,7 @@ REGION_LIST: dict[str, LMRegionInfo] = {
     "Gallery": LMRegionInfo(6, 1, 0, 0, [])
 }
 
+TOAD_SPAWN_LIST: list[str] = ["Foyer", "Courtyard", "Wardrobe Balcony", "1F Washroom"]
 
 vanilla_door_state = {
         34: 0,

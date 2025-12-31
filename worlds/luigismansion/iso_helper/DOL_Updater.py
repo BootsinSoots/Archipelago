@@ -2,19 +2,21 @@ import struct
 from typing import TYPE_CHECKING
 
 from gclib.dol import DOL, DOLSection
+from gclib.fs_helpers import write_magic_str
 
 from ..Regions import REGION_LIST, LMRegionInfo
-from ..Helper_Functions import StringByteFunction as sbf, PROJECT_ROOT
+from ..Helper_Functions import PROJECT_ROOT
 
 if TYPE_CHECKING:
-    from ..LM_ISO_Modifier import LuigisMansionRandomizer
+    from .LM_Randomize_ISO import LuigisMansionRandomizer
 
 CUSTOM_CODE_OFFSET_START = 0x39FA20
 LM_PLAYER_NAME_BYTE_LENGTH = 64
 
-# Updates the main DOL file, which is the main file used for GC and Wii games. This section includes some custom code
-# inside the DOL file itself.
+
 def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
+    """ Updates the main DOL file, which is the main file used for GC and Wii games. This section includes some
+    custom code inside the DOL file itself."""
     # Define all variables from the output data
     start_inv: list[str] = list(lm_gen.output_data["Options"]["start_inventory"])
     walk_speed: int = int(lm_gen.output_data["Options"]["walk_speed"])
@@ -28,7 +30,7 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
 
     # Find the main DOL file and read it.
     lm_dol = DOL()
-    dol_data = lm_gen.gcm.read_file_data("sys/main.dol")
+    dol_data = lm_gen.lm_gcm.read_file_data("sys/main.dol")
     lm_dol.read(dol_data)
 
     # Walk Speed
@@ -38,11 +40,7 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
 
     # Vacuum Speed
     vac_count = len(list("Vacuum Upgrade" in key for key in start_inv))
-    match vac_count:
-        case x if vac_count >= 1:
-            vac_speed = "3800000F"
-        case _:
-            vac_speed = "800D0160"
+    vac_speed = "3800000F" if vac_count >= 1 else "800D0160"
 
     lm_dol.data.seek(0x7EA28)
     lm_dol.data.write(bytes.fromhex(vac_speed))
@@ -102,8 +100,7 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
 
     # Store Player name
     lm_player_name = str(slot_name).strip()
-    lm_dol.data.seek(0x324740)
-    lm_dol.data.write(sbf.string_to_bytes_with_limit(lm_player_name, LM_PLAYER_NAME_BYTE_LENGTH))
+    write_magic_str(lm_dol.data, 0x324740, lm_player_name, LM_PLAYER_NAME_BYTE_LENGTH)
 
     # Change King Boo's Health
     lm_dol.data.seek(0x399228)
@@ -120,11 +117,11 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
     lm_dol.data.write(blank_data)
 
     # Read in all the other custom DOL changes and update their values to the new value as expected.
-    custom_dol_code = PROJECT_ROOT.joinpath("LM_custom_code.lmco").read_bytes()
+    custom_dol_code = PROJECT_ROOT.joinpath("iso_helper").joinpath("LM_custom_code.lmco").read_bytes()
     lm_dol.data.seek(CUSTOM_CODE_OFFSET_START)
     lm_dol.data.write(custom_dol_code)
 
-    dol_csv_offsets = PROJECT_ROOT.joinpath("dol_diff.csv").read_text(encoding="utf-8").splitlines()
+    dol_csv_offsets = PROJECT_ROOT.joinpath("iso_helper").joinpath("dol_diff.csv").read_text(encoding="utf-8").splitlines()
     for csv_line in dol_csv_offsets:
         dol_addr, dol_val, _ = csv_line.split(",")
         lm_dol.data.seek(int(dol_addr, 16))
@@ -153,4 +150,4 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
 
     # Save all changes to the DOL itself.
     lm_dol.save_changes()
-    lm_gen.gcm.changed_files["sys/main.dol"] = lm_dol.data
+    lm_gen.lm_gcm.changed_files["sys/main.dol"] = lm_dol.data
