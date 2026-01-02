@@ -56,7 +56,7 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
         lm_dol.data.seek(0x04DB50)
         lm_dol.data.write(bytes.fromhex("93C1FFF0"))
 
-        # Custom boo display counters hooks.
+        # Custom boo display counters.
         lm_dol.data.seek(0x04DBB0)
         lm_dol.data.write(bytes.fromhex("4848D469"))
         lm_dol.data.seek(0x04DC10)
@@ -191,3 +191,9 @@ def vanilla_game_changes(dol_data: DOL):
     dol_data.data.write(bytes.fromhex("60000000"))
     dol_data.data.seek(0x0ACEAC)
     dol_data.data.write(bytes.fromhex("60000000"))
+
+    # Disables some default behaviour for crawl trap
+    dol_data.data.seek(0x079E64)
+    dol_data.data.write(bytes.fromhex("60000000"))
+    dol_data.data.seek(0x0AC304)
+    dol_data.data.write(bytes.fromhex("807F07E8"))
