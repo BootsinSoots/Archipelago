@@ -11,7 +11,7 @@ class LMLocationData(NamedTuple):
     access: List[str] = []  # items required to access location, many special cases
     floor: int = 0
     locked_item: Optional[str] = None
-    remote_only: bool = None
+    remote_only: bool = False
     update_ram_addr: Optional[list[LMRamData]] = None
     require_poltergust: bool = True
     map_id: list[int] = [2]
