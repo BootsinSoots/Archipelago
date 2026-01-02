@@ -3,7 +3,7 @@ from io import BytesIO
 from math import ceil
 from typing import TYPE_CHECKING
 
-from gcbrickwork.JMP import JMP, JMPEntry, JMPValue
+from gcbrickwork.JMP import JMP, JMPEntry
 
 from .JMP_Entry_Helpers import (LOCATION_TO_INDEX, SPEEDY_OBSERVER_INDEX, SPEEDY_ENEMY_INDEX, CEILING_FURNITURE_LIST,
     GHOST_LIST, MEDIUM_HEIGHT_FURNITURE_LIST, apply_new_ghost, create_observer_entry, BOO_HIDING_SPOT_BANS,
@@ -167,8 +167,10 @@ class RandomizeJMPTables:
         # to have them disappear.
         bad_objects_to_remove: list[str] = ["eldoor07", "eldoor08", "eldoor09", "eldoor10"]
         map_two_obj: JMP = self.lm_rando.map_files["map2"].jmp_files["objinfo"]
+        
         obj_indexes_to_remove: list[int] = list(sorted([index for index, obj_entry in enumerate(map_two_obj.data_entries) if
             str(obj_entry["name"]) in bad_objects_to_remove], reverse=True))
+        
         for obj_idx in obj_indexes_to_remove:
             map_two_obj.delete_jmp_entry(map_two_obj.data_entries[obj_idx])
 
@@ -751,51 +753,51 @@ class RandomizeJMPTables:
         update_spawn_actors: list[str] = ["baby", "mother", "dboy", "dboy2"]
 
         # Removes useless cutscene objects and the vacuum in the Parlor under the closet.
-        map_two_characters.data_entries = [char_entry for char_entry in map_two_characters.data_entries if not
-            map_two_characters.get_jmp_header_name_value(char_entry, "name") in bad_actors_to_remove]
-
         # Also removes King Boo in the hallway, since his event was removed.
-        map_two_characters.data_entries = [char_entry for char_entry in map_two_characters.data_entries if
-            not (map_two_characters.get_jmp_header_name_value(char_entry, "name") == "dltelesa" and
-            int(map_two_characters.get_jmp_header_name_value(char_entry, "room_no")) == 68)]
+        character_indexes_to_remove: list[int] = sorted([index for index, char_entry in enumerate(map_two_characters.data_entries)
+             if str(char_entry["name"]) in bad_actors_to_remove or (str(char_entry["name"]) == "dltelesa" and
+            int(char_entry["room_no"]) == 68)], reverse=True)
+
+        for char_idx in character_indexes_to_remove:
+            map_two_characters.delete_jmp_entry(map_two_characters.data_entries[char_idx])
 
         for character_entry in map_two_characters.data_entries:
-            char_name: str = map_two_characters.get_jmp_header_name_value(character_entry, "name")
-            char_room_num: int = int(map_two_characters.get_jmp_header_name_value(character_entry, "room_no"))
+            char_name: str = str(character_entry["name"])
+            char_room_num: int = int(character_entry["room_no"])
             # Replace the mstar Observatory item with its randomized item.
             if char_name == "mstar":
                 shoot_moon_char: dict = self.lm_rando.output_data["Locations"]["Special"]["Observatory Shoot the Moon"]
-                map_two_characters.update_jmp_header_name_value(character_entry, "name", get_item_name(shoot_moon_char, self.lm_rando.slot))
-                map_two_characters.update_jmp_header_name_value(character_entry, "appear_flag", 50)
-                map_two_characters.update_jmp_header_name_value(character_entry, "invisible", 1)
-                map_two_characters.update_jmp_header_name_value(character_entry, "pos_y", 600.000000)
+                character_entry["name"] = get_item_name(shoot_moon_char, self.lm_rando.slot)
+                character_entry["appear_flag"] = 50
+                character_entry["invisible"] = 1
+                character_entry["pos_y"] = 600.000000
 
             # Allow Chauncey, Lydia, and the Twins to spawn as soon as a new game is created.
             elif char_name in update_spawn_actors:
-                map_two_characters.update_jmp_header_name_value(character_entry, "appear_flag", 0)
+                character_entry["appear_flag"] = 0
 
             # Fix a Nintendo mistake where the Cellar chest has a room ID of 0 instead of 63.
             elif char_name == "63_2":
-                map_two_characters.update_jmp_header_name_value(character_entry, "room_no", 63)
+                character_entry["room_no"] = 63
 
             # Remove Miss Petunia to never disappear, unless captured.
             elif char_name == "fat" and char_room_num == 45:
-                map_two_characters.update_jmp_header_name_value(character_entry, "disappear_flag", 0)
+                character_entry["disappear_flag"] = 0
 
             # Make Shivers / Butler not disappear by doing a different appear flag.
             elif char_name == "situji":
-                map_two_characters.update_jmp_header_name_value(character_entry, "appear_flag", 7)
+                character_entry["appear_flag"] = 7
 
             # Make Luggs stay gone if the light are on in the room
             elif char_name == "eater":
-                map_two_characters.update_jmp_header_name_value(character_entry, "disappear_flag", 31)
+                character_entry["disappear_flag"] = 31
 
             # Editing the starting room spawn coordinates (regardless of it random spawn is turned on).
             elif char_name == "luige" and char_room_num == 2:
-                map_two_characters.update_jmp_header_name_value(character_entry, "room_no", spawn_data.room_id)
-                map_two_characters.update_jmp_header_name_value(character_entry, "pos_x", spawn_data.pos_x)
-                map_two_characters.update_jmp_header_name_value(character_entry, "pos_y", spawn_data.pos_y)
-                map_two_characters.update_jmp_header_name_value(character_entry, "pos_z", spawn_data.pos_z)
+                character_entry["room_no"] = spawn_data.room_id
+                character_entry["pos_x"] = spawn_data.pos_x
+                character_entry["pos_y"] = spawn_data.pos_y
+                character_entry["pos_z"] = spawn_data.pos_z
 
 
     def _map_two_iyapoo_changes(self):
@@ -809,7 +811,7 @@ class RandomizeJMPTables:
         map_two_iyapoo: JMP = self.lm_rando.map_files["map2"].jmp_files["iyapootable"]
 
         for iyapoo_entry in map_two_iyapoo.data_entries:
-            iyapoo_name = map_two_iyapoo.get_jmp_header_name_value(iyapoo_entry, "name")
+            iyapoo_name = str(iyapoo_entry["name"])
             item_data: dict = {}
 
             if speedy_enabled and "iyapoo" in iyapoo_name:
@@ -903,12 +905,12 @@ class RandomizeJMPTables:
                     elif "Ruby" in item_data["name"]:
                         ruby_amount = item_amt
 
-            map_two_iyapoo.update_jmp_header_name_value(iyapoo_entry, "coin", coin_amount)
-            map_two_iyapoo.update_jmp_header_name_value(iyapoo_entry, "bill", bill_amount)
-            map_two_iyapoo.update_jmp_header_name_value(iyapoo_entry, "gold", gold_bar_amount)
-            map_two_iyapoo.update_jmp_header_name_value(iyapoo_entry, "sapphire", sapphire_amount)
-            map_two_iyapoo.update_jmp_header_name_value(iyapoo_entry, "emerald", emerald_amount)
-            map_two_iyapoo.update_jmp_header_name_value(iyapoo_entry, "ruby", ruby_amount)
+            iyapoo_entry["coin"] = coin_amount
+            iyapoo_entry["bill"] = bill_amount
+            iyapoo_entry["gold"] = gold_bar_amount
+            iyapoo_entry["sapphire"] = sapphire_amount
+            iyapoo_entry["emerald"] = emerald_amount
+            iyapoo_entry["ruby"] = ruby_amount
 
 
     def _map_two_treasure_changes(self):
@@ -919,8 +921,8 @@ class RandomizeJMPTables:
 
         for item_name, item_data in self.lm_rando.output_data["Locations"]["Chest"].items():
             for char_entry in map_two_characters.data_entries:
-                char_name: str = map_two_characters.get_jmp_header_name_value(char_entry, "name")
-                char_room: int = int(map_two_characters.get_jmp_header_name_value(char_entry, "room_no"))
+                char_name: str = str(char_entry["name"])
+                char_room: int = int(char_entry["room_no"])
                 # If the name is not a chest or the outside flower/nut
                 if not ("takara" in char_name or char_name == "nut"):
                     continue
@@ -930,22 +932,22 @@ class RandomizeJMPTables:
 
                 # Special Case: Move the Laundry room chest back from Butler door
                 if char_room == 5:
-                    map_two_characters.update_jmp_header_name_value(char_entry, "pos_z", -1100.000000)
+                    char_entry["pos_z"] = -1100.000000
 
                 # Special Case: Move 2F Bathroom chest back from wall
                 elif char_room == 45:
-                    map_two_characters.update_jmp_header_name_value(char_entry, "pos_x", -1900.000000)
-                    map_two_characters.update_jmp_header_name_value(char_entry, "pos_z", -4830.000000)
+                    char_entry["pos_x"] = -1900.000000
+                    char_entry["pos_z"] = -4830.000000
 
                 # Change chest appearance and size based of player cosmetic choices
                 chest_visual: str = get_item_chest_visual(self.lm_rando, item_data, char_name)
-                map_two_characters.update_jmp_header_name_value(char_entry, "name", chest_visual)
+                char_entry["name"] = chest_visual
 
                 treasure_entry: JMPEntry = map_two_treasure.data_entries[item_data["loc_enum"]]
 
                 # Setting all currencies to 0 value by default.
                 for currency_name in CURRENCIES:
-                    map_two_treasure.update_jmp_header_name_value(treasure_entry, currency_name, 0)
+                    treasure_entry[currency_name] = 0
 
                 # Don't give any items that are not from our game, leave those 0 / blank.
                 if int(item_data["player"]) == self.lm_rando.slot and item_data["name"] in ALL_ITEMS_TABLE.keys():
@@ -954,19 +956,18 @@ class RandomizeJMPTables:
                     # If it's a money item, set the currencies based on our defined bundles
                     if hasattr(lm_item_data, 'currencies'):
                         for currency_name, currency_amount in lm_item_data.currencies.items():
-                            map_two_treasure.update_jmp_header_name_value(treasure_entry, currency_name, currency_amount)
+                            treasure_entry[currency_name] = currency_amount
 
-                map_two_treasure.update_jmp_header_name_value(treasure_entry, "cdiamond", 0)
-                map_two_treasure.update_jmp_header_name_value(treasure_entry, "effect", 0)
-                map_two_treasure.update_jmp_header_name_value(treasure_entry, "camera", 0)
+                treasure_entry["cdiamond"] = 0
+                treasure_entry["effect"] = 0
+                treasure_entry["camera"] = 0
 
-                chest_size: int = int(map_two_treasure.get_jmp_header_name_value(treasure_entry, "size"))
-                chest_size = get_chest_size_from_item(self.lm_rando, item_data, chest_size)
-                map_two_treasure.update_jmp_header_name_value(treasure_entry, "size", chest_size)
+                chest_size: int = get_chest_size_from_item(self.lm_rando, item_data, treasure_entry["size"])
+                treasure_entry["size"] = chest_size
 
                 # Define the actor name to use from the Location in the generation output. Act differently if it's a key.
                 lm_item_name: str = get_item_name(item_data, self.lm_rando.slot)
-                map_two_treasure.update_jmp_header_name_value(treasure_entry, "other", lm_item_name)
+                treasure_entry["other"] = lm_item_name
 
 
     def _map_two_furniture_changes(self):
