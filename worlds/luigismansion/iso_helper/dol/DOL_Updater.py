@@ -4,11 +4,11 @@ from typing import TYPE_CHECKING
 from gclib.dol import DOL, DOLSection
 from gclib.fs_helpers import write_magic_str
 
-from ..Regions import REGION_LIST, LMRegionInfo
-from ..Helper_Functions import PROJECT_ROOT
+from ...Regions import REGION_LIST, LMRegionInfo
+from ...Helper_Functions import PROJECT_ROOT
 
 if TYPE_CHECKING:
-    from .LM_Randomize_ISO import LuigisMansionRandomizer
+    from ..LM_Randomize_ISO import LuigisMansionRandomizer
 
 CUSTOM_CODE_OFFSET_START = 0x39FA20
 LM_PLAYER_NAME_BYTE_LENGTH = 64
