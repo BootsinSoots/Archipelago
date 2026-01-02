@@ -86,7 +86,7 @@ class RandomizeJMPTables:
 
             # Replace the furnitureinfo entry to spawn an item from the "itemappeartable".
             # If the entry is supposed to be money, then generate a random amount of coins and/or bills from it.
-            filtered_item_appear: list[JMPValue] = [index for index, item_appear_entry in
+            filtered_item_appear: list[int] = [index for index, item_appear_entry in
                 enumerate(map_six_item_appear.data_entries) if str(item_appear_entry["item0"]) == actor_item_name]
             furniture_entry["item_table"] = filtered_item_appear.index(filtered_item_appear[len(filtered_item_appear) - 1])
 
@@ -156,9 +156,9 @@ class RandomizeJMPTables:
         for gen_entry in map_two_gen.data_entries:
             # Allows the Ring of Boos on the 3F Balcony to only appear when the Ice Medal has been collected.
             # This prevents being softlocked in Boolossus and having to reset the game without saving.
-            if map_two_gen.check_header_name_has_value(gen_entry, "type", "demotel2"):
-                map_two_gen.update_jmp_header_name_value(gen_entry, "appear_flag", 45)
-                map_two_gen.update_jmp_header_name_value(gen_entry, "disappear_flag", 81)
+            if str(gen_entry["type"]) == "demotel2":
+                gen_entry["appear_flag"] = 45
+                gen_entry["disappear_flag"] = 81
 
 
     def _map_two_obj_changes(self):
@@ -168,8 +168,11 @@ class RandomizeJMPTables:
         # to have them disappear.
         bad_objects_to_remove: list[str] = ["eldoor07", "eldoor08", "eldoor09", "eldoor10"]
         map_two_obj: JMP = self.lm_rando.map_files["map2"].jmp_files["objinfo"]
-        map_two_obj.data_entries = [obj_entry for obj_entry in map_two_obj.data_entries if
-            not map_two_obj.get_jmp_header_name_value(obj_entry, "name") in bad_objects_to_remove]
+        obj_indexes_to_remove: list[int] = list(sorted([index for index, obj_entry in enumerate(map_two_obj.data_entries) if
+            str(obj_entry["name"]) in bad_objects_to_remove], reverse=True))
+        for obj_idx in obj_indexes_to_remove:
+            map_two_obj.data_entries.remove(map_two_obj.data_entries[obj_idx])
+
 
 
     def _map_two_item_info_changes(self):
@@ -181,9 +184,9 @@ class RandomizeJMPTables:
         map_two_info: JMP = self.lm_rando.map_files["map2"].jmp_files["iteminfotable"]
 
         for info_entry in map_two_info.data_entries:
-            item_name: str = map_two_info.get_jmp_header_name_value(info_entry, "name")
-            if map_two_info.get_jmp_header_name_value(info_entry, "name") in hp_item_names.keys():
-                map_two_info.update_jmp_header_name_value(info_entry, "HPAmount", hp_item_names[item_name])
+            item_name: str = str(info_entry["name"])
+            if item_name in hp_item_names.keys():
+                info_entry["HPAmount"] = hp_item_names[item_name]
             if not item_name in already_exist_items:
                 already_exist_items.append(item_name)
 
@@ -191,7 +194,7 @@ class RandomizeJMPTables:
             for item_data in self.lm_rando.output_data["Locations"][location_type].values():
                 lm_item_name: str = get_item_name(item_data, self.lm_rando.slot)
                 if not lm_item_name in already_exist_items:
-                    add_new_jmp_data_entry(map_two_info, create_iteminfo_entry(item_data["room_no"], lm_item_name))
+                    map_two_info.add_jmp_entry(create_iteminfo_entry(item_data["room_no"], lm_item_name))
                     already_exist_items.append(lm_item_name)
 
 
@@ -203,12 +206,12 @@ class RandomizeJMPTables:
         # For every Freestanding Key in the game, replace its entry with the proper item from the generation output.
         for item_name, item_data in self.lm_rando.output_data["Locations"]["Freestanding"].items():
             curr_entry: JMPEntry = map_two_key.data_entries[LOCATION_TO_INDEX[item_name]]
-            map_two_key.update_jmp_header_name_value(curr_entry, "name", get_item_name(item_data, self.lm_rando.slot))
-            map_two_key.update_jmp_header_name_value(curr_entry, "open_door_no", int(item_data["door_id"]))
-            map_two_key.update_jmp_header_name_value(curr_entry, "appear_flag", 0)
-            map_two_key.update_jmp_header_name_value(curr_entry, "disappear_flag", 0)
-            if map_two_key.get_jmp_header_name_value(curr_entry, "CodeName") == "demo_key2":
-                map_two_key.update_jmp_header_name_value(curr_entry, "invisible", 0)
+            curr_entry["name"] = get_item_name(item_data, self.lm_rando.slot)
+            curr_entry["open_door_no"] = int(item_data["door_id"])
+            curr_entry["appear_flag"] = 0
+            curr_entry["disappear_flag"] = 0
+            if str(curr_entry["CodeName"]) == "demo_key2":
+                curr_entry["invisible"] = 0
 
         # Remove the cutscene HD key from the Foyer, which only appears in the cutscene.
         map_two_key.data_entries.remove(map_two_key.data_entries[2])
@@ -225,16 +228,16 @@ class RandomizeJMPTables:
         match spooky_rating:
             case 1:
                 for room_entry in map_two_room.data_entries:
-                    map_two_room.update_jmp_header_name_value(room_entry, "Thunder", 3) # MANY THUNDER
-                    map_two_room.update_jmp_header_name_value(room_entry, "sound_echo_parameter", 20) # LONG ECHO
-                    map_two_room.update_jmp_header_name_value(room_entry, "sound_room_code", 5)  # CREAKY CREAKY
+                    room_entry["Thunder"] = 3 # MANY THUNDER
+                    room_entry["sound_echo_parameter"] = 20 # LONG ECHO
+                    room_entry["sound_room_code"] = 5  # CREAKY CREAKY
             case 2:
                 for room_entry in map_two_room.data_entries:
                     coin_flip = self.lm_rando.random.choice(sorted([0, 1]))
                     if coin_flip == 1:
-                        map_two_room.update_jmp_header_name_value(room_entry, "Thunder", 3)  # MANY THUNDER
-                        map_two_room.update_jmp_header_name_value(room_entry, "sound_echo_parameter", 20)  # LONG ECHO
-                        map_two_room.update_jmp_header_name_value(room_entry, "sound_room_code", 5)  # CREAKY CREAKY
+                        room_entry["Thunder"] = 3 # MANY THUNDER
+                        room_entry["sound_echo_parameter"] = 20 # LONG ECHO
+                        room_entry["sound_room_code"] = 5  # CREAKY CREAKY
 
 
     def _map_two_item_appear_changes(self):
