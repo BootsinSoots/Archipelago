@@ -303,15 +303,15 @@ class RandomizeJMPTables:
                 map_two_normal_observer.data_entries.remove(speedy_entry)
 
         # This one checks for luigi entering the wardrobe in blackout, triggering the Grimmly hint
-        add_new_jmp_data_entry(map_two_teiden_observer, create_observer_entry(-2040.000000, 760.000000, -3020.000000,
+        map_two_teiden_observer.add_jmp_entry(create_observer_entry(-2040.000000, 760.000000, -3020.000000,
             38, 15, 7, arg0=157))
 
         # Adds an observer in Blackout Breaker room (event44) to turn on spikes on the doors when room flag 115 is on.
-        add_new_jmp_data_entry(map_two_teiden_observer, create_observer_entry(3250.000000, -500.000000, -1480.000000,
+        map_two_teiden_observer.add_jmp_entry(create_observer_entry(3250.000000, -500.000000, -1480.000000,
             67, 18, 11, cond_arg0=115))
 
         # Adds a teiden observer in Blackout Breaker room (event44) to turn off spikes on the doors when room flag 120 on.
-        add_new_jmp_data_entry(map_two_teiden_observer, create_observer_entry(3250.000000, -500.000000, -1480.000000,
+        map_two_teiden_observer.add_jmp_entry(create_observer_entry(3250.000000, -500.000000, -1480.000000,
             67, 18, 12, cond_arg0=120))
 
 
@@ -323,185 +323,186 @@ class RandomizeJMPTables:
 
         # Load the normal map2 observer
         map_two_nobserver: JMP = self.lm_rando.map_files["map2"].jmp_files["observerinfo"]
-        temp_new_entries: list[JMPEntry] = []
+        new_observ_entries: list[JMPEntry] = []
         toad_char_name_list: list[str] = ["dm_kinopio5", "dm_kinopio4", "dm_kinopio3", "dm_kinopio2"]
 
         for observer_entry in map_two_nobserver.data_entries:
             # Allows the Toads to spawn by default.
-            observer_name: str = get_jmp_value(map_two_nobserver, observer_entry, "name")
-            code_name: str = get_jmp_value(map_two_nobserver, observer_entry, "code_name")
-            room_num: int = int(get_jmp_value(map_two_nobserver, observer_entry, "room_no"))
-            curr_x_pos: float = float(get_jmp_value(map_two_nobserver, observer_entry, "pos_x"))
-            do_num: int = int(get_jmp_value(map_two_nobserver, observer_entry, "do_type"))
+            observer_name: str = str(observer_entry["name"])
+            code_name: str = str(observer_entry["code_name"])
+            room_num: int = int(observer_entry["room_no"])
+            curr_x_pos: float = float(observer_entry["pos_x"])
+            do_num: int = int(observer_entry["do_type"])
 
             if observer_name == "kinopio":
                 if code_name in toad_char_name_list:
                     continue
-                update_jmp_value(map_two_nobserver, observer_entry, "cond_arg0", 0)
-                update_jmp_value(map_two_nobserver, observer_entry, "appear_flag", 0)
-                update_jmp_value(map_two_nobserver, observer_entry, "cond_type", 13)
+                observer_entry["cond_arg0"] = 0
+                observer_entry["appear_flag"] = 0
+                observer_entry["cond_type"] = 13
 
                 if not spawn_area in TOAD_SPAWN_LIST:
                     new_entry: JMPEntry = copy.deepcopy(observer_entry)
-                    update_temp_jmp_value(new_entry, "room_no", spawn_data.room_id)
-                    update_temp_jmp_value(new_entry, "pos_x", int(spawn_data.pos_x) - 150)
-                    update_temp_jmp_value(new_entry, "pos_y", spawn_data.pos_y)
-                    update_temp_jmp_value(new_entry, "pos_z", int(spawn_data.pos_z) - 150)
-                    update_temp_jmp_value(new_entry, "code_name", "dm_kinopio5")
-                    temp_new_entries.append(new_entry)
+                    new_entry["room_no"] = spawn_data.room_id
+                    new_entry["pos_x"] = int(spawn_data.pos_x) - 150
+                    new_entry["pos_y"] = spawn_data.pos_y
+                    new_entry["pos_z"] = int(spawn_data.pos_z) - 150
+                    new_entry["code_name"] = "dm_kinopio5"
+                    new_observ_entries.append(new_entry)
 
             # Allows the Master Bedroom to be lit after clearing it, even if Neville hasn't been caught.
             if room_num == 33:
-                update_jmp_value(map_two_nobserver, observer_entry, "appear_flag", 0)
+                observer_entry["appear_flag"] = 0
 
             # Update the parlor observer to turn on flag 120 instead, which is a room flag.
             elif room_num == 35 and do_num == 7:
-                update_jmp_value(map_two_nobserver, observer_entry, "arg0", 120)
+                observer_entry["arg0"] = 120
 
             # Allows Twins Room to be lit after clearing it, even if Chauncey hasn't been caught.
             elif room_num == 25:
-                update_jmp_value(map_two_nobserver, observer_entry, "appear_flag", 0)
+                observer_entry["appear_flag"] = 0
 
             # Remove locking doors behind Luigi in dark rooms to prevent soft locks
             if do_num == 11:
-                update_jmp_value(map_two_nobserver, observer_entry, "do_type", 0)
+                observer_entry["do_type"] = 0
 
             # Add CodeNames to iphone entries out of blackout
             if observer_name == "iphone" and curr_x_pos == -748.401100:
-                update_jmp_value(map_two_nobserver, observer_entry, "code_name", "tel2")
+                observer_entry["code_name"] = "tel2"
             elif observer_name == "iphone" and curr_x_pos == 752.692200:
-                update_jmp_value(map_two_nobserver, observer_entry, "code_name", "tel3")
+                observer_entry["code_name"] = "tel3"
             elif observer_name == "iphone" and curr_x_pos == 0.000000:
-                update_jmp_value(map_two_nobserver, observer_entry, "code_name", "tel1")
+                observer_entry["code_name"] = "tel1"
 
-        map_two_nobserver.data_entries += temp_new_entries
+        for observer_entry in new_observ_entries:
+            map_two_nobserver.add_jmp_entry(observer_entry)
 
         # This one checks for the candles being lit in the Fortune-Teller's Room, flagging that key spawn
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(1870.000000, 190.000000, 140.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1870.000000, 190.000000, 140.000000,
             3, 9, 7, arg0=110))
 
         # This one checks for lights on in the 1F Bathroom, flagging that key spawn
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(-2130.000000, 180.000000, -4550.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-2130.000000, 180.000000, -4550.000000,
             20, 13, 7, arg0=110))
 
         # This one checks for lights on in the Well, flagging that key spawn
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(590.000000, -445.000000, -5910.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(590.000000, -445.000000, -5910.000000,
             69, 13, 7, arg0=110))
 
         # This one checks for lights on in the Wardrobe, flagging that key spawn
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(-2040.000000, 760.000000, -3020.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-2040.000000, 760.000000, -3020.000000,
             38, 13, 7, arg0=110))
 
         # Turn on Flag 22 to stop Van Gogh from reloading
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(2970.000000, 1550.000000, -2095.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(2970.000000, 1550.000000, -2095.000000,
             57, 13, 7, arg0=22))
 
         # This one checks for lights on in the Dining Room, to prevent Luggs Respawning
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(-400.000000, 420.000000, -1800.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-400.000000, 420.000000, -1800.000000,
             9, 13, 7, arg0=31))
 
         # Adds an observer in Clairvoya's room (event36) to turn on spikes on the doors when room flag 120 is on.
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(2074.000000, 100.000000, -261.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(2074.000000, 100.000000, -261.000000,
             3, 18, 11, cond_arg0=120))
 
         # Adds an observer in Clairvoya's room (event36) to turn off spikes on the doors when room flag 120 is off.
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(2074.000000, 100.000000, -261.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(2074.000000, 100.000000, -261.000000,
             3, 19, 12, cond_arg0=120))
 
         # Adds an observer in Blackout Breaker room (event44) to turn on spikes on the doors when room flag 115 is on.
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(3250.000000, -500.000000, -1480.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(3250.000000, -500.000000, -1480.000000,
             67, 18, 11, cond_arg0=115))
 
         # Adds an observer in Blackout Breaker room (event44) to turn off spikes on the doors when room flag 120 is on.
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(3250.000000, -500.000000, -1480.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(3250.000000, -500.000000, -1480.000000,
             67, 18, 12, cond_arg0=120))
 
         # Check that Shivers is caught to turn on Conservatory Hallway Light
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(3250.000000, 0.000000, -100.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(3250.000000, 0.000000, -100.000000,
             0, 13, 7, arg0=60))
 
         # This one enables the Conservatory 1F hallway after catching Shivers / Butler
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(1400.000000, 0.000000, -4100.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1400.000000, 0.000000, -4100.000000,
             18, 18, 1, cond_arg0=60))
 
         # This one adds an observer into the Foyer where if Luigi is in the room anywhere, it will turn on the lights.
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(0.000000, 0.000000, 0.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(0.000000, 0.000000, 0.000000,
             2, 15, 1))
 
         # This one checks for luigi entering the clockwork room, triggering the doll hint
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(10.000000, 1100.000000, -1650.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(10.000000, 1100.000000, -1650.000000,
             56, 15, 7, arg0=157))
 
         # This one checks for luigi entering the clockwork room, triggering the doll2 hint
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(10.000000, 1100.000000, -1650.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(10.000000, 1100.000000, -1650.000000,
             56, 15, 7, arg0=158))
 
         # This one checks for luigi entering the clockwork room, triggering the doll3 hint
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(10.000000, 1100.000000, -1650.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(10.000000, 1100.000000, -1650.000000,
             56, 15, 7, arg0=159))
 
         # This one checks for luigi entering the artist's room, triggering the gaka hint
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(2890.000000, 1100.000000, -1640.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(2890.000000, 1100.000000, -1640.000000,
             57, 15, 7, arg0=157))
 
         # This one checks for luigi entering the study, triggering the father hint
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(-2440.000000, 550.000000, -2700.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-2440.000000, 550.000000, -2700.000000,
             34, 15, 7, arg0=157))
 
         # This one checks for luigi entering the master bedroom, triggering the mother hint
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(-3760.000000, 550.000000, -1800.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-3760.000000, 550.000000, -1800.000000,
             33, 15, 7, arg0=157))
 
         # This one checks for luigi entering the nursery, triggering the baby hint
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(-3340.000000, 550.000000, -220.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-3340.000000, 550.000000, -220.000000,
             24, 15, 7, arg0=157))
 
         # This one checks for luigi entering the twins room, triggering the dboy hint
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(-1820.000000, 550.000000, -220.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-1820.000000, 550.000000, -220.000000,
             25, 15, 7, arg0=157))
 
         # This one checks for luigi entering the nanas room, triggering the nana hint
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(300.000000, 550.000000, -4960.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(300.000000, 550.000000, -4960.000000,
             46, 15, 7, arg0=157))
 
         # This one checks for luigi entering the 2f bathroom, triggering the petunia hint
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(-2100.000000, 550.000000, -4640.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-2100.000000, 550.000000, -4640.000000,
             45, 15, 7, arg0=157))
 
         # This one checks for luigi entering the guest room, triggering the girl hint
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(3340.000000, 550.000000, -220.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(3340.000000, 550.000000, -220.000000,
             28, 15, 7, arg0=157))
 
         # This one checks for luigi entering the back hallway, triggering the butler hint
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(-3600.000000, 0.000000, 150.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-3600.000000, 0.000000, 150.000000,
             18, 15, 7, arg0=157))
 
         # This one checks for luigi entering the dining room, triggering the luggs hint
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(-280.000000, 0.000000, -1480.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-280.000000, 0.000000, -1480.000000,
             9, 15, 7, arg0=157))
 
         # This one checks for luigi entering the ballroom, triggering the dancer hint
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(2540.000000, 0.000000, -2800.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(2540.000000, 0.000000, -2800.000000,
             10, 15, 7, arg0=157))
 
         # This one checks for luigi entering the billiard room, triggering the hustler hint
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(-1200.000000, 0.000000, -3840.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-1200.000000, 0.000000, -3840.000000,
             12, 15, 7, arg0=157))
 
         # This one checks for luigi entering the conservatory, triggering the pianist hint
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(1360.000000, 0.000000, -4920.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1360.000000, 0.000000, -4920.000000,
             21, 15, 7, arg0=157))
 
         # This one checks for luigi entering the rec room, triggering the builder hint
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(2840.000000, 0.000000, -4940.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(2840.000000, 0.000000, -4940.000000,
             22, 15, 7, arg0=157))
 
         # This one checks for luigi entering the boneyard, triggering the dog hint
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(-3360.000000, 0.000000, -3080.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-3360.000000, 0.000000, -3080.000000,
             11, 15, 7, arg0=157))
 
         # This one checks for luigi entering the cold storage, triggering the snowman hint
-        add_new_jmp_data_entry(map_two_nobserver, create_observer_entry(1180.000000, -445.000000, -690.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, -445.000000, -690.000000,
             61, 15, 7, arg0=157))
 
 
@@ -530,20 +531,20 @@ class RandomizeJMPTables:
         for key, val in self.lm_rando.output_data["Room Enemies"].items():
             room_id: int = REGION_LIST[key].room_id
             for normal_enemy in map_two_normal_enemy.data_entries:
-                curr_room_no: int = int(map_two_normal_enemy.get_jmp_header_name_value(normal_enemy, "room_no"))
-                curr_enemy_name: str = map_two_normal_enemy.get_jmp_header_name_value(normal_enemy, "name")
+                curr_room_no: int = int(normal_enemy["room_no"])
+                curr_enemy_name: str = str(normal_enemy["name"])
                 if curr_room_no != room_id or not curr_enemy_name in GHOST_LIST:
                     continue
 
                 if "16_1" in curr_enemy_name:
-                    map_two_normal_enemy.update_jmp_header_name_value(normal_enemy, "pos_y", 30.000000)
+                    normal_enemy["pos_y"] = 30.000000
 
                 room_element: str = "No Element" if (room_id in [27, 35, 40]) else val
                 apply_new_ghost(self.lm_rando, map_two_normal_enemy, normal_enemy, room_element)
 
             for blackout_enemy in map_two_teiden_enemy.data_entries:
-                curr_room_no: int = int(map_two_teiden_enemy.get_jmp_header_name_value(blackout_enemy, "room_no"))
-                curr_enemy_name: str = map_two_teiden_enemy.get_jmp_header_name_value(blackout_enemy, "name")
+                curr_room_no: int = int(blackout_enemy["room_no"])
+                curr_enemy_name: str = str(blackout_enemy["name"])
                 if curr_room_no != room_id or not curr_enemy_name in GHOST_LIST:
                     continue
                 apply_new_ghost(self.lm_rando, map_two_teiden_enemy, blackout_enemy, val)
