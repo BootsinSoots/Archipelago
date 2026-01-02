@@ -1,8 +1,7 @@
 import copy
 from typing import Any, TYPE_CHECKING
 
-from gcbrickwork import JMPFieldHeader
-from gcbrickwork.JMP import JMP, JMPEntry, JMPValue
+from gcbrickwork.JMP import JMPEntry
 
 if TYPE_CHECKING:
     from ..LM_Randomize_ISO import LuigisMansionRandomizer
@@ -384,7 +383,7 @@ def create_itemappear_entry(item_name: str) -> dict:
         new_item["item" + str(itemid)] = item_name
     return new_item
 
-def apply_new_ghost(lm_rando: "LuigisMansionRandomizer", jmp_file: JMP, enemy_entry: JMPEntry, element: str):
+def apply_new_ghost(lm_rando: "LuigisMansionRandomizer", enemy_entry: JMPEntry, element: str):
     # TODO add a default heigh for ghosts on each floor to re-adjust things moving up and down.
     # The list of ghosts that can replace the vanilla ones. Only includes the ones without elements.
     # Excludes Skul ghosts as well unless the railinfo jmp table is updated.
