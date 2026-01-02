@@ -196,7 +196,7 @@ class LuigisMansionRandomizer:
         temp_map2: LMMapFile = copy.deepcopy(self.map_files["map2"])
         temp_map2.get_all_jmp_files()
         for jmp_name, jmp_entry in temp_map2.jmp_files.items():
-            temp_map2.jmp_files[jmp_name].data_entries = []
+            temp_map2.jmp_files[jmp_name].clear_data_entries()
         self.empty_jmp_files = temp_map2.jmp_files
 
     def _update_map_files(self):
