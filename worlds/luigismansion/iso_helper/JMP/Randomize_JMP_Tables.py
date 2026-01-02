@@ -6,9 +6,8 @@ from typing import TYPE_CHECKING
 from gcbrickwork.JMP import JMP, JMPEntry, JMPValue
 
 from .JMP_Entry_Helpers import (LOCATION_TO_INDEX, SPEEDY_OBSERVER_INDEX, SPEEDY_ENEMY_INDEX, CEILING_FURNITURE_LIST,
-    GHOST_LIST, MEDIUM_HEIGHT_FURNITURE_LIST, apply_new_ghost, add_new_jmp_data_entry, create_observer_entry,
-    create_iteminfo_entry, create_itemappear_entry, get_item_chest_visual, get_chest_size_from_item, get_item_name,
-    update_jmp_value, BOO_HIDING_SPOT_BANS, get_jmp_value, update_temp_jmp_value)
+    GHOST_LIST, MEDIUM_HEIGHT_FURNITURE_LIST, apply_new_ghost, create_observer_entry, BOO_HIDING_SPOT_BANS,
+    create_iteminfo_entry, create_itemappear_entry, get_item_chest_visual, get_chest_size_from_item, get_item_name)
 
 from ...Items import ALL_ITEMS_TABLE, LMItemData, CurrencyItemData, filler_items
 from ...Regions import REGION_LIST, TOAD_SPAWN_LIST
@@ -41,19 +40,18 @@ class RandomizeJMPTables:
         map_one_events: JMP = self.lm_rando.map_files["map1"].jmp_files["eventinfo"]
 
         for event_entry in map_one_events.data_entries:
-            if int(map_one_events.get_jmp_header_name_value(event_entry, "EventNo")) == 8:
-                map_one_events.update_jmp_header_name_value(event_entry, "EventIf", 5)
+            if event_entry["EventNo"] == 8:
+                event_entry["EventIf"] = 5
 
     def _map_three_changes(self):
         """Updates the relevant changes on the training map."""
         map_three_events: JMP = self.lm_rando.map_files["map3"].jmp_files["eventinfo"]
         events_to_remove: list[int] = [9]
-        map_three_events.data_entries = [event_entry for event_entry in map_three_events.data_entries if not
-            map_three_events.get_jmp_header_name_value(event_entry, "EventNo") in events_to_remove]
+        map_three_events.data_entries.remove(map_three_events.data_entries[1])
 
         for event_info in map_three_events.data_entries:
-            if map_three_events.get_jmp_header_name_value(event_info, "EventNo") == 10:
-                map_three_events.update_jmp_header_name_value(map_three_events.data_entries[0], "EventFlag", 0)
+            if int(event_info["EventNo"]) == 10:
+                event_info["EventFlag"] = 0
 
     def _map_six_changes(self):
         """Updates all the jmp files with their relevant changes on the Gallery map"""
@@ -68,18 +66,14 @@ class RandomizeJMPTables:
         map_six_furniture: JMP = self.lm_rando.map_files["map6"].jmp_files["furnitureinfo"]
         map_six_item_appear: JMP = self.lm_rando.map_files["map6"].jmp_files["itemappeartable"]
         for furniture_jmp_id in ceiling_furniture_list:
-            curr_y_offset: int = int(map_six_furniture.get_jmp_header_name_value(
-                map_six_furniture.data_entries[furniture_jmp_id], "item_offset_y"))
+            curr_y_offset: int = int(map_six_furniture.data_entries[furniture_jmp_id]["item_offset_y"])
             adjust_y_offset = 225.0
-            map_six_furniture.update_jmp_header_name_value(map_six_furniture.data_entries[furniture_jmp_id],
-                "item_offset_y", curr_y_offset - adjust_y_offset)
+            map_six_furniture.data_entries[furniture_jmp_id]["item_offset_y"] = curr_y_offset - adjust_y_offset
 
         for furniture_jmp_id in other_furn_list:
-            curr_y_offset: int = int(map_six_furniture.get_jmp_header_name_value(
-                map_six_furniture.data_entries[furniture_jmp_id], "item_offset_y"))
+            curr_y_offset: int = int(map_six_furniture.data_entries[furniture_jmp_id]["item_offset_y"])
             adjust_y_offset = 50.0
-            map_six_furniture.update_jmp_header_name_value(map_six_furniture.data_entries[furniture_jmp_id],
-                "item_offset_y", curr_y_offset + adjust_y_offset)
+            map_six_furniture.data_entries[furniture_jmp_id]["item_offset_y"] = curr_y_offset - adjust_y_offset
 
         for item_name, item_data in self.lm_rando.output_data["Locations"]["Furniture"].items():
             location_data: LMLocationData = ALL_LOCATION_TABLE[item_name]
@@ -92,46 +86,45 @@ class RandomizeJMPTables:
 
             # Replace the furnitureinfo entry to spawn an item from the "itemappeartable".
             # If the entry is supposed to be money, then generate a random amount of coins and/or bills from it.
-            filtered_item_appear: list[JMPValue] = [index for index, item_appear_entry in enumerate(map_six_item_appear.data_entries)
-                if map_six_item_appear.get_jmp_header_name_value(item_appear_entry, "item0") == actor_item_name]
-            map_six_furniture.update_jmp_header_name_value(furniture_entry, "item_table",
-                filtered_item_appear.index(filtered_item_appear[len(filtered_item_appear) - 1]))
+            filtered_item_appear: list[JMPValue] = [index for index, item_appear_entry in
+                enumerate(map_six_item_appear.data_entries) if str(item_appear_entry["item0"]) == actor_item_name]
+            furniture_entry["item_table"] = filtered_item_appear.index(filtered_item_appear[len(filtered_item_appear) - 1])
 
             # TODO update using ALL items table instead
             if any((key, val) for (key, val) in filler_items.items() if
                    key == item_data["name"] and key != "Diamond" and val.type == "Money") \
                     and item_data["player"] == self.lm_rando.slot:
 
-                map_six_furniture.update_jmp_header_name_value(furniture_entry, "item_table", 11)
+                furniture_entry["item_table"] = 11
                 int_money_amt = 1
                 if re.search(r"^\d+", item_data["name"]):
                     int_money_amt = int(re.search(r"^\d+", item_data["name"]).group())
-                map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate_num", int_money_amt)
+                furniture_entry["generate_num"] = int_money_amt
                 if "Coins" in item_data["name"]:
                     if "Bills" in item_data["name"]:
-                        map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate", 3)
+                        furniture_entry["generate"] = 3
                     else:
-                        map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate", 1)
+                        furniture_entry["generate"] = 1
                 elif "Bills" in item_data["name"]:
-                    map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate", 2)
+                    furniture_entry["generate"] = 2
                 elif "Sapphire" in item_data["name"]:
-                    map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate", 4)
+                    furniture_entry["generate"] = 4
                 elif "Emerald" in item_data["name"]:
-                    map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate", 6)
+                    furniture_entry["generate"] = 6
                 elif "Ruby" in item_data["name"]:
-                    map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate", 5)
+                    furniture_entry["generate"] = 5
                 elif "Gold Bar" in item_data["name"]:
-                    map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate", 7)
+                    furniture_entry["generate"] = 7
                 elif item_data["name"] == "Diamond":
-                    map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate", 9)
+                    furniture_entry["generate"] = 9
                 elif item_data["name"] == "Gold Diamond":
-                    map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate", 10)
+                    furniture_entry["generate"] = 10
                 else:
-                    map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate", 0)
-                    map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate_num", 0)
+                    furniture_entry["generate"] = 0
+                    furniture_entry["generate_num"] = 0
             else:
-                map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate", 0)
-                map_six_furniture.update_jmp_header_name_value(furniture_entry, "generate_num", 0)
+                furniture_entry["generate"] = 0
+                furniture_entry["generate_num"] = 0
 
 
     def _map_two_changes(self):
