@@ -87,7 +87,7 @@ class RandomizeJMPTables:
             # If the entry is supposed to be money, then generate a random amount of coins and/or bills from it.
             filtered_item_appear: list[int] = [index for index, item_appear_entry in
                 enumerate(map_six_item_appear.data_entries) if str(item_appear_entry["item0"]) == actor_item_name]
-            furniture_entry["item_table"] = filtered_item_appear.index(filtered_item_appear[len(filtered_item_appear) - 1])
+            furniture_entry["item_table"] = filtered_item_appear[0]
 
             # TODO update using ALL items table instead
             if any((key, val) for (key, val) in filler_items.items() if key == loc_data["name"] and \
@@ -1030,7 +1030,7 @@ class RandomizeJMPTables:
             # If the entry is supposed to be money, then generate a random amount of coins and/or bills from it.
             filtered_item_appear: list[int] = [index for index, item_appear_entry in enumerate(map_two_item_appear.data_entries)
                 if str(item_appear_entry["item0"]) == actor_item_name]
-            furniture_entry["item_table"] = filtered_item_appear.index(filtered_item_appear[0])
+            furniture_entry["item_table"] = filtered_item_appear[0]
 
             # Adjust move types for WDYM furniture items. Trees require water, obviously
             if wdym_enabled:
