@@ -540,14 +540,14 @@ class RandomizeJMPTables:
                     normal_enemy["pos_y"] = 30.000000
 
                 room_element: str = "No Element" if (room_id in [27, 35, 40]) else val
-                apply_new_ghost(self.lm_rando, map_two_normal_enemy, normal_enemy, room_element)
+                apply_new_ghost(self.lm_rando, normal_enemy, room_element)
 
             for blackout_enemy in map_two_teiden_enemy.data_entries:
                 curr_room_no: int = int(blackout_enemy["room_no"])
                 curr_enemy_name: str = str(blackout_enemy["name"])
                 if curr_room_no != room_id or not curr_enemy_name in GHOST_LIST:
                     continue
-                apply_new_ghost(self.lm_rando, map_two_teiden_enemy, blackout_enemy, val)
+                apply_new_ghost(self.lm_rando, blackout_enemy, val)
 
 
     def _map_two_event_changes(self):
