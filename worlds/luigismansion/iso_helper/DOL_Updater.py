@@ -116,6 +116,8 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
     blank_data = b"\x00" * new_dol_size
     lm_dol.data.write(blank_data)
 
+    vanilla_game_changes(lm_dol)
+
     # Read in all the other custom DOL changes and update their values to the new value as expected.
     custom_dol_code = PROJECT_ROOT.joinpath("iso_helper").joinpath("LM_custom_code.lmco").read_bytes()
     lm_dol.data.seek(CUSTOM_CODE_OFFSET_START)
@@ -151,3 +153,41 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
     # Save all changes to the DOL itself.
     lm_dol.save_changes()
     lm_gen.lm_gcm.changed_files["sys/main.dol"] = lm_dol.data
+
+
+def vanilla_game_changes(dol_data: DOL):
+    # Updates LM to allow the GC debug screen to be shown/used.
+    dol_data.data.seek(0x00277C)
+    dol_data.data.write(bytes.fromhex("60000000"))
+
+    # Disables the 1F Washroom door from auto-unlocking
+    dol_data.data.seek(0x019040)
+    dol_data.data.write(bytes.fromhex("60000000"))
+
+    # Disable Van-Gogh Easel/Chest Zoom
+    dol_data.data.seek(0x0339CC)
+    dol_data.data.write(bytes.fromhex("60000000"))
+
+    # Force Storage Room Wall to stay open
+    dol_data.data.seek(0x03458C)
+    dol_data.data.write(bytes.fromhex("38600001"))
+
+    # Force Skip the opening cutscene
+    dol_data.data.seek(0x047500)
+    dol_data.data.write(bytes.fromhex("38600002"))
+
+    # Disables several flags from automatically turning on in-game
+    dol_data.data.seek(0x072428)
+    dol_data.data.write(bytes.fromhex("60000000"))
+    dol_data.data.seek(0x0AC83C)
+    dol_data.data.write(bytes.fromhex("60000000"))
+    dol_data.data.seek(0x0ACE7C)
+    dol_data.data.write(bytes.fromhex("60000000"))
+    dol_data.data.seek(0x0ACE88)
+    dol_data.data.write(bytes.fromhex("60000000"))
+    dol_data.data.seek(0x0ACE94)
+    dol_data.data.write(bytes.fromhex("60000000"))
+    dol_data.data.seek(0x0ACEA0)
+    dol_data.data.write(bytes.fromhex("60000000"))
+    dol_data.data.seek(0x0ACEAC)
+    dol_data.data.write(bytes.fromhex("60000000"))
