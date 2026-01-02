@@ -46,8 +46,7 @@ class RandomizeJMPTables:
     def _map_three_changes(self):
         """Updates the relevant changes on the training map."""
         map_three_events: JMP = self.lm_rando.map_files["map3"].jmp_files["eventinfo"]
-        events_to_remove: list[int] = [9]
-        map_three_events.data_entries.remove(map_three_events.data_entries[1])
+        map_three_events.delete_jmp_entry(map_three_events.data_entries[1])
 
         for event_info in map_three_events.data_entries:
             if int(event_info["EventNo"]) == 10:
@@ -171,7 +170,7 @@ class RandomizeJMPTables:
         obj_indexes_to_remove: list[int] = list(sorted([index for index, obj_entry in enumerate(map_two_obj.data_entries) if
             str(obj_entry["name"]) in bad_objects_to_remove], reverse=True))
         for obj_idx in obj_indexes_to_remove:
-            map_two_obj.data_entries.remove(map_two_obj.data_entries[obj_idx])
+            map_two_obj.delete_jmp_entry(map_two_obj.data_entries[obj_idx])
 
 
 
@@ -214,7 +213,7 @@ class RandomizeJMPTables:
                 curr_entry["invisible"] = 0
 
         # Remove the cutscene HD key from the Foyer, which only appears in the cutscene.
-        map_two_key.data_entries.remove(map_two_key.data_entries[2])
+        map_two_key.delete_jmp_entry(map_two_key.data_entries[2])
 
 
     def _map_two_room_info_changes(self):
@@ -299,8 +298,8 @@ class RandomizeJMPTables:
         if enable_speedy_spirits:
             for entry_no in SPEEDY_OBSERVER_INDEX:
                 speedy_entry: JMPEntry = map_two_normal_observer.data_entries[entry_no]
-                map_two_teiden_observer.data_entries.append(speedy_entry)
-                map_two_normal_observer.data_entries.remove(speedy_entry)
+                map_two_teiden_observer.add_jmp_entry(speedy_entry)
+                map_two_normal_observer.delete_jmp_entry(speedy_entry)
 
         # This one checks for luigi entering the wardrobe in blackout, triggering the Grimmly hint
         map_two_teiden_observer.add_jmp_entry(create_observer_entry(-2040.000000, 760.000000, -3020.000000,
@@ -522,8 +521,8 @@ class RandomizeJMPTables:
         if speedy_enabled:
             for entry_no in SPEEDY_ENEMY_INDEX:
                 speedy_entry: JMPEntry = map_two_normal_enemy.data_entries[entry_no]
-                map_two_teiden_enemy.data_entries.append(speedy_entry)
-                map_two_normal_enemy.data_entries.remove(speedy_entry)
+                map_two_teiden_enemy.add_jmp_entry(speedy_entry)
+                map_two_normal_enemy.delete_jmp_entry(speedy_entry)
 
         if enemizer_enabled == 0:
             return
@@ -573,99 +572,99 @@ class RandomizeJMPTables:
         if spawn_area in TOAD_SPAWN_LIST:
             events_to_remove += [12]
 
-        map_two_events.data_entries = [event_entry for event_entry in map_two_events.data_entries if not
-            map_two_events.get_jmp_header_name_value(event_entry, "EventNo") in events_to_remove]
+        event_info_indexes_to_remove: list[int] = sorted([index for index, event_entry in enumerate(map_two_events.data_entries)
+            if int(event_entry["EventNo"]) in events_to_remove or (int(event_entry["EventNo"]) == 93 and 
+            float(event_entry["pos_x"]) == 0.000000)], reverse=True)
 
-        map_two_events.data_entries = [event_entry for event_entry in map_two_events.data_entries if not
-            (int(map_two_events.get_jmp_header_name_value(event_entry, "EventNo")) == 93 and
-            float(map_two_events.get_jmp_header_name_value(event_entry, "pos_x")) == 0.000000)]
+        for event_idx in event_info_indexes_to_remove:
+            map_two_events.delete_jmp_entry(map_two_events.data_entries[event_idx])
 
         for event_info in map_two_events.data_entries:
-            event_num: int = int(map_two_events.get_jmp_header_name_value(event_info, "EventNo"))
+            event_num: int = int(event_info["EventNo"])
 
             # Move Telephone rings to third phone, make an A press and make always on
             if event_num == 92:
-                map_two_events.update_jmp_header_name_value(event_info, "EventFlag", 0)
-                map_two_events.update_jmp_header_name_value(event_info, "disappear_flag", 0)
-                map_two_events.update_jmp_header_name_value(event_info, "EventLoad", 0)
-                map_two_events.update_jmp_header_name_value(event_info, "EventArea", 150)
-                map_two_events.update_jmp_header_name_value(event_info, "EventIf", 1)
-                map_two_events.update_jmp_header_name_value(event_info, "PlayerStop", 1)
-                map_two_events.update_jmp_header_name_value(event_info, "pos_x", 0.000000)
-                map_two_events.update_jmp_header_name_value(event_info, "pos_y", 1100.000000)
-                map_two_events.update_jmp_header_name_value(event_info, "pos_z", -25.000000)
+                event_info["EventFlag"] = 0
+                event_info["disappear_flag"] = 0
+                event_info["EventLoad"] = 0
+                event_info["EventArea"] = 150
+                event_info["EventIf"] = 1
+                event_info["PlayerStop"] = 1
+                event_info["pos_x"] = 0.000000
+                event_info["pos_y"] = 1100.000000
+                event_info["pos_z"] = -25.000000
 
             # Telephone room event for the telephones, make an A press and make always on
             elif event_num == 94:
-                map_two_events.update_jmp_header_name_value(event_info, "EventFlag", 0)
-                map_two_events.update_jmp_header_name_value(event_info, "disappear_flag", 0)
-                map_two_events.update_jmp_header_name_value(event_info, "EventLoad", 0)
-                map_two_events.update_jmp_header_name_value(event_info, "EventArea", 150)
-                map_two_events.update_jmp_header_name_value(event_info, "EventIf", 1)
-                map_two_events.update_jmp_header_name_value(event_info, "pos_x", 755.000000)
-                map_two_events.update_jmp_header_name_value(event_info, "pos_y", 1100.000000)
-                map_two_events.update_jmp_header_name_value(event_info, "pos_z", -25.000000)
+                event_info["EventFlag"] = 0
+                event_info["disappear_flag"] = 0
+                event_info["EventLoad"] = 0
+                event_info["EventArea"] = 150
+                event_info["EventIf"] = 1
+                event_info["pos_x"] = 755.000000
+                event_info["pos_y"] = 1100.000000
+                event_info["pos_z"] = -25.000000
 
             # Telephone room event for the telephones, make an A press and make always on
             elif event_num == 93:
-                map_two_events.update_jmp_header_name_value(event_info, "EventFlag", 0)
-                map_two_events.update_jmp_header_name_value(event_info, "disappear_flag", 0)
-                map_two_events.update_jmp_header_name_value(event_info, "EventLoad", 0)
-                map_two_events.update_jmp_header_name_value(event_info, "EventArea", 150)
-                map_two_events.update_jmp_header_name_value(event_info, "EventIf", 1)
-                map_two_events.update_jmp_header_name_value(event_info, "pos_x", -755.000000)
-                map_two_events.update_jmp_header_name_value(event_info, "pos_y", 1100.000000)
-                map_two_events.update_jmp_header_name_value(event_info, "pos_z", -25.000000)
+                event_info["EventFlag"] = 0
+                event_info["disappear_flag"] = 0
+                event_info["EventLoad"] = 0
+                event_info["EventArea"] = 150
+                event_info["EventIf"] = 1
+                event_info["pos_x"] = -755.000000
+                event_info["pos_y"] = 1100.000000
+                event_info["pos_z"] = -25.000000
 
             # Allows the Ring of Boos on the 3F Balcony to only appear when the Ice Medal has been collected.
             # This prevents being soft locked in Boolossus and having to reset the game without saving.
             elif event_num == 71:
-                map_two_events.update_jmp_header_name_value(event_info, "EventFlag", 45)
-                map_two_events.update_jmp_header_name_value(event_info, "EventLoad", 0)
+                event_info["EventFlag"] = 45
+                event_info["EventLoad"] = 0
 
             # Allows Jarvis' (Ceramics Room) to only appear when the Ice Medal has been collected.
             # This prevents being kicked out by Jarvis' and being unable to participate in his game.
             elif event_num == 33:
-                map_two_events.update_jmp_header_name_value(event_info, "EventFlag", 45)
+                event_info["EventFlag"] = 45
 
             # Since we have a custom blackout event, we need to update event 44's trigger condition to be A-pressed based.
             # We also update the area ad trigger location to be the same as event45
             elif event_num == 44:
-                map_two_events.update_jmp_header_name_value(event_info, "EventFlag", 0)
-                map_two_events.update_jmp_header_name_value(event_info, "EventLoad", 0)
-                map_two_events.update_jmp_header_name_value(event_info, "EventArea", 230)
-                map_two_events.update_jmp_header_name_value(event_info, "EventIf", 1)
-                map_two_events.update_jmp_header_name_value(event_info, "EventLock", 0)
-                map_two_events.update_jmp_header_name_value(event_info, "PlayerStop", 0)
-                map_two_events.update_jmp_header_name_value(event_info, "pos_x", 3500.277000)
-                map_two_events.update_jmp_header_name_value(event_info, "pos_y", -550.000000)
-                map_two_events.update_jmp_header_name_value(event_info, "pos_z", -2150.792000)
+                event_info["EventFlag"] = 0
+                event_info["EventLoad"] = 0
+                event_info["EventArea"] = 230
+                event_info["EventIf"] = 1
+                event_info["EventLock"] = 0
+                event_info["PlayerStop"] = 0
+                event_info["pos_x"] = 3500.277000
+                event_info["pos_y"] = -550.000000
+                event_info["pos_z"] = -2150.792000
 
             # Update the spawn in event trigger to wherever spawn is
             elif event_num == 48:
-                map_two_events.update_jmp_header_name_value(event_info, "pos_x", spawn_data.pos_x)
-                map_two_events.update_jmp_header_name_value(event_info, "pos_y", spawn_data.pos_y)
-                map_two_events.update_jmp_header_name_value(event_info, "pos_z", spawn_data.pos_z)
+                event_info["pos_x"] = spawn_data.pos_x
+                event_info["pos_y"] = spawn_data.pos_y
+                event_info["pos_z"] = spawn_data.pos_z
 
             # Removes the Mr. Bones requirement. He will spawn instantly
             elif event_num == 23:
-                map_two_events.update_jmp_header_name_value(event_info, "EventFlag", 0)
-                map_two_events.update_jmp_header_name_value(event_info, "disappear_flag", 74)
+                event_info["EventFlag"] = 0
+                event_info["disappear_flag"] = 74
 
             # Turn off Event 74 (Warp to King Boo Fight) in blackout by disabling event if King Boo isn't present
             elif event_num == 74:
-                map_two_events.update_jmp_header_name_value(event_info, "CharacterName", "dltelesa")
+                event_info["CharacterName"] = "dltelesa"
 
             # Make Van Gogh load more than once
             elif event_num == 38:
-                map_two_events.update_jmp_header_name_value(event_info, "EventLoad", 0)
-                map_two_events.update_jmp_header_name_value(event_info, "disappear_flag", 22)
-                map_two_events.update_jmp_header_name_value(event_info, "EventIf", 2)
+                event_info["EventLoad"] = 0
+                event_info["disappear_flag"] = 22
+                event_info["EventIf"] = 2
 
             # Make the parlor ghost spawn event be based on flag 120 instead of a saveable flag
             elif event_num == 61:
-                map_two_events.update_jmp_header_name_value(event_info, "EventFlag", 120)
-                map_two_events.update_jmp_header_name_value(event_info, "EventLoad", 0)
+                event_info["EventFlag"] = 120
+                event_info["EventLoad"] = 0
 
             # # Update the Washroom event trigger to be area entry based
             # # Also updates the event disappear trigger to be flag 28
@@ -684,61 +683,61 @@ class RandomizeJMPTables:
 
             # Update the King Boo event trigger to be area entry based
             elif boo_gates_enabled and event_num == 16:
-                map_two_events.update_jmp_header_name_value(event_info, "EventIf", 5)
-                map_two_events.update_jmp_header_name_value(event_info, "EventArea", 200)
-                map_two_events.update_jmp_header_name_value(event_info, "EventLock", 1)
-                map_two_events.update_jmp_header_name_value(event_info, "PlayerStop", 1)
-                map_two_events.update_jmp_header_name_value(event_info, "EventLoad", 0)
-                map_two_events.update_jmp_header_name_value(event_info, "pos_x", 2260.000000)
-                map_two_events.update_jmp_header_name_value(event_info, "pos_y", -450.000000)
-                map_two_events.update_jmp_header_name_value(event_info, "pos_z", -5300.000000)
+                event_info["EventIf"] = 5
+                event_info["EventArea"] = 200
+                event_info["EventLock"] = 1
+                event_info["PlayerStop"] = 1
+                event_info["EventLoad"] = 0
+                event_info["pos_x"] = 2260.000000
+                event_info["pos_y"] = -450.000000
+                event_info["pos_z"] = -5300.000000
 
             # Update the Balcony Boo event trigger to be area entry based
             elif boo_gates_enabled and event_num == 96:
                 if spawn_area in FLIP_BALCONY_BOO_EVENT_LIST:
-                    map_two_events.update_jmp_header_name_value(event_info, "pos_x", 1800.000000)
-                    map_two_events.update_jmp_header_name_value(event_info, "pos_y", 1200.000000)
-                    map_two_events.update_jmp_header_name_value(event_info, "pos_z", -2950.000000)
-                    map_two_events.update_jmp_header_name_value(event_info, "EventArea", 350)
+                    event_info["pos_x"] = 1800.000000
+                    event_info["pos_y"] = 1200.000000
+                    event_info["pos_z"] = -2950.000000
+                    event_info["EventArea"] = 350
                 else:
-                    map_two_events.update_jmp_header_name_value(event_info, "pos_x", 1800.000000)
-                    map_two_events.update_jmp_header_name_value(event_info, "pos_y", 1200.000000)
-                    map_two_events.update_jmp_header_name_value(event_info, "pos_z", -2600.000000)
-                    map_two_events.update_jmp_header_name_value(event_info, "EventArea", 200)
-                map_two_events.update_jmp_header_name_value(event_info, "EventIf", 5)
-                map_two_events.update_jmp_header_name_value(event_info, "EventLock", 1)
-                map_two_events.update_jmp_header_name_value(event_info, "PlayerStop", 1)
-                map_two_events.update_jmp_header_name_value(event_info, "EventLoad", 0)
+                    event_info["pos_x"] = 1800.000000
+                    event_info["pos_y"] = 1200.000000
+                    event_info["pos_z"] = -2600.000000
+                    event_info["EventArea"] = 200
+                event_info["EventIf"] = 5
+                event_info["EventLock"] = 1
+                event_info["PlayerStop"] = 1
+                event_info["EventLoad"] = 0
 
             # Update the Intro event to talk about save anywhere and healing.
             elif event_num == 11:
-                map_two_events.update_jmp_header_name_value(event_info, "EventFlag", 0)
-                map_two_events.update_jmp_header_name_value(event_info, "disappear_flag", 53)
-                map_two_events.update_jmp_header_name_value(event_info, "EventLoad", 0)
-                map_two_events.update_jmp_header_name_value(event_info, "EventArea", 65535)
-                map_two_events.update_jmp_header_name_value(event_info, "EventIf", 3)
-                map_two_events.update_jmp_header_name_value(event_info, "PlayerStop", 1)
-                map_two_events.update_jmp_header_name_value(event_info, "EventLock", 1)
-                map_two_events.update_jmp_header_name_value(event_info, "event_parameter", 0)
-                map_two_events.update_jmp_header_name_value(event_info, "pos_x", spawn_data.pos_x)
-                map_two_events.update_jmp_header_name_value(event_info, "pos_y", spawn_data.pos_y)
-                map_two_events.update_jmp_header_name_value(event_info, "pos_z", spawn_data.pos_z)
+                event_info["EventFlag"] = 0
+                event_info["disappear_flag"] = 53
+                event_info["EventLoad"] = 0
+                event_info["EventArea"] = 65535
+                event_info["EventIf"] = 3
+                event_info["PlayerStop"] = 1
+                event_info["EventLock"] = 1
+                event_info["event_parameter"] = 0
+                event_info["pos_x"] = spawn_data.pos_x
+                event_info["pos_y"] = spawn_data.pos_y
+                event_info["pos_z"] = spawn_data.pos_z
 
             # Change Training room second visit to always be on
             elif event_num == 10:
-                map_two_events.update_jmp_header_name_value(event_info, "EventFlag", 0)
+                event_info["EventFlag"] = 0
 
             # Update Starting Toad Event (event12) to move to the spawn region.
             elif event_num == 12:
-                map_two_events.update_jmp_header_name_value(event_info, "EventFlag", 0)
-                map_two_events.update_jmp_header_name_value(event_info, "disappear_flag", 0)
-                map_two_events.update_jmp_header_name_value(event_info, "EventLoad", 0)
-                map_two_events.update_jmp_header_name_value(event_info, "EventArea", 330)
-                map_two_events.update_jmp_header_name_value(event_info, "EventIf", 1)
-                map_two_events.update_jmp_header_name_value(event_info, "PlayerStop", 1)
-                map_two_events.update_jmp_header_name_value(event_info, "pos_x", int(spawn_data.pos_x) - 150 + 2)
-                map_two_events.update_jmp_header_name_value(event_info, "pos_y", spawn_data.pos_y)
-                map_two_events.update_jmp_header_name_value(event_info, "pos_z", int(spawn_data.pos_z) - 150)
+                event_info["EventFlag"] = 0
+                event_info["disappear_flag"] = 0
+                event_info["EventLoad"] = 0
+                event_info["EventArea"] = 330
+                event_info["EventIf"] = 1
+                event_info["PlayerStop"] = 1
+                event_info["pos_x"] = int(spawn_data.pos_x) - 150 + 2
+                event_info["pos_y"] = spawn_data.pos_y
+                event_info["pos_z"] = int(spawn_data.pos_z) - 150
 
 
     def _map_two_character_changes(self):
@@ -1032,7 +1031,7 @@ class RandomizeJMPTables:
 
             # Replace the furnitureinfo entry to spawn an item from the "itemappeartable".
             # If the entry is supposed to be money, then generate a random amount of coins and/or bills from it.
-            filtered_item_appear: list[JMPValue] = [index for index, item_appear_entry in enumerate(map_two_item_appear.data_entries)
+            filtered_item_appear: list[int] = [index for index, item_appear_entry in enumerate(map_two_item_appear.data_entries)
                 if map_two_item_appear.get_jmp_header_name_value(item_appear_entry, "item0") == actor_item_name]
             map_two_furniture.update_jmp_header_name_value(furniture_entry, "item_table",
                 filtered_item_appear.index(filtered_item_appear[0]))
