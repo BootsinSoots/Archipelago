@@ -38,10 +38,9 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
     lm_dol.data.seek(0x396538)
     lm_dol.data.write(struct.pack(">H", speed_to_use))
 
-    # Vacuum Speed
+    # Update Vanilla Vac Speed based on if at least one upgrade is available in start inventory
     vac_count = len(list("Vacuum Upgrade" in key for key in start_inv))
     vac_speed = "3800000F" if vac_count >= 1 else "800D0160"
-
     lm_dol.data.seek(0x7EA28)
     lm_dol.data.write(bytes.fromhex(vac_speed))
 
@@ -50,7 +49,7 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
     boo_data = "000005"
     lm_dol.data.write(bytes.fromhex(boo_data))
 
-    # Turn on custom code handler for boo display counter only if Boo Rando is on.
+    # Turn on custom code handler for boo display counter only if Boo Rando is on. These are static changes from vanilla.
     if boo_rando_enabled:
         # Shift for y offset using custom boo counter display
         lm_dol.data.seek(0x04DB50)
