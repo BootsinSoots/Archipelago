@@ -326,13 +326,6 @@ def _get_key_name(door_id):
         case _:
             return "key01"
 
-def update_temp_jmp_value(jmp_entry: JMPEntry, field_name: str, field_value: JMPValue):
-    jmp_field: JMPFieldHeader = next((jfield for jfield in jmp_entry.keys() if jfield.field_name == field_name), None)
-    if jmp_field is None:
-        raise Exception(f"Unable to find field with name '{field_name}'.")
-
-    jmp_entry[jmp_field] = field_value
-
 def create_iteminfo_entry(item_door_id: int, info_item_name: str, hp_amt: int=0, is_escape: int=0) -> dict:
     """Creates a dictionary for use in the iteminfotable"""
     open_no: int = item_door_id
