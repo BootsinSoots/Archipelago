@@ -326,18 +326,6 @@ def _get_key_name(door_id):
         case _:
             return "key01"
 
-def add_new_jmp_data_entry(jmp_file: JMP, values_to_add: dict):
-    jmp_entry: JMPEntry = {}
-    for jmp_header in jmp_file.fields:
-        jmp_entry[jmp_header] = values_to_add[jmp_header.field_name]
-    jmp_file.data_entries.append(jmp_entry)
-
-def get_jmp_value(jmp_file: JMP, jmp_entry: JMPEntry, field_name: str) -> JMPValue:
-    return jmp_file.get_jmp_header_name_value(jmp_entry, field_name)
-
-def update_jmp_value(jmp_file: JMP, jmp_entry: JMPEntry, field_name: str, field_value: JMPValue):
-    jmp_file.update_jmp_header_name_value(jmp_entry, field_name, field_value)
-
 def update_temp_jmp_value(jmp_entry: JMPEntry, field_name: str, field_value: JMPValue):
     jmp_field: JMPFieldHeader = next((jfield for jfield in jmp_entry.keys() if jfield.field_name == field_name), None)
     if jmp_field is None:
@@ -409,31 +397,31 @@ def apply_new_ghost(lm_rando: "LuigisMansionRandomizer", jmp_file: JMP, enemy_en
     # Excludes Skul ghosts as well unless the railinfo jmp table is updated.
 
     # If the vanilla ghost is a Ceiling Ghost, reduce its spawning Y position so the new ghost spawns on the floor.
-    curr_enemy_name: str = jmp_file.get_jmp_header_name_value(enemy_entry, "name")
-    curr_pos_y: float = float(jmp_file.get_jmp_header_name_value(enemy_entry, "pos_y"))
+    curr_enemy_name: str = str(enemy_entry["name"])
+    curr_pos_y: float = float(enemy_entry["pos_y"])
     if "tenjyo" in curr_enemy_name:
-        jmp_file.update_jmp_header_name_value(enemy_entry, "pos_y", curr_pos_y - 200.000000)
+        enemy_entry["pos_y"] = curr_pos_y - 200.000000
 
     # If a room is supposed to have an element, replace all the ghosts in it to be only ghosts with that element.
     # Otherwise, randomize the ghosts between the non-element ones from the list.
     match element:
         case "Ice":
-            jmp_file.update_jmp_header_name_value(enemy_entry, "name", "mapoo2")
+            enemy_entry["name"] = "mapoo2"
         case "Water":
-            jmp_file.update_jmp_header_name_value(enemy_entry, "name", "mopoo2")
+            enemy_entry["name"] = "mopoo2"
         case "Fire":
-            jmp_file.update_jmp_header_name_value(enemy_entry, "name", "yapoo2")
+            enemy_entry["name"] = "yapoo2"
         case "No Element":
-            enemy_room_num: int = int(jmp_file.get_jmp_header_name_value(enemy_entry, "room_no"))
+            enemy_room_num: int = int(enemy_entry["room_no"])
             if enemy_room_num  == 23:
                 no_shy_ghosts = copy.deepcopy(RANDOM_GHOST_LISTS)
                 no_shy_ghosts.pop(5)
                 new_enemy = lm_rando.random.choice(sorted(list(lm_rando.random.choice(sorted(no_shy_ghosts)))))
             else:
                 new_enemy = lm_rando.random.choice(sorted(list(lm_rando.random.choice(sorted(RANDOM_GHOST_LISTS)))))
-            jmp_file.update_jmp_header_name_value(enemy_entry, "name", new_enemy)
+            enemy_entry["name"] = new_enemy
 
     # If the new ghost is a Ceiling Ghost, increase its spawning Y position so it spawns in the air.
-    new_pos_y: float = float(jmp_file.get_jmp_header_name_value(enemy_entry, "pos_y"))
+    new_pos_y: float = float(enemy_entry["pos_y"])
     if "tenjyo" in curr_enemy_name:
-        jmp_file.update_jmp_header_name_value(enemy_entry, "pos_y", new_pos_y + 200.000000)
+        enemy_entry["pos_y"] = new_pos_y + 200.000000
