@@ -177,19 +177,19 @@ def vanilla_game_changes(dol_data: DOL):
     dol_data.data.write(bytes.fromhex("38600002"))
 
     # Disables several flags from automatically turning on in-game
-    dol_data.data.seek(0x072428)
+    dol_data.data.seek(0x072428) # Flag 15
     dol_data.data.write(bytes.fromhex("60000000"))
-    dol_data.data.seek(0x0AC83C)
+    dol_data.data.seek(0x0AC83C) # Flag 56
     dol_data.data.write(bytes.fromhex("60000000"))
-    dol_data.data.seek(0x0ACE7C)
+    dol_data.data.seek(0x0ACE7C) # Flag 39
     dol_data.data.write(bytes.fromhex("60000000"))
-    dol_data.data.seek(0x0ACE88)
+    dol_data.data.seek(0x0ACE88) # Flag 80
     dol_data.data.write(bytes.fromhex("60000000"))
-    dol_data.data.seek(0x0ACE94)
+    dol_data.data.seek(0x0ACE94) # Flag 12
     dol_data.data.write(bytes.fromhex("60000000"))
-    dol_data.data.seek(0x0ACEA0)
+    dol_data.data.seek(0x0ACEA0) # Flag 68
     dol_data.data.write(bytes.fromhex("60000000"))
-    dol_data.data.seek(0x0ACEAC)
+    dol_data.data.seek(0x0ACEAC) # Flag 82
     dol_data.data.write(bytes.fromhex("60000000"))
 
     # Disables some default behaviour for crawl trap
