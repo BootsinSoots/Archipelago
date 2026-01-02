@@ -118,17 +118,13 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
     vanilla_game_changes(lm_dol)
 
     # Read in all the other custom DOL changes and update their values to the new value as expected.
-    custom_dol_code = PROJECT_ROOT.joinpath("iso_helper").joinpath("LM_custom_code.lmco").read_bytes()
+    custom_dol_code = PROJECT_ROOT.joinpath("iso_helper").joinpath("dol").joinpath("LM_custom_code.lmco").read_bytes()
     lm_dol.data.seek(CUSTOM_CODE_OFFSET_START)
     lm_dol.data.write(custom_dol_code)
 
-    dol_csv_offsets = PROJECT_ROOT.joinpath("iso_helper").joinpath("dol_diff.csv").read_text(encoding="utf-8").splitlines()
-    for csv_line in dol_csv_offsets:
-        dol_addr, dol_val, _ = csv_line.split(",")
-        lm_dol.data.seek(int(dol_addr, 16))
-        lm_dol.data.write(bytes.fromhex(dol_val))
+    read_and_update_hooks(lm_dol)
 
-    if not random_spawn == "Foyer":
+    if not random_spawn == "Foyer": # TODO Need to change this dynamically
         spawn_info: LMRegionInfo = REGION_LIST[random_spawn]
         lm_dol.data.seek(0x3A05E0)
         lm_dol.data.write(struct.pack(">f", spawn_info.pos_x))
@@ -138,12 +134,16 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
         lm_dol.data.write(struct.pack(">f", spawn_info.pos_z))
 
     if door_model_enabled:
+        # Each is 6 bytes off from the start door offset.
+        # List of all doors we want to change on map2 (Main Mansion)
         door_model_offsets: list[int] = [0x2FFFBE, 0x2FFFDA, 0x2FFFF6, 0x300012, 0x30004A, 0x300066, 0x300082,
             0x30009E, 0x3000BA, 0x3000D6, 0x300146, 0x300162, 0x30017E, 0x30019A, 0x3001B6, 0x3001D2, 0x3001EE,
             0x30020A, 0x300242, 0x30025E, 0x30027A, 0x3002B2, 0x3002CE, 0x3002EA, 0x300306, 0x30035A, 0x3003AE,
             0x3003CA, 0x3003E6, 0x300402, 0x30043A, 0x300456, 0x300472, 0x30048E, 0x3004C6, 0x3004E2, 0x3004FE,
             0x30051A, 0x30056E, 0x30058A, 0x3005A6, 0x3005DE, 0x3005FA, 0x300616, 0x300632, 0x30064E, 0x300686,
             0x3006A2, 0x3006BE, 0x3006DA, 0x3006F6, 0x300712, 0x30072E, 0x30074A]
+        # List of all doors we want to change on map6 (Gallery)
+        door_model_offsets += [0x300C56, 0x300C72]
         for map_two_doors in door_model_offsets:
             lm_dol.data.seek(map_two_doors)
             door_model_id = lm_gen.random.randint(1,14)
@@ -196,3 +196,18 @@ def vanilla_game_changes(dol_data: DOL):
     dol_data.data.write(bytes.fromhex("60000000"))
     dol_data.data.seek(0x0AC304)
     dol_data.data.write(bytes.fromhex("807F07E8"))
+
+
+def read_and_update_hooks(dol_data: DOL):
+    """Reads and updates all the necessary custom code hooks used for the custom features like mirror warp, traps, etc.
+    Since these hooks typically start with "04", as they are AR codes, update them to start with "80" instead.
+    Once formatted, need to convert the RAM address to a DOL offset instead to update it properly in the DOL file."""
+
+    custom_hooks: list[str] = (PROJECT_ROOT.joinpath("iso_helper").joinpath("dol").joinpath("Code_Hooks.txt")
+        .read_text(encoding="utf-8").splitlines())
+    for hook_line in custom_hooks:
+        ram_addr, dol_val = hook_line.split(" ")
+        ram_addr = "80" + ram_addr[2:]
+        dol_offset = dol_data.convert_address_to_offset(ram_addr)
+        dol_data.data.seek(int(dol_offset, 16))
+        dol_data.data.write(bytes.fromhex(dol_val))
