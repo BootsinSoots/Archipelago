@@ -1051,9 +1051,8 @@ class RandomizeJMPTables:
                     furniture_entry["item_offset_y"] = curr_y_offset + 75
 
             # TODO update using ALL items table instead
-            if any((key, val) for (key, val) in filler_items.items() if
-                key == item_data["name"] and key != "Diamond" and val.type == "Money") \
-                and item_data["player"] == self.lm_rando.slot:
+            if any((key, val) for (key, val) in filler_items.items() if key == item_data["name"] and \
+                key != "Diamond" and val.type == "Money") and item_data["player"] == self.lm_rando.slot:
 
                 furniture_entry["item_table"] = 11
                 int_money_amt = 1
