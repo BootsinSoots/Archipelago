@@ -202,7 +202,6 @@ def read_and_update_hooks(dol_data: DOL):
     """Reads and updates all the necessary custom code hooks used for the custom features like mirror warp, traps, etc.
     Since these hooks typically start with "04", as they are AR codes, update them to start with "80" instead.
     Once formatted, need to convert the RAM address to a DOL offset instead to update it properly in the DOL file."""
-
     custom_hooks: list[str] = (PROJECT_ROOT.joinpath("iso_helper").joinpath("dol").joinpath("Code_Hooks.txt")
         .read_text(encoding="utf-8").splitlines())
     for hook_line in custom_hooks:
