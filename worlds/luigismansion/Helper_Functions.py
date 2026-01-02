@@ -125,3 +125,20 @@ def is_rarc_node_empty(rarc_node: RARCNode, files_to_be_removed: list[str]=None)
 
     future_removed_files: list[str] = files_to_be_removed if not None else []
     return set([nfile.name for nfile in rarc_node.files if nfile.name not in future_removed_files]).issubset(set(IGNORE_RARC_NAMES))
+
+def parse_custom_map_and_update_addresses() -> dict:
+    #TODO Read this as needed (during ROM Generation, During Client Startup, and ROM Patching (last two can be combined)
+    #   Once read, this will need to merge space/tabs to commas to make it easier to parse.
+    #   Based on the name in idx 2 (split on comma) if the name is in our list, make a switch case and get address to update dict.
+
+    custom_address_list: list[str] = (PROJECT_ROOT.joinpath("iso_helper").joinpath("dol").joinpath("Code_Hooks.txt")
+        .read_text(encoding="utf-8").splitlines())
+    ram_addresses: dict = {
+        "Client": {},
+        "Locations": {},
+        "DOL": {}
+    }
+
+    # Weapon_action is used for Client Vac Speed Adjustments
+    name_list: list[str] = ["Generate_Ghost", "Monochrome_Trap_Timer", "Player_Reaction", "Boolossus_Mini_Boo_Difficulty",
+        "Weapon_Action", "Mirror_Warp_X", "Mirror_Warp_Y", "Mirror_Warp_Z", "Play_King_Boo_Gem_Fast_Pickup"]
