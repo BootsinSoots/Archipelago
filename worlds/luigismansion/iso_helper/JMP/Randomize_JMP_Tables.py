@@ -246,14 +246,13 @@ class RandomizeJMPTables:
         map_two_item_appear: JMP = self.lm_rando.map_files["map2"].jmp_files["itemappeartable"]
 
         # Gets the list of keys already added in the item appear table
-        already_exist_items: list[str] = list(set([map_two_item_appear.get_jmp_header_name_value(item_entry,
-            "item0") for item_entry in map_two_item_appear.data_entries]))
+        already_exist_items: list[str] = sorted(list(set([item_entry["item0"] for item_entry in map_two_item_appear.data_entries])))
 
         for location_type in self.lm_rando.output_data["Locations"].keys():
             for item_data in self.lm_rando.output_data["Locations"][location_type].values():
                 lm_item_name: str = get_item_name(item_data, self.lm_rando.slot)
                 if not lm_item_name in already_exist_items:
-                    add_new_jmp_data_entry(map_two_item_appear, create_itemappear_entry(lm_item_name))
+                    map_two_item_appear.add_jmp_entry(create_itemappear_entry(lm_item_name))
                     already_exist_items.append(lm_item_name)
 
 
@@ -267,26 +266,25 @@ class RandomizeJMPTables:
         boo_chosen_hp: int = int(self.lm_rando.output_data["Options"]["boo_health_value"])
 
         map_two_telesa: JMP = self.lm_rando.map_files["map2"].jmp_files["telesa"]
-        boo_hp_unit: int = 0
 
-        if boo_health_choice == 2:
-            boo_hp_unit = max([int(boo_loc["boo_sphere"]) for boo_loc in self.lm_rando.output_data["Locations"]["Boo"].values()])
         for boo_entry in self.lm_rando.output_data["Locations"]["Boo"].values():
             curr_boo_entry: JMPEntry = map_two_telesa.data_entries[int(boo_entry["loc_enum"])]
-            map_two_telesa.update_jmp_header_name_value(curr_boo_entry, "accel", 3.000000)
-            map_two_telesa.update_jmp_header_name_value(curr_boo_entry, "max_speed", boo_speed)
-            map_two_telesa.update_jmp_header_name_value(curr_boo_entry, "move_time", boo_escape_time)
-            map_two_telesa.update_jmp_header_name_value(curr_boo_entry, "attack", boo_anger)
+            curr_boo_entry["accel"] = 3.000000
+            curr_boo_entry["max_speed"] = boo_speed
+            curr_boo_entry["move_time"] = boo_escape_time
+            curr_boo_entry["attack"] = boo_anger
             match boo_health_choice:
                 case 0:
-                    map_two_telesa.update_jmp_header_name_value(curr_boo_entry, "str_hp", boo_chosen_hp)
+                    curr_boo_entry["str_hp"] = boo_chosen_hp
                 case 1:
                     boo_random_hp: int = self.lm_rando.random.randint(1, boo_chosen_hp)
-                    map_two_telesa.update_jmp_header_name_value(curr_boo_entry, "str_hp", boo_random_hp)
+                    curr_boo_entry["str_hp"] = boo_random_hp
                 case 2:
+                    boo_hp_unit = max([int(boo_loc["boo_sphere"]) for boo_loc in
+                        self.lm_rando.output_data["Locations"]["Boo"].values()])
                     boo_sphere_hp: int = ceil(boo_hp_unit * boo_entry["boo_sphere"]) if ceil(
                         boo_hp_unit * boo_entry["boo_sphere"]) <= boo_chosen_hp else boo_chosen_hp
-                    map_two_telesa.update_jmp_header_name_value(curr_boo_entry, "str_hp", boo_sphere_hp)
+                    curr_boo_entry["str_hp"] = boo_sphere_hp
                 case _:
                     continue
 
