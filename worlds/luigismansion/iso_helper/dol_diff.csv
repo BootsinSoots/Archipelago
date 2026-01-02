@@ -22,7 +22,7 @@
 0x0ACE7C,60000000,# Disable flag 39 auto turn on
 0x0ACE88,60000000,# Disable flag 80 auto turn on
 0x0ACE94,60000000,# Disable flag 12 auto turn on
-0x0ACEA0,60000000,# Disable flag 15 auto turn on# Disable flag 68 auto turn on
+0x0ACEA0,60000000,# Disable flag 68 auto turn on
 0x0ACEAC,60000000,# Disable flag 82 auto turn on
 0x0AD624,4842DB4D,# Bowser Gem Pickup thing
 0x0B311C,48427E21,# Player set custom equipment
