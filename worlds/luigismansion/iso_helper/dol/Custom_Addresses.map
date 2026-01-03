@@ -22,14 +22,6 @@
                 0x804dee68                cFurniture_create_Gold_Diamond
                 0x804dee7c                Furniture_create_Gold_Bars
  .text          0x804deee4      0x128 Source/GC2D.asm.o
-                0x804deee4                Item_Name_Scale
-                0x804deee8                Item_Sender_Scale
-                0x804deeec                Item_Received_Action_Color
-                0x804deef0                Item_From_Descriptor_Color
-                0x804deef4                Item_In_Descriptor_Color
-                0x804deef8                Item_Name_Color
-                0x804deefc                Item_Sender_Color
-                0x804def00                Item_Location_Color
                 0x804def04                Player_Health_Color_Full
                 0x804def08                Player_Health_Color_80
                 0x804def0c                Player_Health_Color_60
