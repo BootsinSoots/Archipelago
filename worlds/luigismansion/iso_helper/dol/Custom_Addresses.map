@@ -80,4 +80,3 @@
  .text          0x804df8a0       0x3c Source/SaEnBossTelesa.asm.o
                 0x804df8a0                Boolossus_Mini_Boo_Difficulty
                 0x804df8a4                SaEnBossTelesa_set_Mini_Boo_Difficulty
-
