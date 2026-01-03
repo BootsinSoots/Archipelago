@@ -149,28 +149,29 @@ def parse_custom_map_and_update_addresses() -> dict:
         if csv_line[2] not in name_list:
             continue
 
+        updated_addr: str = csv_line[1].replace("0x", "")
         match csv_line[2]:
             case "Generate_Ghost":
-                ram_addresses["Locations"][csv_line[2]] = csv_line[1]
+                ram_addresses["Locations"][csv_line[2]] = updated_addr
             case "Monochrome_Trap_Timer":
-                ram_addresses["Locations"][csv_line[2]] = csv_line[1]
+                ram_addresses["Locations"][csv_line[2]] = updated_addr
             case "Player_Reaction":
-                ram_addresses["Locations"][csv_line[2]] = csv_line[1]
+                ram_addresses["Locations"][csv_line[2]] = updated_addr
             case "Boolossus_Mini_Boo_Difficulty":
-                ram_addresses["Client"][csv_line[2]] = csv_line[1]
+                ram_addresses["Client"][csv_line[2]] = updated_addr
             case "Weapon_Action":
-                ram_addresses["Client"][csv_line[2]] = csv_line[1]
+                ram_addresses["Client"][csv_line[2]] = updated_addr
             case "Mirror_Warp_X":
-                ram_addresses["Client"][csv_line[2]] = csv_line[1]
+                ram_addresses["Client"][csv_line[2]] = updated_addr
             case "Mirror_Warp_Y":
-                ram_addresses["Client"][csv_line[2]] = csv_line[1]
+                ram_addresses["Client"][csv_line[2]] = updated_addr
             case "Mirror_Warp_Z":
-                ram_addresses["Client"][csv_line[2]] = csv_line[1]
+                ram_addresses["Client"][csv_line[2]] = updated_addr
             case "Play_King_Boo_Gem_Fast_Pickup":
-                ram_addresses["Client"][csv_line[2]] = csv_line[1]
+                ram_addresses["Client"][csv_line[2]] = updated_addr
             case "gItem_Information_Timer":
-                ram_addresses["Client"][csv_line[2]] = csv_line[1]
+                ram_addresses["Client"][csv_line[2]] = updated_addr
             case "gItem_Information":
-                ram_addresses["Client"][csv_line[2]] = csv_line[1]
+                ram_addresses["Client"][csv_line[2]] = updated_addr
 
     return ram_addresses
