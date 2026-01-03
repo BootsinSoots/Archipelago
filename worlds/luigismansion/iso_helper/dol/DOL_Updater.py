@@ -122,7 +122,7 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
     lm_dol.data.seek(CUSTOM_CODE_OFFSET_START)
     lm_dol.data.write(custom_dol_code)
 
-    read_and_update_hooks(lm_dol)
+    read_and_update_hooks(lm_gen, lm_dol)
 
     if not random_spawn == "Foyer": # TODO Need to change this dynamically
         spawn_info: LMRegionInfo = REGION_LIST[random_spawn]
@@ -201,7 +201,9 @@ def vanilla_game_changes(dol_data: DOL):
 def read_and_update_hooks(dol_data: DOL):
     """Reads and updates all the necessary custom code hooks used for the custom features like mirror warp, traps, etc.
     Since these hooks typically start with "04", as they are AR codes, update them to start with "80" instead.
-    Once formatted, need to convert the RAM address to a DOL offset instead to update it properly in the DOL file."""
+    Once formatted, need to convert the RAM address to a DOL offset instead to update it properly in the DOL file.
+    For LM at least, RAM address and DOL offset tend to be 32A0 away from each other.
+    To convert DOL to RAM, add 32A0, to revert back, subtract 32A0."""
     custom_hooks: list[str] = (PROJECT_ROOT.joinpath("iso_helper").joinpath("dol").joinpath("Codes_Hooks.txt")
         .read_text(encoding="utf-8").splitlines())
     for hook_line in custom_hooks:
