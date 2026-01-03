@@ -1,6 +1,7 @@
 from importlib.resources.abc import Traversable
 from typing import NamedTuple, Optional
 import importlib.resources as resources
+import re
 
 from gclib.rarc import RARCFileEntry, RARC, RARCNode
 from gclib.gcm import GCM
@@ -116,6 +117,7 @@ def read_custom_file(file_type: str, file_name: str) -> str:
 
 
 def is_rarc_node_empty(rarc_node: RARCNode, files_to_be_removed: list[str]=None) -> bool:
+    """Checks if a given rarc now has any files left in it. Optionally checks a list of files that will be removed in the future."""
     assert rarc_node.name not in IGNORE_RARC_NAMES
     assert rarc_node is not None
 
@@ -127,10 +129,8 @@ def is_rarc_node_empty(rarc_node: RARCNode, files_to_be_removed: list[str]=None)
     return set([nfile.name for nfile in rarc_node.files if nfile.name not in future_removed_files]).issubset(set(IGNORE_RARC_NAMES))
 
 def parse_custom_map_and_update_addresses() -> dict:
-    #TODO Read this as needed (during ROM Generation, During Client Startup, and ROM Patching (last two can be combined)
-    #   Once read, this will need to merge space/tabs to commas to make it easier to parse.
-    #   Based on the name in idx 2 (split on comma) if the name is in our list, make a switch case and get address to update dict.
-
+    """Parses the list of custom addresses that go along with the custom code provided.
+    A lot of names / functions are not relevant to the APWorld itself so we only care about the name_list provided."""
     custom_address_list: list[str] = (PROJECT_ROOT.joinpath("iso_helper").joinpath("dol").joinpath("Code_Hooks.txt")
         .read_text(encoding="utf-8").splitlines())
     ram_addresses: dict = {
@@ -140,5 +140,37 @@ def parse_custom_map_and_update_addresses() -> dict:
     }
 
     # Weapon_action is used for Client Vac Speed Adjustments
-    name_list: list[str] = ["Generate_Ghost", "Monochrome_Trap_Timer", "Player_Reaction", "Boolossus_Mini_Boo_Difficulty",
-        "Weapon_Action", "Mirror_Warp_X", "Mirror_Warp_Y", "Mirror_Warp_Z", "Play_King_Boo_Gem_Fast_Pickup"]
+    name_list: list[str] = ["Generate_Ghost", "Monochrome_Trap_Timer", "Player_Reaction", "gItem_Information",
+        "Weapon_Action", "Mirror_Warp_X", "Mirror_Warp_Y", "Mirror_Warp_Z", "Play_King_Boo_Gem_Fast_Pickup",
+        "gItem_Information_Timer", "Boolossus_Mini_Boo_Difficulty"]
+
+    for custom_line in custom_address_list:
+        csv_line: list[str] = re.sub("[\s ]+", ",", custom_line, 0, flags=0).split(",")
+        if csv_line[2] not in name_list:
+            continue
+
+        match csv_line[2]:
+            case "Generate_Ghost":
+                ram_addresses["Locations"][csv_line[2]] = csv_line[1]
+            case "Monochrome_Trap_Timer":
+                ram_addresses["Locations"][csv_line[2]] = csv_line[1]
+            case "Player_Reaction":
+                ram_addresses["Locations"][csv_line[2]] = csv_line[1]
+            case "Boolossus_Mini_Boo_Difficulty":
+                ram_addresses["Client"][csv_line[2]] = csv_line[1]
+            case "Weapon_Action":
+                ram_addresses["Client"][csv_line[2]] = csv_line[1]
+            case "Mirror_Warp_X":
+                ram_addresses["Client"][csv_line[2]] = csv_line[1]
+            case "Mirror_Warp_Y":
+                ram_addresses["Client"][csv_line[2]] = csv_line[1]
+            case "Mirror_Warp_Z":
+                ram_addresses["Client"][csv_line[2]] = csv_line[1]
+            case "Play_King_Boo_Gem_Fast_Pickup":
+                ram_addresses["Client"][csv_line[2]] = csv_line[1]
+            case "gItem_Information_Timer":
+                ram_addresses["Client"][csv_line[2]] = csv_line[1]
+            case "gItem_Information":
+                ram_addresses["Client"][csv_line[2]] = csv_line[1]
+
+    return ram_addresses
