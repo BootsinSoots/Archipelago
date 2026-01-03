@@ -77,8 +77,8 @@ BOO_COUNTER_DISPLAY_ADDR = 0x803A3CC4
 BOO_COUNTER_DISPLAY_OFFSET = 0x77
 
 # These addresses and bits are used to turn on flags for Boo Count related events.
-BOO_WASHROOM_FLAG_ADDR = 0x803D339C
-BOO_WASHROOM_FLAG_BIT = 4
+# BOO_WASHROOM_FLAG_ADDR = 0x803D339C
+# BOO_WASHROOM_FLAG_BIT = 4
 BOO_BALCONY_FLAG_ADDR = 0x803D3399
 BOO_BALCONY_FLAG_BIT = 2
 BOO_FINAL_FLAG_ADDR = 0x803D33A2
@@ -189,6 +189,19 @@ class LMContext(BaseContext):
         # Last received index to track locally in the client
         self.last_received_idx: int = 0
         self.non_save_last_recv_idx: int = 0
+
+        # List of Dynamic RAM address that change for
+        self.boolossus_diff_addr: int = 0
+        self.mirror_warp_x_addr: int = 0
+        self.mirror_warp_y_addr: int = 0
+        self.mirror_warp_z_addr: int = 0
+        self.king_bowser_pickup_addr: int = 0
+        self.display_item_text_addr: int = 0
+        self.display_item_timer_addr: int = 0
+        self.weapon_speed_addr: int = 0
+        self.dynamic_addr_list: list[int] = [self.boolossus_diff_addr, self.mirror_warp_x_addr, self.mirror_warp_y_addr,
+            self.mirror_warp_z_addr, self.king_bowser_pickup_addr, self.display_item_text_addr,
+            self.display_item_timer_addr, self.weapon_speed_addr]
 
     async def disconnect(self, allow_autoreconnect: bool = False):
         """
@@ -746,10 +759,11 @@ class LMContext(BaseContext):
         """There is some custom code injected into LM that allows us to display any text we want in game.
         There is a note that there is at max 286 characters and up to 10 lines.
         Lines are indicated by line breaks (\n) and can be anywhere, regardless of character count.
-        To change colors, you will need to use the tags '\eGC[RRGGBBAA]\eCC[RRGGBBAA]', where its RGB + Alpha
+        To change colors, you will need to use the tags '\\eGC[RRGGBBAA]\\eCC[RRGGBBAA]', where its RGB + Alpha
         Alpha is unused in these lines, so we can set it to whatever static value we want, does not matter.
-        \eGC[RRGGBBAA]\eCC[RRGGBBAA] takes up 26 characters on its own.
-        Example line: \eGC[FF0000FF]\eCC[FF0000FF]Sample Red Tex here\n"""
+        \\eGC[RRGGBBAA]\\eCC[RRGGBBAA] takes up 26 characters on its own.
+        Example line: \\eGC[FF0000FF]\\eCC[FF0000FF]Sample Red Tex here\\n"""
+        return # TODO Early return as this is broken until we do changes based on the above docstring.
         try:
             while self.slot:
                 if not (self.check_ingame() and self.check_alive()) or not self.item_display_queue:
@@ -884,6 +898,38 @@ class LMContext(BaseContext):
         except Exception as threadEx:
             logger.error("Something went horribly wrong with the Luigis Mansion client. Details: " + str(threadEx))
 
+    def update_client_addresses(self):
+        from .Helper_Functions import parse_custom_map_and_update_addresses
+        custom_addr_dict: dict = parse_custom_map_and_update_addresses()
+
+        for custom_name, custom_addr in custom_addr_dict["Client"].items():
+            converted_addr: int = int(custom_addr, 16)
+            match custom_name:
+                case "Boolossus_Mini_Boo_Difficulty":
+                    self.boolossus_diff_addr = converted_addr
+                case "Mirror_Warp_X":
+                    self.mirror_warp_x_addr = converted_addr
+                case "Mirror_Warp_Y":
+                    self.mirror_warp_y_addr = converted_addr
+                case "Mirror_Warp_Z":
+                    self.mirror_warp_z_addr = converted_addr
+                case "Play_King_Boo_Gem_Fast_Pickup":
+                    self.king_bowser_pickup_addr = converted_addr
+                case "gItem_Information_Timer":
+                    self.display_item_timer_addr = converted_addr
+                case "gItem_Information":
+                    self.display_item_text_addr = converted_addr
+                case "Weapon_Action":
+                    self.weapon_speed_addr = converted_addr
+                case _:
+                    raise Exception(f"Unknown custom address with name: '{custom_name}'")
+
+        for dynamic_addr in self.dynamic_addr_list:
+            if dynamic_addr == 0:
+                var_name: str = f"{dynamic_addr=}"
+                raise Exception(f"Item with name '{var_name.split("=")}' has a RAM address of 0, which is not expected.")
+
+
 def main(*launch_args: str):
     from .client.dolphin_launcher import DolphinLauncher
     import colorama
@@ -898,6 +944,9 @@ def main(*launch_args: str):
     parser = get_base_parser()
     parser.add_argument('aplm_file', default="", type=str, nargs="?", help='Path to an APLM file')
     args = parser.parse_args(launch_args)
+
+    from .Helper_Functions import update_dynamic_item_ram_addresses
+    update_dynamic_item_ram_addresses()
 
     if args.aplm_file:
         lm_usa_patch = LMUSAAPPatch()
@@ -924,6 +973,7 @@ def main(*launch_args: str):
         ctx.run_cli()
         await ctx.wait_for_next_loop(WAIT_TIMER_LONG_TIMEOUT)
 
+        ctx.update_client_addresses()
         ctx.dolphin_sync_task = asyncio.create_task(ctx.dolphin_sync_main_task(), name="DolphinSync")
 
         await ctx.exit_event.wait()
