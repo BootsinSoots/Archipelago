@@ -253,30 +253,31 @@ other_filler_items: Dict[str, LMItemData] = {
     "2 Gold Bars": CurrencyItemData(139, { CURRENCY_NAME.GOLD_BARS: 2, }),
 }
 
+# RAM Address are set to 0 because they dynamically change based on the custom code used.
+# These will get updated with their dynamic values in create_items in __init__ and Client.
 trap_filler_items: Dict[str, LMItemData] = {
     "Possession Trap": LMItemData("Trap", 141, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=5)], default_weight=5),
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=5)], default_weight=5),
     "Bonk Trap": LMItemData("Trap", 142, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=4)],default_weight=15),
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=4)],default_weight=15),
     "Bomb": LMItemData("Trap", 130, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=1)], default_weight=15), # value of 1
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=1)], default_weight=15), # value of 1
     "Ice Trap": LMItemData("Trap", 131, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=3)], default_weight=15), # value of 3
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=3)], default_weight=15), # value of 3
     "Banana Trap": LMItemData("Trap", 132, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=2)], default_weight=15), # value of 2
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=2)], default_weight=15), # value of 2
     "Poison Mushroom": LMItemData("Trap", 125, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=6)], default_weight=15), # value of 6
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=6)], default_weight=15), # value of 6
     "Ghost": LMItemData("Trap", 126, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDA50, ram_byte_size=4, item_count=1)], default_weight=15),
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=1)], default_weight=15),
     "Fear Trap": LMItemData("Trap", 143, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=8)], default_weight=25), #Crawling
-    # "Drag Trap": LMItemData("Trap", 144, IC.trap, update_ram_addr=),
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=8)], default_weight=25), #Crawling
     "Spooky Time": LMItemData("Trap", 145, IC.trap,
-        update_ram_addr=[LMRamData(0x804de470, ram_byte_size=4, item_count=150)], default_weight=25),
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=150)], default_weight=25),
     "Squash Trap": LMItemData("Trap", 146, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=7)], default_weight=15),
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=7)], default_weight=15),
     "No Vac Trap": LMItemData("Trap", 147, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDF18, ram_byte_size=4, item_count=9)], default_weight=5)
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=9)], default_weight=5)
 }
 
 filler_items = {**other_filler_items,
