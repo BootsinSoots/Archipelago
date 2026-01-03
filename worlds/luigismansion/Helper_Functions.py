@@ -176,3 +176,51 @@ def parse_custom_map_and_update_addresses() -> dict:
                 ram_addresses["Client"][csv_line[2]] = updated_addr
 
     return ram_addresses
+
+def update_dynamic_item_ram_addresses():
+    # Call the custom address parser to get the dynamically changing addresses for several functions.
+    # Since calling the unpacking operator (**) on a dict creates a shallow copy, all copies will have their updated values.
+    from .Items import ALL_ITEMS_TABLE, trap_filler_items, BOO_ITEM_TABLE
+    custom_addresses: dict = parse_custom_map_and_update_addresses()
+
+    for custom_name, custom_addr in custom_addresses["Items"].items():
+        converted_addr: int = int(custom_addr, 16)
+        match custom_name:
+            case "Generate_Ghost":
+                curr_ram_data: LMRamData = ALL_ITEMS_TABLE["Ghost"].update_ram_addr[0]
+                LMRamData(converted_addr, curr_ram_data.bit_position, curr_ram_data.ram_byte_size,
+                    curr_ram_data.pointer_offset, curr_ram_data.in_game_room_id, curr_ram_data.item_count)
+                ALL_ITEMS_TABLE["Ghost"].update_ram_addr[0] = LMRamData(converted_addr, curr_ram_data.bit_position,
+                    curr_ram_data.ram_byte_size, curr_ram_data.pointer_offset,
+                    curr_ram_data.in_game_room_id, curr_ram_data.item_count)
+
+            case "Player_Reaction":
+                for trap_name in trap_filler_items.keys():
+                    if trap_name in ["Ghost", "Spooky Time"]:
+                        continue
+
+                    curr_ram_data: LMRamData = ALL_ITEMS_TABLE[trap_name].update_ram_addr[0]
+                    ALL_ITEMS_TABLE[trap_name].update_ram_addr[0] = LMRamData(converted_addr,
+                        curr_ram_data.bit_position, curr_ram_data.ram_byte_size, curr_ram_data.pointer_offset,
+                        curr_ram_data.in_game_room_id, curr_ram_data.item_count)
+
+            case "Monochrome_Trap_Timer":
+                curr_ram_data: LMRamData = ALL_ITEMS_TABLE["Spooky Time"].update_ram_addr[0]
+                ALL_ITEMS_TABLE["Spooky Time"].update_ram_addr[0] = LMRamData(converted_addr,
+                    curr_ram_data.bit_position, curr_ram_data.ram_byte_size, curr_ram_data.pointer_offset,
+                    curr_ram_data.in_game_room_id, curr_ram_data.item_count)
+
+            case "Custom_Boo_Counter_Bitfields":
+                for boo_name in BOO_ITEM_TABLE.keys():
+                    curr_ram_data: LMRamData = ALL_ITEMS_TABLE[boo_name].update_ram_addr[0]
+                    ALL_ITEMS_TABLE[boo_name].update_ram_addr[0] = LMRamData(converted_addr,
+                        curr_ram_data.bit_position, curr_ram_data.ram_byte_size, curr_ram_data.pointer_offset,
+                        curr_ram_data.in_game_room_id, curr_ram_data.item_count)
+
+            case _:
+                raise Exception(f"Unknown custom address with name: '{custom_name}'")
+
+    for item_name, item_data in ALL_ITEMS_TABLE.items():
+        for ram_details in item_data.update_ram_addr:
+            if ram_details.ram_addr == 0:
+                raise Exception(f"Item with name '{item_name}' has a RAM address of 0, which is not expected.")
