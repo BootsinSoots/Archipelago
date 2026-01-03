@@ -131,7 +131,7 @@ def is_rarc_node_empty(rarc_node: RARCNode, files_to_be_removed: list[str]=None)
 def parse_custom_map_and_update_addresses() -> dict:
     """Parses the list of custom addresses that go along with the custom code provided.
     A lot of names / functions are not relevant to the APWorld itself so we only care about the name_list provided."""
-    custom_address_list: list[str] = (PROJECT_ROOT.joinpath("iso_helper").joinpath("dol").joinpath("Code_Hooks.txt")
+    custom_address_list: list[str] = (PROJECT_ROOT.joinpath("iso_helper").joinpath("dol").joinpath("Custom_Addresses.map")
         .read_text(encoding="utf-8").splitlines())
     ram_addresses: dict = {
         "Client": {},
