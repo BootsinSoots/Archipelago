@@ -11,6 +11,7 @@ from worlds.AutoWorld import World
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess, icon_paths
 
 # Relative Imports
+from .Helper_Functions import update_dynamic_item_ram_addresses
 from .Items import *
 from .LM_Web import LMWeb
 from .Locations import *
@@ -578,6 +579,7 @@ class LMWorld(World):
     #     visualize_regions(self.multiworld.get_region(self.origin_region_name, self.player), "luigiregions.puml", linetype_ortho=False)
 
     def create_items(self):
+        update_dynamic_item_ram_addresses()
         exclude = [item.name for item in self.multiworld.precollected_items[self.player]]
         if len(self.local_early_key) > 0:
             exclude += self.local_early_key
