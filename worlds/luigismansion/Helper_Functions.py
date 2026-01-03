@@ -128,7 +128,7 @@ def is_rarc_node_empty(rarc_node: RARCNode, files_to_be_removed: list[str]=None)
     future_removed_files: list[str] = files_to_be_removed if not None else []
     return set([nfile.name for nfile in rarc_node.files if nfile.name not in future_removed_files]).issubset(set(IGNORE_RARC_NAMES))
 
-def parse_custom_map_and_update_addresses() -> dict:
+def _parse_custom_map_and_update_addresses() -> dict:
     """Parses the list of custom addresses that go along with the custom code provided.
     A lot of names / functions are not relevant to the APWorld itself so we only care about the name_list provided."""
     custom_address_list: list[str] = (PROJECT_ROOT.joinpath("iso_helper").joinpath("dol").joinpath("Custom_Addresses.map")
@@ -181,7 +181,7 @@ def update_dynamic_item_ram_addresses():
     # Call the custom address parser to get the dynamically changing addresses for several functions.
     # Since calling the unpacking operator (**) on a dict creates a shallow copy, all copies will have their updated values.
     from .Items import ALL_ITEMS_TABLE, trap_filler_items, BOO_ITEM_TABLE
-    custom_addresses: dict = parse_custom_map_and_update_addresses()
+    custom_addresses: dict = _parse_custom_map_and_update_addresses()
 
     for custom_name, custom_addr in custom_addresses["Items"].items():
         converted_addr: int = int(custom_addr, 16)
