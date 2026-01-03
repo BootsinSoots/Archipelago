@@ -144,7 +144,7 @@ def parse_custom_map_and_update_addresses() -> dict:
         "gItem_Information_Timer", "Boolossus_Mini_Boo_Difficulty", "Custom_Boo_Counter_Bitfields"]
 
     for custom_line in custom_address_list:
-        csv_line: list[str] = re.sub("[\s ]+", ",", custom_line, 0, flags=0).split(",")
+        csv_line: list[str] = re.sub(r"[\s ]+", ",", custom_line, 0, flags=0).split(",")
         if csv_line[2] not in name_list:
             continue
 
