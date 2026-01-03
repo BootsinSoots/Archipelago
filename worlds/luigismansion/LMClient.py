@@ -743,6 +743,13 @@ class LMContext(BaseContext):
             logger.error("Critical error while running non-essential async tasks. Details: " + str(genericEx))
 
     async def display_received_items(self):
+        """There is some custom code injected into LM that allows us to display any text we want in game.
+        There is a note that there is at max 286 characters and up to 10 lines.
+        Lines are indicated by line breaks (\n) and can be anywhere, regardless of character count.
+        To change colors, you will need to use the tags '\eGC[RRGGBBAA]\eCC[RRGGBBAA]', where its RGB + Alpha
+        Alpha is unused in these lines, so we can set it to whatever static value we want, does not matter.
+        \eGC[RRGGBBAA]\eCC[RRGGBBAA] takes up 26 characters on its own.
+        Example line: \eGC[FF0000FF]\eCC[FF0000FF]Sample Red Tex here\n"""
         try:
             while self.slot:
                 if not (self.check_ingame() and self.check_alive()) or not self.item_display_queue:
