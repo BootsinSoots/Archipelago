@@ -1,4 +1,3 @@
-
  .text          0x804deaf8      0x21c Source/Main_Game.asm.o
                 0x804deaf8                Generate_Ghost
                 0x804deafc                Weapon_Action
