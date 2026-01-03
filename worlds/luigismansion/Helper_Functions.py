@@ -135,8 +135,7 @@ def parse_custom_map_and_update_addresses() -> dict:
         .read_text(encoding="utf-8").splitlines())
     ram_addresses: dict = {
         "Client": {},
-        "Locations": {},
-        "DOL": {}
+        "Items": {},
     }
 
     # Weapon_action is used for Client Vac Speed Adjustments
@@ -152,11 +151,11 @@ def parse_custom_map_and_update_addresses() -> dict:
         updated_addr: str = csv_line[1].replace("0x", "")
         match csv_line[2]:
             case "Generate_Ghost":
-                ram_addresses["Locations"][csv_line[2]] = updated_addr
+                ram_addresses["Items"][csv_line[2]] = updated_addr
             case "Monochrome_Trap_Timer":
-                ram_addresses["Locations"][csv_line[2]] = updated_addr
+                ram_addresses["Items"][csv_line[2]] = updated_addr
             case "Player_Reaction":
-                ram_addresses["Locations"][csv_line[2]] = updated_addr
+                ram_addresses["Items"][csv_line[2]] = updated_addr
             case "Boolossus_Mini_Boo_Difficulty":
                 ram_addresses["Client"][csv_line[2]] = updated_addr
             case "Weapon_Action":
