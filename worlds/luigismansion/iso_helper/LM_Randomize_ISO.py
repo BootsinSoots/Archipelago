@@ -16,7 +16,7 @@ from gcbrickwork import JMP
 # Internal Related imports.
 from .dol.DOL_Updater import update_dol_offsets
 from .Events import EventChanges
-from .jmp.Randomize_JMP_Tables import RandomizeJMPTables
+from .jmp_changes.Randomize_JMP_Tables import RandomizeJMPTables
 from .LM_Map_File import LMMapFile
 from ..client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME, RANDOMIZER_NAME, CLIENT_NAME, LM_GC_IDs
 from .LM_GameUSA_Arc import LMGameUSAArc
