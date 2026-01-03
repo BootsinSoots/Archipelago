@@ -126,12 +126,12 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
 
     if not random_spawn == "Foyer": # TODO Need to change this dynamically
         spawn_info: LMRegionInfo = REGION_LIST[random_spawn]
-        lm_dol.data.seek(0x3A05E0)
-        lm_dol.data.write(struct.pack(">f", spawn_info.pos_x))
-        lm_dol.data.seek(0x3A05E4)
-        lm_dol.data.write(struct.pack(">f", spawn_info.pos_y))
-        lm_dol.data.seek(0x3A05E8)
-        lm_dol.data.write(struct.pack(">f", spawn_info.pos_z))
+        #lm_dol.data.seek(0x3A05E0)
+        #lm_dol.data.write(struct.pack(">f", spawn_info.pos_x))
+        #lm_dol.data.seek(0x3A05E4)
+        #lm_dol.data.write(struct.pack(">f", spawn_info.pos_y))
+        #lm_dol.data.seek(0x3A05E8)
+        #lm_dol.data.write(struct.pack(">f", spawn_info.pos_z))
 
     if door_model_enabled:
         # Each is 6 bytes off from the start door offset.
