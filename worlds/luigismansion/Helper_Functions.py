@@ -224,7 +224,3 @@ def update_dynamic_item_ram_addresses():
         for ram_details in item_data.update_ram_addr:
             if ram_details.ram_addr == 0:
                 raise Exception(f"Item with name '{item_name}' has a RAM address of 0, which is not expected.")
-
-
-def update_dynamic_client_ream_addresses():
-    custom_addresses: dict = parse_custom_map_and_update_addresses()
