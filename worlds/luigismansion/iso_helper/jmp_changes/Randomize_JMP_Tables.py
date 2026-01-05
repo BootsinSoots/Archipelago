@@ -6,8 +6,8 @@ from typing import TYPE_CHECKING
 from gcbrickwork.JMP import JMP, JMPEntry
 
 from .JMP_Entry_Helpers import (LOCATION_TO_INDEX, SPEEDY_OBSERVER_INDEX, SPEEDY_ENEMY_INDEX, CEILING_FURNITURE_LIST,
-    GHOST_LIST, MEDIUM_HEIGHT_FURNITURE_LIST, apply_new_ghost, create_observer_entry, BOO_HIDING_SPOT_BANS,
-    create_iteminfo_entry, create_itemappear_entry, get_item_chest_visual, get_chest_size_from_item, get_item_name)
+    GHOST_LIST, MEDIUM_HEIGHT_FURNITURE_LIST, apply_new_ghost, create_observer_entry, BOO_HIDING_SPOT_BANS, get_item_name,
+    create_iteminfo_entry, create_itemappear_entry, get_item_chest_visual, get_chest_size_from_item, find_item_appear_index)
 
 from ...Items import ALL_ITEMS_TABLE, LMItemData, CurrencyItemData, filler_items
 from ...Regions import REGION_LIST, TOAD_SPAWN_LIST
@@ -85,9 +85,7 @@ class RandomizeJMPTables:
 
             # Replace the furnitureinfo entry to spawn an item from the "itemappeartable".
             # If the entry is supposed to be money, then generate a random amount of coins and/or bills from it.
-            filtered_item_appear: list[int] = [index for index, item_appear_entry in
-                enumerate(map_six_item_appear.data_entries) if str(item_appear_entry["item0"]) == actor_item_name]
-            furniture_entry["item_table"] = filtered_item_appear[0]
+            furniture_entry["item_table"] = find_item_appear_index(map_six_item_appear.data_entries, actor_item_name)
 
             # TODO update using ALL items table instead
             if any((key, val) for (key, val) in filler_items.items() if key == loc_data["name"] and \
@@ -745,6 +743,7 @@ class RandomizeJMPTables:
         """Updates the character info table to remove un-necessary actors. Also update existing spawns to new items."""
         self.lm_rando.client_logger.info("Now updating all character changes for map2.")
         map_two_characters: JMP = self.lm_rando.map_files["map2"].jmp_files["characterinfo"]
+        map_two_itemappear: JMP = self.lm_rando.map_files["map2"].jmp_files["itemappeartable"]
 
         spawn_data = REGION_LIST[self.lm_rando.output_data["Options"]["spawn"]]
 
@@ -1028,9 +1027,7 @@ class RandomizeJMPTables:
 
             # Replace the furnitureinfo entry to spawn an item from the "itemappeartable".
             # If the entry is supposed to be money, then generate a random amount of coins and/or bills from it.
-            filtered_item_appear: list[int] = [index for index, item_appear_entry in enumerate(map_two_item_appear.data_entries)
-                if str(item_appear_entry["item0"]) == actor_item_name]
-            furniture_entry["item_table"] = filtered_item_appear[0]
+            furniture_entry["item_table"] = find_item_appear_index(map_two_item_appear.data_entries, actor_item_name)
 
             # Adjust move types for WDYM furniture items. Trees require water, obviously
             if wdym_enabled:
