@@ -126,10 +126,10 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
 
     if not random_spawn == "Foyer":
         spawn_info: LMRegionInfo = REGION_LIST[random_spawn]
-        dynamic_addr: dict = lm_gen.lm_dynamic_addr.dynamic_addresses
-        mirror_x_offset: int = dol_data.convert_address_to_offset(int(dynamic_addr["Mirror_Warp_X"], 16))
-        mirror_y_offset: int = dol_data.convert_address_to_offset(int(dynamic_addr["Mirror_Warp_Y"], 16))
-        mirror_z_offset: int = dol_data.convert_address_to_offset(int(dynamic_addr["Mirror_Warp_Z"], 16))
+        dynamic_addr: dict = lm_gen.lm_dynamic_addr.dynamic_addresses["DOL"]
+        mirror_x_offset: int = lm_dol.convert_address_to_offset(int(dynamic_addr["Mirror_Warp_X"], 16))
+        mirror_y_offset: int = lm_dol.convert_address_to_offset(int(dynamic_addr["Mirror_Warp_Y"], 16))
+        mirror_z_offset: int = lm_dol.convert_address_to_offset(int(dynamic_addr["Mirror_Warp_Z"], 16))
 
         lm_dol.data.seek(mirror_x_offset)
         lm_dol.data.write(struct.pack(">f", spawn_info.pos_x))
