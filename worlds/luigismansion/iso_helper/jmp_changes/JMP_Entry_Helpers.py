@@ -134,6 +134,14 @@ def get_item_name(item_data: dict, slot: int) -> str:
     return "nothing"
 
 
+def find_item_appear_index(item_appear_entries: list[JMPEntry], item_name: str) -> int:
+    # Within the itemappear table relevant to the map, find the item that matches the same name.
+    # Once found, return the first instance of that itemappear's index.
+    filtered_item_appear: list[int] = [index for index, item_appear_entry in enumerate(item_appear_entries)
+        if str(item_appear_entry["item0"]) == item_name]
+    return filtered_item_appear[0]
+
+
 # Indicates the chest size that will be loaded in game based on item provided. 0 = small, 1 = medium, 2 = large
 def get_chest_size_from_item(lm_gen: "LuigisMansionRandomizer", item_data: dict, current_size: int) -> int:
     chest_option: int = int(lm_gen.output_data["Options"]["chest_types"])
