@@ -27,11 +27,11 @@ class LMGameUSAArc:
     ctp_params: dict[str, PRM]
     th_params: dict[str, PRM]
 
-    def __init__(self, user_gcm: GCM, arc_path: str):
+    def __init__(self, logger: Logger, user_gcm: GCM, arc_path: str):
         self.lm_gcm = user_gcm
         self._arc_path = arc_path
         self.game_usa_arc: RARC = get_arc(self.lm_gcm, arc_path)
-        self._client_logger = getLogger(CLIENT_NAME)
+        self._client_logger = logger
         self._ctp_files = self.game_usa_arc.get_node_by_path("param/ctp").files
         self._th_files = self.game_usa_arc.get_node_by_path("param/th").files
         self.ctp_params = {}
@@ -102,13 +102,13 @@ class LMGameUSAArc:
         Loads several parameter files in the "TH" folder based on a user provided input list.
         """
         for th_param in th_params:
-            self.ctp_params[th_param] = self._load_prm(_ParamType.TH, th_param)
+            self.th_params[th_param] = self._load_prm(_ParamType.TH, th_param)
 
     def load_ctp_parameter(self, ctp_param_name: str):
         """
         Loads a single parameter files from the "CTP" folder.
         """
-        self.th_params[ctp_param_name] = self._load_prm(_ParamType.CTP, ctp_param_name)
+        self.ctp_params[ctp_param_name] = self._load_prm(_ParamType.CTP, ctp_param_name)
 
     def load_th_parameter(self, th_param_name: str):
         """
