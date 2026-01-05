@@ -152,7 +152,7 @@ class LMDynamicAddresses:
         # Weapon_action is used for Client Vac Speed Adjustments
         name_list: list[str] = ["Generate_Ghost", "Monochrome_Trap_Timer", "Player_Reaction", "gItem_Information",
             "Weapon_Action", "Mirror_Warp_X", "Mirror_Warp_Y", "Mirror_Warp_Z", "Play_King_Boo_Gem_Fast_Pickup",
-            "gItem_Information_Timer", "Boolossus_Mini_Boo_Difficulty", "Custom_Boo_Counter_Bitfields"]
+            "gItem_Information_Timer", "Boolossus_Mini_Boo_Difficulty", "Custom_Boo_Counter_Bitfields", "gTsuri_Speed"]
 
         for custom_line in custom_address_list:
             csv_line: list[str] = re.sub(r"[\s ]+", ",", custom_line, 0, flags=0).split(",")
@@ -169,6 +169,10 @@ class LMDynamicAddresses:
                     ram_addresses["Items"][csv_line[2]] = updated_addr
                 case "Custom_Boo_Counter_Bitfields":
                     ram_addresses["Items"][csv_line[2]] = updated_addr
+                case "Weapon_Action":
+                    ram_addresses["Items"][csv_line[2]] = updated_addr
+                case "gTsuri_Speed":
+                    ram_addresses["Items"][csv_line[2]] = updated_addr
                 case "Mirror_Warp_X":
                     ram_addresses["DOL"][csv_line[2]] = updated_addr
                 case "Mirror_Warp_Y":
@@ -176,8 +180,6 @@ class LMDynamicAddresses:
                 case "Mirror_Warp_Z":
                     ram_addresses["DOL"][csv_line[2]] = updated_addr
                 case "Boolossus_Mini_Boo_Difficulty":
-                    ram_addresses["Client"][csv_line[2]] = updated_addr
-                case "Weapon_Action":
                     ram_addresses["Client"][csv_line[2]] = updated_addr
                 case "Play_King_Boo_Gem_Fast_Pickup":
                     ram_addresses["Client"][csv_line[2]] = updated_addr
@@ -227,6 +229,18 @@ class LMDynamicAddresses:
                         ALL_ITEMS_TABLE[boo_name].update_ram_addr[0] = LMRamData(converted_addr,
                             curr_ram_data.bit_position, curr_ram_data.ram_byte_size, curr_ram_data.pointer_offset,
                             curr_ram_data.in_game_room_id, curr_ram_data.item_count)
+
+                case "Weapon_Action":
+                    curr_ram_data: LMRamData = ALL_ITEMS_TABLE["Poltergust 3000"].update_ram_addr[0]
+                    ALL_ITEMS_TABLE["Poltergust 3000"].update_ram_addr[0] = LMRamData(converted_addr,
+                        curr_ram_data.bit_position, curr_ram_data.ram_byte_size, curr_ram_data.pointer_offset,
+                        curr_ram_data.in_game_room_id, curr_ram_data.item_count)
+
+                case "gTsuri_Speed":
+                    curr_ram_data: LMRamData = ALL_ITEMS_TABLE["Vacuum Upgrade"].update_ram_addr[0]
+                    ALL_ITEMS_TABLE["Vacuum Upgrade"].update_ram_addr[0] = LMRamData(converted_addr,
+                        curr_ram_data.bit_position, curr_ram_data.ram_byte_size, curr_ram_data.pointer_offset,
+                        curr_ram_data.in_game_room_id, curr_ram_data.item_count)
 
                 case _:
                     raise Exception(f"Unknown custom address with name: '{custom_name}'")
