@@ -124,14 +124,19 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
 
     read_and_update_hooks(lm_dol)
 
-    if not random_spawn == "Foyer": # TODO Need to change this dynamically
+    if not random_spawn == "Foyer":
         spawn_info: LMRegionInfo = REGION_LIST[random_spawn]
-        #lm_dol.data.seek(0x3A05E0)
-        #lm_dol.data.write(struct.pack(">f", spawn_info.pos_x))
-        #lm_dol.data.seek(0x3A05E4)
-        #lm_dol.data.write(struct.pack(">f", spawn_info.pos_y))
-        #lm_dol.data.seek(0x3A05E8)
-        #lm_dol.data.write(struct.pack(">f", spawn_info.pos_z))
+        dynamic_addr: dict = lm_gen.lm_dynamic_addr.dynamic_addresses
+        mirror_x_offset: int = dol_data.convert_address_to_offset(int(dynamic_addr["Mirror_Warp_X"], 16))
+        mirror_y_offset: int = dol_data.convert_address_to_offset(int(dynamic_addr["Mirror_Warp_Y"], 16))
+        mirror_z_offset: int = dol_data.convert_address_to_offset(int(dynamic_addr["Mirror_Warp_Z"], 16))
+
+        lm_dol.data.seek(mirror_x_offset)
+        lm_dol.data.write(struct.pack(">f", spawn_info.pos_x))
+        lm_dol.data.seek(mirror_y_offset)
+        lm_dol.data.write(struct.pack(">f", spawn_info.pos_y))
+        lm_dol.data.seek(mirror_z_offset)
+        lm_dol.data.write(struct.pack(">f", spawn_info.pos_z))
 
     if door_model_enabled:
         # Each is 6 bytes off from the start door offset.
