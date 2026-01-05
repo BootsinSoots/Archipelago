@@ -15,7 +15,7 @@ from .Regions import REGION_LIST
 from .iso_helper.LM_Rom import LMUSAAPPatch
 from .Items import *
 from .Locations import ALL_LOCATION_TABLE, SELF_LOCATIONS_TO_RECV
-from .Helper_Functions import StringByteFunction as sbf
+from .Helper_Functions import byte_string_strip_null_terminator, LMDynamicAddresses
 from .client.links.energy_link.energy_link import EnergyLinkConstants
 from .client.links.energy_link.energy_link_command_processor import EnergyLinkCommandProcessor
 from .client.constants import *
@@ -94,7 +94,7 @@ def write_short(console_address: int, value: int):
 
 
 def read_string(console_address: int, strlen: int):
-    return sbf.byte_string_strip_null_terminator(dme.read_bytes(console_address, strlen))
+    return byte_string_strip_null_terminator(dme.read_bytes(console_address, strlen))
 
 
 def check_if_addr_is_pointer(addr: int):
@@ -190,18 +190,9 @@ class LMContext(BaseContext):
         self.last_received_idx: int = 0
         self.non_save_last_recv_idx: int = 0
 
-        # List of Dynamic RAM address that change for
-        self.boolossus_diff_addr: int = 0
-        self.mirror_warp_x_addr: int = 0
-        self.mirror_warp_y_addr: int = 0
-        self.mirror_warp_z_addr: int = 0
-        self.king_bowser_pickup_addr: int = 0
-        self.display_item_text_addr: int = 0
-        self.display_item_timer_addr: int = 0
-        self.weapon_speed_addr: int = 0
-        self.dynamic_addr_list: list[int] = [self.boolossus_diff_addr, self.mirror_warp_x_addr, self.mirror_warp_y_addr,
-            self.mirror_warp_z_addr, self.king_bowser_pickup_addr, self.display_item_text_addr,
-            self.display_item_timer_addr, self.weapon_speed_addr]
+        # Dictionary of Dynamic RAM address that change for
+        self.lm_dynamic_addr: LMDynamicAddresses = LMDynamicAddresses()
+        self.lm_dynamic_addr.update_item_addresses()
 
     async def disconnect(self, allow_autoreconnect: bool = False):
         """
@@ -625,6 +616,9 @@ class LMContext(BaseContext):
 
     async def lm_update_non_savable_ram(self):
         try:
+            # Get the dynamic changing address dict first.
+            dynamic_addr: dict = self.lm_dynamic_addr.dynamic_addresses
+
             # Always adjust the Vacuum speed as saving and quitting or going to E. Gadds lab could reset it back to normal.
             vac_count = self.get_item_count_by_id(8148)
             vac_speed = min(self.get_item_count_by_id(8064), 5)
@@ -633,31 +627,33 @@ class LMContext(BaseContext):
                 for item in [8064, 8148]:
                     lm_item_name = self.item_names.lookup_in_game(item)
                     lm_item = ALL_ITEMS_TABLE[lm_item_name]
-                    for addr_to_update in lm_item.update_ram_addr:
-                        if addr_to_update.ram_addr == 0x804dda54 and vac_count > 0:  # If we're checking against our vacuum-on address
+                    for update_addr in lm_item.update_ram_addr:
+                        if lm_item_name == "Poltergust 3000" and vac_count > 0:  # If we're checking against our vacuum-on address
                             curr_val = 1
-                            dme.write_bytes(addr_to_update.ram_addr, curr_val.to_bytes(addr_to_update.ram_byte_size, 'big'))
-                            vacc_flag = dme.read_byte(0x803D33A3)
+                            dme.write_bytes(update_addr.ram_addr, curr_val.to_bytes(update_addr.ram_byte_size, 'big'))
+                            vacc_flag = dme.read_byte(0x803D33A3) # Read and set flag 82
                             vacc_flag = (vacc_flag | (1 << 2))
                             dme.write_byte(0x803D33A3, vacc_flag)
                         else:
-                            dme.write_bytes(addr_to_update.ram_addr, vac_speed.to_bytes(addr_to_update.ram_byte_size, 'big'))
+                            dme.write_bytes(update_addr.ram_addr, vac_speed.to_bytes(update_addr.ram_byte_size, 'big'))
 
             # Always adjust Pickup animation issues if the user turned pick up animations off.
             if not self.pickup_anim_on:
                 crown_helper_val = "00000001"
-                dme.write_bytes(0x804DE40C, bytes.fromhex(crown_helper_val))
+                pickup_addr: int = int(dynamic_addr["Client"]["Play_King_Boo_Gem_Fast_Pickup"], 16)
+                dme.write_bytes(pickup_addr, bytes.fromhex(crown_helper_val))
 
             # Always update Boolossus difficulty
-            dme.write_bytes(0x804de3d0, self.boolossus_difficulty.to_bytes(4,'big'))
+            boolossus_diff_addr: int = int(dynamic_addr["Client"]["Boolossus_Mini_Boo_Difficulty"], 16)
+            dme.write_bytes(boolossus_diff_addr, self.boolossus_difficulty.to_bytes(4,'big'))
 
             # Always update the flower to have the correct amount of flowers in game
             flower_recv: int = self.get_item_count_by_id(8140)
             flower_count = min(flower_recv + 234, 237)
             flower_item = self.item_names.lookup_in_game(8140)
             flower_item_data = ALL_ITEMS_TABLE[flower_item]
-            for flwr_addr_update in flower_item_data.update_ram_addr:
-                dme.write_bytes(flwr_addr_update.ram_addr, flower_count.to_bytes(flwr_addr_update.ram_byte_size, 'big'))
+            for flwr_addr in flower_item_data.update_ram_addr:
+                dme.write_bytes(flwr_addr.ram_addr, flower_count.to_bytes(flwr_addr.ram_byte_size, 'big'))
 
             # Always update the gold diamond count to have the correct amount of diamonds in game
             diamond_recv: int = self.get_item_count_by_id(8065)
@@ -898,37 +894,6 @@ class LMContext(BaseContext):
         except Exception as threadEx:
             logger.error("Something went horribly wrong with the Luigis Mansion client. Details: " + str(threadEx))
 
-    def update_client_addresses(self):
-        from .Helper_Functions import parse_custom_map_and_update_addresses
-        custom_addr_dict: dict = parse_custom_map_and_update_addresses()
-
-        for custom_name, custom_addr in custom_addr_dict["Client"].items():
-            converted_addr: int = int(custom_addr, 16)
-            match custom_name:
-                case "Boolossus_Mini_Boo_Difficulty":
-                    self.boolossus_diff_addr = converted_addr
-                case "Mirror_Warp_X":
-                    self.mirror_warp_x_addr = converted_addr
-                case "Mirror_Warp_Y":
-                    self.mirror_warp_y_addr = converted_addr
-                case "Mirror_Warp_Z":
-                    self.mirror_warp_z_addr = converted_addr
-                case "Play_King_Boo_Gem_Fast_Pickup":
-                    self.king_bowser_pickup_addr = converted_addr
-                case "gItem_Information_Timer":
-                    self.display_item_timer_addr = converted_addr
-                case "gItem_Information":
-                    self.display_item_text_addr = converted_addr
-                case "Weapon_Action":
-                    self.weapon_speed_addr = converted_addr
-                case _:
-                    raise Exception(f"Unknown custom address with name: '{custom_name}'")
-
-        for dynamic_addr in self.dynamic_addr_list:
-            if dynamic_addr == 0:
-                var_name: str = f"{dynamic_addr=}"
-                raise Exception(f"Item with name '{var_name.split("=")}' has a RAM address of 0, which is not expected.")
-
 
 def main(*launch_args: str):
     from .client.dolphin_launcher import DolphinLauncher
@@ -945,9 +910,6 @@ def main(*launch_args: str):
     parser.add_argument('aplm_file', default="", type=str, nargs="?", help='Path to an APLM file')
     args = parser.parse_args(launch_args)
 
-    from .Helper_Functions import update_dynamic_item_ram_addresses
-    update_dynamic_item_ram_addresses()
-
     if args.aplm_file:
         lm_usa_patch = LMUSAAPPatch()
         try:
@@ -962,25 +924,31 @@ def main(*launch_args: str):
             raise ex
 
     async def _main(connect, password):
-        ctx = LMContext(server_address if server_address else connect, password)
-        ctx.server_task = asyncio.create_task(server_loop(ctx), name="ServerLoop")
+        try:
+            ctx = LMContext(server_address if server_address else connect, password)
+            ctx.server_task = asyncio.create_task(server_loop(ctx), name="ServerLoop")
 
-        # Runs Universal Tracker's internal generator
-        ctx._main()
+            # Runs Universal Tracker's internal generator
+            ctx._main()
 
-        if gui_enabled:
-            ctx.run_gui()
-        ctx.run_cli()
-        await ctx.wait_for_next_loop(WAIT_TIMER_LONG_TIMEOUT)
+            if gui_enabled:
+                ctx.run_gui()
+            ctx.run_cli()
+            await ctx.wait_for_next_loop(WAIT_TIMER_LONG_TIMEOUT)
 
-        ctx.update_client_addresses()
-        ctx.dolphin_sync_task = asyncio.create_task(ctx.dolphin_sync_main_task(), name="DolphinSync")
+            ctx.dolphin_sync_task = asyncio.create_task(ctx.dolphin_sync_main_task(), name="DolphinSync")
 
-        await ctx.exit_event.wait()
-        await ctx.shutdown()
+            await ctx.exit_event.wait()
+            await ctx.shutdown()
 
-        if ctx.dolphin_sync_task:
-            await ctx.dolphin_sync_task
+            if ctx.dolphin_sync_task:
+                await ctx.dolphin_sync_task
+        except Exception as clientEx:
+            client_msg: str = (f"An unknown error occurred while running {RANDOMIZER_NAME}'s client.\n" +
+                f"APWorld Version: '{CLIENT_VERSION}'\nAdditional details:\n") + str(clientEx)
+            logger.error(client_msg)
+            Utils.messagebox(f"Main Client Issue {RANDOMIZER_NAME}", client_msg, True)
+            raise clientEx
 
     Utils.asyncio.run(dolphin_launcher.launch_dolphin_async(rom_path))
 
