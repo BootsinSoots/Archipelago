@@ -20,6 +20,7 @@ from .jmp_changes.Randomize_JMP_Tables import RandomizeJMPTables
 from .LM_Map_File import LMMapFile
 from ..client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME, RANDOMIZER_NAME, CLIENT_NAME, LM_GC_IDs
 from .LM_GameUSA_Arc import LMGameUSAArc
+from ..Helper_Functions import LMDynamicAddresses
 
 class LuigisMansionRandomizer:
 
@@ -41,6 +42,7 @@ class LuigisMansionRandomizer:
     client_logger: Logger
     _seed: str
     random: Random
+    lm_dynamic_addr: LMDynamicAddresses
 
     def __init__(self, clean_iso_path: str, randomized_output_file_path: str, ap_output_data: bytes, debug_flag=False):
         self.debug = debug_flag
@@ -60,6 +62,7 @@ class LuigisMansionRandomizer:
         self._get_jmp_name_list()
         self.map_files = {}
         self.empty_jmp_files = {}
+        self.lm_dynamic_addr = LMDynamicAddresses()
 
     def _get_jmp_name_list(self):
         """Gets the jmp dictionary name list and re-maps it from a string to int."""
