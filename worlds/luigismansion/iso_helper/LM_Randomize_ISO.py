@@ -148,7 +148,7 @@ class LuigisMansionRandomizer:
         # Load game_usa and prepare those changes. Leaves wiggle room for support to other LM regions (potentially)
         match regional_id:
             case LM_GC_IDs.USA_ID:
-                self.game_region_arc: LMGameUSAArc = LMGameUSAArc(self.lm_gcm, "files/Game/game_usa.szp")
+                self.game_region_arc: LMGameUSAArc = LMGameUSAArc(self.client_logger, self.lm_gcm, "files/Game/game_usa.szp")
                 self.game_region_arc.add_gold_ghost()
 
     def _load_map_files(self):
