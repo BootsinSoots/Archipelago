@@ -751,15 +751,6 @@ class RandomizeJMPTables:
         bad_actors_to_remove: list[str] = ["vhead", "vbody", "dhakase", "demobak1", "dluige01"]
         update_spawn_actors: list[str] = ["baby", "mother", "dboy", "dboy2"]
 
-        # Removes useless cutscene objects and the vacuum in the Parlor under the closet.
-        # Also removes King Boo in the hallway, since his event was removed.
-        character_indexes_to_remove: list[int] = sorted([index for index, char_entry in enumerate(map_two_characters.data_entries)
-             if str(char_entry["name"]) in bad_actors_to_remove or (str(char_entry["name"]) == "dltelesa" and
-            int(char_entry["room_no"]) == 68)], reverse=True)
-
-        for char_idx in character_indexes_to_remove:
-            map_two_characters.delete_jmp_entry(map_two_characters.data_entries[char_idx])
-
         for character_entry in map_two_characters.data_entries:
             char_name: str = str(character_entry["name"])
             char_room_num: int = int(character_entry["room_no"])
@@ -797,6 +788,15 @@ class RandomizeJMPTables:
                 character_entry["pos_x"] = spawn_data.pos_x
                 character_entry["pos_y"] = spawn_data.pos_y
                 character_entry["pos_z"] = spawn_data.pos_z
+
+        # Removes useless cutscene objects and the vacuum in the Parlor under the closet.
+        # Also removes King Boo in the hallway, since his event was removed.
+        character_indexes_to_remove: list[int] = sorted([index for index, char_entry in enumerate(map_two_characters.data_entries)
+             if str(char_entry["name"]) in bad_actors_to_remove or (str(char_entry["name"]) == "dltelesa" and
+            int(char_entry["room_no"]) == 68)], reverse=True)
+
+        for char_idx in character_indexes_to_remove:
+            map_two_characters.delete_jmp_entry(map_two_characters.data_entries[char_idx])
 
 
     def _map_two_iyapoo_changes(self):
