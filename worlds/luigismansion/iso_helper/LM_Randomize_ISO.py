@@ -94,6 +94,9 @@ class LuigisMansionRandomizer:
         # Update the relevant Game RARC archive
         self._load_game_archive(lm_regional_id)
 
+        # Update all of our items to have their dynamic values.
+        self.lm_dynamic_addr.update_item_addresses()
+
         self.client_logger.info("Updating all the main.dol offsets with their appropriate values.")
         update_dol_offsets(self)
 
