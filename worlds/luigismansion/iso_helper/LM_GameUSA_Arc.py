@@ -1,5 +1,5 @@
 from enum import StrEnum
-from logging import getLogger, Logger
+from logging import Logger
 
 from gclib.gcm import GCM
 from gclib.rarc import RARC, RARCFileEntry
@@ -7,7 +7,6 @@ from gclib.yaz0_yay0 import Yay0
 from gcbrickwork.PRM import PRM
 
 from ..Helper_Functions import get_arc, find_rarc_file_entry
-from ..client.constants import CLIENT_NAME
 
 class _ParamType(StrEnum):
     TH = "TH"
