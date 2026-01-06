@@ -140,7 +140,7 @@ BASE_LOCATION_TABLE: dict[str, LMLocationData] = {
     "Shivers Spawn": LMLocationData("1F Hallway", None, "Event", -1, [], locked_item="Shivers Spawn")
 }
 
-FREESTANDING_KEY_TABLE = {
+FREESTANDING_KEY_TABLE: dict[str, LMLocationData] = {
     "Ghost Foyer Key": LMLocationData("Foyer", 713, "Freestanding", 1, [], remote_only=True,
         update_ram_addr=[LMRamData(0x803D3399, bit_position=3, in_game_room_id=2)], require_poltergust=False),
     "Fortune Teller Candles": LMLocationData("Fortune-Teller's Room", 6, "Freestanding", 4, ["Fire Element Medal"],
@@ -195,7 +195,7 @@ CLEAR_GHOST_LOCATION_TABLE: dict[str, LMLocationData] = {
         update_ram_addr=[LMRamData(0x803CDFD4, bit_position=2, in_game_room_id=68, ram_byte_size=2)]),
 }
 
-CLEAR_LOCATION_TABLE = {**CLEAR_GHOST_LOCATION_TABLE, **FREESTANDING_KEY_TABLE}
+CLEAR_LOCATION_TABLE: dict[str, LMLocationData] = {**CLEAR_GHOST_LOCATION_TABLE, **FREESTANDING_KEY_TABLE}
 
 # Ghost Affected Clear Chests. Rules applied to region entrances
 ENEMIZER_LOCATION_TABLE: dict[str, LMLocationData] = {
@@ -315,7 +315,7 @@ PLANT_LOCATION_TABLE: dict[str, LMLocationData] = {
         update_ram_addr=[LMRamData(in_game_room_id=29)]),
 }
 
-CEILING_LOCATION_TABLE ={
+CEILING_LOCATION_TABLE: dict[str, LMLocationData] ={
     "Heart Door Lamp": LMLocationData("Foyer", 94, "Furniture", 270, [], 1,
                                       update_ram_addr=[LMRamData(in_game_room_id=2)]),
     "Foyer Chandelier": LMLocationData("Foyer", 95, "Furniture", 101, [], 1,
@@ -418,7 +418,7 @@ CEILING_LOCATION_TABLE ={
                                                      update_ram_addr=[LMRamData(in_game_room_id=1)]),
 }
 
-DECOR_LOCATION_TABLE = {
+DECOR_LOCATION_TABLE: dict[str, LMLocationData] = {
     "Foyer Mirror": LMLocationData("Foyer", 96, "Furniture", 208, [], 1,
                                    update_ram_addr=[LMRamData(in_game_room_id=2)], require_poltergust=False),
     "Upper Foyer R Vase": LMLocationData("Foyer", 97, "Furniture", 336, [], 2,
@@ -756,7 +756,7 @@ DECOR_LOCATION_TABLE = {
                                                     update_ram_addr=[LMRamData(in_game_room_id=45)], require_poltergust=False),
 }
 
-CANDLES_LOCATION_TABLE = {
+CANDLES_LOCATION_TABLE: dict[str, LMLocationData] = {
     "Mirror Room West Candlestick": LMLocationData("Mirror Room", 236, "Furniture", 306, [], 1,
                                                    update_ram_addr=[LMRamData(in_game_room_id=4)], require_poltergust=False),
     "Mirror Room East Candlestick": LMLocationData("Mirror Room", 237, "Furniture", 307, [], 1,
@@ -815,7 +815,7 @@ CANDLES_LOCATION_TABLE = {
                                              update_ram_addr=[LMRamData(in_game_room_id=73)]),
 }
 
-HANGABLES_LOCATION_TABLE = {
+HANGABLES_LOCATION_TABLE: dict[str, LMLocationData] = {
     "Parlor Painting L (closer to 4th Wall)": LMLocationData("Parlor", 112, "Furniture", 344, [], 2,
                                                              update_ram_addr=[LMRamData(in_game_room_id=36)]),
     "Parlor Painting L (near China Cabinet)": LMLocationData("Parlor", 113, "Furniture", 343, [], 2,
@@ -950,7 +950,7 @@ HANGABLES_LOCATION_TABLE = {
                                                    update_ram_addr=[LMRamData(in_game_room_id=67)]),
 }
 
-SEATING_LOCATION_TABLE = {
+SEATING_LOCATION_TABLE: dict[str, LMLocationData] = {
     "Parlor Chair": LMLocationData("Parlor", 100, "Furniture", 338, [], 2,
                                    update_ram_addr=[LMRamData(in_game_room_id=36)], require_poltergust=False),
     "Parlor Couch": LMLocationData("Parlor", 102, "Furniture", 341, [], 2,
@@ -1068,7 +1068,7 @@ SEATING_LOCATION_TABLE = {
                                          update_ram_addr=[LMRamData(in_game_room_id=14)], require_poltergust=False),
 }
 
-SURFACES_LOCATION_TABLE = {
+SURFACES_LOCATION_TABLE: dict[str, LMLocationData] = {
     "Parlor Wine Table": LMLocationData("Parlor", 101, "Furniture", 339, [], 2,
                                         update_ram_addr=[LMRamData(in_game_room_id=36)], require_poltergust=False),
     "Parlor Table": LMLocationData("Parlor", 103, "Furniture", 340, [], 2,
@@ -1132,7 +1132,7 @@ SURFACES_LOCATION_TABLE = {
                                          update_ram_addr=[LMRamData(in_game_room_id=69)]),
 }
 
-STORAGE_LOCATION_TABLE = {
+STORAGE_LOCATION_TABLE: dict[str, LMLocationData] = {
     "Study Hat Rack": LMLocationData("Study", 139, "Furniture", 348, [], 2,
                                      update_ram_addr=[LMRamData(in_game_room_id=35)], require_poltergust=False),
     "Wardrobe Shoe Rack": LMLocationData("Wardrobe", 124, "Furniture", 453, [], 2,
@@ -1307,7 +1307,7 @@ STORAGE_LOCATION_TABLE = {
                                                     update_ram_addr=[LMRamData(in_game_room_id=66)], require_poltergust=False),
 }
 
-DRAWERS_LOCATION_TABLE = {
+DRAWERS_LOCATION_TABLE: dict[str, LMLocationData] = {
     "Foyer Dresser": LMLocationData("Foyer", 93, "Furniture", 207, [], 1,
                                     update_ram_addr=[LMRamData(in_game_room_id=2)], require_poltergust=False),
     "Parlor China Cabinet": LMLocationData("Parlor", 105, "Furniture", 337, [], 2,
@@ -1399,18 +1399,23 @@ FURNITURE_LOCATION_TABLE: dict[str, LMLocationData] = {
     **DECOR_LOCATION_TABLE
 }
 
-BASEMENT_LOCS = dict((name, loc_data) for (name, loc_data) in FURNITURE_LOCATION_TABLE.items() if loc_data.floor == 0)
+BASEMENT_LOCS: dict[str, LMLocationData] = (
+    dict((name, loc_data) for (name, loc_data) in FURNITURE_LOCATION_TABLE.items() if loc_data.floor == 0))
 
-FIRST_FLOOR_LOCS = dict((name, loc_data) for (name, loc_data) in FURNITURE_LOCATION_TABLE.items() if loc_data.floor == 1)
+FIRST_FLOOR_LOCS: dict[str, LMLocationData] = (
+    dict((name, loc_data) for (name, loc_data) in FURNITURE_LOCATION_TABLE.items() if loc_data.floor == 1))
 
-SECOND_FLOOR_LOCS = dict((name, loc_data) for (name, loc_data) in FURNITURE_LOCATION_TABLE.items() if loc_data.floor == 2)
+SECOND_FLOOR_LOCS: dict[str, LMLocationData] = (
+    dict((name, loc_data) for (name, loc_data) in FURNITURE_LOCATION_TABLE.items() if loc_data.floor == 2))
 
-ATTIC_LOCS = dict((name, loc_data) for (name, loc_data) in FURNITURE_LOCATION_TABLE.items() if loc_data.floor == 3)
+ATTIC_LOCS: dict[str, LMLocationData] = (
+    dict((name, loc_data) for (name, loc_data) in FURNITURE_LOCATION_TABLE.items() if loc_data.floor == 3))
 
-ROOF_LOCS = dict((name, loc_data) for (name, loc_data) in FURNITURE_LOCATION_TABLE.items() if loc_data.floor == 4)
+ROOF_LOCS: dict[str, LMLocationData] = (
+    dict((name, loc_data) for (name, loc_data) in FURNITURE_LOCATION_TABLE.items() if loc_data.floor == 4))
 
 
-TREASURES_LOCATION_TABLE = {
+TREASURES_LOCATION_TABLE: dict[str, LMLocationData] = {
     "Heart Door Lamp": LMLocationData("Foyer", 94, "Furniture", 270, [],
         update_ram_addr=[LMRamData(in_game_room_id=2)]),
     "Foyer Chandelier": LMLocationData("Foyer", 95, "Furniture", 101, [],
@@ -1672,7 +1677,7 @@ TREASURES_LOCATION_TABLE = {
 
 
 # Map Visits, furniture items in maps, other stuff?
-WDYM_LOCATION_TABLE ={
+WDYM_LOCATION_TABLE: dict[str, LMLocationData] = {
     "Roof Entry Hut": LMLocationData("Roof", 854, "Furniture", 716, [],
                                                               update_ram_addr=[LMRamData(in_game_room_id=63)], require_poltergust=False),
     "Graveyard East Tree": LMLocationData("Graveyard", 855, "Furniture", 184, ["Water Element Medal"],
@@ -1949,8 +1954,7 @@ BOOLOSSUS_LOCATION_TABLE: dict[str, LMLocationData] = {
         update_ram_addr=[LMRamData(0x803D5E0A, bit_position=1, in_game_room_id=62)], map_id=[2,11]),
 }
 
-BOO_LOCATION_TABLE = {**ROOM_BOO_LOCATION_TABLE,
-                      **BOOLOSSUS_LOCATION_TABLE}
+BOO_LOCATION_TABLE: dict[str, LMLocationData] = {**ROOM_BOO_LOCATION_TABLE, **BOOLOSSUS_LOCATION_TABLE}
 
 LIGHT_LOCATION_TABLE: dict[str, LMLocationData] = {
     "Butler's Room Light On": LMLocationData("Butler's Room", 743, "KingdomHearts", 0, ["Fire Element Medal", "Shivers Spawn"],
@@ -2225,7 +2229,7 @@ WALK_LOCATION_TABLE: dict[str, LMLocationData] = {
         update_ram_addr=[LMRamData(0x803CDFDA, bit_position=0, in_game_room_id=72, ram_byte_size=2)], require_poltergust=False),
 }
 
-MEME_LOCATION_TABLE = {
+MEME_LOCATION_TABLE: dict[str, LMLocationData] = {
     "Touch Courtyard Grass": LMLocationData("Courtyard", 880, "Walk", 0, [], remote_only=True,
         update_ram_addr=[LMRamData(0x803CDF7E, bit_position=0, in_game_room_id=24, ram_byte_size=2)], require_poltergust=False),
     "Touch Boneyard Grass":  LMLocationData("Boneyard", 881, "Walk", 0, [], remote_only=True,
@@ -2328,7 +2332,7 @@ GOLD_PORTRAIT_TABLE: dict[str, LMLocationData] = {
         update_ram_addr=[LMRamData(0x803D5E39, bit_position=3, in_game_room_id=64)]),
 }
 
-ALL_LOCATION_TABLE = {**BASE_LOCATION_TABLE,
+ALL_LOCATION_TABLE: dict[str, LMLocationData] = {**BASE_LOCATION_TABLE,
                       **CLEAR_LOCATION_TABLE,
                       **ENEMIZER_LOCATION_TABLE,
                       **FURNITURE_LOCATION_TABLE,
@@ -2349,6 +2353,6 @@ ALL_LOCATION_TABLE = {**BASE_LOCATION_TABLE,
 SELF_LOCATIONS_TO_RECV: list[int] = [
     LMLocation.get_apid(value.code) for value in ALL_LOCATION_TABLE.values() if value.remote_only]
 
-BOOLOSSUS_AP_ID_LIST = [LMLocation.get_apid(value.code) for value in BOOLOSSUS_LOCATION_TABLE.values()]
+BOOLOSSUS_AP_ID_LIST: list[int] = [LMLocation.get_apid(value.code) for value in BOOLOSSUS_LOCATION_TABLE.values()]
 
-FLIP_BALCONY_BOO_EVENT_LIST = ["Clockwork Room", "Telephone Room", "Armory", "Ceramics Studio"]
+FLIP_BALCONY_BOO_EVENT_LIST: list[str] = ["Clockwork Room", "Telephone Room", "Armory", "Ceramics Studio"]
