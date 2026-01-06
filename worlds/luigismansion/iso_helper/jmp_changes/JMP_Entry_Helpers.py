@@ -3,6 +3,8 @@ from typing import Any, TYPE_CHECKING
 
 from gcbrickwork.JMP import JMPEntry
 
+from ...Locations import LMLocationData, ALL_LOCATION_TABLE
+
 if TYPE_CHECKING:
     from ..LM_Randomize_ISO import LuigisMansionRandomizer
 
@@ -425,3 +427,25 @@ def apply_new_ghost(lm_rando: "LuigisMansionRandomizer", enemy_entry: JMPEntry, 
     new_pos_y: float = float(enemy_entry["pos_y"])
     if "tenjyo" in curr_enemy_name:
         enemy_entry["pos_y"] = new_pos_y + 200.000000
+
+def update_furniture_entries(lm_rando: "LuigisMansionRandomizer", map_id: int, furniture_entries: list[JMPEntry],
+    item_appear_entries: list[JMPEntry]):
+    furniture_to_patch: dict = {**lm_rando.output_data["Locations"]["Furniture"]}
+    if "Plant" in lm_rando.output_data["Locations"].keys():
+        furniture_to_patch: dict = {
+            **furniture_to_patch,
+            **lm_rando.output_data["Locations"]["Plant"]}
+
+    for loc_name, loc_data in furniture_to_patch.items():
+        if not int(loc_data["map_id"]) == map_id:
+            continue
+
+        location_data: LMLocationData = ALL_LOCATION_TABLE[loc_name]
+        furniture_entry: JMPEntry = furniture_entries[loc_data["loc_enum"]]
+        if location_data.remote_only:
+            furniture_entry["generate"] = 0
+            furniture_entry["generate_num"] = 0
+            furniture_entry["item_table"] = 0
+            continue
+
+        actor_item_name = get_item_name(loc_data, lm_rando.slot)
