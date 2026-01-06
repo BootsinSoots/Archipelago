@@ -748,20 +748,22 @@ class LMWorld(World):
                     "classification": location.item.classification,
                     "door_id": 0, # Will always be 0 as an event item
                     "room_no": 0, # Will always be 0 as an event item
+                    "map_id": 0, # Will always be 0 as an event item
                     "type": location.type,
                     "loc_enum": location.jmpentry, # Will always be 0 as an event item
                 }
             elif location.item:
                 lm_item: "LMItem" = self.create_item(location.item.name)
+                loc_region: LMRegionInfo = REGION_LIST[location.parent_region.name]
                 doorid = lm_item.doorid if (lm_item.type == "Door Key" and location.address and lm_item.player == self.player) else 0
-                roomid = REGION_LIST[location.parent_region.name].room_id
                 item_info = {
                     "player": lm_item.player,
                     "name": lm_item.name,
                     "game": lm_item.game,
                     "classification": lm_item.classification.name,
                     "door_id": doorid,  # There is no door id for another player's game
-                    "room_no": roomid,
+                    "room_no": loc_region.room_id,
+                    "map_id": loc_region.map_id,
                     "type": location.type,
                     "loc_enum": location.jmpentry,
                 }
