@@ -246,7 +246,7 @@ class LMWorld(World):
                 region.locations.append(entry)
         if self.options.silver_ghosts:
             for location, data in SILVER_PORTRAIT_TABLE.items():
-                region = self.get_region(str(data.region))
+                region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
                 if entry.code == 880 and self.open_doors.get(28) == 0:
                     add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
@@ -258,7 +258,7 @@ class LMWorld(World):
                 region.locations.append(entry)
         if self.options.gold_ghosts:
             for location, data in GOLD_PORTRAIT_TABLE.items():
-                region = self.get_region(str(data.region))
+                region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
                 if entry.code == 902 and self.open_doors.get(28) == 0:
                     add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
@@ -270,7 +270,7 @@ class LMWorld(World):
                 region.locations.append(entry)
         if self.options.lightsanity:
             for location, data in LIGHT_LOCATION_TABLE.items():
-                region = self.get_region(str(data.region))
+                region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
                 if entry.code not in (771, 775, 776): # If not a room that turns on automatically
                     add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
@@ -292,7 +292,7 @@ class LMWorld(World):
                 region.locations.append(entry)
         if self.options.walksanity:
             for location, data in WALK_LOCATION_TABLE.items():
-                region = self.get_region(str(data.region))
+                region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
                 if data.require_poltergust:
                     add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
@@ -308,7 +308,7 @@ class LMWorld(World):
                 region.locations.append(entry)
         if self.options.boosanity:
             for location, data in ROOM_BOO_LOCATION_TABLE.items():
-                region: Region = self.get_region(str(data.region))
+                region: Region = self.get_region(data.region)
                 entry: LMLocation = LMLocation(self.player, location, region, data)
                 add_rule(entry, lambda state: state.has("Boo Radar", self.player), "and")
                 add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
@@ -327,14 +327,14 @@ class LMWorld(World):
                 set_element_rules(self, entry, True)
                 region.locations.append(entry)
             for location, data in BOOLOSSUS_LOCATION_TABLE.items():
-                region = self.get_region(str(data.region))
+                region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
                 add_rule(entry, lambda state: state.has("Ice Element Medal", self.player), "and")
                 add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
                 region.locations.append(entry)
         else:
             for location, data in ROOM_BOO_LOCATION_TABLE.items():
-                region = self.get_region(str(data.region))
+                region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
                 entry.address = None
                 entry.place_locked_item(Item("Boo", ItemClassification.progression, None, self.player))
@@ -357,7 +357,7 @@ class LMWorld(World):
                 set_element_rules(self, entry, True)
                 region.locations.append(entry)
             for location, data in BOOLOSSUS_LOCATION_TABLE.items():
-                region = self.get_region(str(data.region))
+                region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
                 entry.address = None
                 entry.code = None
