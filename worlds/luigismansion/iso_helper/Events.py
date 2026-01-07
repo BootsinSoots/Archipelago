@@ -80,6 +80,9 @@ class EventChanges:
                     lines = lines.replace("<WEAPON>", "<NOWEAPON>")
                 self._update_custom_event(custom_event, True, lines, None, keep_csv_anyways=True)
                 continue
+            if custom_event == "74":
+                rank_requirement = int(self.lm_rando.output_data["Options"]["rank_requirement"])
+                lines = lines.replace("{RANK}", f"{rank_requirement}")
             self._update_custom_event(custom_event, True, lines, None)
 
 
