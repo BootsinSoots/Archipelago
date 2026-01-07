@@ -140,6 +140,8 @@ class BaseContext(UniversalContext):
 
         # Check for current room so we know which hint(s) we need to look at, since they mostly all use the same flags
         current_room = dme.read_word(dme.follow_pointers(ROOM_ID_ADDR, [ROOM_ID_OFFSET]))
+        if current_room == 73:
+            return
         player_id = 0
         location_id = 0
 
