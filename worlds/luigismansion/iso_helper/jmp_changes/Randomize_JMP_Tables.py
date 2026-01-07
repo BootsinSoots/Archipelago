@@ -6,12 +6,12 @@ from typing import TYPE_CHECKING
 from gcbrickwork.JMP import JMP, JMPEntry
 
 from .JMP_Entry_Helpers import (LOCATION_TO_INDEX, SPEEDY_OBSERVER_INDEX, SPEEDY_ENEMY_INDEX, CEILING_FURNITURE_LIST,
-    GHOST_LIST, MEDIUM_HEIGHT_FURNITURE_LIST, apply_new_ghost, create_observer_entry, BOO_HIDING_SPOT_BANS, get_item_name,
-    create_iteminfo_entry, create_itemappear_entry, get_item_chest_visual, get_chest_size_from_item, find_item_appear_index)
+    GHOST_LIST, MEDIUM_HEIGHT_FURNITURE_LIST, apply_new_ghost, create_observer_entry, update_furniture_entries,
+    create_iteminfo_entry, create_itemappear_entry, get_item_chest_visual, get_chest_size_from_item, get_item_name)
 
-from ...Items import ALL_ITEMS_TABLE, LMItemData, CurrencyItemData, filler_items
+from ...Items import ALL_ITEMS_TABLE, LMItemData, CurrencyItemData
 from ...Regions import REGION_LIST, TOAD_SPAWN_LIST
-from ...Locations import FLIP_BALCONY_BOO_EVENT_LIST, ALL_LOCATION_TABLE, LMLocationData
+from ...Locations import FLIP_BALCONY_BOO_EVENT_LIST
 from ...game.Currency import CURRENCIES
 
 if TYPE_CHECKING:
@@ -74,53 +74,7 @@ class RandomizeJMPTables:
             adjust_y_offset = 50.0
             map_six_furniture.data_entries[furniture_jmp_id]["item_offset_y"] = curr_y_offset - adjust_y_offset
 
-        for loc_name, loc_data in self.lm_rando.output_data["Locations"]["Furniture"].items():
-            location_data: LMLocationData = ALL_LOCATION_TABLE[loc_name]
-            if not location_data.region == "Gallery":
-                continue
-
-            actor_item_name = get_item_name(loc_data, self.lm_rando.slot)
-
-            furniture_entry: JMPEntry = map_six_furniture.data_entries[loc_data["loc_enum"]]
-
-            # Replace the furnitureinfo entry to spawn an item from the "itemappeartable".
-            # If the entry is supposed to be money, then generate a random amount of coins and/or bills from it.
-            furniture_entry["item_table"] = find_item_appear_index(map_six_item_appear.data_entries, actor_item_name)
-
-            # TODO update using ALL items table instead
-            if any((key, val) for (key, val) in filler_items.items() if key == loc_data["name"] and \
-                key != "Diamond" and val.type == "Money") and loc_data["player"] == self.lm_rando.slot:
-
-                furniture_entry["item_table"] = 11
-                int_money_amt = 1
-                if re.search(r"^\d+", loc_data["name"]):
-                    int_money_amt = int(re.search(r"^\d+", loc_data["name"]).group())
-                furniture_entry["generate_num"] = int_money_amt
-                if "Coins" in loc_data["name"]:
-                    if "Bills" in loc_data["name"]:
-                        furniture_entry["generate"] = 3
-                    else:
-                        furniture_entry["generate"] = 1
-                elif "Bills" in loc_data["name"]:
-                    furniture_entry["generate"] = 2
-                elif "Sapphire" in loc_data["name"]:
-                    furniture_entry["generate"] = 4
-                elif "Emerald" in loc_data["name"]:
-                    furniture_entry["generate"] = 6
-                elif "Ruby" in loc_data["name"]:
-                    furniture_entry["generate"] = 5
-                elif "Gold Bar" in loc_data["name"]:
-                    furniture_entry["generate"] = 7
-                elif loc_data["name"] == "Diamond":
-                    furniture_entry["generate"] = 9
-                elif loc_data["name"] == "Gold Diamond":
-                    furniture_entry["generate"] = 10
-                else:
-                    furniture_entry["generate"] = 0
-                    furniture_entry["generate_num"] = 0
-            else:
-                furniture_entry["generate"] = 0
-                furniture_entry["generate_num"] = 0
+        update_furniture_entries(self.lm_rando, 6, map_six_furniture.data_entries, map_six_item_appear.data_entries)
 
 
     def _map_two_changes(self):
@@ -999,86 +953,9 @@ class RandomizeJMPTables:
                 furn_entry["generate"] = 0
                 furn_entry["generate_num"] = 0
 
-        furniture_to_patch: dict = {**self.lm_rando.output_data["Locations"]["Furniture"]}
-        if "Plant" in self.lm_rando.output_data["Locations"].keys():
-            furniture_to_patch = {
-                **furniture_to_patch,
-                **self.lm_rando.output_data["Locations"]["Plant"]}
-        for loc_name, loc_data in furniture_to_patch.items():
-            # Ignore any Gallery region locations
-            location_data: LMLocationData = ALL_LOCATION_TABLE[loc_name]
-            if location_data.region == "Gallery":
-                continue
-
-            furniture_entry: JMPEntry = map_two_furniture.data_entries[loc_data["loc_enum"]]
-
-            if extra_boo_spots and (loc_data["type"] == "Furniture" and loc_name not in BOO_HIDING_SPOT_BANS):
-                furniture_entry["telesa_hide"] = 10
-
-            # If our furniture location is remote only, do not add any values to the table and make sure it remains blank
-            if ALL_LOCATION_TABLE[loc_name].remote_only:
-                furniture_entry["generate"] = 0
-                furniture_entry["generate_num"] = 0
-                furniture_entry["item_table"] = 0
-                continue
-
-            actor_item_name = get_item_name(loc_data, self.lm_rando.slot)
-
-            # Replace the furnitureinfo entry to spawn an item from the "itemappeartable".
-            # If the entry is supposed to be money, then generate a random amount of coins and/or bills from it.
-            furniture_entry["item_table"] = find_item_appear_index(map_two_item_appear.data_entries, actor_item_name)
-
-            # Adjust move types for WDYM furniture items. Trees require water, obviously
-            if wdym_enabled:
-                if loc_data["loc_enum"] in [184, 185, 138, 139, 140, 141]:
-                    if loc_data["loc_enum"] == 141:
-                        furniture_entry["pos_x"] = -2260.000000
-                        furniture_entry["pos_y"] = 10.000000
-                        furniture_entry["pos_z"] = -5950.000000
-                    furniture_entry["move"] = 34
-                elif loc_data["loc_enum"] in [9, 61, 69, 118, 303, 321, 322, 323, 23, 314, 538, 539]:
-                    furniture_entry["move"] = 0
-                    furniture_entry["move_level"] = 1
-                elif loc_data["loc_enum"] in [628, 629, 683, 698, 716]:
-                    furniture_entry["move"] = 0
-                    furniture_entry["move_level"] = 1
-                    curr_y_offset: int = int(furniture_entry["item_offset_y"])
-                    furniture_entry["item_offset_y"] = curr_y_offset + 75
-
-            # TODO update using ALL items table instead
-            if any((key, val) for (key, val) in filler_items.items() if key == loc_data["name"] and \
-                key != "Diamond" and val.type == "Money") and loc_data["player"] == self.lm_rando.slot:
-
-                furniture_entry["item_table"] = 11
-                int_money_amt = 1
-                if re.search(r"^\d+", loc_data["name"]):
-                    int_money_amt = int(re.search(r"^\d+", loc_data["name"]).group())
-                furniture_entry["generate_num"] = int_money_amt
-                if "Coins" in loc_data["name"]:
-                    if "Bills" in loc_data["name"]:
-                        furniture_entry["generate"] = 3
-                    else:
-                        furniture_entry["generate"] = 1
-                elif "Bills" in loc_data["name"]:
-                    furniture_entry["generate"] = 2
-                elif "Sapphire" in loc_data["name"]:
-                    furniture_entry["generate"] = 4
-                elif "Emerald" in loc_data["name"]:
-                    furniture_entry["generate"] = 6
-                elif "Ruby" in loc_data["name"]:
-                    furniture_entry["generate"] = 5
-                elif "Gold Bar" in loc_data["name"]:
-                    furniture_entry["generate"] = 7
-                elif loc_data["name"] == "Diamond":
-                    furniture_entry["generate"] = 9
-                elif loc_data["name"] == "Gold Diamond":
-                    furniture_entry["generate"] = 10
-                else:
-                    furniture_entry["generate"] = 0
-                    furniture_entry["generate_num"] = 0
-            else:
-                furniture_entry["generate"] = 0
-                furniture_entry["generate_num"] = 0
+        # TODO Implement this: if extra_boo_spots and (loc_data["type"] == "Furniture" and loc_name not in BOO_HIDING_SPOT_BANS):
+        #   furniture_entry["telesa_hide"] = 10
+        update_furniture_entries(self.lm_rando, 2, map_two_furniture.data_entries, map_two_item_appear.data_entries)
 
     def _add_hearts_to_other_maps(self):
         """Adds the necessary heart drop for the ghosts on boss maps and gallery."""
