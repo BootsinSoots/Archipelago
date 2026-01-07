@@ -1,4 +1,4 @@
-import copy, re
+import copy
 from io import BytesIO
 from math import ceil
 from typing import TYPE_CHECKING
@@ -7,7 +7,8 @@ from gcbrickwork.JMP import JMP, JMPEntry
 
 from .JMP_Entry_Helpers import (LOCATION_TO_INDEX, SPEEDY_OBSERVER_INDEX, SPEEDY_ENEMY_INDEX, CEILING_FURNITURE_LIST,
     GHOST_LIST, MEDIUM_HEIGHT_FURNITURE_LIST, apply_new_ghost, create_observer_entry, update_furniture_entries,
-    create_iteminfo_entry, create_itemappear_entry, get_item_chest_visual, get_chest_size_from_item, get_item_name)
+    create_iteminfo_entry, create_itemappear_entry, get_item_chest_visual, get_chest_size_from_item, get_item_name,
+    WDYM_TREES, WDYM_RAISE_LIST, WDYM_MAKE_MOVE_LIST)
 
 from ...Items import ALL_ITEMS_TABLE, LMItemData, CurrencyItemData
 from ...Regions import REGION_LIST, TOAD_SPAWN_LIST
@@ -924,7 +925,6 @@ class RandomizeJMPTables:
     def _map_two_furniture_changes(self):
         """Updates the items that will appear out of the relevant furniture."""
         self.lm_rando.client_logger.info("Now updating all furniture changes for map2.")
-        extra_boo_spots: bool = bool(self.lm_rando.output_data["Options"]["extra_boo_spots"])
         wdym_enabled: bool = bool(self.lm_rando.output_data["Options"]["WDYM_checks"])
 
         map_two_furniture: JMP = self.lm_rando.map_files["map2"].jmp_files["furnitureinfo"]
@@ -953,8 +953,24 @@ class RandomizeJMPTables:
                 furn_entry["generate"] = 0
                 furn_entry["generate_num"] = 0
 
-        # TODO Implement this: if extra_boo_spots and (loc_data["type"] == "Furniture" and loc_name not in BOO_HIDING_SPOT_BANS):
-        #   furniture_entry["telesa_hide"] = 10
+            # Adjust move types for WDYM furniture items. Trees require water, obviously
+            if wdym_enabled:
+                if map_two_furniture.data_entries.index(furn_entry) in WDYM_TREES:
+                    if map_two_furniture.data_entries.index(furn_entry) == 141:
+                        furn_entry["pos_x"] = -2260.000000
+                        furn_entry["pos_y"] = 10.000000
+                        furn_entry["pos_z"] = -5950.000000
+                    furn_entry["move"] = 34
+                elif map_two_furniture.data_entries.index(furn_entry) in WDYM_MAKE_MOVE_LIST:
+                    furn_entry["move"] = 0
+                    furn_entry["move_level"] = 1
+                elif map_two_furniture.data_entries.index(furn_entry) in WDYM_RAISE_LIST:
+                    furn_entry["move"] = 0
+                    furn_entry["move_level"] = 1
+                    curr_y_offset: int = int(furn_entry["item_offset_y"])
+                    furn_entry["item_offset_y"] = curr_y_offset + 75
+
+
         update_furniture_entries(self.lm_rando, 2, map_two_furniture.data_entries, map_two_item_appear.data_entries)
 
     def _add_hearts_to_other_maps(self):

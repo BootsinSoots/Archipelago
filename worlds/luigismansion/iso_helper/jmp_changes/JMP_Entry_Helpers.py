@@ -39,19 +39,23 @@ RANDOM_GHOST_LISTS: list[list[str]] = [["yapoo1"], ["mapoo1"], ["mopoo1"], ["ban
     ["tenjyo", "tenjyo2"], ["heypo1", "heypo2", "heypo3", "heypo4", "heypo5", "heypo6", "heypo7", "heypo8"],
     ["topoo1", "topoo2", "topoo3", "topoo4"]]
 
-# List of locations that should not have extra boo spots enabled on them.
-BOO_HIDING_SPOT_BANS: list[str] = ["Kitchen Oven", "Artist's Studio Gold Ghost Easel", "Artist's Studio Pink Ghost Easel",
-    "Artist's Studio Blue Ghost Easel", "Artist's Studio Red Ghost Easel", "Artist's Studio Shy Guy Ghost Easel",
-    "Artist's Studio Green Ghost Easel", "Artist's Studio Purple Ghost Easel"]
-
 # Dictionary of Freestanding Location names and their index in keyinfo.
-LOCATION_TO_INDEX = {
+LOCATION_TO_INDEX: dict[str, int] = {
     "The Well Key": 0,
     "Ghost Foyer Key": 1,
     "1F Bathroom Shelf Key": 3,
     "Fortune Teller Candles": 4,
     "Wardrobe Shelf Key": 5,
 }
+
+# List of Trees to update when WDYM is enabled.
+WDYM_TREES: list[int] = [184, 185, 138, 139, 140, 141]
+
+# List of Carpets, Roof Hut, and Telephone Room Frame that needs furniture height lifted.
+WDYM_RAISE_LIST: list[int] = [628, 629, 683, 698, 716]
+
+# List of other WDYM checks, such as gallery furniture, kitchen 4th wall, and rails/fences.
+WDYM_MAKE_MOVE_LIST: list[int] = [9, 61, 69, 118, 303, 321, 322, 323, 23, 314, 538, 539]
 
 CHEST_NAMES: list[str] = ["ytakara1", "rtakara1", "btakara1", "wtakara1", "gtakara1"]
 
