@@ -483,6 +483,8 @@ def apply_new_ghost(lm_rando: "LuigisMansionRandomizer", enemy_entry: JMPEntry, 
 
 def update_furniture_entries(lm_rando: "LuigisMansionRandomizer", map_id: int, furniture_entries: list[JMPEntry],
     item_appear_entries: list[JMPEntry]):
+    """Updates the various furniture that needs to be changed and looks up the related item from the item_appear table
+    that will spawn once interacted with."""
     furniture_to_patch: dict = {**lm_rando.output_data["Locations"]["Furniture"]}
     if "Plant" in lm_rando.output_data["Locations"].keys():
         furniture_to_patch: dict = {
