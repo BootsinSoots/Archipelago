@@ -136,6 +136,55 @@ def get_item_name(item_data: dict, slot: int) -> str:
     return "nothing"
 
 
+def get_item_appear_name(item_data: dict, slot: int) -> str:
+    if int(item_data["player"]) != slot:
+        return "nothing"  # TODO return AP item(s) here
+
+    if item_data["door_id"] != 0:
+        return "key_" + str(item_data["door_id"])
+
+    match item_data["name"]:
+        case "Fire Element Medal":
+            return "elffst"
+        case "Water Element Medal":
+            return "elwfst"
+        case "Ice Element Medal":
+            return "elifst"
+
+        case "Mario's Hat":
+            return "mcap"
+        case "Mario's Letter":
+            return "mletter"
+        case "Mario's Shoe":
+            return "mshoes"
+        case "Mario's Glove":
+            return "mglove"
+        case "Mario's Star":
+            return "mstar"
+
+        case "Gold Diamond" | "Sapphire" | "Emerald" | "Ruby" | "Diamond" :
+            return "money"
+
+        case "Poison Mushroom":
+            return "mkinoko"
+        case "Small Heart":
+            return "sheart"
+        case "Large Heart":
+            return "lheart"
+        case "Bomb":
+            return "itembomb"
+        case "Ice Trap":
+            return "ice"
+        case "Banana Trap":
+            return "banana"
+
+        case "Boo Radar":
+            return "gameboy"
+        case "Vacuum Upgrade" | "Poltergust 3000":
+            return "vbody"
+
+    return "nothing"
+
 def find_item_appear_index(item_appear_entries: list[JMPEntry], item_name: str) -> int:
     # Within the itemappear table relevant to the map, find the item that matches the same name.
     # Once found, return the first instance of that itemappear's index.
@@ -448,4 +497,4 @@ def update_furniture_entries(lm_rando: "LuigisMansionRandomizer", map_id: int, f
             furniture_entry["item_table"] = 0
             continue
 
-        actor_item_name = get_item_name(loc_data, lm_rando.slot)
+        actor_item_name = get_item_appear_name(loc_data, lm_rando.slot)
