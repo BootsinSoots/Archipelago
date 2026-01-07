@@ -159,7 +159,7 @@ class LuigisMansionRandomizer:
             "teidencharacterinfo", "iyapootable"]
         map1_jmp_list: list[str] = ["eventinfo"]
         map3_jmp_list: list[str] = ["eventinfo"]
-        map6_jmp_list: list[str] = ["furnitureinfo", "characterinfo"]
+        map6_jmp_list: list[str] = ["furnitureinfo"]
 
 
         if bool(self.output_data["Options"]["speedy_spirits"]) or int(self.output_data["Options"]["enemizer"]) > 0:
@@ -189,12 +189,12 @@ class LuigisMansionRandomizer:
         map3.update_jmp_names(self.jmp_names_json)
         self.map_files["map3"] = map3
 
+        self.client_logger.info(f"Now loading map6.szp with the following jmp list: {'; '.join(map6_jmp_list)}")
+        map6: LMMapFile = LMMapFile(self.lm_gcm, "files/Map/map6.szp")
         if bool(self.output_data["Options"]["WDYM_checks"]):
-            self.client_logger.info(f"Now loading map6.szp with the following jmp list: {'; '.join(map6_jmp_list)}")
-            map6: LMMapFile = LMMapFile(self.lm_gcm, "files/Map/map6.szp")
             map6.load_jmp_files(map6_jmp_list)
             map6.update_jmp_names(self.jmp_names_json)
-            self.map_files["map6"] = map6
+        self.map_files["map6"] = map6
 
     def _get_empty_jmp_files(self):
         """Loads all jmp files from Map2, excepts removes any JMP entries and loads a default one that can
