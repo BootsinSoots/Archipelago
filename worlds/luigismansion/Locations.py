@@ -14,7 +14,7 @@ class LMLocationData(NamedTuple):
     remote_only: bool = False
     update_ram_addr: Optional[list[LMRamData]] = None
     require_poltergust: bool = True
-    map_id: list[int] = [2]
+    map_id: list[int] = [2] # Allows various locations to be triggered across maps, like boss captures for example.
 
 
 class LMLocation(Location):
