@@ -77,7 +77,7 @@ class EventChanges:
             lines = read_custom_file("txt", "event" + custom_event + ".txt")
             if custom_event == "10":
                 if not bool_start_vacuum:
-                    lines = lines.replace("<WEAPON>", "<NOWEAPON>")
+                    lines = lines.replace("<WEAPON>", "<NOWEAPON>\r\n<ARCHIPELAGO>(1)")
                 self._update_custom_event(custom_event, True, lines, None, keep_csv_anyways=True)
                 continue
             if custom_event == "74":
@@ -110,7 +110,7 @@ class EventChanges:
         lines = lines.replace("{MANSION_TYPE}", "<URALUIGI>" if bool_hidden_mansion else "<OMOTELUIGI>")
         if not bool_start_vacuum:
             lines = lines.replace("{WEAPON}", "<NOWEAPON>")
-            lines = lines.replace("{VacStartFlag}", "<FLAGOFF>(82)")
+            lines = lines.replace("{VacStartFlag}", "<FLAGOFF>(82)\r\n<ARCHIPELAGO>(1)")
         else:
             lines = lines.replace("{WEAPON}", "<WEAPON>")
             lines = lines.replace("{VacStartFlag}", "<FLAGON>(82)")
