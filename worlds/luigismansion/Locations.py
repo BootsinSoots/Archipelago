@@ -15,6 +15,7 @@ class LMLocationData(NamedTuple):
     update_ram_addr: Optional[list[LMRamData]] = None
     require_poltergust: bool = True
     map_id: list[int] = [2] # Allows various locations to be triggered across maps, like boss captures for example.
+    hide_boo: bool = True # If extra boo spots are turned on,
 
 
 class LMLocation(Location):
@@ -530,7 +531,7 @@ DECOR_LOCATION_TABLE: dict[str, LMLocationData] = {
     "Dining Room Table Mess L (underneath Table)": LMLocationData("Dining Room", 304, "Furniture", 215, [], 1,
                                                                   update_ram_addr=[LMRamData(in_game_room_id=8)]),
     "Kitchen Oven": LMLocationData("Kitchen", 307, "Furniture", 80, ["Fire Element Medal"], 1,
-                                   update_ram_addr=[LMRamData(in_game_room_id=7)]),
+        update_ram_addr=[LMRamData(in_game_room_id=7)], hide_boo=False),
     "Kitchen Dishwasher": LMLocationData("Kitchen", 314, "Furniture", 82, [], 1, remote_only=True,
                                          update_ram_addr=[LMRamData(in_game_room_id=7)], require_poltergust=False),
     "Spooky's Dog Bowl (Boneyard)": LMLocationData("Boneyard", 317, "Furniture", 97, [], 1,
@@ -731,19 +732,19 @@ DECOR_LOCATION_TABLE: dict[str, LMLocationData] = {
     #        LMLocationData('Ceramics Studio', 'Ceramics Studio Vase 12', 555),
     #        LMLocationData('Ceramics Studio', 'Ceramics Studio Vase 13', 556),
     "Artist's Studio Gold Ghost Easel": LMLocationData("Artist's Studio", 603, "Furniture", 691, [], 3, remote_only=True,
-                                                    update_ram_addr=[LMRamData(in_game_room_id=60)]),
+        update_ram_addr=[LMRamData(in_game_room_id=60)], hide_boo=False),
     "Artist's Studio Pink Ghost Easel": LMLocationData("Artist's Studio", 604, "Furniture", 692, [], 3, remote_only=True,
-                                                    update_ram_addr=[LMRamData(in_game_room_id=60)]),
+        update_ram_addr=[LMRamData(in_game_room_id=60)], hide_boo=False),
     "Artist's Studio Blue Ghost Easel": LMLocationData("Artist's Studio", 605, "Furniture", 693, [], 3, remote_only=True,
-                                                    update_ram_addr=[LMRamData(in_game_room_id=60)]),
+        update_ram_addr=[LMRamData(in_game_room_id=60)], hide_boo=False),
     "Artist's Studio Red Ghost Easel": LMLocationData("Artist's Studio", 606, "Furniture", 694, [], 3, remote_only=True,
-                                                    update_ram_addr=[LMRamData(in_game_room_id=60)]),
+        update_ram_addr=[LMRamData(in_game_room_id=60)], hide_boo=False),
     "Artist's Studio Shy Guy Ghost Easel": LMLocationData("Artist's Studio", 607, "Furniture", 695, [], 3, remote_only=True,
-                                                    update_ram_addr=[LMRamData(in_game_room_id=60)]),
+        update_ram_addr=[LMRamData(in_game_room_id=60)], hide_boo=False),
     "Artist's Studio Green Ghost Easel": LMLocationData("Artist's Studio", 608, "Furniture", 696, [], 3, remote_only=True,
-                                                    update_ram_addr=[LMRamData(in_game_room_id=60)]),
+        update_ram_addr=[LMRamData(in_game_room_id=60)], hide_boo=False),
     "Artist's Studio Purple Ghost Easel": LMLocationData("Artist's Studio", 609, "Furniture", 697, [], 3, remote_only=True,
-                                                    update_ram_addr=[LMRamData(in_game_room_id=60)]),
+        update_ram_addr=[LMRamData(in_game_room_id=60)], hide_boo=False),
     "Safari Room C Deer Head": LMLocationData("Safari Room", 439, "Furniture", 630, [], 3, remote_only=True,
                                                 update_ram_addr=[LMRamData(in_game_room_id=55)]),
     "Kitchen Refrigerator": LMLocationData("Kitchen", 308, "Furniture", 78, [], 1, remote_only=True,
