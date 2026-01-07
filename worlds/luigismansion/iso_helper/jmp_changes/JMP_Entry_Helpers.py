@@ -1,4 +1,4 @@
-import copy
+import copy, re
 from typing import Any, TYPE_CHECKING
 
 from gcbrickwork.JMP import JMPEntry
@@ -500,9 +500,32 @@ def update_furniture_entries(lm_rando: "LuigisMansionRandomizer", map_id: int, f
         actor_item_name = get_item_appear_name(loc_data, lm_rando.slot)
         furniture_entry["item_table"] = find_item_appear_index(item_appear_entries, actor_item_name)
 
-        if not actor_item_name == "money" or not int(loc_data["player"]) == lm_rando.slot:
+        if not actor_item_name == "money":
             furniture_entry["generate"] = 0
             furniture_entry["generate_num"] = 0
             continue
 
         # Update the Money fields based on the Money provided.
+        int_money_amt = 1
+        if re.search(r"^\d+", loc_data["name"]):
+            int_money_amt = int(re.search(r"^\d+", loc_data["name"]).group())
+        furniture_entry["generate_num"] = int_money_amt
+        if "Coins" in loc_data["name"]:
+            if "Bills" in loc_data["name"]:
+                furniture_entry["generate"] = 3
+            else:
+                furniture_entry["generate"] = 1
+        elif "Bills" in loc_data["name"]:
+            furniture_entry["generate"] = 2
+        elif "Sapphire" in loc_data["name"]:
+            furniture_entry["generate"] = 4
+        elif "Emerald" in loc_data["name"]:
+            furniture_entry["generate"] = 6
+        elif "Ruby" in loc_data["name"]:
+            furniture_entry["generate"] = 5
+        elif "Gold Bar" in loc_data["name"]:
+            furniture_entry["generate"] = 7
+        elif loc_data["name"] == "Diamond":
+            furniture_entry["generate"] = 9
+        elif loc_data["name"] == "Gold Diamond":
+            furniture_entry["generate"] = 10
