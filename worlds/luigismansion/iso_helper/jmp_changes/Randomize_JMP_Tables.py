@@ -881,8 +881,7 @@ class RandomizeJMPTables:
             if int(item_data["player"]) == self.lm_rando.slot and item_data["name"] in ALL_ITEMS_TABLE.keys():
                 lm_item_data = ALL_ITEMS_TABLE[item_data["name"]]
                 if lm_item_data.update_ram_addr and any(update_addr.item_count for update_addr in
-                                                        lm_item_data.update_ram_addr if
-                                                        update_addr.item_count and update_addr.item_count > 0):
+                    lm_item_data.update_ram_addr if update_addr.item_count and update_addr.item_count > 0):
                     item_amt = next(update_addr.item_count for update_addr in lm_item_data.update_ram_addr if
                                     update_addr.item_count and update_addr.item_count > 0)
 
