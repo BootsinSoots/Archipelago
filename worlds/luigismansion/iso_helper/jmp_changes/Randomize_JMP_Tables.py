@@ -12,7 +12,7 @@ from .JMP_Entry_Helpers import (LOCATION_TO_INDEX, SPEEDY_OBSERVER_INDEX, SPEEDY
 
 from ...Items import ALL_ITEMS_TABLE, LMItemData, CurrencyItemData
 from ...Regions import REGION_LIST, TOAD_SPAWN_LIST
-from ...Locations import FLIP_BALCONY_BOO_EVENT_LIST
+from ...Locations import FLIP_BALCONY_BOO_EVENT_LIST, ALL_LOCATION_TABLE
 from ...game.Currency import CURRENCIES
 
 if TYPE_CHECKING:
@@ -926,6 +926,7 @@ class RandomizeJMPTables:
         """Updates the items that will appear out of the relevant furniture."""
         self.lm_rando.client_logger.info("Now updating all furniture changes for map2.")
         wdym_enabled: bool = bool(self.lm_rando.output_data["Options"]["WDYM_checks"])
+        extra_boo_spots: bool = bool(self.lm_rando.output_data["Options"]["extra_boo_spots"])
 
         map_two_furniture: JMP = self.lm_rando.map_files["map2"].jmp_files["furnitureinfo"]
         map_two_item_appear: JMP = self.lm_rando.map_files["map2"].jmp_files["itemappeartable"]
@@ -940,6 +941,14 @@ class RandomizeJMPTables:
         # Foyer Chandelier will never ever hurt anyone ever again.
         map_two_furniture.data_entries[101]["move"] = 7
         map_two_furniture.data_entries[277]["move"] = 23
+
+        if extra_boo_spots:
+            for furn_loc in ALL_LOCATION_TABLE.values():
+                # If the location is not a furniture piece and its does not have hide_boo as an option, ignore it.
+                if not (furn_loc.type == "Furniture" and furn_loc.hide_boo):
+                    continue
+
+                map_two_furniture.data_entries[furn_loc.jmpentry]["telesa_hide"] = 10
 
         for furn_entry in map_two_furniture.data_entries:
             # If this is a book/bookshelf, set it to just shake, no book interaction.
