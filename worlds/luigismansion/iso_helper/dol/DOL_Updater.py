@@ -210,8 +210,10 @@ def read_and_update_hooks(dol_data: DOL):
     For LM at least, RAM address and DOL offset tend to be 32A0 away from each other.
     To convert DOL to RAM, add 32A0, to revert back, subtract 32A0."""
     custom_hooks: list[str] = (PROJECT_ROOT.joinpath("iso_helper").joinpath("dol").joinpath("Codes_Hooks.txt")
-        .read_text(encoding="utf-8").splitlines())
+        .read_text(encoding="utf-8").lstrip().rstrip().splitlines())
     for hook_line in custom_hooks:
+        if hook_line.rstrip() == "": # Ignore any whitespace lines.
+            continue
         arc_code_line: list[str] = hook_line.split(" ")
         ram_addr: int = int("80" + arc_code_line[0][2:], 16)
         dol_offset = dol_data.convert_address_to_offset(ram_addr)

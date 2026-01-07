@@ -142,7 +142,7 @@ class LMDynamicAddresses:
         """Parses the list of custom addresses that go along with the custom code provided. A lot of names / functions
         are not relevant to the APWorld itself so we only care about the name_list provided."""
         custom_address_list: list[str] = (PROJECT_ROOT.joinpath("iso_helper").joinpath("dol")
-            .joinpath("Custom_Addresses.map").read_text(encoding="utf-8").splitlines())
+            .joinpath("Custom_Addresses.map").read_text(encoding="utf-8").lstrip().rstrip().splitlines())
         ram_addresses: dict = {
             "Client": {},
             "Items": {},
@@ -155,6 +155,8 @@ class LMDynamicAddresses:
             "gItem_Information_Timer", "Boolossus_Mini_Boo_Difficulty", "Custom_Boo_Counter_Bitfields", "gTsuri_Speed"]
 
         for custom_line in custom_address_list:
+            if custom_line.rstrip() == "":  # Ignore any whitespace lines.
+                continue
             csv_line: list[str] = re.sub(r"[\s ]+", ",", custom_line, 0, flags=0).split(",")
             if csv_line[2] not in name_list:
                 continue
