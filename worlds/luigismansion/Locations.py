@@ -416,7 +416,7 @@ CEILING_LOCATION_TABLE: dict[str, LMLocationData] ={
     "Secret Altar R Chandelier": LMLocationData("Secret Altar", 612, "Furniture", 40, [],
                                                      update_ram_addr=[LMRamData(in_game_room_id=73)]),
     "Secret Altar L Chandelier": LMLocationData("Secret Altar", 614, "Furniture", 39, [],
-                                                     update_ram_addr=[LMRamData(in_game_room_id=1)]),
+                                                     update_ram_addr=[LMRamData(in_game_room_id=73)]),
 }
 
 DECOR_LOCATION_TABLE: dict[str, LMLocationData] = {
