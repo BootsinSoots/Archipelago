@@ -202,6 +202,11 @@ def vanilla_game_changes(dol_data: DOL):
     dol_data.data.seek(0x0AC304)
     dol_data.data.write(bytes.fromhex("807F07E8"))
 
+    # Disables the parameter file limitation used for portrait ghosts to be capped at 100
+    # This is required, but not directly used as there are DOL offsets for changing Portrait health instead.
+    dol_data.data.seek(0x0817D8)
+    dol_data.data.write(bytes.fromhex("60000000"))
+
 
 def read_and_update_hooks(dol_data: DOL):
     """Reads and updates all the necessary custom code hooks used for the custom features like mirror warp, traps, etc.
