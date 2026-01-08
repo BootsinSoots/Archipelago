@@ -147,7 +147,7 @@ def get_item_appear_name(item_data: dict, slot: int) -> str:
     if item_data["door_id"] != 0:
         return "key_" + str(item_data["door_id"])
 
-    if "Bills" in item_data["name"] or "Coins" in item_data["name"] or "Bar" in item_data["name"]:
+    if any(money_name in item_data["name"] for money_name in ["Coins", "Bills", "Gold Bars"]):
         return "money"
 
     match item_data["name"]:
