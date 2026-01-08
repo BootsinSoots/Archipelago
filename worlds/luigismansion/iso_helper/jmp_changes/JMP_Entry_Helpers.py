@@ -66,7 +66,7 @@ def get_item_name(item_data: dict, slot: int) -> str:
 
     if item_data["door_id"] != 0:
         return "key_" + str(item_data["door_id"])
-    elif "Bills" in item_data["name"] or "Coins" in item_data["name"] or "Gold Bar" in item_data["name"]:
+    elif any(money_name in item_data["name"] for money_name in ["Coins", "Bills", "Gold Bars"]):
         if item_data["type"] in ("Freestanding", "Chest", "BSpeedy", "Mouse"):
             return "nothing" # Do not spawn the money physically let it be handled remotely
         return "money"
