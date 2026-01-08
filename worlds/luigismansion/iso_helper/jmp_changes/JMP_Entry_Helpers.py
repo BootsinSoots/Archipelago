@@ -147,6 +147,9 @@ def get_item_appear_name(item_data: dict, slot: int) -> str:
     if item_data["door_id"] != 0:
         return "key_" + str(item_data["door_id"])
 
+    if "Bills" in item_data["name"] or "Coins" in item_data["name"] or "Bar" in item_data["name"]:
+        return "money"
+
     match item_data["name"]:
         case "Fire Element Medal":
             return "elffst"
@@ -166,7 +169,7 @@ def get_item_appear_name(item_data: dict, slot: int) -> str:
         case "Mario's Star":
             return "mstar"
 
-        case "Gold Diamond" | "Sapphire" | "Emerald" | "Ruby" | "Diamond" :
+        case "Gold Diamond" | "Sapphire" | "Emerald" | "Ruby" | "Diamond":
             return "money"
 
         case "Poison Mushroom":
@@ -504,7 +507,10 @@ def update_furniture_entries(lm_rando: "LuigisMansionRandomizer", map_id: int, f
             continue
 
         actor_item_name = get_item_appear_name(loc_data, lm_rando.slot)
-        furniture_entry["item_table"] = find_item_appear_index(item_appear_entries, actor_item_name)
+        if actor_item_name == "money" and loc_data["map_id"] == 2:
+            furniture_entry["item_table"] = 11
+        else:
+            furniture_entry["item_table"] = find_item_appear_index(item_appear_entries, actor_item_name)
 
         if not actor_item_name == "money":
             furniture_entry["generate"] = 0
