@@ -147,6 +147,9 @@ def get_item_appear_name(item_data: dict, slot: int) -> str:
     if item_data["door_id"] != 0:
         return "key_" + str(item_data["door_id"])
 
+    if any(money_name in item_data["name"] for money_name in ["Coins", "Bills", "Gold Bars"]):
+        return "money"
+
     match item_data["name"]:
         case "Fire Element Medal":
             return "elffst"
@@ -166,7 +169,7 @@ def get_item_appear_name(item_data: dict, slot: int) -> str:
         case "Mario's Star":
             return "mstar"
 
-        case "Gold Diamond" | "Sapphire" | "Emerald" | "Ruby" | "Diamond" :
+        case "Gold Diamond" | "Sapphire" | "Emerald" | "Ruby" | "Diamond":
             return "money"
 
         case "Poison Mushroom":
