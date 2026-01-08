@@ -1,5 +1,5 @@
 import asyncio, time
-import copy, sys
+import copy, sys, re
 from typing import Any
 
 # AP related imports
@@ -217,6 +217,13 @@ class LMContext(BaseContext):
         """
         super().on_package(cmd, args)
         match cmd:
+            case "PrintJSON":
+                if args.get("type", "") == "Countdown" and len(list(args.get("data", []))) > 0 and \
+                    "starting countdown of " in args["data"][0]["text"].lower():
+
+                    countdown_var: int = int(re.search(r"\d+", args["data"][0]["text"]).group())
+                    print(str(countdown_var))
+
             case "Connected": # On Connect
                 super().on_connected(args)
                 slot_data = args["slot_data"]
