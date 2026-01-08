@@ -507,7 +507,7 @@ def update_furniture_entries(lm_rando: "LuigisMansionRandomizer", map_id: int, f
             continue
 
         actor_item_name = get_item_appear_name(loc_data, lm_rando.slot)
-        if actor_item_name == "money" and loc_data["map_id"] == 2:
+        if actor_item_name == "money":
             furniture_entry["item_table"] = 11
         else:
             furniture_entry["item_table"] = find_item_appear_index(item_appear_entries, actor_item_name)
