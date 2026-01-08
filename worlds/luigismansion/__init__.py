@@ -123,91 +123,91 @@ class LMWorld(World):
                 set_element_rules(self, entry, False)
                 region.locations.append(entry)
         else:
-            LOCATION_DICT: dict[str, LMLocationData] = {}
+            location_dict: dict[str, LMLocationData] = {}
             if self.options.game_mode.value == 1:
                 for name, loc_data in FURNITURE_LOCATION_TABLE.items():
                     if not loc_data.require_poltergust:
-                        LOCATION_DICT.update({name: loc_data})
+                        location_dict.update({name: loc_data})
 
             for group in sorted(self.options.furnisanity.value):
                 match group:
                     case "Ceiling":
-                        LOCATION_DICT = {
-                            **LOCATION_DICT,
+                        location_dict = {
+                            **location_dict,
                             **CEILING_LOCATION_TABLE
                         }
                     case "Decor":
-                        LOCATION_DICT = {
-                            **LOCATION_DICT,
+                        location_dict = {
+                            **location_dict,
                             **DECOR_LOCATION_TABLE
                         }
                     case "Hangables":
-                        LOCATION_DICT = {
-                            **LOCATION_DICT,
+                        location_dict = {
+                            **location_dict,
                             **HANGABLES_LOCATION_TABLE
                         }
                     case "Seating":
-                        LOCATION_DICT = {
-                            **LOCATION_DICT,
+                        location_dict = {
+                            **location_dict,
                             **SEATING_LOCATION_TABLE
                         }
                     case "Candles":
-                        LOCATION_DICT = {
-                            **LOCATION_DICT,
+                        location_dict = {
+                            **location_dict,
                             **CANDLES_LOCATION_TABLE
                         }
                     case "Surfaces":
-                        LOCATION_DICT = {
-                            **LOCATION_DICT,
+                        location_dict = {
+                            **location_dict,
                             **SURFACES_LOCATION_TABLE
                         }
                     case "Storage":
-                        LOCATION_DICT = {
-                            **LOCATION_DICT,
+                        location_dict = {
+                            **location_dict,
                             **STORAGE_LOCATION_TABLE
                         }
                     case "Drawers":
-                        LOCATION_DICT = {
-                            **LOCATION_DICT,
+                        location_dict = {
+                            **location_dict,
                             **DRAWERS_LOCATION_TABLE
                         }
                     case "Plants":
-                        LOCATION_DICT = {
-                            **LOCATION_DICT,
+                        location_dict = {
+                            **location_dict,
                             **PLANT_LOCATION_TABLE
                         }
                     case "Treasures":
-                        LOCATION_DICT = {
-                            **LOCATION_DICT,
+                        location_dict = {
+                            **location_dict,
                             **TREASURES_LOCATION_TABLE
                         }
                     case "Basement":
-                        LOCATION_DICT = {
-                            **LOCATION_DICT,
+                        location_dict = {
+                            **location_dict,
                             **BASEMENT_LOCS
                         }
                     case "1st Floor":
-                        LOCATION_DICT = {
-                            **LOCATION_DICT,
+                        location_dict = {
+                            **location_dict,
                             **FIRST_FLOOR_LOCS
                         }
                     case "2nd Floor":
-                        LOCATION_DICT = {
-                            **LOCATION_DICT,
+                        location_dict = {
+                            **location_dict,
                             **SECOND_FLOOR_LOCS
                         }
                     case "Attic":
-                        LOCATION_DICT = {
-                            **LOCATION_DICT,
+                        location_dict = {
+                            **location_dict,
                             **ATTIC_LOCS
                         }
                     case "Roof":
-                        LOCATION_DICT = {
-                            **LOCATION_DICT,
+                        location_dict = {
+                            **location_dict,
                             **ROOF_LOCS
                         }
 
-            for location, data in LOCATION_DICT.items():
+            for location, data in location_dict.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
                 if data.require_poltergust or region.name == self.origin_region_name:
