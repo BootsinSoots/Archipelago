@@ -630,7 +630,8 @@ class LMContext(BaseContext):
             vac_count = self.get_item_count_by_id(8148)
             vac_speed = min(self.get_item_count_by_id(8064), 5)
 
-            if not self.trap_link.check_vac_trap_active(dynamic_addr["Client"]["Player_Weapon_Trap_Timer"]) and vac_count > 0:
+            vac_timer_addr: int = int(dynamic_addr["Client"]["Player_Weapon_Trap_Timer"])
+            if not self.trap_link.check_vac_trap_active(vac_timer_addr) and vac_count > 0:
                 for item in [8064, 8148]:
                     lm_item_name = self.item_names.lookup_in_game(item)
                     lm_item = ALL_ITEMS_TABLE[lm_item_name]

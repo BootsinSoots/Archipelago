@@ -3,7 +3,7 @@
 import logging
 import dolphin_memory_engine as dme
 
-from ..constants import AP_LOGGER_NAME, MEMORY_CONSTANTS
+from ..constants import AP_LOGGER_NAME
 from .network_engine import ArchipelagoNetworkEngine, TrapNetworkRequest
 from .link_base import LinkBase
 from ...Items import *
