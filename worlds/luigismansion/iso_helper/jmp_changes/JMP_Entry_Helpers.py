@@ -511,17 +511,14 @@ def update_furniture_entries(lm_rando: "LuigisMansionRandomizer", map_id: int, f
             continue
 
         actor_item_name = get_item_appear_name(loc_data, lm_rando.slot)
-        if actor_item_name == "money":
-            furniture_entry["item_table"] = 11
-        else:
-            furniture_entry["item_table"] = find_item_appear_index(item_appear_entries, actor_item_name)
-
         if not actor_item_name == "money":
+            furniture_entry["item_table"] = find_item_appear_index(item_appear_entries, actor_item_name)
             furniture_entry["generate"] = 0
             furniture_entry["generate_num"] = 0
             continue
 
         # Update the Money fields based on the Money provided.
+        furniture_entry["item_table"] = 11
         int_money_amt = 1
         if re.search(r"^\d+", loc_data["name"]):
             int_money_amt = int(re.search(r"^\d+", loc_data["name"]).group())
