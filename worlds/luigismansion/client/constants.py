@@ -43,8 +43,3 @@ class MEMORY_CONSTANTS:
 
     TRAINING_BUTTON_LAYOUT_SCREEN: int = 0x803D33AE
     """ Flag 168: Room flag used to determine if the button layout screen during training is present. """
-
-    class TRAP_CONSTANTS:
-        """ Memory Allocations for Archipelago TrapLink. """
-        VAC_TRAP_IS_ACTIVE: int = 0x804ddf1c
-        """ Determines if the vac_trap is active. The value is -1 on inactivity. """

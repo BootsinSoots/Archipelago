@@ -75,8 +75,8 @@ class TrapLink(LinkBase):
             TrapNetworkRequest(tags=[ TrapLinkConstants.FRIENDLY_NAME ],
             trap_name=trap_name))
 
-    def check_vac_trap_active(self) -> bool:
-        is_trap_active: int = int.from_bytes(dme.read_bytes(MEMORY_CONSTANTS.TRAP_CONSTANTS.VAC_TRAP_IS_ACTIVE, 4), signed=True)
+    def check_vac_trap_active(self, vac_trap_address: int) -> bool:
+        is_trap_active: int = int.from_bytes(dme.read_bytes(vac_trap_address, 4), signed=True)
         return is_trap_active != -1
 
     def on_bounced(self, args, vac_count: int):

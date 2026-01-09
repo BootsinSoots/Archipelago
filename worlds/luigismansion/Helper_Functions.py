@@ -152,7 +152,8 @@ class LMDynamicAddresses:
         # Weapon_action is used for Client Vac Speed Adjustments
         name_list: list[str] = ["Generate_Ghost", "Monochrome_Trap_Timer", "Player_Reaction", "gItem_Information",
             "Weapon_Action", "Mirror_Warp_X", "Mirror_Warp_Y", "Mirror_Warp_Z", "Play_King_Boo_Gem_Fast_Pickup",
-            "gItem_Information_Timer", "Boolossus_Mini_Boo_Difficulty", "Custom_Boo_Counter_Bitfields", "gTsuri_Speed"]
+            "gItem_Information_Timer", "Boolossus_Mini_Boo_Difficulty", "Custom_Boo_Counter_Bitfields", "gTsuri_Speed",
+            "Player_Weapon_Trap_Timer"]
 
         for custom_line in custom_address_list:
             if custom_line.rstrip() == "":  # Ignore any whitespace lines.
@@ -188,6 +189,8 @@ class LMDynamicAddresses:
                 case "gItem_Information_Timer":
                     ram_addresses["Client"][csv_line[2]] = updated_addr
                 case "gItem_Information":
+                    ram_addresses["Client"][csv_line[2]] = updated_addr
+                case "Player_Weapon_Trap_Timer":
                     ram_addresses["Client"][csv_line[2]] = updated_addr
 
         self.dynamic_addresses = ram_addresses
