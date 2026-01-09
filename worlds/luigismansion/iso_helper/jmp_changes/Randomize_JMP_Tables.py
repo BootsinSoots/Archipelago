@@ -68,11 +68,11 @@ class RandomizeJMPTables:
         for furniture_jmp_id in ceiling_furniture_list:
             curr_y_offset: int = int(map_six_furniture.data_entries[furniture_jmp_id]["item_offset_y"])
             adjust_y_offset = 225.0
-            map_six_furniture.data_entries[furniture_jmp_id]["item_offset_y"] = curr_y_offset + adjust_y_offset
+            map_six_furniture.data_entries[furniture_jmp_id]["item_offset_y"] = curr_y_offset - adjust_y_offset
 
         for furniture_jmp_id in other_furn_list:
             curr_y_offset: int = int(map_six_furniture.data_entries[furniture_jmp_id]["item_offset_y"])
-            adjust_y_offset = 50.0
+            adjust_y_offset = 100.0
             map_six_furniture.data_entries[furniture_jmp_id]["item_offset_y"] = curr_y_offset + adjust_y_offset
 
         update_furniture_entries(self.lm_rando, 6, map_six_furniture.data_entries, map_six_item_appear.data_entries)
