@@ -1,7 +1,7 @@
 import copy, re
 from typing import Any, TYPE_CHECKING
 
-from gcbrickwork.JMP import JMPEntry
+from gcbrickwork.JMP import JMPEntry, JMP
 
 from ...Locations import LMLocationData, ALL_LOCATION_TABLE
 
@@ -484,17 +484,21 @@ def apply_new_ghost(lm_rando: "LuigisMansionRandomizer", enemy_entry: JMPEntry, 
     if "tenjyo" in curr_enemy_name:
         enemy_entry["pos_y"] = new_pos_y + 200.000000
 
+
+def get_output_dict(lm_rando: "LuigisMansionRandomizer") -> dict:
+    """Gets the furniture/plant dicts in which we want to get items for/create."""
+    output_dict: dict = {**lm_rando.output_data["Locations"]["Furniture"]}
+    if "Plant" in lm_rando.output_data["Locations"].keys():
+        output_dict: dict = {
+            **output_dict,
+            **lm_rando.output_data["Locations"]["Plant"]}
+    return output_dict
+
 def update_furniture_entries(lm_rando: "LuigisMansionRandomizer", map_id: int, furniture_entries: list[JMPEntry],
     item_appear_entries: list[JMPEntry]):
     """Updates the various furniture that needs to be changed and looks up the related item from the item_appear table
     that will spawn once interacted with."""
-    furniture_to_patch: dict = {**lm_rando.output_data["Locations"]["Furniture"]}
-    if "Plant" in lm_rando.output_data["Locations"].keys():
-        furniture_to_patch: dict = {
-            **furniture_to_patch,
-            **lm_rando.output_data["Locations"]["Plant"]}
-
-    for loc_name, loc_data in furniture_to_patch.items():
+    for loc_name, loc_data in get_output_dict(lm_rando).items():
         if not int(loc_data["map_id"]) == map_id:
             continue
 
@@ -541,3 +545,17 @@ def update_furniture_entries(lm_rando: "LuigisMansionRandomizer", map_id: int, f
             furniture_entry["generate"] = 9
         elif loc_data["name"] == "Gold Diamond":
             furniture_entry["generate"] = 10
+
+def update_item_info_entries(lm_rando: "LuigisMansionRandomizer", map_id: int, item_info: JMP, already_exist: list[str]):
+    """Adds any items that dont already exist in the item_info table."""
+    if already_exist is None:
+        already_exist_items = []
+
+    for loc_name, loc_data in get_output_dict(lm_rando).items():
+        if not int(loc_data["map_id"]) == map_id:
+            continue
+
+        lm_item_name: str = get_item_name(loc_data, lm_rando.slot)
+        if not lm_item_name in already_exist:
+            item_info.add_jmp_entry(create_iteminfo_entry(loc_data["door_id"], lm_item_name))
+            already_exist.append(lm_item_name)

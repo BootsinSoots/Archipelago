@@ -8,7 +8,7 @@ from gcbrickwork.JMP import JMP, JMPEntry
 from .JMP_Entry_Helpers import (LOCATION_TO_INDEX, SPEEDY_OBSERVER_INDEX, SPEEDY_ENEMY_INDEX, CEILING_FURNITURE_LIST,
     GHOST_LIST, MEDIUM_HEIGHT_FURNITURE_LIST, apply_new_ghost, create_observer_entry, update_furniture_entries,
     create_iteminfo_entry, create_itemappear_entry, get_item_chest_visual, get_chest_size_from_item, get_item_name,
-    WDYM_TREES, WDYM_RAISE_LIST, WDYM_MAKE_MOVE_LIST)
+    WDYM_TREES, WDYM_RAISE_LIST, WDYM_MAKE_MOVE_LIST, update_item_info_entries)
 
 from ...Items import ALL_ITEMS_TABLE, LMItemData, CurrencyItemData
 from ...Regions import REGION_LIST, TOAD_SPAWN_LIST
@@ -143,12 +143,7 @@ class RandomizeJMPTables:
             if not item_name in already_exist_items:
                 already_exist_items.append(item_name)
 
-        for location_type in self.lm_rando.output_data["Locations"].keys():
-            for item_data in self.lm_rando.output_data["Locations"][location_type].values():
-                lm_item_name: str = get_item_name(item_data, self.lm_rando.slot)
-                if not lm_item_name in already_exist_items:
-                    map_two_info.add_jmp_entry(create_iteminfo_entry(item_data["door_id"], lm_item_name))
-                    already_exist_items.append(lm_item_name)
+        update_item_info_entries(self.lm_rando, 2, map_two_info, already_exist_items)
 
 
     def _map_two_key_info_changes(self):
@@ -1006,7 +1001,9 @@ class RandomizeJMPTables:
             # all items available to us, in case keys or other things are chosen to hide in the furniture.
             if map_name == "map6.szp":
                 curr_map: LMMapFile = self.lm_rando.map_files[map_name.replace(".szp", "")]
-                curr_map.jmp_files["iteminfotable"] = self.lm_rando.map_files["map2"].jmp_files["iteminfotable"]
+                map6_item_info = copy.deepcopy(self.lm_rando.map_files["map2"].jmp_files["iteminfotable"])
+                update_item_info_entries(self.lm_rando, 6, map6_item_info, [])
+                curr_map.jmp_files["iteminfotable"] = map6_item_info
                 curr_map.add_new_jmp_file("iteminfotable", curr_map.jmp_files["iteminfotable"].create_new_jmp())
                 curr_map.jmp_files["itemappeartable"] = self.lm_rando.map_files["map2"].jmp_files["itemappeartable"]
                 curr_map.add_new_jmp_file("itemappeartable", curr_map.jmp_files["itemappeartable"].create_new_jmp())
