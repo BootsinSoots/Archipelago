@@ -1002,7 +1002,8 @@ class RandomizeJMPTables:
             if map_name == "map6.szp":
                 curr_map: LMMapFile = self.lm_rando.map_files[map_name.replace(".szp", "")]
                 map6_item_info = copy.deepcopy(self.lm_rando.map_files["map2"].jmp_files["iteminfotable"])
-                update_item_info_entries(self.lm_rando, 6, map6_item_info, [])
+                already_exists: list[str] = list(set([info_entry["name"] for info_entry in map6_item_info.data_entries]))
+                update_item_info_entries(self.lm_rando, 6, map6_item_info, already_exists)
                 curr_map.jmp_files["iteminfotable"] = map6_item_info
                 curr_map.add_new_jmp_file("iteminfotable", curr_map.jmp_files["iteminfotable"].create_new_jmp())
                 curr_map.jmp_files["itemappeartable"] = self.lm_rando.map_files["map2"].jmp_files["itemappeartable"]
