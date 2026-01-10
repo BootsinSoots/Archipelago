@@ -543,15 +543,11 @@ def update_furniture_entries(lm_rando: "LuigisMansionRandomizer", map_id: int, f
         elif loc_data["name"] == "Gold Diamond":
             furniture_entry["generate"] = 10
 
-def update_item_info_entries(lm_rando: "LuigisMansionRandomizer", map_id: int, item_info: JMP, already_exist: list[str]):
+def update_item_info_entries(lm_rando: "LuigisMansionRandomizer", item_info: JMP):
     """Adds any items that dont already exist in the item_info table."""
-    if already_exist is None:
-        already_exist_items = []
+    already_exist: list[str] = [str(i_entry["name"]) for i_entry in item_info.data_entries]
 
     for loc_name, loc_data in get_output_dict(lm_rando).items():
-        if not int(loc_data["map_id"]) == map_id:
-            continue
-
         lm_item_name: str = get_item_name(loc_data, lm_rando.slot)
         if not lm_item_name in already_exist:
             item_info.add_jmp_entry(create_iteminfo_entry(loc_data["door_id"], lm_item_name))

@@ -132,7 +132,6 @@ class RandomizeJMPTables:
         """Updates/Adds items that can be spawned in via the other JMP tables.
         To avoid item row duplication, items are only added once."""
         self.lm_rando.client_logger.info("Now updating all item_info changes for map2.")
-        already_exist_items: list[str] = []
         hp_item_names: dict[str, int] = {"sheart": 20, "lheart": 50}
         map_two_info: JMP = self.lm_rando.map_files["map2"].jmp_files["iteminfotable"]
 
@@ -140,10 +139,8 @@ class RandomizeJMPTables:
             item_name: str = str(info_entry["name"])
             if item_name in hp_item_names.keys():
                 info_entry["HPAmount"] = hp_item_names[item_name]
-            if not item_name in already_exist_items:
-                already_exist_items.append(item_name)
 
-        update_item_info_entries(self.lm_rando, 2, map_two_info, already_exist_items)
+        update_item_info_entries(self.lm_rando, map_two_info)
 
 
     def _map_two_key_info_changes(self):
@@ -982,9 +979,9 @@ class RandomizeJMPTables:
         self.lm_rando.client_logger.info("Now adding item_appear/item_info entries to the boss maps and gallery map...")
         from ..LM_Map_File import LMMapFile
         # Copy the existing item_appear entries from map2, as these should be the same for the other map files.
-        item_appear: JMP = copy.deepcopy(self.lm_rando.empty_jmp_files["itemappeartable"])
-        for idx in range(15):
-            item_appear.add_jmp_entry(self.lm_rando.map_files["map2"].jmp_files["itemappeartable"].data_entries[idx])
+        item_appear: JMP = copy.deepcopy(self.lm_rando.map_files["map2"].jmp_files["itemappeartable"])
+        #         for idx in range(15):
+        #             item_appear.add_jmp_entry(self.lm_rando.map_files["map2"].jmp_files["itemappeartable"].data_entries[idx])
         item_appear_data: BytesIO = item_appear.create_new_jmp()
 
         # Create the generic item_info that will be used for all other map files.
@@ -1001,13 +998,10 @@ class RandomizeJMPTables:
             # all items available to us, in case keys or other things are chosen to hide in the furniture.
             if map_name == "map6.szp":
                 curr_map: LMMapFile = self.lm_rando.map_files[map_name.replace(".szp", "")]
-                map6_item_info = copy.deepcopy(self.lm_rando.map_files["map2"].jmp_files["iteminfotable"])
-                already_exists: list[str] = list(set([info_entry["name"] for info_entry in map6_item_info.data_entries]))
-                update_item_info_entries(self.lm_rando, 6, map6_item_info, already_exists)
-                curr_map.jmp_files["iteminfotable"] = map6_item_info
+                curr_map.jmp_files["iteminfotable"] = copy.deepcopy(self.lm_rando.map_files["map2"].jmp_files["iteminfotable"])
                 curr_map.add_new_jmp_file("iteminfotable", curr_map.jmp_files["iteminfotable"].create_new_jmp())
                 curr_map.jmp_files["itemappeartable"] = self.lm_rando.map_files["map2"].jmp_files["itemappeartable"]
-                curr_map.add_new_jmp_file("itemappeartable", curr_map.jmp_files["itemappeartable"].create_new_jmp())
+                curr_map.add_new_jmp_file("itemappeartable", item_appear_data)
                 continue
 
             # Add these files directly so these can be saved properly
