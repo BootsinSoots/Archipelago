@@ -8,7 +8,6 @@ from typing import Any
 import requests, ssl, certifi, urllib.request
 from logging import Logger, getLogger
 import json, sys, os, zipfile, tempfile, shutil
-import urllib.request
 
 from ..client.constants import CLIENT_VERSION, RANDOMIZER_NAME, CLIENT_NAME
 
@@ -71,13 +70,9 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
         self._client_logger.info(f"Dependency archive name to use: {lib_path}")
         return lib_path
 
-    def _get_temp_folder_name(self) -> str:
-        temp_path = os.path.join(tempfile.gettempdir(), "luigis_mansion", CLIENT_VERSION, "libs")
-        return temp_path
-
     def patch(self, aplm_patch: str) -> str:
         # Get the AP Path for the base ROM
-        lm_clean_iso = self.get_base_rom_path()
+        lm_clean_iso = get_base_rom_path()
         self._client_logger.info(f"Provided {RANDOMIZER_NAME} ISO Path was: " + lm_clean_iso)
 
         base_path = os.path.splitext(aplm_patch)[0]
@@ -99,13 +94,6 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
             raise Exception(f"File (version: {manifest['compatible_version']}) too new "
                             f"for this handler (version: {self.version})")
         return manifest
-
-    def get_base_rom_path(self) -> str:
-        options: Settings = get_settings()
-        file_name = options["luigismansion_options"]["iso_file"]
-        if not os.path.exists(file_name):
-            file_name = Utils.user_path(file_name)
-        return file_name
 
     def verify_base_rom(self, lm_rom_path: str, throw_on_missing_speedups: bool = False):
         # Verifies we have a valid installation of Luigi's Mansion USA. There are some regional file differences.
@@ -200,7 +188,7 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
     def _get_remote_dependencies_and_create_iso(self, aplm_patch: str, output_file: str, lm_clean_iso: str):
         local_dir_path: str = "N/A"
         try:
-            local_dir_path = self._get_temp_folder_name()
+            local_dir_path = get_temp_folder_name()
             # If temp directory exists, and we failed to patch the ISO, we want to remove the directory
             #   and instead get a fresh installation.
             if os.path.isdir(local_dir_path):
@@ -217,3 +205,18 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
             self.create_iso(aplm_patch, output_file, lm_clean_iso, False)
         except PermissionError:
             self._client_logger.warning("Failed to cleanup temp folder, %s ignoring delete.", local_dir_path)
+
+
+def get_temp_folder_name() -> str:
+    """Gets a temp file based on the current OS, then a subdirectory for game, version, and libs."""
+    temp_path = os.path.join(tempfile.gettempdir(), "luigis_mansion", CLIENT_VERSION, "libs")
+    return temp_path
+
+
+def get_base_rom_path() -> str:
+    """Gets the base rom path from the host.yml settings."""
+    options: Settings = get_settings()
+    file_name = options["luigismansion_options"]["iso_file"]
+    if not os.path.exists(file_name):
+        file_name = Utils.user_path(file_name)
+    return file_name
