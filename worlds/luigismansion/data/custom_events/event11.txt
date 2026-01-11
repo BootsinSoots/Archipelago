@@ -1,7 +1,9 @@
 <MENUOFF>
+<ALLSTOP>
 ---
 <LUIGISTOP3>
 <WAIT>(24)
+<ALLSTOP>
 <ACTOR>"demo_luigi"<STOP>
 <ACTOR>"demo_luigi"<ACT>"WAIT0"
 ---
