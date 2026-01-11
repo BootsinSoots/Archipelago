@@ -9,7 +9,7 @@ import requests, ssl, certifi, urllib.request
 from logging import Logger, getLogger
 import json, sys, os, zipfile, tempfile, shutil
 
-from ..client.constants import CLIENT_VERSION, RANDOMIZER_NAME, CLIENT_NAME
+from ..client.constants import CLIENT_VERSION, RANDOMIZER_NAME, CLIENT_NAME, LM_GC_IDs
 
 LM_USA_MD5 = 0x6e3d9ae0ed2fbd2f77fa1ca09a60c494
 
@@ -135,12 +135,12 @@ class LMUSAAPPatch(APPatch, metaclass=AutoPatchRegister):
         if magic == "CISO":
             raise InvalidCleanISOError(f"The provided ISO is in CISO format. The {RANDOMIZER_NAME} randomizer " +
                                        "only supports ISOs in ISO format.")
-        if game_id != "GLME01":
+        if game_id != LM_GC_IDs.USA_ID:
             if game_id and game_id.startswith("GLM"):
                 raise InvalidCleanISOError(f"Invalid version of {RANDOMIZER_NAME}. " +
                     "Currently, only the North American version is supported by this randomizer.")
             else:
-                raise InvalidCleanISOError("Invalid game given as the vanilla ISO. You must specify a " +
+                raise InvalidCleanISOError(f"Non-{RANDOMIZER_NAME} game detected. Please re-select the vanilla " +
                     f"{RANDOMIZER_NAME}'s ISO (North American version).")
         return
 
