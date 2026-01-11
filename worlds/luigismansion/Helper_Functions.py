@@ -42,20 +42,6 @@ def string_to_bytes(user_string: str, encoded_byte_length: int | None = None) ->
     return encoded_string
 
 
-def string_to_bytes_with_limit(user_string: str, max_bytes_length: int) -> bytes:
-    """
-    Encodes a provided string to UTF-8 format. Adds padding until the expected length is reached.
-    If provided string is longer than expected length, chop it off at the max bytes length instead.
-
-    :param user_string: String that needs to be encoded to bytes.
-    :param max_bytes_length: Max length of the bytes.
-    """
-    encoded_string = user_string.encode('utf-8')
-    if len(encoded_string) < max_bytes_length:
-        encoded_string += b'\x00' * (max_bytes_length - len(encoded_string))
-    return encoded_string[:max_bytes_length]
-
-
 def byte_string_strip(bytes_input: bytes):
     """
     Strips the un-necessary padding / bytes that are not a part of the core string.
