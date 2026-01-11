@@ -21,7 +21,7 @@ class LMRamData(NamedTuple):
     item_count: Optional[int] = None
 
 
-def string_to_bytes(user_string: str, encoded_byte_length: int) -> bytes:
+def string_to_bytes(user_string: str, encoded_byte_length: int = None) -> bytes:
     """
     Encodes a provided string to UTF-8 format. Adds padding until the expected length is reached.
     If provided string is longer than expected length, raise an exception
@@ -30,6 +30,8 @@ def string_to_bytes(user_string: str, encoded_byte_length: int) -> bytes:
     :param encoded_byte_length: Expected length of the provided string.
     """
     encoded_string = user_string.encode('utf-8')
+    if encoded_byte_length is None:
+        encoded_byte_length = len(encoded_string)
 
     if len(encoded_string) < encoded_byte_length:
         encoded_string += b'\x00' * (encoded_byte_length - len(encoded_string))
