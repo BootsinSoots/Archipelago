@@ -16,18 +16,18 @@ if TYPE_CHECKING:
 MAX_DISPLAYED_CHARS: int = 286
 
 class DisplayColors(StrEnum):
-    BLACK = f"\\eGC[{JSONtoTextParser.color_codes["black"]}FF]\\eCC[{JSONtoTextParser.color_codes["black"]}FF]"
-    RED = f"\\eGC[{JSONtoTextParser.color_codes["red"]}FF]\\eCC[{JSONtoTextParser.color_codes["red"]}FF]"
-    GREEN = f"\\eGC[{JSONtoTextParser.color_codes["green"]}FF]\\eCC[{JSONtoTextParser.color_codes["green"]}FF]"
-    YELLOW = f"\\eGC[{JSONtoTextParser.color_codes["yellow"]}FF]\\eCC[{JSONtoTextParser.color_codes["yellow"]}FF]"
-    BLUE = f"\\eGC[{JSONtoTextParser.color_codes["blue"]}FF]\\eCC[{JSONtoTextParser.color_codes["blue"]}FF]"
-    MAGENTA = f"\\eGC[{JSONtoTextParser.color_codes["magenta"]}FF]\\eCC[{JSONtoTextParser.color_codes["magenta"]}FF]"
-    CYAN = f"\\eGC[{JSONtoTextParser.color_codes["cyan"]}FF]\\eCC[{JSONtoTextParser.color_codes["cyan"]}FF]"
-    SLATEBLUE = f"\\eGC[{JSONtoTextParser.color_codes["slateblue"]}FF]\\eCC[{JSONtoTextParser.color_codes["slateblue"]}FF]"
-    PLUM = f"\\eGC[{JSONtoTextParser.color_codes["plum"]}FF]\\eCC[{JSONtoTextParser.color_codes["plum"]}FF]"
-    SALMON = f"\\eGC[{JSONtoTextParser.color_codes["salmon"]}FF]\\eCC[{JSONtoTextParser.color_codes["salmon"]}FF]"
-    WHITE = f"\\eGC[{JSONtoTextParser.color_codes["white"]}FF]\\eCC[{JSONtoTextParser.color_codes["white"]}FF]"
-    ORANGE = f"\\eGC[{JSONtoTextParser.color_codes["orange"]}FF]\\eCC[{JSONtoTextParser.color_codes["orange"]}FF]"
+    BLACK = fr"\eGC[{JSONtoTextParser.color_codes["black"]}FF]\eCC[{JSONtoTextParser.color_codes["black"]}FF]"
+    RED = fr"\eGC[{JSONtoTextParser.color_codes["red"]}FF]\eCC[{JSONtoTextParser.color_codes["red"]}FF]"
+    GREEN = fr"\eGC[{JSONtoTextParser.color_codes["green"]}FF]\eCC[{JSONtoTextParser.color_codes["green"]}FF]"
+    YELLOW = fr"\eGC[{JSONtoTextParser.color_codes["yellow"]}FF]\eCC[{JSONtoTextParser.color_codes["yellow"]}FF]"
+    BLUE = fr"\eGC[{JSONtoTextParser.color_codes["blue"]}FF]\eCC[{JSONtoTextParser.color_codes["blue"]}FF]"
+    MAGENTA = fr"\eGC[{JSONtoTextParser.color_codes["magenta"]}FF]\eCC[{JSONtoTextParser.color_codes["magenta"]}FF]"
+    CYAN = fr"\eGC[{JSONtoTextParser.color_codes["cyan"]}FF]\eCC[{JSONtoTextParser.color_codes["cyan"]}FF]"
+    SLATEBLUE = fr"\eGC[{JSONtoTextParser.color_codes["slateblue"]}FF]\eCC[{JSONtoTextParser.color_codes["slateblue"]}FF]"
+    PLUM = fr"\eGC[{JSONtoTextParser.color_codes["plum"]}FF]\eCC[{JSONtoTextParser.color_codes["plum"]}FF]"
+    SALMON = fr"\eGC[{JSONtoTextParser.color_codes["salmon"]}FF]\eCC[{JSONtoTextParser.color_codes["salmon"]}FF]"
+    WHITE = fr"\eGC[{JSONtoTextParser.color_codes["white"]}FF]\eCC[{JSONtoTextParser.color_codes["white"]}FF]"
+    ORANGE = fr"\eGC[{JSONtoTextParser.color_codes["orange"]}FF]\eCC[{JSONtoTextParser.color_codes["orange"]}FF]"
 
 
 class LMDisplayQueue:
@@ -40,13 +40,13 @@ class LMDisplayQueue:
 
 
     def __init__(self, ctx: "LMContext"):
-        """There is some custom code injected into LM that allows us to display any text we want in game.
+        r"""There is some custom code injected into LM that allows us to display any text we want in game.
         There is a note that there is at max 286 bytes per line, 10 lines total (can be any amount)
         Lines are indicated by line breaks (\n) and can be anywhere, regardless of character count.
-        To change colors, you will need to use the tags '\\eGC[RRGGBBAA]\\eCC[RRGGBBAA]', where its RGB + Alpha
+        To change colors, you will need to use the tags '\eGC[RRGGBBAA]\eCC[RRGGBBAA]', where its RGB + Alpha
         Alpha is unused in these lines, so we can set it to whatever static value we want, does not matter.
-        \\eGC[RRGGBBAA]\\eCC[RRGGBBAA] takes up 26 characters on its own.
-        Example line: \\eGC[FF0000FF]\\eCC[FF0000FF]Sample Red Tex here\\n"""
+        \eGC[RRGGBBAA]\eCC[RRGGBBAA] takes up 26 characters on its own.
+        Example line: \eGC[FF0000FF]\eCC[FF0000FF]Sample Red Tex here\n"""
         self.ring_link_msgs = []
         self.ring_link_msgs = []
         self.items_received = []
@@ -79,8 +79,8 @@ class LMDisplayQueue:
             # Get the Received Item Name to Display
             lm_item_name = self.lm_ctx.item_names.lookup_in_game(item_to_display.item).replace("&", "")
             recv_from: str = " found their own " if item_to_display.player == self.lm_ctx.slot else " received "
-            text_to_display.append(string_to_bytes(DisplayColors.MAGENTA + curr_player_name +
-                DisplayColors.WHITE + recv_from + lm_item_name, None))
+            first_line: str = DisplayColors.MAGENTA + curr_player_name + DisplayColors.WHITE + recv_from + lm_item_name
+            text_to_display.append(string_to_bytes(first_line, None))
 
             if item_to_display.player != self.lm_ctx.slot:
                 recv_text: str  = DisplayColors.WHITE + " from "
@@ -99,13 +99,14 @@ class LMDisplayQueue:
             loc_name_retr = DisplayColors.GREEN + f"({loc_name_retr})"
             text_to_display.append(string_to_bytes(loc_name_retr, None))
 
-            await self._write_to_screen(await _build_msg(text_to_display))
+            screen_text: bytes = await _build_msg(text_to_display)
+            await self._write_to_screen(screen_text)
 
 
     async def _write_to_screen(self, msg_to_write: bytes):
         """Writes the provided message on screen with the associated folors"""
         recv_timer_on_screen: int = int("96", 16) # 5 Seconds in hex
-        item_display_addr: int = int(self.lm_ctx.lm_dynamic_addr.dynamic_addresses["Client"]["gItem_Information"], 16)
+        item_display_addr: int = 0x80338FC4
         item_timer_addr: int = int(self.lm_ctx.lm_dynamic_addr.dynamic_addresses["Client"]["gItem_Information_Timer"], 16)
         frame_avg_count: int = 30
 
@@ -124,4 +125,4 @@ async def _build_msg(msg_parts: list[bytes]) -> bytes:
     if msg_parts is None or len(msg_parts) == 0:
         return b'\00'
 
-    return b'\0A'.join(msg_parts)[:MAX_DISPLAYED_CHARS]
+    return "\n".encode("utf-8").join(msg_parts)[:MAX_DISPLAYED_CHARS].replace(b"\\eCC", b"\x1BCC").replace(b"\\eGC", b"\x1BGC")
