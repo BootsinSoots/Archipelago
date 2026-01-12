@@ -404,7 +404,12 @@ class LMContext(BaseContext):
     def check_ram_location(self, loc_data, addr_to_update, curr_map_id, map_to_check) -> bool:
         """
         Checks a provided location in ram to see if the location was interacted with. This includes
-        furniture, plants, entering rooms,
+        furniture, plants, entering rooms, etc.
+
+        It should be noted that although reading 800 bytes in RAM is preferable for furniture, it actually has a lot
+        of pointers and instead will cause just as many reads to dynamically get bulk data if not more than it would to
+        just read data 4 bytes at a time. For context, it's a static address + the current offset, then you add
+        either the furniture id offset or the flag offset to get the furniture id, and it's value respectively.
         """
         match loc_data.type:
             case "Furniture" | "Plant":
@@ -456,7 +461,6 @@ class LMContext(BaseContext):
             #   to consider the location as "checked"
             for loc_addr in lm_loc_data.update_ram_addr:
                 # If in main mansion map
-                # TODO this will now calculate every iteration, which will slow down location checks are more are added.
                 if current_map_id == 2:
                     # If special moving Toad, room_to_check should be the spawn room id
                     if lm_loc_data.code == 617:
