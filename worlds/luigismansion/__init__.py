@@ -753,20 +753,22 @@ class LMWorld(World):
                     "loc_enum": location.jmpentry, # Will always be 0 as an event item
                 }
             elif location.item:
-                lm_item: "LMItem" = self.create_item(location.item.name)
                 loc_region: LMRegionInfo = REGION_LIST[location.parent_region.name]
-                doorid = lm_item.doorid if (lm_item.type == "Door Key" and location.address and lm_item.player == self.player) else 0
                 item_info = {
-                    "player": lm_item.player,
-                    "name": lm_item.name,
-                    "game": lm_item.game,
-                    "classification": lm_item.classification.name,
-                    "door_id": doorid,  # There is no door id for another player's game
+                    "player": location.item.player,
+                    "name": location.item.name,
+                    "game": location.item.game,
+                    "classification": location.item.classification.name,
                     "room_no": loc_region.room_id,
                     "map_id": loc_region.map_id,
                     "type": location.type,
                     "loc_enum": location.jmpentry,
                 }
+                if location.address and location.item.player == self.player:
+                    lm_item: "LMItem" = self.create_item(location.item.name)
+                    item_info.update({"door_id": lm_item.doorid if lm_item.type == "Door Key" else 0})
+                else:
+                    item_info.update({"door_id": 0}) # There is no door id for another player's game
             else:
                 item_info = {"name": "Nothing", "game": self.game, "classification": "filler"}
 
