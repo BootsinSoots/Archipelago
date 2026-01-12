@@ -1,4 +1,3 @@
-
  .text          0x804deb58      0x234 Source/Main_Game.asm.o
                 0x804deb58                Generate_Ghost
                 0x804deb5c                Weapon_Action
@@ -89,3 +88,4 @@
                 0x804dfce8                gTsuri_Speed
                 0x804dfcf0                gPlayer_Is_Game_Boy_Only
                 0x804dfcf8                gGallery_Current_Closeup_Portrait
+
