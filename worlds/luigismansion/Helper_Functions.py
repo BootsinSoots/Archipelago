@@ -1,10 +1,11 @@
 from importlib.resources.abc import Traversable
-from typing import NamedTuple, Optional
+from typing import NamedTuple, Optional, TYPE_CHECKING
 import importlib.resources as resources
 import re
 
-from gclib.rarc import RARCFileEntry, RARC, RARCNode
-from gclib.gcm import GCM
+if TYPE_CHECKING:
+    from gclib.rarc import RARCFileEntry, RARC, RARCNode
+    from gclib.gcm import GCM
 
 PROJECT_ROOT: Traversable = resources.files(__name__)
 
@@ -63,7 +64,7 @@ def byte_string_strip_null_terminator(bytes_input: bytes):
 
 
 
-def find_rarc_file_entry(rarc_file: RARC, directory_name: str, name_of_file: str) -> RARCFileEntry | None:
+def find_rarc_file_entry(rarc_file: "RARC", directory_name: str, name_of_file: str) -> "RARCFileEntry | None":
     """Gets a file/if its from a specific directory."""
     for file_entry in rarc_file.file_entries:
       if file_entry.name == name_of_file and file_entry.parent_node.name == directory_name:
@@ -71,7 +72,7 @@ def find_rarc_file_entry(rarc_file: RARC, directory_name: str, name_of_file: str
     return None
 
 
-def get_arc(gcm: GCM, arc_path) -> RARC:
+def get_arc(gcm: "GCM", arc_path) -> "RARC":
     """Get an ARC / RARC / SZP file from within the ISO / ROM"""
     arc_path = arc_path.replace("\\", "/")
     if arc_path in gcm.changed_files:
@@ -104,7 +105,7 @@ def read_custom_file(file_type: str, file_name: str) -> str:
     return file_data
 
 
-def is_rarc_node_empty(rarc_node: RARCNode, files_to_be_removed: list[str]=None) -> bool:
+def is_rarc_node_empty(rarc_node: "RARCNode", files_to_be_removed: list[str]=None) -> bool:
     """Checks if a given rarc now has any files left in it. Optionally checks a list of files that will be removed in the future."""
     assert rarc_node.name not in IGNORE_RARC_NAMES
     assert rarc_node is not None
