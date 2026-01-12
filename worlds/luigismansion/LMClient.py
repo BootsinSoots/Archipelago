@@ -19,6 +19,7 @@ from .Helper_Functions import byte_string_strip_null_terminator, LMDynamicAddres
 from .client.links.energy_link.energy_link import EnergyLinkConstants
 from .client.links.energy_link.energy_link_command_processor import EnergyLinkCommandProcessor
 from .client.constants import *
+from .client.display_in_game import LMDisplayQueue
 
 # This is the address that holds the player's slot name.
 # This way, the player does not have to manually authenticate their slot name.
@@ -254,8 +255,9 @@ class LMContext(BaseContext):
                     "DeathLink"), name="Update Deathlink")
 
                 # Fire off all the non_essential tasks here.
+                display_class = LMDisplayQueue(self)
                 Utils.async_start(self.non_essentials_async_tasks(), "LM Non-Essential Tasks")
-                Utils.async_start(self.display_received_items(), "LM - Display Items in Game")
+                Utils.async_start(display_class.display_in_game(), "LM - Display Items in Game")
                 self.ring_link.reset_ringlink()
 
             case "Bounced":
@@ -758,55 +760,6 @@ class LMContext(BaseContext):
                 await self.wait_for_next_loop(0.5)
         except Exception as genericEx:
             logger.error("Critical error while running non-essential async tasks. Details: " + str(genericEx))
-
-    async def display_received_items(self):
-        """There is some custom code injected into LM that allows us to display any text we want in game.
-        There is a note that there is at max 255 characters per line, 10 lines total.
-        Lines are indicated by line breaks (\n) and can be anywhere, regardless of character count.
-        To change colors, you will need to use the tags '\\eGC[RRGGBBAA]\\eCC[RRGGBBAA]', where its RGB + Alpha
-        Alpha is unused in these lines, so we can set it to whatever static value we want, does not matter.
-        \\eGC[RRGGBBAA]\\eCC[RRGGBBAA] takes up 26 characters on its own.
-        Example line: \\eGC[FF0000FF]\\eCC[FF0000FF]Sample Red Tex here\\n"""
-        return # TODO Early return as this is broken until we do changes based on the above docstring.
-        try:
-            while self.slot:
-                if not (self.check_ingame() and self.check_alive()) or not self.item_display_queue:
-                    await self.wait_for_next_loop(WAIT_TIMER_LONG_TIMEOUT)
-                    continue
-
-                while self.item_display_queue:
-                    item_to_display = self.item_display_queue.pop(0)
-                    lm_item_name = self.item_names.lookup_in_game(item_to_display.item)
-
-                    item_name_display = lm_item_name[:RECV_MAX_STRING_LENGTH].replace("&", "")
-                    short_item_name = sbf.string_to_bytes_with_limit(item_name_display, RECV_LINE_STRING_LENGTH)
-                    dme.write_bytes(RECV_ITEM_NAME_ADDR, short_item_name + b'\x00')
-
-                    if item_to_display.player == self.slot:
-                        loc_name_retr = self.location_names.lookup_in_game(item_to_display.location)
-                    else:
-                        loc_name_retr = self.location_names.lookup_in_slot(item_to_display.location, item_to_display.player)
-                    loc_name_display = loc_name_retr[:SLOT_NAME_STR_LENGTH].replace("&", "")
-                    loc_name_bytes = sbf.string_to_bytes_with_limit(loc_name_display, RECV_LINE_STRING_LENGTH)
-                    dme.write_bytes(RECV_ITEM_LOC_ADDR, loc_name_bytes + b'\x00')
-
-                    recv_full_player_name = self.player_names[item_to_display.player]
-                    recv_name_repl = recv_full_player_name.replace("&", "")
-                    # We try to check the received player's name is under the slot length first.
-                    short_recv_name = sbf.string_to_bytes_with_limit(recv_name_repl, SLOT_NAME_STR_LENGTH)
-                    # Then we can re-combine it with 's Game to stay under te max char limit.
-                    recv_name_display = short_recv_name.decode("utf-8") + "'s Game"
-                    dme.write_bytes(RECV_ITEM_SENDER_ADDR,
-                        sbf.string_to_bytes_with_limit(recv_name_display, RECV_LINE_STRING_LENGTH) + b'\x00')
-
-                    dme.write_word(RECV_ITEM_DISPLAY_TIMER_ADDR, int(RECV_DEFAULT_TIMER_IN_HEX, 16))
-                    await self.wait_for_next_loop(int(RECV_DEFAULT_TIMER_IN_HEX, 16) / FRAME_AVG_COUNT)
-                    while dme.read_byte(RECV_ITEM_DISPLAY_VIZ_ADDR) > 0:
-                        await self.wait_for_next_loop(WAIT_TIMER_SHORT_TIMEOUT)
-
-                    await self.wait_for_next_loop(WAIT_TIMER_MEDIUM_TIMEOUT)
-        except Exception as genericEx:
-            logger.error("While trying to display an item in game, an unknown issue occurred. Details: " + str(genericEx))
 
     async def dolphin_sync_main_task(self):
         logger.info(f"Using {RANDOMIZER_NAME} client {CLIENT_VERSION}")
