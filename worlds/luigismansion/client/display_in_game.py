@@ -57,7 +57,7 @@ class LMDisplayQueue:
     async def display_in_game(self):
         try:
             while self.lm_ctx.slot:
-                if not await (self.lm_ctx.check_ingame() and self.lm_ctx.check_alive()):
+                if not (self.lm_ctx.check_ingame() and self.lm_ctx.check_alive()):
                     await self.lm_ctx.wait_for_next_loop(WAIT_TIMER_LONG_TIMEOUT)
                     continue
 
