@@ -92,7 +92,7 @@ class LMDisplayQueue:
 
                 # Get Received Player's Game who found the item
                 recv_game_name: str = DisplayColors.ORANGE + f"Game: ({self.lm_ctx.slot_info[item_to_display.player].game})"
-                recv_game_bytes: bytes = string_to_bytes(recv_game_name, None)
+                text_to_display.append(string_to_bytes(recv_game_name, None))
 
             # Get the Received Player's Location Name who found the name
             loc_name_retr = self.lm_ctx.location_names.lookup_in_slot(item_to_display.location, item_to_display.player).replace("&", "")
