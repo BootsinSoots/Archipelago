@@ -147,7 +147,6 @@ class LMContext(BaseContext):
         self.rom_loaded = False
         self.password_required = False
         self.dolphin_status = CONNECTION_INITIAL_STATUS
-        self.item_display_queue: list[NetUtils.NetworkItem] = []
 
         # All used when death link is enabled.
         self.is_luigi_dead = False
@@ -194,6 +193,9 @@ class LMContext(BaseContext):
         # Dictionary of Dynamic RAM address that change for
         self.lm_dynamic_addr: LMDynamicAddresses = LMDynamicAddresses()
         self.lm_dynamic_addr.update_item_addresses()
+
+        # Useful for displaying various in-game messages
+        self.display_class = LMDisplayQueue(self)
 
     async def disconnect(self, allow_autoreconnect: bool = False):
         """
@@ -255,9 +257,8 @@ class LMContext(BaseContext):
                     "DeathLink"), name="Update Deathlink")
 
                 # Fire off all the non_essential tasks here.
-                display_class = LMDisplayQueue(self)
                 Utils.async_start(self.non_essentials_async_tasks(), "LM Non-Essential Tasks")
-                Utils.async_start(display_class.display_in_game(), "LM - Display Items in Game")
+                Utils.async_start(self.display_class.display_in_game(), "LM - Display Items in Game")
                 self.ring_link.reset_ringlink()
 
             case "Bounced":
@@ -542,9 +543,9 @@ class LMContext(BaseContext):
 
             # Add the item to the display items queue to display when it can
             if self.self_item_messages == 0:
-                self.item_display_queue.append(item)
+                self.display_class.items_received.append(item)
             elif self.self_item_messages == 1 and lm_item.classification == IC.progression:
-                self.item_display_queue.append(item)
+                self.display_class.items_received.append(item)
 
             # If the user is subscribed to send items and the trap is a valid trap and the trap was not already
             # received (to prevent sending the same traps over and over to other TrapLinkers if Luigi died)
