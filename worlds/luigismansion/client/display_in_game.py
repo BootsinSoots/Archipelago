@@ -125,6 +125,8 @@ class LMDisplayQueue:
         while dme.read_byte(item_timer_addr) > 0:
             await self.lm_ctx.wait_for_next_loop(WAIT_TIMER_SHORT_TIMEOUT)
 
+        # Reset the screen size to avoid old text from being written
+        dme.write_bytes(item_display_addr, b"\00" * len(msg_to_write))
         await self.lm_ctx.wait_for_next_loop(WAIT_TIMER_MEDIUM_TIMEOUT)
 
 
