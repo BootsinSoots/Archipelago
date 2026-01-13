@@ -785,8 +785,8 @@ class LMContext(BaseContext):
 
                     if not self.dolphin_status == CONNECTION_CONNECTED_STATUS:
                         # Check if Game ID is 0, which means something failed to load for Dolphin for some reason.
-                        game_bytes: bytes = dme.read_bytes(0x80000000, 20)
-                        if int(game_bytes) == 0:
+                        game_id_bytes: bytes = dme.read_bytes(0x80000000, 20)
+                        if int.from_bytes(game_id_bytes, "big") == 0:
                             logger.info(DOLPHIN_DIDNT_LOAD_ROM_CORRECTLY)
                             self.dolphin_status = DOLPHIN_DIDNT_LOAD_ROM_CORRECTLY
                             dme.un_hook()
@@ -794,7 +794,7 @@ class LMContext(BaseContext):
                             continue
 
                         # If the Game ID is a standard one, the randomized ISO has not been loaded - so disconnect
-                        game_id = read_string(0x80000000, 6)
+                        game_id = byte_string_strip_null_terminator(game_id_bytes)
                         if game_id in LM_GC_IDs:
                             logger.info(CONNECTION_REFUSED_STATUS)
                             self.dolphin_status = CONNECTION_REFUSED_STATUS
