@@ -381,8 +381,60 @@ class LMWorld(World):
         add_rule(loc, lambda state: state.has("Gold Diamond", self.player, rankcalc), "and")
         add_rule(loc, lambda state: state.has("Poltergust 3000", self.player), "and")
 
+    def _set_ut_logic(self):
+        if hasattr(self.multiworld, "re_gen_passthrough"):
+            if not self.game in self.multiworld.re_gen_passthrough:
+                return False
+
+            slot_data: dict = self.multiworld.re_gen_passthrough[self.game]
+            self.options.rank_requirement.value = slot_data["rank requirement"]
+            self.options.game_mode.value = slot_data["game mode"]
+            self.options.vacuum_upgrades.value = slot_data["better vacuum"]
+            self.options.vacuum_start.value = slot_data["vacuum start"]
+            self.options.boo_radar.value = slot_data["boo radar"]
+            self.options.door_rando.value = slot_data["door rando"]
+            self.options.toadsanity.value = slot_data["toadsanity"]
+            self.options.gold_mice.value = slot_data["gold_mice"]
+            self.options.furnisanity.value = slot_data["furnisanity"]
+            self.options.boosanity.value = slot_data["boosanity"]
+            self.options.portrification.value = slot_data["portrait ghosts"]
+            self.options.speedy_spirits.value = slot_data["speedy spirits"]
+            self.options.lightsanity.value = slot_data["lightsanity"]
+            self.options.walksanity.value = slot_data["walksanity"]
+            self.options.mario_items.value = slot_data["clairvoya requirement"]
+            self.options.boo_gates.value = slot_data["boo gates"]
+            # self.options.washroom_boo_count.value = slot_data["washroom boo count"]
+            self.options.balcony_boo_count.value = slot_data["balcony boo count"]
+            self.options.final_boo_count.value = slot_data["final boo count"]
+            self.options.enemizer.value = slot_data["enemizer"]
+            self.options.luigi_max_health.value = slot_data["luigi max health"]
+            self.origin_region_name = slot_data["spawn_region"]
+            self.ghost_affected_regions = slot_data["ghost elements"]
+            self.local_early_key = slot_data["local first key"]
+            self.options.silver_ghosts.value = slot_data["silver rank"]
+            self.options.gold_ghosts.value = slot_data["gold rank"]
+            self.options.WDYM_checks.value = slot_data["WDYM"]
+            self.options.grassanity.value = slot_data["grassanity"]
+
+            # Needed to avoid option errors, otherwise they will randomly roll still.
+            self.options.trap_link.value = slot_data["trap_link"],
+            self.options.energy_link.value = slot_data["energy_link"],
+            self.options.ring_link.value = slot_data["ring_link"]
+
+            # Update Door list based on the slot's open/closed doors.
+            self.open_doors = slot_data["door rando list"]  # this should be the same list from slot data
+            self.open_doors = {int(k): v for k, v in self.open_doors.items()}
+
+            #filler_weights: FillerWeights
+            #trap_percentage: TrapPercentage
+            #trap_weights: TrapWeights
+            return True
+
+        return False
+
+
     def generate_early(self):
-        passthrough = {}
+        using_ut = self._set_ut_logic()
 
         if self.options.energy_link == 1 and self.options.ring_link == 1:
             raise Options.OptionError(f"In {RANDOMIZER_NAME}, both energy_link and ring_link cannot be enabled.\n"
@@ -393,34 +445,6 @@ class LMWorld(World):
             raise Options.OptionError(f"When Boo Radar is excluded, neither Boosanity nor Boo Gates can be active.\n"
                                       f"This error was found in {self.player_name}'s {RANDOMIZER_NAME} world."
                                       f"Their YAML must be fixed")
-        if hasattr(self.multiworld, "re_gen_passthrough"):
-            if self.game in self.multiworld.re_gen_passthrough:
-                self.using_ut = True
-                passthrough = self.multiworld.re_gen_passthrough[self.game]
-                self.options.rank_requirement.value = passthrough["rank requirement"]
-                self.options.game_mode.value = passthrough["game mode"]
-                self.options.vacuum_upgrades.value = passthrough["better vacuum"]
-                self.options.vacuum_start.value = passthrough["vacuum start"]
-                self.options.door_rando.value = passthrough["door rando"]
-                self.options.toadsanity.value = passthrough["toadsanity"]
-                self.options.gold_mice.value = passthrough["gold_mice"]
-                self.options.furnisanity.value = passthrough["furnisanity"]
-                self.options.boosanity.value = passthrough["boosanity"]
-                self.options.portrification.value = passthrough["portrait ghosts"]
-                self.options.speedy_spirits.value = passthrough["speedy spirits"]
-                self.options.lightsanity.value = passthrough["lightsanity"]
-                self.options.walksanity.value = passthrough["walksanity"]
-                self.options.mario_items.value = passthrough["clairvoya requirement"]
-                self.options.boo_gates.value = passthrough["boo gates"]
-                # self.options.washroom_boo_count.value = passthrough["washroom boo count"]
-                self.options.balcony_boo_count.value = passthrough["balcony boo count"]
-                self.options.final_boo_count.value = passthrough["final boo count"]
-                self.options.enemizer.value = passthrough["enemizer"]
-                self.options.luigi_max_health.value = passthrough["luigi max health"]
-            else:
-                self.using_ut = False
-        else:
-            self.using_ut = False
 
         if self.options.game_mode.value == 1:
             self.options.vacuum_start.value = 0
@@ -432,49 +456,7 @@ class LMWorld(World):
         if self.options.hint_distribution.value in (1, 4, 5):
             self.options.send_hints.value = 0
 
-        if self.using_ut:
-            # We know we're in second gen
-            self.origin_region_name = passthrough["spawn_region"]  # this should be the same region from slot data
-        elif self.options.random_spawn.value > 0:
-            self.origin_region_name = self.random.choice(sorted([region_name for (region_name, region_data) in
-                REGION_LIST.items() if region_data.allow_random_spawn]))
-
-        if self.using_ut:
-            # We know we're in second gen
-            self.ghost_affected_regions = passthrough["ghost elements"]  # this should be the same list from slot data
-        elif self.options.enemizer == 1:
-            set_ghost_type(self, self.ghost_affected_regions)
-        elif self.options.enemizer == 2:
-            for key in self.ghost_affected_regions.keys():
-                self.ghost_affected_regions[key] = "No Element"
-
-        if self.using_ut:
-            # We know we're in second gen
-            self.open_doors = passthrough["door rando list"]  # this should be the same list from slot data
-            self.open_doors = {int(k): v for k, v in self.open_doors.items()}
-        elif self.options.door_rando == 1 or self.options.door_rando == 2:
-            for key in  self.open_doors.keys():
-                # If door is a suite_door, lock it in this option
-                if self.options.door_rando.value == 2 and key in [3, 42, 59, 72]:
-                    self.open_doors[key] = 0
-                    continue
-                self.open_doors[key] = self.random.choice(sorted([0,1]))
-        elif self.options.door_rando.value == 3:
-            for door_id in self.open_doors.keys():
-                self.open_doors[door_id] = 1
-        elif self.options.door_rando.value == 4:
-            for door_id in self.open_doors.keys():
-                self.open_doors[door_id] = 0
-
-        spawn_doors = copy.deepcopy(REGION_LIST[self.origin_region_name].door_ids)
-        if spawn_doors:
-            for door in REGION_LIST[self.origin_region_name].door_ids:
-                if self.open_doors[door] == 0:
-                    spawn_doors.remove(door)
-            if not spawn_doors:
-                self.spawn_full_locked: bool = True
-
-        # If player wants to start with boo radar or good vacuum
+        # If player wants to start with boo radar
         if self.options.boo_radar == 0:
             self.multiworld.push_precollected(self.create_item("Boo Radar"))
 
@@ -491,16 +473,50 @@ class LMWorld(World):
             self.options.balcony_boo_count.value = 0
             # self.options.washroom_boo_count.value = 0
 
-        if self.options.early_first_key.value == 1:
-            early_key = ""
-            for key in REGION_LIST[self.origin_region_name].early_keys:
-                key_data: LMItemData = ITEM_TABLE[key]
-                if self.open_doors[key_data.doorid] == 0:
-                    early_key = key
-                    break
-            if len(early_key) > 0:
-                self.local_early_key = early_key
-                self.multiworld.local_early_items[self.player].update({early_key: 1})
+        # Anything below this is normal logic, anything
+        if not using_ut:
+            if self.options.random_spawn.value > 0:
+                self.origin_region_name = self.random.choice(sorted([region_name for (region_name, region_data) in
+                    REGION_LIST.items() if region_data.allow_random_spawn]))
+
+            if self.options.enemizer == 1:
+                set_ghost_type(self, self.ghost_affected_regions)
+            elif self.options.enemizer == 2:
+                for key in self.ghost_affected_regions.keys():
+                    self.ghost_affected_regions[key] = "No Element"
+
+            if self.options.door_rando == 1 or self.options.door_rando == 2:
+                for key in  self.open_doors.keys():
+                    # If door is a suite_door, lock it in this option
+                    if self.options.door_rando.value == 2 and key in [3, 42, 59, 72]:
+                        self.open_doors[key] = 0
+                        continue
+                    self.open_doors[key] = self.random.choice(sorted([0,1]))
+            elif self.options.door_rando.value == 3:
+                for door_id in self.open_doors.keys():
+                    self.open_doors[door_id] = 1
+            elif self.options.door_rando.value == 4:
+                for door_id in self.open_doors.keys():
+                    self.open_doors[door_id] = 0
+
+            if self.options.early_first_key.value == 1:
+                early_key = ""
+                for key in REGION_LIST[self.origin_region_name].early_keys:
+                    key_data: LMItemData = ITEM_TABLE[key]
+                    if self.open_doors[key_data.doorid] == 0:
+                        early_key = key
+                        break
+                if len(early_key) > 0:
+                    self.local_early_key = early_key
+                    self.multiworld.local_early_items[self.player].update({early_key: 1})
+
+        spawn_doors = copy.deepcopy(REGION_LIST[self.origin_region_name].door_ids)
+        if spawn_doors:
+            for door in REGION_LIST[self.origin_region_name].door_ids:
+                if self.open_doors[door] == 0:
+                    spawn_doors.remove(door)
+            if not spawn_doors:
+                self.spawn_full_locked: bool = True
 
         self.trap_filler_dict: dict[str, int] = self.options.trap_weights.value
 
@@ -795,6 +811,7 @@ class LMWorld(World):
             "game mode": self.options.game_mode.value,
             "better vacuum": self.options.vacuum_upgrades.value,
             "vacuum start": self.options.vacuum_start.value,
+            "boo radar": self.options.boo_radar.value,
             "door rando": self.options.door_rando.value,
             "door rando list": self.open_doors,
             "ghost elements": self.ghost_affected_regions,
@@ -808,6 +825,8 @@ class LMWorld(World):
             "walksanity": self.options.walksanity.value,
             "WDYM": self.options.WDYM_checks.value,
             "grassanity": self.options.grassanity.value,
+            "silver rank": self.options.silver_ghosts.value,
+            "gold rank": self.options.gold_ghosts.value,
             "clairvoya requirement": self.options.mario_items.value,
             "boo gates": self.options.boo_gates.value,
             "boolossus_difficulty": self.options.boolossus_difficulty.value,
@@ -832,6 +851,7 @@ class LMWorld(World):
             "self_item_messages": self.options.self_item_messages.value,
             "enable_ring_client_msg": self.options.enable_ring_client_msg.value,
             "enable_trap_client_msg": self.options.enable_trap_client_msg.value,
+            "local first key": self.local_early_key
         }
 
     def modify_multidata(self, multidata: "MultiData") -> None:
