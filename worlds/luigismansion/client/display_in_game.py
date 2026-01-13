@@ -13,7 +13,8 @@ if TYPE_CHECKING:
     from ..LMClient import LMContext
 
 # Maximum number of bytes that
-MAX_DISPLAYED_CHARS: int = 286
+MAX_DISPLAYED_CHARS: int = 320
+MAX_LOCATION_CHARS: int = 32
 
 class DisplayColors(StrEnum):
     BLACK = fr"\eGC[{JSONtoTextParser.color_codes["black"]}FF]\eCC[{JSONtoTextParser.color_codes["black"]}FF]"
@@ -89,7 +90,8 @@ class LMDisplayQueue:
                 loc_name_retr = self.lm_ctx.location_names.lookup_in_slot(display_item.location, display_item.player)
 
             # Get the Received Player's Location Name who found the name
-            loc_name_disp = DisplayColors.GREEN + "Location: " + DisplayColors.PLUM + f"({loc_name_retr.replace("&", "")})"
+            loc_name_disp = (DisplayColors.GREEN + "Location: " +
+                DisplayColors.PLUM + f"({loc_name_retr[:MAX_LOCATION_CHARS].replace("&", "")})")
             text_to_display.append(string_to_bytes(loc_name_disp, None))
 
             # Get the proper AP Game Name
@@ -124,6 +126,8 @@ class LMDisplayQueue:
         while dme.read_byte(item_timer_addr) > 0:
             await self.lm_ctx.wait_for_next_loop(WAIT_TIMER_SHORT_TIMEOUT)
 
+        # Reset the screen size to avoid old text from being written
+        dme.write_bytes(item_display_addr, b"\00" * len(msg_to_write))
         await self.lm_ctx.wait_for_next_loop(WAIT_TIMER_MEDIUM_TIMEOUT)
 
 
@@ -133,4 +137,5 @@ async def _build_msg(msg_parts: list[bytes]) -> bytes:
     if msg_parts is None or len(msg_parts) == 0:
         return b'\00'
 
-    return "\n".encode("utf-8").join(msg_parts)[:MAX_DISPLAYED_CHARS].replace(b"\\eCC", b"\x1BCC").replace(b"\\eGC", b"\x1BGC")
+    built_msg: bytes = "\n".encode("utf-8").join(msg_parts)[:MAX_DISPLAYED_CHARS]
+    return built_msg.replace(b"\\eCC", b"\x1BCC").replace(b"\\eGC", b"\x1BGC") + b"\00"
