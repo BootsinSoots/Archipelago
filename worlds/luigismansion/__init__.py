@@ -425,6 +425,14 @@ class LMWorld(World):
             self.open_doors = slot_data["door rando list"]  # this should be the same list from slot data
             self.open_doors = {int(k): v for k, v in self.open_doors.items()}
 
+            spawn_doors = copy.deepcopy(REGION_LIST[self.origin_region_name].door_ids)
+            if spawn_doors:
+                for door in REGION_LIST[self.origin_region_name].door_ids:
+                    if self.open_doors[door] == 0:
+                        spawn_doors.remove(door)
+                if not spawn_doors:
+                    self.spawn_full_locked: bool = True
+
             #filler_weights: FillerWeights
             #trap_percentage: TrapPercentage
             #trap_weights: TrapWeights
@@ -473,42 +481,44 @@ class LMWorld(World):
             self.options.balcony_boo_count.value = 0
             # self.options.washroom_boo_count.value = 0
 
-        # Anything below this is normal logic, anything
-        if not using_ut:
-            if self.options.random_spawn.value > 0:
-                self.origin_region_name = self.random.choice(sorted([region_name for (region_name, region_data) in
-                    REGION_LIST.items() if region_data.allow_random_spawn]))
+        # Anything below this is normal logic, so if using UT, can exit early.
+        if using_ut:
+            return
 
-            if self.options.enemizer == 1:
-                set_ghost_type(self, self.ghost_affected_regions)
-            elif self.options.enemizer == 2:
-                for key in self.ghost_affected_regions.keys():
-                    self.ghost_affected_regions[key] = "No Element"
+        if self.options.random_spawn.value > 0:
+            self.origin_region_name = self.random.choice(sorted([region_name for (region_name, region_data) in
+                REGION_LIST.items() if region_data.allow_random_spawn]))
 
-            if self.options.door_rando == 1 or self.options.door_rando == 2:
-                for key in  self.open_doors.keys():
-                    # If door is a suite_door, lock it in this option
-                    if self.options.door_rando.value == 2 and key in [3, 42, 59, 72]:
-                        self.open_doors[key] = 0
-                        continue
-                    self.open_doors[key] = self.random.choice(sorted([0,1]))
-            elif self.options.door_rando.value == 3:
-                for door_id in self.open_doors.keys():
-                    self.open_doors[door_id] = 1
-            elif self.options.door_rando.value == 4:
-                for door_id in self.open_doors.keys():
-                    self.open_doors[door_id] = 0
+        if self.options.enemizer == 1:
+            set_ghost_type(self, self.ghost_affected_regions)
+        elif self.options.enemizer == 2:
+            for key in self.ghost_affected_regions.keys():
+                self.ghost_affected_regions[key] = "No Element"
 
-            if self.options.early_first_key.value == 1:
-                early_key = ""
-                for key in REGION_LIST[self.origin_region_name].early_keys:
-                    key_data: LMItemData = ITEM_TABLE[key]
-                    if self.open_doors[key_data.doorid] == 0:
-                        early_key = key
-                        break
-                if len(early_key) > 0:
-                    self.local_early_key = early_key
-                    self.multiworld.local_early_items[self.player].update({early_key: 1})
+        if self.options.door_rando == 1 or self.options.door_rando == 2:
+            for key in  self.open_doors.keys():
+                # If door is a suite_door, lock it in this option
+                if self.options.door_rando.value == 2 and key in [3, 42, 59, 72]:
+                    self.open_doors[key] = 0
+                    continue
+                self.open_doors[key] = self.random.choice(sorted([0,1]))
+        elif self.options.door_rando.value == 3:
+            for door_id in self.open_doors.keys():
+                self.open_doors[door_id] = 1
+        elif self.options.door_rando.value == 4:
+            for door_id in self.open_doors.keys():
+                self.open_doors[door_id] = 0
+
+        if self.options.early_first_key.value == 1:
+            early_key = ""
+            for key in REGION_LIST[self.origin_region_name].early_keys:
+                key_data: LMItemData = ITEM_TABLE[key]
+                if self.open_doors[key_data.doorid] == 0:
+                    early_key = key
+                    break
+            if len(early_key) > 0:
+                self.local_early_key = early_key
+                self.multiworld.local_early_items[self.player].update({early_key: 1})
 
         spawn_doors = copy.deepcopy(REGION_LIST[self.origin_region_name].door_ids)
         if spawn_doors:
