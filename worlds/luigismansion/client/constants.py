@@ -14,6 +14,7 @@ CONNECTION_LOST_STATUS: str = "Dolphin connection was lost. Please restart your 
 NO_SLOT_NAME_STATUS: str = "No slot name was detected. Ensure a randomized ROM is loaded. Retrying in 5 seconds..."
 CONNECTION_VERIFY_SERVER: str = "Dolphin was confirmed to be opened and ready, Connect to the server when ready..."
 CONNECTION_INITIAL_STATUS: str = "Dolphin emulator was not detected to be running. Retrying in 5 seconds..."
+DOLPHIN_DIDNT_LOAD_ROM_CORRECTLY: str = "Dolphin did not load the ROM correctly. Close only the game / dolphin launcher and try again..."
 CONNECTION_CONNECTED_STATUS: str = "Dolphin is connected, AP is connected, Ready to play LM!"
 AP_REFUSED_STATUS: str = "AP Refused to connect for one or more reasons, see above for more details."
 

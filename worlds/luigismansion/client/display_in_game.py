@@ -70,34 +70,42 @@ class LMDisplayQueue:
     async def _check_items_display_queue(self):
         """Displays the Received item details in game."""
         while self.items_received:
-            item_to_display = self.items_received.pop(0)
+            display_item = self.items_received.pop(0)
             text_to_display: list[bytes] = []
 
             # Get Current Player's name
-            curr_player_name: str = self.lm_ctx.player_names[item_to_display.player]
+            curr_player_name: str = self.lm_ctx.player_names[display_item.player]
 
             # Get the Received Item Name to Display
-            lm_item_name = self.lm_ctx.item_names.lookup_in_game(item_to_display.item).replace("&", "")
-            recv_from: str = " found their own " if item_to_display.player == self.lm_ctx.slot else " received "
+            lm_item_name = self.lm_ctx.item_names.lookup_in_game(display_item.item).replace("&", "")
+            recv_from: str = " found their own " if display_item.player == self.lm_ctx.slot else " received "
             first_line: str = DisplayColors.MAGENTA + curr_player_name + DisplayColors.WHITE + recv_from + lm_item_name
             text_to_display.append(string_to_bytes(first_line, None))
 
-            if item_to_display.player != self.lm_ctx.slot:
-                recv_text: str  = DisplayColors.WHITE + " from "
-
-                # Get the Player who found the item in their game
-                recv_text += DisplayColors.YELLOW + self.lm_ctx.player_names[item_to_display.player].replace("&", "")
-                recv_text += DisplayColors.SALMON + "'s World"
-                text_to_display.append(string_to_bytes(recv_text, None))
-
-                # Get Received Player's Game who found the item
-                recv_game_name: str = DisplayColors.ORANGE + f"Game: ({self.lm_ctx.slot_info[item_to_display.player].game})"
-                text_to_display.append(string_to_bytes(recv_game_name, None))
+            # Look up the location name based on the item's player attached.
+            if display_item.player == self.lm_ctx.slot:
+                loc_name_retr = self.lm_ctx.location_names.lookup_in_game(display_item.location)
+            else:
+                loc_name_retr = self.lm_ctx.location_names.lookup_in_slot(display_item.location, display_item.player)
 
             # Get the Received Player's Location Name who found the name
-            loc_name_retr = self.lm_ctx.location_names.lookup_in_slot(item_to_display.location, item_to_display.player).replace("&", "")
-            loc_name_retr = DisplayColors.GREEN + f"({loc_name_retr})"
-            text_to_display.append(string_to_bytes(loc_name_retr, None))
+            loc_name_disp = DisplayColors.GREEN + "Location: " + DisplayColors.PLUM + f"({loc_name_retr.replace("&", "")})"
+            text_to_display.append(string_to_bytes(loc_name_disp, None))
+
+            # Get the proper AP Game Name
+            if loc_name_retr.lower() == "server":
+                recv_text: str = DisplayColors.WHITE + "From the AP Server"
+            else:
+                recv_text: str  = DisplayColors.WHITE + "At "
+
+                # Get the Player who found the item in their game
+                recv_text += DisplayColors.YELLOW + self.lm_ctx.player_names[display_item.player].replace("&", "")
+                recv_text += DisplayColors.SALMON + "'s World"
+            text_to_display.append(string_to_bytes(recv_text, None))
+
+            # Get Received Player's Game who found the item
+            recv_game_name: str = DisplayColors.ORANGE + f"Game: ({self.lm_ctx.slot_info[display_item.player].game})"
+            text_to_display.append(string_to_bytes(recv_game_name, None))
 
             screen_text: bytes = await _build_msg(text_to_display)
             await self._write_to_screen(screen_text)
