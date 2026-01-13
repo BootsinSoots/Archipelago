@@ -90,8 +90,9 @@ class LMDisplayQueue:
                 loc_name_retr = self.lm_ctx.location_names.lookup_in_slot(display_item.location, display_item.player)
 
             # Get the Received Player's Location Name who found the name
-            loc_name_disp = DisplayColors.GREEN + "Location: " + DisplayColors.PLUM + f"({loc_name_retr.replace("&", "")})"
-            text_to_display.append(string_to_bytes(loc_name_disp[:MAX_LOCATION_CHARS], None))
+            loc_name_disp = (DisplayColors.GREEN + "Location: " +
+                DisplayColors.PLUM + f"({loc_name_retr[:MAX_LOCATION_CHARS].replace("&", "")})")
+            text_to_display.append(string_to_bytes(loc_name_disp, None))
 
             # Get the proper AP Game Name
             if loc_name_retr.lower() == "server":
