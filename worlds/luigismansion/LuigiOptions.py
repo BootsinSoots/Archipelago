@@ -244,7 +244,7 @@ class BalconyBooCount(Range):
     display_name = "Balcony Boo Count"
     internal_name = "balcony_boo_count"
     range_start = 0
-    range_end = 36
+    range_end = 35
     default = 20
 
 
