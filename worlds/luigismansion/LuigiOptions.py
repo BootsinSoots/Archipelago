@@ -244,7 +244,7 @@ class BalconyBooCount(Range):
     display_name = "Balcony Boo Count"
     internal_name = "balcony_boo_count"
     range_start = 0
-    range_end = 35
+    range_end = 31 # 50 - 15 (Boolossus) - 4 (Ceramics, Telephone, Armory, and Clockroom)
     default = 20
 
 
