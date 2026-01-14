@@ -78,7 +78,7 @@ class LMDisplayQueue:
             # Get Current Player's name
             curr_player_name: str = "You" if display_item.player == self.lm_ctx.slot else self.lm_ctx.player_names[display_item.player]
             recv_from: str = " found your own" if display_item.player == self.lm_ctx.slot else " received"
-            first_line: str = DisplayColors.MAGENTA + curr_player_name + recv_from
+            first_line: str = DisplayColors.MAGENTA + curr_player_name + DisplayColors.WHITE + recv_from
             text_to_display.append(string_to_bytes(first_line, None))
 
             # Get the Received Item Name to Display
@@ -124,11 +124,6 @@ class LMDisplayQueue:
                     recv_text += DisplayColors.SALMON + self.lm_ctx.player_names[display_item.player].replace("&", "")
                     recv_text += "'s World"
                     text_to_display.append(string_to_bytes(recv_text, None))
-
-            if display_item.player != self.lm_ctx.slot:
-                # Get Received Player's Game who found the item
-                recv_game_name: str = DisplayColors.ORANGE + f"Game: ({self.lm_ctx.slot_info[display_item.player].game})"
-                text_to_display.append(string_to_bytes(recv_game_name, None))
 
             screen_text: bytes = await _build_msg(text_to_display)
             await self._write_to_screen(screen_text)
