@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 import dolphin_memory_engine as dme
 
 import NetUtils
+from BaseClasses import ItemClassification
 from NetUtils import JSONtoTextParser
 from .constants import CLIENT_NAME, WAIT_TIMER_LONG_TIMEOUT, WAIT_TIMER_SHORT_TIMEOUT, WAIT_TIMER_MEDIUM_TIMEOUT
 from ..Helper_Functions import string_to_bytes
@@ -75,13 +76,31 @@ class LMDisplayQueue:
             text_to_display: list[bytes] = []
 
             # Get Current Player's name
-            curr_player_name: str = self.lm_ctx.player_names[display_item.player]
+            curr_player_name: str = "You" if display_item.player == self.lm_ctx.slot else self.lm_ctx.player_names[display_item.player]
+            recv_from: str = " found their own" if display_item.player == self.lm_ctx.slot else " received"
+            first_line: str = DisplayColors.MAGENTA + curr_player_name + recv_from
+            text_to_display.append(string_to_bytes(first_line, None))
 
             # Get the Received Item Name to Display
             lm_item_name = self.lm_ctx.item_names.lookup_in_game(display_item.item).replace("&", "")
-            recv_from: str = " found their own " if display_item.player == self.lm_ctx.slot else " received "
-            first_line: str = DisplayColors.MAGENTA + curr_player_name + DisplayColors.WHITE + recv_from + lm_item_name
-            text_to_display.append(string_to_bytes(first_line, None))
+            lm_item_class = ItemClassification(display_item.flags).name
+            if not lm_item_class is None:
+                lm_item_class = lm_item_class.lower()
+
+            # Display the item name based on the associated Item Classification.
+            lm_item_str: str = ""
+            match lm_item_class:
+                case "progression":
+                    lm_item_str = DisplayColors.PLUM + lm_item_name
+                case "useful":
+                    lm_item_str = DisplayColors.BLUE + lm_item_name
+                case "trap":
+                    lm_item_str = DisplayColors.SALMON + lm_item_name
+                case "filler":
+                    lm_item_str = DisplayColors.CYAN + lm_item_name
+                case _:
+                    lm_item_str = DisplayColors.WHITE + lm_item_name
+            text_to_display.append(string_to_bytes(lm_item_str, None))
 
             # Look up the location name based on the item's player attached.
             if display_item.player == self.lm_ctx.slot:
