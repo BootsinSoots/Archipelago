@@ -117,7 +117,7 @@ class LMDisplayQueue:
 
     async def _write_to_screen(self, msg_to_write: bytes):
         """Writes the provided message on screen with the associated folors"""
-        recv_timer_on_screen: int = int("96", 16) # 5 Seconds in hex
+        recv_timer_on_screen: int = 105 # 3.5 Seconds
         item_display_addr: int = 0x80338FC4
         item_timer_addr: int = int(self.lm_ctx.lm_dynamic_addr.dynamic_addresses["Client"]["gItem_Information_Timer"], 16)
         frame_avg_count: int = 30
