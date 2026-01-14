@@ -77,7 +77,7 @@ class LMDisplayQueue:
 
             # Get Current Player's name
             curr_player_name: str = "You" if display_item.player == self.lm_ctx.slot else self.lm_ctx.player_names[display_item.player]
-            recv_from: str = " found their own" if display_item.player == self.lm_ctx.slot else " received"
+            recv_from: str = " found your own" if display_item.player == self.lm_ctx.slot else " received"
             first_line: str = DisplayColors.MAGENTA + curr_player_name + recv_from
             text_to_display.append(string_to_bytes(first_line, None))
 
