@@ -60,7 +60,6 @@ class LMWorld(World):
     required_client_version = (0, 6, 5)
     web = LMWeb()
 
-    using_ut: bool # so we can check if we're using UT only once
     ut_can_gen_without_yaml = True  # class var that tells it to ignore the player yaml
 
     # Adding these to be able to grab from other classes, such as test classes
