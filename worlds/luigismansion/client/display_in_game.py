@@ -13,7 +13,7 @@ if TYPE_CHECKING:
     from ..LMClient import LMContext
 
 # Maximum number of bytes that
-MAX_DISPLAYED_CHARS: int = 320
+MAX_DISPLAYED_CHARS: int = 286
 MAX_LOCATION_CHARS: int = 32
 
 class DisplayColors(StrEnum):
@@ -96,17 +96,20 @@ class LMDisplayQueue:
             # Get the proper AP Game Name
             if loc_name_retr.lower() == "server":
                 recv_text: str = DisplayColors.WHITE + "From the AP Server"
+                text_to_display.append(string_to_bytes(recv_text, None))
             else:
-                recv_text: str  = DisplayColors.WHITE + "At "
+                if display_item.player != self.lm_ctx.slot:
+                    recv_text: str  = DisplayColors.WHITE + "At "
 
-                # Get the Player who found the item in their game
-                recv_text += DisplayColors.SALMON + self.lm_ctx.player_names[display_item.player].replace("&", "")
-                recv_text += "'s World"
-            text_to_display.append(string_to_bytes(recv_text, None))
+                    # Get the Player who found the item in their game
+                    recv_text += DisplayColors.SALMON + self.lm_ctx.player_names[display_item.player].replace("&", "")
+                    recv_text += "'s World"
+                    text_to_display.append(string_to_bytes(recv_text, None))
 
-            # Get Received Player's Game who found the item
-            recv_game_name: str = DisplayColors.ORANGE + f"Game: ({self.lm_ctx.slot_info[display_item.player].game})"
-            text_to_display.append(string_to_bytes(recv_game_name, None))
+            if display_item.player != self.lm_ctx.slot:
+                # Get Received Player's Game who found the item
+                recv_game_name: str = DisplayColors.ORANGE + f"Game: ({self.lm_ctx.slot_info[display_item.player].game})"
+                text_to_display.append(string_to_bytes(recv_game_name, None))
 
             screen_text: bytes = await _build_msg(text_to_display)
             await self._write_to_screen(screen_text)
