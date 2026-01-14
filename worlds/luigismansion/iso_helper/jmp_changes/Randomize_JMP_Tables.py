@@ -675,6 +675,7 @@ class RandomizeJMPTables:
 
             # Update Starting Toad Event (event12) to move to the spawn region.
             elif event_num == 12:
+                event_info["CharacterName"] = "kinopio"
                 event_info["EventFlag"] = 0
                 event_info["disappear_flag"] = 0
                 event_info["EventLoad"] = 0
@@ -684,6 +685,10 @@ class RandomizeJMPTables:
                 event_info["pos_x"] = int(spawn_data.pos_x) - 150 + 2
                 event_info["pos_y"] = spawn_data.pos_y
                 event_info["pos_z"] = int(spawn_data.pos_z) - 150
+
+            # If the event is Courtyard Toad (event4), Foyer (event17), Washroom (event63), Wardrobe Balcony (event32)
+            elif event_num in [4, 17, 32, 63]:
+                event_info["CharacterName"] = "kinopio"
 
 
     def _map_two_character_changes(self):
