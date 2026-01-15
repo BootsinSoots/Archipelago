@@ -460,9 +460,6 @@ class LMWorld(World):
         if self.options.vacuum_start.value:
             self.multiworld.push_precollected(self.create_item("Poltergust 3000"))
 
-        if self.options.hint_distribution.value in (1, 4, 5):
-            self.options.send_hints.value = 0
-
         # If player wants to start with boo radar
         if self.options.boo_radar == 0:
             self.multiworld.push_precollected(self.create_item("Boo Radar"))
@@ -470,6 +467,10 @@ class LMWorld(World):
         # Anything below this is normal logic, so if using UT, can exit early.
         if using_ut:
             return
+
+        # if hint distribution is vague, disabled, junk, do not send hints.
+        if self.options.hint_distribution.value in (1, 4, 5):
+            self.options.send_hints.value = 0
 
         if self.options.boosanity.value == 0 and self.options.balcony_boo_count.value > 31:
             self.options.balcony_boo_count.value = 31
