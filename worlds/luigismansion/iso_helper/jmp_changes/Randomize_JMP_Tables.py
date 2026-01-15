@@ -630,6 +630,7 @@ class RandomizeJMPTables:
 
             # Update the King Boo event trigger to be area entry based
             elif boo_gates_enabled and event_num == 16:
+                event_info["CharacterName"] = "(null)"
                 event_info["EventIf"] = 5
                 event_info["EventArea"] = 200
                 event_info["EventLock"] = 1
