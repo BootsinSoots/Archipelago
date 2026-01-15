@@ -158,62 +158,60 @@ class EventChanges:
 
             if boosanity_enabled:
                 str_begin_case = "not_enough"
-                lines = lines.replace("{Count0}", str(0)).replace("{Count1}", str(0))
-                lines = lines.replace("{Count2}", str(0)).replace("{Count3}", str(0))
-                lines = lines.replace("{Count4}", str(req_boo_count)).replace("{CaseBegin}", str_begin_case)
-                self._update_custom_event(event_no, True, lines, None)
-                return
+            else:
+                str_begin_case = "CheckBoos"
 
-            str_begin_case = "CheckBoos"
             lines = lines.replace("{CaseBegin}", str_begin_case)
 
             str_not_enough = "not_enough"
             str_boo_captured = "boos_captured"
+            lines = lines.replace("{Count0}", "(0)").replace("{Case0}", "\"" + str_not_enough + "\"")
+
+            # Default values for all cases/counts
+            count_one: str = ""
+            count_two: str | None = None
+            count_three: str | None = None
+            count_four: str | None = None
+            case_one: str = ""
+            case_two: str | None = None
+            case_three: str | None = None
+            case_four: str | None = None
+
             match req_boo_count:
                 case 1:
-                    lines = lines.replace("{Count0}", "0")
-                    lines = lines.replace("{Count1}", str(req_boo_count))
-                    lines = lines.replace("{Count2}", str(req_boo_count))
-                    lines = lines.replace("{Count3}", str(req_boo_count))
-                    lines = lines.replace("{Count4}", str(req_boo_count))
-                    lines = lines.replace("{Case0}", str_not_enough)
-                    lines = lines.replace("{Case1}", str_boo_captured)
-                    lines = lines.replace("{Case2}", str_boo_captured)
-                    lines = lines.replace("{Case3}", str_boo_captured)
-                    lines = lines.replace("{Case4}", str_boo_captured)
+                    count_one: str = str(req_boo_count)
+                    case_one: str = str_boo_captured
                 case 2:
-                    lines = lines.replace("{Count0}", "0")
-                    lines = lines.replace("{Count1}", "1")
-                    lines = lines.replace("{Count2}", str(req_boo_count))
-                    lines = lines.replace("{Count3}", str(req_boo_count))
-                    lines = lines.replace("{Count4}", str(req_boo_count))
-                    lines = lines.replace("{Case0}", str_not_enough)
-                    lines = lines.replace("{Case1}", str_not_enough)
-                    lines = lines.replace("{Case2}", str_boo_captured)
-                    lines = lines.replace("{Case3}", str_boo_captured)
-                    lines = lines.replace("{Case4}", str_boo_captured)
+                    count_one: str = "1"
+                    count_two: str = str(req_boo_count)
+                    case_one: str = str_not_enough
+                    case_two: str = str_boo_captured
                 case 3:
-                    lines = lines.replace("{Count0}", "0")
-                    lines = lines.replace("{Count1}", "1")
-                    lines = lines.replace("{Count2}", "2")
-                    lines = lines.replace("{Count3}", str(req_boo_count))
-                    lines = lines.replace("{Count4}", str(req_boo_count))
-                    lines = lines.replace("{Case0}", str_not_enough)
-                    lines = lines.replace("{Case1}", str_not_enough)
-                    lines = lines.replace("{Case2}", str_not_enough)
-                    lines = lines.replace("{Case3}", str_boo_captured)
-                    lines = lines.replace("{Case4}", str_boo_captured)
+                    count_one: str = "1"
+                    count_two: str = "2"
+                    count_three: str = str(req_boo_count)
+                    case_one: str = str_not_enough
+                    case_two: str = str_not_enough
+                    case_three: str = str_boo_captured
                 case _:
-                    lines = lines.replace("{Count0}", str(req_boo_count - 4))
-                    lines = lines.replace("{Count1}", str(req_boo_count - 3))
-                    lines = lines.replace("{Count2}", str(req_boo_count - 2))
-                    lines = lines.replace("{Count3}", str(req_boo_count - 1))
-                    lines = lines.replace("{Count4}", str(req_boo_count))
-                    lines = lines.replace("{Case0}", str_not_enough)
-                    lines = lines.replace("{Case1}", str_not_enough)
-                    lines = lines.replace("{Case2}", str_not_enough)
-                    lines = lines.replace("{Case3}", str_not_enough)
-                    lines = lines.replace("{Case4}", str_boo_captured)
+                    count_one: str = str(req_boo_count - 3)
+                    count_two: str = str(req_boo_count - 2)
+                    count_three: str = str(req_boo_count - 1)
+                    count_four: str = str(req_boo_count)
+                    case_one: str = str_not_enough
+                    case_two: str = str_not_enough
+                    case_three: str = str_not_enough
+                    case_four: str = str_boo_captured
+
+            # Update all values based on the counts/cases identified.
+            lines = lines.replace("{Count1}", "(" + count_one + ")").replace("{Case1}", "\"" + case_one + "\"")
+            lines = lines.replace("{Count2}", "(" + count_two + ")" if count_two else "")
+            lines = lines.replace("{Case2}", "\"" + case_two + "\"" if case_two else "")
+            lines = lines.replace("{Count3}", "(" + count_two + ")" if count_two else "")
+            lines = lines.replace("{Case3}", "\"" + case_two + "\"" if case_two else "")
+            lines = lines.replace("{Count4}", "(" + count_two + ")" if count_two else "")
+            lines = lines.replace("{Case4}", "\"" + case_two + "\"" if case_two else "")
+            lines = lines.replace("{ReqCount}", str(req_boo_count))
 
             self._update_custom_event(event_no, True, lines, None)
 
