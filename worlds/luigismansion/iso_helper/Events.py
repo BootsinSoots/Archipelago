@@ -157,7 +157,7 @@ class EventChanges:
                 continue
 
             if boosanity_enabled:
-                str_begin_case = "CheckBoos" #"not_enough"
+                str_begin_case = "not_enough"
             else:
                 str_begin_case = "CheckBoos"
 
