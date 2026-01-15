@@ -467,8 +467,16 @@ class LMWorld(World):
         if self.options.boo_radar == 0:
             self.multiworld.push_precollected(self.create_item("Boo Radar"))
 
+        # Anything below this is normal logic, so if using UT, can exit early.
+        if using_ut:
+            return
+
         if self.options.boosanity.value == 0 and self.options.balcony_boo_count.value > 31:
             self.options.balcony_boo_count.value = 31
+
+        if self.options.random_spawn.value > 0:
+            self.origin_region_name = self.random.choice(sorted([region_name for (region_name, region_data) in
+                REGION_LIST.items() if region_data.allow_random_spawn]))
 
         # If spawn region is past Boolossus, make sure the gate is possible
         if self.origin_region_name in FLIP_BALCONY_BOO_EVENT_LIST:
@@ -479,14 +487,6 @@ class LMWorld(World):
             self.options.final_boo_count.value = 0
             self.options.balcony_boo_count.value = 0
             # self.options.washroom_boo_count.value = 0
-
-        # Anything below this is normal logic, so if using UT, can exit early.
-        if using_ut:
-            return
-
-        if self.options.random_spawn.value > 0:
-            self.origin_region_name = self.random.choice(sorted([region_name for (region_name, region_data) in
-                REGION_LIST.items() if region_data.allow_random_spawn]))
 
         if self.options.enemizer == 1:
             set_ghost_type(self, self.ghost_affected_regions)
@@ -508,6 +508,14 @@ class LMWorld(World):
             for door_id in self.open_doors.keys():
                 self.open_doors[door_id] = 0
 
+        spawn_doors = copy.deepcopy(REGION_LIST[self.origin_region_name].door_ids)
+        if spawn_doors:
+            for door in REGION_LIST[self.origin_region_name].door_ids:
+                if self.open_doors[door] == 0:
+                    spawn_doors.remove(door)
+            if not spawn_doors:
+                self.spawn_full_locked: bool = True
+
         if self.options.early_first_key.value == 1:
             early_key = ""
             for key in REGION_LIST[self.origin_region_name].early_keys:
@@ -519,13 +527,6 @@ class LMWorld(World):
                 self.local_early_key = early_key
                 self.multiworld.local_early_items[self.player].update({early_key: 1})
 
-        spawn_doors = copy.deepcopy(REGION_LIST[self.origin_region_name].door_ids)
-        if spawn_doors:
-            for door in REGION_LIST[self.origin_region_name].door_ids:
-                if self.open_doors[door] == 0:
-                    spawn_doors.remove(door)
-            if not spawn_doors:
-                self.spawn_full_locked: bool = True
 
         self.trap_filler_dict: dict[str, int] = self.options.trap_weights.value
 
