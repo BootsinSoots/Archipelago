@@ -146,10 +146,10 @@ class EventChanges:
         for event_no in boo_list_events:
             lines = read_custom_file("txt", "event" + event_no + ".txt")
 
-            if event_no == "96":
-                req_boo_count = balcony_boo_count
-            else:
+            if event_no == "16":
                 req_boo_count = final_boo_count
+            else:
+                req_boo_count = balcony_boo_count
                 str_move_type = "MOVEOUTSIDE" if spawn_area in FLIP_BALCONY_BOO_EVENT_LIST else "MOVEINSIDE"
                 lines = lines.replace("{MoveType}", str_move_type)
 
