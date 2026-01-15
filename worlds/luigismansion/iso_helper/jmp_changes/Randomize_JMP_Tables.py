@@ -628,7 +628,7 @@ class RandomizeJMPTables:
             #     x["PlayerStop"] = 1
             #     x["EventLoad"] = 0
 
-            # Update the King Boo event trigger to be area entry based
+            # Update the King Boo boo gate event trigger to be area entry based
             elif boo_gates_enabled and event_num == 16:
                 event_info["CharacterName"] = "(null)"
                 event_info["EventIf"] = 5
@@ -640,7 +640,7 @@ class RandomizeJMPTables:
                 event_info["pos_y"] = -450.000000
                 event_info["pos_z"] = -5300.000000
 
-            # Update the Balcony Boo event trigger to be area entry based
+            # Update the Balcony Boo boo gate event trigger to be area entry based
             elif boo_gates_enabled and event_num == 96:
                 if spawn_area in FLIP_BALCONY_BOO_EVENT_LIST:
                     event_info["pos_x"] = 1800.000000
