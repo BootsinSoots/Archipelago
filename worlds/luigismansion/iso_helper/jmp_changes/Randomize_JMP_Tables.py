@@ -600,6 +600,7 @@ class RandomizeJMPTables:
             # Turn off Event 74 (Warp to King Boo Fight) in blackout by disabling event if King Boo isn't present
             elif event_num == 74:
                 event_info["CharacterName"] = "dltelesa"
+                event_info["EventIf"] = 1
 
             # Make Van Gogh load more than once
             elif event_num == 38:
