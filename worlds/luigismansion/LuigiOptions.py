@@ -243,7 +243,7 @@ class BalconyBooCount(Range):
     """
     Set the number of Boos required to reach the Balcony. 0 = Starts Open
 
-    If Boosanity is off, this count will be reduced to make the seed viable, based on spawn location
+    If Boosanity is off, this count may be reduced to make the seed viable, based on spawn location
     """
     display_name = "Balcony Boo Count"
     internal_name = "balcony_boo_count"
