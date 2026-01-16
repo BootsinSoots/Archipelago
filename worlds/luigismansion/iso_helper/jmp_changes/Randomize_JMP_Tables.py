@@ -450,6 +450,55 @@ class RandomizeJMPTables:
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, -445.000000, -690.000000,
             61, 15, 7, arg0=157))
 
+        # THE GRASS SANITY WALL FOR THE COURTYARD
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-2250.000000, 10.000000, -5770.000000,
+            23, 7, 7, arg0=123))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-2250.000000, 10.000000, -6350.000000,
+            23, 7, 7, arg0=124))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+            23, 7, 7, arg0=125))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+            23, 7, 7, arg0=126))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+            23, 7, 7, arg0=127))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+            23, 7, 7, arg0=128))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+            23, 7, 7, arg0=129))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+            23, 7, 7, arg0=130))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+            23, 7, 7, arg0=131))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+            23, 7, 7, arg0=132))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+            23, 7, 7, arg0=133))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+            23, 7, 7, arg0=134))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+            23, 7, 7, arg0=135))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+            23, 7, 7, arg0=136))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+            23, 7, 7, arg0=137))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+            23, 7, 7, arg0=138))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+            23, 7, 7, arg0=139))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+            23, 7, 7, arg0=140))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+            23, 7, 7, arg0=141))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+            23, 7, 7, arg0=142))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+            23, 7, 7, arg0=143))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+            23, 7, 7, arg0=144))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+            23, 7, 7, arg0=145))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+            23, 7, 7, arg0=146))
 
     def _map_two_enemy_changes(self):
         """Handles changes to enemy table for both normal and blackout."""
