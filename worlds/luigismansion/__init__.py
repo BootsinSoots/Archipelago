@@ -903,11 +903,14 @@ class LMWorld(World):
             "enable_trap_client_msg": self.options.enable_trap_client_msg.value,
         }
 
-    #def modify_multidata(self, multidata: "MultiData") -> None:
-    #    if self.options.hint_distribution != 5 and self.options.hint_distribution != 1:
-    #        self.finished_hints.wait()
-    #    if self.options.boo_health_option.value == 2:
-    #        self.finished_boo_scaling.wait()
+    # Intentionally used to prevent issues in multi-data updates that occur when multi-data is being modifed,
+    # but gen output has not completed itself yet. Namely in write_multidata:
+    #     multidata[key] = convert_to_base_types(multidata[key])
+    def modify_multidata(self, multidata: "MultiData") -> None:
+        if self.options.hint_distribution != 5 and self.options.hint_distribution != 1:
+            self.finished_hints.wait()
+        if self.options.boo_health_option.value == 2:
+            self.finished_boo_scaling.wait()
 
 def _get_disabled_traps(options: LuigiOptions.LMOptions) -> int:
     """
