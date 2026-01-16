@@ -731,7 +731,10 @@ class LMWorld(World):
             except:
                 raise
             finally:
-                cls.finished_hints.set()
+                for player_int in hint_worlds:
+                    world: "LMWorld" = multiworld.worlds[player_int]
+                    world.finished_hints.set()
+
         if not boo_worlds:
             return
 
@@ -745,19 +748,22 @@ class LMWorld(World):
                     done_players.add(player)
             boo_worlds.difference_update(done_players)
 
-        for sphere_num, sphere in enumerate(multiworld.get_spheres(), 1):
-            for loc in sphere:
-                if loc.player in boo_worlds and loc.name in ROOM_BOO_LOCATION_TABLE.keys():
-                    player_world = multiworld.worlds[loc.player]
-                    player_world.boo_spheres.update({loc.name: sphere_num})
-            try:
-                check_boo_players_done()
-            except:
-                raise
-            finally:
-                cls.finished_boo_scaling.set()
-            if not boo_worlds:
-                return
+        try:
+            for sphere_num, sphere in enumerate(multiworld.get_spheres(), 1):
+                for loc in sphere:
+                    if loc.player in boo_worlds and loc.name in ROOM_BOO_LOCATION_TABLE.keys():
+                        player_world = multiworld.worlds[loc.player]
+                        player_world.boo_spheres.update({loc.name: sphere_num})
+                    check_boo_players_done()
+
+                if not boo_worlds:
+                    return
+        except:
+            raise
+        finally:
+            for player_int in boo_worlds:
+                world: "LMWorld" = multiworld.worlds[player_int]
+                world.finished_boo_scaling.set()
 
 
     # Output options, locations and doors for patcher
