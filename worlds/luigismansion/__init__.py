@@ -726,7 +726,12 @@ class LMWorld(World):
             return
         # Produce hints for LM games that need them
         if hint_worlds:
-            get_hints_by_option(multiworld, hint_worlds)
+            try:
+                get_hints_by_option(multiworld, hint_worlds)
+            except:
+                raise
+            finally:
+                cls.finished_hints.set()
         if not boo_worlds:
             return
 
@@ -739,12 +744,18 @@ class LMWorld(World):
                     player_world.finished_boo_scaling.set()
                     done_players.add(player)
             boo_worlds.difference_update(done_players)
+
         for sphere_num, sphere in enumerate(multiworld.get_spheres(), 1):
             for loc in sphere:
                 if loc.player in boo_worlds and loc.name in ROOM_BOO_LOCATION_TABLE.keys():
                     player_world = multiworld.worlds[loc.player]
                     player_world.boo_spheres.update({loc.name: sphere_num})
-            check_boo_players_done()
+            try:
+                check_boo_players_done()
+            except:
+                raise
+            finally:
+                cls.finished_boo_scaling.set()
             if not boo_worlds:
                 return
 
@@ -886,11 +897,11 @@ class LMWorld(World):
             "enable_trap_client_msg": self.options.enable_trap_client_msg.value,
         }
 
-    def modify_multidata(self, multidata: "MultiData") -> None:
-        if self.options.hint_distribution != 5 and self.options.hint_distribution != 1:
-            self.finished_hints.wait()
-        if self.options.boo_health_option.value == 2:
-            self.finished_boo_scaling.wait()
+    #def modify_multidata(self, multidata: "MultiData") -> None:
+    #    if self.options.hint_distribution != 5 and self.options.hint_distribution != 1:
+    #        self.finished_hints.wait()
+    #    if self.options.boo_health_option.value == 2:
+    #        self.finished_boo_scaling.wait()
 
 def _get_disabled_traps(options: LuigiOptions.LMOptions) -> int:
     """
