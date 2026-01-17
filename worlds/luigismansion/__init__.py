@@ -728,7 +728,9 @@ class LMWorld(World):
         if hint_worlds:
             try:
                 get_hints_by_option(multiworld, hint_worlds)
-            except:
+            except Exception:
+                import traceback
+                traceback.print_exc()
                 raise
             finally:
                 for player_int in hint_worlds:
@@ -758,7 +760,9 @@ class LMWorld(World):
 
                 if not boo_worlds:
                     return
-        except:
+        except Exception:
+            import traceback
+            traceback.print_exc()
             raise
         finally:
             for player_int in boo_worlds:
