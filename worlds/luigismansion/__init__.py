@@ -721,7 +721,7 @@ class LMWorld(World):
         # Filter for any Luigi's Mansion worlds that need hints or have boo health by sphere turned on
         hint_worlds = {world.player for world in multiworld.get_game_worlds(cls.game)
                        if (world.options.hint_distribution.value != 5 and world.options.hint_distribution.value != 1)}
-        boo_worlds = {world.player for world in multiworld.get_game_worlds(cls.game) if world.options.boo_health_option == 2}
+        boo_worlds = {world.player for world in multiworld.get_game_worlds(cls.game) if world.options.boo_health_option.value == 2}
         if not boo_worlds and not hint_worlds:
             return
         # Produce hints for LM games that need them
