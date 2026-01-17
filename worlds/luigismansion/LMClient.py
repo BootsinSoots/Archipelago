@@ -846,6 +846,8 @@ class LMContext(BaseContext):
                         self.ui.get_wallet_value()
                         self.ui.update_flower_label(self.get_item_count_by_id(8140))
                         self.ui.update_vacuum_label(self.get_item_count_by_id(8064))
+                        self.ui.update_king_boo_label(self.boo_balcony_count)
+                        self.ui.update_balcony_boo_label(self.boo_balcony_count)
 
                     if not (self.check_ingame() and self.check_alive()):
                         await self.wait_for_next_loop(WAIT_TIMER_SHORT_TIMEOUT)

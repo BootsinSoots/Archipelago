@@ -76,7 +76,8 @@ class LMDisplayQueue:
             text_to_display: list[bytes] = []
 
             # Get Current Player's name
-            curr_player_name: str = "You" if display_item.player == self.lm_ctx.slot else self.lm_ctx.player_names[display_item.player]
+            curr_player_name: str = "You" if display_item.player == self.lm_ctx.slot or \
+                display_item.player == 0 else self.lm_ctx.player_names[display_item.player]
             recv_from: str = " found your own" if display_item.player == self.lm_ctx.slot else " received"
             first_line: str = DisplayColors.MAGENTA + curr_player_name + DisplayColors.WHITE + recv_from
             text_to_display.append(string_to_bytes(first_line, None))
@@ -113,7 +114,7 @@ class LMDisplayQueue:
             text_to_display.append(string_to_bytes(loc_name_disp, None))
 
             # Get the proper AP Game Name
-            if loc_name_retr.lower() == "server":
+            if display_item.player == 0:
                 recv_text: str = DisplayColors.WHITE + "From the AP Server"
                 text_to_display.append(string_to_bytes(recv_text, None))
             else:
