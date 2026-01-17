@@ -38,7 +38,7 @@ def get_other_items(world: "LMWorld", hinted_loc, other_items) -> Location:
 
 def get_hints_by_option(multiworld: MultiWorld, player_hints: set[int]) -> None:
     # Since locations are optional and you cannot hint items with no location, these will get filtered out.
-    all_placed_items = [loc.item for loc in multiworld.get_filled_locations() if loc.item.location is loc]
+    all_placed_items = [loc.item for loc in multiworld.get_filled_locations() if not loc is None and loc.item.location is loc]
     player_hint_worlds = sorted(player_hints)
     for player_int in player_hint_worlds:
         world: "LMWorld" = multiworld.worlds[player_int]
