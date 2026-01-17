@@ -522,7 +522,7 @@ class LMWorld(World):
             spawn_doors = copy.deepcopy(spawn_locations[self.origin_region_name]["door_ids"])
             if spawn_doors:
                 for door in spawn_locations[self.origin_region_name]["door_ids"]:
-                    if self.open_doors[door] == 1:
+                    if self.open_doors[door] == 0:
                         spawn_doors.remove(door)
                 if not spawn_doors:
                     self.spawn_full_locked: bool = True
