@@ -43,9 +43,10 @@ def get_hints_by_option(multiworld: MultiWorld, player_hints: set[int]) -> None:
     for player_int in player_hint_worlds:
         world: "LMWorld" = multiworld.worlds[player_int]
         prog_no_skip = [item for item in all_placed_items if item.advancement and not item.code is None and
-            (item.player == player_int or item.location.player == player_int) and not item.skip_in_prog_balancing]
+            item.location is not None and not item.skip_in_prog_balancing and
+            (item.player == player_int or item.location.player == player_int)]
         other_items = [item for item in all_placed_items if not item.advancement and not item.code is None and
-                      (item.player == player_int or item.location.player == player_int)]
+            item.location is not None and (item.player == player_int or item.location.player == player_int)]
         already_hinted_locations: List[Location] = []
         hint_list: dict[str, int] = copy.deepcopy(ALWAYS_HINT)
         if world.options.portrait_hints == 1:
