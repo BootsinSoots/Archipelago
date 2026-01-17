@@ -64,7 +64,7 @@ class LMDisplayQueue:
                     continue
 
                 await self._check_items_display_queue()
-                await self.lm_ctx.wait_for_next_loop(WAIT_TIMER_LONG_TIMEOUT)
+                await self.lm_ctx.wait_for_next_loop(WAIT_TIMER_MEDIUM_TIMEOUT)
         except Exception as genericEx:
             self.logger.error("While trying to display text in game, an unknown issue occurred. Details: " + str(genericEx))
 
@@ -145,7 +145,7 @@ class LMDisplayQueue:
 
         # Reset the screen size to avoid old text from being written
         dme.write_bytes(item_display_addr, b"\00" * len(msg_to_write))
-        await self.lm_ctx.wait_for_next_loop(WAIT_TIMER_MEDIUM_TIMEOUT)
+        await self.lm_ctx.wait_for_next_loop(WAIT_TIMER_SHORT_TIMEOUT)
 
 
 async def _build_msg(msg_parts: list[bytes]) -> bytes:
