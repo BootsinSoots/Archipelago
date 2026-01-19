@@ -1,91 +1,90 @@
- .text          0x804deb58      0x234 Source/Main_Game.asm.o
-                0x804deb58                Generate_Ghost
-                0x804deb5c                Weapon_Action
-                0x804deb60                Main_Game_perform
-                0x804decd8                Monochrome_Trap_Timer
-                0x804decdc                Monochrome_Trap_Intensity
-                0x804dece0                perform_Monochrome_Trap
-                0x804ded68                to_Float
- .text          0x804ded8c      0x100 Source/GuideMap.asm.o
-                0x804ded8c                GuideMap_set_Map_Room_Color
- .text          0x804dee8c       0x14 Source/Event.asm.o
-                0x804dee8c                Event_perform_Archipelago_Tag
- .text          0x804deea0       0xbc Source/Furniture.asm.o
-                0x804deea0                gFurniture_Generate_Lookup_Table
-                0x804deecc                cFurniture_create_Diamond
-                0x804deee0                cFurniture_create_Gold_Diamond
-                0x804deef4                Furniture_create_Gold_Bars
- .text          0x804def5c      0x1ac Source/GC2D.asm.o
-                0x804def5c                Player_Health_Color_1
-                0x804def60                Player_Health_Color_2
-                0x804def64                Player_Health_Color_3
-                0x804def68                Player_Health_Color_4
-                0x804def6c                Player_Health_Color_5
-                0x804def70                Player_Health_Threshold_1
-                0x804def74                Player_Health_Threshold_2
-                0x804def78                Player_Health_Threshold_3
-                0x804def7c                Player_Health_Threshold_4
-                0x804def80                Player_Health_Threshold_5
-                0x804def84                GC2D_use_Player_Health_Main_Counter_Colors
-                0x804def88                GC2D_draw_Player_Health_Counter_Main
-                0x804df0a0                Custom_Boo_Counter_Bitfields
-                0x804df0a8                GC2D_read_Boo_Counter_Bitfields
- .text          0x804df108       0x58 Source/Tsuri.asm.o
-                0x804df108                Tsuri_set_Damage_Factor
- .text          0x804df160      0x428 Source/Player.asm.o
-                0x804df160                Player_Reaction
-                0x804df164                Player_Weapon_Trap_Timer
-                0x804df168                Player_Weapon_Position
-                0x804df174                Mirror_Warp_X
-                0x804df178                Mirror_Warp_Y
-                0x804df17c                Mirror_Warp_Z
-                0x804df180                Player_perform
-                0x804df45c                Player_set_Equipment_Animation
-                0x804df498                Player_set_Music_Speed
-                0x804df4ac                Player_set_Game_Boy_Only_Mode
-                0x804df4c8                Player_set_Game_Boy_Only_Visibility
-                0x804df4e8                Player_set_Boss_Ghost_Rank
-                0x804df54c                Play_King_Boo_Gem_Fast_Pickup
-                0x804df550                Player_play_King_Boo_Gem_Pickup_Sound
- .text          0x804df588       0x88 Source/EnGhostA.asm.o
-                0x804df588                EnGhostA_get_Room_Light_Status
-                0x804df5c0                EnGhostA_Disappear_Begin
- .text          0x804df610      0x2d8 Source/EnBasicTsuri.asm.o
-                0x804df610                gHealth_Gold_Rank_Threshold
-                0x804df614                gHealth_Silver_Rank_Threshold
-                0x804df618                EnBasicTsuri_init
-                0x804df634                EnBasicTsuri_perform_Pearl_Drops
-                0x804df7b0                EnBasicTsuri_set_Health_Based_Portrait_Ghost_Rank
- .text          0x804df8e8       0x4c Source/EnAppear.asm.o
-                0x804df8e8                EnAppear_wait_To_Appear
- .text          0x804df934       0xa0 Source/EnManager.asm.o
-                0x804df934                EnManager_perform_Light_Check
-                0x804df958                EnManager_clear_Required_Fields
- .text          0x804df9d4       0x3c Source/SaEnBossTelesa.asm.o
-                0x804df9d4                Boolossus_Mini_Boo_Difficulty
-                0x804df9d8                SaEnBossTelesa_set_Mini_Boo_Difficulty
+ .text          0x804deb8c      0x234 Source/Main_Game.asm.o
+                0x804deb8c                Generate_Ghost
+                0x804deb90                Weapon_Action
+                0x804deb94                Main_Game_perform
+                0x804ded0c                Monochrome_Trap_Timer
+                0x804ded10                Monochrome_Trap_Intensity
+                0x804ded14                perform_Monochrome_Trap
+                0x804ded9c                to_Float
+ .text          0x804dedc0      0x100 Source/GuideMap.asm.o
+                0x804dedc0                GuideMap_set_Map_Room_Color
+ .text          0x804deec0       0x14 Source/Event.asm.o
+                0x804deec0                Event_perform_Archipelago_Tag
+ .text          0x804deed4       0xbc Source/Furniture.asm.o
+                0x804deed4                gFurniture_Generate_Lookup_Table
+                0x804def00                cFurniture_create_Diamond
+                0x804def14                cFurniture_create_Gold_Diamond
+                0x804def28                Furniture_create_Gold_Bars
+ .text          0x804def90      0x1ac Source/GC2D.asm.o
+                0x804def90                Player_Health_Color_1
+                0x804def94                Player_Health_Color_2
+                0x804def98                Player_Health_Color_3
+                0x804def9c                Player_Health_Color_4
+                0x804defa0                Player_Health_Color_5
+                0x804defa4                Player_Health_Threshold_1
+                0x804defa8                Player_Health_Threshold_2
+                0x804defac                Player_Health_Threshold_3
+                0x804defb0                Player_Health_Threshold_4
+                0x804defb4                Player_Health_Threshold_5
+                0x804defb8                GC2D_use_Player_Health_Main_Counter_Colors
+                0x804defbc                GC2D_draw_Player_Health_Counter_Main
+                0x804df0d4                Custom_Boo_Counter_Bitfields
+                0x804df0dc                GC2D_read_Boo_Counter_Bitfields
+ .text          0x804df13c       0x58 Source/Tsuri.asm.o
+                0x804df13c                Tsuri_set_Damage_Factor
+ .text          0x804df194      0x428 Source/Player.asm.o
+                0x804df194                Player_Reaction
+                0x804df198                Player_Weapon_Trap_Timer
+                0x804df19c                Player_Weapon_Position
+                0x804df1a8                Mirror_Warp_X
+                0x804df1ac                Mirror_Warp_Y
+                0x804df1b0                Mirror_Warp_Z
+                0x804df1b4                Player_perform
+                0x804df490                Player_set_Equipment_Animation
+                0x804df4cc                Player_set_Music_Speed
+                0x804df4e0                Player_set_Game_Boy_Only_Mode
+                0x804df4fc                Player_set_Game_Boy_Only_Visibility
+                0x804df51c                Player_set_Boss_Ghost_Rank
+                0x804df580                Play_King_Boo_Gem_Fast_Pickup
+                0x804df584                Player_play_King_Boo_Gem_Pickup_Sound
+ .text          0x804df5bc       0x88 Source/EnGhostA.asm.o
+                0x804df5bc                EnGhostA_get_Room_Light_Status
+                0x804df5f4                EnGhostA_Disappear_Begin
+ .text          0x804df644      0x2d8 Source/EnBasicTsuri.asm.o
+                0x804df644                gHealth_Gold_Rank_Threshold
+                0x804df648                gHealth_Silver_Rank_Threshold
+                0x804df64c                EnBasicTsuri_init
+                0x804df668                EnBasicTsuri_perform_Pearl_Drops
+                0x804df7e4                EnBasicTsuri_set_Health_Based_Portrait_Ghost_Rank
+ .text          0x804df91c       0x4c Source/EnAppear.asm.o
+                0x804df91c                EnAppear_wait_To_Appear
+ .text          0x804df968       0xa0 Source/EnManager.asm.o
+                0x804df968                EnManager_perform_Light_Check
+                0x804df98c                EnManager_clear_Required_Fields
+ .text          0x804dfa08       0x3c Source/SaEnBossTelesa.asm.o
+                0x804dfa08                Boolossus_Mini_Boo_Difficulty
+                0x804dfa0c                SaEnBossTelesa_set_Mini_Boo_Difficulty
 
-                0x804dfa10                gArea_2_Halls
-                0x804dfa1c                gArea_3_Halls
-                0x804dfa50                gPortrait_Ghost_Locations
-                0x804dfa68                escape_Codes__8J2DPrint
-                0x804dfaa8                gLine_Sizes
-                0x804dfc30                gPortrait_Ghost_Starting_Health
-                0x804dfc90                gGallery_Prompt_Release_Timer
-                0x804dfc94                gGallery_Prompt_Yes_Color
-                0x804dfc98                gItem_Information_Timer
-                0x804dfc9c                gItem_Information
-                0x804dfcc0                gArea_2_Halls_On
-                0x804dfcc4                gArea_3_Halls_On
-                0x804dfcc8                gGallery_Is_Retry_Mode
-                0x804dfccc                gGallery_Prompt
-                0x804dfcd0                gGallery_Prompt_Alpha
-                0x804dfcd4                gGallery_Prompt_Choice
-                0x804dfcd8                gGallery_Prompt_Choice_Held
-                0x804dfcdc                gGallery_Prompt_Confirm_Held
-                0x804dfce0                gGallery_Closeup_Dismiss_Timer
-                0x804dfce4                gItem_Information_Alpha
-                0x804dfce8                gTsuri_Speed
-                0x804dfcf0                gPlayer_Is_Game_Boy_Only
-                0x804dfcf8                gGallery_Current_Closeup_Portrait
-
+                0x804dfa48                gArea_2_Halls
+                0x804dfa54                gArea_3_Halls
+                0x804dfa88                gPortrait_Ghost_Locations
+                0x804dfaa0                escape_Codes__8J2DPrint
+                0x804dfae0                gLine_Sizes
+                0x804dfc68                gPortrait_Ghost_Starting_Health
+                0x804dfcc8                gGallery_Prompt_Release_Timer
+                0x804dfccc                gGallery_Prompt_Yes_Color
+                0x804dfcd0                gItem_Information_Timer
+                0x804dfcd4                gItem_Information
+                0x804dfcf8                gArea_2_Halls_On
+                0x804dfcfc                gArea_3_Halls_On
+                0x804dfd00                gGallery_Is_Retry_Mode
+                0x804dfd04                gGallery_Prompt
+                0x804dfd08                gGallery_Prompt_Alpha
+                0x804dfd0c                gGallery_Prompt_Choice
+                0x804dfd10                gGallery_Prompt_Choice_Held
+                0x804dfd14                gGallery_Prompt_Confirm_Held
+                0x804dfd18                gGallery_Closeup_Dismiss_Timer
+                0x804dfd1c                gItem_Information_Alpha
+                0x804dfd20                gTsuri_Speed
+                0x804dfd28                gPlayer_Is_Game_Boy_Only
+                0x804dfd30                gGallery_Current_Closeup_Portrait
