@@ -57,7 +57,7 @@ class LMWorld(World):
     }
     settings: ClassVar[LuigisMansionSettings]
     item_name_groups = get_item_names_per_category()
-    required_client_version = (0, 6, 5)
+    required_client_version = (0, 6, 6)
     web = LMWeb()
 
     ut_can_gen_without_yaml = True  # class var that tells it to ignore the player yaml
