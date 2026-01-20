@@ -21,6 +21,8 @@ Run the emulator at least once to make sure it is working.
 
 5. Note for Mac users: Due to additional security hardening that Apple added to MacOS, the steps from [here](https://github.com/aldelaro5/dolphin-memory-engine?tab=readme-ov-file#macos-code-signing) relating to Code Signing must be performed. Not doing so will prevent your Archipelago Client from connecting to the game appropriately.
 
+6. Note for Windows users: you may experience some issues with patching the ISO if your file is stored on OneDrive.
+
 ## Create a Config (.yaml) File
 
 ### What is a config file and why do I need one?
@@ -67,7 +69,9 @@ to continue later.
    - The field should read `archipelago.gg:<port number>`
 9. Once you have loaded into the game, click the `Connect` button at the top of the LMClient. You are now connected and ready to play!
    - The client takes around 10 seconds to finish connecting, and only connects once you are actually in the mansion
-   - Unfortunately, due to the nature of some checks, you must be connected to a server while playing
+   - Unfortunately, due to the nature of some checks, you must be connected to a server while playing. Please keep a link to the webpage on hand
+10. To rejoin the room later, you need to open the webpage, open the LM Client through the Archipelago Launcher, and open the patched ISO with Dolphin.
+Then you can click connect on the LM Client so long as the port matches what is shown on the webpage.
 
 ## Joining a MultiWorld Game
 
