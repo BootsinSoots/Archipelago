@@ -338,6 +338,7 @@ ALL_ITEMS_TABLE = {**ITEM_TABLE,
 BOO_AP_ID_LIST: list[int] = [LMItem.get_apid(value.code) for value in BOO_ITEM_TABLE.values()]
 IMPORTANT_ITEM_AP_LIST: list[int] = [LMItem.get_apid(value.code) for value in ITEM_TABLE.values() if
     not value.code == 65]
+BUNDLES_AP_ID_LIST: list[int] = [LMItem.get_apid(value.code) for value in treasure_bundles.values()] #TODO Figure out how to make remote on not treasure chests
 
 # Mario items + Elemental Medals + Traps + Boo Radar + Super Vac + Progressive Flower + Certain Traps
 RECV_OWN_GAME_ITEMS: list[int] = BOO_AP_ID_LIST + IMPORTANT_ITEM_AP_LIST + [8126, 8141, 8142, 8143, 8145, 8146, 8147]
