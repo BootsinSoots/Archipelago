@@ -5,9 +5,7 @@ from win32comext.ifilter.ifilter import BindIFilterFromStream
 from BaseClasses import Item
 from BaseClasses import ItemClassification as IC
 from .Helper_Functions import LMRamData
-from ..kh2.Names.LocationName import SpookyCaveAPBoost
-from ..shivers import ShiversItem
-
+from .game.Currency import CURRENCY_NAME
 
 class LMItemData(NamedTuple):
     type: str
@@ -15,7 +13,15 @@ class LMItemData(NamedTuple):
     classification: IC
     doorid: Optional[int] = None
     update_ram_addr: Optional[list[LMRamData]] = None
+    default_weight: int = 0
 
+class CurrencyItemData(LMItemData):
+    currencies: dict[str, int]
+
+    def __new__(cls, code, currencies: dict[str, int], item_type="Money", classification: IC=IC.filler):
+        instance = super().__new__(cls, item_type, code, classification, update_ram_addr=[])
+        instance.currencies = currencies
+        return instance
 
 class LMItem(Item):
     game: str = "Luigi's Mansion"
@@ -117,190 +123,166 @@ ITEM_TABLE: dict[str, LMItemData] = {
         update_ram_addr=[LMRamData(0x803D5DBB, bit_position=7), LMRamData(0x803D339C, bit_position=0)]),
     "Boo Radar": LMItemData("Upgrade", 63, IC.progression,
         update_ram_addr=[LMRamData(0x803D33A2, bit_position=1), LMRamData(0x803D33A2, bit_position=3)]),
-    "Poltergust 4000": LMItemData("Upgrade", 64, IC.useful, update_ram_addr=[LMRamData(0x80081CC8, item_count=0)]),
-    "Gold Diamond": LMItemData("Money", 65, IC.progression,
-        update_ram_addr=[LMRamData(0x803D8B7C, pointer_offset=0x344, ram_byte_size=4, item_count=1)]),
+    "Vacuum Upgrade": LMItemData("Upgrade", 64, IC.useful,
+        update_ram_addr=[LMRamData(0x804ddde0, item_count=1, ram_byte_size=4)]),
+    "Poltergust 3000": LMItemData("Upgrade", 148, IC.progression,
+        update_ram_addr=[LMRamData(0x804dda54, ram_byte_size=4, item_count=1)]),
+    "Gold Diamond": CurrencyItemData(65, { CURRENCY_NAME.GOLD_DIAMOND: 1 }, classification=IC.progression),
     "Progressive Flower": LMItemData("Flower Stage", 140, IC.progression,
         update_ram_addr=[LMRamData(0x80338fc0, ram_byte_size=4)])
 }
 
-PORTRAIT_ITEMS: dict[str, LMItemData] = {
-    "Shivers's Candelabra": LMItemData("Portrait Spawner", 150, IC.progression, update_ram_addr=),
-    "Neville's Book": LMItemData("Portrait Spawner", 151, IC.progression, update_ram_addr=),
-    "Lydia's Brush": LMItemData("Portrait Spawner", 152, IC.progression, update_ram_addr=),
-    "Chauncey's Pacifier": LMItemData("Portrait Spawner", 153, IC.progression, update_ram_addr=),
-    "Whirlindas' Dance Steps": LMItemData("Portrait Spawner", 141, IC.progression, update_ram_addr=),
-    "Melody's Music Sheets": LMItemData("Portrait Spawner", 155, IC.progression, update_ram_addr=),
-    "Mr. Luggs's Utensils": LMItemData("Portrait Spawner", 156, IC.progression, update_ram_addr=),
-    "Spooky's Collar": LMItemData("Portrait Spawner", 157, IC.progression, update_ram_addr=),
-    "Bogmire's Shadow": LMItemData("Portrait Spawner", 158, IC.progression, update_ram_addr=),
-    "Biff's Weights": LMItemData("Portrait Spawner", 159, IC.progression, update_ram_addr=),
-    "Petunia's Shower Cap": LMItemData("Portrait Spawner", 160, IC.progression, update_ram_addr=),
-    "Nana's Yarn Balls": LMItemData("Portrait Spawner", 161, IC.progression, update_ram_addr=),
-    "Bankshot's Pool Cue": LMItemData("Portrait Spawner", 162, IC.progression, update_ram_addr=),
-    "The Twins' Mobile": LMItemData("Portrait Spawner", 163, IC.progression, update_ram_addr=),
-    "Clairvoya's Crystal Ball": LMItemData("Portrait Spawner", 164, IC.progression, update_ram_addr=),
-    "Boolossus's Bahamas Ticket": LMItemData("Portrait Spawner", 165, IC.progression, update_ram_addr=),
-    "Grimmly's Mirror": LMItemData("Portrait Spawner", 166, IC.progression, update_ram_addr=),
-    "Toy Soldiers' Wind-up Keys": LMItemData("Portrait Spawner", 167, IC.progression, update_ram_addr=),
-    "Sue Pea's Bed": LMItemData("Portrait Spawner", 168, IC.progression, update_ram_addr=),
-    "Sir Weston's Backpack": LMItemData("Portrait Spawner", 169, IC.progression, update_ram_addr=),
-    "Jarvis's Vase Collection": LMItemData("Portrait Spawner", 170, IC.progression, update_ram_addr=),
-    "Van Gore's Paintbrush": LMItemData("Portrait Spawner", 171, IC.progression, update_ram_addr=),
-}
 
+# RAM Address are set to 0 because they dynamically change based on the custom code used.
+# These will get updated with their dynamic values in create_items in __init__ and Client.
 BOO_ITEM_TABLE: dict[str, LMItemData] = {
     "Butler's Room Boo (PeekaBoo)": LMItemData("Boo", 66, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04C, bit_position=0)]),
+        update_ram_addr=[LMRamData(0, bit_position=0)]),
     "Hidden Room Boo (GumBoo)": LMItemData("Boo", 67, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04C, bit_position=1)]),
+        update_ram_addr=[LMRamData(0, bit_position=1)]),
     "Fortune Teller Boo (Booigi)": LMItemData("Boo", 68, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04C, bit_position=2)]),
+        update_ram_addr=[LMRamData(0, bit_position=2)]),
     "Mirror Room Boo (Kung Boo)": LMItemData("Boo", 69, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04C, bit_position=3)]),
+        update_ram_addr=[LMRamData(0, bit_position=3)]),
     "Laundry Room Boo (Boogie)": LMItemData("Boo", 70, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04C, bit_position=4)]),
+        update_ram_addr=[LMRamData(0, bit_position=4)]),
     "Kitchen Boo (Booligan)": LMItemData("Boo", 71, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04C, bit_position=5)]),
+        update_ram_addr=[LMRamData(0, bit_position=5)]),
     "Dining Room Boo (Boodacious)": LMItemData("Boo", 72, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04C, bit_position=6)]),
+        update_ram_addr=[LMRamData(0, bit_position=6)]),
     "Ball Room Boo (Boo La La)": LMItemData("Boo", 73, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04C, bit_position=7)]),
+        update_ram_addr=[LMRamData(0, bit_position=7)]),
     "Billiards Boo (Boohoo)": LMItemData("Boo", 74, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04D, bit_position=0)]),
+        update_ram_addr=[LMRamData(0, bit_position=0)]),
     "Projection Room Boo (ShamBoo)": LMItemData("Boo", 75, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04D, bit_position=1)]),
+        update_ram_addr=[LMRamData(0, bit_position=1)]),
     "Storage Room Boo (Game Boo)": LMItemData("Boo", 76, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04D, bit_position=2)]),
+        update_ram_addr=[LMRamData(0, bit_position=2)]),
     "Conservatory Boo (Boomeo)": LMItemData("Boo", 77, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04D, bit_position=3)]),
+        update_ram_addr=[LMRamData(0, bit_position=3)]),
     "Rec Room Boo (Booregard)": LMItemData("Boo", 78, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04D, bit_position=4)]),
+        update_ram_addr=[LMRamData(0, bit_position=4)]),
     "Nursery Boo (TurBoo)": LMItemData("Boo", 79, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04D, bit_position=5)]),
+        update_ram_addr=[LMRamData(0, bit_position=5)]),
     "Twin's Room Boo (Booris)": LMItemData("Boo", 80, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04D, bit_position=6)]),
+        update_ram_addr=[LMRamData(0, bit_position=6)]),
     "Sitting Room Boo (Boolivia)": LMItemData("Boo", 81, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04D, bit_position=7)]),
+        update_ram_addr=[LMRamData(0, bit_position=7)]),
     "Guest Room Boo (Boonita)": LMItemData("Boo", 82, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04E, bit_position=0)]),
+        update_ram_addr=[LMRamData(0, bit_position=0)]),
     "Master Bedroom Boo (Boolicious)": LMItemData("Boo", 83, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04E, bit_position=1)]),
+        update_ram_addr=[LMRamData(0, bit_position=1)]),
     "Study Boo (TaBoo)": LMItemData("Boo", 84, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04E, bit_position=2)]),
+        update_ram_addr=[LMRamData(0, bit_position=2)]),
     "Parlor Boo (BamBoo)": LMItemData("Boo", 85, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04E, bit_position=3)]),
+        update_ram_addr=[LMRamData(0, bit_position=3)]),
     "Wardrobe Boo (GameBoo Advance)": LMItemData("Boo", 86, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04E, bit_position=4)]),
+        update_ram_addr=[LMRamData(0, bit_position=4)]),
     "Anteroom Boo (Bootha)": LMItemData("Boo", 87, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04E, bit_position=5)]),
+        update_ram_addr=[LMRamData(0, bit_position=5)]),
     "Astral Boo (Boonswoggle)": LMItemData("Boo", 88, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04E, bit_position=6)]),
+        update_ram_addr=[LMRamData(0, bit_position=6)]),
     "Nana's Room Boo (LimBooger)": LMItemData("Boo", 89, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04E, bit_position=7)]),
+        update_ram_addr=[LMRamData(0, bit_position=7)]),
     "Tea Room Boo (Mr. Boojangles)": LMItemData("Boo", 90, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04F, bit_position=0)]),
+        update_ram_addr=[LMRamData(0, bit_position=0)]),
     "Armory Boo (Underboo)": LMItemData("Boo", 91, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04F, bit_position=1)]),
+        update_ram_addr=[LMRamData(0, bit_position=1)]),
     "Telephone Room Boo (Boomerang)": LMItemData("Boo", 92, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04F, bit_position=2)]),
+        update_ram_addr=[LMRamData(0, bit_position=2)]),
     "Safari Room Boo (Little Boo Peep)": LMItemData("Boo", 93, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04F, bit_position=3)]),
+        update_ram_addr=[LMRamData(0, bit_position=3)]),
     "Ceramics Studio Boo (TamBoorine)": LMItemData("Boo", 94, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04F, bit_position=4)]),
+        update_ram_addr=[LMRamData(0, bit_position=4)]),
     "Clockwork Room Boo (Booscaster)": LMItemData("Boo", 95, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04F, bit_position=5)]),
+        update_ram_addr=[LMRamData(0, bit_position=5)]),
     "Artist's Studio Boo (Bootique)": LMItemData("Boo", 96, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04F, bit_position=6)]),
+        update_ram_addr=[LMRamData(0, bit_position=6)]),
     "Cold Storage Boo (Boolderdash)": LMItemData("Boo", 97, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE04F, bit_position=7)]),
+        update_ram_addr=[LMRamData(0, bit_position=7)]),
     "Cellar Boo (Booripedes)": LMItemData("Boo", 98, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE050, bit_position=0)]),
+        update_ram_addr=[LMRamData(0, bit_position=0)]),
     "Pipe Room Boo (Booffant)": LMItemData("Boo", 99, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE050, bit_position=1)]),
+        update_ram_addr=[LMRamData(0, bit_position=1)]),
     "Breaker Room Boo (Boo B. Hatch)": LMItemData("Boo", 100, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE050, bit_position=2)]),
+        update_ram_addr=[LMRamData(0, bit_position=2)]),
     "Boolossus MiniBoo 1": LMItemData("Boo", 101, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE050, bit_position=3)]),
+        update_ram_addr=[LMRamData(0, bit_position=3)]),
     "Boolossus MiniBoo 2": LMItemData("Boo", 102, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE050, bit_position=4)]),
+        update_ram_addr=[LMRamData(0, bit_position=4)]),
     "Boolossus MiniBoo 3": LMItemData("Boo", 103, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE050, bit_position=5)]),
+        update_ram_addr=[LMRamData(0, bit_position=5)]),
     "Boolossus MiniBoo 4": LMItemData("Boo", 104, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE050, bit_position=6)]),
+        update_ram_addr=[LMRamData(0, bit_position=6)]),
     "Boolossus MiniBoo 5": LMItemData("Boo", 105, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE050, bit_position=7)]),
+        update_ram_addr=[LMRamData(0, bit_position=7)]),
     "Boolossus MiniBoo 6": LMItemData("Boo", 107, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE051, bit_position=0)]),
+        update_ram_addr=[LMRamData(0, bit_position=0)]),
     "Boolossus MiniBoo 7": LMItemData("Boo", 108, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE051, bit_position=1)]),
+        update_ram_addr=[LMRamData(0, bit_position=1)]),
     "Boolossus MiniBoo 8": LMItemData("Boo", 109, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE051, bit_position=2)]),
+        update_ram_addr=[LMRamData(0, bit_position=2)]),
     "Boolossus MiniBoo 9": LMItemData("Boo", 110, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE051, bit_position=3)]),
+        update_ram_addr=[LMRamData(0, bit_position=3)]),
     "Boolossus MiniBoo 10": LMItemData("Boo", 111, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE051, bit_position=4)]),
+        update_ram_addr=[LMRamData(0, bit_position=4)]),
     "Boolossus MiniBoo 11": LMItemData("Boo", 112, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE051, bit_position=5)]),
+        update_ram_addr=[LMRamData(0, bit_position=5)]),
     "Boolossus MiniBoo 12": LMItemData("Boo", 113, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE051, bit_position=6)]),
+        update_ram_addr=[LMRamData(0, bit_position=6)]),
     "Boolossus MiniBoo 13": LMItemData("Boo", 114, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE051, bit_position=7)]),
+        update_ram_addr=[LMRamData(0, bit_position=7)]),
     "Boolossus MiniBoo 14": LMItemData("Boo", 115, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE052, bit_position=0)]),
+        update_ram_addr=[LMRamData(0, bit_position=0)]),
     "Boolossus MiniBoo 15": LMItemData("Boo", 116, IC.progression,
-        update_ram_addr=[LMRamData(0x804DE052, bit_position=1)]),
+        update_ram_addr=[LMRamData(0, bit_position=1)]),
 }
 
 other_filler_items: Dict[str, LMItemData] = {
-    "20 Coins & Bills": LMItemData("Money", 119, IC.filler,
-        update_ram_addr=[LMRamData(0x803D8B7C, pointer_offset=0x324, ram_byte_size=4, item_count=20),
-                         LMRamData(0x803D8B7C, pointer_offset=0x328, ram_byte_size=4, item_count=20)]),
-    "Sapphire": LMItemData("Money", 121, IC.filler,
-        update_ram_addr=[LMRamData(0x803D8B7C, pointer_offset=0x330, ram_byte_size=4, item_count=1)]),
-    "Emerald": LMItemData("Money", 122, IC.filler,
-        update_ram_addr=[LMRamData(0x803D8B7C, pointer_offset=0x334, ram_byte_size=4, item_count=1)]),
-    "Ruby": LMItemData("Money", 123, IC.filler,
-        update_ram_addr=[LMRamData(0x803D8B7C, pointer_offset=0x338, ram_byte_size=4, item_count=1)]),
-    "Diamond": LMItemData("Money", 124, IC.filler,
-        update_ram_addr=[LMRamData(0x803D8B7C, pointer_offset=0x33C, ram_byte_size=4, item_count=1)]),
-    "Nothing": LMItemData("Nothing Item", 127, IC.filler),
+    "20 Coins & Bills": CurrencyItemData(119, { CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, }),
+    "Sapphire": CurrencyItemData(121, { CURRENCY_NAME.SAPPHIRE: 1, }),
+    "Emerald": CurrencyItemData(122, { CURRENCY_NAME.EMERALD: 1, }),
+    "Ruby": CurrencyItemData(123, { CURRENCY_NAME.RUBY: 1, }),
+    "Diamond": CurrencyItemData(124, { CURRENCY_NAME.DIAMOND: 1, }),
+    "Dust": LMItemData("Nothing Item", 127, IC.filler, update_ram_addr=[]),
     "Small Heart": LMItemData("Heart", 128, IC.filler,
         update_ram_addr=[LMRamData(0x803D8B40, pointer_offset=0xB8, ram_byte_size=2, item_count=20)]),
     "Large Heart": LMItemData("Heart", 129, IC.filler,
         update_ram_addr=[LMRamData(0x803D8B40, pointer_offset=0xB8, ram_byte_size=2, item_count=50)]),
-    "10 Coins": LMItemData("Money", 133, IC.filler,
-        update_ram_addr=[LMRamData(0x803D8B7C, pointer_offset=0x324, ram_byte_size=4, item_count=10)]),
-    "20 Coins": LMItemData("Money", 134, IC.filler,
-        update_ram_addr=[LMRamData(0x803D8B7C, pointer_offset=0x324, ram_byte_size=4, item_count=20)]),
-    "30 Coins": LMItemData("Money", 135, IC.filler,
-        update_ram_addr=[LMRamData(0x803D8B7C, pointer_offset=0x324, ram_byte_size=4, item_count=30)]),
-    "15 Bills": LMItemData("Money", 136, IC.filler,
-        update_ram_addr=[LMRamData(0x803D8B7C, pointer_offset=0x328, ram_byte_size=4, item_count=15)]),
-    "25 Bills": LMItemData("Money", 137, IC.filler,
-        update_ram_addr=[LMRamData(0x803D8B7C, pointer_offset=0x328, ram_byte_size=4, item_count=25)]),
-    "1 Gold Bar": LMItemData("Money", 138, IC.filler,
-        update_ram_addr=[LMRamData(0x803D8B7C, pointer_offset=0x32C, ram_byte_size=4, item_count=1)]),
-    "2 Gold Bars": LMItemData("Money", 139, IC.filler,
-        update_ram_addr=[LMRamData(0x803D8B7C, pointer_offset=0x32C, ram_byte_size=4, item_count=2)]),
+    "10 Coins": CurrencyItemData(133, { CURRENCY_NAME.COINS: 10, }),
+    "20 Coins": CurrencyItemData(134, { CURRENCY_NAME.COINS: 20, }),
+    "30 Coins": CurrencyItemData(135, { CURRENCY_NAME.COINS: 30, }),
+    "15 Bills": CurrencyItemData(136, { CURRENCY_NAME.BILLS: 15, }),
+    "25 Bills": CurrencyItemData(137, { CURRENCY_NAME.BILLS: 25, }),
+    "1 Gold Bar": CurrencyItemData(138, { CURRENCY_NAME.GOLD_BARS: 1, }),
+    "2 Gold Bars": CurrencyItemData(139, { CURRENCY_NAME.GOLD_BARS: 2, }),
 }
 
+# RAM Address are set to 0 because they dynamically change based on the custom code used.
+# These will get updated with their dynamic values in create_items in __init__ and Client.
 trap_filler_items: Dict[str, LMItemData] = {
     "Possession Trap": LMItemData("Trap", 141, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDE7C, ram_byte_size=4, item_count=5)]),
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=5)], default_weight=5),
     "Bonk Trap": LMItemData("Trap", 142, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDE7C, ram_byte_size=4, item_count=4)]),
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=4)],default_weight=15),
     "Bomb": LMItemData("Trap", 130, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDE7C, ram_byte_size=4, item_count=1)]), # value of 1
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=1)], default_weight=15), # value of 1
     "Ice Trap": LMItemData("Trap", 131, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDE7C, ram_byte_size=4, item_count=3)]), # value of 3
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=3)], default_weight=15), # value of 3
     "Banana Trap": LMItemData("Trap", 132, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDE7C, ram_byte_size=4, item_count=2)]), # value of 2
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=2)], default_weight=15), # value of 2
     "Poison Mushroom": LMItemData("Trap", 125, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDE7C, ram_byte_size=4, item_count=6)]), # value of 6
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=6)], default_weight=15), # value of 6
     "Ghost": LMItemData("Trap", 126, IC.trap,
-        update_ram_addr=[LMRamData(0x804DDA50, ram_byte_size=4, item_count=1)]),
-
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=1)], default_weight=15),
+    "Fear Trap": LMItemData("Trap", 143, IC.trap,
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=8)], default_weight=25), #Crawling
+    "Spooky Time": LMItemData("Trap", 145, IC.trap,
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=150)], default_weight=25),
+    "Squash Trap": LMItemData("Trap", 146, IC.trap,
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=7)], default_weight=15),
+    "No Vac Trap": LMItemData("Trap", 147, IC.trap,
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=9)], default_weight=5)
 }
 
 filler_items = {**other_filler_items,
@@ -316,7 +298,7 @@ IMPORTANT_ITEM_AP_LIST: list[int] = [LMItem.get_apid(value.code) for value in IT
     not value.code == 65]
 
 # Mario items + Elemental Medals + Traps + Boo Radar + Super Vac + Progressive Flower + Certain Traps
-RECV_OWN_GAME_ITEMS: list[int] = BOO_AP_ID_LIST + IMPORTANT_ITEM_AP_LIST + [8126, 8141, 8142]
+RECV_OWN_GAME_ITEMS: list[int] = BOO_AP_ID_LIST + IMPORTANT_ITEM_AP_LIST + [8126, 8141, 8142, 8143, 8145, 8146, 8147]
 
 # List of received items to ignore because they are handled elsewhere
 RECV_ITEMS_IGNORE: list[int] = [8127]
@@ -324,13 +306,36 @@ RECV_ITEMS_IGNORE: list[int] = [8127]
 # List of health related items, which are used to not exceed max health
 HEALTH_RELATED_ITEMS: list[int] = [8128, 8129]
 
-ICE_TRAP_EQUIV = ["Freeze Trap", "Frozen Trap", "Ice Trap"]
-BOMB_EQUIV = ["TNT Barrel Trap", "Bomb", "Fire Trap"]
-BANANA_TRAP_EQUIV = ["Stun Trap", "Banana Trap", "Thwimp Trap", "Hiccup Trap", "Push Trap"]
-GHOST_EQUIV = ["OmoTrap", "Ghost", "Bee Trap", "Police Trap", "Nut Trap", "Army Trap"]
-POISON_MUSH_EQUIV = [ "Tiny Trap", "Poison Mushroom"]
-BONK_EQUIV = ["Spring Trap", "Damage Trap", "Bonk Trap"]
-POSSESION_EQUIV = ["Poison Trap", "Possession Trap", "Laughter Trap"]
+ICE_TRAP_EQUIV = ["Freeze Trap", "Frozen Trap", "Ice Trap", "Paralyze Trap", "Chaos Control Trap", "Bubble Trap", "Ice Floor Trap"]
+BOMB_EQUIV = ["TNT Barrel Trap", "Bomb", "Fire Trap", "Items to Bombs", "Burn Trap"]
+BANANA_TRAP_EQUIV = ["Stun Trap", "Banana Trap", "Thwimp Trap", "Hiccup Trap", "Push Trap", "Pie Trap", "Banana Peel Trap", "Slip Trap"]
+GHOST_EQUIV = ["OmoTrap", "Ghost", "Bee Trap", "Police Trap", "Nut Trap", "Army Trap", "Buyon Trap", "Animal Trap", "Fishin' Boo Trap", "Enemy Ball Trap"]
+POISON_MUSH_EQUIV = [ "Tiny Trap", "Poison Mushroom", "Iron Boots Trap", "Poison Trap", "Electrocution Trap", "Slow Trap", "Frog Trap", "Slowness Trap"]
+BONK_EQUIV = ["Spring Trap", "Damage Trap", "Bonk Trap", "Jumping Jacks Trap"]
+POSSESION_EQUIV = ["Possession Trap", "Laughter Trap", "My Turn! Trap", "Blue Balls Curse", "Controller Drift Trap"]
+FEAR_EQUIV = ["Fear Trap", "Confuse Trap", "Confound Trap", "Confusion Trap", "Icy Hot Pants Trap", "Paralysis Trap"]
+SPOOKY_EQUIV = ["Spooky Time", "Deisometric Trap", "Fake Transition", "Ghost Chat", "SvC Effect", "Pixellation Trap", "144p Trap", "Spotlight Trap", "Pixelate Trap", "Fish Eye Trap"]
+SQUASH_EQUIV = ["Squash Trap", "W I D E Trap", "Meteor Trap", "Spike Ball Trap", "Whoops! Trap", "Paper Trap", "Rockfall Trap"]
+NOVAC_EQUIV = ["No Vac Trap", "Eject Ability", "Depletion trap", "Disable B Trap", "Disable Z Trap", "Dry Trap", "Cursed Ball Trap"]
 
-trap_id_list = [8125, 8126, 8130, 8131, 8132, 8141, 8142]
-ACCEPTED_TRAPS = ICE_TRAP_EQUIV+BOMB_EQUIV+BANANA_TRAP_EQUIV+GHOST_EQUIV+POISON_MUSH_EQUIV+BONK_EQUIV+POSSESION_EQUIV
+trap_id_list = [8125, 8126, 8130, 8131, 8132, 8141, 8142, 8143, 8145, 8146, 8147]
+ACCEPTED_TRAPS: list[str] = (ICE_TRAP_EQUIV+BOMB_EQUIV+BANANA_TRAP_EQUIV+GHOST_EQUIV+POISON_MUSH_EQUIV+BONK_EQUIV+POSSESION_EQUIV+
+                  FEAR_EQUIV+SPOOKY_EQUIV+SQUASH_EQUIV+NOVAC_EQUIV)
+
+class CurrencyReceiver:
+    """
+    Sends currency game data from Archipelago server.
+    """
+    from .client.wallet import Wallet
+    def __init__(self, wallet: Wallet):
+        self.wallet = wallet
+
+    def send_to_wallet(self, item: CurrencyItemData):
+        """
+        Sends currency to the game client based upon the item data received from Archipelago.
+
+        :param item: The currency item data to be sent to the client.
+        """
+        if not isinstance(item, CurrencyItemData):
+            return
+        self.wallet.add_to_wallet(item.currencies)

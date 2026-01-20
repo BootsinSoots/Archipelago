@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
 from Options import Toggle, Range, PerGameCommonOptions, Choice, StartInventoryPool, DeathLinkMixin, OptionSet, \
-    DefaultOnToggle
-
+    DefaultOnToggle, OptionCounter
+from .Items import trap_filler_items
 
 class LuigiWalkSpeed(Choice):
     """Choose how fast Luigi moves. Speeds above normal may cause OoB issues"""
@@ -13,121 +13,67 @@ class LuigiWalkSpeed(Choice):
     option_schmoovin = 2
     default = 0
 
+class GameMode(Choice):
+    """
+    Enable alternate game modes:
+
+    Default - Play through the mansion as usual
+
+    Poltergust Hunt - You must first find the Poltergust 3000 inside a piece of furniture before use. Enabling this will
+    automatically add certain pieces of furniture to the pool of locations even if other furniture options are turned off.
+    This will also unlock all doors in the mansion. This is intended as a short form game mode
+    """
+    display_name = "Game Mode"
+    internal_name = "game_mode"
+    option_default = 0
+    option_poltergust_hunt = 1
+    default = 0
+
+class SendHints(DefaultOnToggle):
+    """
+    If enabled, in-game hints will be sent out to the multiworld when discovered.
+
+    This is automatically disabled if hint distribution is set to Junk, Disabled or Vague
+    """
+    display_name = "Send Hints"
+    internal_name = "send_hints"
 
 class RandomMusic(Toggle):
     """Randomize Music"""
     display_name = "Music Randomization"
     internal_name = "random_music"
 
+class ShowSelfReceivedItems(Choice):
+    """Choose whether you want all in-game received messages for your own items, only progression, or none at all."""
+    display_name = "Show Self Received Item Messaging"
+    internal_name = "self_item_messages"
+    option_all_messages = 0
+    option_progression_items_only = 1
+    option_nothing = 2
+    default = 0
 
-class BundleWeight(Range):
-    """Set the weight for how often coin & bill bundles get chosen as filler."""
-    display_name = "Money Bundle Weight"
-    internal_name = "bundle_weight"
+class BetterVacuum(Range):
+    """
+    Choose how many vacuum upgrades to include, up to 5."""
+    display_name = "Vacuum Upgrades"
+    internal_name = "vacuum_upgrades"
     range_start = 0
-    range_end = 100
-    default = 10
-
-
-class CoinWeight(Range):
-    """Set the weight for how often coins get chosen as filler."""
-    display_name = "Coin Weight"
-    internal_name = "coin_weight"
-    range_start = 0
-    range_end = 100
-    default = 15
-
-
-class BillWeight(Range):
-    """Set the weight for how often bills get chosen as filler."""
-    display_name = "Bill Weight"
-    internal_name = "bill_weight"
-    range_start = 0
-    range_end = 100
-    default = 10
-
-
-class BarsWeight(Range):
-    """Set the weight for how often gold bars get chosen as filler."""
-    display_name = "Gold Bars Weight"
-    internal_name = "bars_weight"
-    range_start = 0
-    range_end = 100
-    default = 10
-
-
-class GemsWeight(Range):
-    """Set the weight for how often gemstones get chosen as filler."""
-    display_name = "Gems Weight"
-    internal_name = "gems_weight"
-    range_start = 0
-    range_end = 100
-    default = 5
-
-
-class PoisonTrapWeight(Range):
-    """Set the weight for how often poison mushrooms get chosen as traps."""
-    display_name = "Poison Trap Weight"
-    internal_name = "poison_trap_weight"
-    range_start = 0
-    range_end = 100
-    default = 15
-
-
-class BombWeight(Range):
-    """Set the weight for how often bombs get chosen as traps."""
-    display_name = "Bomb Weight"
-    internal_name = "bomb_trap_weight"
-    range_start = 0
-    range_end = 100
-    default = 15
-
-
-class IceTrapWeight(Range):
-    """Set the weight for how often ice traps get chosen as traps."""
-    display_name = "Ice Trap Weight"
-    internal_name = "ice_trap_weight"
-    range_start = 0
-    range_end = 100
-    default = 15
-
-
-class BananaTrapWeight(Range):
-    """Set the weight for how often bananas get chosen as traps."""
-    display_name = "Banana Trap Weight"
-    internal_name = "banana_trap_weight"
-    range_start = 0
-    range_end = 100
-    default = 15
-
-
-class NothingWeight(Range):
-    """Set the weight for how often nothing is chosen as filler."""
-    display_name = "'Nothing' Weight"
-    internal_name = "mothing_weight"
-    range_start = 0
-    range_end = 100
-    default = 40
-
-
-class HeartWeight(Range):
-    """Set the weight for how often hearts get chosen as filler."""
-    display_name = "Heart Weight"
-    internal_name = "heart_weight"
-    range_start = 0
-    range_end = 100
-    default = 10
-
-
-class BetterVacuum(Choice):
-    """Choose whether to include the Poltergust 4000"""
-    display_name = "Poltergust 4000"
-    internal_name = "good_vacuum"
-    option_start_with = 0
-    option_include = 1
-    option_exclude = 2
+    range_end = 5
     default = 1
 
+class Spookiness(Choice):
+    """
+    Change ambient room sounds.
+    Vanilla = unchanged ambience
+    Full Spooky = All rooms become spooky
+    Random Rooms = Random rooms become spooky
+    """
+    display_name = "Spookiness"
+    internal_name = "spookiness"
+    option_vanilla = 0
+    option_full_spooky = 1
+    option_random_rooms = 2
+    default = 0
 
 # These might end up being the same
 class StartHiddenMansion(Toggle):
@@ -150,7 +96,7 @@ class StartWithBooRadar(Choice):
 
     include: Boo Radar in pool
 
-    exclude: No Boo Radar - Boo Gates and Boosanity will be disabled if excluded
+    exclude: No Boo Radar - generation will fail if excluded while Boo Gates or Boosanity are enabled
     """
     display_name = "Boo Radar"
     internal_name = "boo_radar"
@@ -167,7 +113,21 @@ class PortraitHints(Toggle):
 
 
 class HintDistribution(Choice):
-    """Choose the level of hint from in-game hints. Will affect Portrait Ghost hints if the option is on."""
+    """
+    Choose the level of hint from in-game hints. Will affect Portrait Ghost hints if the option is on.
+
+    Junk hints will  not hint any items and instead provide funny lines
+
+    Strong hints will favor hinting progression items when choosing hints
+
+    Balanced will pick between progression items or other items to hint, but slightly favor progression items
+
+    Chaos wil pick items completely at random, with no favoring of progression or not
+
+    Vague hints will tell you the game the item is in, but not where
+
+    Disabled hints disables hint text completely
+    """
     display_name = "Hint Distribution"
     internal_name = "hint_distribution"
     option_balanced = 0
@@ -179,7 +139,8 @@ class HintDistribution(Choice):
     default = 0
 
 class PickupAnim(DefaultOnToggle):
-    """Turn on Luigi's pickup animations"""
+    """Turn on Luigi's pickup animations.
+    Set this to false if you want to turn these animations off."""
     display_name = "Enable Pickup Animation"
     internal_name = "enable_pickup_animation"
 
@@ -228,11 +189,13 @@ class Furnisanity(OptionSet):
 
     "Treasures" turns on only locations that contain treasure (including all plants) in the vanilla game. Does not create duplicate locations
 
+    "Basement, 1st Floor, 2nd Floor, Attic, and Roof can be used to turn on all furniture pieces on that level.
+
     "Full" turns on all furniture locations and will override any other specified groups
     """
     display_name = "Furnisanity"
     internal_name = "furnisanity"
-    valid_keys = {"Hangables", "Ceiling", "Candles", "Seating", "Surfaces", "Plants", "Storage", "Drawers", "Decor", "Full", "Treasures"}
+    valid_keys = {"Hangables", "Ceiling", "Candles", "Seating", "Surfaces", "Plants", "Storage", "Drawers", "Decor", "Full", "Treasures", "Basement", "1st Floor", "2nd Floor", "Attic", "Roof"}
 
 
 class EarlyFirstKey(Toggle):
@@ -262,22 +225,30 @@ class MarioItems(Range):
     range_end = 5
     default = 5
 
+class WhatDoYouMean(Toggle):
+    """Adds locations you would never expect."""
+    display_name = "What do you mean these are locations?"
+    internal_name = "WDYM_checks"
 
-class WashroomBooCount(Range):
-    """Set the number of Boos required to reach the 1F Washroom. 0 = Starts Open"""
-    display_name = "Washroom Boo Count"
-    internal_name = "washroom_boo_count"
-    range_start = 0
-    range_end = 50
-    default = 5
+# class WashroomBooCount(Range):
+#     """Set the number of Boos required to reach the 1F Washroom. 0 = Starts Open"""
+#     display_name = "Washroom Boo Count"
+#     internal_name = "washroom_boo_count"
+#     range_start = 0
+#     range_end = 50
+#     default = 5
 
 
 class BalconyBooCount(Range):
-    """Set the number of Boos required to reach the Balcony. 0 = Starts Open"""
+    """
+    Set the number of Boos required to reach the Balcony. 0 = Starts Open
+
+    If Boosanity is off, this count may be reduced to make the seed viable, based on spawn location
+    """
     display_name = "Balcony Boo Count"
     internal_name = "balcony_boo_count"
     range_start = 0
-    range_end = 36
+    range_end = 50
     default = 20
 
 
@@ -310,16 +281,25 @@ class Portrification(Toggle):
     display_name = "Portrification"
     internal_name = "portrification"
 
+class SilverPortrait(Toggle):
+    """Adds locations on getting a Silver border for catching a portrait ghost"""
+    display_name = "Silver Border Portrait Ghosts"
+    internal_name = "silver_ghosts"
+
+class GoldPortrait(Toggle):
+    """Adds locations on getting a Gold border for catching a portrait ghost"""
+    display_name = "Gold Border Portrait Ghosts"
+    internal_name = "gold_ghosts"
 
 class Enemizer(Choice):
     """
     Choose if and how ghosts are randomized.
 
-    Vanilla: No ghost randomization
+    Vanilla - No ghost randomization
 
-    Randomized Elements: Randomized ghost elements and waves
+    Randomized Elements - Randomized ghost elements and waves
 
-    No Elements: Remove ghost elements, randomize waves
+    No Elements - Remove ghost elements, randomize waves
     """
     display_name = "Enemizer"
     internal_name = "enemizer"
@@ -328,15 +308,42 @@ class Enemizer(Choice):
     option_no_elements = 2
     default = 0
 
+class VacuumStart(DefaultOnToggle):
+    """
+    Enable Luigi to have the Poltergust 3000 at the start.
+    """
+    display_name = "Starting Vacuum"
+    internal_name = "vacuum_start"
 
-class DoorRando(Toggle):
-    """Randomize which doors are locked or unlocked in the mansion."""
+
+class DoorRando(Choice):
+    """
+    Various options regarding which doors are locked or unlocked in the mansion.
+
+    Off - Doors are in their vanilla state
+
+    Randomized - All doors are randomly locked or unlocked
+
+    Suit Doors - Randomize doors but guarantee the Suit Key Doors remain locked
+
+    All Doors Unlocked - Unlocks all doors in the mansion. Without Boo gates, this will make King Boo immediately accessible.
+
+    All Doors Locked - Locks all door in the mansion.
+    """
     display_name = "Door Randomization"
     internal_name = "door_rando"
+    option_off = 0
+    option_randomized = 1
+    option_suit_doors = 2
+    option_all_doors_unlocked = 3
+    option_all_doors_locked = 4
+    default = 0
+
 
 
 class LuigiFearAnim(DefaultOnToggle):
-    """Turn on Luigi being scared by ghosts if they spawn close to him"""
+    """Turn on Luigi being scared by ghosts if they spawn close to him.
+    Set this to false if you want to turn it off"""
     display_name = "Enable Fear Animation"
     internal_name = "enable_fear_animation"
 
@@ -437,7 +444,9 @@ class BooHealthOption(Choice):
 
 class BooHealthValue(Range):
     """
-    Choose the health value all Boos will have it the Boo Health Option is Choice. Range between 1 and 999
+    Choose the health value all Boos will have if the Boo Health Option is Choice. Range between 1 and 999
+    If boo_health_option is set to random_values, if you set this to "100: 50", the max value used will be 100 instead.
+    If you want a custom range, use a random range function: https://archipelago.gg/tutorial/Archipelago/advanced_settings_en#random-numbers
 
     Values over 150 may not be catchable within the current room and logic cannot account for where they move
 
@@ -480,6 +489,24 @@ class BooAnger(Toggle):
     internal_name = "boo_anger"
     default = 0
 
+class EnergyLink(Toggle):
+    """
+    Games that support energylink will be able to send and retrieve 'energy' from the team's pool.
+    If no team is present, the default team will be used (0).
+
+    'Energy' in the context of Luigi's Mansion will be money.
+    """
+    display_name = "EnergyLink"
+    internal_name = "energy_link"
+
+class RingLink(Toggle):
+    """
+    Games that support ringlink will be able to send and retrieve 'rings' sent from another ringlink game.
+
+    'Rings' in the context of Luigi's Mansion will be Coins.
+    """
+    display_name = "RingLink"
+    internal_name = "ring_link"
 
 class TrapLink(Toggle):
     """
@@ -487,7 +514,6 @@ class TrapLink(Toggle):
     """
     display_name = "TrapLink"
     internal_name = "trap_link"
-
 
 class GoldMice(Toggle):
     """
@@ -517,35 +543,24 @@ class LuigiMaxHealth(Range):
     range_end = 1000
     default = 100
 
-class PossTrapWeight(Range):
+class BoolossusDifficulty(Choice):
     """
-    Set the weight for how often possession traps get chosen as traps.
+    Alter the difficulty of the mini-boos in the Boolossus fight. Easy slows them down, Hard speeds them up.
     """
-    display_name = "Possession Trap Weight"
-    internal_name = "poss_trap_weight"
-    range_start = 0
-    range_end = 100
-    default = 5
+    display_name = "Boolossus Diffculty"
+    internal_name = "boolossus_difficulty"
+    option_easy = 0
+    option_normal = 1
+    option_hard = 2
+    default = 1
 
-class BonkTrapWeight(Range):
+class CallMario(Toggle):
     """
-    Set the weight for how often bonk traps get chosen as traps.
+    Let everyone know you're looking for Mario in the client!
+    (CAUTION: THIS CAN EASILY SPAM THE CLIENT WITH MESSAGES)
     """
-    display_name = "Bonk Trap Weight"
-    internal_name = "bonk_trap_weight"
-    range_start = 0
-    range_end = 100
-    default = 15
-
-class GhostTrapWeight(Range):
-    """
-    Set the weight for how often ghosts get chosen as traps.
-    """
-    display_name = "Ghost Weight"
-    internal_name = "ghost_weight"
-    range_start = 0
-    range_end = 100
-    default = 15
+    display_name = "Press A to Mario"
+    internal_name = "call_mario"
 
 class DoorModelRando(Toggle):
     """
@@ -554,22 +569,86 @@ class DoorModelRando(Toggle):
     display_name = "Randomized Door Model"
     internal_name = "door_model_rando"
 
+class TrapWeights(OptionCounter):
+    """
+    Set Trap Weights for traps chosen as filler items, if Trap Percentage is greater than 0
+    Each weight represents a number of balls in a lottery roller with that trap on it.
+    So if you had Banana Trap set to 3, and Ice Trap set to 7, and the rest set to 0,
+    you would have a 3/10 for a Banana Trap to be chosen when rolling for trap fillers
+    Must be between 0 and 100
+    """
+    display_name = "Trap Weights"
+    internal_name = "trap_weights"
+    min = 0
+    max = 100
+    valid_keys = trap_filler_items.keys()
+    default = {item: data.default_weight for item, data in trap_filler_items.items()}
+    all_on_dict = {item: 100 for item in trap_filler_items.keys()}
+    all_off_dict = {item: 0 for item in trap_filler_items.keys()}
+
+class FillerWeights(OptionCounter):
+    """
+    Set filler weights for filler items.
+    Each weight represents a number of balls in a lottery roller with that trap on it.
+    So if you had Banana Trap set to 3, and Ice Trap set to 7, and the rest set to 0,
+    you would have a 3/10 for a Banana Trap to be chosen when rolling for trap fillers
+    Must be between 0 and 100
+    """
+    display_name = "Filler Weights"
+    internal_name = "filler_weights"
+    min = 0
+    max = 100
+    valid_keys = ["Bundles", "Coins", "Bills", "Bars", "Gems", "Dust", "Hearts"]
+    default = {
+        "Bundles": 10,
+        "Coins": 15,
+        "Bills": 10,
+        "Bars": 10,
+        "Gems": 5,
+        "Dust": 40,
+        "Hearts": 10
+    }
+    all_on_dict = {item: 100 for item in valid_keys}
+    all_off_dict = {item: 0 for item in valid_keys}
 
 class TrapPercentage(Range):
     """
-    Set the percentage of filler items that are traps.
+    Set the percentage of filler items that are traps. Default percentage is 0%
     """
     display_name = "Trap Percentage"
     internal_name = "trap_percentage"
     range_start = 0
     range_end = 100
-    default = 50
+    default = 0
+
+class RingLinkClientMsgs(DefaultOnToggle):
+    """
+    Enables messages in the client whenever a ring link is received.
+    """
+    display_name = "Enable Ring Link Client Message"
+    internal_name = "enable_ring_client_msg"
+
+class TrapLinkClientMsgs(DefaultOnToggle):
+    """
+    Enables messages in the client whenever a trap link is received.
+    """
+    display_name = "Enable Trap Link Client Message"
+    internal_name = "enable_trap_client_msg"
+
+class Grassanity(Toggle):
+    """
+    Add grass locations to the location pool
+    """
+    display_name = "Grassanity"
+    internal_name = "grassanity"
 
 @dataclass
 class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     rank_requirement: RankRequirement
+    game_mode: GameMode
+    vacuum_start: VacuumStart
     walk_speed: LuigiWalkSpeed
-    good_vacuum: BetterVacuum
+    vacuum_upgrades: BetterVacuum
     boo_radar: StartWithBooRadar
     hidden_mansion: StartHiddenMansion
     enable_fear_animation: LuigiFearAnim
@@ -583,20 +662,27 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     random_spawn: RandomSpawn
     portrait_hints: PortraitHints
     hint_distribution: HintDistribution
+    send_hints: SendHints
     toadsanity: Toadsanity
     gold_mice: GoldMice
     furnisanity: Furnisanity
     boosanity: Boosanity
     portrification: Portrification
+    silver_ghosts: SilverPortrait
+    gold_ghosts: GoldPortrait
     lightsanity: Lightsanity
     walksanity: Walksanity
     speedy_spirits: SpeedySpirits
+    WDYM_checks: WhatDoYouMean
+    grassanity: Grassanity
     boo_gates: BooGates
+    self_item_messages: ShowSelfReceivedItems
     mario_items: MarioItems
-    washroom_boo_count: WashroomBooCount
+    #washroom_boo_count: WashroomBooCount
     balcony_boo_count: BalconyBooCount
     final_boo_count: FinalBooCount
     king_boo_health: KingBooHealth
+    boolossus_difficulty: BoolossusDifficulty
     boo_health_option: BooHealthOption
     boo_health_value: BooHealthValue
     boo_speed: BooSpeed
@@ -605,20 +691,14 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     extra_boo_spots: ExtraBooSpots
     chest_types: ChestTypes
     trap_chests: TrapChestType
+    call_mario: CallMario
+    spookiness: Spookiness
     trap_link: TrapLink
+    enable_trap_client_msg: TrapLinkClientMsgs
+    energy_link: EnergyLink
+    ring_link: RingLink
+    enable_ring_client_msg: RingLinkClientMsgs
+    filler_weights: FillerWeights
     trap_percentage: TrapPercentage
-    bundle_weight: BundleWeight
-    coin_weight: CoinWeight
-    bill_weight: BillWeight
-    bars_weight: BarsWeight
-    gems_weight: GemsWeight
-    poison_trap_weight: PoisonTrapWeight
-    bomb_trap_weight: BombWeight
-    ice_trap_weight: IceTrapWeight
-    banana_trap_weight: BananaTrapWeight
-    poss_trap_weight: PossTrapWeight
-    bonk_trap_weight: BonkTrapWeight
-    ghost_weight: GhostTrapWeight
-    nothing_weight: NothingWeight
-    heart_weight: HeartWeight
+    trap_weights: TrapWeights
     start_inventory_from_pool: StartInventoryPool

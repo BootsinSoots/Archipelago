@@ -15,7 +15,8 @@ jobs:
       uses: Eijebong/ap-actions/fuzz@main
       with:
         apworld-path: worlds/luigismansion
-        ap-version: '0.6.1'
+        ap-version: "latest"
         python-version: '3.12'
-        runs: 1000
+        runs: 15000
         yamls-per-run: 1
+        meta: "${{github.workspace}}/worlds/luigismansion/luigis-mansion-meta.yml"
