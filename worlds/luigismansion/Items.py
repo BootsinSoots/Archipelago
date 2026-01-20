@@ -283,12 +283,56 @@ trap_filler_items: Dict[str, LMItemData] = {
         update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=9)], default_weight=5)
 }
 
+treasure_bundles: Dict[str, LMItemData] = {
+    "Hidden Room Treasure Bundle":
+        CurrencyItemData(148,
+                         { CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 2,
+                           CURRENCY_NAME.SAPPHIRE: 1, CURRENCY_NAME.EMERALD: 1, CURRENCY_NAME.RUBY: 1}),
+    "Laundry Room Treasure Bundle":
+        CurrencyItemData(149,
+                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 2}),
+    "Dining Room Treasure Bundle":
+        CurrencyItemData(150,
+                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 2,
+                          CURRENCY_NAME.DIAMOND: 1}),
+    "Boneyard Flower Bundle":
+        CurrencyItemData(151,
+                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 30, CURRENCY_NAME.GOLD_BARS: 2,
+                          CURRENCY_NAME.GOLD_DIAMOND: 1}),
+    "Billiards Room Treasure Bundle":
+        CurrencyItemData(152,
+                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 2,
+                          CURRENCY_NAME.DIAMOND: 1}),
+    "Rec Room Treasure Bundle":
+        CurrencyItemData(153,
+                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 2,
+                          CURRENCY_NAME.DIAMOND: 1}),
+    "Courtyard Treasure Bundle":
+        CurrencyItemData(154,
+                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 2}),
+    "Guest Room Treasure Bundle":
+        CurrencyItemData(155,
+                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 2,
+                          CURRENCY_NAME.DIAMOND: 1}),
+    "2F Washroom Treasure Bundle":
+        CurrencyItemData(156,
+                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 1}),
+    "Telephone Room Treasure Bundle":
+        CurrencyItemData(157,
+                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 1}),
+    "Ceramics Studio Treasure Bundle":
+        CurrencyItemData(158,
+                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 2,
+                          CURRENCY_NAME.DIAMOND: 1})
+}
+
 filler_items = {**other_filler_items,
                 **trap_filler_items}
 
 ALL_ITEMS_TABLE = {**ITEM_TABLE,
                    **BOO_ITEM_TABLE,
-                   **filler_items}
+                   **filler_items,
+                   **treasure_bundles,}
 
 
 BOO_AP_ID_LIST: list[int] = [LMItem.get_apid(value.code) for value in BOO_ITEM_TABLE.values()]

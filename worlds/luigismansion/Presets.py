@@ -38,6 +38,7 @@ all_random_settings = { #TODO: Rename this because FillerWeights and TrapWeights
     LMOptions.KingBooHealth.internal_name:             "random",
     LMOptions.BoolossusDifficulty.internal_name:       "random",
     LMOptions.MarioItems.internal_name:                "random",
+    LMOptions.TreasureBundles.internal_name:           "rendom",
     # LMOptions.WashroomBooCount.internal_name:          "random",
     LMOptions.BalconyBooCount.internal_name:           "random",
     LMOptions.FinalBooCount.internal_name:             "random",

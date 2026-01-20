@@ -28,6 +28,7 @@ class LMWeb(WebWorld):
             LuigiOptions.GameMode,
             LuigiOptions.VacuumStart,
             LuigiOptions.MarioItems,
+            LuigiOptions.TreasureBundles,
             LuigiOptions.BooGates,
             # LuigiOptions.WashroomBooCount,
             LuigiOptions.BalconyBooCount,

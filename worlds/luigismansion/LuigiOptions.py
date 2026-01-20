@@ -112,6 +112,13 @@ class PortraitHints(Toggle):
     internal_name = "portrait_hints"
 
 
+class TreasureBundles(Toggle):
+    """
+    Choose to add vanilla treasure bundles as filler to the item pool
+    """
+    display_name = "Treasure Bundles"
+    internal_name = "treasure_bundles"
+
 class HintDistribution(Choice):
     """
     Choose the level of hint from in-game hints. Will affect Portrait Ghost hints if the option is on.
@@ -678,6 +685,7 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     boo_gates: BooGates
     self_item_messages: ShowSelfReceivedItems
     mario_items: MarioItems
+    treasure_bundles: TreasureBundles
     #washroom_boo_count: WashroomBooCount
     balcony_boo_count: BalconyBooCount
     final_boo_count: FinalBooCount
