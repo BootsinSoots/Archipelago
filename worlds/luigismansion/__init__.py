@@ -771,6 +771,7 @@ class LMWorld(World):
             self.options.boo_health_option.value == 2):
             self.finished_post_generation.wait()
 
+        # If current world required hint distribution, update the output hint dict
         if self.options.hint_distribution != 5 and self.options.hint_distribution != 1:
             output_data["Hints"] = self.hints
 
