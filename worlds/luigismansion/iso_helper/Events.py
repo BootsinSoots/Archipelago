@@ -180,19 +180,19 @@ class EventChanges:
             match req_boo_count:
                 case 1:
                     count_one: str = str(req_boo_count)
-                    case_one: str = str_boo_captured
+                    case_one: str = str_boo_captured if not boosanity_enabled else str_not_enough
                 case 2:
                     count_one: str = "1"
                     count_two: str = str(req_boo_count)
                     case_one: str = str_not_enough
-                    case_two: str = str_boo_captured
+                    case_two: str = str_boo_captured if not boosanity_enabled else str_not_enough
                 case 3:
                     count_one: str = "1"
                     count_two: str = "2"
                     count_three: str = str(req_boo_count)
                     case_one: str = str_not_enough
                     case_two: str = str_not_enough
-                    case_three: str = str_boo_captured
+                    case_three: str = str_boo_captured if not boosanity_enabled else str_not_enough
                 case _:
                     count_one: str = str(req_boo_count - 3)
                     count_two: str = str(req_boo_count - 2)
@@ -201,16 +201,16 @@ class EventChanges:
                     case_one: str = str_not_enough
                     case_two: str = str_not_enough
                     case_three: str = str_not_enough
-                    case_four: str = str_boo_captured
+                    case_four: str = str_boo_captured if not boosanity_enabled else str_not_enough
 
             # Update all values based on the counts/cases identified.
             lines = lines.replace("{Count1}", "(" + count_one + ")").replace("{Case1}", "\"" + case_one + "\"")
             lines = lines.replace("{Count2}", "(" + count_two + ")" if count_two else "")
             lines = lines.replace("{Case2}", "\"" + case_two + "\"" if case_two else "")
-            lines = lines.replace("{Count3}", "(" + count_two + ")" if count_two else "")
-            lines = lines.replace("{Case3}", "\"" + case_two + "\"" if case_two else "")
-            lines = lines.replace("{Count4}", "(" + count_two + ")" if count_two else "")
-            lines = lines.replace("{Case4}", "\"" + case_two + "\"" if case_two else "")
+            lines = lines.replace("{Count3}", "(" + count_three + ")" if count_three else "")
+            lines = lines.replace("{Case3}", "\"" + case_three + "\"" if case_three else "")
+            lines = lines.replace("{Count4}", "(" + count_four + ")" if count_four else "")
+            lines = lines.replace("{Case4}", "\"" + case_four + "\"" if case_four else "")
             lines = lines.replace("{ReqCount}", str(req_boo_count))
 
             self._update_custom_event(event_no, True, lines, None)
