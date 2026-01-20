@@ -1,5 +1,7 @@
 from typing import NamedTuple, Dict, Set, Optional
 
+from win32comext.ifilter.ifilter import BindIFilterFromStream
+
 from BaseClasses import Item
 from BaseClasses import ItemClassification as IC
 from .Helper_Functions import LMRamData
