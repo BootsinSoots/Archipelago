@@ -21,7 +21,7 @@ from . import Items, Locations, Options, Regions, Rules, web_world
 # This implementation in particular has the following additional files, each covering one topic:
 # regions.py, locations.py, rules.py, items.py, options.py and web_world.py.
 # It is recommended that you read these in that specific order, then come back to the world class.
-class GameQuestWorld(World):
+class GameWorld(World):
     """
     APQuest is a minimal 8bit-era inspired adventure game with grid-like movement.
     Good games don't need more than six checks.
