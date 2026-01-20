@@ -20,6 +20,7 @@ class LMRegionInfo(NamedTuple):
     pos_y: float = 0.0000000
     pos_z: float = 0.0000000
     element_type: str = None
+    allow_element_rando: bool = True
 
 class LMRegion(Region):
     region_data: LMRegionInfo
@@ -33,7 +34,7 @@ REGION_LIST: dict[str, LMRegionInfo] = {
     "Foyer": LMRegionInfo(2, 1, 2, 2, ["Heart Key", "Family Hallway Key", "Parlor Key"],
         ["Heart Key", "Family Hallway Key", "Parlor Key"], [3, 34, 33], True, -7.640748, 0.000000, 145.174300),
     "Parlor": LMRegionInfo(2, 2, 35, 36, ["Parlor Key", "Heart Key", "Anteroom Key"],
-        ["Parlor Key", "Anteroom Key"], [34, 38], False, -43.294357, 550.000000, -1775.288450),
+        ["Parlor Key", "Anteroom Key"], [34, 38], False, -43.294357, 550.000000, -1775.288450, "No Element", False),
     "Family Hallway": LMRegionInfo(2, 2, 29, 30, []),
     "1F Hallway": LMRegionInfo(2, 1, 6, 6, []),
     "Anteroom": LMRegionInfo(2, 2, 39, 42, ["Wardrobe Key", "Anteroom Key", "Parlor Key"],
@@ -50,9 +51,9 @@ REGION_LIST: dict[str, LMRegionInfo] = {
         -3331.658690, 550.000000, -198.970337),
     "Twins' Room": LMRegionInfo(2, 2, 25, 27, ["Twins Bedroom Key", "Family Hallway Key"], ["Twins Bedroom Key"], [28],
         True, -1729.586790, 550.000000, 116.055779),
-    "Laundry Room": LMRegionInfo(2, 1, 5, 5, ["Laundry Key", "Butler's Room Key", "Heart Key"],
-        ["Laundry Key", "Butler's Room Key"], [1, 7], False, -3165.112550, 0.000000, -804.770508, "No Element"),
-    "Butler's Room": LMRegionInfo(2, 1, 0, 0, ["Butler's Room Key", "Laundry Key", "Heart Key"], ["Butler's Room Key"],
+    "Laundry Room": LMRegionInfo(2, 1, 5, 5, ["Laundry Room Key", "Butler's Room Key", "Heart Key"],
+        ["Laundry Room Key", "Butler's Room Key"], [1, 7], False, -3165.112550, 0.000000, -804.770508, "No Element"),
+    "Butler's Room": LMRegionInfo(2, 1, 0, 0, ["Butler's Room Key", "Laundry Room Key", "Heart Key"], ["Butler's Room Key"],
         [1], True, -3800.646000, 0.000000, -327.291077),
     "Fortune-Teller's Room": LMRegionInfo(2, 1, 3, 3, ["Fortune Teller Key", "Mirror Room Key"],
         ["Fortune Teller Key", "Mirror Room Key"], [4, 5], True, 1807.135740, 0.000000, 14.838852),
@@ -104,11 +105,11 @@ REGION_LIST: dict[str, LMRegionInfo] = {
     "2F Bathroom": LMRegionInfo(2, 2, 45, 48, ["2F Bathroom Key", "Upper 2F Stairwell Key"], ["2F Bathroom Key"], [48],
         True, -1902.854130, 550.000000, -4660.501950),
     "Astral Hall": LMRegionInfo(2, 2, 40, 43, ["Astral Hall Key", "Upper 2F Stairwell Key"],
-        ["Astral Hall Key", "Observatory Key"], [44, 40], True, 2023.579290, 550.000000, -2915.000000),
+        ["Astral Hall Key", "Observatory Key"], [44, 40], True, 2023.579290, 550.000000, -2915.000000, "No Element", False),
     "Observatory": LMRegionInfo(2, 2, 41, 44, []),
     "Sealed Room": LMRegionInfo(2, 2, 36, 37, [], element_type="No Element"),
     "Sitting Room": LMRegionInfo(2, 2, 27, 28, ["Sitting Room Key", "Guest Room Key"],
-        ["Sitting Room Key", "Guest Room Key"], [29, 30], True, 2225.465090, 550.000000, -98.163559),
+        ["Sitting Room Key", "Guest Room Key"], [29, 30], True, 2225.465090, 550.000000, -98.163559, "No Element", False),
     "Guest Room": LMRegionInfo(2, 2, 28, 29, ["Guest Room Key", "Sitting Room Key"], ["Guest Room Key"], [30], True,
         3637.69727, 550.000000, 201.316391),
     "Safari Room": LMRegionInfo(2, 3, 52, 55, ["Safari Room Key", "East Attic Hallway Key", "Balcony Key"],
@@ -117,7 +118,7 @@ REGION_LIST: dict[str, LMRegionInfo] = {
     "West Attic Hallway": LMRegionInfo(2, 3, 49, 57, []),
     "Artist's Studio": LMRegionInfo(2, 3, 57, 60, [], element_type="No Element"),
     "Balcony": LMRegionInfo(2, 3, 59, 62, []),
-    "Armory": LMRegionInfo(2, 3, 48, 51, ["Armory Key", "Balcony Key", "Telephone Room Key"],
+    "Armory": LMRegionInfo(2, 3, 48, 51, ["Armory Key", "Diamond Key", "Telephone Room Key"],
         ["Armory Key", "Ceramics Studio Key"], [50, 51], True, -2541.662600, 1100.000000, -40.361595, "No Element"),
     "Ceramics Studio": LMRegionInfo(2, 3, 55, 58, ["Ceramics Studio Key", "Armory Key", "Telephone Room Key"],
         ["Ceramics Studio Key", "Armory Key"], [50], True, -2397.3373540, 1100.000000, -1579.717410),
@@ -130,6 +131,7 @@ REGION_LIST: dict[str, LMRegionInfo] = {
     "Gallery": LMRegionInfo(6, 1, 0, 0, [])
 }
 
+TOAD_SPAWN_LIST: list[str] = ["Foyer", "Courtyard", "Wardrobe Balcony", "1F Washroom"]
 
 vanilla_door_state = {
         34: 0,
@@ -189,10 +191,14 @@ vanilla_door_state = {
     }
 
 def set_ghost_type(world: "LMWorld", ghost_list: dict):
+    types: list[str] = ["Fire", "Water", "Ice", "No Element"]
+    weights: list[int] = [2, 2, 2, 8]
+
     for region_name in ghost_list:
-        types = ["Fire", "Water", "Ice", "No Element"]
-        weights = [2, 2, 2, 8]
-        ghost_type = world.random.choices(types, weights, k=1)[0]
+        if not REGION_LIST[region_name].allow_element_rando:
+            ghost_type = "No Element"
+        else:
+            ghost_type = world.random.choices(sorted(types), weights, k=1)[0]
         ghost_list.update({region_name: ghost_type})
 
 

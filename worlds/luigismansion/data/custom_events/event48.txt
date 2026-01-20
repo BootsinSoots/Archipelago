@@ -11,8 +11,8 @@
 <FLAGON>(25)
 <FLAGON>(34)
 <FLAGON>(35)
-<FLAGON>(53)
 <FLAGON>(71)
+{VacStartFlag}
 {BOO RADAR}
 <HPMAX>({LUIGIMAXHP})
 <ACTOR>"demo_luigi"<HP>({LUIGIMAXHP})
