@@ -6,6 +6,7 @@ from .Constants.Names import region_names as RegionName
 class GameRegionData(NamedTuple):
     region: str
     type: str  # type of randomization for GER
+    parent_region: Optional[str]
 
 
 
