@@ -1,0 +1,1 @@
+from .Constants.Names import location_names as Location
