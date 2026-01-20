@@ -1,0 +1,1 @@
+LOCATION1 = "Location1"

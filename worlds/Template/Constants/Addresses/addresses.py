@@ -1,0 +1,1 @@
+JOHN_DOE_ADDRESS = "John Doe Address"
