@@ -112,5 +112,3 @@ def get_hints_by_option(multiworld: MultiWorld, player_hints: set[int]) -> None:
                                "Class": icolor}}
                 already_hinted_locations.append(loc)
                 world.hints.update(hint)
-        world.finished_hints.set()
-
