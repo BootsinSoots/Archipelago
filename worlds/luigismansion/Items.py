@@ -238,6 +238,31 @@ BOO_ITEM_TABLE: dict[str, LMItemData] = {
         update_ram_addr=[LMRamData(0, bit_position=1)]),
 }
 
+PORTRAIT_ITEMS: dict[str, LMItemData] = {
+    "Shivers's Candelabra": LMItemData("Portrait Spawner", 172, IC.progression, update_ram_addr=),
+    "Neville's Book": LMItemData("Portrait Spawner", 173, IC.progression, update_ram_addr=),
+    "Lydia's Brush": LMItemData("Portrait Spawner", 174, IC.progression, update_ram_addr=),
+    "Chauncey's Pacifier": LMItemData("Portrait Spawner", 175, IC.progression, update_ram_addr=),
+    "Whirlindas' Dance Steps": LMItemData("Portrait Spawner", 176, IC.progression, update_ram_addr=),
+    "Melody's Music Sheets": LMItemData("Portrait Spawner", 177, IC.progression, update_ram_addr=),
+    "Mr. Luggs's Utensils": LMItemData("Portrait Spawner", 178, IC.progression, update_ram_addr=),
+    "Spooky's Collar": LMItemData("Portrait Spawner", 179, IC.progression, update_ram_addr=),
+    "Bogmire's Shadow": LMItemData("Portrait Spawner", 180, IC.progression, update_ram_addr=),
+    "Biff's Weights": LMItemData("Portrait Spawner", 159, IC.progression, update_ram_addr=),
+    "Petunia's Shower Cap": LMItemData("Portrait Spawner", 160, IC.progression, update_ram_addr=),
+    "Nana's Yarn Balls": LMItemData("Portrait Spawner", 161, IC.progression, update_ram_addr=),
+    "Bankshot's Pool Cue": LMItemData("Portrait Spawner", 162, IC.progression, update_ram_addr=),
+    "The Twins' Mobile": LMItemData("Portrait Spawner", 163, IC.progression, update_ram_addr=),
+    "Clairvoya's Crystal Ball": LMItemData("Portrait Spawner", 164, IC.progression, update_ram_addr=),
+    "Boolossus's Bahamas Ticket": LMItemData("Portrait Spawner", 165, IC.progression, update_ram_addr=),
+    "Grimmly's Mirror": LMItemData("Portrait Spawner", 166, IC.progression, update_ram_addr=),
+    "Toy Soldiers' Wind-up Keys": LMItemData("Portrait Spawner", 167, IC.progression, update_ram_addr=),
+    "Sue Pea's Bed": LMItemData("Portrait Spawner", 168, IC.progression, update_ram_addr=),
+    "Sir Weston's Backpack": LMItemData("Portrait Spawner", 169, IC.progression, update_ram_addr=),
+    "Jarvis's Vase Collection": LMItemData("Portrait Spawner", 170, IC.progression, update_ram_addr=),
+    "Van Gore's Paintbrush": LMItemData("Portrait Spawner", 171, IC.progression, update_ram_addr=),
+}
+
 other_filler_items: Dict[str, LMItemData] = {
     "20 Coins & Bills": CurrencyItemData(119, { CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, }),
     "Sapphire": CurrencyItemData(121, { CURRENCY_NAME.SAPPHIRE: 1, }),
