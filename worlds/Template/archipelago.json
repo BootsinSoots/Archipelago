@@ -1,0 +1,6 @@
+{
+    "game": "Game",
+    "authors": ["BootsinSoots", "SomeJakeGuy"],
+    "minimum_ap_version": "0.6.6",
+    "world_version": "0.0.1"
+}
