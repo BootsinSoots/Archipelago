@@ -4,9 +4,9 @@ from BaseClasses import Region, MultiWorld
 from .Constants.Names import region_names as RegionName
 
 class GameRegionData(NamedTuple):
-    region: str
     type: str  # type of randomization for GER
-    parent_region: Optional[str]
+    entrance_regions: Optional[list[str]] # Regions with entrances to this one
+    exit_regions: Optional[list[str]] # Regions with entrances from this one
 
 
 
