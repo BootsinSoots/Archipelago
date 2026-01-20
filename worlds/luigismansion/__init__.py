@@ -633,6 +633,21 @@ class LMWorld(World):
             for _ in range(copies_to_place):
                 loc_itempool.append(self.create_item(item))
 
+        # Add treasure bundles until there is no longer space or out of bundles
+        if self.options.treasure_bundles:
+            n_locations: int = len(self.multiworld.get_unfilled_locations(self.player))
+            n_items: int = len(loc_itempool)
+            n_bundles: int = n_locations - n_items
+            bundles: list[str] = copy.deepcopy(list(treasure_bundles.keys()))
+            while n_bundles > 0:
+                item = self.random.choice(sorted(bundles)) # Always create 1 copy of each treasure bundle and not more
+                bundles.remove(item)
+                for _ in range(max(0, 1 - exclude.count(item))): # Check here for start_inventory item
+                    loc_itempool.append(self.create_item(item))
+                    n_bundles -= 1
+                if n_bundles <= 0:
+                    break
+
         # Calculate the number of additional filler items to create to fill all locations
         n_locations = len(self.multiworld.get_unfilled_locations(self.player))
         n_items = len(loc_itempool)
