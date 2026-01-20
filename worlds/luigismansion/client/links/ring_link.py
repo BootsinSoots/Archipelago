@@ -6,7 +6,7 @@ import time
 
 from .network_engine import ArchipelagoNetworkEngine, RingNetworkRequest
 from .link_base import LinkBase
-from ..wallet_manager import WalletManager, _remove_currencies
+from ..wallet import Wallet
 from ..constants import AP_LOGGER_NAME
 from ...game.Currency import CURRENCY_NAME
 
@@ -21,18 +21,20 @@ class SlotDataConstants:
     SLOT_DATA = "slot_data"
 
 class RingLink(LinkBase):
-    wallet_manager: WalletManager
-    ring_multiplier = 5
+    wallet: Wallet
+    ring_multiplier = 1
     timer_start: float = time.time()
     pending_rings: int = 0
     remote_pending_rings: int = 0
-    remote_rings_sent: int = 0
-    enable_logger: bool = True
+    remote_rings_received: bool = False
+    rings_received_by_link: int = 0
+    previous_coins: int = 0
+    initialized: bool = False
 
-    def __init__(self, network_engine: ArchipelagoNetworkEngine, wallet_manager: WalletManager):
+    def __init__(self, network_engine: ArchipelagoNetworkEngine, wallet: Wallet):
         super().__init__(friendly_name=RingLinkConstants.FRIENDLY_NAME, slot_name=RingLinkConstants.SLOT_NAME,
             network_engine=network_engine)
-        self.wallet_manager = wallet_manager
+        self.wallet = wallet
         self.id = _get_uuid()
 
     def on_connected(self, args):
@@ -49,38 +51,41 @@ class RingLink(LinkBase):
             base_amount = data["amount"]
             amount = _calc_rings(self, base_amount)
 
-            calculated_ring_worth = self.wallet_manager.wallet.get_calculated_amount_worth(1)
-            coins_current_amt: int = self.wallet_manager.wallet.get_currency_amount(CURRENCY_NAME.COINS)
-            amount_difference: int = amount * calculated_ring_worth
             if amount > 0:
                 if self.enable_logger:
                     logger.info("%s: You received %s coin(s)!",RingLinkConstants.FRIENDLY_NAME, amount)
-                currencies = self.wallet_manager.add_currencies(amount_difference)
-                self.wallet_manager.wallet.add_to_wallet(currencies)
-                self.remote_rings_sent += amount
+                self.wallet.add_to_wallet({ CURRENCY_NAME.COINS: amount })
+                self.remote_rings_received = True
             elif amount < 0:
                 if self.enable_logger:
-                    logger.info("%s: You lost %s coin(s).", RingLinkConstants.FRIENDLY_NAME, amount)
-                self.wallet_manager.wallet.set_specific_currency(CURRENCY_NAME.COINS, max(coins_current_amt - amount_difference, 0))
-                self.remote_rings_sent -= amount
+                    logger.info("%s: You lost %s coin(s).", RingLinkConstants.FRIENDLY_NAME, amount * -1)
+                coins_current_amt: int = self.wallet.get_currency_amount(CURRENCY_NAME.COINS)
+                self.wallet.set_specific_currency(CURRENCY_NAME.COINS, max(coins_current_amt - abs(amount), 0))
+                self.remote_rings_received = True
+            self.rings_received_by_link += amount
 
-    async def handle_ring_link_async(self, delay: int = 5):
+    async def handle_ring_link_async(self, delay: int = 1):
         if not self.is_enabled():
             return
 
         timer_end: float = time.time()
-
         # There may be instances where currency gained/lost may not equate to having a different final value
         # and/or ringlink requests may come in and cancel currency differences.
         if timer_end - self.timer_start >= delay:
-            difference = self.wallet_manager._difference
-            self.wallet_manager._difference = 0
-
-            if difference == 0:
+            difference = _get_difference(self)
+            if not _should_send_rings(self, difference):
                 return
 
-            difference -= self.remote_rings_sent
-            self.remote_rings_sent = 0
+            received_rings = self.rings_received_by_link
+            self.rings_received_by_link = 0
+            if received_rings > 0:
+                difference -= received_rings
+                if difference <= 0:
+                    return
+            elif received_rings < 0:
+                difference += received_rings
+                if difference >= 0:
+                    return
 
             await self.send_rings_async(difference * self.ring_multiplier)
             self.timer_start = time.time()
@@ -91,8 +96,12 @@ class RingLink(LinkBase):
             ring_link_req.source = self.id
 
             if self.enable_logger:
-                logger.info("%s: You sent %s rings!", RingLinkConstants.FRIENDLY_NAME, int(amount))
+                logger.info("%s: You sent %s coin(s)!", RingLinkConstants.FRIENDLY_NAME, int(amount))
             await self.network_engine.send_ring_link_request_async(ring_link_req)
+
+    def reset_ringlink(self):
+        self.rings_received_by_link = 0
+        self.initialized = False
 
 def _calc_rings(ring_link: RingLink, amount: int) -> int:
     amount_to_update, remainder = divmod(amount + ring_link.remote_pending_rings, ring_link.ring_multiplier)
@@ -106,3 +115,38 @@ def _get_uuid() -> int:
     for char in string_id:
         uid += ord(char)
     return uid
+
+def _should_send_rings(ring_link: RingLink, difference: int) -> bool:
+    should_send = True
+    max_to_be_sent: int = 500
+
+    # If the wallet difference is 0 there's nothing to send.
+    if difference == 0:
+        should_send = False
+    # If the number is outrageous, we want to avoid sending.
+    elif abs(difference) > max_to_be_sent:
+        should_send = False
+    # Lastly, if we received rings within the last update we want to avoid sending.
+    elif ring_link.remote_rings_received:
+        should_send = False
+
+    # If we're not sending we want to reset all counters.
+    if not should_send:
+        ring_link.remote_rings_received = False
+
+    return should_send
+
+def _get_difference(ring_link: RingLink) -> int:
+    previous = ring_link.previous_coins
+
+    if not ring_link.initialized:
+        ring_link.initialized = True
+        ring_link.previous_coins = ring_link.wallet.get_currency_amount(CURRENCY_NAME.COINS)
+        return 0
+    current = ring_link.wallet.get_currency_amount(CURRENCY_NAME.COINS)
+    ring_link.previous_coins = current
+    # We don't want to manage differences between negative wallet values, so we just set difference to 0.
+    if current < 0:
+        return 0
+    difference = current - previous
+    return difference

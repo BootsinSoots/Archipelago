@@ -1,0 +1,8 @@
+meta_description: Meta descriptions are fun!
+Luigi's Mansion:
+  energy_link:
+    'false': 50
+  boo_radar:
+    start_with: 50
+    include: 50
+    exclude: 0

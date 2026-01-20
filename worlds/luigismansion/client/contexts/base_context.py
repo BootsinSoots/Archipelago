@@ -14,7 +14,6 @@ from ..links.trap_link import TrapLink
 from ..links.ring_link import RingLink
 from ..links.link_base import LinkBase
 from ..wallet import Wallet
-from ..wallet_manager import WalletManager
 from ...client.constants import *
 from ...Hints import ALWAYS_HINT, PORTRAIT_HINTS
 
@@ -27,10 +26,6 @@ LUIGI_SHOUT_ADDR = 0x804EB558
 LUIGI_SHOUT_DURATION = 3 # Time in seconds of how long the mario shout lasts.
 LUIGI_SHOUT_RAMVALUE = 0xBCB84ED4
 LUIGI_SHOUT_LIST = ["Mario?", "Marrrio", "MARIO!", "MAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAARIOOOOOOOOOOOOOOOOOOOO"]
-
-
-class BaseCommandProcessor(UniversalCommandProcessor):
-    pass
 
 class BaseContext(UniversalContext):
 
@@ -57,7 +52,7 @@ class BaseContext(UniversalContext):
         self.network_engine = ArchipelagoNetworkEngine(self)
         self.wallet = Wallet()
         self.trap_link = TrapLink(self.network_engine)
-        self.ring_link = RingLink(self.network_engine, WalletManager(self.wallet))
+        self.ring_link = RingLink(self.network_engine, self.wallet)
         self.energy_link = EnergyLinkClient(self.network_engine, self.wallet)
         self.already_fired_events = False
 
@@ -93,7 +88,7 @@ class BaseContext(UniversalContext):
         # This appears to be occurring if a spawned process does not have a UI element when importing kvui/kivymd.
         from .lm_tab import build_gui, GameManager, MDLabel, MDLinearProgressIndicator
 
-        ui: GameManager = super().make_gui()
+        ui: type[GameManager] = super().make_gui()
         class LMGuiWrapper(ui):
             wallet_ui: MDLabel
             boo_count: MDLabel
@@ -115,22 +110,28 @@ class BaseContext(UniversalContext):
                 if self.ctx.check_ingame():
                     current_worth = self.ctx.wallet.get_wallet_worth()
 
-                self.wallet_ui.text = f"{format(current_worth, ',d')}/{format(total_worth, ',d')}"
+                self.wallet_ui.text = f"{format(current_worth, ',d')} / Required Money: {format(total_worth, ',d')}"
                 if total_worth != 0:
-                    self.wallet_progress_bar.value = current_worth/total_worth
+                    self.wallet_progress_bar.value = current_worth / total_worth
                 else:
                     self.wallet_progress_bar.value = 100
 
             def update_boo_count_label(self, item_count: int):
                 boo_total = 50
-                self.boo_count.text = f"{item_count}/{boo_total}"
-                self.boo_progress_bar.value = item_count/boo_total
+                self.boo_count.text = f"{item_count} / {boo_total}"
+                self.boo_progress_bar.value = item_count / boo_total
 
             def update_flower_label(self, count: int):
                 self.flower_label.text = f"{count}"
 
             def update_vacuum_label(self, item_count: int):
                 self.vacuum_label.text = f"{item_count}"
+
+            def update_king_boo_label(self, count: int):
+                self.king_boo_label.text = f"{count}"
+
+            def update_balcony_boo_label(self, count: int):
+                self.balcony_boo_label.text = f"{count}"
 
         return LMGuiWrapper
 
@@ -145,6 +146,8 @@ class BaseContext(UniversalContext):
 
         # Check for current room so we know which hint(s) we need to look at, since they mostly all use the same flags
         current_room = dme.read_word(dme.follow_pointers(ROOM_ID_ADDR, [ROOM_ID_OFFSET]))
+        if current_room == 73:
+            return
         player_id = 0
         location_id = 0
 
@@ -208,10 +211,48 @@ class BaseContext(UniversalContext):
                 Utils.async_start(yell_in_client(self), name="Luigi Is Yelling")
 
 def _check_tag(link: LinkBase, network_engine: ArchipelagoNetworkEngine, args) -> bool:
-    return link.slot_name in args["slot_data"] and link.friendly_name not in network_engine.get_tags()
+    slot_data = args["slot_data"]
+    return link.slot_name in slot_data and slot_data[link.slot_name] == 1 and link.friendly_name not in network_engine.get_tags()
 
 async def yell_in_client(ctx: BaseContext) -> None:
     logger.info(random.choice(LUIGI_SHOUT_LIST))
     await ctx.wait_for_next_loop(LUIGI_SHOUT_DURATION)
     ctx.yelling_in_client = False
     return
+
+
+class BaseCommandProcessor(UniversalCommandProcessor):
+    def __init__(self, ctx: BaseContext, server_address: str = None):
+        if server_address:
+            ctx.server_address = server_address
+        super().__init__(ctx)
+
+    def _cmd_traplink(self):
+        """Toggle traplink from client. Overrides default setting."""
+        if isinstance(self.ctx, BaseContext):
+            Utils.async_start(self.ctx.network_engine.update_tags_async(not self.ctx.trap_link.is_enabled(),
+                "TrapLink"), name="Update Traplink")
+
+    def _cmd_ringlink(self):
+        """Toggle traplink from client. Overrides default setting."""
+        if isinstance(self.ctx, BaseContext):
+            Utils.async_start(self.ctx.network_engine.update_tags_async(not self.ctx.ring_link.is_enabled(),
+                "RingLink"), name="Update RingLink")
+
+    def _cmd_ringlink_msg(self):
+        """ Toggles RingLink messages being displayed in the client."""
+        if isinstance(self.ctx, BaseContext):
+            self.ctx.ring_link.set_logs(not self.ctx.ring_link.enable_logger)
+            _log_msg_status_to_client(self.ctx.ring_link)
+
+    def _cmd_traplink_msg(self):
+        """ Toggles TrapLink messages being displayed in the client."""
+        if isinstance(self.ctx, BaseContext):
+            self.ctx.trap_link.set_logs(not self.ctx.trap_link.enable_logger)
+            _log_msg_status_to_client(self.ctx.trap_link)
+
+def _log_msg_status_to_client(link_base: LinkBase):
+    is_enabled: str = "disabled"
+    if link_base.enable_logger:
+        is_enabled = "enabled"
+    logger.info("%s client logs are now %s.", link_base.friendly_name,  is_enabled)

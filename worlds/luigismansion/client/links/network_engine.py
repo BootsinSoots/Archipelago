@@ -236,7 +236,7 @@ class ArchipelagoNetworkEngine:
             self._ctx.tags -= { tag_name }
         if old_tags != self.get_tags() and self._ctx.server and not self._ctx.server.socket.closed:
             await self.send_connect_update_request_async(ConnectUpdateRequest(self.get_tags()))
-    
+
     async def update_client_tags_async(self, tags: list[str]):
         """
         Adds client tags and sends them to Archipelago server.
