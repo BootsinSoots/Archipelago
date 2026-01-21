@@ -212,6 +212,12 @@ class RandomizeJMPTables:
 
         map_two_telesa: JMP = self.lm_rando.map_files["map2"].jmp_files["telesa"]
 
+        boo_hp_unit: float = 0
+        if boo_health_choice == 2:
+            max_sphere: int = max([int(boo_loc["boo_sphere"]) for boo_loc in
+                              self.lm_rando.output_data["Locations"]["Boo"].values()])
+            boo_hp_unit = boo_chosen_hp / max_sphere
+
         for boo_entry in self.lm_rando.output_data["Locations"]["Boo"].values():
             curr_boo_entry: JMPEntry = map_two_telesa.data_entries[int(boo_entry["loc_enum"])]
             curr_boo_entry["accel"] = 3.000000
@@ -225,8 +231,6 @@ class RandomizeJMPTables:
                     boo_random_hp: int = self.lm_rando.random.randint(1, boo_chosen_hp)
                     curr_boo_entry["str_hp"] = boo_random_hp
                 case 2:
-                    boo_hp_unit = max([int(boo_loc["boo_sphere"]) for boo_loc in
-                        self.lm_rando.output_data["Locations"]["Boo"].values()])
                     boo_sphere_hp: int = ceil(boo_hp_unit * boo_entry["boo_sphere"]) if ceil(
                         boo_hp_unit * boo_entry["boo_sphere"]) <= boo_chosen_hp else boo_chosen_hp
                     curr_boo_entry["str_hp"] = boo_sphere_hp
