@@ -69,6 +69,7 @@ class RandomizeJMPTables:
             curr_y_offset: int = int(map_six_furniture.data_entries[furniture_jmp_id]["item_offset_y"])
             adjust_y_offset = 225.0
             map_six_furniture.data_entries[furniture_jmp_id]["item_offset_y"] = curr_y_offset - adjust_y_offset
+            map_six_furniture.data_entries[furniture_jmp_id]["arg0"] = 0.000000
 
         for furniture_jmp_id in other_furn_list:
             curr_y_offset: int = int(map_six_furniture.data_entries[furniture_jmp_id]["item_offset_y"])
