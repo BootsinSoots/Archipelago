@@ -50,41 +50,41 @@
  .text          0x804df5bc       0x88 Source/EnGhostA.asm.o
                 0x804df5bc                EnGhostA_get_Room_Light_Status
                 0x804df5f4                EnGhostA_Disappear_Begin
- .text          0x804df644      0x2d8 Source/EnBasicTsuri.asm.o
+ .text          0x804df644      0x2f8 Source/EnBasicTsuri.asm.o
                 0x804df644                gHealth_Gold_Rank_Threshold
                 0x804df648                gHealth_Silver_Rank_Threshold
                 0x804df64c                EnBasicTsuri_init
                 0x804df668                EnBasicTsuri_perform_Pearl_Drops
-                0x804df7e4                EnBasicTsuri_set_Health_Based_Portrait_Ghost_Rank
- .text          0x804df91c       0x4c Source/EnAppear.asm.o
-                0x804df91c                EnAppear_wait_To_Appear
- .text          0x804df968       0xa0 Source/EnManager.asm.o
-                0x804df968                EnManager_perform_Light_Check
-                0x804df98c                EnManager_clear_Required_Fields
- .text          0x804dfa08       0x3c Source/SaEnBossTelesa.asm.o
-                0x804dfa08                Boolossus_Mini_Boo_Difficulty
-                0x804dfa0c                SaEnBossTelesa_set_Mini_Boo_Difficulty
+                0x804df7fc                EnBasicTsuri_set_Health_Based_Portrait_Ghost_Rank
+ .text          0x804df93c       0x4c Source/EnAppear.asm.o
+                0x804df93c                EnAppear_wait_To_Appear
+ .text          0x804df988       0xa0 Source/EnManager.asm.o
+                0x804df988                EnManager_perform_Light_Check
+                0x804df9ac                EnManager_clear_Required_Fields
+ .text          0x804dfa28       0x3c Source/SaEnBossTelesa.asm.o
+                0x804dfa28                Boolossus_Mini_Boo_Difficulty
+                0x804dfa2c                SaEnBossTelesa_set_Mini_Boo_Difficulty
 
-                0x804dfa48                gArea_2_Halls
-                0x804dfa54                gArea_3_Halls
-                0x804dfa88                gPortrait_Ghost_Locations
-                0x804dfaa0                escape_Codes__8J2DPrint
-                0x804dfae0                gLine_Sizes
-                0x804dfc68                gPortrait_Ghost_Starting_Health
-                0x804dfcc8                gGallery_Prompt_Release_Timer
-                0x804dfccc                gGallery_Prompt_Yes_Color
-                0x804dfcd0                gItem_Information_Timer
-                0x804dfcd4                gItem_Information
-                0x804dfcf8                gArea_2_Halls_On
-                0x804dfcfc                gArea_3_Halls_On
-                0x804dfd00                gGallery_Is_Retry_Mode
-                0x804dfd04                gGallery_Prompt
-                0x804dfd08                gGallery_Prompt_Alpha
-                0x804dfd0c                gGallery_Prompt_Choice
-                0x804dfd10                gGallery_Prompt_Choice_Held
-                0x804dfd14                gGallery_Prompt_Confirm_Held
-                0x804dfd18                gGallery_Closeup_Dismiss_Timer
-                0x804dfd1c                gItem_Information_Alpha
-                0x804dfd20                gTsuri_Speed
-                0x804dfd28                gPlayer_Is_Game_Boy_Only
-                0x804dfd30                gGallery_Current_Closeup_Portrait
+                0x804dfa68                gArea_2_Halls
+                0x804dfa74                gArea_3_Halls
+                0x804dfaa8                gPortrait_Ghost_Locations
+                0x804dfac0                escape_Codes__8J2DPrint
+                0x804dfb00                gLine_Sizes
+                0x804dfc88                gPortrait_Ghost_Starting_Health
+                0x804dfce8                gGallery_Prompt_Release_Timer
+                0x804dfcec                gGallery_Prompt_Yes_Color
+                0x804dfcf0                gItem_Information_Timer
+                0x804dfcf4                gItem_Information
+                0x804dfd18                gArea_2_Halls_On
+                0x804dfd1c                gArea_3_Halls_On
+                0x804dfd20                gGallery_Is_Retry_Mode
+                0x804dfd24                gGallery_Prompt
+                0x804dfd28                gGallery_Prompt_Alpha
+                0x804dfd2c                gGallery_Prompt_Choice
+                0x804dfd30                gGallery_Prompt_Choice_Held
+                0x804dfd34                gGallery_Prompt_Confirm_Held
+                0x804dfd38                gGallery_Closeup_Dismiss_Timer
+                0x804dfd3c                gItem_Information_Alpha
+                0x804dfd40                gTsuri_Speed
+                0x804dfd48                gPlayer_Is_Game_Boy_Only
+                0x804dfd50                gGallery_Current_Closeup_Portrait
