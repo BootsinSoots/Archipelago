@@ -247,9 +247,9 @@ class LMWorld(World):
             for location, data in SILVER_PORTRAIT_TABLE.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
-                if entry.code == 880 and self.open_doors.get(28) == 0:
+                if entry.code == 978 and self.open_doors.get(28) == 0:
                     add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
-                if entry.code == 883:
+                if entry.code == 981:
                     add_rule(entry,
                              lambda state: state.has_group("Mario Item", self.player, self.options.mario_items.value),
                              "and")
@@ -259,9 +259,9 @@ class LMWorld(World):
             for location, data in GOLD_PORTRAIT_TABLE.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
-                if entry.code == 902 and self.open_doors.get(28) == 0:
+                if entry.code == 953 and self.open_doors.get(28) == 0:
                     add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
-                if entry.code == 905:
+                if entry.code == 956:
                     add_rule(entry,
                              lambda state: state.has_group("Mario Item", self.player, self.options.mario_items.value),
                              "and")
