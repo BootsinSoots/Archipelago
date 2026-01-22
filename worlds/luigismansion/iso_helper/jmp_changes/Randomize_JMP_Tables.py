@@ -29,7 +29,7 @@ class RandomizeJMPTables:
 
     def randomize_jmp_tables(self):
         self._map_two_changes()
-        self._add_hearts_to_other_maps()
+        #self._add_hearts_to_other_maps()
         self._map_one_changes()
         self._map_three_changes()
         self._map_six_changes()
