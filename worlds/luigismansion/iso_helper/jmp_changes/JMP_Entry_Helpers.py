@@ -512,7 +512,7 @@ def update_furniture_entries(lm_rando: "LuigisMansionRandomizer", map_id: int, f
 
         actor_item_name = get_item_appear_name(loc_data, lm_rando.slot)
         if not actor_item_name == "money":
-            furniture_entry["item_table"] = find_item_appear_index(item_appear_entries, actor_item_name)
+            furniture_entry["item_table"] = find_item_appear_index(item_appear_entries, actor_item_name) if map_id == 2 else 0 # TODO Remove this once itemappear is fixed.
             furniture_entry["generate"] = 0
             furniture_entry["generate_num"] = 0
             continue

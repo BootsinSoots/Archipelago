@@ -29,7 +29,7 @@ class RandomizeJMPTables:
 
     def randomize_jmp_tables(self):
         self._map_two_changes()
-        #self._add_hearts_to_other_maps()
+        #self._add_hearts_to_other_maps() # TODO Remove this once itemappear is fixed.
         self._map_one_changes()
         self._map_three_changes()
         self._map_six_changes()
@@ -64,7 +64,7 @@ class RandomizeJMPTables:
         other_furn_list: list[int] = [3, 4, 5, 6, 7, 8]
 
         map_six_furniture: JMP = self.lm_rando.map_files["map6"].jmp_files["furnitureinfo"]
-        map_six_item_appear: JMP = self.lm_rando.map_files["map6"].jmp_files["itemappeartable"]
+        #map_six_item_appear: JMP = self.lm_rando.map_files["map6"].jmp_files["itemappeartable"] # TODO Add back in once itemappear is fixed.
         for furniture_jmp_id in ceiling_furniture_list:
             curr_y_offset: int = int(map_six_furniture.data_entries[furniture_jmp_id]["item_offset_y"])
             adjust_y_offset = 225.0
@@ -76,7 +76,7 @@ class RandomizeJMPTables:
             adjust_y_offset = 100.0
             map_six_furniture.data_entries[furniture_jmp_id]["item_offset_y"] = curr_y_offset + adjust_y_offset
 
-        update_furniture_entries(self.lm_rando, 6, map_six_furniture.data_entries, map_six_item_appear.data_entries)
+        update_furniture_entries(self.lm_rando, 6, map_six_furniture.data_entries, []) #map_six_item_appear.data_entries) # TODO Remove this once itemappear is fixed.
 
 
     def _map_two_changes(self):
