@@ -462,7 +462,7 @@ class RandomizeJMPTables:
         speedy_enabled: bool = bool(self.lm_rando.output_data["Options"]["speedy_spirits"])
 
         # If randomize ghosts options are not enabled or speedy spirits are not enabled.
-        if not speedy_enabled or enemizer_enabled == 0:
+        if not speedy_enabled and enemizer_enabled == 0:
             return
 
         self.lm_rando.client_logger.info("Now updating all enemy changes (both normal and blackout) for map2.")
