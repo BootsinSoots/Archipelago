@@ -60,7 +60,7 @@
 -------------------------
 <CASE>"Next"
 <SAY>Hi Luigi! What do you need?
-<CHOICE>"Lab"(4)"Gallery"(5)""Close"(6)<LISTEND>
+<CHOICE>"Lab"(4)"Gallery"(5)"Close"(6)<LISTEND>
 <ANYKEY>
 -------------------------
 <CASE>"Lab"
