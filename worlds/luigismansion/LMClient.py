@@ -570,7 +570,8 @@ class LMContext(BaseContext):
                 self.update_received_idx(last_recv_idx)
                 continue
             elif lm_item.type == "Trap" and (self.non_save_last_recv_idx >= last_recv_idx or
-                (item.item == 8147 and self.get_item_count_by_id(8148) < 1)):
+                (item.item == 8147 and self.get_item_count_by_id(8148) < 1) or
+                (lm_item_name == "Ghost" and self.last_map_id != 2)): # TODO Remove when either ghost trap stop dropping hearts or another workaround to do.
                 # Skip this trap item to avoid Luigi dying in an infinite trap loop.
                 # Also skip No Vac Trap if we don't have a vacuum
                 self.update_received_idx(last_recv_idx)
