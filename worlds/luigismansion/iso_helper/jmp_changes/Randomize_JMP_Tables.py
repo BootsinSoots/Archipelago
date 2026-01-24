@@ -763,7 +763,7 @@ class RandomizeJMPTables:
         self.lm_rando.client_logger.info("Now updating all speedy spirits/golden mice changes for map2.")
         speedy_enabled: bool = bool(self.lm_rando.output_data["Options"]["speedy_spirits"])
         mice_enabled: bool = bool(self.lm_rando.output_data["Options"]["gold_mice"])
-        if not (speedy_enabled and mice_enabled):
+        if not (speedy_enabled or mice_enabled):
             return
 
         map_two_iyapoo: JMP = self.lm_rando.map_files["map2"].jmp_files["iyapootable"]
