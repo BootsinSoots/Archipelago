@@ -1523,7 +1523,7 @@ TREASURES_LOCATION_TABLE: dict[str, LMLocationData] = {
                                           update_ram_addr=[LMRamData(in_game_room_id=50)]),
     "Tea Room R Drawers": LMLocationData("Tea Room", 364, "Furniture", 517, [],
                                          update_ram_addr=[LMRamData(in_game_room_id=50)], require_poltergust=False),
-    "2F Rear Hallway Vase R": LMLocationData("2F Rear Hallway", 371, "Furniture", 519, [],
+    "2F Rear Hallway Vase R (near Guest Room)": LMLocationData("2F Rear Hallway", 371, "Furniture", 519, [],
                                              update_ram_addr=[LMRamData(in_game_room_id=32)]),
     "2F Rear Hallway Vase 3": LMLocationData("2F Rear Hallway", 372, "Furniture", 521, [],
                                              update_ram_addr=[LMRamData(in_game_room_id=46)]),
