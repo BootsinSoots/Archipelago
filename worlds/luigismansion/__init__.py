@@ -685,7 +685,11 @@ class LMWorld(World):
                 trap_count = len(trap_boolossus_list) - 8
                 for _ in range(trap_count):
                     loc = self.random.choice(trap_boolossus_list)
-                    loc.item = self.create_item(self.get_other_filler_item())
+                    # Un-place the existing item.
+                    loc.item.location = None
+                    loc.item = None
+                    # Place a new, replacement filler item.
+                    self.multiworld.push_item(loc, self.create_item(self.get_other_filler_item()), False)
                     trap_boolossus_list.remove(loc)
             # Count number of trap items on these locations. Determine difference between total trap count and 8
             # then repick using other filler listing if difference is positive, equal to difference, and replace those items
