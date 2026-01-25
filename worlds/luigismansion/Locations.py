@@ -1736,7 +1736,9 @@ WDYM_LOCATION_TABLE: dict[str, LMLocationData] = {
     "Kitchen 4th wall painting across from Sink": LMLocationData("Kitchen", 946, "Furniture", 322, [],
         update_ram_addr=[LMRamData(in_game_room_id=7)]),
     "Kitchen 4th wall painting near Dining Room Door": LMLocationData("Kitchen", 947, "Furniture", 323, [],
-        update_ram_addr=[LMRamData(in_game_room_id=7)])
+        update_ram_addr=[LMRamData(in_game_room_id=7)]),
+    "Breaker Room 4th Wall Mirror": LMLocationData("Breaker Room", 948, "Furniture", 75, [], remote_only=True,
+        update_ram_addr=[LMRamData(in_game_room_id=69)])
 }
 
 
