@@ -11,5 +11,6 @@ CLOSE
 <COLOR>(1){SendPlayer}'s{BreakHere}<COLOR>(1){WorldOrLoc}
 <COLOR>(0)Due to unforeseen circumstances,{BreakHere}<COLOR>(0)I saw nothing in the mansion.{BreakHere}<COLOR>(0)Perhaps, next time, enable hints.
 {JokeText}
+<COLOR>(3)Have fun in the gallery!
 IGNORE
 

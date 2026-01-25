@@ -6,7 +6,7 @@
 <WINDOW>(0)<COLOR>(17)
 ------------------------
 <SAY>Hi Luigi! What do you need?
-<CHOICE>"Hint"(0)"Save"(1)"Heal"(2)"Next"(3)<LISTEND>
+<CHOICE>"Save"(1)"Heal"(2)"Next"(3)<LISTEND>
 <ANYKEY>
 -------------------------
 <CASE>"Hint"
@@ -52,7 +52,7 @@
 -------------------------
 <CASE>"Heal"
 <WINDOW>(0)<COLOR>(17)
-<SPEAK>(6)
+<SPEAK>(7)
 <ANYKEY>
 <ACTOR>"demo_luigi"<HP>({LUIGIMAXHP})
 <CLOSEWINDOW>(0)
@@ -64,7 +64,7 @@
 <ANYKEY>
 -------------------------
 <CASE>"Lab"
-<SPEAK>(7)
+<SPEAK>(8)
 <ANYKEY>
 <CLOSEWINDOW>(0)
 <BGMSTOP>
@@ -75,7 +75,7 @@
 <END>
 -------------------------
 <CASE>"Gallery"
-<SPEAK>(7)
+<SPEAK>(13)
 <ANYKEY>
 <CLOSEWINDOW>(0)
 <BGMSTOP>

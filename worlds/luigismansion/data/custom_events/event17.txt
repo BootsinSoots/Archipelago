@@ -15,33 +15,33 @@
 <RAMDOMJMP>"{HintType}"
 -------------------------
 <CASE>"SpecificHint"
-<SPEAK>(10)
+<SPEAK>(9)
 <ANYKEY>
 <SAY><COLOR>(0)Can be found at:
 <ANYKEY>
-<SPEAK>(11)
+<SPEAK>(10)
 <ANYKEY>
 <CLOSEWINDOW>(0)
 <RAMDOMJMP>"Close"
 -------------------------
 <CASE>"VagueHint"
-<SPEAK>(10)
+<SPEAK>(9)
 <ANYKEY>
 <SAY><COLOR>(0)Is somewhere in:
 <ANYKEY>
-<SPEAK>(11)
+<SPEAK>(10)
 <ANYKEY>
 <CLOSEWINDOW>(0)
 <RAMDOMJMP>"Close"
 -------------------------
 <CASE>"DisabledHint"
-<SPEAK>(12)
+<SPEAK>(11)
 <ANYKEY>
 <CLOSEWINDOW>(0)
 <RAMDOMJMP>"Close"
 -------------------------
 <CASE>"JokeHint"
-<SPEAK>(13)
+<SPEAK>(12)
 <ANYKEY>
 <CLOSEWINDOW>(0)
 <RAMDOMJMP>"Close"
@@ -52,7 +52,7 @@
 -------------------------
 <CASE>"Heal"
 <WINDOW>(0)<COLOR>(17)
-<SPEAK>(6)
+<SPEAK>(7)
 <ANYKEY>
 <ACTOR>"demo_luigi"<HP>({LUIGIMAXHP})
 <CLOSEWINDOW>(0)
@@ -64,7 +64,7 @@
 <ANYKEY>
 -------------------------
 <CASE>"Lab"
-<SPEAK>(7)
+<SPEAK>(8)
 <ANYKEY>
 <CLOSEWINDOW>(0)
 <BGMSTOP>
@@ -75,7 +75,7 @@
 <END>
 -------------------------
 <CASE>"Gallery"
-<SPEAK>(7)
+<SPEAK>(13)
 <ANYKEY>
 <CLOSEWINDOW>(0)
 <BGMSTOP>
