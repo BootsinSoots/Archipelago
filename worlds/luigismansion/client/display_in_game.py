@@ -68,19 +68,11 @@ class LMDisplayQueue:
         except Exception as genericEx:
             self.logger.error("While trying to display text in game, an unknown issue occurred. Details: " + str(genericEx))
 
-
     async def _check_items_display_queue(self):
         """Displays the Received item details in game."""
         while self.items_received:
             display_item = self.items_received.pop(0)
             text_to_display: list[bytes] = []
-
-            # Get Current Player's name
-            curr_player_name: str = "You" if display_item.player == self.lm_ctx.slot or \
-                display_item.player == 0 else self.lm_ctx.player_names[display_item.player]
-            recv_from: str = " found your own" if display_item.player == self.lm_ctx.slot else " received"
-            first_line: str = DisplayColors.MAGENTA + curr_player_name + DisplayColors.WHITE + recv_from
-            text_to_display.append(string_to_bytes(first_line, None))
 
             # Get the Received Item Name to Display
             lm_item_name = self.lm_ctx.item_names.lookup_in_game(display_item.item).replace("&", "")
@@ -103,6 +95,14 @@ class LMDisplayQueue:
                     lm_item_str = DisplayColors.WHITE + lm_item_name
             text_to_display.append(string_to_bytes(lm_item_str, None))
 
+            # Get Received Player's name
+            if display_item.player == self.lm_ctx.slot:
+                received_line: str = DisplayColors.WHITE + "Found by " + DisplayColors.MAGENTA + "You"
+            else:
+                sent_player: str = self.lm_ctx.player_names[display_item.player]
+                received_line: str = DisplayColors.WHITE + "Found by " + DisplayColors.MAGENTA + sent_player
+            text_to_display.append(string_to_bytes(received_line, None))
+
             # Look up the location name based on the item's player attached.
             if display_item.player == self.lm_ctx.slot:
                 loc_name_retr = self.lm_ctx.location_names.lookup_in_game(display_item.location)
@@ -110,21 +110,18 @@ class LMDisplayQueue:
                 loc_name_retr = self.lm_ctx.location_names.lookup_in_slot(display_item.location, display_item.player)
 
             # Get the Received Player's Location Name who found the name
-            loc_name_disp = (DisplayColors.GREEN + f"Location: ({loc_name_retr[:MAX_LOCATION_CHARS].replace("&", "")})")
+            loc_name_disp = (
+                        DisplayColors.GREEN + f"from Location: ({loc_name_retr[:MAX_LOCATION_CHARS].replace("&", "")})")
             text_to_display.append(string_to_bytes(loc_name_disp, None))
 
             # Get the proper AP Game Name
             if display_item.player == 0:
-                recv_text: str = DisplayColors.WHITE + "From the AP Server"
+                recv_text: str = DisplayColors.SALMON + "From the AP Server"
                 text_to_display.append(string_to_bytes(recv_text, None))
-            else:
-                if display_item.player != self.lm_ctx.slot:
-                    recv_text: str  = DisplayColors.WHITE + "At "
-
-                    # Get the Player who found the item in their game
-                    recv_text += DisplayColors.SALMON + self.lm_ctx.player_names[display_item.player].replace("&", "")
-                    recv_text += "'s World"
-                    text_to_display.append(string_to_bytes(recv_text, None))
+            elif display_item.player != self.lm_ctx.slot:
+                recv_text: str = DisplayColors.SALMON + "in "
+                recv_text += self.lm_ctx.slot_info[display_item.player].game.replace("&", "")
+                text_to_display.append(string_to_bytes(recv_text, None))
 
             screen_text: bytes = await _build_msg(text_to_display)
             await self._write_to_screen(screen_text)
