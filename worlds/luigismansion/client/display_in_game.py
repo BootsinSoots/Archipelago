@@ -68,7 +68,6 @@ class LMDisplayQueue:
         except Exception as genericEx:
             self.logger.error("While trying to display text in game, an unknown issue occurred. Details: " + str(genericEx))
 
-
     async def _check_items_display_queue(self):
         """Displays the Received item details in game."""
         while self.items_received:
@@ -111,7 +110,8 @@ class LMDisplayQueue:
                 loc_name_retr = self.lm_ctx.location_names.lookup_in_slot(display_item.location, display_item.player)
 
             # Get the Received Player's Location Name who found the name
-            loc_name_disp = (DisplayColors.GREEN + f"from Location: ({loc_name_retr[:MAX_LOCATION_CHARS].replace("&", "")})")
+            loc_name_disp = (
+                        DisplayColors.GREEN + f"from Location: ({loc_name_retr[:MAX_LOCATION_CHARS].replace("&", "")})")
             text_to_display.append(string_to_bytes(loc_name_disp, None))
 
             # Get the proper AP Game Name
@@ -119,7 +119,7 @@ class LMDisplayQueue:
                 recv_text: str = DisplayColors.SALMON + "From the AP Server"
                 text_to_display.append(string_to_bytes(recv_text, None))
             elif display_item.player != self.lm_ctx.slot:
-                recv_text: str  = DisplayColors.SALMON + "in "
+                recv_text: str = DisplayColors.SALMON + "in "
                 recv_text += self.lm_ctx.slot_info[display_item.player].game.replace("&", "")
                 text_to_display.append(string_to_bytes(recv_text, None))
 
