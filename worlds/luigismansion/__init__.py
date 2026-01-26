@@ -680,7 +680,8 @@ class LMWorld(World):
             boolossus_locations: list[LMLocation] = []
             for location in BOOLOSSUS_LOCATION_TABLE.keys():
                 boolossus_locations += [self.get_location(location)]
-            trap_boolossus_list = [lm_loc for lm_loc in boolossus_locations if lm_loc.item.classification == IC.trap]
+            trap_boolossus_list = [lm_loc for lm_loc in boolossus_locations if (lm_loc.item.classification == IC.trap
+                                                                                and lm_loc.item.player == self.player)]
             if len(trap_boolossus_list) > 8:
                 trap_count = len(trap_boolossus_list) - 8
                 for _ in range(trap_count):
