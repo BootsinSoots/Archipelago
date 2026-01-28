@@ -279,7 +279,7 @@ class LMWorld(World):
                     add_rule(entry,
                              lambda state: state.has_group("Mario Item", self.player, self.options.mario_items.value),
                              "and")
-                elif entry.code == 772: # If family ahllway light
+                elif entry.code == 772: # If family hallway light
                     add_rule(entry, lambda state: state.can_reach_location("Nursery Clear Chest", self.player))
                 elif entry.code == 773: # If 1F Hallway light
                     add_rule(entry, lambda state: state.can_reach_location("Graveyard Clear Chest", self.player))
