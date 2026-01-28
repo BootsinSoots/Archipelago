@@ -6,7 +6,7 @@ from ..client.wallet import Wallet
 from ..game.Currency import CURRENCY_NAME
 
 class _MockNetworkEngine(ArchipelagoNetworkEngine):
-    def __init__(self, tags = tuple("TrapLink"), player_name = "rando-player"):
+    def __init__(self, tags = tuple(["RingLink"]), player_name = "rando-player"):
         self.tags = list(tags)
         self.player_name = player_name
 
