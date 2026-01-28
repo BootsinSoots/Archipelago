@@ -55,7 +55,7 @@ WDYM_TREES: list[int] = [184, 185, 138, 139, 140, 141]
 WDYM_RAISE_LIST: list[int] = [628, 629, 683, 698, 716]
 
 # List of other WDYM checks, such as gallery furniture, kitchen 4th wall, and rails/fences.
-WDYM_MAKE_MOVE_LIST: list[int] = [9, 61, 69, 118, 303, 321, 322, 323, 23, 314, 538, 539]
+WDYM_MAKE_MOVE_LIST: list[int] = [9, 61, 69, 118, 303, 321, 322, 323, 23, 314]
 
 CHEST_NAMES: list[str] = ["ytakara1", "rtakara1", "btakara1", "wtakara1", "gtakara1"]
 
