@@ -59,8 +59,8 @@ class DolphinLauncher:
 
 def _check_emulator_process_open(dl: DolphinLauncher) -> bool:
     for proc in psutil.process_iter():
-        if (dl.dolphin_process_name in proc.name().lower() and
-            dl.exclusion_dolphin_process_name not in proc.name().lower()):
+        if (dl.dolphin_process_name in proc.name().lower() and not any(
+            exclude_name for exclude_name in dl.exclusion_dolphin_process_name if exclude_name in proc.name().lower())):
             logger.info("Located existing Dolphin process: %s, skipping.", proc.name())
             return True
     logger.info("No existing Dolphin processes, continuing.")
