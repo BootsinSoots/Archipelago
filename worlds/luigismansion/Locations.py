@@ -586,7 +586,7 @@ DECOR_LOCATION_TABLE: dict[str, LMLocationData] = {
                                              update_ram_addr=[LMRamData(in_game_room_id=32)]),
     "2F Rear Hallway Vase Furthest Left": LMLocationData("2F Rear Hallway", 372, "Furniture", 521, [], 2,
                                              update_ram_addr=[LMRamData(in_game_room_id=46)]),
-    "2F Rear Hallway Second from Left": LMLocationData("2F Rear Hallway", 373, "Furniture", 522, [], 2,
+    "2F Rear Hallway Vase Second from Left": LMLocationData("2F Rear Hallway", 373, "Furniture", 522, [], 2,
                                              update_ram_addr=[LMRamData(in_game_room_id=46)]),
     "2F Rear Hallway Vase near Astral Hall": LMLocationData("2F Rear Hallway", 374, "Furniture", 523, [], 2,
                                              update_ram_addr=[LMRamData(in_game_room_id=46)]),
