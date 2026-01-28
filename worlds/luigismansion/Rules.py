@@ -30,6 +30,8 @@ ICE_SPIRIT_SPOT = ("Kitchen",
                    "Tea Room",
                    "Ceramics Studio")
 
+grimmly_list = ["Uncle Grimmly, Hermit of the Darkness", "Catch Grimmly - Silver", "Catch Grimmly - Gold"]
+
 
 def set_element_rules(world: "LMWorld", location: LMLocation, use_enemizer: bool):
     region = location.region
@@ -44,7 +46,7 @@ def set_element_rules(world: "LMWorld", location: LMLocation, use_enemizer: bool
             add_rule(location, lambda state, i=item: state.has(i, world.player), "and")
 
     if use_enemizer:
-        if region in world.ghost_affected_regions.keys() and location != "Uncle Grimmly, Hermit of the Darkness":
+        if region in world.ghost_affected_regions.keys() and location not in grimmly_list:
             # if fire, require water
             if world.ghost_affected_regions[region] == "Fire":
                 add_rule(location, lambda state: can_fst_water(state, world.player), "and")
