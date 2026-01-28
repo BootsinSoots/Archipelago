@@ -3,7 +3,9 @@ from typing import Any, TYPE_CHECKING
 
 from gcbrickwork.JMP import JMPEntry, JMP
 
+from ...Items import LMItemData, CurrencyItemData, ALL_ITEMS_TABLE
 from ...Locations import LMLocationData, ALL_LOCATION_TABLE
+from ...game.Currency import CURRENCIES
 
 if TYPE_CHECKING:
     from ..LM_Randomize_ISO import LuigisMansionRandomizer
@@ -549,3 +551,31 @@ def update_item_info_entries(lm_rando: "LuigisMansionRandomizer", item_info: JMP
         if not lm_item_name in already_exist:
             item_info.add_jmp_entry(create_iteminfo_entry(loc_data["door_id"], lm_item_name))
             already_exist.append(lm_item_name)
+
+def update_treasure_info_entry(lm_rando: "LuigisMansionRandomizer", treasure_entry: JMPEntry, loc_data: dict):
+    """Updates a treasuretable JMP info entry, which includes the size of the chest, its contents (including currencies
+    or an item like mario's hat, and disables camera/extra effects."""
+
+    # Setting all currencies to 0 value by default.
+    for currency_name in CURRENCIES:
+        treasure_entry[currency_name] = 0
+
+    # Don't give any items that are not from our game, leave those 0 / blank.
+    if int(loc_data["player"]) == lm_rando.slot and loc_data["name"] in ALL_ITEMS_TABLE.keys():
+        lm_item_data: type[LMItemData | CurrencyItemData] = ALL_ITEMS_TABLE[loc_data["name"]]
+
+        # If it's a money item, set the currencies based on our defined bundles
+        if hasattr(lm_item_data, 'currencies'):
+            for currency_name, currency_amount in lm_item_data.currencies.items():
+                treasure_entry[currency_name] = currency_amount
+
+    treasure_entry["cdiamond"] = 0
+    treasure_entry["effect"] = 0
+    treasure_entry["camera"] = 0
+
+    chest_size: int = get_chest_size_from_item(lm_rando, loc_data, treasure_entry["size"])
+    treasure_entry["size"] = chest_size
+
+    # Define the actor name to use from the Location in the generation output. Act differently if it's a key.
+    lm_item_name: str = get_item_name(loc_data, lm_rando.slot)
+    treasure_entry["other"] = lm_item_name

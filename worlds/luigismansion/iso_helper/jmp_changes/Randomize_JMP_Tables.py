@@ -7,13 +7,12 @@ from gcbrickwork.JMP import JMP, JMPEntry
 
 from .JMP_Entry_Helpers import (LOCATION_TO_INDEX, SPEEDY_OBSERVER_INDEX, SPEEDY_ENEMY_INDEX, CEILING_FURNITURE_LIST,
     GHOST_LIST, MEDIUM_HEIGHT_FURNITURE_LIST, apply_new_ghost, create_observer_entry, update_furniture_entries,
-    create_iteminfo_entry, create_itemappear_entry, get_item_chest_visual, get_chest_size_from_item, get_item_name,
+    create_iteminfo_entry, create_itemappear_entry, get_item_chest_visual, update_treasure_info_entry, get_item_name,
     WDYM_TREES, WDYM_RAISE_LIST, WDYM_MAKE_MOVE_LIST, update_item_info_entries)
 
-from ...Items import ALL_ITEMS_TABLE, LMItemData, CurrencyItemData
+from ...Items import ALL_ITEMS_TABLE
 from ...Regions import REGION_LIST, TOAD_SPAWN_LIST
 from ...Locations import FLIP_BALCONY_BOO_EVENT_LIST, ALL_LOCATION_TABLE
-from ...game.Currency import CURRENCIES
 
 if TYPE_CHECKING:
     from ..LM_Randomize_ISO import LuigisMansionRandomizer
@@ -263,6 +262,9 @@ class RandomizeJMPTables:
         # Adds a teiden observer in Blackout Breaker room (event44) to turn off spikes on the doors when room flag 120 on.
         map_two_teiden_observer.add_jmp_entry(create_observer_entry(3250.000000, -500.000000, -1480.000000,
             67, 18, 12, cond_arg0=120))
+
+        # Turn off Blackout chest spawn in the boneyard. This should only ever be the flower.
+        map_two_teiden_observer.data_entries[28]["do_type"] = 0
 
 
     def _map_two_observer_changes(self):
@@ -875,8 +877,22 @@ class RandomizeJMPTables:
         self.lm_rando.client_logger.info("Now updating all treasure chest contents/size/visual changes for map2.")
         map_two_characters: JMP = self.lm_rando.map_files["map2"].jmp_files["characterinfo"]
         map_two_treasure: JMP = self.lm_rando.map_files["map2"].jmp_files["treasuretable"]
+        map_two_teiden_characters: JMP = self.lm_rando.map_files["map2"].jmp_files["teidencharacterinfo"]
 
         for loc_name, loc_data in self.lm_rando.output_data["Locations"]["Chest"].items():
+            # Ignore the Wardrobe Clear Chest, as thats only done in blackout.
+            if loc_name == "Wardrobe Clear Chest":
+                war_chest_entry: JMPEntry = map_two_teiden_characters.data_entries[17]
+
+                # Update the Wardrobe Chest Visual to match the expected setting.
+                chest_visual: str = get_item_chest_visual(self.lm_rando, loc_data, str(war_chest_entry["name"]))
+                war_chest_entry["name"] = chest_visual
+
+                # Get the current treasure entry based on the jmp entry number, then update its treasure data.
+                war_treasure_entry: JMPEntry = map_two_treasure.data_entries[loc_data["loc_enum"]]
+                update_treasure_info_entry(self.lm_rando, war_treasure_entry, loc_data)
+                continue
+
             for char_entry in map_two_characters.data_entries:
                 char_name: str = str(char_entry["name"])
                 char_room: int = int(char_entry["room_no"])
@@ -900,32 +916,9 @@ class RandomizeJMPTables:
                 chest_visual: str = get_item_chest_visual(self.lm_rando, loc_data, char_name)
                 char_entry["name"] = chest_visual
 
+                # Get the current treasure entry based on the jmp entry number, then update its treasure data.
                 treasure_entry: JMPEntry = map_two_treasure.data_entries[loc_data["loc_enum"]]
-
-                # Setting all currencies to 0 value by default.
-                for currency_name in CURRENCIES:
-                    treasure_entry[currency_name] = 0
-
-                # Don't give any items that are not from our game, leave those 0 / blank.
-                if int(loc_data["player"]) == self.lm_rando.slot and loc_data["name"] in ALL_ITEMS_TABLE.keys():
-                    lm_item_data: type[LMItemData | CurrencyItemData] = ALL_ITEMS_TABLE[loc_data["name"]]
-
-                    # If it's a money item, set the currencies based on our defined bundles
-                    if hasattr(lm_item_data, 'currencies'):
-                        for currency_name, currency_amount in lm_item_data.currencies.items():
-                            treasure_entry[currency_name] = currency_amount
-
-                treasure_entry["cdiamond"] = 0
-                treasure_entry["effect"] = 0
-                treasure_entry["camera"] = 0
-
-                chest_size: int = get_chest_size_from_item(self.lm_rando, loc_data, treasure_entry["size"])
-                treasure_entry["size"] = chest_size
-
-                # Define the actor name to use from the Location in the generation output. Act differently if it's a key.
-                lm_item_name: str = get_item_name(loc_data, self.lm_rando.slot)
-                treasure_entry["other"] = lm_item_name
-
+                update_treasure_info_entry(self.lm_rando, treasure_entry, loc_data)
 
     def _map_two_furniture_changes(self):
         """Updates the items that will appear out of the relevant furniture."""
