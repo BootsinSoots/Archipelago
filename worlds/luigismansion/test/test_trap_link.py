@@ -5,8 +5,8 @@ from ..client.links.trap_link import TrapLink, TrapLinkType
 from ..client.links.network_engine import ArchipelagoNetworkEngine
 
 class MockNetworkEngine(ArchipelagoNetworkEngine):
-    def __init__(self, tags = [ "TrapLink" ], player_name = "rando-player"):
-        self.tags = tags
+    def __init__(self, tags = tuple("TrapLink"), player_name = "rando-player"):
+        self.tags = list(tags)
         self.player_name = player_name
 
     def update_tags_async(self, enable_tag: bool, tag_name:str):
