@@ -947,6 +947,10 @@ class RandomizeJMPTables:
         map_two_furniture.data_entries[101]["move"] = 7
         map_two_furniture.data_entries[277]["move"] = 23
 
+        # Force Tea Room Tables to always update their move type to 0, so people can trigger it.
+        map_two_furniture.data_entries[538]["move"] = 0
+        map_two_furniture.data_entries[539]["move"] = 0
+
         if extra_boo_spots:
             for furn_loc in ALL_LOCATION_TABLE.values():
                 # If the location is not a furniture piece and its does not have hide_boo as an option, ignore it.
