@@ -470,13 +470,10 @@ def apply_new_ghost(lm_rando: "LuigisMansionRandomizer", enemy_entry: JMPEntry, 
         case "Fire":
             enemy_entry["name"] = "yapoo2"
         case "No Element":
-            enemy_room_num: int = int(enemy_entry["room_no"])
-            if enemy_room_num  == 23:
-                no_shy_ghosts = copy.deepcopy(RANDOM_GHOST_LISTS)
-                no_shy_ghosts.pop(5)
-                new_enemy = lm_rando.random.choice(sorted(list(lm_rando.random.choice(sorted(no_shy_ghosts)))))
-            else:
-                new_enemy = lm_rando.random.choice(sorted(list(lm_rando.random.choice(sorted(RANDOM_GHOST_LISTS)))))
+            # No Shy Guy ghosts allowed currently, as they need a path defined in a path file to be used correctly.
+            no_shy_ghosts = copy.deepcopy(RANDOM_GHOST_LISTS)
+            no_shy_ghosts.pop(5)
+            new_enemy = lm_rando.random.choice(sorted(list(lm_rando.random.choice(sorted(no_shy_ghosts)))))
             enemy_entry["name"] = new_enemy
 
     # If the new ghost is a Ceiling Ghost, increase its spawning Y position so it spawns in the air.
