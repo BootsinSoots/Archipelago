@@ -9,15 +9,17 @@ def build_gui(ui: GameManager):
     ui.wallet_ui = MDLabel(text="0 / Required Money: 0", halign="center", font_style="Display", role="medium", width=5000)
 
     _make_progressive_layout(ui)
-    _make_progress_bar_layout(ui, ui.boo_count, ui.boo_progress_bar, "Caught Boos")
+    _make_progress_bar_layout(ui, ui.boo_count, ui.boo_progress_bar, "Boos")
     _make_progress_bar_layout(ui, ui.wallet_ui, ui.wallet_progress_bar, "Wallet")
 
     ui.add_client_tab("Luigi's Mansion", ui.lm_layout)
 
 def _make_progress_bar_layout(ui: GameManager, counter: MDLabel, progress_bar: MDLinearProgressIndicator, label: str):
     root_layout = MDBoxLayout(orientation="vertical", padding=[5, 5, 5, 10])
-
-    root_layout.add_widget(MDLabel(text=label, halign="center", font_style="Display", role="small", width=5))
+    print("Hi")
+    ui.important_labels[label] = MDLabel(text=label, halign="center", font_style="Display", role="small", width=5)
+    print("Hi again")
+    root_layout.add_widget(ui.important_labels[label])
     root_layout.add_widget(counter)
     root_layout.add_widget(progress_bar)
 

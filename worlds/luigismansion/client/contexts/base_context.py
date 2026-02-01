@@ -89,6 +89,7 @@ class BaseContext(UniversalContext):
         from .lm_tab import build_gui, GameManager, MDLabel, MDLinearProgressIndicator
 
         ui: type[GameManager] = super().make_gui()
+        ui.important_labels = {}
         class LMGuiWrapper(ui):
             wallet_ui: MDLabel
             boo_count: MDLabel

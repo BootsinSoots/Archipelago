@@ -261,6 +261,12 @@ class LMContext(BaseContext):
                 Utils.async_start(self.display_class.display_in_game(), "LM - Display Items in Game")
                 self.ring_link.reset_ringlink()
 
+                # Update the Text for Caught/Received Boos based on boosanity enabled.
+                if not self.boosanity:
+                    self.ui.important_labels["Boos"].text = "Caught Boos"
+                else:
+                    self.ui.important_labels["Boos"].text = "Received Boos"
+
                 # Lastly Update the Client tab with details of the Balcony Boo Count / King Boo
                 self.ui.update_king_boo_label(self.boo_final_count)
                 self.ui.update_balcony_boo_label(self.boo_balcony_count)
@@ -844,8 +850,10 @@ class LMContext(BaseContext):
 
                     # At this point, we are verified as connected. Update UI elements in the LMCLient tab.
                     if self.ui:
-                        boo_count = len(
-                            set(([item.item for item in self.items_received if item.item in BOO_AP_ID_LIST])))
+                        if self.boosanity:
+                            boo_count = len(([item.item for item in self.items_received if item.item in BOO_AP_ID_LIST]))
+                        else:
+                            boo_count = sum(bin(byte).count('1') for byte in dme.read_bytes(0x803D5E04, 8))
                         self.ui.update_boo_count_label(boo_count)
                         self.ui.get_wallet_value()
                         self.ui.update_flower_label(self.get_item_count_by_id(8140))
