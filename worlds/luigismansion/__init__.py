@@ -464,6 +464,9 @@ class LMWorld(World):
         if self.options.boo_radar == 0:
             self.multiworld.push_precollected(self.create_item("Boo Radar"))
 
+        if self.options.gold_ghosts.value == 1 and self.options.vacuum_upgrades.value < 1:
+            self.options.vacuum_upgrades.value = 1
+
         # Anything below this is normal logic, so if using UT, can exit early.
         if using_ut:
             return
@@ -595,10 +598,13 @@ class LMWorld(World):
         connect_regions(self)
 
     def create_item(self, item: str) -> LMItem:
-        set_non_progress = False
+        if self.options.gold_ghosts.value == 1 and item == "Vacuum Upgrade":
+            set_progress = True
+        else:
+            set_progress = False
 
         if item in ALL_ITEMS_TABLE.keys():
-            return LMItem(item, self.player, ALL_ITEMS_TABLE[item], set_non_progress)
+            return LMItem(item, self.player, ALL_ITEMS_TABLE[item], set_progress)
         raise Exception(f"Invalid item name: {item}")
 
     # def post_fill(self):
