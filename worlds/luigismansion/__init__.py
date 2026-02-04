@@ -259,12 +259,14 @@ class LMWorld(World):
             for location, data in GOLD_PORTRAIT_TABLE.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
-                if entry.code == 953 and self.open_doors.get(28) == 0:
+                if entry.code == 953 and self.open_doors.get(28) == 0: # Special logic for twins
                     add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
-                if entry.code == 956:
+                if entry.code == 956: # Special logic for Clairvoya
                     add_rule(entry,
                              lambda state: state.has_group("Mario Item", self.player, self.options.mario_items.value),
                              "and")
+                if entry.code in (962, 971): # Gold borders requiring Vac Upgrade
+                    add_rule(entry, lambda state: state.has("Vacuum Upgrade", self.player))
                 set_element_rules(self, entry, True)
                 region.locations.append(entry)
         if self.options.lightsanity:
@@ -464,6 +466,9 @@ class LMWorld(World):
         if self.options.boo_radar == 0:
             self.multiworld.push_precollected(self.create_item("Boo Radar"))
 
+        if self.options.gold_ghosts.value == 1 and self.options.vacuum_upgrades.value < 1:
+            self.options.vacuum_upgrades.value = 1
+
         # Anything below this is normal logic, so if using UT, can exit early.
         if using_ut:
             return
@@ -595,10 +600,13 @@ class LMWorld(World):
         connect_regions(self)
 
     def create_item(self, item: str) -> LMItem:
-        set_non_progress = False
+        if self.options.gold_ghosts.value == 1 and item == "Vacuum Upgrade":
+            set_progress = True
+        else:
+            set_progress = False
 
         if item in ALL_ITEMS_TABLE.keys():
-            return LMItem(item, self.player, ALL_ITEMS_TABLE[item], set_non_progress)
+            return LMItem(item, self.player, ALL_ITEMS_TABLE[item], set_progress)
         raise Exception(f"Invalid item name: {item}")
 
     # def post_fill(self):
