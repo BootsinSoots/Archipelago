@@ -747,6 +747,8 @@ class RandomizeJMPTables:
                 character_entry["pos_x"] = spawn_data.pos_x
                 character_entry["pos_y"] = spawn_data.pos_y
                 character_entry["pos_z"] = spawn_data.pos_z
+            elif char_name == "luige" and char_room_num == 48:
+                character_entry["room_no"] = 55
 
         # Removes useless cutscene objects and the vacuum in the Parlor under the closet.
         # Also removes King Boo in the hallway, since his event was removed.
