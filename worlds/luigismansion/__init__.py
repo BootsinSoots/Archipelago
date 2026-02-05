@@ -515,7 +515,7 @@ class LMWorld(World):
                 self.open_doors[door_id] = 0
 
         spawn_doors = copy.deepcopy(REGION_LIST[self.origin_region_name].door_ids)
-        if spawn_doors:
+        if spawn_doors and self.origin_region_name != "Butler's Room":
             for door in REGION_LIST[self.origin_region_name].door_ids:
                 if self.open_doors[door] == 0:
                     spawn_doors.remove(door)
