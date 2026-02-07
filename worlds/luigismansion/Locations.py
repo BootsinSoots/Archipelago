@@ -742,7 +742,7 @@ DECOR_LOCATION_TABLE: dict[str, LMLocationData] = {
         update_ram_addr=[LMRamData(in_game_room_id=60)], hide_boo=False),
     "Artist's Studio Shy Guy Ghost Easel": LMLocationData("Artist's Studio", 607, "Furniture", 695, [], 3, remote_only=True,
         update_ram_addr=[LMRamData(in_game_room_id=60)], hide_boo=False),
-    "Artist's Studio Green Ghost Easel": LMLocationData("Artist's Studio", 608, "Furniture", 696, [], 3, remote_only=True,
+    "Artist's Studio Banana Boys Squad Easel": LMLocationData("Artist's Studio", 608, "Furniture", 696, [], 3, remote_only=True,
         update_ram_addr=[LMRamData(in_game_room_id=60)], hide_boo=False),
     "Artist's Studio Purple Ghost Easel": LMLocationData("Artist's Studio", 609, "Furniture", 697, [], 3, remote_only=True,
         update_ram_addr=[LMRamData(in_game_room_id=60)], hide_boo=False),
