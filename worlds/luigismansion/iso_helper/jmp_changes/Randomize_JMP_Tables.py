@@ -726,7 +726,7 @@ class RandomizeJMPTables:
                 character_entry["appear_flag"] = 0
 
             # Fix a Nintendo mistake where the Cellar chest has a room ID of 0 instead of 63.
-            elif char_name == "63_2":
+            elif character_entry["create_name"] == "63_2":
                 character_entry["room_no"] = 63
 
             # Remove Miss Petunia to never disappear, unless captured.
