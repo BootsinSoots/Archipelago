@@ -16,9 +16,7 @@ def build_gui(ui: GameManager):
 
 def _make_progress_bar_layout(ui: GameManager, counter: MDLabel, progress_bar: MDLinearProgressIndicator, label: str):
     root_layout = MDBoxLayout(orientation="vertical", padding=[5, 5, 5, 10])
-    print("Hi")
     ui.important_labels[label] = MDLabel(text=label, halign="center", font_style="Display", role="small", width=5)
-    print("Hi again")
     root_layout.add_widget(ui.important_labels[label])
     root_layout.add_widget(counter)
     root_layout.add_widget(progress_bar)
