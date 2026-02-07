@@ -467,6 +467,10 @@ class LMContext(BaseContext):
             if current_map_id not in lm_loc_data.map_id:
                 continue
 
+            # Some locations, like Gold Portraits require multiple RAM address to be true simultaneously. Keep track of
+            # all of these booleans in a list and check if all true to send the check.
+            all_true_list: list[bool] = []
+
             # This only checks if one address in the ram list is true, not all, so any location in the list can be true
             #   to consider the location as "checked"
             for loc_addr in lm_loc_data.update_ram_addr:
@@ -480,7 +484,16 @@ class LMContext(BaseContext):
                     if not room_to_check == current_room_id:
                         continue
 
+                if lm_loc_data.all_true:
+                    all_true_list.append(self.check_ram_location(lm_loc_data, loc_addr, current_map_id, lm_loc_data.map_id))
+                    continue
+
                 if self.check_ram_location(lm_loc_data, loc_addr, current_map_id, lm_loc_data.map_id):
+                    self.locations_checked.add(mis_loc)
+                    break
+
+            if lm_loc_data.all_true:
+                if all(loc_true for loc_true in all_true_list):
                     self.locations_checked.add(mis_loc)
 
         await self.check_locations(self.locations_checked)
