@@ -67,25 +67,25 @@
                 0x804dfa20                SaEnBossTelesa_set_Mini_Boo_Difficulty
 
                 0x804dfa58                gArea_2_Halls
-                0x804dfa64                gArea_3_Halls
-                0x804dfa98                gPortrait_Ghost_Locations
-                0x804dfab0                escape_Codes__8J2DPrint
-                0x804dfaf0                gLine_Sizes
-                0x804dfc78                gPortrait_Ghost_Starting_Health
-                0x804dfcd8                gGallery_Prompt_Release_Timer
-                0x804dfcdc                gGallery_Prompt_Yes_Color
-                0x804dfce0                gItem_Information_Timer
-                0x804dfce4                gItem_Information
-                0x804dfd08                gArea_2_Halls_On
-                0x804dfd0c                gArea_3_Halls_On
-                0x804dfd10                gGallery_Is_Retry_Mode
-                0x804dfd14                gGallery_Prompt
-                0x804dfd18                gGallery_Prompt_Alpha
-                0x804dfd1c                gGallery_Prompt_Choice
-                0x804dfd20                gGallery_Prompt_Choice_Held
-                0x804dfd24                gGallery_Prompt_Confirm_Held
-                0x804dfd28                gGallery_Closeup_Dismiss_Timer
-                0x804dfd2c                gItem_Information_Alpha
-                0x804dfd30                gTsuri_Speed
-                0x804dfd38                gPlayer_Is_Game_Boy_Only
-                0x804dfd40                gGallery_Current_Closeup_Portrait
+                0x804dfa68                gArea_3_Halls
+                0x804dfa9c                gPortrait_Ghost_Locations
+                0x804dfab8                escape_Codes__8J2DPrint
+                0x804dfaf8                gLine_Sizes
+                0x804dfc80                gPortrait_Ghost_Starting_Health
+                0x804dfce0                gGallery_Prompt_Release_Timer
+                0x804dfce4                gGallery_Prompt_Yes_Color
+                0x804dfce8                gItem_Information_Timer
+                0x804dfcec                gItem_Information
+                0x804dfd10                gArea_2_Halls_On
+                0x804dfd14                gArea_3_Halls_On
+                0x804dfd18                gGallery_Is_Retry_Mode
+                0x804dfd1c                gGallery_Prompt
+                0x804dfd20                gGallery_Prompt_Alpha
+                0x804dfd24                gGallery_Prompt_Choice
+                0x804dfd28                gGallery_Prompt_Choice_Held
+                0x804dfd2c                gGallery_Prompt_Confirm_Held
+                0x804dfd30                gGallery_Closeup_Dismiss_Timer
+                0x804dfd34                gItem_Information_Alpha
+                0x804dfd38                gTsuri_Speed
+                0x804dfd40                gPlayer_Is_Game_Boy_Only
+                0x804dfd48                gGallery_Current_Closeup_Portrait
