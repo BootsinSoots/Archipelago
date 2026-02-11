@@ -471,8 +471,9 @@ def apply_new_ghost(lm_rando: "LuigisMansionRandomizer", enemy_entry: JMPEntry, 
             enemy_entry["name"] = "yapoo2"
         case "No Element":
             # No Shy Guy ghosts allowed currently, as they need a path defined in a path file to be used correctly.
-            no_shy_ghosts = copy.deepcopy(RANDOM_GHOST_LISTS)
-            no_shy_ghosts.pop(5)
+            no_shy_ghosts: list[list[str]] = copy.deepcopy(RANDOM_GHOST_LISTS)
+            no_shy_ghosts = [enemy_list for enemy_list in no_shy_ghosts if not
+                any("heypo" in enemy_name for enemy_name in enemy_list)]
             new_enemy = lm_rando.random.choice(sorted(list(lm_rando.random.choice(sorted(no_shy_ghosts)))))
             enemy_entry["name"] = new_enemy
 
