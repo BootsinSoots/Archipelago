@@ -367,14 +367,6 @@ class RandomizeJMPTables:
         map_two_nobserver.add_jmp_entry(create_observer_entry(3250.000000, -500.000000, -1480.000000,
             67, 18, 12, cond_arg0=120))
 
-        # Check that Shivers is caught to turn on Conservatory Hallway Light
-        map_two_nobserver.add_jmp_entry(create_observer_entry(3250.000000, 0.000000, -100.000000,
-            0, 13, 7, arg0=60))
-
-        # This one enables the Conservatory 1F hallway after catching Shivers / Butler
-        map_two_nobserver.add_jmp_entry(create_observer_entry(1400.000000, 0.000000, -4100.000000,
-            18, 18, 1, cond_arg0=60))
-
         # This one adds an observer into the Foyer where if Luigi is in the room anywhere, it will turn on the lights.
         map_two_nobserver.add_jmp_entry(create_observer_entry(0.000000, 0.000000, 0.000000,
             2, 15, 1))
@@ -733,7 +725,8 @@ class RandomizeJMPTables:
             elif char_name == "fat" and char_room_num == 45:
                 character_entry["disappear_flag"] = 0
 
-            # Make Shivers / Butler not disappear by doing a different appear flag.
+            # Make Shivers / Butler not disappear by doing a different appear flag, as his original flag (35) only
+            # turns on when the storage boos are released (when the second button is pressed).
             elif char_name == "situji":
                 character_entry["appear_flag"] = 7
 
