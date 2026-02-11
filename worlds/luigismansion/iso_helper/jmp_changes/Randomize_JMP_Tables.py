@@ -486,7 +486,7 @@ class RandomizeJMPTables:
                 if curr_room_no != room_id or not curr_enemy_name in GHOST_LIST:
                     continue
 
-                if "16_1" in curr_enemy_name:
+                if "16_1" in normal_enemy["create_name"]:
                     normal_enemy["pos_y"] = 30.000000
 
                 room_element: str = "No Element" if (room_id in [27, 35, 40]) else val
