@@ -940,6 +940,8 @@ HANGABLES_LOCATION_TABLE: dict[str, LMLocationData] = {
                                               update_ram_addr=[LMRamData(in_game_room_id=55)]),
     "Safari Room R Deer Head": LMLocationData("Safari Room", 440, "Furniture", 634, [], 3,
                                               update_ram_addr=[LMRamData(in_game_room_id=55)]),
+    "Safari Room C Deer Head": LMLocationData("Safari Room", 439, "Furniture", 630, [], 3, remote_only=True,
+                                              update_ram_addr=[LMRamData(in_game_room_id=55)]),
     "Sealed Room Mirror": LMLocationData("Sealed Room", 558, "Furniture", 557, [], 2,
                                          update_ram_addr=[LMRamData(in_game_room_id=37)]),
     "Sealed Room Picture": LMLocationData("Sealed Room", 559, "Furniture", 526, [], 2,
