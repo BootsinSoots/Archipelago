@@ -368,7 +368,9 @@ class LMWorld(World):
                 region.locations.append(entry)
 
         rankcalc = 0
-        if self.options.rank_requirement < 3:
+        if self.options.rank_requirement == 0:
+            rankcalc = 0
+        elif 1 < self.options.rank_requirement < 3:
             rankcalc = 1
         elif self.options.rank_requirement == 3:
             rankcalc = 2
@@ -379,7 +381,8 @@ class LMWorld(World):
         else:
             rankcalc = 5
         loc = self.get_location("King Boo")
-        add_rule(loc, lambda state: state.has("Gold Diamond", self.player, rankcalc), "and")
+        if rankcalc != 0 :
+            add_rule(loc, lambda state: state.has("Gold Diamond", self.player, rankcalc), "and")
         add_rule(loc, lambda state: state.has("Poltergust 3000", self.player), "and")
 
     def _set_ut_logic(self):
