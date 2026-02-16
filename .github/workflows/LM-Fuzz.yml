@@ -54,9 +54,9 @@ jobs:
     - name: Test Empty Download
       run: |
         if unzip -tq ${{ steps.setupAP.outputs.path }}/custom_worlds/empty.apworld > /dev/null 2>&1; then
-          echo "$FILE_NAME is a valid ZIP file."
+          echo "${{ steps.setupAP.outputs.path }}/custom_worlds/empty.apworld is a valid ZIP file."
         else
-          echo "$FILE_NAME is not a valid ZIP file."
+          echo "${{ steps.setupAP.outputs.path }}/custom_worlds/empty.apworld is not a valid ZIP file."
           exit 1
         fi
 
@@ -64,11 +64,17 @@ jobs:
     # Also sets up AP behind the scenes
     - name: Generate Empty Template
       uses: Eijebong/ap-actions/generate-template@main
+      continue-on-error: true
       with:
         ap-version: "latest"
         python-version: 3.12
         apworld-path: ${{ github.workspace }}/archipelago/custom_worlds/empty.apworld
         checkout: false
+    - name: Check File Exists
+      run: |
+        if [-f "${{ github.workspace }}/archipelago/custom_worlds/empty.apworld"];
+          echo "${{ github.workspace }}/archipelago/custom_worlds/empty.apworld still exists."
+        fi
 
     # Now checkout our own repo and set up our dependencies
     - name: Download LM's Repo
