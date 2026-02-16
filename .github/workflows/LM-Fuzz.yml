@@ -64,6 +64,9 @@ jobs:
 
     # Generate a template YAML for the EmptyWorld, which will be used as an input into a fuzzer task later.
     # Also sets up AP behind the scenes
+    - name: Temp ls Custom worlds
+      run: |
+        ls ${{ steps.setupAP.outputs.path }}/custom_worlds
     - name: Generate Empty Template
       uses: Eijebong/ap-actions/generate-template@main
       with:
@@ -88,7 +91,7 @@ jobs:
       continue-on-error: true
       run: |
         cd ${{ steps.setupAP.outputs.path }}
-        python ${{ github.workspace }}/eije-fuzzer/fuzz.py -r 1000 -g luigismansion -n 1 -m \
+        python ${{ github.workspace }}/eije-fuzzer/fuzz.py -r 1000 -j 4 -g luigismansion -n 1 -m \
         ${{ steps.setupAP.outputs.path }}/worlds/luigismansion/luigis-mansion-meta.yml
     - name: Zip Single Yaml Fuzz Output
       run: |
