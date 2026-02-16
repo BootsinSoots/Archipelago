@@ -17,9 +17,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: pip
-      - name: Clear pip cache 3.11
-        run: pip cache purge
       - name: Create Lib-Windows3-11
         run: mkdir lib-windows3-11
       - name: Install Windows-Deps 3.11
@@ -36,9 +33,6 @@ jobs:
     - uses: actions/setup-python@v5
       with:
         python-version: "3.12"
-        cache: pip
-    - name: Clear pip cache 3.12
-      run: pip cache purge
     - name: Create Lib-Windows3-12
       run: mkdir lib-windows3-12
     - name: Install Windows-Deps3-12
@@ -55,9 +49,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-          cache: pip
-      - name: Clear pip cache 3.13
-        run: pip cache purge
       - name: Create Lib-Windows3-13
         run: mkdir lib-windows3-13
       - name: Install Windows-Deps3-13
@@ -74,9 +65,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: pip
-      - name: Clear pip cache 3.11
-        run: pip cache purge
       - name: Create Lib-Linux3-11
         run: mkdir lib-linux3-11
       - name: Install Linux-Deps3-11
@@ -93,9 +81,6 @@ jobs:
     - uses: actions/setup-python@v5
       with:
         python-version: "3.12"
-        cache: pip
-    - name: Clear pip cache 3.12
-      run: pip cache purge
     - name: Create Lib-Linux3-12
       run: mkdir lib-linux3-12
     - name: Install Linux-Deps3-12
@@ -112,9 +97,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-          cache: pip
-      - name: Clear pip cache 3.13
-        run: pip cache purge
       - name: Create Lib-Linux3-13
         run: mkdir lib-linux3-13
       - name: Install Linux-Deps3-13
@@ -132,7 +114,6 @@ jobs:
     - uses: actions/setup-python@v5
       with:
         python-version: "3.12"
-        cache: pip
     - name: Fuzzer-Check-3-yml
       uses: Eijebong/ap-actions/fuzz@main
       with:
@@ -160,9 +141,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-          cache: pip
-      - name: Clear pip cache Build-AP
-        run: pip cache purge
       - name: Install Dependencies Build-AP
         run: python ${{github.workspace}}/ModuleUpdate.py -y -f
 
