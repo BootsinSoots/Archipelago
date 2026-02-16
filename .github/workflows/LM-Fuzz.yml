@@ -89,12 +89,10 @@ jobs:
       continue-on-error: true
       run: |
         cd archipelago
-        python fuzz.py -r 1000 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml
+        python fuzz.py -r 1000 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml --dump-ignored
     - name: Zip Single Yaml Fuzz Output
-      run: |
-        if [ -d "${{ github.workspace }}/archipelago/fuzz_output" ]; then
-          zip -r fuzz_single_yaml_output.zip "${{ github.workspace }}/archipelago/fuzz_output"
-          gh artifact upload fuzz_single_yaml_output.zip --name fuzz_single_yaml_output
-        fi
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      if: -d "${{ github.workspace }}/archipelago/fuzz_output"
+      uses: actions/upload-artifact@v4
+      with:
+        name: fuzz_single_yaml_output
+        path: ${{ github.workspace }}/archipelago/fuzz_output
