@@ -60,6 +60,7 @@ jobs:
     - name: Download LM's Repo
       uses: actions/checkout@v4
       with:
+        ref: ${{ github.ref_name }}
         sparse-checkout: |
           worlds/luigismansion
         path: worlds/luigismansion
