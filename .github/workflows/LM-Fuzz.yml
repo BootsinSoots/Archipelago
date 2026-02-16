@@ -42,7 +42,7 @@ jobs:
         curl -L -H "Authorization: Bearer ${{ github.token }}" \
           -H "Accept: application/octet-stream" \
           -o ${{ steps.setupAP.outputs.path }}/custom_worlds/tracker.apworld \
-          "https://github.com/FarisTheAncient/Archipelago/releases/downloads/${{ steps.getTrackerTag.outputs.releasetag }}/tracker.apworld"
+          "https://github.com/FarisTheAncient/Archipelago/releases/download/${{ steps.getTrackerTag.outputs.releasetag }}/tracker.apworld"
 
     # Get the latest release of Eije's empty world, which is used to help evaluate restrictive starts.
     - name: Download Empty APWorld
@@ -50,7 +50,7 @@ jobs:
         curl -L -H "Authorization: Bearer ${{ github.token }}" \
           -H "Accept: application/octet-stream" \
           -o ${{ steps.setupAP.outputs.path }}/custom_worlds/empty.apworld \
-          "https://github.com/Eijebong/empty-apworld/releases/downloads/0.0.3/empty.apworld"
+          "https://github.com/Eijebong/empty-apworld/releases/download/0.0.3/empty.apworld"
 
     # Generate a template YAML for the EmptyWorld, which will be used as an input into a fuzzer task later.
     # Also sets up AP behind the scenes
