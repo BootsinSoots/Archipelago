@@ -110,8 +110,8 @@ jobs:
         mv ${{ steps.genTemplate.output.template }} temp_static
         python fuzz.py -r 1000 -j 4 -g luigismansion -n 3 -m worlds/luigismansion/luigis-mansion-meta.yml \
         --dump-ignored --with-static-worlds temp_static
-    - name: Zip Triple Yaml Fuzz Output
+    - name: Zip Empty Yaml Fuzz Output
       uses: actions/upload-artifact@v4
       with:
-        name: fuzz_triple_yaml_output
+        name: fuzz_empty_yaml_output
         path: ${{ github.workspace }}/archipelago/fuzz_output
