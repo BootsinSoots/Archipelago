@@ -46,7 +46,7 @@ jobs:
       
         curl -L -H "Authorization: Bearer ${{ github.token }}" \
           -H "Accept: application/octet-stream" \
-          -o ${{ steps.setupAP.outputs.path }}/custom-worlds/tracker.apworld \
+          -o ${{ steps.setupAP.outputs.path }}/custom_worlds/tracker.apworld \
           "$asset_url"
 
     # Get the latest release of Eije's empty world, which is used to help evaluate restrictive starts.
@@ -59,7 +59,7 @@ jobs:
         
         curl -L -H "Authorization: Bearer ${{ github.token }}" \
           -H "Accept: application/octet-stream" \
-          -o ${{ steps.setupAP.outputs.path }}/custom-worlds/empty.apworld \
+          -o ${{ steps.setupAP.outputs.path }}/custom_worlds/empty.apworld \
           "$asset_url"
 
     # Generate a template YAML for the EmptyWorld, which will be used as an input into a fuzzer task later.
@@ -69,7 +69,7 @@ jobs:
       with:
         ap-version: "latest"
         python-version: "3.12"
-        apworld-path: ${{ steps.setupAP.outputs.path }}/custom-worlds/empty.apworld
+        apworld-path: ${{ steps.setupAP.outputs.path }}/custom_worlds/empty.apworld
         apworld-name: "Empty"
         checkout: false
 
@@ -79,17 +79,17 @@ jobs:
       with:
         sparse-checkout: |
           worlds/luigismansion
-        path: ${{ github.workspace }}/archipelago/worlds/luigismansion
+        path: ${{ steps.setupAP.outputs.path }}/worlds/luigismansion
     - name: Install LM Dependencies
-      run: pip install -r ${{ github.workspace }}/archipelago/worlds/luigismansion/requirements.txt
+      run: pip install -r ${{ steps.setupAP.outputs.path }}/worlds/luigismansion/requirements.txt
 
     # Fuzz with Single Yaml
     - name: LM Single Yaml Run
       continue-on-error: true
       run: |
-        cd ${{ github.workspace }}/archipelago
+        cd ${{ steps.setupAP.outputs.path }}
         python ${{ github.workspace }}/eije-fuzzer/fuzz.py -r 1000 -g luigismansion -n 1 -m \
-        ${{ github.workspace }}/archipelago/worlds/luigismansion/luigis-mansion-meta.yml
+        ${{ steps.setupAP.outputs.path }}/worlds/luigismansion/luigis-mansion-meta.yml
     - name: Zip Single Yaml Fuzz Output
       run: |
         if [ -d format("{0}{1}", ${{ github.workspace }}, "/archipelago/fuzz_output") ]; then
