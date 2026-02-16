@@ -6,6 +6,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+    # Download and setup AP by running its pip install scripts
+    - name: Setup AP
+      id: setupAP
+      uses: Eijebong/ap-actions/setup-ap@main
+      with:
+        version: "latest"
+        python-version: 3.12
+
     # Get Eije's Fuzzer and his various built-in hooks
     - name: Checkout Fuzzer
       uses: actions/checkout@v4
@@ -13,6 +21,14 @@ jobs:
         repository: Eijebong/Archipelago-fuzzer
         ref: eaef49942adfba577bd886dafe932e87d33a367c
         path: ${{ github.workspace }}/eije-fuzzer
+
+      #  Get Mysteryem's hook files for lambda capture issues and item placement issues.
+    - name: Download Mysterym Fuzzer Hooks
+      uses: actions/checkout@v4
+      with:
+        repository: Mysteryem/Archipelago-fuzzer
+        ref: 8b80a433fe57570b644fe9d245b1eb6a61be3d89
+        path: ${{ github.workspace }}/mysteryem-fuzzer
 
     # Get the latest release of UT's tracker world, which also contains a UT hook check.
     - name: Get Latest UT Tracker Release Tag
@@ -30,7 +46,7 @@ jobs:
       
         curl -L -H "Authorization: Bearer ${{ github.token }}" \
           -H "Accept: application/octet-stream" \
-          -o ${{ github.workspace }}/tracker-download \
+          -o ${{ steps.setupAP.outputs.path }}/custom-worlds
           "$asset_url"
 
     # Get the latest release of Eije's empty world, which is used to help evaluate restrictive starts.
@@ -43,7 +59,7 @@ jobs:
         
         curl -L -H "Authorization: Bearer ${{ github.token }}" \
           -H "Accept: application/octet-stream" \
-          -o ${{ github.workspace }}/empty-download \
+          -o ${{ steps.setupAP.outputs.path }}/custom-worlds \
           "$asset_url"
 
     # Generate a template YAML for the EmptyWorld, which will be used as an input into a fuzzer task later.
@@ -53,16 +69,9 @@ jobs:
       with:
         ap-version: "latest"
         python-version: "3.12"
-        apworld-path: ${{ github.workspace }}/empty-download/empty
+        apworld-path: ${{ steps.setupAP.outputs.path }}/custom-worlds/empty.apworld
         apworld-name: "Empty"
-        
-    #  Get Mysteryem's hook files for lambda capture issues and item placement issues.
-    - name: Download Mysterym Fuzzer Hooks
-      uses: actions/checkout@v4
-      with:
-        repository: Mysteryem/Archipelago-fuzzer
-        ref: 8b80a433fe57570b644fe9d245b1eb6a61be3d89
-        path: ${{ github.workspace }}/mysteryem-fuzzer
+        checkout: false
 
     # Now checkout our own repo and set up our dependencies
     - name: Download LM's Repo
