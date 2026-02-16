@@ -6,24 +6,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    # Download and setup AP by running its pip install scripts
-    - name: Setup AP
-      id: setupAP
-      uses: Eijebong/ap-actions/setup-ap@main
-      with:
-        version: "latest"
-        python-version: 3.12
-
     # Get Eije's Fuzzer and his various built-in hooks
     - name: Checkout Fuzzer
       uses: actions/checkout@v4
       with:
         repository: Eijebong/Archipelago-fuzzer
         ref: eaef49942adfba577bd886dafe932e87d33a367c
-        path: ${{ steps.setupAP.outputs.path }}/eije-fuzzer
-    - name: Copy Fuzz.py to main AP Level
-      run: |
-        mv ${{ steps.setupAP.outputs.path }}/eije-fuzzer/fuzz.py ${{ steps.setupAP.outputs.path }}/fuzz.py
+        path: ${{ github.workspace }}/eije-fuzzer
 
       #  Get Mysteryem's hook files for lambda capture issues and item placement issues.
     - name: Download Mysterym Fuzzer Hooks
@@ -31,7 +20,7 @@ jobs:
       with:
         repository: Mysteryem/Archipelago-fuzzer
         ref: 8b80a433fe57570b644fe9d245b1eb6a61be3d89
-        path: ${{ steps.setupAP.outputs.path }}/mysteryem-fuzzer
+        path: ${{ github.workspace }}/mysteryem-fuzzer
 
     # Get the latest release of UT's tracker world, which also contains a UT hook check.
     - name: Get Latest UT Tracker Release Tag
@@ -42,42 +31,29 @@ jobs:
         https://api.github.com/repos/FarisTheAncient/Archipelago/releases/latest | jq -r '.tag_name' )" >> $GITHUB_OUTPUT
     - name: Download Latest UT APWorld Release
       run: |      
-        curl --fail -L -H "Authorization: Bearer ${{ github.token }}" \
+        curl --fail --create-dirs -L -H "Authorization: Bearer ${{ github.token }}" \
           -H "Accept: application/octet-stream" \
-          -o ${{ steps.setupAP.outputs.path }}/custom_worlds/tracker.apworld \
+          -o ${{ github.workspace }}/temp_worlds/tracker.apworld \
           "https://github.com/FarisTheAncient/Archipelago/releases/download/${{ steps.getTrackerTag.outputs.releasetag }}/tracker.apworld"
 
     # Get the latest release of Eije's empty world, which is used to help evaluate restrictive starts.
     - name: Download Empty APWorld
       run: |        
-        curl --fail -L -H "Authorization: Bearer ${{ github.token }}" \
+        curl --fail --create-dirs -L -H "Authorization: Bearer ${{ github.token }}" \
           -H "Accept: application/octet-stream" \
-          -o ${{ steps.setupAP.outputs.path }}/custom_worlds/empty.apworld \
+          -o ${{ github.workspace }}/temp_worlds/empty.apworld \
           "https://github.com/Eijebong/empty-apworld/releases/download/0.0.3/empty.apworld"
-    - name: Test Empty Download
-      run: |
-        if unzip -tq ${{ steps.setupAP.outputs.path }}/custom_worlds/empty.apworld > /dev/null 2>&1; then
-          echo "${{ steps.setupAP.outputs.path }}/custom_worlds/empty.apworld is a valid ZIP file."
-        else
-          echo "${{ steps.setupAP.outputs.path }}/custom_worlds/empty.apworld is not a valid ZIP file."
-          exit 1
-        fi
 
     # Generate a template YAML for the EmptyWorld, which will be used as an input into a fuzzer task later.
-    # Also sets up AP behind the scenes
+    # Also sets up AP behind the scenes.
     - name: Generate Empty Template
+      id: genTemplate
       uses: Eijebong/ap-actions/generate-template@main
       continue-on-error: true
       with:
         ap-version: "latest"
         python-version: 3.12
-        apworld-path: ${{ github.workspace }}/archipelago/custom_worlds/empty.apworld
-        checkout: false
-    - name: Check File Exists
-      run: |
-        if [ -f "${{ github.workspace }}/archipelago/custom_worlds/empty.apworld"]; then
-          echo "${{ github.workspace }}/archipelago/custom_worlds/empty.apworld still exists."
-        fi
+        apworld-path: ${{ github.workspace }}/temp_worlds/empty.apworld
 
     # Now checkout our own repo and set up our dependencies
     - name: Download LM's Repo
@@ -88,6 +64,17 @@ jobs:
         path: worlds/luigismansion
     - name: Install LM Dependencies
       run: pip install -r worlds/luigismansion/requirements.txt
+
+    # Copy the fuzzer into AP's Main Folder, copies UT and Empty to custom_worlds.
+    - name: Copy Fuzz.py to main AP Level
+      run: |
+        mv ${{ github.workspace }}/eije-fuzzer/fuzz.py ${{ github.workspace }}/archipelago/fuzz.py
+    - name: Copy Empty world to custom_worlds
+      run: |
+        mv ${{ github.workspace }}/temp_worlds/empty.apworld ${{ github.workspace }}/archipelago/custom_worlds
+    - name: Copy Tracker world to custom_worlds
+      run: |
+        mv ${{ github.workspace }}/temp_worlds/tracker.apworld ${{ github.workspace }}/archipelago/custom_worlds
 
     # Fuzz with Single Yaml
     - name: LM Single Yaml Run
