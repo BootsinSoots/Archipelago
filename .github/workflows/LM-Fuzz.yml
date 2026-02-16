@@ -79,11 +79,9 @@ jobs:
     - name: Copy Fuzz.py to main AP Level
       run: |
         mv ${{ github.workspace }}/eije-fuzzer/fuzz.py ${{ github.workspace }}/archipelago/fuzz.py
-    - name: Copy Empty world to custom_worlds
+    - name: Copy Empty / UT world to custom_worlds
       run: |
         mv ${{ github.workspace }}/temp_worlds/empty.apworld ${{ github.workspace }}/archipelago/custom_worlds
-    - name: Copy Tracker world to custom_worlds
-      run: |
         mv ${{ github.workspace }}/temp_worlds/tracker.apworld ${{ github.workspace }}/archipelago/custom_worlds
 
     # Fuzz with Single Yaml
@@ -91,16 +89,11 @@ jobs:
       continue-on-error: true
       run: |
         cd archipelago
-        python fuzz.py -r 1000 -j 4 -g luigismansion -n 1 -m \
-        ${{ github.workspace }}/archipelago/worlds/luigismansion/luigis-mansion-meta.yml
+        python fuzz.py -r 1000 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml
     - name: Zip Single Yaml Fuzz Output
       run: |
-        if [ -d "fuzz_output" ]; then
-          zip -r fuzz_single_yaml_output.zip "fuzz_output"
-        fi
-    - name: Upload Single Yaml Fuzz Artifact
-      run: |
-        if [ -f "fuzz_single_yaml_output.zip" ]; then
+        if [ -d "${{ github.workspace }}/archipelago/fuzz_output" ]; then
+          zip -r fuzz_single_yaml_output.zip "${{ github.workspace }}/archipelago/fuzz_output"
           gh artifact upload fuzz_single_yaml_output.zip --name fuzz_single_yaml_output
         fi
       env:
