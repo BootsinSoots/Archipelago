@@ -81,7 +81,7 @@ jobs:
     - name: LM Single Yaml Run
       continue-on-error: true
       run: |
-        python ${{ github.workspace }}/eije-fuzzer/fuzz.py -r 1000 -j 4 -g luigismansion -n 1 -m \
+        python fuzz.py -r 1000 -j 4 -g luigismansion -n 1 -m \
         worlds/luigismansion/luigis-mansion-meta.yml
     - name: Zip Single Yaml Fuzz Output
       run: |
