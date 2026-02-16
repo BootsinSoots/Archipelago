@@ -107,7 +107,7 @@ jobs:
       run: |
         cd archipelago
         mkdir -p temp_static
-        mv ${{ steps.genTemplate.output.template }} temp_static
+        mv ${{ steps.genTemplate.outputs.template }} temp_static
         python fuzz.py -r 1000 -j 4 -g luigismansion -n 3 -m worlds/luigismansion/luigis-mansion-meta.yml \
         --dump-ignored --with-static-worlds temp_static
     - name: Zip Empty Yaml Fuzz Output
