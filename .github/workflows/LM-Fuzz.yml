@@ -46,7 +46,7 @@ jobs:
       
         curl -L -H "Authorization: Bearer ${{ github.token }}" \
           -H "Accept: application/octet-stream" \
-          -o ${{ steps.setupAP.outputs.path }}/custom-worlds
+          -o ${{ steps.setupAP.outputs.path }}/custom-worlds \
           "$asset_url"
 
     # Get the latest release of Eije's empty world, which is used to help evaluate restrictive starts.
