@@ -85,7 +85,7 @@ jobs:
       run: |
         cd archipelago
         python fuzz.py -r 1000 -j 4 -g luigismansion -n 1 -m \
-        worlds/luigismansion/luigis-mansion-meta.yml
+        ${{ github.workspace }}/archipelago/worlds/luigismansion/luigis-mansion-meta.yml
     - name: Zip Single Yaml Fuzz Output
       run: |
         if [ -d "fuzz_output" ]; then
