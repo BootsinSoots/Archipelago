@@ -54,6 +54,7 @@ jobs:
         ap-version: "latest"
         python-version: 3.12
         apworld-path: ${{ github.workspace }}/temp_worlds/empty.apworld
+        checkout: false
 
     # Now checkout our own repo and set up our dependencies
     - name: Download LM's Repo
