@@ -105,8 +105,8 @@ jobs:
     - name: LM Empty World Run
       continue-on-error: true
       run: |
-        mkdir -p temp_static
-        mv ${{ steps.genTemplate.outputs.template }} temp_static
+        mkdir -p archipelago/temp_static
+        mv ${{ steps.genTemplate.outputs.template }} archipelago/temp_static
         cd archipelago
         python fuzz.py -r 1000 -j 4 -g luigismansion -n 3 -m worlds/luigismansion/luigis-mansion-meta.yml \
         --dump-ignored --with-static-worlds temp_static
@@ -114,4 +114,18 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: fuzz_empty_yaml_output
+        path: ${{ github.workspace }}/archipelago/fuzz_output
+
+    # Fuzz determinism
+    - name: LM Determinism Run
+      continue-on-error: true
+      run: |
+        cd archipelago
+        mv ${{ github.workspace }}/eije-fuzzer/hooks/determinism.py determinism.py
+        python fuzz.py -r 1000 -j 4 -g luigismansion -n 3 -m worlds/luigismansion/luigis-mansion-meta.yml \
+        --dump-ignored --hook determinism:Hook
+    - name: Zip Determinism Fuzz Output
+      uses: actions/upload-artifact@v4
+      with:
+        name: fuzz_determinism_output
         path: ${{ github.workspace }}/archipelago/fuzz_output
