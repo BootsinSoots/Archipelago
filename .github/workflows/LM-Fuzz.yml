@@ -20,7 +20,10 @@ jobs:
       with:
         repository: Eijebong/Archipelago-fuzzer
         ref: eaef49942adfba577bd886dafe932e87d33a367c
-        path: ${{ github.workspace }}/eije-fuzzer
+        path: ${{ steps.setupAP.outputs.path }}/eije-fuzzer
+    - name: Copy Fuzz.py to main AP Level
+      run: |
+        mv ${{ steps.setupAP.outputs.path }}/eije-fuzzer/fuzz.py ${{ steps.setupAP.outputs.path }}/fuzz.py
 
       #  Get Mysteryem's hook files for lambda capture issues and item placement issues.
     - name: Download Mysterym Fuzzer Hooks
@@ -28,7 +31,7 @@ jobs:
       with:
         repository: Mysteryem/Archipelago-fuzzer
         ref: 8b80a433fe57570b644fe9d245b1eb6a61be3d89
-        path: ${{ github.workspace }}/mysteryem-fuzzer
+        path: ${{ steps.setupAP.outputs.path }}/mysteryem-fuzzer
 
     # Get the latest release of UT's tracker world, which also contains a UT hook check.
     - name: Get Latest UT Tracker Release Tag
