@@ -66,7 +66,7 @@ jobs:
     - name: Install LM Dependencies
       run: pip install -r worlds/luigismansion/requirements.txt
     - name: Re-Install AP Dependencies
-      run: python ModuleUpdate.py -y -f
+      run: python ${{ github.workspace }}/archipelago/ModuleUpdate.py -y -f
 
     # Copy the fuzzer into AP's Main Folder, copies UT and Empty to custom_worlds.
     - name: Copy Fuzz.py to main AP Level
