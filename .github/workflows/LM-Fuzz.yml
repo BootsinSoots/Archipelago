@@ -61,9 +61,10 @@ jobs:
       uses: actions/checkout@v4
       with:
         ref: ${{ github.ref_name }}
-        sparse-checkout: |
-          worlds/luigismansion
-        path: ${{ github.workspace }}/archipelago/worlds/luigismansion
+        path: ${{ github.workspace }}/luigipelago
+    - name: Copy LM World to actual AP install
+      run: |
+        mv ${{ github.workspace }}/luigipelago/worlds/luigismansion ${{ github.workspace }}/archipelago/worlds/luigismansion
     - name: List LM Directory and cd
       run: |
         cd ${{ github.workspace }}/archipelago
