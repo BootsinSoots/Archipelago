@@ -39,7 +39,7 @@ jobs:
         https://api.github.com/repos/FarisTheAncient/Archipelago/releases/latest | jq -r '.tag_name' )" >> $GITHUB_OUTPUT
     - name: Download Latest UT APWorld Release
       run: |      
-        curl -L -H "Authorization: Bearer ${{ github.token }}" \
+        curl --fail -L -H "Authorization: Bearer ${{ github.token }}" \
           -H "Accept: application/octet-stream" \
           -o ${{ steps.setupAP.outputs.path }}/custom_worlds/tracker.apworld \
           "https://github.com/FarisTheAncient/Archipelago/releases/download/${{ steps.getTrackerTag.outputs.releasetag }}/tracker.apworld"
@@ -47,7 +47,7 @@ jobs:
     # Get the latest release of Eije's empty world, which is used to help evaluate restrictive starts.
     - name: Download Empty APWorld
       run: |        
-        curl -L -H "Authorization: Bearer ${{ github.token }}" \
+        curl --fail -L -H "Authorization: Bearer ${{ github.token }}" \
           -H "Accept: application/octet-stream" \
           -o ${{ steps.setupAP.outputs.path }}/custom_worlds/empty.apworld \
           "https://github.com/Eijebong/empty-apworld/releases/download/0.0.3/empty.apworld"
@@ -61,7 +61,7 @@ jobs:
       uses: Eijebong/ap-actions/generate-template@main
       with:
         ap-version: "latest"
-        python-version: "3.12"
+        python-version: 3.12
         apworld-path: ${{ steps.setupAP.outputs.path }}/custom_worlds/empty.apworld
         apworld-name: "Empty"
         checkout: false
