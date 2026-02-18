@@ -110,28 +110,8 @@ jobs:
     needs: [windows-deps-311, windows-deps-312, windows-deps-313, linux-deps-311, linux-deps-312, linux-deps-313]
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
-      with:
-        python-version: "3.12"
-    - name: Fuzzer-Check-3-yml
-      uses: Eijebong/ap-actions/fuzz@main
-      with:
-        apworld-path: worlds/luigismansion
-        ap-version: "latest"
-        python-version: '3.12'
-        runs: 15000
-        yamls-per-run: 3
-        meta: "${{github.workspace}}/worlds/luigismansion/luigis-mansion-meta.yml"
-    - name: Fuzzer-Check-1-yml
-      uses: Eijebong/ap-actions/fuzz@main
-      with:
-        apworld-path: worlds/luigismansion
-        ap-version: "latest"
-        python-version: '3.12'
-        runs: 15000
-        yamls-per-run: 1
-        meta: "${{github.workspace}}/worlds/luigismansion/luigis-mansion-meta.yml"
+    - name: Call LM Fuzz Suite
+      uses: ${{ github.workspace }}/.github/workflows/LM-Fuzz.yml@${{ github.ref_name }}
 
   package:
     needs: [windows-deps-311, windows-deps-312, windows-deps-313, linux-deps-311, linux-deps-312, linux-deps-313]
