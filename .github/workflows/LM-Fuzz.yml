@@ -1,5 +1,63 @@
 name: Fuzz Luigi's Mansion
-on: [workflow_dispatch, workflow_call]
+on:
+  workflow_dispatch:
+    inputs:
+      run_ut_fuzz:
+        description: Run the fuzzer test for Universal Tracker.
+        default: true
+        required: true
+      run_determinism_fuzz:
+        description: Run the fuzzer test for Determinism.
+        default: true
+        required: true
+      run_item_count_fuzz:
+        description: Run the fuzzer test for Item Count matching Location Count.
+        default: true
+        required: true
+      run_item_placement_fuzz:
+        description: Run the fuzzer test for Item Placement.
+        default: true
+        required: true
+      run_gerpocalypse_fuzz:
+        description: Run the fuzzer test for GER apocalypse.
+        default: true
+        required: true
+      run_lambda_fuzz:
+        description: Run the fuzzer test for Lambda Capture.
+        default: true
+        required: true
+  workflow_call:
+    inputs:
+      run_ut_fuzz:
+        description: Run the fuzzer test for Universal Tracker.
+        default: true
+        required: true
+        type: boolean
+      run_determinism_fuzz:
+        description: Run the fuzzer test for Determinism.
+        default: true
+        required: true
+        type: boolean
+      run_item_count_fuzz:
+        description: Run the fuzzer test for Item Count matching Location Count.
+        default: true
+        required: true
+        type: boolean
+      run_item_placement_fuzz:
+        description: Run the fuzzer test for Item Placement.
+        default: true
+        required: true
+        type: boolean
+      run_gerpocalypse_fuzz:
+        description: Run the fuzzer test for GER apocalypse.
+        default: true
+        required: true
+        type: boolean
+      run_lambda_fuzz:
+        description: Run the fuzzer test for Lambda Capture.
+        default: true
+        required: true
+        type: boolean
 
 jobs:
   fuzz-lm:
@@ -24,12 +82,14 @@ jobs:
 
     # Get the latest release of UT's tracker world, which also contains a UT hook check.
     - name: Get Latest UT Tracker Release Tag
+      if: ${{ github.event.inputs.run_ut_fuzz != 'false' }}
       id: getTrackerTag
       shell: bash
       run: |
         echo "releasetag=$(curl -fsL -H "Authorization: Bearer ${{ github.token }}" \
         https://api.github.com/repos/FarisTheAncient/Archipelago/releases/latest | jq -r '.tag_name' )" >> $GITHUB_OUTPUT
     - name: Download Latest UT APWorld Release
+      if: ${{ github.event.inputs.run_ut_fuzz != 'false' }}
       run: |      
         curl --fail --create-dirs -L -H "Authorization: Bearer ${{ github.token }}" \
           -H "Accept: application/octet-stream" \
@@ -118,6 +178,7 @@ jobs:
 
     # Fuzz determinism
     - name: LM Determinism Run
+      if: ${{ github.event.inputs.run_determinism_fuzz != 'false' }}
       continue-on-error: true
       run: |
         cd archipelago
@@ -125,6 +186,7 @@ jobs:
         python fuzz.py -r 500 -j 4 -g luigismansion -n 3 -m worlds/luigismansion/luigis-mansion-meta.yml \
         --dump-ignored --hook determinism:Hook
     - name: Zip Determinism Fuzz Output
+      if: ${{ github.event.inputs.run_determinism_fuzz != 'false' }}
       uses: actions/upload-artifact@v4
       with:
         name: fuzz_determinism_output
@@ -132,6 +194,7 @@ jobs:
 
     # Fuzz UT
     - name: LM UT Run
+      if: ${{ github.event.inputs.run_ut_fuzz != 'false' }}
       continue-on-error: true
       run: |
         cd archipelago
@@ -139,6 +202,7 @@ jobs:
         python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
         --dump-ignored --hook worlds.tracker.fuzzer_hook:Hook
     - name: Zip UT Fuzz Output
+      if: ${{ github.event.inputs.run_ut_fuzz != 'false' }}
       uses: actions/upload-artifact@v4
       with:
         name: fuzz_ut_output
@@ -146,6 +210,7 @@ jobs:
 
     # Fuzz Lambda Capture
     - name: LM Lambda Capture Run
+      if: ${{ github.event.inputs.run_lambda_fuzz != 'false' }}
       continue-on-error: true
       run: |
         cd archipelago
@@ -153,6 +218,7 @@ jobs:
         python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
         --dump-ignored --hook lambda_check:Hook
     - name: Zip Lambda Capture Output
+      if: ${{ github.event.inputs.run_lambda_fuzz != 'false' }}
       uses: actions/upload-artifact@v4
       with:
         name: fuzz_lambda_capture_output
@@ -160,6 +226,7 @@ jobs:
 
     # Fuzz Gerpocalypse
     - name: LM Gerpocalypse Run
+      if: ${{ github.event.inputs.run_gerpocalypse_fuzz != 'false' }}
       continue-on-error: true
       run: |
         cd archipelago
@@ -167,6 +234,7 @@ jobs:
         python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
         --dump-ignored --hook gerpocalypse:Hook
     - name: Zip Gerpocalypse Output
+      if: ${{ github.event.inputs.run_gerpocalypse_fuzz != 'false' }}
       uses: actions/upload-artifact@v4
       with:
         name: fuzz_gerpocalypse_output
@@ -174,6 +242,7 @@ jobs:
 
     # Fuzz Item Placement
     - name: LM Item Placement Run
+      if: ${{ github.event.inputs.run_item_placement_fuzz != 'false' }}
       continue-on-error: true
       run: |
         cd archipelago
@@ -181,6 +250,7 @@ jobs:
         python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
         --dump-ignored --hook item_placement:Hook
     - name: Zip Item Placement Output
+      if: ${{ github.event.inputs.run_item_placement_fuzz != 'false' }}
       uses: actions/upload-artifact@v4
       with:
         name: fuzz_item_placement_output
@@ -188,6 +258,7 @@ jobs:
 
     # Fuzz Item Loc Count
     - name: LM Item Loc Run
+      if: ${{ github.event.inputs.run_item_count_fuzz != 'false' }}
       continue-on-error: true
       run: |
         cd archipelago
@@ -196,6 +267,7 @@ jobs:
         python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
         --dump-ignored --hook item_location_count:Hook
     - name: Zip Item Loc Output
+      if: ${{ github.event.inputs.run_item_count_fuzz != 'false' }}
       uses: actions/upload-artifact@v4
       with:
         name: fuzz_item_loc_output
