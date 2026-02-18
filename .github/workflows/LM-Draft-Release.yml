@@ -110,8 +110,9 @@ jobs:
     needs: [windows-deps-311, windows-deps-312, windows-deps-313, linux-deps-311, linux-deps-312, linux-deps-313]
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v4
     - name: Call LM Fuzz Suite
-      uses: ${{ github.workspace }}/.github/workflows/LM-Fuzz.yml@${{ github.ref_name }}
+      uses: ./.github/workflows/LM-Fuzz.yml@${{ github.ref_name }}
 
   package:
     needs: [windows-deps-311, windows-deps-312, windows-deps-313, linux-deps-311, linux-deps-312, linux-deps-313]
