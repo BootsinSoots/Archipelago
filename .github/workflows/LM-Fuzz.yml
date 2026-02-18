@@ -135,6 +135,7 @@ jobs:
       continue-on-error: true
       run: |
         cd archipelago
+        mkdir -p Players
         python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
         --dump-ignored --hook worlds.tracker.fuzzer_hook:Hook
     - name: Zip UT Fuzz Output
@@ -190,6 +191,7 @@ jobs:
       continue-on-error: true
       run: |
         cd archipelago
+        ls ${{ github.workspace }}/eije-fuzzer/hooks/
         mv ${{ github.workspace }}/eije-fuzzer/hooks/item_location_count.py item_location_count.py
         python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
         --dump-ignored --hook item_location_count:Hook
