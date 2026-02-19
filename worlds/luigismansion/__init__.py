@@ -545,7 +545,6 @@ class LMWorld(World):
             "Emerald": self.options.filler_weights["Gems"],
             "Ruby": self.options.filler_weights["Gems"],
             "Diamond": math.ceil(self.options.filler_weights["Gems"] * 0.4),
-            "Dust": self.options.filler_weights["Dust"],
             "Small Heart": self.options.filler_weights["Hearts"],
             "Large Heart":  max(0,self.options.filler_weights["Hearts"] - 5),
             "10 Coins": self.options.filler_weights["Coins"],
@@ -556,6 +555,10 @@ class LMWorld(World):
             "1 Gold Bar": self.options.filler_weights["Bars"],
             "2 Gold Bars": max(0,self.options.filler_weights["Bars"] - 5),
         }
+        if self.options.grassanity.value == 1:
+            self.other_filler_dict.update({"Grass": self.options.filler_weights["Dust"],})
+        else:
+            self.other_filler_dict.update({"Dust": self.options.filler_weights["Dust"],})
 
         self.all_filler_dict = {**self.trap_filler_dict, **self.other_filler_dict}
 
@@ -673,7 +676,7 @@ class LMWorld(World):
             other_filler = dict(sorted(self.other_filler_dict.items()))
             return self.random.choices(list(other_filler.keys()), weights=list(other_filler.values()), k=1)[0]
         else:
-            return "Dust"
+            return "Dust" if self.options.grassanity.value == 0 else "Grass"
 
     # Used for ItemLink and overrides the one used by AP.
     def get_filler_item_name(self) -> str:
@@ -681,13 +684,15 @@ class LMWorld(World):
             filler_dict = dict(sorted(self.all_filler_dict.items()))
             return self.random.choices(list(filler_dict.keys()), weights=list(filler_dict.values()), k=1)[0]
         else:
-            return "Dust"
+            return "Dust" if self.options.grassanity.value == 0 else "Grass"
 
     def set_rules(self):
         self.multiworld.completion_condition[self.player] = lambda state: state.has("Mario's Painting", self.player)
 
     def post_fill(self) -> None:
         if self.options.boosanity:
+            # Count number of trap items on these locations. Determine difference between total trap count and 8
+            # then repick using other filler listing if difference is positive, equal to difference, and replace those items
             boolossus_locations: list[LMLocation] = []
             for location in BOOLOSSUS_LOCATION_TABLE.keys():
                 boolossus_locations += [self.get_location(location)]
@@ -703,8 +708,6 @@ class LMWorld(World):
                     # Place a new, replacement filler item.
                     self.multiworld.push_item(loc, self.create_item(self.get_other_filler_item()), False)
                     trap_boolossus_list.remove(loc)
-            # Count number of trap items on these locations. Determine difference between total trap count and 8
-            # then repick using other filler listing if difference is positive, equal to difference, and replace those items
 
     @classmethod # output_directory is required even though we don't use it
     def stage_generate_output(cls, multiworld: MultiWorld, output_directory: str):
