@@ -5,58 +5,58 @@ on:
       run_ut_fuzz:
         description: Run the fuzzer test for Universal Tracker.
         default: true
-        required: true
+        required: false
       run_determinism_fuzz:
         description: Run the fuzzer test for Determinism.
         default: true
-        required: true
+        required: false
       run_item_count_fuzz:
         description: Run the fuzzer test for Item Count matching Location Count.
         default: true
-        required: true
+        required: false
       run_item_placement_fuzz:
         description: Run the fuzzer test for Item Placement.
         default: true
-        required: true
+        required: false
       run_gerpocalypse_fuzz:
         description: Run the fuzzer test for GER apocalypse.
         default: true
-        required: true
+        required: false
       run_lambda_fuzz:
         description: Run the fuzzer test for Lambda Capture.
         default: true
-        required: true
+        required: false
   workflow_call:
     inputs:
       run_ut_fuzz:
         description: Run the fuzzer test for Universal Tracker.
         default: true
-        required: true
+        required: false
         type: boolean
       run_determinism_fuzz:
         description: Run the fuzzer test for Determinism.
         default: true
-        required: true
+        required: false
         type: boolean
       run_item_count_fuzz:
         description: Run the fuzzer test for Item Count matching Location Count.
         default: true
-        required: true
+        required: false
         type: boolean
       run_item_placement_fuzz:
         description: Run the fuzzer test for Item Placement.
         default: true
-        required: true
+        required: false
         type: boolean
       run_gerpocalypse_fuzz:
         description: Run the fuzzer test for GER apocalypse.
         default: true
-        required: true
+        required: false
         type: boolean
       run_lambda_fuzz:
         description: Run the fuzzer test for Lambda Capture.
         default: true
-        required: true
+        required: false
         type: boolean
 
 jobs:
