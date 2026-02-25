@@ -275,7 +275,7 @@ class LMWorld(World):
             for location, data in LIGHT_LOCATION_TABLE.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
-                if entry.code not in (771, 775, 776): # If not a room that turns on automatically
+                if data.require_poltergust:
                     add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
                 if entry.region == "Twins' Room" and self.open_doors.get(28) == 0:
                     add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
