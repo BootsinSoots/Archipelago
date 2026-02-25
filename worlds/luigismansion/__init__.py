@@ -247,6 +247,7 @@ class LMWorld(World):
             for location, data in SILVER_PORTRAIT_TABLE.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
+                add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
                 if entry.code == 978 and self.open_doors.get(28) == 0:
                     add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
                 if entry.code == 981:
@@ -259,6 +260,7 @@ class LMWorld(World):
             for location, data in GOLD_PORTRAIT_TABLE.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
+                add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
                 if entry.code == 953 and self.open_doors.get(28) == 0: # Special logic for twins
                     add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
                 if entry.code == 956: # Special logic for Clairvoya
