@@ -8,7 +8,7 @@
 
 ## Installation Procedures
 
-1. Download and install the Archipelago Multiworld Suite from the link above, making sure to install the most recent version.
+1. Download and install the most recent Archipelago Multiworld Suite from the link above, making sure to install the most recent version.
 
 2. Acquire the most recent APWorld from the [Releases page](https://github.com/BootsinSoots/Archipelago/releases/latest) and place the luigismansion.apworld in the custom_worlds folder of your Archipelago install
 
