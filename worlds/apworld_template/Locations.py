@@ -6,7 +6,7 @@ from .Constants.Names import location_names as LocationName
 
 class GameLocationData(NamedTuple):
     region: str
-    code: Optional[int]  # used to create ap_id, None for events
+    address: Optional[int]  # used to create ap_id, None for events
     location_groups: list[str]  # type of randomization option/jmp table and group [Chest, Furniture, Furniture, Plant, Boo, GSpeedy (Gold Mouse), BSpeedy (Blue Ghost), Portrait, Toad]
     other_variable: int = -1  # entry number on the jmp table it belongs to
 
