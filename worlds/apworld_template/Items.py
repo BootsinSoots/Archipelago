@@ -6,7 +6,7 @@ from BaseClasses import ItemClassification as IC
 from .Constants.Names import item_names as ItemName
 
 class GameItemData(NamedTuple):
-    type: list[str]
+    item_groups: list[str]
     code: Optional[int]
     classification: IC
     other_variable: Optional[int] = None
@@ -19,7 +19,7 @@ class GameItem(Item):
     def __init__(self, name: str, classification: ItemClassification, code: Optional[int], player: int):
         super(GameItem, self).__init__(name, classification, code, player)
         data: GameItemData = item_table[name]
-        self.type = data.type
+        self.item_groups = data.item_groups
 
 item_table: dict[str, GameItemData] = {
 
@@ -35,7 +35,7 @@ def get_item_names_per_category() -> Dict[str, Set[str]]:
     categories: Dict[str, Set[str]] = {}
 
     for name, data in item_table.items():
-        for category in data.type:
+        for category in data.item_groups:
             categories.setdefault(category, set()).add(name)
 
     return categories
