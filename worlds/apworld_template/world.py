@@ -67,7 +67,8 @@ class GameWorld(World):
     # Our world class must also have a create_item function that can create any one of our items by name at any time.
     # We also put this in a different file, the same one that create_items is in.
     def create_item(self, name: str) -> Items.GameItem:
-        return Items.create_item_with_correct_classification(self, name)
+        item_data: Items.GameItemData = Items.item_table[name]
+        return Items.GameItem(name, item_data.classification, item_data.code, self.player)
 
     # For features such as item links and panic-method start inventory, AP may ask your world to create extra filler.
     # The way it does this is by calling get_filler_item_name.
