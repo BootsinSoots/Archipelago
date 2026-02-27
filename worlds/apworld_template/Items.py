@@ -24,7 +24,7 @@ item_table: dict[str, GameItemData] = {
 
 }
 
-def get_items_name_to_id():
+def get_items_name_to_id() -> dict[str, int]:
     dict_locs: dict[str, int] = {}
     for name, data in item_table.items():
         dict_locs.update({name: len(dict_locs) + 1})
