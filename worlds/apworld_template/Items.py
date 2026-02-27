@@ -1,4 +1,4 @@
-from typing import NamedTuple, Optional, Dict, Set
+from typing import NamedTuple, Optional
 
 from BaseClasses import Item, ItemClassification
 from BaseClasses import ItemClassification as IC
@@ -30,8 +30,8 @@ def get_items_name_to_id() -> dict[str, int]:
         dict_locs.update({name: len(dict_locs) + 1})
     return dict_locs
 
-def get_item_names_per_category() -> Dict[str, Set[str]]:
-    categories: Dict[str, Set[str]] = {}
+def get_item_names_per_category() -> dict[str, set[str]]:
+    categories: dict[str, set[str]] = {}
 
     for name, data in item_table.items():
         for category in data.item_groups:
