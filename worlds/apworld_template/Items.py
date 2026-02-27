@@ -1,7 +1,6 @@
 from typing import NamedTuple, Optional
 
-from BaseClasses import Item, ItemClassification
-from BaseClasses import ItemClassification as IC
+from BaseClasses import Item, ItemClassification as IC
 
 from .Constants.Names import item_names as ItemName
 
@@ -16,7 +15,7 @@ class GameItem(Item):
     game: str = "Game"
     doorid: Optional[int] = None
 
-    def __init__(self, name: str, classification: ItemClassification, code: Optional[int], player: int):
+    def __init__(self, name: str, classification: IC, code: Optional[int], player: int):
         super(GameItem, self).__init__(name, classification, code, player)
         data: GameItemData = item_table[name]
 
