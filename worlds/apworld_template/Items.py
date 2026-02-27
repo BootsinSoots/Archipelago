@@ -32,7 +32,7 @@ item_table: dict[str, GameItemData] = {
 }
 
 ITEM_NAME_TO_ID: dict[str, int] =  {
-    name: data.code for name, data in item_table.items() if data.code is not None}
+name: data.code for name, data in item_table.items() if data.code is not None}
 
 def get_item_names_per_category() -> Dict[str, Set[str]]:
     categories: Dict[str, Set[str]] = {}
