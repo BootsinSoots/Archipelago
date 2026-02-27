@@ -19,13 +19,12 @@ class GameItem(Item):
     def __init__(self, name: str, classification: ItemClassification, code: Optional[int], player: int):
         super(GameItem, self).__init__(name, classification, code, player)
         data: GameItemData = item_table[name]
-        self.item_groups = data.item_groups
 
 item_table: dict[str, GameItemData] = {
 
 }
 
-def get_location_name_to_id():
+def get_items_name_to_id():
     dict_locs: dict[str, int] = {}
     for name, data in item_table.items():
         dict_locs.update({name: len(dict_locs) + 1})
@@ -40,4 +39,4 @@ def get_item_names_per_category() -> Dict[str, Set[str]]:
 
     return categories
 
-ITEM_NAME_TO_ID: dict[str, int] = get_location_name_to_id()
+ITEM_NAME_TO_ID: dict[str, int] = get_items_name_to_id()
