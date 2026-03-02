@@ -29,7 +29,7 @@ class RandomizeJMPTables:
 
     def randomize_jmp_tables(self):
         self._map_two_changes()
-        self._add_hearts_to_other_maps()
+        #self._add_hearts_to_other_maps() # TODO Remove this once itemappear is fixed.
         self._map_one_changes()
         self._map_three_changes()
         self._map_six_changes()
@@ -64,18 +64,19 @@ class RandomizeJMPTables:
         other_furn_list: list[int] = [3, 4, 5, 6, 7, 8]
 
         map_six_furniture: JMP = self.lm_rando.map_files["map6"].jmp_files["furnitureinfo"]
-        map_six_item_appear: JMP = self.lm_rando.map_files["map6"].jmp_files["itemappeartable"]
+        #map_six_item_appear: JMP = self.lm_rando.map_files["map6"].jmp_files["itemappeartable"] # TODO Add back in once itemappear is fixed.
         for furniture_jmp_id in ceiling_furniture_list:
             curr_y_offset: int = int(map_six_furniture.data_entries[furniture_jmp_id]["item_offset_y"])
             adjust_y_offset = 225.0
             map_six_furniture.data_entries[furniture_jmp_id]["item_offset_y"] = curr_y_offset - adjust_y_offset
+            map_six_furniture.data_entries[furniture_jmp_id]["arg0"] = 0.000000
 
         for furniture_jmp_id in other_furn_list:
             curr_y_offset: int = int(map_six_furniture.data_entries[furniture_jmp_id]["item_offset_y"])
             adjust_y_offset = 100.0
             map_six_furniture.data_entries[furniture_jmp_id]["item_offset_y"] = curr_y_offset + adjust_y_offset
 
-        update_furniture_entries(self.lm_rando, 6, map_six_furniture.data_entries, map_six_item_appear.data_entries)
+        update_furniture_entries(self.lm_rando, 6, map_six_furniture.data_entries, []) #map_six_item_appear.data_entries) # TODO Remove this once itemappear is fixed.
 
 
     def _map_two_changes(self):
@@ -212,6 +213,12 @@ class RandomizeJMPTables:
 
         map_two_telesa: JMP = self.lm_rando.map_files["map2"].jmp_files["telesa"]
 
+        boo_hp_unit: float = 0
+        if boo_health_choice == 2:
+            max_sphere: int = max([int(boo_loc["boo_sphere"]) for boo_loc in
+                              self.lm_rando.output_data["Locations"]["Boo"].values()])
+            boo_hp_unit = boo_chosen_hp / max_sphere
+
         for boo_entry in self.lm_rando.output_data["Locations"]["Boo"].values():
             curr_boo_entry: JMPEntry = map_two_telesa.data_entries[int(boo_entry["loc_enum"])]
             curr_boo_entry["accel"] = 3.000000
@@ -225,8 +232,6 @@ class RandomizeJMPTables:
                     boo_random_hp: int = self.lm_rando.random.randint(1, boo_chosen_hp)
                     curr_boo_entry["str_hp"] = boo_random_hp
                 case 2:
-                    boo_hp_unit = max([int(boo_loc["boo_sphere"]) for boo_loc in
-                        self.lm_rando.output_data["Locations"]["Boo"].values()])
                     boo_sphere_hp: int = ceil(boo_hp_unit * boo_entry["boo_sphere"]) if ceil(
                         boo_hp_unit * boo_entry["boo_sphere"]) <= boo_chosen_hp else boo_chosen_hp
                     curr_boo_entry["str_hp"] = boo_sphere_hp
@@ -362,14 +367,6 @@ class RandomizeJMPTables:
         map_two_nobserver.add_jmp_entry(create_observer_entry(3250.000000, -500.000000, -1480.000000,
             67, 18, 12, cond_arg0=120))
 
-        # Check that Shivers is caught to turn on Conservatory Hallway Light
-        map_two_nobserver.add_jmp_entry(create_observer_entry(3250.000000, 0.000000, -100.000000,
-            0, 13, 7, arg0=60))
-
-        # This one enables the Conservatory 1F hallway after catching Shivers / Butler
-        map_two_nobserver.add_jmp_entry(create_observer_entry(1400.000000, 0.000000, -4100.000000,
-            18, 18, 1, cond_arg0=60))
-
         # This one adds an observer into the Foyer where if Luigi is in the room anywhere, it will turn on the lights.
         map_two_nobserver.add_jmp_entry(create_observer_entry(0.000000, 0.000000, 0.000000,
             2, 15, 1))
@@ -457,7 +454,7 @@ class RandomizeJMPTables:
         speedy_enabled: bool = bool(self.lm_rando.output_data["Options"]["speedy_spirits"])
 
         # If randomize ghosts options are not enabled or speedy spirits are not enabled.
-        if not speedy_enabled or enemizer_enabled == 0:
+        if not speedy_enabled and enemizer_enabled == 0:
             return
 
         self.lm_rando.client_logger.info("Now updating all enemy changes (both normal and blackout) for map2.")
@@ -481,7 +478,7 @@ class RandomizeJMPTables:
                 if curr_room_no != room_id or not curr_enemy_name in GHOST_LIST:
                     continue
 
-                if "16_1" in curr_enemy_name:
+                if "16_1" in normal_enemy["create_name"]:
                     normal_enemy["pos_y"] = 30.000000
 
                 room_element: str = "No Element" if (room_id in [27, 35, 40]) else val
@@ -721,14 +718,15 @@ class RandomizeJMPTables:
                 character_entry["appear_flag"] = 0
 
             # Fix a Nintendo mistake where the Cellar chest has a room ID of 0 instead of 63.
-            elif char_name == "63_2":
+            elif character_entry["create_name"] == "63_2":
                 character_entry["room_no"] = 63
 
             # Remove Miss Petunia to never disappear, unless captured.
             elif char_name == "fat" and char_room_num == 45:
                 character_entry["disappear_flag"] = 0
 
-            # Make Shivers / Butler not disappear by doing a different appear flag.
+            # Make Shivers / Butler not disappear by doing a different appear flag, as his original flag (35) only
+            # turns on when the storage boos are released (when the second button is pressed).
             elif char_name == "situji":
                 character_entry["appear_flag"] = 7
 
@@ -742,6 +740,8 @@ class RandomizeJMPTables:
                 character_entry["pos_x"] = spawn_data.pos_x
                 character_entry["pos_y"] = spawn_data.pos_y
                 character_entry["pos_z"] = spawn_data.pos_z
+            elif char_name == "luige" and char_room_num == 48:
+                character_entry["room_no"] = 55
 
         # Removes useless cutscene objects and the vacuum in the Parlor under the closet.
         # Also removes King Boo in the hallway, since his event was removed.
@@ -758,7 +758,7 @@ class RandomizeJMPTables:
         self.lm_rando.client_logger.info("Now updating all speedy spirits/golden mice changes for map2.")
         speedy_enabled: bool = bool(self.lm_rando.output_data["Options"]["speedy_spirits"])
         mice_enabled: bool = bool(self.lm_rando.output_data["Options"]["gold_mice"])
-        if not (speedy_enabled and mice_enabled):
+        if not (speedy_enabled or mice_enabled):
             return
 
         map_two_iyapoo: JMP = self.lm_rando.map_files["map2"].jmp_files["iyapootable"]
@@ -941,6 +941,10 @@ class RandomizeJMPTables:
         # Foyer Chandelier will never ever hurt anyone ever again.
         map_two_furniture.data_entries[101]["move"] = 7
         map_two_furniture.data_entries[277]["move"] = 23
+
+        # Force Tea Room Tables to always update their move type to 0, so people can trigger it.
+        map_two_furniture.data_entries[538]["move"] = 0
+        map_two_furniture.data_entries[539]["move"] = 0
 
         if extra_boo_spots:
             for furn_loc in ALL_LOCATION_TABLE.values():

@@ -55,12 +55,6 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
         lm_dol.data.seek(0x04DB50)
         lm_dol.data.write(bytes.fromhex("93C1FFF0"))
 
-        # Custom boo display counters.
-        lm_dol.data.seek(0x04DBB0)
-        lm_dol.data.write(bytes.fromhex("4848D469"))
-        lm_dol.data.seek(0x04DC10)
-        lm_dol.data.write(bytes.fromhex("4848D409"))
-
     # Turn on/off pickup animations
     if pickup_anim_enabled:
         keys_and_others_val = "02"
@@ -122,7 +116,7 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
     lm_dol.data.seek(CUSTOM_CODE_OFFSET_START)
     lm_dol.data.write(custom_dol_code)
 
-    read_and_update_hooks(lm_dol)
+    read_and_update_hooks(lm_dol, boo_rando_enabled)
 
     if not random_spawn == "Foyer":
         spawn_info: LMRegionInfo = REGION_LIST[random_spawn]
@@ -208,17 +202,23 @@ def vanilla_game_changes(dol_data: DOL):
     dol_data.data.write(bytes.fromhex("60000000"))
 
 
-def read_and_update_hooks(dol_data: DOL):
+def read_and_update_hooks(dol_data: DOL, boo_rando_enabled: bool):
     """Reads and updates all the necessary custom code hooks used for the custom features like mirror warp, traps, etc.
     Since these hooks typically start with "04", as they are AR codes, update them to start with "80" instead.
     Once formatted, need to convert the RAM address to a DOL offset instead to update it properly in the DOL file.
     For LM at least, RAM address and DOL offset tend to be 32A0 away from each other.
     To convert DOL to RAM, add 32A0, to revert back, subtract 32A0."""
-    custom_hooks: list[str] = (PROJECT_ROOT.joinpath("iso_helper").joinpath("dol").joinpath("Codes_Hooks.txt")
-        .read_text(encoding="utf-8").lstrip().rstrip().splitlines())
-    for hook_line in custom_hooks:
+    custom_hook_text: str = (PROJECT_ROOT.joinpath("iso_helper").joinpath("dol").joinpath("Codes_Hooks.txt")
+        .read_text(encoding="utf-8").lstrip().rstrip())
+    custom_hook_lines: list[str] = custom_hook_text.splitlines()
+    if not ("04050E50" in custom_hook_text and "04050EB0" in custom_hook_text):
+        raise Exception("Unable to properly identify the code hooks to exclude regarding boosanity...")
+    for hook_line in custom_hook_lines:
         if hook_line.rstrip() == "": # Ignore any whitespace lines.
             continue
+        elif not boo_rando_enabled and ("04050E50" in hook_line or "04050EB0" in hook_line):
+            continue
+
         arc_code_line: list[str] = hook_line.split(" ")
         ram_addr: int = int("80" + arc_code_line[0][2:], 16)
         dol_offset = dol_data.convert_address_to_offset(ram_addr)

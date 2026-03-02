@@ -261,6 +261,16 @@ class LMContext(BaseContext):
                 Utils.async_start(self.display_class.display_in_game(), "LM - Display Items in Game")
                 self.ring_link.reset_ringlink()
 
+                # Update the Text for Caught/Received Boos based on boosanity enabled.
+                if not self.boosanity:
+                    self.ui.important_labels["Boos"].text = "Caught Boos"
+                else:
+                    self.ui.important_labels["Boos"].text = "Received Boos"
+
+                # Lastly Update the Client tab with details of the Balcony Boo Count / King Boo
+                self.ui.update_king_boo_label(self.boo_final_count)
+                self.ui.update_balcony_boo_label(self.boo_balcony_count)
+
             case "Bounced":
                 if not (self.check_ingame() and self.check_alive()):
                     return
@@ -457,6 +467,10 @@ class LMContext(BaseContext):
             if current_map_id not in lm_loc_data.map_id:
                 continue
 
+            # Some locations, like Gold Portraits require multiple RAM address to be true simultaneously. Keep track of
+            # all of these booleans in a list and check if all true to send the check.
+            all_true_list: list[bool] = []
+
             # This only checks if one address in the ram list is true, not all, so any location in the list can be true
             #   to consider the location as "checked"
             for loc_addr in lm_loc_data.update_ram_addr:
@@ -470,7 +484,16 @@ class LMContext(BaseContext):
                     if not room_to_check == current_room_id:
                         continue
 
+                if lm_loc_data.all_true:
+                    all_true_list.append(self.check_ram_location(lm_loc_data, loc_addr, current_map_id, lm_loc_data.map_id))
+                    continue
+
                 if self.check_ram_location(lm_loc_data, loc_addr, current_map_id, lm_loc_data.map_id):
+                    self.locations_checked.add(mis_loc)
+                    break
+
+            if lm_loc_data.all_true:
+                if all(loc_true for loc_true in all_true_list):
                     self.locations_checked.add(mis_loc)
 
         await self.check_locations(self.locations_checked)
@@ -554,7 +577,6 @@ class LMContext(BaseContext):
             # If the user is subscribed to send items and the trap is a valid trap and the trap was not already
             # received (to prevent sending the same traps over and over to other TrapLinkers if Luigi died)
             if self.trap_link.is_enabled() and item.item in trap_id_list and last_recv_idx > self.non_save_last_recv_idx:
-                logger.info("Triggering Trap...")
                 await self.trap_link.send_trap_link_async(lm_item_name)
 
             # Filter for only items where we have not received yet. If same slot, only receive locations from pre-set
@@ -571,7 +593,8 @@ class LMContext(BaseContext):
                 self.update_received_idx(last_recv_idx)
                 continue
             elif lm_item.type == "Trap" and (self.non_save_last_recv_idx >= last_recv_idx or
-                (item.item == 8147 and self.get_item_count_by_id(8148) < 1)):
+                (item.item == 8147 and self.get_item_count_by_id(8148) < 1) or
+                (lm_item_name == "Ghost" and self.last_map_id != 2)): # TODO Remove when either ghost trap stop dropping hearts or another workaround to do.
                 # Skip this trap item to avoid Luigi dying in an infinite trap loop.
                 # Also skip No Vac Trap if we don't have a vacuum
                 self.update_received_idx(last_recv_idx)
@@ -840,14 +863,14 @@ class LMContext(BaseContext):
 
                     # At this point, we are verified as connected. Update UI elements in the LMCLient tab.
                     if self.ui:
-                        boo_count = len(
-                            set(([item.item for item in self.items_received if item.item in BOO_AP_ID_LIST])))
+                        if self.boosanity:
+                            boo_count = len(([item.item for item in self.items_received if item.item in BOO_AP_ID_LIST]))
+                        else:
+                            boo_count = sum(bin(byte).count('1') for byte in dme.read_bytes(0x803D5E04, 8))
                         self.ui.update_boo_count_label(boo_count)
                         self.ui.get_wallet_value()
                         self.ui.update_flower_label(self.get_item_count_by_id(8140))
                         self.ui.update_vacuum_label(self.get_item_count_by_id(8064))
-                        self.ui.update_king_boo_label(self.boo_balcony_count)
-                        self.ui.update_balcony_boo_label(self.boo_balcony_count)
 
                     if not (self.check_ingame() and self.check_alive()):
                         await self.wait_for_next_loop(WAIT_TIMER_SHORT_TIMEOUT)

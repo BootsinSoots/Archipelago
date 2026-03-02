@@ -1,3 +1,4 @@
+import copy
 from importlib.resources.abc import Traversable
 from typing import NamedTuple, Optional, TYPE_CHECKING
 import importlib.resources as resources
@@ -219,9 +220,10 @@ class LMDynamicAddresses:
                         curr_ram_data.in_game_room_id, curr_ram_data.item_count)
 
                 case "Custom_Boo_Counter_Bitfields":
-                    for boo_name in BOO_ITEM_TABLE.keys():
+                    for boo_idx, boo_name in enumerate(BOO_ITEM_TABLE.keys(), 0):
                         curr_ram_data: LMRamData = ALL_ITEMS_TABLE[boo_name].update_ram_addr[0]
-                        ALL_ITEMS_TABLE[boo_name].update_ram_addr[0] = LMRamData(converted_addr,
+                        boo_addr = copy.deepcopy(converted_addr) + int(boo_idx/8)
+                        ALL_ITEMS_TABLE[boo_name].update_ram_addr[0] = LMRamData(boo_addr,
                             curr_ram_data.bit_position, curr_ram_data.ram_byte_size, curr_ram_data.pointer_offset,
                             curr_ram_data.in_game_room_id, curr_ram_data.item_count)
 

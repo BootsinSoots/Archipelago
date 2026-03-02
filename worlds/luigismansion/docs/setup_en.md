@@ -8,7 +8,7 @@
 
 ## Installation Procedures
 
-1. Download and install the Archipelago Multiworld Suite from the link above, making sure to install the most recent version.
+1. Download and install the most recent Archipelago Multiworld Suite from the link above, making sure to install the most recent version.
 
 2. Acquire the most recent APWorld from the [Releases page](https://github.com/BootsinSoots/Archipelago/releases/latest) and place the luigismansion.apworld in the custom_worlds folder of your Archipelago install
 
@@ -19,7 +19,9 @@ Run the emulator at least once to make sure it is working.
 
 ![img.png](Dolphin_Disabled_MMU.png)
 
-5. Note for Mac users: Due to additional security hardening that Apple added to MacOS, the steps from [here](https://github.com/aldelaro5/dolphin-memory-engine?tab=readme-ov-file#macos-code-signing) relating to Code Signing must be performed. Not doing so will prevent your Archipelago Client from connecting to the game appropriately.
+5. Additionally, make sure that Emulated Memory Size Override on the same screen is disabled.
+
+![img.png](Emulated_Memory_Size_Override.png)
 
 6. Note for Windows users: you may experience some issues with patching the ISO if your file is stored on OneDrive.
 

@@ -55,7 +55,7 @@ WDYM_TREES: list[int] = [184, 185, 138, 139, 140, 141]
 WDYM_RAISE_LIST: list[int] = [628, 629, 683, 698, 716]
 
 # List of other WDYM checks, such as gallery furniture, kitchen 4th wall, and rails/fences.
-WDYM_MAKE_MOVE_LIST: list[int] = [9, 61, 69, 118, 303, 321, 322, 323, 23, 314, 538, 539]
+WDYM_MAKE_MOVE_LIST: list[int] = [9, 61, 69, 118, 303, 321, 322, 323, 23, 314]
 
 CHEST_NAMES: list[str] = ["ytakara1", "rtakara1", "btakara1", "wtakara1", "gtakara1"]
 
@@ -470,13 +470,11 @@ def apply_new_ghost(lm_rando: "LuigisMansionRandomizer", enemy_entry: JMPEntry, 
         case "Fire":
             enemy_entry["name"] = "yapoo2"
         case "No Element":
-            enemy_room_num: int = int(enemy_entry["room_no"])
-            if enemy_room_num  == 23:
-                no_shy_ghosts = copy.deepcopy(RANDOM_GHOST_LISTS)
-                no_shy_ghosts.pop(5)
-                new_enemy = lm_rando.random.choice(sorted(list(lm_rando.random.choice(sorted(no_shy_ghosts)))))
-            else:
-                new_enemy = lm_rando.random.choice(sorted(list(lm_rando.random.choice(sorted(RANDOM_GHOST_LISTS)))))
+            # No Shy Guy ghosts allowed currently, as they need a path defined in a path file to be used correctly.
+            no_shy_ghosts: list[list[str]] = copy.deepcopy(RANDOM_GHOST_LISTS)
+            no_shy_ghosts = [enemy_list for enemy_list in no_shy_ghosts if not
+                any("heypo" in enemy_name for enemy_name in enemy_list)]
+            new_enemy = lm_rando.random.choice(sorted(list(lm_rando.random.choice(sorted(no_shy_ghosts)))))
             enemy_entry["name"] = new_enemy
 
     # If the new ghost is a Ceiling Ghost, increase its spawning Y position so it spawns in the air.
@@ -512,7 +510,7 @@ def update_furniture_entries(lm_rando: "LuigisMansionRandomizer", map_id: int, f
 
         actor_item_name = get_item_appear_name(loc_data, lm_rando.slot)
         if not actor_item_name == "money":
-            furniture_entry["item_table"] = find_item_appear_index(item_appear_entries, actor_item_name)
+            furniture_entry["item_table"] = find_item_appear_index(item_appear_entries, actor_item_name) if map_id == 2 else 0 # TODO Remove this once itemappear is fixed.
             furniture_entry["generate"] = 0
             furniture_entry["generate_num"] = 0
             continue

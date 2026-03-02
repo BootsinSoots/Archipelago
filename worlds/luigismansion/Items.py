@@ -1,7 +1,5 @@
 from typing import NamedTuple, Dict, Set, Optional
 
-from win32comext.ifilter.ifilter import BindIFilterFromStream
-
 from BaseClasses import Item
 from BaseClasses import ItemClassification as IC
 from .Helper_Functions import LMRamData
@@ -27,8 +25,8 @@ class LMItem(Item):
     game: str = "Luigi's Mansion"
     doorid: Optional[int] = None
 
-    def __init__(self, name: str, player: int, data: LMItemData, force_nonprogress: bool = False):
-        adjusted_classification = IC.filler if force_nonprogress else data.classification
+    def __init__(self, name: str, player: int, data: LMItemData, force_progress: bool = False):
+        adjusted_classification = IC.progression if force_progress else data.classification
         super(LMItem, self).__init__(name, adjusted_classification, LMItem.get_apid(data.code), player)
 
         self.type = data.type
@@ -245,6 +243,7 @@ other_filler_items: Dict[str, LMItemData] = {
     "Ruby": CurrencyItemData(123, { CURRENCY_NAME.RUBY: 1, }),
     "Diamond": CurrencyItemData(124, { CURRENCY_NAME.DIAMOND: 1, }),
     "Dust": LMItemData("Nothing Item", 127, IC.filler, update_ram_addr=[]),
+    "Grass": LMItemData("Nothing Item", 149, IC.filler, update_ram_addr=[]),
     "Small Heart": LMItemData("Heart", 128, IC.filler,
         update_ram_addr=[LMRamData(0x803D8B40, pointer_offset=0xB8, ram_byte_size=2, item_count=20)]),
     "Large Heart": LMItemData("Heart", 129, IC.filler,

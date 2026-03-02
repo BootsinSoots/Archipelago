@@ -1,0 +1,274 @@
+name: Fuzz Luigi's Mansion
+on:
+  workflow_dispatch:
+    inputs:
+      run_ut_fuzz:
+        description: Run the fuzzer test for Universal Tracker.
+        default: true
+        required: false
+      run_determinism_fuzz:
+        description: Run the fuzzer test for Determinism.
+        default: true
+        required: false
+      run_item_count_fuzz:
+        description: Run the fuzzer test for Item Count matching Location Count.
+        default: true
+        required: false
+      run_item_placement_fuzz:
+        description: Run the fuzzer test for Item Placement.
+        default: true
+        required: false
+      run_gerpocalypse_fuzz:
+        description: Run the fuzzer test for GER apocalypse.
+        default: true
+        required: false
+      run_lambda_fuzz:
+        description: Run the fuzzer test for Lambda Capture.
+        default: true
+        required: false
+  workflow_call:
+    inputs:
+      run_ut_fuzz:
+        description: Run the fuzzer test for Universal Tracker.
+        default: true
+        required: false
+        type: boolean
+      run_determinism_fuzz:
+        description: Run the fuzzer test for Determinism.
+        default: true
+        required: false
+        type: boolean
+      run_item_count_fuzz:
+        description: Run the fuzzer test for Item Count matching Location Count.
+        default: true
+        required: false
+        type: boolean
+      run_item_placement_fuzz:
+        description: Run the fuzzer test for Item Placement.
+        default: true
+        required: false
+        type: boolean
+      run_gerpocalypse_fuzz:
+        description: Run the fuzzer test for GER apocalypse.
+        default: true
+        required: false
+        type: boolean
+      run_lambda_fuzz:
+        description: Run the fuzzer test for Lambda Capture.
+        default: true
+        required: false
+        type: boolean
+
+jobs:
+  fuzz-lm:
+    runs-on: ubuntu-latest
+    steps:
+
+    # Get Eije's Fuzzer and his various built-in hooks
+    - name: Checkout Fuzzer
+      uses: actions/checkout@v4
+      with:
+        repository: Eijebong/Archipelago-fuzzer
+        ref: eaef49942adfba577bd886dafe932e87d33a367c
+        path: ${{ github.workspace }}/eije-fuzzer
+
+      #  Get Mysteryem's hook files for lambda capture issues and item placement issues.
+    - name: Download Mysterym Fuzzer Hooks
+      uses: actions/checkout@v4
+      with:
+        repository: Mysteryem/Archipelago-fuzzer
+        ref: 8b80a433fe57570b644fe9d245b1eb6a61be3d89
+        path: ${{ github.workspace }}/mysteryem-fuzzer
+
+    # Get the latest release of UT's tracker world, which also contains a UT hook check.
+    - name: Get Latest UT Tracker Release Tag
+      if: ${{ github.event.inputs.run_ut_fuzz != 'false' }}
+      id: getTrackerTag
+      shell: bash
+      run: |
+        echo "releasetag=$(curl -fsL -H "Authorization: Bearer ${{ github.token }}" \
+        https://api.github.com/repos/FarisTheAncient/Archipelago/releases/latest | jq -r '.tag_name' )" >> $GITHUB_OUTPUT
+    - name: Download Latest UT APWorld Release
+      if: ${{ github.event.inputs.run_ut_fuzz != 'false' }}
+      run: |      
+        curl --fail --create-dirs -L -H "Authorization: Bearer ${{ github.token }}" \
+          -H "Accept: application/octet-stream" \
+          -o ${{ github.workspace }}/temp_worlds/tracker.apworld \
+          "https://github.com/FarisTheAncient/Archipelago/releases/download/${{ steps.getTrackerTag.outputs.releasetag }}/tracker.apworld"
+
+    # Get the latest release of Eije's empty world, which is used to help evaluate restrictive starts.
+    - name: Download Empty APWorld
+      run: |        
+        curl --fail --create-dirs -L -H "Authorization: Bearer ${{ github.token }}" \
+          -H "Accept: application/octet-stream" \
+          -o ${{ github.workspace }}/temp_worlds/empty.apworld \
+          "https://github.com/Eijebong/empty-apworld/releases/download/0.0.3/empty.apworld"
+
+    # Generate a template YAML for the EmptyWorld, which will be used as an input into a fuzzer task later.
+    # Also sets up AP behind the scenes.
+    - name: Generate Empty Template
+      id: genTemplate
+      uses: Eijebong/ap-actions/generate-template@main
+      continue-on-error: true
+      with:
+        ap-version: "latest"
+        python-version: 3.12
+        apworld-path: ${{ github.workspace }}/temp_worlds/empty.apworld
+        checkout: false
+
+    # Now checkout our own repo and set up our dependencies
+    - name: Download LM's Repo
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.ref_name }}
+        path: ${{ github.workspace }}/luigipelago
+    - name: Copy LM World and Install AP Dependencies, including LM Dependencies
+      run: |
+        cd ${{ github.workspace }}/archipelago
+        mv ${{ github.workspace }}/luigipelago/worlds/luigismansion worlds/luigismansion
+        python ModuleUpdate.py -y -f
+
+    # Copy the fuzzer into AP's Main Folder, copies UT and Empty to custom_worlds.
+    - name: Copy Fuzz.py to main AP Level
+      run: |
+        mv ${{ github.workspace }}/eije-fuzzer/fuzz.py ${{ github.workspace }}/archipelago/fuzz.py
+    - name: Copy Empty / UT world to custom_worlds
+      run: |
+        mv ${{ github.workspace }}/temp_worlds/empty.apworld ${{ github.workspace }}/archipelago/custom_worlds
+        mv ${{ github.workspace }}/temp_worlds/tracker.apworld ${{ github.workspace }}/archipelago/custom_worlds
+
+    # Fuzz with Single Yaml
+    - name: LM Single Yaml Run
+      continue-on-error: true
+      run: |
+        cd archipelago
+        python fuzz.py -r 1000 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml --dump-ignored
+    - name: Zip Single Yaml Fuzz Output
+      uses: actions/upload-artifact@v4
+      with:
+        name: fuzz_single_yaml_output
+        path: ${{ github.workspace }}/archipelago/fuzz_output
+
+    # Fuzz with Triple Yaml
+    - name: LM Triple Yaml Run
+      continue-on-error: true
+      run: |
+        cd archipelago
+        python fuzz.py -r 1000 -j 4 -g luigismansion -n 3 -m worlds/luigismansion/luigis-mansion-meta.yml --dump-ignored
+    - name: Zip Triple Yaml Fuzz Output
+      uses: actions/upload-artifact@v4
+      with:
+        name: fuzz_triple_yaml_output
+        path: ${{ github.workspace }}/archipelago/fuzz_output
+
+    # Fuzz no restrictive
+    - name: LM Empty World Run
+      continue-on-error: true
+      run: |
+        mkdir -p archipelago/temp_static
+        mv ${{ steps.genTemplate.outputs.template }} archipelago/temp_static
+        cd archipelago
+        python fuzz.py -r 1000 -j 4 -g luigismansion -n 3 -m worlds/luigismansion/luigis-mansion-meta.yml \
+        --dump-ignored --with-static-worlds temp_static
+    - name: Zip Empty Yaml Fuzz Output
+      uses: actions/upload-artifact@v4
+      with:
+        name: fuzz_empty_yaml_output
+        path: ${{ github.workspace }}/archipelago/fuzz_output
+
+    # Fuzz determinism
+    - name: LM Determinism Run
+      if: ${{ github.event.inputs.run_determinism_fuzz != 'false' }}
+      continue-on-error: true
+      run: |
+        cd archipelago
+        mv ${{ github.workspace }}/eije-fuzzer/hooks/determinism.py determinism.py
+        python fuzz.py -r 500 -j 4 -g luigismansion -n 3 -m worlds/luigismansion/luigis-mansion-meta.yml \
+        --dump-ignored --hook determinism:Hook
+    - name: Zip Determinism Fuzz Output
+      if: ${{ github.event.inputs.run_determinism_fuzz != 'false' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: fuzz_determinism_output
+        path: ${{ github.workspace }}/archipelago/fuzz_output
+
+    # Fuzz UT
+    - name: LM UT Run
+      if: ${{ github.event.inputs.run_ut_fuzz != 'false' }}
+      continue-on-error: true
+      run: |
+        cd archipelago
+        mkdir -p Players
+        python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
+        --dump-ignored --hook worlds.tracker.fuzzer_hook:Hook
+    - name: Zip UT Fuzz Output
+      if: ${{ github.event.inputs.run_ut_fuzz != 'false' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: fuzz_ut_output
+        path: ${{ github.workspace }}/archipelago/fuzz_output
+
+    # Fuzz Lambda Capture
+    - name: LM Lambda Capture Run
+      if: ${{ github.event.inputs.run_lambda_fuzz != 'false' }}
+      continue-on-error: true
+      run: |
+        cd archipelago
+        mv ${{ github.workspace }}/mysteryem-fuzzer/hooks/detect_rule_variable_capture_issues.py lambda_check.py
+        python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
+        --dump-ignored --hook lambda_check:Hook
+    - name: Zip Lambda Capture Output
+      if: ${{ github.event.inputs.run_lambda_fuzz != 'false' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: fuzz_lambda_capture_output
+        path: ${{ github.workspace }}/archipelago/fuzz_output
+
+    # Fuzz Gerpocalypse
+    - name: LM Gerpocalypse Run
+      if: ${{ github.event.inputs.run_gerpocalypse_fuzz != 'false' }}
+      continue-on-error: true
+      run: |
+        cd archipelago
+        mv ${{ github.workspace }}/eije-fuzzer/hooks/gerpocalypse.py gerpocalypse.py
+        python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
+        --dump-ignored --hook gerpocalypse:Hook
+    - name: Zip Gerpocalypse Output
+      if: ${{ github.event.inputs.run_gerpocalypse_fuzz != 'false' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: fuzz_gerpocalypse_output
+        path: ${{ github.workspace }}/archipelago/fuzz_output
+
+    # Fuzz Item Placement
+    - name: LM Item Placement Run
+      if: ${{ github.event.inputs.run_item_placement_fuzz != 'false' }}
+      continue-on-error: true
+      run: |
+        cd archipelago
+        mv ${{ github.workspace }}/mysteryem-fuzzer/hooks/check_placement_item_location_references.py item_placement.py
+        python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
+        --dump-ignored --hook item_placement:Hook
+    - name: Zip Item Placement Output
+      if: ${{ github.event.inputs.run_item_placement_fuzz != 'false' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: fuzz_item_placement_output
+        path: ${{ github.workspace }}/archipelago/fuzz_output
+
+    # Fuzz Item Loc Count
+    - name: LM Item Loc Run
+      if: ${{ github.event.inputs.run_item_count_fuzz != 'false' }}
+      continue-on-error: true
+      run: |
+        cd archipelago
+        ls ${{ github.workspace }}/eije-fuzzer/hooks/
+        mv ${{ github.workspace }}/eije-fuzzer/hooks/item_location_count.py item_location_count.py
+        python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
+        --dump-ignored --hook item_location_count:Hook
+    - name: Zip Item Loc Output
+      if: ${{ github.event.inputs.run_item_count_fuzz != 'false' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: fuzz_item_loc_output
+        path: ${{ github.workspace }}/archipelago/fuzz_output
