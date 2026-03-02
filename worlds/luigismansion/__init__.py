@@ -81,6 +81,7 @@ class LMWorld(World):
         # If hints for other peoples worlds are enabled or need to calculate boo health by sphere
         self.finished_post_generation = threading.Event()
         self.boo_spheres = {}
+        self.portrait_ghost_health = {}
         self.hints = {}
         self.spawn_full_locked: bool = False
         self.local_early_key: str = ""
@@ -231,6 +232,11 @@ class LMWorld(World):
                 add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
                 region.locations.append(entry)
         if self.options.portrification:
+            # Set max required upgrades based on chosen max health value
+            #
+            # randomly choose a number of upgrades for a given portrait ghost.
+            # After spheres, set health values based on sphere + number of upgrades compared to max value
+
             for location, data in PORTRAIT_LOCATION_TABLE.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
@@ -243,7 +249,25 @@ class LMWorld(World):
                              "and")
                 set_element_rules(self, entry, True)
                 region.locations.append(entry)
+        else:
+            for location, data in PORTRAIT_LOCATION_TABLE.items():
+                region = self.get_region(data.region)
+                region.add_event(location, show_in_spoiler=False)
+                entry = self.get_location(location)
+                add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
+                if entry.region == "Twins' Room" and self.open_doors.get(28) == 0:
+                    add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
+                if data.region == "Fortune-Teller's Room": # If it's Clairvoya's room, should match Mario item count
+                    add_rule(entry,
+                             lambda state: state.has_group("Mario Item", self.player, self.options.mario_items.value),
+                             "and")
+                set_element_rules(self, entry, True)
+
         if self.options.silver_ghosts:
+            # Set max required upgrades based on chosen max health value
+            # @200, 350, 500, 650, 800 +1 upgrade
+            # randomly choose a number of upgrades for a given portrait ghost.
+            # After spheres, set health values based on sphere + number of upgrades compared to max value
             for location, data in SILVER_PORTRAIT_TABLE.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
@@ -257,6 +281,10 @@ class LMWorld(World):
                 set_element_rules(self, entry, True)
                 region.locations.append(entry)
         if self.options.gold_ghosts:
+            # Set max required upgrades based on chosen max health value
+            # @130, 260, 390, 520, 650 +1 upgrade - cap max health at 600 if gold portraits are chosen
+            # randomly choose a number of upgrades for a given portrait ghost.
+            # After spheres, set health values based on sphere + number of upgrades compared to max value
             for location, data in GOLD_PORTRAIT_TABLE.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
