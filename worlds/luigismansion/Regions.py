@@ -194,7 +194,7 @@ def set_ghost_type(world: "LMWorld", ghost_list: dict):
     types: list[str] = ["Fire", "Water", "Ice", "No Element"]
     weights: list[int] = [2, 2, 2, 8]
 
-    for region_name in ghost_list:
+    for region_name in ghost_list.keys():
         if not REGION_LIST[region_name].allow_element_rando:
             ghost_type = "No Element"
         else:
@@ -297,7 +297,7 @@ def connect_regions(world: "LMWorld"):
     lmconnect(world, "Safari Room", "East Attic Hallway", "East Attic Hallway Key", 55)
     lmconnect(world, "East Attic Hallway", "Artist's Studio", "Artist's Studio Key", 63)
     lmconnect(world, "East Attic Hallway", "Balcony", "Balcony Key", 62,
-            lambda state, balc_boo_count=world.options.balcony_boo_count.value: state.has_group("Boo", world.player, balc_boo_count)
+            lambda state, balc_boo_count=world.options.balcony_boo_count.value: state.has_group_unique("Boo", world.player, balc_boo_count)
                           or state.has("Boo", world.player, balc_boo_count))
     lmconnect(world, "Balcony", "West Attic Hallway", "Diamond Key", 59)
     lmconnect(world, "West Attic Hallway", "Armory", "Armory Key", 51)
@@ -315,7 +315,7 @@ def connect_regions(world: "LMWorld"):
     lmconnect(world, "Basement Hallway", "Pipe Room", "Pipe Room Key", 69)
     lmconnect(world, "Basement Hallway", "Altar Hallway", "Altar Hallway Key", 70)
     lmconnect(world, "Altar Hallway", "Secret Altar", "Spade Key", 72,
-            lambda state, final_boo_count=world.options.final_boo_count.value: state.has_group("Boo", world.player, final_boo_count)
+            lambda state, final_boo_count=world.options.final_boo_count.value: state.has_group_unique("Boo", world.player, final_boo_count)
                           or state.has("Boo", world.player, final_boo_count))
     lmconnect(world, world.origin_region_name, "Gallery")
     lmconnect(world, world.origin_region_name, "Training Room")
