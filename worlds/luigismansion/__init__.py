@@ -255,8 +255,9 @@ class LMWorld(World):
         else:
             for location, data in PORTRAIT_LOCATION_TABLE.items():
                 region = self.get_region(data.region)
-                region.add_event(location, show_in_spoiler=False, location_type=LMLocation)
-                entry = self.get_location(location)
+                entry = LMLocation(self.player, location, region, data)
+                entry.address = None
+                entry.place_locked_item(Item("Portrait _Ghost", ItemClassification.progression, None, self.player))
                 add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
                 if entry.region == "Twins' Room" and self.open_doors.get(28) == 0:
                     add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
