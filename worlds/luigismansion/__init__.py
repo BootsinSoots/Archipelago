@@ -322,6 +322,7 @@ class LMWorld(World):
                 location_name = [name for name in PORTRAIT_LOCATION_TABLE.keys() if portrait_short_name in name]
                 if self.options.portrait_health_option.value == 2:
                     if entry.code not in (952, 960, 967):
+                        upgrade_count = number_list.pop()
                         if entry.code in (962, 971): # Gold borders requiring Vac Upgrade
                             add_rule(entry, lambda state: state.has("Vacuum Upgrade", self.player, min(5, (upgrade_count+1))))
                             self.gold_portrait_upgrades.update({location: min(5, (min((upgrade_count+1), self.options.vacuum_upgrades.value)))})
