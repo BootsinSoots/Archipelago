@@ -286,7 +286,8 @@ class LMWorld(World):
                 if self.options.portrait_health_option.value == 2:
                     if entry.code not in (977, 985, 992):
                         upgrade_count = number_list.pop()
-                        add_rule(entry, lambda state: state.has("Vacuum Upgrade", self.player, upgrade_count))
+                        if upgrade_count > 0:
+                            add_rule(entry, lambda state: state.has("Vacuum Upgrade", self.player, upgrade_count))
                         self.silver_portrait_upgrades.update({location: upgrade_count})
                 elif self.options.portrait_health_option.value < 2:
                     if entry.code not in (977, 985, 992):
@@ -320,9 +321,10 @@ class LMWorld(World):
                         upgrade_count = number_list.pop()
                         if entry.code in (962, 971): # Gold borders requiring Vac Upgrade
                             add_rule(entry, lambda state: state.has("Vacuum Upgrade", self.player, min(5, (upgrade_count+1))))
-                            self.gold_portrait_upgrades.update({location: min(5, (upgrade_count+1))})
+                            self.gold_portrait_upgrades.update({location: min(5, (min((upgrade_count+1), self.options.vacuum_upgrades.value)))})
                         else:
-                            add_rule(entry, lambda state: state.has("Vacuum Upgrade", self.player, upgrade_count))
+                            if upgrade_count > 0:
+                                add_rule(entry, lambda state: state.has("Vacuum Upgrade", self.player, upgrade_count))
                             self.gold_portrait_upgrades.update({location: upgrade_count})
                 elif self.options.portrait_health_option.value < 2:
                     if entry.code not in (952, 960, 967):
@@ -709,7 +711,7 @@ class LMWorld(World):
         connect_regions(self)
 
     def create_item(self, item: str) -> LMItem:
-        if self.options.gold_ghosts.value == 1 and item == "Vacuum Upgrade":
+        if (self.options.gold_ghosts.value == 1 or self.options.silver_ghosts.value == 1) and item == "Vacuum Upgrade":
             set_progress = True
         else:
             set_progress = False
