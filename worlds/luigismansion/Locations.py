@@ -73,7 +73,7 @@ BASE_LOCATION_TABLE: dict[str, LMLocationData] = {
     "Hidden Room Small Chest L Floor": LMLocationData("Hidden Room", 14, "Furniture", 246, [],
         update_ram_addr=[LMRamData(in_game_room_id=1)], require_poltergust=False),
     "Rec Room Treadmill Key": LMLocationData("Rec Room", 18, "Furniture", 106, [],
-        update_ram_addr=[LMRamData(in_game_room_id=23)], require_poltergust=False),
+        update_ram_addr=[LMRamData(in_game_room_id=23)], require_poltergust=False, hide_boo=False),
     "Courtyard Birdhouse": LMLocationData("Courtyard", 20, "Furniture", 146, [],
         update_ram_addr=[LMRamData(in_game_room_id=24)], require_poltergust=False),
     "Sealed Room NW Shelf Chest": LMLocationData("Sealed Room", 29, "Furniture", 532, [],
