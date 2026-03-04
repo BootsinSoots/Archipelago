@@ -895,7 +895,7 @@ class LMWorld(World):
 
         # Wait for output thread to finish first.
         if ((self.options.hint_distribution != 5 and self.options.hint_distribution != 1) or
-            self.options.boo_health_option.value == 2):
+            self.options.boo_health_option.value == 2 or self.options.portrait_health_option.value == 2):
             self.finished_post_generation.wait()
 
         # If current world required hint distribution, update the output hint dict
@@ -1008,7 +1008,7 @@ class LMWorld(World):
     def modify_multidata(self, multidata: "MultiData") -> None:
         # Wait for output thread to finish first.
         if ((self.options.hint_distribution != 5 and self.options.hint_distribution != 1) or
-            self.options.boo_health_option.value == 2 or self.options.portrait_health_option.value ==2):
+            self.options.boo_health_option.value == 2 or self.options.portrait_health_option.value == 2):
             self.finished_post_generation.wait()
 
 def _get_disabled_traps(options: LuigiOptions.LMOptions) -> int:
