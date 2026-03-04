@@ -699,7 +699,8 @@ class LMWorld(World):
         for location, data in CLEAR_LOCATION_TABLE.items():
             region = self.get_region(data.region)
             entry = LMLocation(self.player, location, region, data)
-            add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
+            if data.require_poltergust:
+                add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
             # If it's Clairvoya's room chest, should match Mario item count.
             # Do not compare to region to keep rule correct for the Candles Key
             if data.code == 5:
