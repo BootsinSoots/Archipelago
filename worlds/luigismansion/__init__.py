@@ -266,7 +266,7 @@ class LMWorld(World):
                              lambda state: state.has_group_unique("Mario Item", self.player, self.options.mario_items.value),
                              "and")
                 set_element_rules(self, entry, True)
-
+                region.locations.append(entry)
         if self.options.silver_ghosts:
             # Set max required upgrades based on chosen max health value
             # @200, 350, 500, 650, 800 +1 upgrade
