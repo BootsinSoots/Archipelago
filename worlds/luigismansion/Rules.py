@@ -101,7 +101,7 @@ def portrait_health_sphere_things(multiworld: MultiWorld, portrait_sphere_player
                 done_players.add(player)
         portrait_sphere_players.difference_update(done_players)
     exclude_bosses: list[str] = copy.deepcopy(list(PORTRAIT_LOCATION_TABLE.keys()))
-    exclude_bosses -= ["Boolossus, the Jumbo Ghost"]
+    exclude_bosses.remove("Boolossus, the Jumbo Ghost")
     player_max_sphere: dict[int, int] = {}
     for player in portrait_sphere_players:
         max_sphere: int = max([sphere_num for sphere_num, sphere in enumerate(multiworld.get_spheres(), 1) if

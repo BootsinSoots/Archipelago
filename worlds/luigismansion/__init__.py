@@ -284,8 +284,8 @@ class LMWorld(World):
                              lambda state: state.has_group_unique("Mario Item", self.player, self.options.mario_items.value),
                              "and")
                 if self.options.portrait_health_option.value == 2:
-                    upgrade_count = number_list.pop()
                     if entry.code not in (977, 985, 992):
+                        upgrade_count = number_list.pop()
                         add_rule(entry, lambda state: state.has("Vacuum Upgrade", self.player, upgrade_count))
                         self.silver_portrait_upgrades.update({location: upgrade_count})
                 elif self.options.portrait_health_option.value < 2:
@@ -316,8 +316,8 @@ class LMWorld(World):
                              "and")
                 # Choose number of upgrades for each portrasit ghost if by sphere is on
                 if self.options.portrait_health_option.value == 2:
-                    upgrade_count = number_list.pop()
                     if entry.code not in (952, 960, 967):
+                        upgrade_count = number_list.pop()
                         if entry.code in (962, 971): # Gold borders requiring Vac Upgrade
                             add_rule(entry, lambda state: state.has("Vacuum Upgrade", self.player, min(5, (upgrade_count+1))))
                             self.gold_portrait_upgrades.update({location: min(5, (upgrade_count+1))})
