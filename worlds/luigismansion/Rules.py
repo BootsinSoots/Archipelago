@@ -113,9 +113,9 @@ def portrait_health_sphere_things(multiworld: MultiWorld, portrait_sphere_player
                 player_world: "LMWorld" = multiworld.worlds[loc.player]
                 health = min((math.floor(player_world.options.portrait_health_value.value/player_max_sphere[loc.player]))
                         * sphere_num, player_world.options.portrait_health_value.value)
-                if player_world.options.silver_ghosts.value == 1 and loc.name not in ["Bogmire, the Cemetary Shadow", "Chauncey, the Spoiled Baby"]:
+                if player_world.options.silver_ghosts.value == 1 and loc.name not in ["Bogmire, the Cemetary Shadow", "Chauncey, the Spoiled Baby", "Boolossus, the Jumbo Ghost"]:
                     health = min(health, (player_world.silver_portrait_upgrades[loc.name]+1) * 200)
-                if player_world.options.gold_ghosts.value == 1 and loc.name not in ["Bogmire, the Cemetary Shadow", "Chauncey, the Spoiled Baby"]:
+                if player_world.options.gold_ghosts.value == 1 and loc.name not in ["Bogmire, the Cemetary Shadow", "Chauncey, the Spoiled Baby", "Boolossus, the Jumbo Ghost"]:
                     health = min(health, (player_world.gold_portrait_upgrades[loc.name]+1) * 130)
                 player_world.portrait_ghost_health.update({loc.name: health})
             check_portrait_players_done()

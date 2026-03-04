@@ -325,7 +325,7 @@ class LMWorld(World):
                         upgrade_count = number_list.pop()
                         if entry.code in (962, 971): # Gold borders requiring Vac Upgrade
                             add_rule(entry, lambda state: state.has("Vacuum Upgrade", self.player, min(5, (upgrade_count+1))))
-                            self.gold_portrait_upgrades.update({location: min(5, (min((upgrade_count+1), self.options.vacuum_upgrades.value)))})
+                            self.gold_portrait_upgrades.update({location_name[0]: min(5, (min((upgrade_count+1), self.options.vacuum_upgrades.value)))})
                         else:
                             if upgrade_count > 0:
                                 add_rule(entry, lambda state: state.has("Vacuum Upgrade", self.player, upgrade_count))
