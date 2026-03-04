@@ -290,7 +290,9 @@ class LMWorld(World):
                         self.silver_portrait_upgrades.update({location: upgrade_count})
                 elif self.options.portrait_health_option.value < 2:
                     if entry.code not in (977, 985, 992):
-                        health = self.portrait_ghost_health[location]
+                        portrait_short_name = location.split("-")[0].split(" ", 1)[1].strip()
+                        location_name = [name for name in PORTRAIT_LOCATION_TABLE.keys() if portrait_short_name in name]
+                        health = self.portrait_ghost_health[location_name[0]]
                         upgrade_count = math.floor(health / 200)
                         if upgrade_count > 0:
                             add_rule(entry, lambda state: state.has("Vacuum Upgrade", self.player, upgrade_count))
@@ -324,7 +326,9 @@ class LMWorld(World):
                             self.gold_portrait_upgrades.update({location: upgrade_count})
                 elif self.options.portrait_health_option.value < 2:
                     if entry.code not in (952, 960, 967):
-                        health = self.portrait_ghost_health[location]
+                        portrait_short_name = location.split("-")[0].split(" ", 1)[1].strip()
+                        location_name = [name for name in PORTRAIT_LOCATION_TABLE.keys() if portrait_short_name in name]
+                        health = self.portrait_ghost_health[location_name[0]]
                         upgrade_count = math.floor(health/130)
                         if upgrade_count > 0:
                             add_rule(entry, lambda state: state.has("Vacuum Upgrade", self.player, upgrade_count))
