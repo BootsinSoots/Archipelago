@@ -202,7 +202,7 @@ jobs:
         python fuzz.py -r 500 -j 4 -g luigismansion -n 3 -m worlds/luigismansion/luigis-mansion-meta.yml \
         --dump-ignored --hook determinism:Hook
     - name: Zip Determinism Fuzz Output
-      if: ${{ github.event.inputs.run_determinism_fuzz != 'false' }}  and failure() && steps.determ_fuzz.outcome == 'failure'
+      if: failure() and ${{ github.event.inputs.run_determinism_fuzz != 'false' && steps.determ_fuzz.outcome == 'failure' }}
       uses: actions/upload-artifact@v4
       with:
         name: fuzz_determinism_output
@@ -219,7 +219,7 @@ jobs:
         python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
         --dump-ignored --hook worlds.tracker.fuzzer_hook:Hook
     - name: Zip UT Fuzz Output
-      if: ${{ github.event.inputs.run_ut_fuzz != 'false' }}  and failure() && steps.ut_fuzz.outcome == 'failure'
+      if: failure() and ${{ github.event.inputs.run_ut_fuzz != 'false' && steps.ut_fuzz.outcome == 'failure' }}
       uses: actions/upload-artifact@v4
       with:
         name: fuzz_ut_output
@@ -236,7 +236,7 @@ jobs:
         python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
         --dump-ignored --hook lambda_check:Hook
     - name: Zip Lambda Capture Output
-      if: ${{ github.event.inputs.run_lambda_fuzz != 'false' }}  and failure() && steps.lambda_fuzz.outcome == 'failure'
+      if: failure() and ${{ github.event.inputs.run_lambda_fuzz != 'false' && steps.lambda_fuzz.outcome == 'failure' }}
       uses: actions/upload-artifact@v4
       with:
         name: fuzz_lambda_capture_output
@@ -253,7 +253,7 @@ jobs:
         python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
         --dump-ignored --hook gerpocalypse:Hook
     - name: Zip Gerpocalypse Output
-      if: ${{ github.event.inputs.run_gerpocalypse_fuzz != 'false' }} and failure() && steps.gerpoc_fuzz.outcome == 'failure'
+      if: failure() and ${{ github.event.inputs.run_gerpocalypse_fuzz != 'false' && steps.gerpoc_fuzz.outcome == 'failure' }}
       uses: actions/upload-artifact@v4
       with:
         name: fuzz_gerpocalypse_output
@@ -270,7 +270,7 @@ jobs:
         python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
         --dump-ignored --hook item_placement:Hook
     - name: Zip Item Placement Output
-      if: ${{ github.event.inputs.run_item_placement_fuzz != 'false' }} and failure() && steps.item_place_fuzz.outcome == 'failure'
+      if: failure() and ${{ github.event.inputs.run_item_placement_fuzz != 'false' && steps.item_place_fuzz.outcome == 'failure' }}
       uses: actions/upload-artifact@v4
       with:
         name: fuzz_item_placement_output
@@ -287,7 +287,7 @@ jobs:
         python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
         --dump-ignored --hook item_loc:Hook
     - name: Zip Item Loc Output
-      if: ${{ github.event.inputs.run_item_count_fuzz != 'false' }} and failure() && steps.item_loc_fuzz.outcome == 'failure'
+      if: failure() and ${{ github.event.inputs.run_item_count_fuzz != 'false' && steps.item_loc_fuzz.outcome == 'failure' }}
       uses: actions/upload-artifact@v4
       with:
         name: fuzz_item_loc_output
@@ -304,7 +304,7 @@ jobs:
         python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
         --dump-ignored --hook indirect_cond:Hook
     - name: Zip Indirect Conditions Output
-      if: ${{ github.event.inputs.run_indirect_conditions_fuzz != 'false' }} and failure() && steps.indirect_fuzz.outcome == 'failure'
+      if: failure() and ${{ github.event.inputs.run_indirect_conditions_fuzz != 'false' && steps.indirect_fuzz.outcome == 'failure' }}
       uses: actions/upload-artifact@v4
       with:
         name: fuzz_item_loc_output
