@@ -13,14 +13,6 @@ class EmulatorAdditionalArguments(list[str]):
     """ Additional arugments to be passed in when auto starting emulator. """
     args = []
 
-def emulator_settings_constructor(loader, node):
-    return loader.construct_mapping(node, deep=True)
-
-yaml.add_constructor(
-        'tag:yaml.org,2002:python/object:worlds.luigismansion.client.luigismansion_settings.EmulatorSettings',
-        emulator_settings_constructor
-    )
-
 class EmulatorSettings(settings.Group):
     """Various Emulator specific settings (such as Dolphin)"""
     path: EmulatorExecutable = EmulatorExecutable()
