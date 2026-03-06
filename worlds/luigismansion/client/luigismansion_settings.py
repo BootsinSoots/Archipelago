@@ -14,19 +14,18 @@ class EmulatorAdditionalArguments(list[str]):
     args = []
 
 def emulator_settings_constructor(loader, node):
-    _ = loader.construct_mapping(node, deep=True)
-    return EmulatorSettings()
+    return loader.construct_mapping(node, deep=True)
+
+yaml.add_constructor(
+        'tag:yaml.org,2002:python/object:worlds.luigismansion.client.luigismansion_settings.EmulatorSettings',
+        emulator_settings_constructor
+    )
 
 class EmulatorSettings(settings.Group):
     """Various Emulator specific settings (such as Dolphin)"""
     path: EmulatorExecutable = EmulatorExecutable()
     additional_args: EmulatorAdditionalArguments = EmulatorAdditionalArguments([ ])
     auto_start: bool = True
-
-    yaml.add_constructor(
-        'tag:yaml.org,2002:python/object:worlds.luigismansion.client.luigismansion_settings.EmulatorSettings',
-        emulator_settings_constructor
-    )
 
 class ISOFile(settings.UserFilePath):
     """ Locate your Luigi's Mansion ISO """
