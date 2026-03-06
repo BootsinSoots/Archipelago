@@ -5,13 +5,13 @@ from typing import ClassVar
 
 # AP Related Imports
 import Options
-from BaseClasses import ItemClassification
+from BaseClasses import ItemClassification, Item
 from Utils import visualize_regions, local_path
 from worlds.AutoWorld import World
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess, icon_paths
 
 # Relative Imports
-from .Items import *
+from .Items import LMItem, LMItemData, ALL_ITEMS_TABLE, BOO_ITEM_TABLE, ITEM_TABLE, get_item_names_per_category
 from .LM_Web import LMWeb
 from .Locations import *
 from .LuigiOptions import *
@@ -804,8 +804,8 @@ class LMWorld(World):
             boolossus_locations: list[LMLocation] = []
             for location in BOOLOSSUS_LOCATION_TABLE.keys():
                 boolossus_locations += [self.get_location(location)]
-            trap_boolossus_list = [lm_loc for lm_loc in boolossus_locations if (lm_loc.item.classification == IC.trap
-                                                                                and lm_loc.item.player == self.player)]
+            trap_boolossus_list = [lm_loc for lm_loc in boolossus_locations if (lm_loc.item.classification ==
+                ItemClassification.trap and lm_loc.item.player == self.player)]
             if len(trap_boolossus_list) > 8:
                 trap_count = len(trap_boolossus_list) - 8
                 for _ in range(trap_count):
