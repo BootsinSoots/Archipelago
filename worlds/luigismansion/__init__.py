@@ -289,7 +289,7 @@ class LMWorld(World):
                     if entry.code not in (977, 985, 992):
                         upgrade_count = number_list.pop()
                         if upgrade_count > 0:
-                            add_rule(entry, lambda state: state.has("Vacuum Upgrade", self.player, upgrade_count))
+                            add_rule(entry, lambda state, up_count=upgrade_count: state.has("Vacuum Upgrade", self.player, up_count))
                         self.silver_portrait_upgrades.update({location_name[0]: upgrade_count})
                 elif self.options.portrait_health_option.value < 2:
                     if entry.code not in (977, 985, 992):
@@ -298,7 +298,7 @@ class LMWorld(World):
                         health = self.portrait_ghost_health[location_name[0]]
                         upgrade_count = math.floor(health / 200)
                         if upgrade_count > 0:
-                            add_rule(entry, lambda state: state.has("Vacuum Upgrade", self.player, upgrade_count))
+                            add_rule(entry, lambda state, up_count=upgrade_count: state.has("Vacuum Upgrade", self.player, up_count))
                 set_element_rules(self, entry, True)
                 region.locations.append(entry)
         if self.options.gold_ghosts:
@@ -324,18 +324,19 @@ class LMWorld(World):
                     if entry.code not in (952, 960, 967):
                         upgrade_count = number_list.pop()
                         if entry.code in (962, 971): # Gold borders requiring Vac Upgrade
-                            add_rule(entry, lambda state, up_count=upgrade_count: state.has("Vacuum Upgrade", self.player, min(5, (min((up_count+1), self.options.vacuum_upgrades.value)))))
-                            self.gold_portrait_upgrades.update({location_name[0]: min(5, (min((upgrade_count+1), self.options.vacuum_upgrades.value)))})
+                            min_vac_count = min(5, upgrade_count+1, self.options.vacuum_upgrades.value)
+                            add_rule(entry, lambda state, up_count=min_vac_count: state.has("Vacuum Upgrade", self.player, up_count))
+                            self.gold_portrait_upgrades.update({location_name[0]: min_vac_count})
                         else:
                             if upgrade_count > 0:
-                                add_rule(entry, lambda state: state.has("Vacuum Upgrade", self.player, upgrade_count))
+                                add_rule(entry, lambda state, up_count=upgrade_count: state.has("Vacuum Upgrade", self.player, up_count))
                             self.gold_portrait_upgrades.update({location_name[0]: upgrade_count})
                 elif self.options.portrait_health_option.value < 2:
                     if entry.code not in (952, 960, 967):
                         health = self.portrait_ghost_health[location_name[0]]
                         upgrade_count = math.floor(health/130)
                         if upgrade_count > 0:
-                            add_rule(entry, lambda state: state.has("Vacuum Upgrade", self.player, upgrade_count))
+                            add_rule(entry, lambda state, up_count=upgrade_count: state.has("Vacuum Upgrade", self.player, up_count))
                 set_element_rules(self, entry, True)
                 region.locations.append(entry)
         if self.options.lightsanity:
