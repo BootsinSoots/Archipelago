@@ -518,6 +518,8 @@ class LMWorld(World):
                 if not spawn_doors:
                     self.spawn_full_locked: bool = True
 
+            self.portrait_ghost_health = slot_data["portrait_health"]
+
             #filler_weights: FillerWeights
             #trap_percentage: TrapPercentage
             #trap_weights: TrapWeights
@@ -1013,7 +1015,8 @@ class LMWorld(World):
             "self_item_messages": self.options.self_item_messages.value,
             "enable_ring_client_msg": self.options.enable_ring_client_msg.value,
             "enable_trap_client_msg": self.options.enable_trap_client_msg.value,
-            "local first key": self.local_early_key
+            "local first key": self.local_early_key,
+            "portrait_health": self.portrait_ghost_health,
         }
 
     def modify_multidata(self, multidata: "MultiData") -> None:
