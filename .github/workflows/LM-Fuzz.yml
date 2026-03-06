@@ -26,6 +26,10 @@ on:
         description: Run the fuzzer test for Lambda Capture.
         default: true
         required: false
+      run_indirect_conditions_fuzz:
+        description: Run the fuzzer test for Indirect Conditions.
+        default: true
+        required: false
   workflow_call:
     inputs:
       run_ut_fuzz:
@@ -58,6 +62,11 @@ on:
         default: true
         required: false
         type: boolean
+      run_indirect_conditions_fuzz:
+        description: Run the fuzzer test for Indirect Conditions.
+        default: true
+        required: false
+        type: boolean
 
 jobs:
   fuzz-lm:
@@ -69,7 +78,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: Eijebong/Archipelago-fuzzer
-        ref: eaef49942adfba577bd886dafe932e87d33a367c
+        ref: 4a5c89c5c6eec17f0c358827057eab9bba85c679
         path: ${{ github.workspace }}/eije-fuzzer
 
       #  Get Mysteryem's hook files for lambda capture issues and item placement issues.
@@ -262,12 +271,28 @@ jobs:
       continue-on-error: true
       run: |
         cd archipelago
-        ls ${{ github.workspace }}/eije-fuzzer/hooks/
-        mv ${{ github.workspace }}/eije-fuzzer/hooks/item_location_count.py item_location_count.py
+        mv ${{ github.workspace }}/eije-fuzzer/hooks/item_location_count.py item_loc.py
         python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
-        --dump-ignored --hook item_location_count:Hook
+        --dump-ignored --hook item_loc:Hook
     - name: Zip Item Loc Output
       if: ${{ github.event.inputs.run_item_count_fuzz != 'false' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: fuzz_item_loc_output
+        path: ${{ github.workspace }}/archipelago/fuzz_output
+
+    # Fuzz Indirect Conditions Count
+    - name: LM Indirect Conditions Run
+      id: indirect_fuzz
+      if: ${{ github.event.inputs.run_indirect_conditions_fuzz != 'false' }}
+      continue-on-error: true
+      run: |
+        cd archipelago
+        mv ${{ github.workspace }}/eije-fuzzer/hooks/indirect_conditions.py indirect_cond.py
+        python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
+        --dump-ignored --hook indirect_cond:Hook
+    - name: Zip Indirect Conditions Output
+      if: ${{ github.event.inputs.run_indirect_conditions_fuzz != 'false' }} and failure() && steps.indirect_fuzz.outcome == 'failure'
       uses: actions/upload-artifact@v4
       with:
         name: fuzz_item_loc_output
