@@ -9,14 +9,15 @@ class EmulatorExecutable(settings.UserFilePath):
     is_exe = True
     description = "The path for emulator executable. If using Flatpak, specify this path instead."
 
-class EmulatorAdditionalArguments(list[str]):
-    """ Additional arugments to be passed in when auto starting emulator. """
+# Not a list[str] as apparently yaml cannot construct it or know how to infer it...
+class EmulatorAdditionalArguments(list):
+    """ Additional arugments to be passed in when auto starting emulator."""
     args = []
 
 class EmulatorSettings(settings.Group):
     """Various Emulator specific settings (such as Dolphin)"""
     path: EmulatorExecutable = EmulatorExecutable()
-    additional_args: EmulatorAdditionalArguments = EmulatorAdditionalArguments([ ])
+    additional_args: EmulatorAdditionalArguments = EmulatorAdditionalArguments()
     auto_start: bool = True
 
 class ISOFile(settings.UserFilePath):
