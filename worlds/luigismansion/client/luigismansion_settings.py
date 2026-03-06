@@ -12,7 +12,7 @@ class EmulatorExecutable(settings.UserFilePath):
 # Not a list[str] as apparently yaml cannot construct it or know how to infer it...
 class EmulatorAdditionalArguments(list):
     """ Additional arugments to be passed in when auto starting emulator."""
-    args = []
+    pass
 
 class EmulatorSettings(settings.Group):
     """Various Emulator specific settings (such as Dolphin)"""
@@ -28,9 +28,10 @@ class ISOFile(settings.UserFilePath):
 
 class DolphinProcessName(str):
     """The name of the Dolphin process to connect to. Leave blank for system default."""
+    pass
 
 class LuigisMansionSettings(settings.Group):
     """Various Luigi Mansion Settings"""
     iso_file: ISOFile = ISOFile(ISOFile.copy_to)
     dolphin_settings: EmulatorSettings = EmulatorSettings()
-    dolphin_process_name: DolphinProcessName = ""
+    dolphin_process_name: DolphinProcessName = DolphinProcessName("")
