@@ -76,6 +76,11 @@ class LMWorld(World):
     trap_filler_dict: dict[str, int]
     other_filler_dict: dict[str, int]
 
+    # Additional Upgrade Count Lists used to calculate how many upgrades Gold/Silver needs.
+    # Without this, UT will not be able to calculate the required amount of upgrades properly.
+    silver_original_counts: list[int]
+    gold_original_counts: list[int]
+
     def __init__(self, *args, **kwargs):
         super(LMWorld, self).__init__(*args, **kwargs)
         self.ghost_affected_regions = copy.deepcopy({key: val.element_type for (key, val) in REGION_LIST.items() if val.element_type})
@@ -86,6 +91,8 @@ class LMWorld(World):
         self.boo_spheres = {}
         self.silver_portrait_upgrades = {}
         self.gold_portrait_upgrades = {}
+        self.silver_original_counts = []
+        self.gold_original_counts = []
         self.portrait_ghost_health = {}
         self.hints = {}
         self.spawn_full_locked: bool = False
@@ -272,7 +279,8 @@ class LMWorld(World):
             # @200, 350, 500, 650, 800 +1 upgrade
             # randomly choose a number of upgrades for a given portrait ghost.
             # After spheres, set health values based on sphere + number of upgrades compared to max value
-            number_list: list[int] = self.portrait_health_by_sphere()
+            number_list: list[int] = self.portrait_health_by_sphere() if not self.silver_original_counts else self.silver_original_counts
+            self.silver_original_counts = copy.deepcopy(number_list)
             for location, data in SILVER_PORTRAIT_TABLE.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
@@ -306,7 +314,8 @@ class LMWorld(World):
             # @130, 260, 390, 520, 650 +1 upgrade - cap max health at 600 if gold portraits are chosen
             # randomly choose a number of upgrades for a given portrait ghost.
             # After spheres, set health values based on sphere + number of upgrades compared to max value
-            number_list: list[int] = self.portrait_health_by_sphere()
+            number_list: list[int] = self.portrait_health_by_sphere() if not self.gold_original_counts else self.gold_original_counts
+            self.gold_original_counts = copy.deepcopy(number_list)
             for location, data in GOLD_PORTRAIT_TABLE.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
@@ -518,11 +527,11 @@ class LMWorld(World):
                 if not spawn_doors:
                     self.spawn_full_locked: bool = True
 
+            # Various Portrait Ghost health related options.
             self.portrait_ghost_health = slot_data["portrait_health"]
-
-            #filler_weights: FillerWeights
-            #trap_percentage: TrapPercentage
-            #trap_weights: TrapWeights
+            self.options.portrait_health_option.value = slot_data["portrait_ghost_health_option"]
+            self.silver_original_counts = list(slot_data["silver_original_counts"])
+            self.gold_original_counts = list(slot_data["gold_original_counts"])
             return True
 
         return False
@@ -1017,6 +1026,9 @@ class LMWorld(World):
             "enable_trap_client_msg": self.options.enable_trap_client_msg.value,
             "local first key": self.local_early_key,
             "portrait_health": self.portrait_ghost_health,
+            "portrait_ghost_health_option": self.options.portrait_health_option.value,
+            "silver_original_counts": self.silver_original_counts,
+            "gold_original_counts": self.gold_original_counts,
         }
 
     def modify_multidata(self, multidata: "MultiData") -> None:
