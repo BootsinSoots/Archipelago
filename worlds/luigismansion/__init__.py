@@ -1010,6 +1010,10 @@ class LMWorld(World):
         if ((self.options.hint_distribution != 5 and self.options.hint_distribution != 1) or
             self.options.boo_health_option.value == 2 or self.options.portrait_health_option.value == 2):
             self.finished_post_generation.wait()
+        # Wait for output thread to finish first.
+        if ((self.options.hint_distribution != 5 and self.options.hint_distribution != 1) or
+            self.options.boo_health_option.value == 2):
+            self.finished_post_generation.wait()
 
 def _get_disabled_traps(options: LuigiOptions.LMOptions) -> int:
     """
