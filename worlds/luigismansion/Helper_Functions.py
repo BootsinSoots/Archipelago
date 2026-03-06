@@ -144,7 +144,7 @@ class LMDynamicAddresses:
         name_list: list[str] = ["Generate_Ghost", "Monochrome_Trap_Timer", "Player_Reaction", "gItem_Information",
             "Weapon_Action", "Mirror_Warp_X", "Mirror_Warp_Y", "Mirror_Warp_Z", "Play_King_Boo_Gem_Fast_Pickup",
             "gItem_Information_Timer", "Boolossus_Mini_Boo_Difficulty", "Custom_Boo_Counter_Bitfields", "gTsuri_Speed",
-            "Player_Weapon_Trap_Timer"]
+            "Player_Weapon_Trap_Timer", "gPortrait_Ghost_Starting_Health"]
 
         for custom_line in custom_address_list:
             if custom_line.rstrip() == "":  # Ignore any whitespace lines.
@@ -172,6 +172,8 @@ class LMDynamicAddresses:
                 case "Mirror_Warp_Y":
                     ram_addresses["DOL"][csv_line[2]] = updated_addr
                 case "Mirror_Warp_Z":
+                    ram_addresses["DOL"][csv_line[2]] = updated_addr
+                case "gPortrait_Ghost_Starting_Health":
                     ram_addresses["DOL"][csv_line[2]] = updated_addr
                 case "Boolossus_Mini_Boo_Difficulty":
                     ram_addresses["Client"][csv_line[2]] = updated_addr
