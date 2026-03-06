@@ -1,5 +1,5 @@
 # Python related Imports
-import math, os, threading, copy
+import os, threading
 from dataclasses import fields
 from typing import ClassVar
 
@@ -866,9 +866,14 @@ class LMWorld(World):
 
     # Output options, locations and doors for patcher
     def generate_output(self, output_directory: str):
+        if 'W' in self.multiworld.seed_name:
+            ap_seed: str = str(self.multiworld.seed_name[1:])
+        else:
+            ap_seed: str = str(self.multiworld.seed_name)
+
         # Output seed name and slot number to seed RNG in randomizer client
         output_data: dict = {
-            "Seed": self.multiworld.seed,
+            "Seed": ap_seed,
             "Slot": self.player,
             "Name": self.player_name,
             "Options": {},
@@ -957,6 +962,11 @@ class LMWorld(World):
 
     # Fill slot data for LM tracker
     def fill_slot_data(self):
+        if 'W' in self.multiworld.seed_name:
+            ap_seed: str = str(self.multiworld.seed_name[1:])
+        else:
+            ap_seed: str = str(self.multiworld.seed_name)
+
         return {
             "rank requirement": self.options.rank_requirement.value,
             "game mode": self.options.game_mode.value,
@@ -997,7 +1007,7 @@ class LMWorld(World):
             "portrait_hints": self.options.portrait_hints.value,
             "hints": self.hints,
             "apworld version": CLIENT_VERSION,
-            "seed": self.multiworld.seed,
+            "seed": ap_seed,
             "disabled_traps": _get_disabled_traps(self.options),
             "self_item_messages": self.options.self_item_messages.value,
             "enable_ring_client_msg": self.options.enable_ring_client_msg.value,
@@ -1009,10 +1019,6 @@ class LMWorld(World):
         # Wait for output thread to finish first.
         if ((self.options.hint_distribution != 5 and self.options.hint_distribution != 1) or
             self.options.boo_health_option.value == 2 or self.options.portrait_health_option.value == 2):
-            self.finished_post_generation.wait()
-        # Wait for output thread to finish first.
-        if ((self.options.hint_distribution != 5 and self.options.hint_distribution != 1) or
-            self.options.boo_health_option.value == 2):
             self.finished_post_generation.wait()
 
 def _get_disabled_traps(options: LuigiOptions.LMOptions) -> int:
