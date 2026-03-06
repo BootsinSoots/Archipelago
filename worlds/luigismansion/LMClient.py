@@ -1,10 +1,12 @@
 import asyncio, time
 import copy, sys, re
+import os
 from typing import Any
 
 # AP related imports
 import NetUtils, Utils
 from CommonClient import get_base_parser, gui_enabled, server_loop
+from settings import get_settings
 
 # 3rd Party related imports
 import dolphin_memory_engine as dme
@@ -20,6 +22,19 @@ from .client.links.energy_link.energy_link import EnergyLinkConstants
 from .client.links.energy_link.energy_link_command_processor import EnergyLinkCommandProcessor
 from .client.constants import *
 from .client.display_in_game import LMDisplayQueue
+
+# Load settings and enforce that LM options exist. If they do, import their name and save for later use.
+from .client.luigismansion_settings import LuigisMansionSettings, DolphinProcessName
+
+DME_DOLPHIN_PROCESS_NAME_ENV_VARIABLE = "DME_DOLPHIN_PROCESS_NAME"
+
+# DME seems to only load the environment variables value once, then after the first hook it never retrieves it again.
+# It is in our best interest to set this up first, then call hook later
+lm_settings: LuigisMansionSettings = get_settings().luigismansion_options
+if lm_settings.dolphin_process_name:
+    os.environ[DME_DOLPHIN_PROCESS_NAME_ENV_VARIABLE] = lm_settings.dolphin_process_name
+elif DME_DOLPHIN_PROCESS_NAME_ENV_VARIABLE in os.environ:
+    del os.environ[DME_DOLPHIN_PROCESS_NAME_ENV_VARIABLE]
 
 # This is the address that holds the player's slot name.
 # This way, the player does not have to manually authenticate their slot name.
@@ -126,6 +141,17 @@ class LMCommandProcessor(EnergyLinkCommandProcessor):
         if the devs ask for it."""
         if isinstance(self.ctx, LMContext):
             Utils.async_start(self.ctx.get_debug_info(), name="Get Luigi's Mansion Debug info")
+
+    def _cmd_change_dolphin_process_name(self, process_name: str):
+        """Specify the name of the Dolphin process to connect to. "" for system default."""
+        self.ctx.hook_check = False
+        self.ctx.hook_name = process_name
+        logger.info(f"Changing Dolphin process name to: {process_name if process_name else ""}")
+        lm_settings.dolphin_process_name = DolphinProcessName(process_name)
+        get_settings().save()
+        log_msg: str = f"Dolphin process name set to {process_name or "default"}. You must open a new client for this to take effect."
+        logger.info(log_msg)
+        Utils.messagebox("Close LM Client to take effect", log_msg)
 
 class LMContext(BaseContext):
     command_processor = LMCommandProcessor

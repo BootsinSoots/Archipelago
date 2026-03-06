@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 from gclib.dol import DOL, DOLSection
 from gclib.fs_helpers import write_magic_str
 
+from ...Locations import PORTRAIT_LOCATION_TABLE
 from ...Regions import REGION_LIST, LMRegionInfo
 from ...Helper_Functions import PROJECT_ROOT
 
@@ -27,11 +28,15 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
     pickup_anim_enabled: bool = bool(lm_gen.output_data["Options"]["enable_pickup_animation"])
     boo_rando_enabled: bool = bool(lm_gen.output_data["Options"]["boosanity"])
     door_model_enabled: bool = bool(lm_gen.output_data["Options"]["door_model_rando"])
+    portrait_health_dict: dict = dict(lm_gen.output_data["Portrait Health"])
 
     # Find the main DOL file and read it.
     lm_dol = DOL()
     dol_data = lm_gen.lm_gcm.read_file_data("sys/main.dol")
     lm_dol.read(dol_data)
+
+    # Get the dynamic addresses, which are used for various dol changes
+    dynamic_addr: dict = lm_gen.lm_dynamic_addr.dynamic_addresses["DOL"]
 
     # Walk Speed
     speed_to_use = 16784 if walk_speed == 0 else (16850 if walk_speed == 1 else 16950)
@@ -120,7 +125,6 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
 
     if not random_spawn == "Foyer":
         spawn_info: LMRegionInfo = REGION_LIST[random_spawn]
-        dynamic_addr: dict = lm_gen.lm_dynamic_addr.dynamic_addresses["DOL"]
         mirror_x_offset: int = lm_dol.convert_address_to_offset(int(dynamic_addr["Mirror_Warp_X"], 16))
         mirror_y_offset: int = lm_dol.convert_address_to_offset(int(dynamic_addr["Mirror_Warp_Y"], 16))
         mirror_z_offset: int = lm_dol.convert_address_to_offset(int(dynamic_addr["Mirror_Warp_Z"], 16))
@@ -147,6 +151,9 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
             lm_dol.data.seek(map_two_doors)
             door_model_id = lm_gen.random.randint(1,14)
             lm_dol.data.write(door_model_id.to_bytes())
+
+    # Update all portrait ghost health
+    update_portrait_health(lm_dol, int(dynamic_addr["gPortrait_Ghost_Starting_Health"], 16), portrait_health_dict)
 
     # Save all changes to the DOL itself.
     lm_dol.save_changes()
@@ -224,3 +231,17 @@ def read_and_update_hooks(dol_data: DOL, boo_rando_enabled: bool):
         dol_offset = dol_data.convert_address_to_offset(ram_addr)
         dol_data.data.seek(dol_offset)
         dol_data.data.write(bytes.fromhex(arc_code_line[1]))
+
+
+def update_portrait_health(dol_data: DOL, base_portrait_health_addr: int, health_dict: dict):
+    """Updates all the portrait ghost health in game. The order in which they appear ar defined in ghost_order_list"""
+    portrait_base_offset: int = dol_data.convert_address_to_offset(base_portrait_health_addr)
+
+    for portrait_ghost, portrait_health in health_dict.items():
+        portrait_offset: int = PORTRAIT_LOCATION_TABLE[portrait_ghost].health_addr_offset
+
+        if portrait_offset is None: # Should only be none for bosses really
+            continue
+
+        dol_data.data.seek(portrait_base_offset+portrait_offset)
+        dol_data.data.write(struct.pack(">H", portrait_health))
