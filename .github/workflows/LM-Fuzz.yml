@@ -307,5 +307,5 @@ jobs:
       if: failure() and ${{ github.event.inputs.run_indirect_conditions_fuzz != 'false' && steps.indirect_fuzz.outcome == 'failure' }}
       uses: actions/upload-artifact@v4
       with:
-        name: fuzz_item_loc_output
+        name: fuzz_indirect_cond_output
         path: ${{ github.workspace }}/archipelago/fuzz_output
