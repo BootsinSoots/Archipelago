@@ -93,23 +93,25 @@ def can_fst_ice(state, player):
                                                        state.can_reach_region("Ceramics Studio", player)))
 
 def portrait_health_sphere_things(multiworld: MultiWorld, portrait_sphere_players: set[int]):
+    exclude_bosses: list[str] = copy.deepcopy(list(PORTRAIT_LOCATION_TABLE.keys()))
+    exclude_bosses.remove("Boolossus, the Jumbo Ghost")
+    player_max_sphere: dict[int, int] = {}
+
     def check_portrait_players_done() -> None:
         done_players = set()
         for player in portrait_sphere_players:
             player_lm_world = multiworld.worlds[player]
-            if len(player_lm_world.portrait_ghost_health.keys()) == len(PORTRAIT_LOCATION_TABLE.keys())-3:
+            if len(player_lm_world.portrait_ghost_health.keys()) == len(exclude_bosses):
                 done_players.add(player)
         portrait_sphere_players.difference_update(done_players)
-    exclude_bosses: list[str] = copy.deepcopy(list(PORTRAIT_LOCATION_TABLE.keys()))
-    exclude_bosses.remove("Boolossus, the Jumbo Ghost")
-    player_max_sphere: dict[int, int] = {}
+
     for player in portrait_sphere_players:
         max_sphere: int = max([sphere_num for sphere_num, sphere in enumerate(multiworld.get_spheres(), 1) if
             bool(set([sphere_loc.name for sphere_loc in sphere if sphere_loc.player == player]) & set(exclude_bosses))])
         player_max_sphere.update({player: max_sphere})
     for sphere_num, sphere in enumerate(multiworld.get_spheres(), 1):
         for loc in sphere:
-            if loc.player in portrait_sphere_players and loc.name in PORTRAIT_LOCATION_TABLE.keys():
+            if loc.player in portrait_sphere_players and loc.name in exclude_bosses:
                 player_world: "LMWorld" = multiworld.worlds[loc.player]
                 health = min((math.floor(player_world.options.portrait_health_value.value/player_max_sphere[loc.player]))
                         * sphere_num, player_world.options.portrait_health_value.value)

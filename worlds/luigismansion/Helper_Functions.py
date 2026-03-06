@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from gclib.rarc import RARCFileEntry, RARC, RARCNode
     from gclib.gcm import GCM
 
-PROJECT_ROOT: Traversable = resources.files(__name__)
+PROJECT_ROOT: Traversable = resources.files("worlds.luigismansion")
 
 IGNORE_RARC_NAMES: list[str] = [".", ".."]
 RARC_FILE_STR_ENCODING: str = "shift_jis"

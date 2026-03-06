@@ -1,17 +1,17 @@
 # Python related Imports
-import math, os, threading, copy
+import os, threading
 from dataclasses import fields
 from typing import ClassVar
 
 # AP Related Imports
 import Options
-from BaseClasses import ItemClassification
+from BaseClasses import ItemClassification, Item
 from Utils import visualize_regions, local_path
 from worlds.AutoWorld import World
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess, icon_paths
 
 # Relative Imports
-from .Items import *
+from .Items import LMItem, LMItemData, ALL_ITEMS_TABLE, BOO_ITEM_TABLE, ITEM_TABLE, get_item_names_per_category
 from .LM_Web import LMWeb
 from .Locations import *
 from .LuigiOptions import *
@@ -76,6 +76,11 @@ class LMWorld(World):
     trap_filler_dict: dict[str, int]
     other_filler_dict: dict[str, int]
 
+    # Additional Upgrade Count Lists used to calculate how many upgrades Gold/Silver needs.
+    # Without this, UT will not be able to calculate the required amount of upgrades properly.
+    silver_original_counts: list[int]
+    gold_original_counts: list[int]
+
     def __init__(self, *args, **kwargs):
         super(LMWorld, self).__init__(*args, **kwargs)
         self.ghost_affected_regions = copy.deepcopy({key: val.element_type for (key, val) in REGION_LIST.items() if val.element_type})
@@ -86,6 +91,8 @@ class LMWorld(World):
         self.boo_spheres = {}
         self.silver_portrait_upgrades = {}
         self.gold_portrait_upgrades = {}
+        self.silver_original_counts = []
+        self.gold_original_counts = []
         self.portrait_ghost_health = {}
         self.hints = {}
         self.spawn_full_locked: bool = False
@@ -272,7 +279,8 @@ class LMWorld(World):
             # @200, 350, 500, 650, 800 +1 upgrade
             # randomly choose a number of upgrades for a given portrait ghost.
             # After spheres, set health values based on sphere + number of upgrades compared to max value
-            number_list: list[int] = self.portrait_health_by_sphere()
+            number_list: list[int] = self.portrait_health_by_sphere() if not self.silver_original_counts else self.silver_original_counts
+            self.silver_original_counts = copy.deepcopy(number_list)
             for location, data in SILVER_PORTRAIT_TABLE.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
@@ -289,7 +297,7 @@ class LMWorld(World):
                     if entry.code not in (977, 985, 992):
                         upgrade_count = number_list.pop()
                         if upgrade_count > 0:
-                            add_rule(entry, lambda state: state.has("Vacuum Upgrade", self.player, upgrade_count))
+                            add_rule(entry, lambda state, up_count=upgrade_count: state.has("Vacuum Upgrade", self.player, up_count))
                         self.silver_portrait_upgrades.update({location_name[0]: upgrade_count})
                 elif self.options.portrait_health_option.value < 2:
                     if entry.code not in (977, 985, 992):
@@ -298,7 +306,7 @@ class LMWorld(World):
                         health = self.portrait_ghost_health[location_name[0]]
                         upgrade_count = math.floor(health / 200)
                         if upgrade_count > 0:
-                            add_rule(entry, lambda state: state.has("Vacuum Upgrade", self.player, upgrade_count))
+                            add_rule(entry, lambda state, up_count=upgrade_count: state.has("Vacuum Upgrade", self.player, up_count))
                 set_element_rules(self, entry, True)
                 region.locations.append(entry)
         if self.options.gold_ghosts:
@@ -306,7 +314,8 @@ class LMWorld(World):
             # @130, 260, 390, 520, 650 +1 upgrade - cap max health at 600 if gold portraits are chosen
             # randomly choose a number of upgrades for a given portrait ghost.
             # After spheres, set health values based on sphere + number of upgrades compared to max value
-            number_list: list[int] = self.portrait_health_by_sphere()
+            number_list: list[int] = self.portrait_health_by_sphere() if not self.gold_original_counts else self.gold_original_counts
+            self.gold_original_counts = copy.deepcopy(number_list)
             for location, data in GOLD_PORTRAIT_TABLE.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
@@ -324,18 +333,19 @@ class LMWorld(World):
                     if entry.code not in (952, 960, 967):
                         upgrade_count = number_list.pop()
                         if entry.code in (962, 971): # Gold borders requiring Vac Upgrade
-                            add_rule(entry, lambda state, up_count=upgrade_count: state.has("Vacuum Upgrade", self.player, min(5, (min((up_count+1), self.options.vacuum_upgrades.value)))))
-                            self.gold_portrait_upgrades.update({location_name[0]: min(5, (min((upgrade_count+1), self.options.vacuum_upgrades.value)))})
+                            min_vac_count = min(5, upgrade_count+1, self.options.vacuum_upgrades.value)
+                            add_rule(entry, lambda state, up_count=min_vac_count: state.has("Vacuum Upgrade", self.player, up_count))
+                            self.gold_portrait_upgrades.update({location_name[0]: min_vac_count})
                         else:
                             if upgrade_count > 0:
-                                add_rule(entry, lambda state: state.has("Vacuum Upgrade", self.player, upgrade_count))
+                                add_rule(entry, lambda state, up_count=upgrade_count: state.has("Vacuum Upgrade", self.player, up_count))
                             self.gold_portrait_upgrades.update({location_name[0]: upgrade_count})
                 elif self.options.portrait_health_option.value < 2:
                     if entry.code not in (952, 960, 967):
                         health = self.portrait_ghost_health[location_name[0]]
                         upgrade_count = math.floor(health/130)
                         if upgrade_count > 0:
-                            add_rule(entry, lambda state: state.has("Vacuum Upgrade", self.player, upgrade_count))
+                            add_rule(entry, lambda state, up_count=upgrade_count: state.has("Vacuum Upgrade", self.player, up_count))
                 set_element_rules(self, entry, True)
                 region.locations.append(entry)
         if self.options.lightsanity:
@@ -517,9 +527,11 @@ class LMWorld(World):
                 if not spawn_doors:
                     self.spawn_full_locked: bool = True
 
-            #filler_weights: FillerWeights
-            #trap_percentage: TrapPercentage
-            #trap_weights: TrapWeights
+            # Various Portrait Ghost health related options.
+            self.portrait_ghost_health = slot_data["portrait_health"]
+            self.options.portrait_health_option.value = slot_data["portrait_ghost_health_option"]
+            self.silver_original_counts = list(slot_data["silver_original_counts"])
+            self.gold_original_counts = list(slot_data["gold_original_counts"])
             return True
 
         return False
@@ -804,8 +816,8 @@ class LMWorld(World):
             boolossus_locations: list[LMLocation] = []
             for location in BOOLOSSUS_LOCATION_TABLE.keys():
                 boolossus_locations += [self.get_location(location)]
-            trap_boolossus_list = [lm_loc for lm_loc in boolossus_locations if (lm_loc.item.classification == IC.trap
-                                                                                and lm_loc.item.player == self.player)]
+            trap_boolossus_list = [lm_loc for lm_loc in boolossus_locations if (lm_loc.item.classification ==
+                ItemClassification.trap and lm_loc.item.player == self.player)]
             if len(trap_boolossus_list) > 8:
                 trap_count = len(trap_boolossus_list) - 8
                 for _ in range(trap_count):
@@ -866,9 +878,14 @@ class LMWorld(World):
 
     # Output options, locations and doors for patcher
     def generate_output(self, output_directory: str):
+        if 'W' in self.multiworld.seed_name:
+            ap_seed: str = str(self.multiworld.seed_name[1:])
+        else:
+            ap_seed: str = str(self.multiworld.seed_name)
+
         # Output seed name and slot number to seed RNG in randomizer client
         output_data: dict = {
-            "Seed": self.multiworld.seed,
+            "Seed": ap_seed,
             "Slot": self.player,
             "Name": self.player_name,
             "Options": {},
@@ -957,6 +974,11 @@ class LMWorld(World):
 
     # Fill slot data for LM tracker
     def fill_slot_data(self):
+        if 'W' in self.multiworld.seed_name:
+            ap_seed: str = str(self.multiworld.seed_name[1:])
+        else:
+            ap_seed: str = str(self.multiworld.seed_name)
+
         return {
             "rank requirement": self.options.rank_requirement.value,
             "game mode": self.options.game_mode.value,
@@ -997,22 +1019,22 @@ class LMWorld(World):
             "portrait_hints": self.options.portrait_hints.value,
             "hints": self.hints,
             "apworld version": CLIENT_VERSION,
-            "seed": self.multiworld.seed,
+            "seed": ap_seed,
             "disabled_traps": _get_disabled_traps(self.options),
             "self_item_messages": self.options.self_item_messages.value,
             "enable_ring_client_msg": self.options.enable_ring_client_msg.value,
             "enable_trap_client_msg": self.options.enable_trap_client_msg.value,
-            "local first key": self.local_early_key
+            "local first key": self.local_early_key,
+            "portrait_health": self.portrait_ghost_health,
+            "portrait_ghost_health_option": self.options.portrait_health_option.value,
+            "silver_original_counts": self.silver_original_counts,
+            "gold_original_counts": self.gold_original_counts,
         }
 
     def modify_multidata(self, multidata: "MultiData") -> None:
         # Wait for output thread to finish first.
         if ((self.options.hint_distribution != 5 and self.options.hint_distribution != 1) or
             self.options.boo_health_option.value == 2 or self.options.portrait_health_option.value == 2):
-            self.finished_post_generation.wait()
-        # Wait for output thread to finish first.
-        if ((self.options.hint_distribution != 5 and self.options.hint_distribution != 1) or
-            self.options.boo_health_option.value == 2):
             self.finished_post_generation.wait()
 
 def _get_disabled_traps(options: LuigiOptions.LMOptions) -> int:
