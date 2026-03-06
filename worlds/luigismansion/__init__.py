@@ -518,6 +518,8 @@ class LMWorld(World):
                 if not spawn_doors:
                     self.spawn_full_locked: bool = True
 
+            from CommonClient import logger
+            logger.info(slot_data["portrait_health"])
             self.portrait_ghost_health = slot_data["portrait_health"]
 
             #filler_weights: FillerWeights
