@@ -867,15 +867,16 @@ class LMWorld(World):
     # Output options, locations and doors for patcher
     def generate_output(self, output_directory: str):
         # Output seed name and slot number to seed RNG in randomizer client
-        output_data = {
+        output_data: dict = {
             "Seed": self.multiworld.seed,
             "Slot": self.player,
             "Name": self.player_name,
             "Options": {},
             "Locations": {},
-            "Entrances": {},
-            "Room Enemies": {},
+            "Entrances": self.open_doors,
+            "Room Enemies": self.ghost_affected_regions,
             "Hints": {},
+            "Portrait Health": {},
             AP_WORLD_VERSION_NAME: CLIENT_VERSION
         }
 
@@ -888,12 +889,6 @@ class LMWorld(World):
         # Output the spawn region name
         output_data["Options"]["spawn"]: str = self.origin_region_name
 
-        # Ourput Randomized Door info
-        output_data["Entrances"] = self.open_doors
-
-        # Output randomized Ghost info
-        output_data["Room Enemies"] = self.ghost_affected_regions
-
         # Wait for output thread to finish first.
         if ((self.options.hint_distribution != 5 and self.options.hint_distribution != 1) or
             self.options.boo_health_option.value == 2 or self.options.portrait_health_option.value == 2):
@@ -902,6 +897,10 @@ class LMWorld(World):
         # If current world required hint distribution, update the output hint dict
         if self.options.hint_distribution != 5 and self.options.hint_distribution != 1:
             output_data["Hints"] = self.hints
+
+        # We output the portrait health here in case option 2 (health by sphere) is chosen,
+        #   which is after the above thread waiting.
+        output_data["Portrait Health"] = self.portrait_ghost_health
 
         # Output which item has been placed at each location
         for location in list(lmloc for lmloc in self.get_locations() if isinstance(lmloc, LMLocation)):
