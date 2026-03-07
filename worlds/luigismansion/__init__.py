@@ -839,18 +839,38 @@ class LMWorld(World):
         portrait_sphere_worlds = {world.player for world in multiworld.get_game_worlds(cls.game)
                       if world.options.portrait_health_option.value == 2}
 
+        if not boo_worlds and not hint_worlds and not portrait_sphere_worlds:
+            return
+
+        # Import traceback to be able to get additional details on some of the error messages
+        import traceback
+
         # Even if no worlds have any hints/boo worlds, always set the thread anyway as it won't hurt anything.
         try:
-            if not boo_worlds and not hint_worlds and not portrait_sphere_worlds:
-                return
-
             if hint_worlds:
                 # Produce hints for LM games that need them
                 get_hints_by_option(multiworld, hint_worlds)
+        except Exception:
+            traceback.print_exc()
+            # Act as if the world had hints disabled.
+            for hinted_worlds in hint_worlds:
+                if not hinted_worlds.hints:
+                    hinted_worlds.hints = {}
 
+        try:
             if portrait_sphere_worlds:
                 portrait_health_sphere_things(multiworld, portrait_sphere_worlds)
+        except:
+            traceback.print_exc()
 
+            exclude_bosses: list[str] = copy.deepcopy(list(PORTRAIT_LOCATION_TABLE.keys()))
+            exclude_bosses.remove("Boolossus, the Jumbo Ghost")
+            # Set all portrait health to 100, default
+            for portrait_world in portrait_sphere_worlds:
+                for port_loc in exclude_bosses:
+                    portrait_world.portrait_ghost_health[port_loc] = 100
+
+        try:
             # Produce values for boo health for worlds the need them
             def check_boo_players_done() -> None:
                 done_players = set()
@@ -869,12 +889,14 @@ class LMWorld(World):
 
                     if not boo_worlds:
                         return
-        except Exception:
-            import traceback
+        except:
             traceback.print_exc()
-            raise
-        finally:
-            _set_gen_thread_finished(multiworld, cls.game)
+
+            for boo_world in boo_worlds:
+                for boo_loc in ROOM_BOO_LOCATION_TABLE.keys():
+                    boo_world.boo_spheres[boo_loc] = 1
+
+        _set_gen_thread_finished(multiworld, cls.game)
 
     # Output options, locations and doors for patcher
     def generate_output(self, output_directory: str):
