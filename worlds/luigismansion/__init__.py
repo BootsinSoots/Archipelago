@@ -888,7 +888,7 @@ class LMWorld(World):
                         check_boo_players_done()
 
                     if not boo_worlds:
-                        return
+                        break
         except:
             traceback.print_exc()
 
