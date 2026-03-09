@@ -6,6 +6,7 @@ from worlds.AutoWorld import World
 
 # Imports of your world's files must be relative.
 from . import Items, Locations, Options, Regions, Rules, web_world
+from .Constants.world_constants import GAME_NAME
 
 # APQuest will go through all the parts of the world api one step at a time,
 # with many examples and comments across multiple files.
@@ -30,7 +31,7 @@ class GameWorld(World):
     # The docstring should contain a description of the game, to be displayed on the WebHost.
 
     # You must override the "game" field to say the name of the game.
-    game = "Game"
+    game = GAME_NAME
 
     # The WebWorld is a definition class that governs how this world will be displayed on the website.
     web = web_world.GameWebWorld()
