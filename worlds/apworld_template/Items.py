@@ -3,6 +3,7 @@ from typing import NamedTuple, Optional
 from BaseClasses import Item, ItemClassification as IC
 
 from .Constants.Names import item_names as ItemName
+from .Constants.world_constants import GAME_NAME
 
 class GameItemData(NamedTuple):
     item_groups: list[str]
@@ -12,12 +13,12 @@ class GameItemData(NamedTuple):
 
 
 class GameItem(Item):
-    game: str = "Game"
-    doorid: Optional[int] = None
+    game: str = GAME_NAME
+    data: GameItemData
 
     def __init__(self, name: str, classification: IC, code: Optional[int], player: int):
         super(GameItem, self).__init__(name, classification, code, player)
-        data: GameItemData = item_table[name]
+        self.data = item_table[name]
 
 item_table: dict[str, GameItemData] = {
 

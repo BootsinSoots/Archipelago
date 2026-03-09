@@ -1,0 +1,1 @@
+GAME_NAME: str = "Game"
