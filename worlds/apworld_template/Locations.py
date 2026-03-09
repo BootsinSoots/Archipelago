@@ -3,6 +3,7 @@ from typing import Optional, NamedTuple
 from BaseClasses import Location, Region
 
 from .Constants.Names import location_names as LocationName
+from .Constants.world_constants import GAME_NAME
 
 class GameLocationData(NamedTuple):
     region: str
@@ -12,7 +13,7 @@ class GameLocationData(NamedTuple):
 
 
 class GameLocation(Location):
-    game: str = "Game"
+    game: str = GAME_NAME
     data: GameLocationData
 
     def __init__(self, player: int, name: str, address: Optional[int], parent: Optional[Region]):
