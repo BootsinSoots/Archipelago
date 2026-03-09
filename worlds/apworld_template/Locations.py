@@ -6,19 +6,18 @@ from .Constants.Names import location_names as LocationName
 
 class GameLocationData(NamedTuple):
     region: str
-    address: Optional[int]  # used to create ap_id, None for events
-    location_groups: list[str]  # type of randomization option/jmp table and group [Chest, Furniture, Furniture, Plant, Boo, GSpeedy (Gold Mouse), BSpeedy (Blue Ghost), Portrait, Toad]
+    location_groups: list[str]  # one or more groups that this location belongs to
+    access: list[str]
     other_variable: int = -1  # entry number on the jmp table it belongs to
 
 
 class GameLocation(Location):
     game: str = "Game"
-    access: list[str]
-    rule_def: str = ""
+    data: GameLocationData
 
     def __init__(self, player: int, name: str, address: Optional[int], parent: Optional[Region]):
         super(GameLocation, self).__init__(player, name, address, parent)
-        data: GameLocationData = location_table[name]
+        self.data = location_table[name]
 
 
 location_table: dict[str, GameLocationData] = {
