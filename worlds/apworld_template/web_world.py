@@ -2,13 +2,14 @@ from BaseClasses import Tutorial
 from worlds.AutoWorld import WebWorld
 
 from .Options import options_groups, game_options_presets
+from .Constants.world_constants import GAME_NAME
 
 
 # For our game to display correctly on the website, we need to define a WebWorld subclass.
 class GameWebWorld(WebWorld):
     # We need to override the "game" field of the WebWorld superclass.
     # This must be the same string as the regular World class.
-    game = "GameName"
+    game = GAME_NAME
 
     # Your game pages will have a visual theme (affecting e.g. the background image).
     # You can choose between dirt, grass, grassFlowers, ice, jungle, ocean, partyTime, and stone.
@@ -22,7 +23,7 @@ class GameWebWorld(WebWorld):
     # The "link" parameter is unused, but we still need to provide it.
     setup_en = Tutorial(
         "Multiworld Setup Guide",
-        "A guide to setting up Game for MultiWorld.",
+        f"A guide to setting up {GAME_NAME} for MultiWorld.",
         "English",
         "setup_en.md",
         "setup/en",
@@ -34,7 +35,7 @@ class GameWebWorld(WebWorld):
     # This lets it display the tutorials more compactly.
     setup_de = Tutorial(
         "Multiworld Setup Guide",
-        "A guide to setting up Game for MultiWorld.",
+        f"A guide to setting up {GAME_NAME} for MultiWorld.",
         "German",
         "setup_de.md",
         "setup/de",
