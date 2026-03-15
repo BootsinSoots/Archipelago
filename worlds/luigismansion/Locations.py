@@ -1702,7 +1702,7 @@ WDYM_LOCATION_TABLE: dict[str, LMLocationData] = {
     "Cellar Fence": LMLocationData("Cellar", 864, "Furniture", 9, [],
         update_ram_addr=[LMRamData(in_game_room_id=66)], require_poltergust=False),
     "Pipe Room Fence": LMLocationData("Pipe Room", 865, "Furniture", 23, [],
-        update_ram_addr=[LMRamData(in_game_room_id=68)], require_poltergust=False),
+        update_ram_addr=[LMRamData(in_game_room_id=68)]),
     "Safari Room L Cheetah Carpet": LMLocationData("Safari Room", 866, "Furniture", 628, [],
         update_ram_addr=[LMRamData(in_game_room_id=55)]),
     "Safari Room R Cheetah Carpet": LMLocationData("Safari Room", 867, "Furniture", 629, [],
