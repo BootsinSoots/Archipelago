@@ -169,6 +169,13 @@ class Furnisanity(OptionSet):
 
     Different sets of locations can be added within the list. Valid strings are:
 
+    "Full" turns on all furniture locations and will override any other specified groups
+
+    "Random Any" will randomly add furniture to the pool from all available furniture locations and will override any
+    other specified groups besides Full
+
+    "Random Groups" will randomly turn on any groups listed below, in addition to any other specified groups
+
     "Hangables" includes items on walls such as paintings and other decor
 
     "Decor" includes items such as instruments and suits of armor
@@ -189,13 +196,11 @@ class Furnisanity(OptionSet):
 
     "Treasures" turns on only locations that contain treasure (including all plants) in the vanilla game. Does not create duplicate locations
 
-    "Basement, 1st Floor, 2nd Floor, Attic, and Roof can be used to turn on all furniture pieces on that level.
-
-    "Full" turns on all furniture locations and will override any other specified groups
+    "Basement", "1st Floor", "2nd Floor", "Attic", and "Roof" can be used to turn on all furniture pieces on that level.
     """
     display_name = "Furnisanity"
     internal_name = "furnisanity"
-    valid_keys = {"Hangables", "Ceiling", "Candles", "Seating", "Surfaces", "Plants", "Storage", "Drawers", "Decor", "Full", "Treasures", "Basement", "1st Floor", "2nd Floor", "Attic", "Roof"}
+    valid_keys = {"Hangables", "Ceiling", "Candles", "Seating", "Surfaces", "Plants", "Storage", "Drawers", "Decor", "Full", "Treasures", "Basement", "1st Floor", "2nd Floor", "Attic", "Roof", "Random Any", "Random Groups"}
 
 
 class EarlyFirstKey(Toggle):
