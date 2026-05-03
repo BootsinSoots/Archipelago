@@ -66,7 +66,7 @@ You will be prompted to locate your Luigi's Mansion ISO the first time you do th
 to continue later.
 7. Open Dolphin and from Dolphin, open your newly patched Luigi's Mansion ISO. Load all the way into a brand new save file, and pause.
    - Ensure that "Enable GPU Overclock" and "Emulated Memory Size Override" are both off in your Dolphin settings
-   - You ***must*** use a brand new save file, not a New Game Plus file
+   - You ***must*** use a brand new save file, not a New Game Plus file. New Game Plus is ***not*** supported
 8. In the server page, there will be a port number. Copy this port number into the top of your LMClient if it did not populate on its own. 
    - The field should read `archipelago.gg:<port number>`
 9. Once you have loaded into the game, click the `Connect` button at the top of the LMClient. You are now connected and ready to play!
@@ -97,6 +97,7 @@ the background. If it did not, please check the log in your Archipelaog/logs fol
 3. Once you have loaded into the game, the client should log that Dolphin has been connected. Click the `Connect` button
 at the top of the LMClient. If the port number is correct, you are now connected and ready to play!
    - Unfortunately, due to the nature of some checks, you must be connected to a server while playing
+   - New Game Plus is ***not*** supported. You must use a brand new save after beating King Boo to continue sending checks, supposing you cannot release your game for some reason.
 
 ### Play the game
 
