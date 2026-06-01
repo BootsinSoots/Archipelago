@@ -13,6 +13,7 @@
 <SE>(96)
 <WIPEKIND>(3)
 <WARP>(9)
+<END>
 <CASE>"Poor"
 <WINDOW>(1)<COLOR>(4)
 <SAY><COLOR>(0)Sorry Luigi, I can't GIVE credit!
