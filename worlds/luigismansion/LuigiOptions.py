@@ -527,7 +527,7 @@ class GoldMice(Toggle):
 
     Logic requires these to be obtained after blackout so they can't be missed. They can be acquired without black out, out of logic.
     """
-    display_name = " Gold Mice"
+    display_name = "Gold Mice"
     internal_name = "gold_mice"
 
 
