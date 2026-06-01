@@ -941,7 +941,7 @@ def main(*launch_args: str):
         try:
             lm_usa_manifest = lm_usa_patch.read_contents(args.aplm_file)
             server_address = lm_usa_manifest["server"]
-            rom_path= lm_usa_patch.patch(args.aplm_file)
+            rom_path = lm_usa_patch.patch(args.aplm_file)
         except Exception as ex:
             err_msg: str = (f"Unable to patch your {RANDOMIZER_NAME} ROM as expected.\n" +
                 f"APWorld Version: '{CLIENT_VERSION}'\nAdditional details:\n") + str(ex)
