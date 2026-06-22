@@ -1,13 +1,14 @@
 # Origin Region
-SHIP = "Comet Observatory"
+SHIP = "Starship Mario"
 
 # Hub Regions
-TERRACE = "Dome 1"
-FOUNTAIN = "Dome 2"
-GARDEN = "Dome 6"
-ENGINE = "Dome 5"
-BEDROOM = "Dome 4"
-KITCHEN = "Dome 3"
+WORLD1 = "World 1"
+WORLD2 = "World 2"
+WORLD6 = "World 6"
+WORLD5 = "World 5"
+WORLD4 = "World 4"
+WORLD3 = "World 3"
+WORLD7 = "World S"
 TRIALS = "Trials Planetoid"
 LIBRARY = "Library"
 COTU = "Center of the Universe"

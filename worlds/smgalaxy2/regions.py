@@ -4,14 +4,14 @@ from BaseClasses import Region, Entrance, MultiWorld
 from entrance_rando import disconnect_entrance_for_randomization
 
 from .Constants.Names import region_names as regname
-from .Options import SMGOptions
-from .locations import SMGLocation, locPC_table, base_stars_locations, SMGLocationData
+from .Options import SMG2Options
+from .locations import SMG2Location, locPC_table, base_stars_locations, SMG2LocationData
 from ..generic.Rules import add_rule
 
 if TYPE_CHECKING:
-    from . import SMGWorld
+    from . import SMG2World
 
-class SMGRegionData(NamedTuple):
+class SMG2RegionData(NamedTuple):
     type: str  # type of randomization for GER
     entrance_regions: Optional[list[str]] # Regions with entrances to this one
     exit_regions: Optional[list[str]] # Regions with entrances from this one
@@ -22,9 +22,9 @@ class SMGRegionData(NamedTuple):
 
 class SMGRegion(Region):
     game: str = "Super Mario Galaxy"
-    region_data: SMGRegionData
+    region_data: SMG2RegionData
 
-    def __init__(self, region_name: str, region_data: SMGRegionData, player: int, multiworld: MultiWorld):
+    def __init__(self, region_name: str, region_data: SMG2RegionData, player: int, multiworld: MultiWorld):
         super().__init__(region_name, player, multiworld)
         self.region_data = region_data
 
@@ -50,82 +50,82 @@ obs_entr_list: list[str] = ["Sweet Sweet Hungry Luma", "Sling Pod Hungry Luma", 
 
 all_galaxy_slots: list[str] = major_entr_list + gal_minor_entr_list + obs_entr_list + boss_entr_list
 
-region_list: dict[str, SMGRegionData] = {
-    regname.SHIP: SMGRegionData("Main", [],
-                                [],
-                                [regname.TERRACE, regname.LIBRARY, regname.KITCHEN, regname.GARDEN, regname.GATEWAY,
-                                 regname.ENGINE, regname.BEDROOM, regname.FOUNTAIN, regname.COTU, regname.SWEETSWEET,
-                                 regname.SLINGPOD, regname.DRIPDROP, regname.BIGMOUTH, regname.SANDSPIRAL,
-                                 regname.SNOWCAP, regname.BOOBONE, regname.ROLLINGGIZ, regname.BUBBLEBLAST,
-                                 regname.LOOPDEESWOOP, regname.FINALE], {}),
-    regname.TERRACE: SMGRegionData("Dome", [regname.SHIP], [],
+region_list: dict[str, SMG2RegionData] = {
+    regname.SHIP: SMG2RegionData("Main", [],
+                                 [],
+                                 [regname.WORLD1, regname.LIBRARY, regname.WORLD3, regname.WORLD6, regname.GATEWAY,
+                                  regname.WORLD5, regname.WORLD4, regname.WORLD2, regname.COTU, regname.SWEETSWEET,
+                                  regname.SLINGPOD, regname.DRIPDROP, regname.BIGMOUTH, regname.SANDSPIRAL,
+                                  regname.SNOWCAP, regname.BOOBONE, regname.ROLLINGGIZ, regname.BUBBLEBLAST,
+                                  regname.LOOPDEESWOOP, regname.FINALE], {}),
+    regname.WORLD1: SMG2RegionData("Dome", [regname.SHIP], [],
                                    [regname.GOODEGG, regname.HONEYHIVE, regname.LOOPDEELOOP, regname.FLIPSWITCH,
                                     regname.BOWJR1],
                                    {}),
-    regname.FOUNTAIN: SMGRegionData("Dome", [regname.SHIP], [],
-                                    [regname.SPACEJUNK, regname.ROLLINGGREEN, regname.BATTLEROCK, regname.HURRYSCUR,
+    regname.WORLD2: SMG2RegionData("Dome", [regname.SHIP], [],
+                                   [regname.SPACEJUNK, regname.ROLLINGGREEN, regname.BATTLEROCK, regname.HURRYSCUR,
                                      regname.BOWSER1],
-                                    {"Grand Star": 1}),
-    regname.ENGINE: SMGRegionData("Dome", [regname.SHIP], [],
-                                  [regname.GOLDLEAF, regname.SEASLIDE, regname.TOYTIME, regname.BONEFIN,
+                                   {"Grand Star": 1}),
+    regname.WORLD5: SMG2RegionData("Dome", [regname.SHIP], [],
+                                   [regname.GOLDLEAF, regname.SEASLIDE, regname.TOYTIME, regname.BONEFIN,
                                    regname.BOWJR3],
-                                    {"Grand Star": 4}),
-    regname.KITCHEN: SMGRegionData("Dome", [regname.SHIP], [],
+                                   {"Grand Star": 4}),
+    regname.WORLD3: SMG2RegionData("Dome", [regname.SHIP], [],
                                    [regname.BEACHBOWL, regname.BUBBLEBREEZE, regname.GHOSTLY, regname.BUOY,
                                     regname.BOWJR2],
-                                    {"Grand Star": 2}),
-    regname.BEDROOM: SMGRegionData("Dome",[regname.SHIP], [],
+                                   {"Grand Star": 2}),
+    regname.WORLD4: SMG2RegionData("Dome", [regname.SHIP], [],
                                    [regname.GUSTY, regname.FREEZEFLAME, regname.DUSTY, regname.HONEYCLIMB,
                                     regname.BOWSER2],
-                                    {"Grand Star": 3}),
-    regname.GARDEN: SMGRegionData("Dome", [regname.SHIP], [],
-                                  [regname.DEEPDARK, regname.DREADNOUGHT, regname.MATTER, regname.MELTY],
-                                    {"Grand Star": 5}),
-    regname.LIBRARY: SMGRegionData("Dome", [regname.SHIP], [], [], {}),
-    regname.COTU: SMGRegionData("Dome", [regname.SHIP], [], [regname.BOWSER3], {"Grand Star": 5, "Power Star": 60}),
-    regname.GATEWAY: SMGRegionData("Special", [regname.SHIP], [], [], {}, 0x0, "HeavensDoorGalaxy"),
-    regname.SWEETSWEET: SMGRegionData("Special", [regname.SHIP], [], [], {}, 0x14, "BeltConveyerExGalaxy"),
-    regname.SLINGPOD: SMGRegionData("Special", [regname.SHIP], [], [], {}, 0x2C, "CocoonExGalaxy"),
-    regname.DRIPDROP: SMGRegionData("Special", [regname.SHIP], [], [], {}, 0x44, "TearDropGalaxy"),
-    regname.BIGMOUTH: SMGRegionData("Special", [regname.SHIP], [], [], {}, 0x90, "FishTunnelGalaxy"),
-    regname.SANDSPIRAL: SMGRegionData("Special", [regname.SHIP], [], [], {}, 0x78, "TransformationExGalaxy"),
-    regname.SNOWCAP: SMGRegionData("Special", [regname.SHIP], [], [], {}, 0x60, "SnowCapsuleGalaxy"),
-    regname.BOOBONE: SMGRegionData("Special", [regname.SHIP], [], [], {}, 0x48, "TeresaMario2DGalaxy"),
-    regname.ROLLINGGIZ: SMGRegionData("Special", [regname.TRIALS], [], [], {}, 0x98, "TamakoroExLv2Galaxy"),
-    regname.LOOPDEESWOOP: SMGRegionData("Special", [regname.TRIALS], [], [], {}, 0x9C, "SurfingLv2Galaxy"),
-    regname.BUBBLEBLAST: SMGRegionData("Special", [regname.TRIALS], [], [], {}, 0xA0, "CubeBubbleExLv2Galaxy"),
-    #regname.FINALE: SMGRegionData("Special", [regname.SHIP], [], [], {}, 0xA4, "PeachCastleFinalGalaxy"),
-    regname.BOWJR1: SMGRegionData("Boss", [regname.TERRACE], [], [], {}, 0x18, "TriLegLv1Galaxy"),
-    regname.BOWJR2: SMGRegionData("Boss", [regname.KITCHEN], [], [], {}, 0x4C, "KoopaJrShipLv1Galaxy"),
-    regname.BOWJR3: SMGRegionData("Boss", [regname.ENGINE], [], [], {}, 0x7C, "FloaterOtaKingGalaxy"), # Dome 5
-    regname.BOWSER1: SMGRegionData("Boss", [regname.FOUNTAIN], [], [], {}, 0x30, "KoopaBattleVs1Galaxy"),
-    regname.BOWSER2: SMGRegionData("Boss", [regname.BEDROOM], [], [], {}, 0x64, "KoopaBattleVs2Galaxy"),
-    regname.BOWSER3: SMGRegionData("Goal", [regname.COTU], [], [], {}, 0x94, "KoopaBattleVs3Galaxy"),
-    regname.GOODEGG: SMGRegionData("Major", [regname.TERRACE], [], [], {}, 0x4, "EggStarGalaxy"),
-    regname.HONEYHIVE: SMGRegionData("Major", [regname.TERRACE], [], [], {}, 0x8, "HoneyBeeKingdomGalaxy"),
-    regname.SPACEJUNK: SMGRegionData("Major", [regname.FOUNTAIN], [], [], {}, 0x1C, "StarDustGalaxy"),
-    regname.BATTLEROCK: SMGRegionData("Major", [regname.FOUNTAIN], [], [], {}, 0x24, "BattleShipGalaxy"),
-    regname.BEACHBOWL: SMGRegionData("Major", [regname.KITCHEN], [], [], {}, 0x34, "HeavenlyBeachGalaxy"),
-    regname.GHOSTLY: SMGRegionData("Major", [regname.KITCHEN], [], [], {}, 0x3C, "PhantomGalaxy"),
-    regname.GUSTY: SMGRegionData("Major", [regname.BEDROOM], [], [], {}, 0x50, "CosmosGardenGalaxy"),
-    regname.FREEZEFLAME: SMGRegionData("Major", [regname.BEDROOM], [], [], {}, 0x54, "IceVolcanoGalaxy"),
-    regname.DUSTY: SMGRegionData("Major", [regname.BEDROOM], [], [], {}, 0x5C, "SandClockGalaxy"),
-    regname.GOLDLEAF: SMGRegionData("Major", [regname.ENGINE], [], [], {}, 0x68, "ReverseKingdomGalaxy"),
-    regname.SEASLIDE: SMGRegionData("Major", [regname.ENGINE], [], [], {}, 0x6C, "OceanRingGalaxy"),
-    regname.TOYTIME: SMGRegionData("Major", [regname.ENGINE], [], [], {}, 0x74, "FactoryGalaxy"),
-    regname.DEEPDARK: SMGRegionData("Major", [regname.GARDEN], [], [], {}, 0x80, "OceanPhantomCaveGalaxy"),
-    regname.DREADNOUGHT: SMGRegionData("Major", [regname.GARDEN], [], [], {}, 0x84, "CannonFleetGalaxy"),
-    regname.MELTY: SMGRegionData("Major", [regname.GARDEN], [], [], {}, 0x8C, "HellProminenceGalaxy"),
-    regname.LOOPDEELOOP: SMGRegionData("Minor", [regname.TERRACE], [], [], {}, 0xC, "SurfingLv1Galaxy"),
-    regname.FLIPSWITCH: SMGRegionData("Minor", [regname.TERRACE], [], [], {}, 0x10, "FlipPanelExGalaxy"),
-    regname.ROLLINGGREEN: SMGRegionData("Minor", [regname.FOUNTAIN], [], [], {}, 0x20, "TamakoroExLv1Galaxy"),
-    regname.HURRYSCUR: SMGRegionData("Minor", [regname.FOUNTAIN], [], [], {}, 0x28, "BreakDownPlanetGalaxy"),
-    regname.BUBBLEBREEZE: SMGRegionData("Minor", [regname.KITCHEN], [], [], {}, 0x38, "CubeBubbleExLv1Galaxy"),
-    regname.BUOY: SMGRegionData("Minor", [regname.KITCHEN], [], [], {}, 0x40, "OceanFloaterLandGalaxy"),
-    regname.HONEYCLIMB: SMGRegionData("Minor", [regname.BEDROOM], [], [], {}, 0x58, "HoneyBeeExGalaxy"),
-    regname.BONEFIN: SMGRegionData("Minor", [regname.ENGINE], [], [], {}, 0x70, "SkullSharkGalaxy"),
-    regname.MATTER: SMGRegionData("Minor", [regname.GARDEN], [], [], {}, 0x88, "DarkRoomGalaxy"),
-    regname.TRIALS: SMGRegionData("Hub", [], [regname.SHIP], [regname.LOOPDEESWOOP, regname.BUBBLEBLAST, regname.ROLLINGGIZ], {"Green Star": 1}),
+                                   {"Grand Star": 3}),
+    regname.WORLD6: SMG2RegionData("Dome", [regname.SHIP], [],
+                                   [regname.DEEPDARK, regname.DREADNOUGHT, regname.MATTER, regname.MELTY],
+                                   {"Grand Star": 5}),
+    regname.LIBRARY: SMG2RegionData("Dome", [regname.SHIP], [], [], {}),
+    regname.COTU: SMG2RegionData("Dome", [regname.SHIP], [], [regname.BOWSER3], {"Grand Star": 5, "Power Star": 60}),
+    regname.GATEWAY: SMG2RegionData("Special", [regname.SHIP], [], [], {}, 0x0, "HeavensDoorGalaxy"),
+    regname.SWEETSWEET: SMG2RegionData("Special", [regname.SHIP], [], [], {}, 0x14, "BeltConveyerExGalaxy"),
+    regname.SLINGPOD: SMG2RegionData("Special", [regname.SHIP], [], [], {}, 0x2C, "CocoonExGalaxy"),
+    regname.DRIPDROP: SMG2RegionData("Special", [regname.SHIP], [], [], {}, 0x44, "TearDropGalaxy"),
+    regname.BIGMOUTH: SMG2RegionData("Special", [regname.SHIP], [], [], {}, 0x90, "FishTunnelGalaxy"),
+    regname.SANDSPIRAL: SMG2RegionData("Special", [regname.SHIP], [], [], {}, 0x78, "TransformationExGalaxy"),
+    regname.SNOWCAP: SMG2RegionData("Special", [regname.SHIP], [], [], {}, 0x60, "SnowCapsuleGalaxy"),
+    regname.BOOBONE: SMG2RegionData("Special", [regname.SHIP], [], [], {}, 0x48, "TeresaMario2DGalaxy"),
+    regname.ROLLINGGIZ: SMG2RegionData("Special", [regname.TRIALS], [], [], {}, 0x98, "TamakoroExLv2Galaxy"),
+    regname.LOOPDEESWOOP: SMG2RegionData("Special", [regname.TRIALS], [], [], {}, 0x9C, "SurfingLv2Galaxy"),
+    regname.BUBBLEBLAST: SMG2RegionData("Special", [regname.TRIALS], [], [], {}, 0xA0, "CubeBubbleExLv2Galaxy"),
+    #regname.FINALE: SMG2RegionData("Special", [regname.SHIP], [], [], {}, 0xA4, "PeachCastleFinalGalaxy"),
+    regname.BOWJR1: SMG2RegionData("Boss", [regname.WORLD1], [], [], {}, 0x18, "TriLegLv1Galaxy"),
+    regname.BOWJR2: SMG2RegionData("Boss", [regname.WORLD3], [], [], {}, 0x4C, "KoopaJrShipLv1Galaxy"),
+    regname.BOWJR3: SMG2RegionData("Boss", [regname.WORLD5], [], [], {}, 0x7C, "FloaterOtaKingGalaxy"), # Dome 5
+    regname.BOWSER1: SMG2RegionData("Boss", [regname.WORLD2], [], [], {}, 0x30, "KoopaBattleVs1Galaxy"),
+    regname.BOWSER2: SMG2RegionData("Boss", [regname.WORLD4], [], [], {}, 0x64, "KoopaBattleVs2Galaxy"),
+    regname.BOWSER3: SMG2RegionData("Goal", [regname.COTU], [], [], {}, 0x94, "KoopaBattleVs3Galaxy"),
+    regname.GOODEGG: SMG2RegionData("Major", [regname.WORLD1], [], [], {}, 0x4, "EggStarGalaxy"),
+    regname.HONEYHIVE: SMG2RegionData("Major", [regname.WORLD1], [], [], {}, 0x8, "HoneyBeeKingdomGalaxy"),
+    regname.SPACEJUNK: SMG2RegionData("Major", [regname.WORLD2], [], [], {}, 0x1C, "StarDustGalaxy"),
+    regname.BATTLEROCK: SMG2RegionData("Major", [regname.WORLD2], [], [], {}, 0x24, "BattleShipGalaxy"),
+    regname.BEACHBOWL: SMG2RegionData("Major", [regname.WORLD3], [], [], {}, 0x34, "HeavenlyBeachGalaxy"),
+    regname.GHOSTLY: SMG2RegionData("Major", [regname.WORLD3], [], [], {}, 0x3C, "PhantomGalaxy"),
+    regname.GUSTY: SMG2RegionData("Major", [regname.WORLD4], [], [], {}, 0x50, "CosmosGardenGalaxy"),
+    regname.FREEZEFLAME: SMG2RegionData("Major", [regname.WORLD4], [], [], {}, 0x54, "IceVolcanoGalaxy"),
+    regname.DUSTY: SMG2RegionData("Major", [regname.WORLD4], [], [], {}, 0x5C, "SandClockGalaxy"),
+    regname.GOLDLEAF: SMG2RegionData("Major", [regname.WORLD5], [], [], {}, 0x68, "ReverseKingdomGalaxy"),
+    regname.SEASLIDE: SMG2RegionData("Major", [regname.WORLD5], [], [], {}, 0x6C, "OceanRingGalaxy"),
+    regname.TOYTIME: SMG2RegionData("Major", [regname.WORLD5], [], [], {}, 0x74, "FactoryGalaxy"),
+    regname.DEEPDARK: SMG2RegionData("Major", [regname.WORLD6], [], [], {}, 0x80, "OceanPhantomCaveGalaxy"),
+    regname.DREADNOUGHT: SMG2RegionData("Major", [regname.WORLD6], [], [], {}, 0x84, "CannonFleetGalaxy"),
+    regname.MELTY: SMG2RegionData("Major", [regname.WORLD6], [], [], {}, 0x8C, "HellProminenceGalaxy"),
+    regname.LOOPDEELOOP: SMG2RegionData("Minor", [regname.WORLD1], [], [], {}, 0xC, "SurfingLv1Galaxy"),
+    regname.FLIPSWITCH: SMG2RegionData("Minor", [regname.WORLD1], [], [], {}, 0x10, "FlipPanelExGalaxy"),
+    regname.ROLLINGGREEN: SMG2RegionData("Minor", [regname.WORLD2], [], [], {}, 0x20, "TamakoroExLv1Galaxy"),
+    regname.HURRYSCUR: SMG2RegionData("Minor", [regname.WORLD2], [], [], {}, 0x28, "BreakDownPlanetGalaxy"),
+    regname.BUBBLEBREEZE: SMG2RegionData("Minor", [regname.WORLD3], [], [], {}, 0x38, "CubeBubbleExLv1Galaxy"),
+    regname.BUOY: SMG2RegionData("Minor", [regname.WORLD3], [], [], {}, 0x40, "OceanFloaterLandGalaxy"),
+    regname.HONEYCLIMB: SMG2RegionData("Minor", [regname.WORLD4], [], [], {}, 0x58, "HoneyBeeExGalaxy"),
+    regname.BONEFIN: SMG2RegionData("Minor", [regname.WORLD5], [], [], {}, 0x70, "SkullSharkGalaxy"),
+    regname.MATTER: SMG2RegionData("Minor", [regname.WORLD6], [], [], {}, 0x88, "DarkRoomGalaxy"),
+    regname.TRIALS: SMG2RegionData("Hub", [], [regname.SHIP], [regname.LOOPDEESWOOP, regname.BUBBLEBLAST, regname.ROLLINGGIZ], {"Green Star": 1}),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]
@@ -136,7 +136,7 @@ boss_galaxy_list: list[str] = [key for key, data in region_list.items() if data.
 
 specials_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Special"]
 
-def by_type_shuffle(world: "SMGWorld", entrances: list, galaxies: list[str]):
+def by_type_shuffle(world: "SMG2World", entrances: list, galaxies: list[str]):
     for entrance in entrances:
         slot = world.get_entrance(entrance)
         galaxy = world.get_region(world.random.choice(sorted(galaxies)))
@@ -145,7 +145,7 @@ def by_type_shuffle(world: "SMGWorld", entrances: list, galaxies: list[str]):
         galaxy.entrances.remove(er_target)
         slot.connect(galaxy)
 
-def create_regions(world: "SMGWorld"):
+def create_regions(world: "SMG2World"):
     for region_name in region_list.keys():
         world.multiworld.regions.append(SMGRegion(region_name, region_list[region_name], world.player, world.multiworld))
 
@@ -157,7 +157,7 @@ def create_regions(world: "SMGWorld"):
     if world.options.stars_to_finish.value > 103 >= len(list(world.get_locations()))-1:
         world.options.stars_to_finish.value = len(list(world.get_locations()))-1
 
-def connect_regions(world: "SMGWorld", player: int, source: str, target: str, name: str, rule=None):
+def connect_regions(world: "SMG2World", player: int, source: str, target: str, name: str, rule=None):
     sourceRegion = world.get_region(source)
     targetRegion = world.get_region(target)
 
@@ -168,13 +168,13 @@ def connect_regions(world: "SMGWorld", player: int, source: str, target: str, na
     sourceRegion.exits.append(connection)
     connection.connect(targetRegion)
 
-def create_region(name: str, world: "SMGWorld") -> Region:
+def create_region(name: str, world: "SMG2World") -> Region:
     return Region(name, world.player, world.multiworld, name)
 
-def create_locations(locs: dict[str, SMGLocationData], world: "SMGWorld"):
+def create_locations(locs: dict[str, SMG2LocationData], world: "SMG2World"):
     for name, data in locs.items():
         reg = world.get_region(data.region)
-        location = SMGLocation(world.player, name, reg)
+        location = SMG2Location(world.player, name, reg)
         if data.default_access:
             for item, count in data.default_access:
                 rule = lambda state,i=item, c=count: state.has(i, world.player, count)
@@ -182,7 +182,7 @@ def create_locations(locs: dict[str, SMGLocationData], world: "SMGWorld"):
 
         reg.locations += [location]
 
-def disconnect_from_option(world: "SMGWorld") -> str:
+def disconnect_from_option(world: "SMG2World") -> str:
     Dome1Slot1 = "Good Egg Galaxy"
     if "Bosses" in world.options.galaxy_shuffle.value or "Full" in world.options.galaxy_shuffle.value:
         disconnect_entrance_for_randomization(world.get_entrance("Dome 1 Fifth Orbit Galaxy"), 0, regname.BOWJR1)

@@ -6,88 +6,88 @@ from.Constants.Names import region_names as regname
 from ..generic.Rules import add_rule
 
 if TYPE_CHECKING:
-    from . import SMGWorld
+    from . import SMG2World
 
 # Cap the incoming offsets to the maximum of that area.
 
 # main stage logic
-def set_rules(world: "SMGWorld", player: int):
+def set_rules(world: "SMG2World", player: int):
     # Dome 1
-    connect_regions(world, player, regname.SHIP, regname.TERRACE, "Dome 1 Entry")
-    connect_regions(world, player, regname.TERRACE, regname.GOODEGG, "Dome 1 First Orbit Galaxy")
-    connect_regions(world, player, regname.TERRACE, regname.HONEYHIVE, "Dome 1 Second Orbit Galaxy",
+    connect_regions(world, player, regname.SHIP, regname.WORLD1, "Dome 1 Entry")
+    connect_regions(world, player, regname.WORLD1, regname.GOODEGG, "Dome 1 First Orbit Galaxy")
+    connect_regions(world, player, regname.WORLD1, regname.HONEYHIVE, "Dome 1 Second Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player,
                                                   min(world.options.dome_one_counts["Second Orbit"], 4)))
-    connect_regions(world, player, regname.TERRACE, regname.LOOPDEELOOP, "Dome 1 Third Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD1, regname.LOOPDEELOOP, "Dome 1 Third Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player,
                                                   min(world.options.dome_one_counts["Third Orbit"], 5)))
-    connect_regions(world, player, regname.TERRACE, regname.FLIPSWITCH, "Dome 1 Fourth Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD1, regname.FLIPSWITCH, "Dome 1 Fourth Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player,
                                                   min(world.options.dome_one_counts["Fourth Orbit"], 6)))
-    connect_regions(world, player, regname.TERRACE, regname.BOWJR1, "Dome 1 Fifth Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD1, regname.BOWJR1, "Dome 1 Fifth Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player,7))
     # Dome 2
-    connect_regions(world, player, regname.SHIP, regname.FOUNTAIN, "Dome 2 Entry",
+    connect_regions(world, player, regname.SHIP, regname.WORLD2, "Dome 2 Entry",
                     lambda state: state.has("Grand Star", player))
-    connect_regions(world, player, regname.FOUNTAIN, regname.SPACEJUNK, "Dome 2 First Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD2, regname.SPACEJUNK, "Dome 2 First Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 8))
-    connect_regions(world, player, regname.FOUNTAIN, regname.ROLLINGGREEN, "Dome 2 Second Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD2, regname.ROLLINGGREEN, "Dome 2 Second Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 9))
-    connect_regions(world, player, regname.FOUNTAIN, regname.BATTLEROCK, "Dome 2 Third Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD2, regname.BATTLEROCK, "Dome 2 Third Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 10))
-    connect_regions(world, player, regname.FOUNTAIN, regname.HURRYSCUR, "Dome 2 Fourth Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD2, regname.HURRYSCUR, "Dome 2 Fourth Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 11))
-    connect_regions(world, player, regname.FOUNTAIN, regname.BOWSER1, "Dome 2 Fifth Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD2, regname.BOWSER1, "Dome 2 Fifth Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 12))
     # Dome 3
-    connect_regions(world, player, regname.SHIP, regname.KITCHEN, "Dome 3 Entry",
+    connect_regions(world, player, regname.SHIP, regname.WORLD3, "Dome 3 Entry",
                     lambda state: state.has("Grand Star", player, 2))
-    connect_regions(world, player, regname.KITCHEN, regname.BEACHBOWL, "Dome 3 First Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD3, regname.BEACHBOWL, "Dome 3 First Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 13))
-    connect_regions(world, player, regname.KITCHEN, regname.BUBBLEBREEZE, "Dome 3 Second Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD3, regname.BUBBLEBREEZE, "Dome 3 Second Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 14))
-    connect_regions(world, player, regname.KITCHEN, regname.GHOSTLY, "Dome 3 Third Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD3, regname.GHOSTLY, "Dome 3 Third Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 15))
-    connect_regions(world, player, regname.KITCHEN, regname.BUOY, "Dome 3 Fourth Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD3, regname.BUOY, "Dome 3 Fourth Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 16))
-    connect_regions(world, player, regname.KITCHEN, regname.BOWJR2, "Dome 3 Fifth Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD3, regname.BOWJR2, "Dome 3 Fifth Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 17))
     # Dome 4
-    connect_regions(world, player, regname.SHIP, regname.BEDROOM, "Dome 4 Entry",
+    connect_regions(world, player, regname.SHIP, regname.WORLD4, "Dome 4 Entry",
                     lambda state: state.has("Grand Star", player, 3))
-    connect_regions(world, player, regname.BEDROOM, regname.GUSTY, "Dome 4 First Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD4, regname.GUSTY, "Dome 4 First Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 18))
-    connect_regions(world, player, regname.BEDROOM, regname.FREEZEFLAME, "Dome 4 Second Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD4, regname.FREEZEFLAME, "Dome 4 Second Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 19))
-    connect_regions(world, player, regname.BEDROOM, regname.DUSTY, "Dome 4 Third Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD4, regname.DUSTY, "Dome 4 Third Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 20))
-    connect_regions(world, player, regname.BEDROOM, regname.HONEYCLIMB, "Dome 4 Fourth Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD4, regname.HONEYCLIMB, "Dome 4 Fourth Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 21))
-    connect_regions(world, player, regname.BEDROOM, regname.BOWSER2, "Dome 4 Fifth Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD4, regname.BOWSER2, "Dome 4 Fifth Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 22))
     # Dome 5
-    connect_regions(world, player, regname.SHIP, regname.ENGINE, "Dome 5 Entry",
+    connect_regions(world, player, regname.SHIP, regname.WORLD5, "Dome 5 Entry",
                     lambda state: state.has("Grand Star", player, 4))
-    connect_regions(world, player, regname.ENGINE, regname.GOLDLEAF, "Dome 5 First Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD5, regname.GOLDLEAF, "Dome 5 First Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 23))
-    connect_regions(world, player, regname.ENGINE, regname.SEASLIDE, "Dome 5 Second Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD5, regname.SEASLIDE, "Dome 5 Second Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 24))
-    connect_regions(world, player, regname.ENGINE, regname.TOYTIME, "Dome 5 Third Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD5, regname.TOYTIME, "Dome 5 Third Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 25))
-    connect_regions(world, player, regname.ENGINE, regname.BONEFIN, "Dome 5 Fourth Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD5, regname.BONEFIN, "Dome 5 Fourth Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 26))
-    connect_regions(world, player, regname.ENGINE, regname.BOWJR3, "Dome 5 Fifth Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD5, regname.BOWJR3, "Dome 5 Fifth Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 27))
     # Dome 6
-    connect_regions(world, player, regname.SHIP, regname.GARDEN, "Dome 6 Entry",
+    connect_regions(world, player, regname.SHIP, regname.WORLD6, "Dome 6 Entry",
                     lambda state: state.has("Grand Star", player, 5))
-    connect_regions(world, player, regname.GARDEN, regname.DEEPDARK, "Dome 6 First Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD6, regname.DEEPDARK, "Dome 6 First Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 28))
-    connect_regions(world, player, regname.GARDEN, regname.DREADNOUGHT, "Dome 6 Second Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD6, regname.DREADNOUGHT, "Dome 6 Second Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 29))
-    connect_regions(world, player, regname.GARDEN, regname.MATTER, "Dome 6 Third Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD6, regname.MATTER, "Dome 6 Third Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 30))
-    connect_regions(world, player, regname.GARDEN, regname.MELTY, "Dome 6 Fourth Orbit Galaxy",
+    connect_regions(world, player, regname.WORLD6, regname.MELTY, "Dome 6 Fourth Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 31))
     #Remaining Ship Connections
     connect_regions(world, player, regname.SHIP, regname.LIBRARY, "Library Entrance")
@@ -118,7 +118,7 @@ def set_rules(world: "SMGWorld", player: int):
     #                 lambda state: state.has("Green Star", player) and state.has("Power Star", player, 120))
     world.multiworld.completion_condition[player] = lambda state: state.has("Peach", player)
 
-def rules_from_er_placements(world: "SMGWorld"):
+def rules_from_er_placements(world: "SMG2World"):
     available_locations = 4
     dome_orbits: list[str] = ["First Orbit", "Second Orbit", "Third Orbit", "Fourth Orbit", "Fifth Orbit"]
     for dome_num in [1, 2, 3, 4, 5, 6]:

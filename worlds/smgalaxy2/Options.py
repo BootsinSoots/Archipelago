@@ -215,7 +215,7 @@ class  MarioColors(OptionDict):
 
 # this defines all the options.
 @dataclass
-class SMGOptions(PerGameCommonOptions):
+class SMG2Options(PerGameCommonOptions):
     enable_purple_coin_stars: EnablePurpleCoinStars
     stars_to_finish: StarstoFinish
     mario_colors: MarioColors

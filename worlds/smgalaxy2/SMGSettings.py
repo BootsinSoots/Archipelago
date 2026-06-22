@@ -9,7 +9,7 @@ class EmulatorExecutable(settings.UserFilePath):
     description = "The path for emulator executable. If using Flatpak, specify this path instead."
 
 class EmulatorAdditionalArguments(list):
-    """ Additional arugments to be passed in when auto starting emulator."""
+    """ Additional arguments to be passed in when auto starting emulator."""
     pass
 
 class EmulatorSettings(settings.Group):
@@ -19,8 +19,8 @@ class EmulatorSettings(settings.Group):
     auto_start: bool = True
 
 class ISOFile(settings.UserFilePath):
-    """Locate your Super Mario Galaxy ISO"""
-    description = "Super Mario Galaxy (USA) ISO"
+    """Locate your Super Mario Galaxy 2 ISO"""
+    description = "Super Mario Galaxy 2 (USA) ISO"
     copy_to = None
 
 class DolphinProcessName(str):
@@ -28,7 +28,7 @@ class DolphinProcessName(str):
     pass
 
 class SuperMarioGalaxy(settings.Group):
-    """Various Super Mario Galaxy Settings"""
+    """Various Super Mario Galaxy 2 Settings"""
     iso_file: ISOFile = ISOFile(ISOFile.copy_to)
     dolphin_settings: EmulatorSettings = EmulatorSettings()
     dolphin_process_name: DolphinProcessName = DolphinProcessName("")

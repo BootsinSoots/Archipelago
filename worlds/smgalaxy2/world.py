@@ -12,9 +12,9 @@ from . import items, regions, Rules, web_world, Options
 from .Constants.Names import region_names as regname
 from .Constants.constants import AP_WORLD_VERSION_NAME, CLIENT_VERSION
 from .Rules import rules_from_er_placements
-from .locations import LOCATION_NAME_TO_ID, get_location_names_per_category, SMGLocation, location_table
+from .locations import LOCATION_NAME_TO_ID, get_location_names_per_category, SMG2Location, location_table
 from .items import SMGItem, ITEM_NAME_TO_ID, get_item_names_per_category
-from .regions import disconnect_from_option, region_list, SMGRegionData
+from .regions import disconnect_from_option, region_list, SMG2RegionData
 from .SMGSettings import SuperMarioGalaxy
 from .Patch.Patch import SMGPlayerContainer
 
@@ -24,21 +24,21 @@ def runClient(*args):
 
 components.append(Component("SMG2 Client", func=runClient, component_type=Type.CLIENT, file_identifier=SuffixIdentifier(".apsmg2")))
 
-class SMGWorld(World):
+class SMG2World(World):
     """
     Super Mario Galaxy allows you to explore the cosmos with Rosalina in the Comet Observatory.
     Mario must collect Power Stars and Grand Stars to power the observatory so it can go to the
     center of the universe in order to save Princess Peach from Bowser's clutches.
     """
 
-    game = "Super Mario Galaxy"
+    game = "Super Mario Galaxy 2"
     topology_present = False
     
-    web = web_world.SMGWebWorld()
+    web = web_world.SMG2WebWorld()
     
     #option definitions
-    options_dataclass = Options.SMGOptions
-    options: Options.SMGOptions
+    options_dataclass = Options.SMG2Options
+    options: Options.SMG2Options
     settings: ClassVar[SuperMarioGalaxy]
 
     item_name_to_id: ClassVar[dict[str, int]] = ITEM_NAME_TO_ID
@@ -46,12 +46,12 @@ class SMGWorld(World):
 
     item_name_groups = get_item_names_per_category()
     location_name_groups = get_location_names_per_category()
-    required_client_version = (0, 6, 6)
+    required_client_version = (0, 6, 7)
 
     hint_blacklist = {"B: Bowser's Galaxy Reactor", "Peach"}
 
     def __init__(self, *args, **kwargs):
-        super(SMGWorld, self).__init__(*args, **kwargs)
+        super(SMG2World, self).__init__(*args, **kwargs)
         self.origin_region_name: str = regname.SHIP
         self.shuffled_levels: dict[str, str] = {} # Entrance Name (Galaxy Slot): Region name (Galaxy)
         self.starting_galaxy: str = "Good Egg Galaxy"
@@ -104,8 +104,8 @@ class SMGWorld(World):
     def set_rules(self):
         Rules.set_rules(self, self.player)
     
-    def create_item(self, name: str) -> SMGItem:
-        item = items.SMGItem(name, self.player, items.item_table[name])
+    def create_item(self, name: str) -> SMG2Item:
+        item = items.SMG2Item(name, self.player, items.item_table[name])
         
         return item
 
@@ -180,11 +180,11 @@ class SMGWorld(World):
         k = ["Dome 1", "Dome 2", "Dome 3", "Dome 4", "Dome 5", "Dome 6"]
         if self.options.dome_shuffle.value:
             self.random.shuffle(k)
-        v = [regname.TERRACE, regname.FOUNTAIN, regname.KITCHEN, regname.BEDROOM, regname.ENGINE, regname.GARDEN]
+        v = [regname.WORLD1, regname.WORLD2, regname.WORLD3, regname.WORLD4, regname.WORLD5, regname.WORLD6]
         output_data["Options"]["dome_shuffle"] = dict(zip(k, v))
 
         # Output which item has been placed at each location
-        for location in list(smgloc for smgloc in self.get_locations() if isinstance(smgloc, SMGLocation)):
+        for location in list(smgloc for smgloc in self.get_locations() if isinstance(smgloc, SMG2Location)):
             if location.address is None:
                 continue
             if location.item.code is None:
@@ -196,7 +196,7 @@ class SMGWorld(World):
                     # "type": location.type,
                 }
             elif location.item:
-                loc_region: SMGRegionData = region_list[location.parent_region.name]
+                loc_region: SMG2RegionData = region_list[location.parent_region.name]
                 item_info = {
                     "player": location.item.player,
                     "name": location.item.name,

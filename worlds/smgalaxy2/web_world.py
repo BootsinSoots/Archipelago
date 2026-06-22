@@ -6,8 +6,8 @@ from .Options import option_groups, option_presets
 
 
 # For our game to display correctly on the website, we need to define a WebWorld subclass.
-class SMGWebWorld(WebWorld):
-    game = "Super Mario Galaxy"
+class SMG2WebWorld(WebWorld):
+    game = "Super Mario Galaxy 2"
     theme = "ice"
 
     options_presets = option_presets
@@ -15,7 +15,7 @@ class SMGWebWorld(WebWorld):
 
     setup_en = Tutorial(
         "Multiworld Setup Guide",
-        "A guide to setting up Super Mario Galaxy for MultiWorld.",
+        "A guide to setting up Super Mario Galaxy 2 for MultiWorld.",
         "English",
         "setup_en.md",
         "setup/en",
