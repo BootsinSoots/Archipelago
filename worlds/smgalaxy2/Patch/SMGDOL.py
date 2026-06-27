@@ -7,10 +7,10 @@ from gclib.dol import DOL
 from .extensions import DOLExtended, CustomDOLSection
 from .bcsv import BCSV
 
-from ..Constants.Names.region_names import GATEWAY
+from ..Constants.Names.region_names import FLIPSWAP
 from ..regions import region_list
 
-GATEWAY: str = region_list[GATEWAY].in_game_name
+GATEWAY: str = region_list[FLIPSWAP].in_game_name
 
 DOL_RELATIVE_PATH: str = "/DATA/sys/main.dol"
 
@@ -250,8 +250,8 @@ class NameObjFactory:
         to_surprised_elements: list[Name2CreateFuncElement] = [element for element in self.name_to_create_function_elements
                                                                if element.name_pointer.string[4:] in surprised_galaxy_names]
 
-        if GATEWAY in miniature_galaxy_names:
-            self.extra_create_element.name_pointer.string = "Mini" + GATEWAY
+        if FLIPSWAP in miniature_galaxy_names:
+            self.extra_create_element.name_pointer.string = "Mini" + FLIPSWAP
             self.extra_create_element.name_pointer.write_string()
             to_miniature_elements.append(self.extra_create_element)
         

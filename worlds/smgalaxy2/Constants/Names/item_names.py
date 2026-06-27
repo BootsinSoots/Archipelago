@@ -6,3 +6,9 @@ GRAND4 = "Grand Star - World 4"
 GRAND5 = "Grand Star - World 5"
 GRAND6 = "Grand Star - World 6"
 GRAND7 = "Grand Star - World 7"
+
+# Standard items
+GRAND = "Grand Star"
+POWER = "Power Star"
+GREEN = "Green Star"
+ONEUP = "1-up Mushroom"

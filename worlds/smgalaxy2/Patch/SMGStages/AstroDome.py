@@ -4,7 +4,7 @@ from enum import StrEnum
 from ..extensions import RARCExtended
 from ..SMGObjects.SurprisedGalaxy import SurprisedGalaxy
 from ..SMGObjects.Gateway import Gateway
-from ...Constants.Names.region_names import GATEWAY
+from ...Constants.Names.region_names import FLIPSWAP
 from ...regions import region_list
 
 ASTRODOME_RELATIVE_PATH = "/DATA/files/StageData/AstroDome.arc"
@@ -78,7 +78,7 @@ class AstroDome(RARCExtended):
                                             if data.type == "Boss"]
         self.special_galaxy_list: list[str] = [region_list[galaxy].in_game_name for galaxy, data in region_list.items()
                                       if data.type == "Special"]
-        self.gateway: str = region_list[GATEWAY].in_game_name
+        self.gateway: str = region_list[FLIPSWAP].in_game_name
 
     def update_dome(self, new_galaxies: list[GalaxyDestination], dome_index: int, interior_dome_index: int):
         """

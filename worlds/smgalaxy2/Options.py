@@ -4,23 +4,49 @@ from typing import Dict, Any
 import Options
 from Options import Choice, Range, PerGameCommonOptions, OptionSet, Toggle, OptionCounter, OptionDict
 
+class Goal(Choice):
+    """
+    Determine goal for your world
+
+    Galaxy Generator: Beating Bowser's Fortified Fortress in Bowser's Galaxy Generator
+
+    Green Star Cutscene: Getting 120 stars and beating Bowser's Fortified Fortress a 2nd time
+
+    Grandmaster: Collecting all the Green Stars and beating The Ultimate Test
+
+    Perfect Run: Beating the Perfect Run in Grandmaster Galaxy
+    """
+    display_name = "Goal"
+    internal_name = "goal"
+    option_Galaxy_Generator = 0
+    option_Green_Star_Cutscene = 1
+    option_Grandmaster = 2
+    option_Perfect_Run = 3
+
 class GalaxyShuffle(OptionSet):
     """
     Determine what kinds of galaxies should be added to the shuffle pool. Leave empty to disable shuffling
 
+    Goal galaxy will be left in its original position
+
     Full: Any galaxy in any galaxy position
 
-    Dome Majors: Add Major galaxies to shuffle pool
+    World Majors: Add Major (3 star) galaxies to shuffle pool
 
-    Dome Minors: Add Minor galaxies to shuffle pool
+    World Minors: Add Minor (2 star) galaxies to shuffle pool
 
-    Observatory Specials: Add Direct from Observatory galaxies to shuffle pool, such as Trials or Hungry Luma galaxies
+    Hungry Lumas: Add Hungry Luma galaxies to shuffle pool
 
-    Bosses: Add Boss galaxies to shuffle pool
+    World S Specials: Add World S galaxies to shuffle pool, excluding Grandmaster and Boss Blitz
+
+    Grandmaster: Allow Grandmaster Galaxy to be shuffled if it is not your goal, with other World S Galaxies
+
+    Bosses: Add Boss galaxies to shuffle pool, including Boss Blitz Galaxy. Galaxy Generator will only be randomized if
+    it is not the goal
     """
     display_name = "Galaxy Shuffle"
     internal_name = "galaxy_shuffle"
-    valid_keys = {"Full", "Dome Majors", "Dome Minors", "Observatory Specials", "Bosses"}
+    valid_keys = {"Full", "World Majors", "World Minors", "Hungry Lumas", "World S Specials", "Bosses", "Grandmaster"}
 
 class GalaxyShuffleType(Choice):
     """
@@ -39,157 +65,89 @@ class GalaxyShuffleType(Choice):
     option_Major_Separate = 1
     option_Full = 2
 
-class ShuffleDomes(Toggle):
+class WorldShuffle(Choice):
     """
-    Shuffle Dome entrances
-    """
-    display_name = "Dome Shuffle"
-    internal_name = "dome_shuffle"
+    How World order is shuffled
 
-# this defines the enable_purple_coin_stars setting 
-class EnablePurpleCoinStars(Toggle):
-    """
-    Add Purple Coin star location. Only one of these is normally available outside of post game
-    """
-    display_name = "Enable Purple Coin Stars"
-    internal_name = "enable_purple_coin_stars"
+    Progressive means each Grand Star will unlock the next world
 
-# this allows players to pick their own star count to finish the game. 
+    Keyed Grand Stars means each Grand Star unlocks a specific world map for you to access.
+    You will receive one at random in your starting inventory
+    """
+    display_name = "World Shuffle"
+    internal_name = "world_shuffle"
+    option_Progressive = 0
+    option_Keyed_Grand_Stars = 1
+
+class EnableGreenStars(Toggle):
+    """
+    Add Green Star locations and items
+    """
+    display_name = "Enable Green Stars"
+    internal_name = "enable_green_stars"
+
 class StarstoFinish(Range):
     """
-    This will set the number of stars required to reach the center of the universe.
-    This will be capped at 104 stars if extra locations are not enabled in a single world multiworld.
+    This will set the number of stars required to reach your chosen goal galaxy
+
+    This will be capped to a percentage if Green Star locations are not enabled and this option is set to over 120 stars.
+    The same will happen if Green Stars are not set to count as Power Stars
     """
     display_name = "Stars to finish"
     internal_name = "stars_to_finish"
-    range_start = 25
-    range_end = 119
+    range_start = 0
+    range_end = 240
     default = 60
 
-class Dome1Offsets(OptionCounter):
+class GreenStarBehavior(Choice):
     """
-    Set the star requirements for each galaxy in the Dome 1, which is the Terrace in vanilla.
-    Each number corresponds to how many more stars are needed than the last orbit. In Dome 1, some of these numbers
-    will be capped to ensure generation if necessary, and will never be allowed to go above 9 total stars
+    Choose how Green Stars are applied in logic
 
-    These are based on each orbit in the dome, in case levels are shuffled. First Orbit is excluded, to ensure you have
-    at least one world to start.
+    Power Stars: Count as Power Stars for goal
+
+    Green Stars: Changes goal to require both Green and Power stars seperately
+
+    Nothing: Don't count towards any logical requirements
     """
-    display_name = "Dome 1 Access"
-    internal_name = "dome_one_counts"
+    display_name = "Green Star Behavior"
+    internal_name = "green_star_behavior"
+    option_Power_Stars = 0
+    option_Green_Stars = 1
+    options_Nothing = 2
+
+class GreenStarstoFinish(Range):
+    """
+    If Green Star Behavior is set to Green Stars, choose the amount required for goal.
+    """
+    display_name = "Green Stars to Finish"
+    internal_name = "green_stars_to_finish"
+    range_start = 0
+    range_end = 120
+    default = 60
+
+class FinalStarBlocks(OptionCounter):
+    value: collection.Counter[str, int]
+    """
+    Set the star requirements for the final Star Block in each world.
+
+    If the world has multiple blocks, the others will be set based on your choice for the final block.
+
+    Counts may be reduced if it is determined not enough levels would be available.
+    """
+    display_name = "Final Star Blocks"
+    internal_name = "final_star_blocks"
     min = 0
-    max = 8
-    valid_keys = ["Second Orbit", "Third Orbit", "Fourth Orbit", "Fifth Orbit"]
+    max = 236
+    valid_keys = ["Final Star Block 1", "Final Star Block 2", "Final Star Block 3", "Final Star Block 4",
+                  "Final Star Block 5", "Final Star Block 6", "Final Star Block 7"]
     default = {
-        "Second Orbit": 0,
-        "Third Orbit": 0,
-        "Fourth Orbit": 0,
-        "Fifth Orbit": 0
-    }
-
-
-class Dome2Offsets(OptionCounter):
-    """
-    Set the star requirements for each galaxy in the Dome 2, which is the Fountain in vanilla.
-    Each number corresponds to how many more stars are needed than the last orbit,
-    and willed be capped if it goes above 10
-
-    These are based on each orbit in the dome, in case levels are shuffled.
-    """
-    display_name = "Dome 2 Access"
-    internal_name = "dome_two_counts"
-    min = 0
-    max = 10
-    valid_keys = ["First Orbit", "Second Orbit", "Third Orbit", "Fourth Orbit", "Fifth Orbit"]
-    default = {
-        "First Orbit": 0,
-        "Second Orbit": 0,
-        "Third Orbit": 0,
-        "Fourth Orbit": 0,
-        "Fifth Orbit": 0
-    }
-
-class Dome3Offsets(OptionCounter):
-    """
-    Set the star requirements for each galaxy in the Dome 3, which is the Kitchen in vanilla.
-    Each number corresponds to how many more stars are needed than the last orbit,
-    and willed be capped if it goes above 10
-
-    These are based on each orbit in the dome, in case levels are shuffled.
-    """
-    display_name = "Dome 3 Access"
-    internal_name = "dome_three_counts"
-    min = 0
-    max = 10
-    valid_keys = ["First Orbit", "Second Orbit", "Third Orbit", "Fourth Orbit", "Fifth Orbit"]
-    default = {
-        "First Orbit": 0,
-        "Second Orbit": 0,
-        "Third Orbit": 0,
-        "Fourth Orbit": 0,
-        "Fifth Orbit": 0
-    }
-
-class Dome4Offsets(OptionCounter):
-    """
-    Set the star requirements for each galaxy in the Dome 4, which is the Bedroom in vanilla.
-    Each number corresponds to how many more stars are needed than the last orbit,
-    and willed be capped if it goes above 10
-
-    These are based on each orbit in the dome, in case levels are shuffled.
-    """
-    display_name = "Dome 4 Access"
-    internal_name = "dome_four_counts"
-    min = 0
-    max = 10
-    valid_keys = ["First Orbit", "Second Orbit", "Third Orbit", "Fourth Orbit", "Fifth Orbit"]
-    default = {
-        "First Orbit": 0,
-        "Second Orbit": 0,
-        "Third Orbit": 0,
-        "Fourth Orbit": 0,
-        "Fifth Orbit": 0
-    }
-
-class Dome5Offsets(OptionCounter):
-    """
-    Set the star requirements for each galaxy in the Dome 5, which is the Engine Room in vanilla.
-    Each number corresponds to how many more stars are needed than the last orbit,
-    and willed be capped if it goes above 10
-
-    These are based on each orbit in the dome, in case levels are shuffled.
-    """
-    display_name = "Dome 5 Access"
-    internal_name = "dome_five_counts"
-    min = 0
-    max = 10
-    valid_keys = ["First Orbit", "Second Orbit", "Third Orbit", "Fourth Orbit", "Fifth Orbit"]
-    default = {
-        "First Orbit": 0,
-        "Second Orbit": 0,
-        "Third Orbit": 0,
-        "Fourth Orbit": 0,
-        "Fifth Orbit": 0
-    }
-
-class Dome6Offsets(OptionCounter):
-    """
-    Set the star requirements for each galaxy in the Dome 6, which is the Garden in vanilla.
-    Each number corresponds to how many more stars are needed than the last orbit,
-    and willed be capped if it goes above 20
-
-    These are based on each orbit in the dome, in case levels are shuffled.
-    """
-    display_name = "Dome 6 Access"
-    internal_name = "dome_six_counts"
-    min = 0
-    max = 20
-    valid_keys = ["First Orbit", "Second Orbit", "Third Orbit", "Fourth Orbit"]
-    default = {
-        "First Orbit": 0,
-        "Second Orbit": 0,
-        "Third Orbit": 0,
-        "Fourth Orbit": 0
+        "Final Star Block 1": 7, # -4 for other block
+        "Final Star Block 2": 16,
+        "Final Star Block 3": 28,
+        "Final Star Block 4": 40,
+        "Final Star Block 5": 55,
+        "Final Star Block 6": 70, # -5 and -10 for other blocks
+        "Final Star Block 7": 110 # -10, -20, -30, -35 for other blocks
     }
 
 
@@ -216,36 +174,36 @@ class  MarioColors(OptionDict):
 # this defines all the options.
 @dataclass
 class SMG2Options(PerGameCommonOptions):
-    enable_purple_coin_stars: EnablePurpleCoinStars
+    goal: Goal
+    enable_green_stars: EnableGreenStars
+    green_star_behavior: GreenStarBehavior
     stars_to_finish: StarstoFinish
+    green_stars_to_finish: GreenStarstoFinish
     mario_colors: MarioColors
-    dome_one_counts: Dome1Offsets
-    dome_two_counts: Dome2Offsets
-    dome_three_counts: Dome3Offsets
-    dome_four_counts: Dome4Offsets
-    dome_five_counts: Dome5Offsets
-    dome_six_counts: Dome6Offsets
-    dome_shuffle: ShuffleDomes
+    final_star_blocks: FinalStarBlocks
+    world_shuffle: WorldShuffle
     galaxy_shuffle: GalaxyShuffle
     galaxy_shuffle_type: GalaxyShuffleType
 
 option_groups = [
     Options.OptionGroup("Extra Locations", [
-        EnablePurpleCoinStars,
+        EnableGreenStars,
     ]),
     Options.OptionGroup("Access Options", [
         StarstoFinish,
-        ShuffleDomes,
+        GreenStarstoFinish,
+        WorldShuffle,
         GalaxyShuffle,
         GalaxyShuffleType
     ]),
-    Options.OptionGroup("Dome Offsets", [
-       Dome1Offsets,
-       Dome2Offsets,
-       Dome3Offsets,
-       Dome4Offsets,
-       Dome5Offsets,
-       Dome6Offsets
+    Options.OptionGroup("World Blocks", [
+        GreenStarBehavior,
+        World1Blocks,
+        World2Blocks,
+        World3Blocks,
+        World4Blocks,
+        World5Blocks,
+        World6Blocks
     ]),
     Options.OptionGroup("Cosmetics", [
         MarioColors

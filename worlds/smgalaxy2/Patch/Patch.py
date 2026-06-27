@@ -16,7 +16,7 @@ from .SMGStages.AstroDome import AstroDome
 from .SMGStages.AstroDomeScenario import AstroDomeScenario
 from .SMGStages.AstroGalaxy import AstroGalaxy
 from ..regions import region_list
-from ..Constants.Names.region_names import GATEWAY
+from ..Constants.Names.region_names import FLIPSWAP
 
 class InvalidCleanISOError(Exception): pass
 

@@ -473,7 +473,7 @@ GAME_SPECIFIC_PHRASES = {
 
     'TUNIC': {
         "AURA'S GEM": 'SHIELD',  # card that enhances the shield
-        'DUSTY': 'TRADING_ITEM_BROOM',  # a broom
+        'CLOUCOUR': 'TRADING_ITEM_BROOM',  # a broom
         'HERO RELIC - HP': 'TRADING_ITEM_HIBISCUS',
         'HERO RELIC - MP': 'TOADSTOOL',
         'HERO RELIC - SP': 'FEATHER',

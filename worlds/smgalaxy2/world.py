@@ -1,7 +1,10 @@
+import copy
 import json
 import os
 from dataclasses import fields
-from typing import ClassVar
+from typing import ClassVar, Counter
+
+import worlds.smgalaxy2.Options
 from BaseClasses import Item
 from Utils import visualize_regions
 from entrance_rando import randomize_entrances
@@ -10,10 +13,11 @@ from worlds.LauncherComponents import Component, SuffixIdentifier, Type, compone
 
 from . import items, regions, Rules, web_world, Options
 from .Constants.Names import region_names as regname
+from .Constants.Names import item_names as itemname
 from .Constants.constants import AP_WORLD_VERSION_NAME, CLIENT_VERSION
 from .Rules import rules_from_er_placements
 from .locations import LOCATION_NAME_TO_ID, get_location_names_per_category, SMG2Location, location_table
-from .items import SMGItem, ITEM_NAME_TO_ID, get_item_names_per_category
+from .items import SMG2Item, ITEM_NAME_TO_ID, get_item_names_per_category
 from .regions import disconnect_from_option, region_list, SMG2RegionData
 from .SMGSettings import SuperMarioGalaxy
 from .Patch.Patch import SMGPlayerContainer
@@ -48,58 +52,61 @@ class SMG2World(World):
     location_name_groups = get_location_names_per_category()
     required_client_version = (0, 6, 7)
 
-    hint_blacklist = {"B: Bowser's Galaxy Reactor", "Peach"}
+    hint_blacklist = {"Peach"}
 
     def __init__(self, *args, **kwargs):
         super(SMG2World, self).__init__(*args, **kwargs)
         self.origin_region_name: str = regname.SHIP
         self.shuffled_levels: dict[str, str] = {} # Entrance Name (Galaxy Slot): Region name (Galaxy)
-        self.starting_galaxy: str = "Good Egg Galaxy"
-        self.galaxy_counts: dict[str, int] = {}
+        self.starting_world: str = "World 1"
+        self.star_block_counts: dict[str, dict[str, int]] = {}
 
     def generate_early(self) -> None:
-        self.galaxy_counts = self.get_galaxy_counts()
+        self.star_block_counts = self.get_star_block_counts()
 
     def create_regions(self):
         regions.create_regions(self)
 
-    def get_galaxy_counts(self) -> dict[str, int]:
-        """Gets all the required galaxy required counts for each dome number and galaxies within that dome."""
-        stupid_word_dict: dict[str, int] = {"one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6}
-        galaxy_counts: dict[str, int] = {}
-        previous_dome_count: int = 0
+    def get_star_block_counts(self) -> dict[str, dict[str, int]]:
+        """Gets all the required star block counts for each world """
+        # Determine world order, whether left progressive or randomized
+        self.options.final_star_blocks.value.most_common()
+        star_block_copy = copy.deepcopy(self.options.final_star_blocks.value)
+        world_order: list[str] = ["World 1", "World 2", "World 3", "World 4", "World 5", "World 6", "World 7"]
+        world_list_tuple: list[tuple[str, int]] = star_block_copy.most_common().reverse()
+        world_final_blocks: dict[str, int] = dict(world_list_tuple)
+        if self.options.world_shuffle.value == 1:
+            world_order: list[str] = []
+            self.starting_world = ("World " + list(world_final_blocks.keys())[0][17]) # Get world number from string in option
+            self.multiworld.push_precollected(self.create_item("Grand Star - " + self.starting_world))
+            for i in range(7):
+                world_order.append("World " + str(list(world_final_blocks.keys())[i][17])) # Get world number from string in option
 
-        for dome_name, dome_num in stupid_word_dict.items():
-            # Get each set of dome offsets for each dome
-            dome_dict: dict = dict(sorted(dict(getattr(self.options, f"dome_{dome_name}_counts").value).items(),
-                                          key=lambda item: item[1]))
-            # Each dome offset needs to account for the previous dome's max count. In the case of Dome 1, return 0
-            if dome_num != 1:
-                previous_dome_count = max([d_val for d_key, d_val in galaxy_counts.items() if f"D{dome_num - 1}" in d_key])
-            # Gets the list of all the option counter names from the current option's value
-            dome_orbits: list[str] = ["First Orbit", "Second Orbit", "Third Orbit", "Fourth Orbit", "Fifth Orbit"]
+        block_counts: dict[str, dict[str, int]] = {}
+        previous_block_count: int = 0
 
-            for i, dome_orb_name in enumerate(dome_orbits):
-                if not dome_orb_name in dome_dict.keys():
-                    print(f"Dome {dome_name} did not have orbit name: {dome_orb_name}")
+        # put out dict with str star block to int star count
+        for world in world_order:
+            dict_entry: dict[str, int] = {}
+            match world:
+                case "World 1":
+                    dict_entry = {"Block 1": (max(world_final_blocks[world]-4, 0)),
+                                  "Block 2": (max(world_final_blocks[world], 0))}
+                case "World 6":
+                    dict_entry = {"Block 1": (max(world_final_blocks[world] - 10, 0)),
+                                  "Block 2": (max(world_final_blocks[world] - 5, 0)),
+                                  "Block 3": (max(world_final_blocks[world], 0))}
+                case "World 7":
+                    dict_entry = {"Block 1": (max(world_final_blocks[world] - 35, 0)),
+                                  "Block 2": (max(world_final_blocks[world] - 30, 0)),
+                                  "Block 3": (max(world_final_blocks[world] - 20, 0)),
+                                  "Block 4": (max(world_final_blocks[world] - 10, 0)),
+                                  "blick 5": (max(world_final_blocks[world], 0))}
+                case _:
+                    dict_entry = {"Block 1": (max(world_final_blocks[world], 0)),}
+            block_counts.update({world: dict_entry})
 
-                    # If the first dome, First Orbit would never exist
-                    # IF the last dome, Fourth Orbit will never exist
-                    if dome_num == 1 and dome_orb_name == "First Orbit":
-                        continue
-
-                    # Because OptionCounters can somehow be blank entirely, just force these to have values to 0, which
-                    # wouldn't need to be added to dome count.
-                    if dome_name == "six" and dome_orb_name != "Fifth Orbit":
-                        galaxy_counts[f"D{dome_num}G{i + 1}"] = previous_dome_count
-                        continue
-
-                    # Special case for Dome 6, as D6 will only ever have 4 galaxies total
-                if dome_name == "six" and dome_orb_name == "Fifth Orbit":
-                    continue
-                galaxy_counts[f"D{dome_num}G{i + 1}"] = previous_dome_count + int(dome_dict[dome_orb_name])
-
-        return galaxy_counts
+        return block_counts
 
     def set_rules(self):
         Rules.set_rules(self, self.player)
@@ -109,26 +116,35 @@ class SMG2World(World):
         
         return item
 
-    def get_filler_item_name(self) -> str:
-        return "1up Mushroom"
+    def get_filler_item_name(self) -> str: #TODO FIX IT
+        return self.random.choice(list(items.filler_items.keys()))
     
     def create_items(self):
-        # creates the green stars in each player's itempool
-        local_pool: list[SMGItem] = []
-        local_pool += [self.create_item("Green Star") for i in range(3)]
-        local_pool += [self.create_item("Grand Star") for i in range(7)]
-        self.multiworld.get_location("B: The Fate of the Universe", self.player).place_locked_item(self.create_item("Peach"))
+        exclude = [item.name for item in self.multiworld.precollected_items[self.player]]
+        local_pool: list[SMG2Item] = []
+        copies: int = 1
+        if self.options.enable_green_stars.value == 1:
+            copies = max(0, items.all_items_table["Green Star"].default_count - exclude.count("Green Star"))
+            local_pool += [self.create_item("Green Star") for i in range(copies)]
+        if self.options.world_shuffle.value == 0:
+            copies = max(0, items.all_items_table[itemname.GRAND].default_count - exclude.count(itemname.GRAND))
+            local_pool += [self.create_item(itemname.GRAND) for i in range(copies)]
+        else:
+            for item in items.keyed_grand_stars.keys():
+                copies = max(0, items.all_items_table[item].default_count - exclude.count(item))
+                local_pool += [self.create_item(item) for _ in range(copies)]
         
         # make sure we don't create more stars than locations, somehow
-        local_pool += [self.create_item("Power Star") for i in range(self.options.stars_to_finish.value)]
+        copies = max(0, items.all_items_table[itemname.POWER].default_count - exclude.count(itemname.POWER))
+        local_pool += [self.create_item(itemname.POWER) for i in range(copies)]
+
+        # match case Goal to place item on correct location
+
+        self.multiworld.get_location("B: The Fate of the Universe", self.player).place_locked_item(self.create_item("Peach"))
         
         # Calculate the number of additional filler items to create to fill all locations
         n_locations = len(self.multiworld.get_unfilled_locations(self.player))
         leftover_locations = min([109, (len(list(self.multiworld.get_unfilled_locations(self.player))) - len(local_pool))])
-        
-        # Add a random number of extra stars. Later, this can be made into an option.
-        extra_stars: int = self.random.randint(0, leftover_locations)
-        local_pool += [self.create_item("Power Star") for i in range(extra_stars)]
         n_filler_items = n_locations - len(local_pool)
 
         # Create filler
@@ -140,8 +156,8 @@ class SMG2World(World):
     def connect_entrances(self) -> None:
         if self.options.galaxy_shuffle:
             # Disconnect entrances based on options choice. Also ensures first available slot is a major galaxy
-            self.starting_galaxy = disconnect_from_option(self)
-            # Run randomize entrances, but do not get pairings - we craete our own method for them
+            disconnect_from_option(self)
+            # Run randomize entrances, but do not get pairings - we create our own method for them
             randomize_entrances(self, True, {0: [0]})
         # Apply rules to newly formed entrances based on within-world access, regardless of randomization
         rules_from_er_placements(self)
@@ -151,7 +167,7 @@ class SMG2World(World):
 
     # Output options, locations and doors for patcher
     def generate_output(self, output_directory: str):
-        self.galaxy_counts.update({"D1G1": 0})
+        self.star_block_counts.update({"D1G1": 0})
         # Output seed name and slot number to seed RNG in randomizer client
         output_data: dict = {
             AP_WORLD_VERSION_NAME: CLIENT_VERSION,
@@ -163,7 +179,7 @@ class SMG2World(World):
             },
             "Locations": {},
             "Galaxies": self.shuffled_levels,
-            "Galaxy Counts": self.galaxy_counts,
+            "Galaxy Counts": self.star_block_counts,
             "Hints": {},
         }
 
@@ -176,12 +192,6 @@ class SMG2World(World):
                 output_data["Options"][field.name] = list(output_data["Options"][field.name])
         output_data["Options"]["character_select"] = getattr(self.options, "character_select").value
         output_data["Options"]["mario_colors"] = getattr(self.options, "mario_colors").value
-
-        k = ["Dome 1", "Dome 2", "Dome 3", "Dome 4", "Dome 5", "Dome 6"]
-        if self.options.dome_shuffle.value:
-            self.random.shuffle(k)
-        v = [regname.WORLD1, regname.WORLD2, regname.WORLD3, regname.WORLD4, regname.WORLD5, regname.WORLD6]
-        output_data["Options"]["dome_shuffle"] = dict(zip(k, v))
 
         # Output which item has been placed at each location
         for location in list(smgloc for smgloc in self.get_locations() if isinstance(smgloc, SMG2Location)):
