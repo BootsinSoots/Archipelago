@@ -1,8 +1,8 @@
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from BaseClasses import Entrance
 from rule_builder.options import OptionFilter
-from rule_builder.rules import Has, True_, HasFromList
+from rule_builder.rules import Has, True_, HasFromList, Rule
 from .Options import WorldShuffle, Goal, GreenStarBehavior
 from .regions import connect_regions, region_list, all_galaxy_slots
 from .Constants.Names import region_names as regname
@@ -12,12 +12,12 @@ if TYPE_CHECKING:
     from . import SMG2World
 
 # main stage logic
-def set_rules(world: "SMG2World", player: int):
+def set_rules(world: "SMG2World", player: int): #TODO fix connections
     # World 1
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD1), "World 1 Map",
-                                           rule=(True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
-                                                | (Has(itemname.GRAND1) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars)))
-    connect_regions(world, player, regname.SHIP, regname.WORLD1, "Dome 1 Entry")
+                                           rule=(True_()&
+                                                 OptionFilter(WorldShuffle, WorldShuffle.option_Progressive)|(True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open))
+                                                | (Has(itemname.GRAND1) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))))
     connect_regions(world, player, regname.WORLD1, regname.GOODEGG, "Dome 1 First Orbit Galaxy")
     connect_regions(world, player, regname.WORLD1, regname.SPINDIG, "Dome 1 Second Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player,
@@ -33,7 +33,8 @@ def set_rules(world: "SMG2World", player: int):
     # World 2
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD2), "World 2 Map",
                                            rule=(Has(itemname.GRAND)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
-                                                | (Has(itemname.GRAND2) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars)))
+                                                | (Has(itemname.GRAND2) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))
+                                                | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
     connect_regions(world, player, regname.WORLD2, regname.FLUFFBLUFF, "Dome 2 First Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 8))
     connect_regions(world, player, regname.WORLD2, regname.WILDGLIDE, "Dome 2 Second Orbit Galaxy",
@@ -47,7 +48,8 @@ def set_rules(world: "SMG2World", player: int):
     # World 3
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD3), "World 3 Map",
                                            rule=(Has(itemname.GRAND, 2)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
-                                                | (Has(itemname.GRAND3) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars)))
+                                                | (Has(itemname.GRAND3) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))
+                                                | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
     connect_regions(world, player, regname.WORLD3, regname.HIGHTAIL, "Dome 3 First Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 13))
     connect_regions(world, player, regname.WORLD3, regname.ROLLMAST, "Dome 3 Second Orbit Galaxy",
@@ -61,7 +63,8 @@ def set_rules(world: "SMG2World", player: int):
     # World 4
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD4), "World 4 Map",
                                            rule=(Has(itemname.GRAND, 3)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
-                                                | (Has(itemname.GRAND4) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars)))
+                                                | (Has(itemname.GRAND4) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))
+                                                | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
     connect_regions(world, player, regname.WORLD4, regname.COSMICO, "Dome 4 First Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 18))
     connect_regions(world, player, regname.WORLD4, regname.TALLTRUNK, "Dome 4 Second Orbit Galaxy",
@@ -75,7 +78,8 @@ def set_rules(world: "SMG2World", player: int):
     # World 5
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD5), "World 5 Map",
                                            rule=(Has(itemname.GRAND, 4)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
-                                                | (Has(itemname.GRAND5) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars)))
+                                                | (Has(itemname.GRAND5) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))
+                                                | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
     connect_regions(world, player, regname.WORLD5, regname.HAUNHALL, "Dome 5 First Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 23))
     connect_regions(world, player, regname.WORLD5, regname.FREEFLAKE, "Dome 5 Second Orbit Galaxy",
@@ -89,7 +93,8 @@ def set_rules(world: "SMG2World", player: int):
     # World 6
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD6), "World 6 Map",
                                            rule=(Has(itemname.GRAND, 5)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
-                                                | (Has(itemname.GRAND6) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars)))
+                                                | (Has(itemname.GRAND6) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))
+                                                | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
     connect_regions(world, player, regname.WORLD6, regname.FLIPVILL, "Dome 6 First Orbit Galaxy",
                     lambda state: state.has_group("Power Star", player, 28))
     connect_regions(world, player, regname.WORLD6, regname.STARBEACH, "Dome 6 Second Orbit Galaxy",
@@ -101,7 +106,8 @@ def set_rules(world: "SMG2World", player: int):
     # World 7
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD7), "World S Map",
                                            rule=(Has(itemname.GRAND, 6)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
-                                                | (Has(itemname.GRAND7) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars)))
+                                                | (Has(itemname.GRAND7) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))
+                                                | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
     #Remaining Ship Connections
     connect_regions(world, player, regname.SHIP, regname.LIBRARY, "Library Entrance")
     connect_regions(world, player, regname.SHIP, regname.COTU, "Center Of the Universe Entry",
@@ -153,25 +159,34 @@ def rules_from_er_placements(world: "SMG2World"):
                     last_block_count = block_dict[f"Block 5"]
 
             if last_block_count <= available_locations:
-                world.set_rule(galaxy_entr, (Has("Power Star", last_block_count) & OptionFilter(GreenStarBehavior, 1))
-                               |(OptionFilter(GreenStarBehavior, 0) &
-                                   HasFromList(itemname.POWER, itemname.GREEN, count=last_block_count)))
+                world.set_rule(galaxy_entr, (HasFromList(itemname.POWER, itemname.GRAND, itemname.GRAND1, itemname.GRAND2, itemname.GRAND3, itemname.GRAND4, itemname.GRAND5, itemname.GRAND6,itemname.GRAND7,
+                                                         count=last_block_count)
+                                             & OptionFilter(GreenStarBehavior, 1))
+                               | (OptionFilter(GreenStarBehavior, 0) &
+                                   HasFromList(itemname.POWER, itemname.GREEN, itemname.GRAND, itemname.GRAND1, itemname.GRAND2, itemname.GRAND3, itemname.GRAND4, itemname.GRAND5, itemname.GRAND6,itemname.GRAND7,
+                                               count=last_block_count)))
             else:
-                world.set_rule(galaxy_entr, (Has("Power Star", available_locations) & OptionFilter(GreenStarBehavior, 1))
-                               |(OptionFilter(GreenStarBehavior, 0) &
-                                   HasFromList(itemname.POWER, itemname.GREEN, count=available_locations)))
+                world.set_rule(galaxy_entr, (HasFromList(itemname.POWER, itemname.GRAND, itemname.GRAND1, itemname.GRAND2, itemname.GRAND3, itemname.GRAND4, itemname.GRAND5, itemname.GRAND6,itemname.GRAND7,
+                                                         count=available_locations)
+                                             & OptionFilter(GreenStarBehavior, 1))
+                               | (OptionFilter(GreenStarBehavior, 0) &
+                                   HasFromList(itemname.POWER, itemname.GREEN, itemname.GRAND, itemname.GRAND1, itemname.GRAND2, itemname.GRAND3, itemname.GRAND4, itemname.GRAND5, itemname.GRAND6,itemname.GRAND7,
+                                               count=available_locations)))
                 world.star_block_counts[world_num][f"Block {slot_num}"] = available_locations
                 last_block_count = available_locations
             if ((world.options.goal.value < 2 and (world_num, slot_num) == (6, 7))
                     or (world.options.goal.value > 1 and (world_num, slot_num) == (7, 7))): # TODO add in starbit requirements somehow
                 world.set_rule(galaxy_entr,
                                 (OptionFilter(Goal, Goal.option_Green_Star_Cutscene)
-                                 & Has(itemname.POWER, world.options.stars_to_finish.value) & Has(itemname.GREEN, 120)) |
-                                (Has(itemname.POWER, min(world.options.stars_to_finish.value, 120))
-                                 & Has(itemname.POWER, world.options.green_stars_to_finish.value)
+                                 & HasFromList(itemname.POWER, itemname.GRAND, itemname.GRAND1, itemname.GRAND2, itemname.GRAND3, itemname.GRAND4, itemname.GRAND5, itemname.GRAND6,itemname.GRAND7,
+                                               count=world.options.stars_to_finish.value) & Has(itemname.GREEN, 120)) |
+                                (HasFromList(itemname.POWER, itemname.GRAND, itemname.GRAND1, itemname.GRAND2, itemname.GRAND3, itemname.GRAND4, itemname.GRAND5, itemname.GRAND6,itemname.GRAND7,
+                                             count=min(world.options.stars_to_finish.value, 120))
+                                 & Has(itemname.GREEN, world.options.green_stars_to_finish.value)
                                  & OptionFilter(GreenStarBehavior, 1))
                                 | (OptionFilter(GreenStarBehavior, 0) &
-                                   HasFromList(itemname.POWER, itemname.GREEN, count=world.options.stars_to_finish.value)))
+                                   HasFromList(itemname.POWER, itemname.GREEN, itemname.GRAND, itemname.GRAND1, itemname.GRAND2, itemname.GRAND3, itemname.GRAND4, itemname.GRAND5, itemname.GRAND6,itemname.GRAND7,
+                                               count=world.options.stars_to_finish.value)))
 
             if world.options.enable_green_stars.value == 1 and world.options.green_star_behavior.value == 0:
                 available_locations += 5 if galaxy_type == "Major" else 3
