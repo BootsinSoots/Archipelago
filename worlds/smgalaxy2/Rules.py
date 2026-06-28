@@ -153,18 +153,22 @@ def rules_from_er_placements(world: "SMG2World"):
                     last_block_count = block_dict[f"Block 5"]
 
             if last_block_count <= available_locations:
-                world.set_rule(galaxy_entr, Has("Power Star", last_block_count))
+                world.set_rule(galaxy_entr, (Has("Power Star", last_block_count) & OptionFilter(GreenStarBehavior, 1))
+                               |(OptionFilter(GreenStarBehavior, 0) &
+                                   HasFromList(itemname.POWER, itemname.GREEN, count=last_block_count)))
             else:
-                world.set_rule(galaxy_entr, Has("Power Star", available_locations))
+                world.set_rule(galaxy_entr, (Has("Power Star", available_locations) & OptionFilter(GreenStarBehavior, 1))
+                               |(OptionFilter(GreenStarBehavior, 0) &
+                                   HasFromList(itemname.POWER, itemname.GREEN, count=available_locations)))
                 world.star_block_counts[world_num][f"Block {slot_num}"] = available_locations
                 last_block_count = available_locations
             if ((world.options.goal.value < 2 and (world_num, slot_num) == (6, 7))
                     or (world.options.goal.value > 1 and (world_num, slot_num) == (7, 7))): # TODO add in starbit requirements somehow
                 world.set_rule(galaxy_entr,
                                 (OptionFilter(Goal, Goal.option_Green_Star_Cutscene)
-                                 & Has("Power Star", world.options.stars_to_finish.value) & Has("Green Star", 120)) |
+                                 & Has(itemname.POWER, world.options.stars_to_finish.value) & Has(itemname.GREEN, 120)) |
                                 (Has(itemname.POWER, min(world.options.stars_to_finish.value, 120))
-                                 & Has("Green Star", world.options.green_stars_to_finish.value)
+                                 & Has(itemname.POWER, world.options.green_stars_to_finish.value)
                                  & OptionFilter(GreenStarBehavior, 1))
                                 | (OptionFilter(GreenStarBehavior, 0) &
                                    HasFromList(itemname.POWER, itemname.GREEN, count=world.options.stars_to_finish.value)))
