@@ -2,8 +2,8 @@ from typing import TYPE_CHECKING
 
 from BaseClasses import Entrance
 from rule_builder.options import OptionFilter
-from rule_builder.rules import Has, True_
-from .Options import WorldShuffle
+from rule_builder.rules import Has, True_, HasFromList
+from .Options import WorldShuffle, Goal, GreenStarBehavior
 from .regions import connect_regions, region_list, all_galaxy_slots
 from .Constants.Names import region_names as regname
 from .Constants.Names import item_names as itemname
@@ -158,10 +158,21 @@ def rules_from_er_placements(world: "SMG2World"):
                 world.set_rule(galaxy_entr, Has("Power Star", available_locations))
                 world.star_block_counts[world_num][f"Block {slot_num}"] = available_locations
                 last_block_count = available_locations
-            if world.options.goal.value < 2 and (world_num, slot_num) == (6, 7):
-                
+            if ((world.options.goal.value < 2 and (world_num, slot_num) == (6, 7))
+                    or (world.options.goal.value > 1 and (world_num, slot_num) == (7, 7))): # TODO add in starbit requirements somehow
+                world.set_rule(galaxy_entr,
+                                (OptionFilter(Goal, Goal.option_Green_Star_Cutscene)
+                                 & Has("Power Star", world.options.stars_to_finish.value) & Has("Green Star", 120)) |
+                                (Has(itemname.POWER, min(world.options.stars_to_finish.value, 120))
+                                 & Has("Green Star", world.options.green_stars_to_finish.value)
+                                 & OptionFilter(GreenStarBehavior, 1))
+                                | (OptionFilter(GreenStarBehavior, 0) &
+                                   HasFromList(itemname.POWER, itemname.GREEN, count=world.options.stars_to_finish.value)))
 
-            available_locations += 2 if galaxy_type == "Major" else 1
+            if world.options.enable_green_stars.value == 1 and world.options.green_star_behavior.value == 0:
+                available_locations += 5 if galaxy_type == "Major" else 3
+            else:
+                available_locations += 2 if galaxy_type == "Major" else 1
 
     for galaxy_slot in all_galaxy_slots:
         world.shuffled_levels[world.get_entrance(galaxy_slot).name] = world.get_entrance(galaxy_slot).connected_region.name
