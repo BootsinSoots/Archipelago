@@ -1,7 +1,10 @@
 # Sky Station Star locations
 SKYSTASTAR1 = "Sky Station 1: Peewee Pirahna's Temper Tantrum"
-
-
+SKYSTASTAR2 = "Sky Station 2: Storming the Sky Fleet"
+SKYSTASTAR3 = "Sky Station 3: Peewee Piranha's Speed Run"
+SKYSTASTARG1 = "Sky Station: Green Star 1"
+SKYSTASTARG2 = "Sky Station: Green Star 2"
+SKYSTASTARG3 = "Sky Station: Green Star 3"
 
 # Bowser Jr.s Fiery Flotilla
 FIREFLOTSTAR1 = "Fiery Flotilla 1: Gobblegut's Aching Belly"
