@@ -38,7 +38,7 @@ major_entr_list: list[str] = ["World 1 Slot 1 Galaxy", "World 1 Slot 2 Galaxy", 
                               "World 6 Slot 2 Galaxy", "World 6 Slot 4 Galaxy", "World 6 Slot 6 Galaxy"]
 
 boss_entr_list: list[str] = ["World 1 Slot 7 Galaxy", "World 2 Slot 7 Galaxy", "World 3 Slot 7 Galaxy",
-                             "World 4 Slot 7 Galaxy", "World 5 Slot 7 Galaxy", "World 7 Slot 5 Galaxy"]
+                             "World 4 Slot 7 Galaxy", "World 5 Slot 7 Galaxy"]
 
 ggen_entr: list[str] = ["World 6 Slot 7 Galaxy"]
 
@@ -49,7 +49,7 @@ luma_entr_list: list[str] = ["World 1 Slot 4 Galaxy", "World 2 Slot 6 Galaxy", "
                             "World 4 Slot 2 Galaxy", "World 5 Slot 5 Galaxy", "World 6 Slot 3 Galaxy", "World 7 Slot 6 Galaxy"]
 
 special_entr_list: list[str] = ["World 7 Slot 1 Galaxy", "World 7 Slot 2 Galaxy", "World 7 Slot 3 Galaxy",
-                                "World 7 Slot 4 Galaxy"]
+                                "World 7 Slot 4 Galaxy", "World 7 Slot 5 Galaxy"]
 
 grand_entr: list[str] = ["World 7 Slot 7 Galaxy"]
 
@@ -83,7 +83,6 @@ region_list: dict[str, SMG2RegionData] = {
     regname.BOWSER1: SMG2RegionData("Boss", [regname.WORLD2], [], 0x30, "KoopaBattleVs1Galaxy"),
     regname.BOWSER2: SMG2RegionData("Boss", [regname.WORLD4], [], 0x64, "KoopaBattleVs2Galaxy"),
     regname.BOWSER3: SMG2RegionData("Goal", [regname.WORLD6], [], 0x94, "KoopaBattleVs3Galaxy"),
-    regname.BOSSBLITZ: SMG2RegionData("Boss", [regname.WORLD7], [], 0x94, "KoopaBattleVs3Galaxy"),
     # Major Galaxies
     regname.SKYOBS: SMG2RegionData("Major", [regname.WORLD1], [], 0x4, "EggStarGalaxy"),
     regname.GOODEGG: SMG2RegionData("Major", [regname.WORLD1], [], 0x4, "EggStarGalaxy"),
@@ -121,6 +120,7 @@ region_list: dict[str, SMG2RegionData] = {
     regname.ROLLCOAST: SMG2RegionData("Special", [regname.WORLD6], [], 0x58, "HoneyBeeExGalaxy"),
     regname.TWISTTRI: SMG2RegionData("Special", [regname.WORLD6], [], 0x58, "HoneyBeeExGalaxy"),
     regname.STONECYC: SMG2RegionData("Special", [regname.WORLD6], [], 0x58, "HoneyBeeExGalaxy"),
+    regname.BOSSBLITZ: SMG2RegionData("Special", [regname.WORLD7], [], 0x94, "KoopaBattleVs3Galaxy"),
     regname.GRANDMASTER: SMG2RegionData("Goal", [regname.WORLD6], [], 0x58, "HoneyBeeExGalaxy"),
 }
 
@@ -194,7 +194,6 @@ def disconnect_from_option(world: "SMG2World"):
         disconnect_entrance_for_randomization(world.get_entrance("World 3 Slot 7 Galaxy"), 0, regname.BOWJR2)
         disconnect_entrance_for_randomization(world.get_entrance("World 4 Slot 7 Galaxy"), 0, regname.BOWSER2)
         disconnect_entrance_for_randomization(world.get_entrance("World 5 Slot 7 Galaxy"), 0, regname.BOWJR3)
-        disconnect_entrance_for_randomization(world.get_entrance("World 7 Slot 5 Galaxy"), 0, regname.BOWJR3)
         if world.options.goal.value > 1:
             disconnect_entrance_for_randomization(world.get_entrance(ggen_entr[0]), 0, regname.BOWSER3)
         if world.options.galaxy_shuffle_type.value == 0:
@@ -259,6 +258,7 @@ def disconnect_from_option(world: "SMG2World"):
         disconnect_entrance_for_randomization(world.get_entrance("World 7 Slot 2 Galaxy"), 0, regname.ROLLCOAST)
         disconnect_entrance_for_randomization(world.get_entrance("World 7 Slot 3 Galaxy"), 0, regname.TWISTTRI)
         disconnect_entrance_for_randomization(world.get_entrance("World 7 Slot 4 Galaxy"), 0, regname.STONECYC)
+        disconnect_entrance_for_randomization(world.get_entrance("World 7 Slot 5 Galaxy"), 0, regname.BOSSBLITZ)
         if world.options.goal.value < 2 and "Grandmaster" in world.options.galaxy_shuffle.value:
             disconnect_entrance_for_randomization(world.get_entrance(grand_entr[0]), 0, regname.GRANDMASTER)
         if world.options.galaxy_shuffle_type.value == 0:

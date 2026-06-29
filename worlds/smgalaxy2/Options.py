@@ -54,7 +54,7 @@ class GalaxyShuffleType(Choice):
     Choose how galaxies are shuffled between slots. Does nothing if no galaxies are randomized
 
     By Type - Galaxies will only be shuffled between slots of the same kind. Major galaxies on major galaxies,
-    Boss galaxies on Boss galaxies, Observatory Galaxies on observatory galaxies
+    Boss galaxies on Boss galaxies, Luma Galaxies on Luma galaxies
 
     Major Separately - Major galaxies will only be shuffled among themselves, but all other galaxies can go anywhere
 

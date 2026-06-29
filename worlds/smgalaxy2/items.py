@@ -45,7 +45,7 @@ keyed_grand_stars: dict[str, SMG2ItemData] = {
     itemname.GRAND7: SMG2ItemData(["Grand Star", "Power Star"], 170000016, IC.progression),
 }
 
-all_items_table: dict[str, SMG2ItemData] = {**keyed_grand_stars, **item_table}
+all_items_table: dict[str, SMG2ItemData] = {**keyed_grand_stars, **item_table, **generic_event_items}
 
 ITEM_NAME_TO_ID: dict[str, int] =  {
     name: data.code for name, data in all_items_table.items() if data.code is not None}
