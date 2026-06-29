@@ -175,17 +175,6 @@ def create_regions(world: "SMG2World"): #TODO Correctly add locations
     if world.options.stars_to_finish.value > 103 >= len(list(world.get_locations()))-1:
         world.options.stars_to_finish.value = len(list(world.get_locations()))-1
 
-def connect_regions(world: "SMG2World", player: int, source: str, target: str, name: str, rule=None): #TODO replace completely with built-in connect function
-    sourceRegion = world.get_region(source)
-    targetRegion = world.get_region(target)
-
-    connection = Entrance(player, name, sourceRegion)
-    if rule:
-        add_rule(connection, rule, "and")
-
-    sourceRegion.exits.append(connection)
-    connection.connect(targetRegion)
-
 def create_region(name: str, world: "SMG2World") -> Region:
     return Region(name, world.player, world.multiworld, name)
 

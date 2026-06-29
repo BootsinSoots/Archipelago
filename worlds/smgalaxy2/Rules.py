@@ -4,7 +4,7 @@ from BaseClasses import Entrance
 from rule_builder.field_resolvers import FromOption
 from rule_builder.options import OptionFilter
 from rule_builder.rules import Has, True_, HasFromList, Rule, HasGroup
-from .Options import WorldShuffle, Goal, GreenStarBehavior, StarstoFinish
+from .Options import WorldShuffle, Goal, GreenStarBehavior, StarstoFinish, GreenStarstoFinish
 from .regions import connect_regions, region_list, all_galaxy_slots
 from .Constants.Names import region_names as regname
 from .Constants.Names import item_names as itemname
@@ -19,123 +19,67 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                            rule=(True_()&
                                                  OptionFilter(WorldShuffle, WorldShuffle.option_Progressive)|(True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open))
                                                 | (Has(itemname.GRAND1) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))))
-    connect_regions(world, player, regname.WORLD1, regname.GOODEGG, "Dome 1 First Orbit Galaxy")
-    connect_regions(world, player, regname.WORLD1, regname.SPINDIG, "Dome 1 Second Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player,
-                                                  min(world.options.dome_one_counts["Second Orbit"], 4)))
-    connect_regions(world, player, regname.WORLD1, regname.RIGHTDOWN, "Dome 1 Third Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player,
-                                                  min(world.options.dome_one_counts["Third Orbit"], 5)))
-    connect_regions(world, player, regname.WORLD1, regname.FLIPSWITCH, "Dome 1 Fourth Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player,
-                                                  min(world.options.dome_one_counts["Fourth Orbit"], 6)))
-    connect_regions(world, player, regname.WORLD1, regname.BOWJR1, "Dome 1 Fifth Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player,7))
+    world.get_region(regname.WORLD1).connect(world.get_region(regname.SKYOBS), "World 1 Slot 1 Galaxy")
+    world.get_region(regname.WORLD1).connect(world.get_region(regname.GOODEGG), "World 1 Slot 2 Galaxy")
+    world.get_region(regname.WORLD1).connect(world.get_region(regname.SPINDIG), "World 1 Slot 3 Galaxy")
+    world.get_region(regname.WORLD1).connect(world.get_region(regname.FLIPSWAP), "World 1 Slot 4 Galaxy")
+    world.get_region(regname.WORLD1).connect(world.get_region(regname.FLUFFBLUFF), "World 1 Slot 5 Galaxy")
+    world.get_region(regname.WORLD1).connect(world.get_region(regname.RIGHTDOWN), "World 1 Slot 6 Galaxy")
+    world.get_region(regname.WORLD1).connect(world.get_region(regname.BOWJR1), "World 1 Slot 7 Galaxy")
     # World 2
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD2), "World 2 Map",
                                            rule=(Has(itemname.GRAND)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
                                                 | (Has(itemname.GRAND2) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))
                                                 | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
-    connect_regions(world, player, regname.WORLD2, regname.FLUFFBLUFF, "Dome 2 First Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player, 8))
-    connect_regions(world, player, regname.WORLD2, regname.WILDGLIDE, "Dome 2 Second Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player, 9))
-    connect_regions(world, player, regname.WORLD2, regname.PUZZPLAN, "Dome 2 Third Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player, 10))
-    connect_regions(world, player, regname.WORLD2, regname.HURRYSCUR, "Dome 2 Fourth Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player, 11))
-    connect_regions(world, player, regname.WORLD2, regname.BOWSER1, "Dome 2 Fifth Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player, 12))
+    world.get_region(regname.WORLD2).connect(world.get_region(regname.FLUFFBLUFF), "World 2 Slot 1 Galaxy")
+    world.get_region(regname.WORLD2).connect(world.get_region(regname.WILDGLIDE), "World 2 Slot 2 Galaxy")
+    world.get_region(regname.WORLD2).connect(world.get_region(regname.PUZZPLAN), "World 2 Slot 3 Galaxy")
+    world.get_region(regname.WORLD2).connect(world.get_region(regname.HURRYSCUR), "World 2 Slot 4 Galaxy")
+    world.get_region(regname.WORLD2).connect(world.get_region(regname.BOWSER1), "World 2 Slot 5 Galaxy")
     # World 3
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD3), "World 3 Map",
                                            rule=(Has(itemname.GRAND, 2)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
                                                 | (Has(itemname.GRAND3) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))
                                                 | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
-    connect_regions(world, player, regname.WORLD3, regname.HIGHTAIL, "Dome 3 First Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player, 13))
-    connect_regions(world, player, regname.WORLD3, regname.ROLLMAST, "Dome 3 Second Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player, 14))
-    connect_regions(world, player, regname.WORLD3, regname.BOULBOWL, "Dome 3 Third Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player, 15))
-    connect_regions(world, player, regname.WORLD3, regname.HONEYHOP, "Dome 3 Fourth Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player, 16))
-    connect_regions(world, player, regname.WORLD3, regname.BOWJR2, "Dome 3 Fifth Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player, 17))
+    world.get_region(regname.WORLD3).connect(world.get_region(regname.HIGHTAIL), "World 3 Slot 1 Galaxy")
+    world.get_region(regname.WORLD3).connect(world.get_region(regname.ROLLMAST), "World 3 Slot 2 Galaxy")
+    world.get_region(regname.WORLD3).connect(world.get_region(regname.BOULBOWL), "World 3 Slot 3 Galaxy")
+    world.get_region(regname.WORLD3).connect(world.get_region(regname.HONEYHOP), "World 3 Slot 4 Galaxy")
+    world.get_region(regname.WORLD3).connect(world.get_region(regname.BOWJR2), "World 3 Slot 5 Galaxy")
     # World 4
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD4), "World 4 Map",
                                            rule=(Has(itemname.GRAND, 3)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
                                                 | (Has(itemname.GRAND4) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))
                                                 | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
-    connect_regions(world, player, regname.WORLD4, regname.COSMICO, "Dome 4 First Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player, 18))
-    connect_regions(world, player, regname.WORLD4, regname.TALLTRUNK, "Dome 4 Second Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player, 19))
-    connect_regions(world, player, regname.WORLD4, regname.CLOUCOUR, "Dome 4 Third Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player, 20))
-    connect_regions(world, player, regname.WORLD4, regname.UPDOWN, "Dome 4 Fourth Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player, 21))
-    connect_regions(world, player, regname.WORLD4, regname.BOWSER2, "Dome 4 Fifth Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player, 22))
+    world.get_region(regname.WORLD4).connect(world.get_region(regname.COSMICO), "World 4 Slot 1 Galaxy")
+    world.get_region(regname.WORLD4).connect(world.get_region(regname.TALLTRUNK), "World 4 Slot 2 Galaxy")
+    world.get_region(regname.WORLD4).connect(world.get_region(regname.CLOUCOUR), "World 4 Slot 3 Galaxy")
+    world.get_region(regname.WORLD4).connect(world.get_region(regname.UPDOWN), "World 4 Slot 4 Galaxy")
+    world.get_region(regname.WORLD4).connect(world.get_region(regname.BOWSER2), "World 4 Slot 5 Galaxy")
     # World 5
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD5), "World 5 Map",
                                            rule=(Has(itemname.GRAND, 4)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
                                                 | (Has(itemname.GRAND5) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))
                                                 | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
-    connect_regions(world, player, regname.WORLD5, regname.HAUNHALL, "Dome 5 First Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player, 23))
-    connect_regions(world, player, regname.WORLD5, regname.FREEFLAKE, "Dome 5 Second Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player, 24))
-    connect_regions(world, player, regname.WORLD5, regname.SUPMASS, "Dome 5 Third Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player, 25))
-    connect_regions(world, player, regname.WORLD5, regname.BONEFIN, "Dome 5 Fourth Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player, 26))
-    connect_regions(world, player, regname.WORLD5, regname.BOWJR3, "Dome 5 Fifth Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player, 27))
+    world.get_region(regname.WORLD5).connect(world.get_region(regname.HAUNHALL), "World 5 Slot 1 Galaxy")
+    world.get_region(regname.WORLD5).connect(world.get_region(regname.FREEFLAKE), "World 5 Slot 2 Galaxy")
+    world.get_region(regname.WORLD5).connect(world.get_region(regname.SUPMASS), "World 5 Slot 3 Galaxy")
+    world.get_region(regname.WORLD5).connect(world.get_region(regname.BONEFIN), "World 5 Slot 4 Galaxy")
+    world.get_region(regname.WORLD5).connect(world.get_region(regname.BOWJR3), "World 5 Slot 5 Galaxy")
     # World 6
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD6), "World 6 Map",
                                            rule=(Has(itemname.GRAND, 5)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
                                                 | (Has(itemname.GRAND6) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))
                                                 | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
-    connect_regions(world, player, regname.WORLD6, regname.FLIPVILL, "Dome 6 First Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player, 28))
-    connect_regions(world, player, regname.WORLD6, regname.STARBEACH, "Dome 6 Second Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player, 29))
-    connect_regions(world, player, regname.WORLD6, regname.MATTER, "Dome 6 Third Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player, 30))
-    connect_regions(world, player, regname.WORLD6, regname.CHOMWORK, "Dome 6 Fourth Orbit Galaxy",
-                    lambda state: state.has_group("Power Star", player, 31))
+    world.get_region(regname.WORLD6).connect(world.get_region(regname.FLIPVILL), "World 6 Slot 1 Galaxy")
+    world.get_region(regname.WORLD6).connect(world.get_region(regname.STARBEACH), "World 6 Slot 2 Galaxy")
+    world.get_region(regname.WORLD6).connect(world.get_region(regname.MATTER), "World 6 Slot 3 Galaxy")
+    world.get_region(regname.WORLD6).connect(world.get_region(regname.CHOMWORK), "World 6 Slot 4 Galaxy")
     # World 7
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD7), "World S Map",
                                            rule=(Has(itemname.GRAND, 6)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
                                                 | (Has(itemname.GRAND7) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))
                                                 | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
-    #Remaining Ship Connections
-    connect_regions(world, player, regname.SHIP, regname.LIBRARY, "Library Entrance")
-    connect_regions(world, player, regname.SHIP, regname.COTU, "Center Of the Universe Entry",
-                    lambda state: state.has("Grand Star", player, 5) and state.has_group("Power Star", player, world.options.stars_to_finish.value))
-    connect_regions(world, player, regname.COTU, regname.BOWSER3, "Galaxy's Center")
-    connect_regions(world, player, regname.SHIP, regname.HONEYBLOOM, "Sweet Sweet Hungry Luma")
-    connect_regions(world, player, regname.SHIP, regname.BEATBLOCK, "Sling Pod Hungry Luma",
-                    lambda state: state.has("Grand Star", player))
-    connect_regions(world, player, regname.SHIP, regname.SWEETMYS, "Drip Drop Hungry Luma",
-                    lambda state: state.has("Grand Star", player, 2))
-    connect_regions(world, player, regname.SHIP, regname.BIGMOUTH, "Bigmouth Hungry Luma",
-                    lambda state: state.has("Grand Star", player, 3))
-    connect_regions(world, player, regname.SHIP, regname.SANDSPIRAL, "Sand Spiral Hungry Luma",
-                    lambda state: state.has("Grand Star", player, 4))
-    connect_regions(world, player, regname.SHIP, regname.SNOWCAP, "Snow Cap Hungry Luma",
-                    lambda state: state.has("Grand Star", player, 5))
-    connect_regions(world, player, regname.SHIP, regname.FLIPSWAP, "Gateway Dome",
-                    lambda state: state.has("Grand Star", player, 5))
-    connect_regions(world, player, regname.SHIP, regname.BOOBONE, "Boo's Boneyard Hungry Luma",
-                    lambda state: state.has("Grand Star", player, 5))
-    connect_regions(world, player, regname.SHIP, regname.TRIALS, "Planet of Trials Launch Star",
-                    lambda state: state.has("Green Star", player))
-    connect_regions(world, player, regname.TRIALS, regname.ROLLINGGIZ, "Rolling Gizmo Launch Star")
-    connect_regions(world, player, regname.TRIALS, regname.LOOPDEESWOOP, "Loopdeeswoop Launch Star")
-    connect_regions(world, player, regname.TRIALS, regname.BUBBLEBLAST, "Bubble Blast Launch Star")
-    # connect_regions(world, player, regname.SHIP, regname.FINALE, "Grand Finale Launch Star",
-    #                 lambda state: state.has("Green Star", player) and state.has("Power Star", player, 120))
     world.set_completion_rule(Has("Peach"))
 
 def rules_from_er_placements(world: "SMG2World"):
@@ -175,18 +119,16 @@ def rules_from_er_placements(world: "SMG2World"):
                     or (4 > world.options.goal.value > 1 and (world_num, slot_num) == (7, 7))): # TODO add in starbit requirements somehow
                 world.set_rule(galaxy_entr,
                                 (OptionFilter(Goal, Goal.option_Green_Star_Cutscene)
-                                 & HasGroup("Power Star", count=world.options.stars_to_finish.value) & Has(itemname.GREEN, 120)
-                               & OptionFilter(GreenStarBehavior, 0)) |
-                                (HasFromList(*NoGreenList, count=min(world.options.stars_to_finish.value, 120))
-                                 & Has(itemname.GREEN, 120) & OptionFilter(Goal, Goal.option_Green_Star_Cutscene)
-                                 & OptionFilter(GreenStarBehavior, 1))
-                                | (OptionFilter(GreenStarBehavior, 0) &
+                                 & ((HasGroup("Power Star", count=max(world.options.stars_to_finish.value, 120))
+                                 & OptionFilter(GreenStarBehavior, 0))
+                               |(HasFromList(*NoGreenList, count=120)
+                                 & GreenSeparateGoal)))
+                               |(OptionFilter(GreenStarBehavior, 0) &
                                    HasGroup("Power Star", count=world.options.stars_to_finish.value)
                                    & OptionFilter(Goal, Goal.option_Green_Star_Cutscene, operator="ne"))
-                                |(OptionFilter(GreenStarBehavior, 1) &
+                                |(GreenSeparateGoal &
                                    HasFromList(*NoGreenList, count=min(world.options.stars_to_finish.value, 120))
-                                   & OptionFilter(Goal, Goal.option_Green_Star_Cutscene, operator="ne")
-                                  & Has(itemname.GREEN, world.options.green_stars_to_finish.value)))
+                                   & OptionFilter(Goal, Goal.option_Green_Star_Cutscene, operator="ne")))
 
             if world.options.enable_green_stars.value == 1 and world.options.green_star_behavior.value == 0:
                 available_locations += 5 if galaxy_type == "Major" else 3
@@ -200,3 +142,5 @@ def rules_from_er_placements(world: "SMG2World"):
 
 # Common Rules
 NoGreenList: list[str] = [itemname.POWER, itemname.GRAND, itemname.GRAND1, itemname.GRAND2, itemname.GRAND3, itemname.GRAND4, itemname.GRAND5, itemname.GRAND6,itemname.GRAND7]
+GreenSeparateGoal = ((Has(itemname.GREEN, FromOption(GreenStarstoFinish)) & OptionFilter(GreenStarBehavior, 1))
+                     | OptionFilter(GreenStarBehavior, 2))
