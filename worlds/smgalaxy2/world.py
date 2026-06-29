@@ -14,6 +14,7 @@ from worlds.LauncherComponents import Component, SuffixIdentifier, Type, compone
 from . import items, regions, Rules, web_world, Options
 from .Constants.Names import region_names as regname
 from .Constants.Names import item_names as itemname
+from .Constants.Names import location_names as locname
 from .Constants.constants import AP_WORLD_VERSION_NAME, CLIENT_VERSION
 from .Rules import rules_from_er_placements
 from .locations import LOCATION_NAME_TO_ID, get_location_names_per_category, SMG2Location, location_table
@@ -75,10 +76,11 @@ class SMG2World(World):
         world_order: list[str] = ["World 1", "World 2", "World 3", "World 4", "World 5", "World 6", "World 7"]
         world_list_tuple: list[tuple[str, int]] = star_block_copy.most_common().reverse()
         world_final_blocks: dict[str, int] = dict(world_list_tuple)
-        if self.options.world_shuffle.value == 1:
+        if self.options.world_shuffle.value in [1, 2]:
             world_order: list[str] = []
             self.starting_world = ("World " + list(world_final_blocks.keys())[0][17]) # Get world number from string in option
-            self.multiworld.push_precollected(self.create_item("Grand Star - " + self.starting_world))
+            if self.options.world_shuffle.value ==1:
+                self.multiworld.push_precollected(self.create_item("Grand Star - " + self.starting_world))
             for i in range(7):
                 world_order.append("World " + str(list(world_final_blocks.keys())[i][17])) # Get world number from string in option
 
@@ -112,7 +114,7 @@ class SMG2World(World):
         Rules.set_rules(self, self.player)
     
     def create_item(self, name: str) -> SMG2Item:
-        item = items.SMG2Item(name, self.player, items.item_table[name])
+        item = items.SMG2Item(name, self.player, items.all_items_table[name])
         
         return item
 
@@ -137,10 +139,6 @@ class SMG2World(World):
         # make sure we don't create more stars than locations, somehow
         copies = max(0, items.all_items_table[itemname.POWER].default_count - exclude.count(itemname.POWER))
         local_pool += [self.create_item(itemname.POWER) for i in range(copies)]
-
-        # match case Goal to place item on correct location
-
-        self.multiworld.get_location("B: The Fate of the Universe", self.player).place_locked_item(self.create_item("Peach"))
         
         # Calculate the number of additional filler items to create to fill all locations
         n_locations = len(self.multiworld.get_unfilled_locations(self.player))
@@ -163,11 +161,10 @@ class SMG2World(World):
         rules_from_er_placements(self)
 
     def pre_fill(self) -> None:
-        visualize_regions(self.get_region(self.origin_region_name), "SMG_region_graph.puml",show_entrance_names=True)
+        visualize_regions(self.get_region(self.origin_region_name), "SMG2_region_graph.puml",show_entrance_names=True)
 
-    # Output options, locations and doors for patcher
+    # Output options, locations and doors for patcher TODO correct for SMG2
     def generate_output(self, output_directory: str):
-        self.star_block_counts.update({"D1G1": 0})
         # Output seed name and slot number to seed RNG in randomizer client
         output_data: dict = {
             AP_WORLD_VERSION_NAME: CLIENT_VERSION,

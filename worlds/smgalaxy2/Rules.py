@@ -1,9 +1,10 @@
 from typing import TYPE_CHECKING, Any
 
 from BaseClasses import Entrance
+from rule_builder.field_resolvers import FromOption
 from rule_builder.options import OptionFilter
-from rule_builder.rules import Has, True_, HasFromList, Rule
-from .Options import WorldShuffle, Goal, GreenStarBehavior
+from rule_builder.rules import Has, True_, HasFromList, Rule, HasGroup
+from .Options import WorldShuffle, Goal, GreenStarBehavior, StarstoFinish
 from .regions import connect_regions, region_list, all_galaxy_slots
 from .Constants.Names import region_names as regname
 from .Constants.Names import item_names as itemname
@@ -159,34 +160,33 @@ def rules_from_er_placements(world: "SMG2World"):
                     last_block_count = block_dict[f"Block 5"]
 
             if last_block_count <= available_locations:
-                world.set_rule(galaxy_entr, (HasFromList(itemname.POWER, itemname.GRAND, itemname.GRAND1, itemname.GRAND2, itemname.GRAND3, itemname.GRAND4, itemname.GRAND5, itemname.GRAND6,itemname.GRAND7,
-                                                         count=last_block_count)
-                                             & OptionFilter(GreenStarBehavior, 1))
-                               | (OptionFilter(GreenStarBehavior, 0) &
-                                   HasFromList(itemname.POWER, itemname.GREEN, itemname.GRAND, itemname.GRAND1, itemname.GRAND2, itemname.GRAND3, itemname.GRAND4, itemname.GRAND5, itemname.GRAND6,itemname.GRAND7,
-                                               count=last_block_count)))
+                world.set_rule(galaxy_entr, (HasFromList(*NoGreenList, count=last_block_count)
+                                             & OptionFilter(GreenStarBehavior, 0, operator= "gt"))
+                                             | (OptionFilter(GreenStarBehavior, 0) &
+                                                 HasGroup("Power Star", count=last_block_count)))
             else:
-                world.set_rule(galaxy_entr, (HasFromList(itemname.POWER, itemname.GRAND, itemname.GRAND1, itemname.GRAND2, itemname.GRAND3, itemname.GRAND4, itemname.GRAND5, itemname.GRAND6,itemname.GRAND7,
-                                                         count=available_locations)
-                                             & OptionFilter(GreenStarBehavior, 1))
-                               | (OptionFilter(GreenStarBehavior, 0) &
-                                   HasFromList(itemname.POWER, itemname.GREEN, itemname.GRAND, itemname.GRAND1, itemname.GRAND2, itemname.GRAND3, itemname.GRAND4, itemname.GRAND5, itemname.GRAND6,itemname.GRAND7,
-                                               count=available_locations)))
+                world.set_rule(galaxy_entr, (HasFromList(*NoGreenList, count=available_locations)
+                                             & OptionFilter(GreenStarBehavior, 0, operator="gt"))
+                                             | (OptionFilter(GreenStarBehavior, 0) &
+                                                 HasGroup("Power Star", count=available_locations)))
                 world.star_block_counts[world_num][f"Block {slot_num}"] = available_locations
                 last_block_count = available_locations
             if ((world.options.goal.value < 2 and (world_num, slot_num) == (6, 7))
-                    or (world.options.goal.value > 1 and (world_num, slot_num) == (7, 7))): # TODO add in starbit requirements somehow
+                    or (4 > world.options.goal.value > 1 and (world_num, slot_num) == (7, 7))): # TODO add in starbit requirements somehow
                 world.set_rule(galaxy_entr,
                                 (OptionFilter(Goal, Goal.option_Green_Star_Cutscene)
-                                 & HasFromList(itemname.POWER, itemname.GRAND, itemname.GRAND1, itemname.GRAND2, itemname.GRAND3, itemname.GRAND4, itemname.GRAND5, itemname.GRAND6,itemname.GRAND7,
-                                               count=world.options.stars_to_finish.value) & Has(itemname.GREEN, 120)) |
-                                (HasFromList(itemname.POWER, itemname.GRAND, itemname.GRAND1, itemname.GRAND2, itemname.GRAND3, itemname.GRAND4, itemname.GRAND5, itemname.GRAND6,itemname.GRAND7,
-                                             count=min(world.options.stars_to_finish.value, 120))
-                                 & Has(itemname.GREEN, world.options.green_stars_to_finish.value)
+                                 & HasGroup("Power Star", count=world.options.stars_to_finish.value) & Has(itemname.GREEN, 120)
+                               & OptionFilter(GreenStarBehavior, 0)) |
+                                (HasFromList(*NoGreenList, count=min(world.options.stars_to_finish.value, 120))
+                                 & Has(itemname.GREEN, 120) & OptionFilter(Goal, Goal.option_Green_Star_Cutscene)
                                  & OptionFilter(GreenStarBehavior, 1))
                                 | (OptionFilter(GreenStarBehavior, 0) &
-                                   HasFromList(itemname.POWER, itemname.GREEN, itemname.GRAND, itemname.GRAND1, itemname.GRAND2, itemname.GRAND3, itemname.GRAND4, itemname.GRAND5, itemname.GRAND6,itemname.GRAND7,
-                                               count=world.options.stars_to_finish.value)))
+                                   HasGroup("Power Star", count=world.options.stars_to_finish.value)
+                                   & OptionFilter(Goal, Goal.option_Green_Star_Cutscene, operator="ne"))
+                                |(OptionFilter(GreenStarBehavior, 1) &
+                                   HasFromList(*NoGreenList, count=min(world.options.stars_to_finish.value, 120))
+                                   & OptionFilter(Goal, Goal.option_Green_Star_Cutscene, operator="ne")
+                                  & Has(itemname.GREEN, world.options.green_stars_to_finish.value)))
 
             if world.options.enable_green_stars.value == 1 and world.options.green_star_behavior.value == 0:
                 available_locations += 5 if galaxy_type == "Major" else 3
@@ -199,3 +199,4 @@ def rules_from_er_placements(world: "SMG2World"):
 
 
 # Common Rules
+NoGreenList: list[str] = [itemname.POWER, itemname.GRAND, itemname.GRAND1, itemname.GRAND2, itemname.GRAND3, itemname.GRAND4, itemname.GRAND5, itemname.GRAND6,itemname.GRAND7]

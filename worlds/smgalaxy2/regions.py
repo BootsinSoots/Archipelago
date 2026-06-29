@@ -2,8 +2,10 @@ import copy
 from typing import NamedTuple, Optional, Callable, TYPE_CHECKING
 from BaseClasses import Region, Entrance, MultiWorld
 from entrance_rando import disconnect_entrance_for_randomization
+from rule_builder.rules import CanReachLocation
 
 from .Constants.Names import region_names as regname
+from .Constants.Names import location_names as locname
 from .Options import SMG2Options
 from .locations import SMG2Location, locPC_table, base_stars_locations, SMG2LocationData
 from ..generic.Rules import add_rule
@@ -141,11 +143,31 @@ def by_type_shuffle(world: "SMG2World", entrances: list, galaxies: list[str]):
         galaxy.entrances.remove(er_target)
         slot.connect(galaxy)
 
-def create_regions(world: "SMG2World"):
+def create_regions(world: "SMG2World"): #TODO Correctly add locations
     for region_name in region_list.keys():
         world.multiworld.regions.append(SMGRegion(region_name, region_list[region_name], world.player, world.multiworld))
 
     create_locations(base_stars_locations, world)
+
+    # match case Goal to place item on correct location. Case 4 is placed ealier
+    match world.options.goal.value:
+        case 0 | 1:
+            world.multiworld.get_location(locname.GALAXYGENSTAR1, world.player).place_locked_item(
+                world.create_item("Peach"))
+        case 2:
+            world.multiworld.get_location(locname.GRANDMASTSTAR1, world.player).place_locked_item(
+                world.create_item("Peach"))
+        case 3:
+            world.multiworld.get_location(locname.GRANDMASTSTAR2, world.player).place_locked_item(
+                world.create_item("Peach"))
+        case 4:
+            world.get_region(regname.SHIP).add_event("Boss Rush Goal", "Peach",
+                                                     (CanReachLocation(locname.FIREFLOTSTAR1)
+                                                      & CanReachLocation(locname.LAVALAIRSTAR1)
+                                                      & CanReachLocation(locname.FEARFLETSTAR1)
+                                                      & CanReachLocation(locname.BOOMBUNKSTAR1)
+                                                      & CanReachLocation(locname.GRAVGAUNSTAR1)
+                                                      & CanReachLocation(locname.GALAXYGENSTAR1)))
 
     if world.options.enable_green_stars.value == 1: # Fix for Green star locations
         create_locations(locGS_table, world)
@@ -153,7 +175,7 @@ def create_regions(world: "SMG2World"):
     if world.options.stars_to_finish.value > 103 >= len(list(world.get_locations()))-1:
         world.options.stars_to_finish.value = len(list(world.get_locations()))-1
 
-def connect_regions(world: "SMG2World", player: int, source: str, target: str, name: str, rule=None):
+def connect_regions(world: "SMG2World", player: int, source: str, target: str, name: str, rule=None): #TODO replace completely with built-in connect function
     sourceRegion = world.get_region(source)
     targetRegion = world.get_region(target)
 

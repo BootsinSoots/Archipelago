@@ -30,6 +30,11 @@ filler_items: dict[str, SMG2ItemData] = {
     "1up Mushroom": SMG2ItemData(["Filler Items"], 170000007, IC.filler),
 }
 
+
+generic_event_items: dict[str, SMG2ItemData] = {
+    "Peach": SMG2ItemData([], None, IC.progression)
+}
+
 keyed_grand_stars: dict[str, SMG2ItemData] = {
     itemname.GRAND1: SMG2ItemData(["Grand Star", "Power Star"], 170000010, IC.progression),
     itemname.GRAND2: SMG2ItemData(["Grand Star", "Power Star"], 170000011, IC.progression),

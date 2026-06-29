@@ -22,6 +22,7 @@ class Goal(Choice):
     option_Green_Star_Cutscene = 1
     option_Grandmaster = 2
     option_Perfect_Run = 3
+    option_Boss_Rush = 4
 
 class GalaxyShuffle(OptionSet):
     """
@@ -73,11 +74,14 @@ class WorldShuffle(Choice):
 
     Keyed Grand Stars means each Grand Star unlocks a specific world map for you to access.
     You will receive one at random in your starting inventory
+
+    Open means that all world maps are open from the start
     """
     display_name = "World Shuffle"
     internal_name = "world_shuffle"
     option_Progressive = 0
     option_Keyed_Grand_Stars = 1
+    option_Open = 2
 
 class EnableGreenStars(Toggle):
     """
