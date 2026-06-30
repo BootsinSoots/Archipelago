@@ -6,8 +6,13 @@ SKYSTASTARG1 = "Sky Station: Green Star 1"
 SKYSTASTARG2 = "Sky Station: Green Star 2"
 SKYSTASTARG3 = "Sky Station: Green Star 3"
 
+# Yoshi Star Galaxy
+
 # Bowser Jr.s Fiery Flotilla
 FIREFLOTSTAR1 = "Fiery Flotilla 1: Gobblegut's Aching Belly"
+FIREFLOTSTAR2 = "Fiery Flotilla 2: Fiery Flotilla Speed Run"
+FIREFLOTSTARG1 = "Fiery Flotilla: Green Star 1"
+FIREFLOTSTARG2 = "Fiery Flotilla: Green Star 2"
 
 # Bowser's Lava Lair
 LAVALAIRSTAR1 = "Lava Lair 1: Bowser's Big Lava Power Party"
