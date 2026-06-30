@@ -5,7 +5,7 @@ from rule_builder.field_resolvers import FromOption
 from rule_builder.options import OptionFilter
 from rule_builder.rules import Has, True_, HasFromList, Rule, HasGroup
 from .Options import WorldShuffle, Goal, GreenStarBehavior, StarstoFinish, GreenStarstoFinish
-from .regions import connect_regions, region_list, all_galaxy_slots
+from .regions import region_list, all_galaxy_slots
 from .Constants.Names import region_names as regname
 from .Constants.Names import item_names as itemname
 
@@ -31,55 +31,74 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                            rule=(Has(itemname.GRAND)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
                                                 | (Has(itemname.GRAND2) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))
                                                 | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
-    world.get_region(regname.WORLD2).connect(world.get_region(regname.FLUFFBLUFF), "World 2 Slot 1 Galaxy")
-    world.get_region(regname.WORLD2).connect(world.get_region(regname.WILDGLIDE), "World 2 Slot 2 Galaxy")
-    world.get_region(regname.WORLD2).connect(world.get_region(regname.PUZZPLAN), "World 2 Slot 3 Galaxy")
-    world.get_region(regname.WORLD2).connect(world.get_region(regname.HURRYSCUR), "World 2 Slot 4 Galaxy")
-    world.get_region(regname.WORLD2).connect(world.get_region(regname.BOWSER1), "World 2 Slot 5 Galaxy")
+    world.get_region(regname.WORLD2).connect(world.get_region(regname.PUZZPLAN), "World 2 Slot 1 Galaxy")
+    world.get_region(regname.WORLD2).connect(world.get_region(regname.BOULBOWL), "World 2 Slot 2 Galaxy")
+    world.get_region(regname.WORLD2).connect(world.get_region(regname.HIGHTAIL), "World 2 Slot 3 Galaxy")
+    world.get_region(regname.WORLD2).connect(world.get_region(regname.WILDGLIDE), "World 2 Slot 4 Galaxy")
+    world.get_region(regname.WORLD2).connect(world.get_region(regname.COSMICO), "World 2 Slot 5 Galaxy")
+    world.get_region(regname.WORLD2).connect(world.get_region(regname.HONEYBLOOM), "World 2 Slot 6 Galaxy")
+    world.get_region(regname.WORLD2).connect(world.get_region(regname.BOWSER1), "World 2 Slot 7 Galaxy")
     # World 3
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD3), "World 3 Map",
                                            rule=(Has(itemname.GRAND, 2)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
                                                 | (Has(itemname.GRAND3) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))
                                                 | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
-    world.get_region(regname.WORLD3).connect(world.get_region(regname.HIGHTAIL), "World 3 Slot 1 Galaxy")
-    world.get_region(regname.WORLD3).connect(world.get_region(regname.ROLLMAST), "World 3 Slot 2 Galaxy")
-    world.get_region(regname.WORLD3).connect(world.get_region(regname.BOULBOWL), "World 3 Slot 3 Galaxy")
-    world.get_region(regname.WORLD3).connect(world.get_region(regname.HONEYHOP), "World 3 Slot 4 Galaxy")
-    world.get_region(regname.WORLD3).connect(world.get_region(regname.BOWJR2), "World 3 Slot 5 Galaxy")
+    world.get_region(regname.WORLD3).connect(world.get_region(regname.TALLTRUNK), "World 3 Slot 1 Galaxy")
+    world.get_region(regname.WORLD3).connect(world.get_region(regname.CLOUCOUR), "World 3 Slot 2 Galaxy")
+    world.get_region(regname.WORLD3).connect(world.get_region(regname.HAUNHALL), "World 3 Slot 3 Galaxy")
+    world.get_region(regname.WORLD3).connect(world.get_region(regname.FREEFLAKE), "World 3 Slot 4 Galaxy")
+    world.get_region(regname.WORLD3).connect(world.get_region(regname.BEATBLOCK), "World 3 Slot 5 Galaxy")
+    world.get_region(regname.WORLD3).connect(world.get_region(regname.ROLLMAST), "World 3 Slot 6 Galaxy")
+    world.get_region(regname.WORLD3).connect(world.get_region(regname.BOWJR2), "World 3 Slot 7 Galaxy")
     # World 4
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD4), "World 4 Map",
                                            rule=(Has(itemname.GRAND, 3)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
                                                 | (Has(itemname.GRAND4) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))
                                                 | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
-    world.get_region(regname.WORLD4).connect(world.get_region(regname.COSMICO), "World 4 Slot 1 Galaxy")
-    world.get_region(regname.WORLD4).connect(world.get_region(regname.TALLTRUNK), "World 4 Slot 2 Galaxy")
-    world.get_region(regname.WORLD4).connect(world.get_region(regname.CLOUCOUR), "World 4 Slot 3 Galaxy")
-    world.get_region(regname.WORLD4).connect(world.get_region(regname.UPDOWN), "World 4 Slot 4 Galaxy")
-    world.get_region(regname.WORLD4).connect(world.get_region(regname.BOWSER2), "World 4 Slot 5 Galaxy")
+    world.get_region(regname.WORLD4).connect(world.get_region(regname.SUPMASS), "World 4 Slot 1 Galaxy")
+    world.get_region(regname.WORLD4).connect(world.get_region(regname.SWEETMYS), "World 4 Slot 2 Galaxy")
+    world.get_region(regname.WORLD4).connect(world.get_region(regname.FLIPVILL), "World 4 Slot 3 Galaxy")
+    world.get_region(regname.WORLD4).connect(world.get_region(regname.HONEYHOP), "World 4 Slot 4 Galaxy")
+    world.get_region(regname.WORLD4).connect(world.get_region(regname.STARBEACH), "World 4 Slot 5 Galaxy")
+    world.get_region(regname.WORLD4).connect(world.get_region(regname.CHOMWORK), "World 4 Slot 6 Galaxy")
+    world.get_region(regname.WORLD4).connect(world.get_region(regname.BOWSER2), "World 4 Slot 7 Galaxy")
     # World 5
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD5), "World 5 Map",
                                            rule=(Has(itemname.GRAND, 4)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
                                                 | (Has(itemname.GRAND5) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))
                                                 | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
-    world.get_region(regname.WORLD5).connect(world.get_region(regname.HAUNHALL), "World 5 Slot 1 Galaxy")
-    world.get_region(regname.WORLD5).connect(world.get_region(regname.FREEFLAKE), "World 5 Slot 2 Galaxy")
-    world.get_region(regname.WORLD5).connect(world.get_region(regname.SUPMASS), "World 5 Slot 3 Galaxy")
-    world.get_region(regname.WORLD5).connect(world.get_region(regname.BONEFIN), "World 5 Slot 4 Galaxy")
-    world.get_region(regname.WORLD5).connect(world.get_region(regname.BOWJR3), "World 5 Slot 5 Galaxy")
+    world.get_region(regname.WORLD5).connect(world.get_region(regname.SPACSTOR), "World 5 Slot 1 Galaxy")
+    world.get_region(regname.WORLD5).connect(world.get_region(regname.BOOMOON), "World 5 Slot 2 Galaxy")
+    world.get_region(regname.WORLD5).connect(world.get_region(regname.UPDOWN), "World 5 Slot 3 Galaxy")
+    world.get_region(regname.WORLD5).connect(world.get_region(regname.SLIPSAND), "World 5 Slot 4 Galaxy")
+    world.get_region(regname.WORLD5).connect(world.get_region(regname.FLEETGLIDE), "World 5 Slot 5 Galaxy")
+    world.get_region(regname.WORLD5).connect(world.get_region(regname.SHIVBURN), "World 5 Slot 6 Galaxy")
+    world.get_region(regname.WORLD5).connect(world.get_region(regname.BOWJR3), "World 5 Slot 7 Galaxy")
     # World 6
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD6), "World 6 Map",
                                            rule=(Has(itemname.GRAND, 5)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
                                                 | (Has(itemname.GRAND6) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))
                                                 | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
-    world.get_region(regname.WORLD6).connect(world.get_region(regname.FLIPVILL), "World 6 Slot 1 Galaxy")
-    world.get_region(regname.WORLD6).connect(world.get_region(regname.STARBEACH), "World 6 Slot 2 Galaxy")
-    world.get_region(regname.WORLD6).connect(world.get_region(regname.MATTER), "World 6 Slot 3 Galaxy")
-    world.get_region(regname.WORLD6).connect(world.get_region(regname.CHOMWORK), "World 6 Slot 4 Galaxy")
+    world.get_region(regname.WORLD6).connect(world.get_region(regname.MELTY), "World 6 Slot 1 Galaxy")
+    world.get_region(regname.WORLD6).connect(world.get_region(regname.CLOCKWORK), "World 6 Slot 2 Galaxy")
+    world.get_region(regname.WORLD6).connect(world.get_region(regname.FLASHBLACK), "World 6 Slot 3 Galaxy")
+    world.get_region(regname.WORLD6).connect(world.get_region(regname.WHOMPFORT), "World 6 Slot 4 Galaxy")
+    world.get_region(regname.WORLD6).connect(world.get_region(regname.SLIMSPRI), "World 6 Slot 5 Galaxy")
+    world.get_region(regname.WORLD6).connect(world.get_region(regname.BATTLEBELT), "World 6 Slot 6 Galaxy")
+    world.get_region(regname.WORLD6).connect(world.get_region(regname.BOWSER3), "World 6 Slot 7 Galaxy")
     # World 7
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD7), "World S Map",
                                            rule=(Has(itemname.GRAND, 6)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
                                                 | (Has(itemname.GRAND7) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))
                                                 | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
+    world.get_region(regname.WORLD7).connect(world.get_region(regname.MARIO), "World 7 Slot 1 Galaxy")
+    world.get_region(regname.WORLD7).connect(world.get_region(regname.ROLLCOAST), "World 7 Slot 2 Galaxy")
+    world.get_region(regname.WORLD7).connect(world.get_region(regname.TWISTTRI), "World 7 Slot 3 Galaxy")
+    world.get_region(regname.WORLD7).connect(world.get_region(regname.STONECYC), "World 7 Slot 4 Galaxy")
+    world.get_region(regname.WORLD7).connect(world.get_region(regname.BOSSBLITZ), "World 7 Slot 5 Galaxy")
+    world.get_region(regname.WORLD7).connect(world.get_region(regname.FLIPOUT), "World 7 Slot 6 Galaxy")
+    world.get_region(regname.WORLD7).connect(world.get_region(regname.GRANDMASTER), "World 7 Slot 7 Galaxy")
+    world.get_region(regname.SHIP).connect(world.get_region(regname.SHIPINSIDE)), "Inside Starship Mario"
     world.set_completion_rule(Has("Peach"))
 
 def rules_from_er_placements(world: "SMG2World"):

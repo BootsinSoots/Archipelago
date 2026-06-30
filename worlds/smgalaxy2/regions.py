@@ -58,8 +58,7 @@ all_galaxy_slots: list[str] = (major_entr_list + gal_minor_entr_list + luma_entr
 
 # TODO Replace in game name for galaxies, or remove entirely
 region_list: dict[str, SMG2RegionData] = {
-    regname.SHIP: SMG2RegionData("Main", [],
-                                 []),
+    regname.SHIP: SMG2RegionData("Main", [], []),
     regname.WORLD1: SMG2RegionData("World", [regname.SHIP], []),
     regname.WORLD2: SMG2RegionData("World", [regname.SHIP], []),
     regname.WORLD5: SMG2RegionData("World", [regname.SHIP], []),
