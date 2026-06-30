@@ -128,13 +128,14 @@ class SMG2World(World):
         if self.options.enable_green_stars.value == 1:
             copies = max(0, items.all_items_table["Green Star"].default_count - exclude.count("Green Star"))
             local_pool += [self.create_item("Green Star") for i in range(copies)]
-        if self.options.world_shuffle.value == 0:
-            copies = max(0, items.all_items_table[itemname.GRAND].default_count - exclude.count(itemname.GRAND))
-            local_pool += [self.create_item(itemname.GRAND) for i in range(copies)]
-        else:
+        if self.options.world_shuffle.value == 1:
             for item in items.keyed_grand_stars.keys():
                 copies = max(0, items.all_items_table[item].default_count - exclude.count(item))
                 local_pool += [self.create_item(item) for _ in range(copies)]
+        else:
+            copies = max(0, items.all_items_table[itemname.GRAND].default_count - exclude.count(itemname.GRAND))
+            local_pool += [self.create_item(itemname.GRAND) for i in range(copies)]
+
         
         # make sure we don't create more stars than locations, somehow
         copies = max(0, items.all_items_table[itemname.POWER].default_count - exclude.count(itemname.POWER))
