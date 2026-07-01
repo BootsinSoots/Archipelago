@@ -4,7 +4,7 @@ from BaseClasses import Entrance
 from rule_builder.field_resolvers import FromOption
 from rule_builder.options import OptionFilter
 from rule_builder.rules import Has, True_, HasFromList, Rule, HasGroup
-from .Options import WorldShuffle, Goal, GreenStarBehavior, StarstoFinish, GreenStarstoFinish
+from .Options import WorldShuffle, Goal, GreenStarBehavior, StarstoFinish, GreenStarstoFinish, GalaxyLock
 from .regions import region_list, all_galaxy_slots
 from .Constants.Names import region_names as regname
 from .Constants.Names import item_names as itemname
@@ -126,13 +126,15 @@ def rules_from_er_placements(world: "SMG2World"):
             world.set_rule(galaxy_entr, (HasFromList(*NoGreenList, count=req_star_count)
                                          & OptionFilter(GreenStarBehavior, 0, operator="gt"))
                                          | (OptionFilter(GreenStarBehavior, 0) &
-                                             HasGroup("Power Star", count=req_star_count)))
+                                             HasGroup("Power Star", count=req_star_count))
+                           & ((OptionFilter(GalaxyLock, 1) & Has(f"{galaxy_entr.connected_region.name} Key"))
+                              | (OptionFilter(GalaxyLock, 0)&True_())))
             world.star_block_counts[world_num][f"Block {gal_slot_num}"] = req_star_count
             last_block_count = req_star_count
             if ((world.options.goal.value < 2 and (world_num, gal_slot_num) == (6, 7))
                     or (4 > world.options.goal.value > 1 and (world_num, gal_slot_num) == (7, 7))): # TODO add in starbit requirements somehow
                 world.set_rule(galaxy_entr,
-                                (OptionFilter(Goal, Goal.option_Green_Star_Cutscene)
+                               ((OptionFilter(Goal, Goal.option_Green_Star_Cutscene)
                                  & ((HasGroup("Power Star", count=max(world.options.stars_to_finish.value, 120))
                                  & OptionFilter(GreenStarBehavior, 0))
                                |(HasFromList(*NoGreenList, count=120)
@@ -143,6 +145,8 @@ def rules_from_er_placements(world: "SMG2World"):
                                 |(GreenSeparateGoal &
                                    HasFromList(*NoGreenList, count=min(world.options.stars_to_finish.value, 120))
                                    & OptionFilter(Goal, Goal.option_Green_Star_Cutscene, operator="ne")))
+                               & ((OptionFilter(GalaxyLock, 1) & Has(f"{galaxy_entr.connected_region.name} Key"))
+                              | (OptionFilter(GalaxyLock, 0)&True_())))
 
             if world.options.enable_green_stars.value == 1 and world.options.green_star_behavior.value == 0:
                 available_locations += 5 if galaxy_type == "Major" else 3
@@ -156,5 +160,5 @@ def rules_from_er_placements(world: "SMG2World"):
 
 # Common Rules
 NoGreenList: list[str] = [itemname.POWER, itemname.GRAND, itemname.GRAND1, itemname.GRAND2, itemname.GRAND3, itemname.GRAND4, itemname.GRAND5, itemname.GRAND6,itemname.GRAND7]
-GreenSeparateGoal = ((Has(itemname.GREEN, FromOption(GreenStarstoFinish)) & OptionFilter(GreenStarBehavior, 1))
+GreenSeparateGoal = ((HasGroup(itemname.GREEN, FromOption(GreenStarstoFinish)) & OptionFilter(GreenStarBehavior, 1))
                      | OptionFilter(GreenStarBehavior, 2))

@@ -174,6 +174,12 @@ class  MarioColors(OptionDict):
         "Gloves": "White"
     }
 
+class GalaxyLock(Toggle):
+    """
+    Apply an extra requirement that each galaxy requires a specific item to open.
+    """
+    display_name = "Galaxy Locks"
+    internal_name = "galaxy_lock"
 
 # this defines all the options.
 @dataclass
@@ -188,26 +194,28 @@ class SMG2Options(PerGameCommonOptions):
     world_shuffle: WorldShuffle
     galaxy_shuffle: GalaxyShuffle
     galaxy_shuffle_type: GalaxyShuffleType
+    galaxy_lock: GalaxyLock
 
 option_groups = [
-    Options.OptionGroup("Extra Locations", [
-        EnableGreenStars,
-    ]),
-    Options.OptionGroup("Access Options", [
+    Options.OptionGroup("Map Options", [
+        Goal,
         StarstoFinish,
-        GreenStarstoFinish,
         WorldShuffle,
+        FinalStarBlocks,
         GalaxyShuffle,
-        GalaxyShuffleType
+        GalaxyShuffleType,
+        GalaxyLock,
     ]),
-    Options.OptionGroup("World Blocks", [
+    Options.OptionGroup("Green Stars", [
+        EnableGreenStars,
+        GreenStarstoFinish,
         GreenStarBehavior,
-        World1Blocks,
-        World2Blocks,
-        World3Blocks,
-        World4Blocks,
-        World5Blocks,
-        World6Blocks
+    ]),
+    Options.OptionGroup("Logic Options", [
+
+    ]),
+    Options.OptionGroup("Extra Locations", [
+
     ]),
     Options.OptionGroup("Cosmetics", [
         MarioColors
