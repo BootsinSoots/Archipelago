@@ -16,6 +16,7 @@ from .Constants.Names import region_names as regname
 from .Constants.Names import item_names as itemname
 from .Constants.Names import location_names as locname
 from .Constants.constants import AP_WORLD_VERSION_NAME, CLIENT_VERSION
+from .Options import WorldShuffle
 from .Rules import rules_from_er_placements
 from .locations import LOCATION_NAME_TO_ID, get_location_names_per_category, SMG2Location, location_table
 from .items import SMG2Item, ITEM_NAME_TO_ID, get_item_names_per_category
@@ -71,21 +72,19 @@ class SMG2World(World):
     def get_star_block_counts(self) -> dict[str, dict[str, int]]:
         """Gets all the required star block counts for each world """
         # Determine world order, whether left progressive or randomized
-        self.options.final_star_blocks.value.most_common()
         star_block_copy = copy.deepcopy(self.options.final_star_blocks.value)
         world_order: list[str] = ["World 1", "World 2", "World 3", "World 4", "World 5", "World 6", "World 7"]
         world_list_tuple: list[tuple[str, int]] = star_block_copy.most_common().reverse()
         world_final_blocks: dict[str, int] = dict(world_list_tuple)
-        if self.options.world_shuffle.value in [1, 2]:
+        if self.options.world_shuffle.value in [WorldShuffle.option_Keyed_Grand_Stars, WorldShuffle.option_Open]:
             world_order: list[str] = []
             self.starting_world = ("World " + list(world_final_blocks.keys())[0][17]) # Get world number from string in option
-            if self.options.world_shuffle.value ==1:
+            if self.options.world_shuffle.value == WorldShuffle.option_Keyed_Grand_Stars:
                 self.multiworld.push_precollected(self.create_item("Grand Star - " + self.starting_world))
             for i in range(7):
                 world_order.append("World " + str(list(world_final_blocks.keys())[i][17])) # Get world number from string in option
 
         block_counts: dict[str, dict[str, int]] = {}
-        previous_block_count: int = 0
 
         # put out dict with str star block to int star count
         for world in world_order:
@@ -118,14 +117,14 @@ class SMG2World(World):
         
         return item
 
-    def get_filler_item_name(self) -> str: #TODO FIX IT
+    def get_filler_item_name(self) -> str:
         return self.random.choice(list(items.filler_items.keys()))
     
     def create_items(self):
         exclude = [item.name for item in self.multiworld.precollected_items[self.player]]
         local_pool: list[SMG2Item] = []
         copies: int = 1
-        if self.options.enable_green_stars.value == 1:
+        if self.options.enable_green_stars.value == 1 and self.options.green_star_behavior != 2:
             copies = max(0, items.all_items_table["Green Star"].default_count - exclude.count("Green Star"))
             local_pool += [self.create_item("Green Star") for i in range(copies)]
         if self.options.world_shuffle.value == 1:

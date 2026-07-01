@@ -106,11 +106,11 @@ def rules_from_er_placements(world: "SMG2World"):
     last_block_count = 0
     for world_num in list(world.star_block_counts.keys()): # For each world, apply rule to galaxy slot, based on last block count.
         block_dict: dict[str, int] = world.star_block_counts[world_num]
-        for slot_num in range(1, 8): # Rotate through each galaxy slot to determine rule
-            galaxy_entr: Entrance = world.get_entrance(f"World {world_num[6]} Slot {slot_num} Galaxy")
+        for gal_slot_num in range(1, 8): # Rotate through each galaxy slot to determine rule
+            galaxy_entr: Entrance = world.get_entrance(f"World {world_num[6]} Slot {gal_slot_num} Galaxy")
             galaxy_type: str = region_list[galaxy_entr.connected_region.name].type
 
-            match (world_num, slot_num): # Match the correct pairing or world/slot to the correct block number to determine when to update the current count
+            match (world_num, gal_slot_num): # Match the correct pairing or world/slot to the correct block number to determine when to update the current count
                 case (7, 2)|(1, 3)|(2, 7)|(3, 7)|(4, 7)|(5, 7)|(6, 4):
                     last_block_count = block_dict[f"Block 1"]
                 case (7, 3)|(1, 7)|(6, 6):
@@ -122,20 +122,15 @@ def rules_from_er_placements(world: "SMG2World"):
                 case (7, 6):
                     last_block_count = block_dict[f"Block 5"]
 
-            if last_block_count <= available_locations:
-                world.set_rule(galaxy_entr, (HasFromList(*NoGreenList, count=last_block_count)
-                                             & OptionFilter(GreenStarBehavior, 0, operator= "gt"))
-                                             | (OptionFilter(GreenStarBehavior, 0) &
-                                                 HasGroup("Power Star", count=last_block_count)))
-            else:
-                world.set_rule(galaxy_entr, (HasFromList(*NoGreenList, count=available_locations)
-                                             & OptionFilter(GreenStarBehavior, 0, operator="gt"))
-                                             | (OptionFilter(GreenStarBehavior, 0) &
-                                                 HasGroup("Power Star", count=available_locations)))
-                world.star_block_counts[world_num][f"Block {slot_num}"] = available_locations
-                last_block_count = available_locations
-            if ((world.options.goal.value < 2 and (world_num, slot_num) == (6, 7))
-                    or (4 > world.options.goal.value > 1 and (world_num, slot_num) == (7, 7))): # TODO add in starbit requirements somehow
+            req_star_count = min(last_block_count, available_locations)
+            world.set_rule(galaxy_entr, (HasFromList(*NoGreenList, count=req_star_count)
+                                         & OptionFilter(GreenStarBehavior, 0, operator="gt"))
+                                         | (OptionFilter(GreenStarBehavior, 0) &
+                                             HasGroup("Power Star", count=req_star_count)))
+            world.star_block_counts[world_num][f"Block {gal_slot_num}"] = req_star_count
+            last_block_count = req_star_count
+            if ((world.options.goal.value < 2 and (world_num, gal_slot_num) == (6, 7))
+                    or (4 > world.options.goal.value > 1 and (world_num, gal_slot_num) == (7, 7))): # TODO add in starbit requirements somehow
                 world.set_rule(galaxy_entr,
                                 (OptionFilter(Goal, Goal.option_Green_Star_Cutscene)
                                  & ((HasGroup("Power Star", count=max(world.options.stars_to_finish.value, 120))

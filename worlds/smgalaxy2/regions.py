@@ -7,7 +7,7 @@ from rule_builder.rules import CanReachLocation
 from .Constants.Names import region_names as regname
 from .Constants.Names import location_names as locname
 from .Options import SMG2Options
-from .locations import SMG2Location, locPC_table, base_stars_locations, SMG2LocationData
+from .locations import SMG2Location, locPC_table, base_stars_locations, SMG2LocationData, green_star_locations
 from ..generic.Rules import add_rule
 
 if TYPE_CHECKING:
@@ -169,10 +169,8 @@ def create_regions(world: "SMG2World"): #TODO Correctly add locations
                                                       & CanReachLocation(locname.GALAXYGENSTAR1)))
 
     if world.options.enable_green_stars.value == 1: # Fix for Green star locations
-        create_locations(locGS_table, world)
+        create_locations(green_star_locations, world)
 
-    if world.options.stars_to_finish.value > 103 >= len(list(world.get_locations()))-1:
-        world.options.stars_to_finish.value = len(list(world.get_locations()))-1
 
 def create_region(name: str, world: "SMG2World") -> Region:
     return Region(name, world.player, world.multiworld, name)
@@ -258,12 +256,14 @@ def disconnect_from_option(world: "SMG2World"):
         disconnect_entrance_for_randomization(world.get_entrance("World 7 Slot 3 Galaxy"), 0, regname.TWISTTRI)
         disconnect_entrance_for_randomization(world.get_entrance("World 7 Slot 4 Galaxy"), 0, regname.STONECYC)
         disconnect_entrance_for_randomization(world.get_entrance("World 7 Slot 5 Galaxy"), 0, regname.BOSSBLITZ)
-        if world.options.goal.value < 2 and "Grandmaster" in world.options.galaxy_shuffle.value:
+        if ((world.options.goal.value < 2 or world.options.goal.value == 4)
+                and ("Grandmaster" in world.options.galaxy_shuffle.value or "Full" in world.options.galaxy_shuffle.value)):
             disconnect_entrance_for_randomization(world.get_entrance(grand_entr[0]), 0, regname.GRANDMASTER)
         if world.options.galaxy_shuffle_type.value == 0:
             spec_list: list[str] = copy.deepcopy(specials_galaxy_list)
             spec_entr_list: list[str] = copy.deepcopy(special_entr_list)
-            if world.options.goal.value < 2 and "Grandmaster" in world.options.galaxy_shuffle.value:
+            if ((world.options.goal.value < 2 or world.options.goal.value == 4)
+                    and ("Grandmaster" in world.options.galaxy_shuffle.value or "Full" in world.options.galaxy_shuffle.value)):
                 spec_list += [regname.GRANDMASTER]
                 spec_entr_list += grand_entr
             by_type_shuffle(world, spec_entr_list, spec_list)
