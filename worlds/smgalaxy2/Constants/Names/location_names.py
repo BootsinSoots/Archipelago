@@ -330,7 +330,7 @@ STONECYCLOSTARG2 = "Stone Cyclone: Green Star 2"
 
 # Boss Blitz Star Locations
 BOSSBLITSTAR1 = "Boss Blitz 1: Throwback Throwdown"
-BOSSBLITSTAR1 = "Boss Blitz 2: Throwback Throwdown Speed Run"
+BOSSBLITSTAR2 = "Boss Blitz 2: Throwback Throwdown Speed Run"
 BOSSBLITSTARG1 = "Boss Blitz: Green Star 1"
 BOSSBLITSTARG2 = "Boss Blitz: Green Star 2"
 
@@ -343,3 +343,66 @@ FLIPOUTSTARG2 = "Flip-Out: Green Star 2"
 # Grandmaster
 GRANDMASTSTAR1 = "Grandmaster 1: The Ultimate Test"
 GRANDMASTSTAR2 = "Grandmaster 2: The Perfect Run"
+
+# World 1 Comet Medals
+SKYSTACM = "Sky Station Comet Medal"
+YOSHSTARCM = "Yoshi Star Comet Medal"
+SPINDIGCM = "Spin-Dig Comet Medal"
+FLUFBLUFCM = "Fluffy Bluff Comet Medal"
+RIGHTDOWNCM = "Rightside Down Comet Medal"
+FLIPSWAPCM = "Flip-Swap Comet Medal"
+FIREFLOTCM = "Fiery Flotilla Comet Medal"
+
+# World 2 Comet Medals
+PUZZPLANKCM = "Puzzle Plank Comet Medal"
+HIGHFALLCM = "Hightail Falls Comet Medal"
+ROCKBOWLCM = "Boulder Bowl Comet Medal"
+COSCCOVECM = "Cosmic Cove Comet Medal"
+WILDGLIDECM = "Wild Glide Comet Medal"
+BEEBLOOMCM = "Honeybloom Comet Medal"
+LAVALAIRCM = "Lava Lair Comet Medal"
+
+# World 3 Comet Medals
+TALLTREECM = "Tall Trunk Comet Medal"
+CLOUDCOURTCM = "Cloudy Court Comet Medal"
+HAUNTHALLCM = "Haunty Halls Comet Medal"
+SNOWFLAKECM = "Freezy Flake Comet Medal"
+ROLLMASTERCM = "Rolling Masterpiece Comet Medal"
+BEATBLOCKCM = "Beat Block Comet Medal"
+FEARFLEETCM = "Fearsome Fleet Comet Medal"
+
+# World 4 Comet Medals
+SUPERMASSCM = "Supermassive Comet Medal"
+FLIPVILLECM = "Flipsville Comet Medal"
+STARBEACHCM = "Starshine Beach Comet Medal"
+CHOMPWORKCM = "Chompworks Comet Medal"
+HONEYHOPCM = "Honeyhop Comet Medal"
+SWEETMYSTCM = "Sweet Mystery Comet Medal"
+GRAVGAUNTCM = "Gravity Gauntlet Comet Medal"
+
+# World 5 Comet Medals
+SPACESTORMCM = "Space Storm Comet Medal"
+SLIPSANDCM = "Slipsand Comet Medal"
+COLDFIRECM = "Shiverburn Comet Medal"
+BOOMOONCM = "Boo Moon Comet Medal"
+UPDIZZYCM = "Upside Dizzy Comet Medal"
+FLEETFLYCM = "Fleet Glide Comet Medal"
+BOOMBUNKCM = "Boom Bunker Comet Medal"
+
+# World 6 Comet Medals
+MELTMONSCM = "Melty Monster Comet Medal"
+CLOCKRUINSCM = "Clockwork Ruins Comet Medal"
+THROWBACKCM = "Throwback Comet Medal"
+BATTBELTCM = "Battle Belt Comet Medal"
+FLASHBLACKCM = "Flash Black Comet Medal"
+SLIMYSPRICM = "Slimy Spring Comet Medal"
+GLXYGENCM = "Galaxy Generator Comet Medal"
+
+# World S Comet Medals
+MARIOSQRCM = "Mario Squared Comet Medal"
+ROLLSLIDECM = "Rolling Coaster Comet Medal"
+TWISTTRIALCM = "Twisty Trials Comet Medal"
+STONECYCLOCM = "Stone Cyclone Comet Medal"
+BOSSBLITCM = "Boss Blitz Comet Medal"
+FLIPOUTCM = "Flip-Out Comet Medal"
+GRANDMASTRCM = "Grandmaster Comet Medal"
