@@ -22,7 +22,7 @@ class Goal(Choice):
     option_Green_Star_Cutscene = 1
     option_Grandmaster = 2
     option_Perfect_Run = 3
-    option_Boss_Rush = 4
+    option_All_Bowsers = 4
 
 class GalaxyShuffle(OptionSet):
     """
@@ -111,13 +111,13 @@ class GreenStarBehavior(Choice):
 
     Green Stars: Changes goal to require both Green and Power stars seperately
 
-    Nothing: Don't count towards any logical requirements
+    Disabled: Don't count towards any logical requirements or be in item pool
     """
     display_name = "Green Star Behavior"
     internal_name = "green_star_behavior"
     option_Power_Stars = 0
     option_Green_Stars = 1
-    options_Nothing = 2
+    option_Disabled = 2
 
 class GreenStarstoFinish(Range):
     """

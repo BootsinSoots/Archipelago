@@ -2,7 +2,8 @@ from typing import Dict, NamedTuple, Optional, Set, Any
 from BaseClasses import Location, Region
 from rule_builder.rules import Rule
 
-from.Constants.Names import region_names as regname
+from .Constants.Names import region_names as regname
+from .Constants.Names import location_names as locname
 
 class SMG2Location(Location):
     game: str = "Super Mario Galaxy"
@@ -16,202 +17,467 @@ class SMG2LocationData(NamedTuple):
     region: str
     code: Optional[int]  # used to create ap_id, None for events
     default_access: Rule[Any] = True
-    game_address: Optional[int] = 0  #
+    game_address: Optional[int] = 0
 
-# good egg galaxy
-locGE_table: dict[str, SMG2LocationData] = {
-    "GE: Dino Piranha": SMG2LocationData(["Good Egg Galaxy", "Power Star"], regname.GOODEGG, 17000000, game_address=0),
-    "GE: A Snack of Cosmic Proportions": SMG2LocationData(["Good Egg Galaxy", "Power Star"], regname.GOODEGG, 17000001, game_address=1),
-    "GE: King Kaliente's Battle Fleet": SMG2LocationData(["Good Egg Galaxy", "Power Star"], regname.GOODEGG, 17000002, game_address=2),
-    "GE: Luigi on the Roof": SMG2LocationData(["Good Egg Galaxy", "Power Star"], regname.GOODEGG, 17000003, game_address=3),
-    "GE: Dino Piranha Speed Run": SMG2LocationData(["Good Egg Galaxy", "Power Star"], regname.GOODEGG, 17000004, game_address=4),
+# Sky Station S
+SKYOBS_loc: dict[str, SMG2LocationData] = {
+    locname.SKYSTASTAR1: SMG2LocationData([regname.SKYOBS, "Power Star Location"], regname.SKYOBS),
+    locname.SKYSTASTAR2: SMG2LocationData([regname.SKYOBS, "Power Star Location"], regname.SKYOBS),
+    locname.SKYSTASTAR3: SMG2LocationData([regname.SKYOBS, "Power Star Location"], regname.SKYOBS),
 }
 
-locHH_table: dict[str, SMG2LocationData]  = {
-    "HH: Bee Mario Takes Flight": SMG2LocationData(["Honeyhive Galaxy", "Power Star"], regname.SPINDIG, 17000006, game_address=0),
-    "HH: Trouble on the Tower": SMG2LocationData(["Honeyhive Galaxy", "Power Star"], regname.SPINDIG, 17000007, game_address=1),
-    "HH: Big Bad Bugabooom": SMG2LocationData(["Honeyhive Galaxy", "Power Star"], regname.SPINDIG, 17000008, game_address=2),
-    "HH: Luigi in the Honeyhive Kingdom": SMG2LocationData(["Honeyhive Galaxy", "Power Star"], regname.SPINDIG, 17000009, game_address=3),
-    "HH: Honeyhive Cosmic Mario Race": SMG2LocationData(["Honeyhive Galaxy", "Power Star"], regname.SPINDIG, 170000010, game_address=4)
+# Yoshi Star St
+YOSHTAR_loc: dict[str, SMG2LocationData] = {
+    locname.YOSHSTARSTAR1: SMG2LocationData([regname.GOODEGG, "Power Star Location"], regname.GOODEGG),
+    locname.YOSHSTARSTAR2: SMG2LocationData([regname.GOODEGG, "Power Star Location"], regname.GOODEGG),
+    locname.YOSHSTARSTAR3: SMG2LocationData([regname.GOODEGG, "Power Star Location"], regname.GOODEGG),
 }
 
-locspecialstages_table: dict[str, SMG2LocationData]  = {
-    "LDL: Surfing 101": SMG2LocationData(["Loopdeloop Galaxy", "Power Star"], regname.RIGHTDOWN, 170000012, game_address=0),
-    "FS: Painting the Planet Yellow": SMG2LocationData(["Flipswitch Galaxy", "Power Star"], regname.FLIPSWITCH, 170000013, game_address=0),
-    "RG: Rolling in the Clouds": SMG2LocationData(["Rolling Green Galaxy", "Power Star"], regname.WILDGLIDE, 170000014, game_address=0),
-    "HS: Shrinking Satellite": SMG2LocationData(["Hurry-Scurry Galaxy", "Power Star"], regname.HURRYSCUR, 170000015, game_address=0),
-    "BUB: Through the Poison Swamp": SMG2LocationData(["Bubble Breeze Galaxy", "Power Star"], regname.ROLLMAST, 170000016, game_address=0),
-    "HC: Scaling the Sticky Wall": SMG2LocationData(["Honeyclimb Galaxy", "Power Star"], regname.UPDOWN, 170000118, game_address=0),
-    "BB: The Floating Fortress": SMG2LocationData(["Buoy Base Galaxy", "Power Star"], regname.HONEYHOP, 170000017, game_address=0),
-    "BB: The Secret of Buoy Base": SMG2LocationData(["Buoy Base Galaxy", "Power Star"], regname.HONEYHOP, 170000018, game_address=0),
-    #TODO: FIX duplicate abbreviation 
-    "GG: Grand Star Rescue": SMG2LocationData([regname.SHIP, "Power Star"], regname.FLIPSWAP, 170000019, game_address=0),
-    "BF: Kingfin's Fearsome Waters": SMG2LocationData(["Bonefin Galaxy", "Power Star"], regname.BONEFIN, 170000021, game_address=0),
-    "MS: Watch Your Step": SMG2LocationData(["Matter Splatter Galaxy", "Power Star"], regname.MATTER, 170000022, game_address=0),
-    "RGT: Gizmos, Gears, and Gadgets": SMG2LocationData(["Rolling Gizmo Galaxy", "Power Star"], regname.ROLLINGGIZ, 170000023, game_address=0),
-    "LDT: The Galaxy's Greatest Wave": SMG2LocationData(["Loopdeeswoop Galaxy", "Power Star"], regname.LOOPDEESWOOP, 170000024, game_address=0),
-    "BBT: The Electric Labyrinth": SMG2LocationData(["Bubble Blast Galaxy", "Power Star"], regname.BUBBLEBLAST, 170000025, game_address=0)
+# Spin-Dig Star
+SPINDIG_loc: dict[str, SMG2LocationData] = {
+    locname.SPINDIGSTAR1: SMG2LocationData([regname.SPINDIG, "Power Star Location"],regname.SPINDIG),
+    locname.SPINDIGSTAR2: SMG2LocationData([regname.SPINDIG, "Power Star Location"],regname.SPINDIG),
+    locname.SPINDIGSTAR3: SMG2LocationData([regname.SPINDIG, "Power Star Location"],regname.SPINDIG),
 }
 
-locbosses_table: dict[str, SMG2LocationData]  = {
-    "BJ: Megaleg's Moon": SMG2LocationData([regname.BOWJR1, "Power Star", "Boss Star"], regname.BOWJR1, 170000026, game_address=0),
-    "B: The Fiery Stronghold": SMG2LocationData([regname.BOWSER1, "Power Star", "Boss Star"], regname.BOWSER1, 170000027, game_address=0),
-    "BJ: Sinking the Airships": SMG2LocationData([regname.BOWJR2, "Power Star", "Boss Star"], regname.BOWJR2, 170000028, game_address=0),
-    "BJ: King Kaliente's Spicy Return": SMG2LocationData([regname.BOWJR3, "Power Star", "Boss Star"], regname.BOWJR3, 170000029, game_address=0),
-    "B: Darkness on the Horizon": SMG2LocationData([regname.BOWSER2, "Power Star", "Boss Star"], regname.BOWSER2, 170000030, game_address=0),
-    "B: The Fate of the Universe": SMG2LocationData([regname.BOWSER3, "Power Star", "Boss Star"], regname.BOWSER3, None, game_address=0)
+# Fluffy Bluff
+FLUFBLUF_loc: dict[str, SMG2LocationData] = {
+    locname.FLUFBLUFSTAR1: SMG2LocationData(["Power Star Location",regname.FLUFFBLUFF],regname.FLUFFBLUFF),
+    locname.FLUFBLUFSTAR2: SMG2LocationData(["Power Star Location",regname.FLUFFBLUFF],regname.FLUFFBLUFF),
+    locname.FLUFBLUFSTAR3: SMG2LocationData(["Power Star Location",regname.FLUFFBLUFF],regname.FLUFFBLUFF),
 }
 
-locSJ_table: dict[str, SMG2LocationData]  = {
-    "SJ: Pull Star Path": SMG2LocationData(["Space Junk Galaxy", "Power Star"], regname.FLUFFBLUFF, 170000031, game_address=0),
-    "SJ: Kamella's Airship Attack": SMG2LocationData(["Space Junk Galaxy", "Power Star"], regname.FLUFFBLUFF, 170000032, game_address=1),
-    "SJ: Tarantox's Tangled Web": SMG2LocationData(["Space Junk Galaxy", "Power Star"], regname.FLUFFBLUFF, 170000033, game_address=2),
-    "SJ: Yoshi's Unexpected Apparence": SMG2LocationData(["Space Junk Galaxy", "Power Star"], regname.FLUFFBLUFF, 170000034, game_address=3),
-    "SJ: Pull Star Path Speed Run": SMG2LocationData(["Space Junk Galaxy", "Power Star"], regname.FLUFFBLUFF, 170000035, game_address=4)
+# Rightside Dow
+RIGHTDOWN_loc: dict[str, SMG2LocationData] = {
+    locname.RIGHTDOWNSTAR1: SMG2LocationData(["Power Star Location",regname.RIGHTDOWN],regname.RIGHTDOWN),
+    locname.RIGHTDOWNSTAR2: SMG2LocationData(["Power Star Location",regname.RIGHTDOWN],regname.RIGHTDOWN),
 }
 
-locBR_table: dict[str, SMG2LocationData]  = {
-    "BR: Battlerock Barrage": SMG2LocationData(["Battlerock Galaxy", "Power Star"], regname.PUZZPLAN, 170000037, game_address=0),
-    "BR: Breaking into the Battlerock": SMG2LocationData(["Battlerock Galaxy", "Power Star"], regname.PUZZPLAN, 170000038, game_address=1),
-    "BR: Topmaniac and Topman Tribe": SMG2LocationData(["Battlerock Galaxy", "Power Star"], regname.PUZZPLAN, 170000119, game_address=2),
-    "BR: Battlerock's Garbage dump": SMG2LocationData(["Battlerock Galaxy", "Power Star"], regname.PUZZPLAN, 170000039, game_address=3),
-    "BR: Topmanic's Dardevil Run": SMG2LocationData(["Battlerock Galaxy", "Power Star"], regname.PUZZPLAN, 170000040, game_address=4),
-    "BR: Luigi under the Saucer": SMG2LocationData(["Battlerock Galaxy", "Power Star"], regname.PUZZPLAN, 170000042, game_address=5)
-}
-#TODO: note change abbreviation same as buoy base
-locBB_table: dict[str, SMG2LocationData]  = {
-    "BB: Sunken Treasure": SMG2LocationData(["Beach Bowl Galaxy", "Power Star"], regname.HIGHTAIL, 170000043, game_address=0),
-    "BB: Passing the Swim Test": SMG2LocationData(["Beach Bowl Galaxy", "Power Star"], regname.HIGHTAIL, 170000044, game_address=1),
-    "BB: The Secret Undersea Cavern": SMG2LocationData(["Beach Bowl Galaxy", "Power Star"], regname.HIGHTAIL, 170000045, game_address=2),
-    "BB: Fast Foes on the Cyclone Stone": SMG2LocationData(["Beach Bowl Galaxy", "Power Star"], regname.HIGHTAIL, 170000046, game_address=3),
-    "BB: Wall Jumping Up Waterfalls": SMG2LocationData(["Beach Bowl Galaxy", "Power Star"], regname.HIGHTAIL, 170000048, game_address=4)
+# Flip-Swap Sta
+FLIPSWAP_loc: dict[str, SMG2LocationData] = {
+    locname.FLIPSWAPSTAR1: SMG2LocationData(["Power Star Location",regname.FLIPSWAP],regname.FLIPSWAP),
+    locname.FLIPSWAPSTAR2: SMG2LocationData(["Power Star Location",regname.FLIPSWAP],regname.FLIPSWAP),
 }
 
-locG_table: dict[str, SMG2LocationData]  = {
-    "G: Luigi and the Haunted Mansion": SMG2LocationData([regname.BOULBOWL, "Power Star"], regname.BOULBOWL, 170000049, game_address=0),
-    "G: A Very Spooky Spirit": SMG2LocationData([regname.BOULBOWL, "Power Star"], regname.BOULBOWL, 170000050, game_address=1),
-    "G: Beware of Bouldergeist": SMG2LocationData([regname.BOULBOWL, "Power Star"], regname.BOULBOWL, 170000051, game_address=2),
-    "G: Bouldergeist's Daredevil Run": SMG2LocationData([regname.BOULBOWL, "Power Star"], regname.BOULBOWL, 170000052, game_address=3),
-    "G: Matter Splatter Mansion": SMG2LocationData([regname.BOULBOWL, "Power Star"], regname.BOULBOWL, 170000054, game_address=4)
+# Bowser Jr.s F
+FIREFLOT_loc: dict[str, SMG2LocationData] = {
+locname.FIREFLOTSTAR1:  SMG2LocationData(["Power Star Location", regname.BOWJR1], regname.BOWJR1),
+locname.FIREFLOTSTAR2:  SMG2LocationData(["Power Star Location", regname.BOWJR1], regname.BOWJR1),
 }
 
-locGG_table: dict[str, SMG2LocationData]  = {
-    "GG: Bunnies in the Wind": SMG2LocationData(["Gusty Garden Galaxy", "Power Star"], regname.COSMICO, 170000055, game_address=0),
-    "GG: The Dirty Tricks of Major Burrows": SMG2LocationData(["Gusty Garden Galaxy", "Power Star"], regname.COSMICO, 170000056, game_address=1),
-    "GG: Gusty Garden's Gravity Scramble": SMG2LocationData(["Gusty Garden Galaxy", "Power Star"], regname.COSMICO, 170000057, game_address=2),
-    "GG: Major Burrows's Daredevil Run": SMG2LocationData(["Gusty Garden Galaxy", "Power Star"], regname.COSMICO, 170000058, game_address=3),
-    "GG: The Golden Chomp": SMG2LocationData(["Gusty Garden Galaxy", "Power Star"], regname.COSMICO, 170000060, game_address=4)
+# World 2
+# Puzzle Plank
+PUZZPLANK_loc: dict[str, SMG2LocationData] = {
+    locname.PUZZPLANKSTAR1:  SMG2LocationData(["Power Star Location", regname.PUZZPLAN], regname.PUZZPLAN),
+    locname.PUZZPLANKSTAR2:  SMG2LocationData(["Power Star Location", regname.PUZZPLAN], regname.PUZZPLAN),
+    locname.PUZZPLANKSTAR3:  SMG2LocationData(["Power Star Location", regname.PUZZPLAN], regname.PUZZPLAN),
 }
 
-locFF_table: dict[str, SMG2LocationData]  = {
-    "FF: The Frozen Peak of Baron Brr": SMG2LocationData(["Freezeflame Galaxy", "Power Star"], regname.TALLTRUNK, 170000061, game_address=0),
-    "FF: Freezeflame's Blistering Coore": SMG2LocationData(["Freezeflame Galaxy", "Power Star"], regname.TALLTRUNK, 170000062, game_address=1),
-    "FF: Hot and Cold Collide": SMG2LocationData(["Freezeflame Galaxy", "Power Star"], regname.TALLTRUNK, 170000063, game_address=2),
-    "FF: Conquring the Summit": SMG2LocationData(["Freezeflame Galaxy", "Power Star"], regname.TALLTRUNK, 170000064, game_address=3),
-    "FF: Frosty Cosmic Mario race": SMG2LocationData(["Freezeflame Galaxy", "Power Star"], regname.TALLTRUNK, 170000065, game_address=4)
+# Hightail Fall
+HIGHFALL_loc: dict[str, SMG2LocationData] = {
+    locname.HIGHFALLSTAR1:  SMG2LocationData(["Power Star Location", regname.HIGHTAIL], regname.HIGHTAIL),
+    locname.HIGHFALLSTAR2:  SMG2LocationData(["Power Star Location", regname.HIGHTAIL], regname.HIGHTAIL),
+    locname.HIGHFALLSTAR3:  SMG2LocationData(["Power Star Location", regname.HIGHTAIL], regname.HIGHTAIL),
 }
 
-locDDune_table: dict[str, SMG2LocationData]  = {
-    "DDune: Soaring on the Desert Winds": SMG2LocationData(["Dusty Dune Galaxy", "Power Star"], regname.CLOUCOUR, 170000067, game_address=0),
-    "DDune: Blasting through the Sand": SMG2LocationData(["Dusty Dune Galaxy", "Power Star"], regname.CLOUCOUR, 170000068, game_address=1),
-    "DDune: Sunbaked Sand Castle": SMG2LocationData(["Dusty Dune Galaxy", "Power Star"], regname.CLOUCOUR, 170000069, game_address=2),
-    "DDune: Sandblast Speed Run": SMG2LocationData(["Dusty Dune Galaxy", "Power Star"], regname.CLOUCOUR, 170000071, game_address=3),
-    "DDune: Bullet Bill on Your Back": SMG2LocationData(["Dusty Dune Galaxy", "Power Star"], regname.CLOUCOUR, 170000072, game_address=4),
-    "DDune: Treasure of the Pyramid": SMG2LocationData(["Dusty Dune Galaxy", "Power Star"], regname.CLOUCOUR, 170000073, game_address=5)
-} 
-
-locGL_table: dict[str, SMG2LocationData]  = {
-    "GL: Star Bunnies on the Hunt": SMG2LocationData(["Gold Leaf Galaxy", "Power Star"], regname.HAUNHALL, 170000074, game_address=0),
-    "GL: Cataquack to the skies": SMG2LocationData(["Gold Leaf Galaxy", "Power Star"], regname.HAUNHALL, 170000075, game_address=1),
-    "GL: When it Rains, it Pours": SMG2LocationData(["Gold Leaf Galaxy", "Power Star"], regname.HAUNHALL, 170000076, game_address=2),
-    "GL: Cosmic Mario Forest Race": SMG2LocationData(["Gold Leaf Galaxy", "Power Star"], regname.HAUNHALL, 170000077, game_address=3),
-    "GL: The Bell on the Big Trees": SMG2LocationData(["Gold Leaf Galaxy", "Power Star"], regname.HAUNHALL, 170000079, game_address=4)
-}
-#TODO: Change abbrivation
-locSS_table: dict[str, SMG2LocationData]  = {
-    "SS: Going After Guppy": SMG2LocationData(["Sea Slide Galaxy", "Power Star"], regname.FREEFLAKE, 170000080, game_address=0),
-    "SS: Faster Than a Speedrunning Penguin": SMG2LocationData(["Sea Slide Galaxy", "Power Star"], regname.FREEFLAKE, 170000081, game_address=1),
-    "SS: The Silver Stars of Sea Slide": SMG2LocationData(["Sea Slide Galaxy", "Power Star"], regname.FREEFLAKE, 170000082, game_address=2),
-    "SS: Underwater Cosmic Mario Race": SMG2LocationData(["Sea Slide Galaxy", "Power Star"], regname.FREEFLAKE, 170000083, game_address=3),
-    "SS: Hurry, He's Hungry": SMG2LocationData(["Sea Slide Galaxy", "Power Star"], regname.FREEFLAKE, 170000085, game_address=4)
+# Boulder Bowl
+ROCKBOWL_loc: dict[str, SMG2LocationData] = {
+    locname.ROCKBOWLSTAR1:  SMG2LocationData(["Power Star Location", regname.BOULBOWL], regname.BOULBOWL),
+    locname.ROCKBOWLSTAR2:  SMG2LocationData(["Power Star Location", regname.BOULBOWL], regname.BOULBOWL),
+    locname.ROCKBOWLSTAR3:  SMG2LocationData(["Power Star Location", regname.BOULBOWL], regname.BOULBOWL),
 }
 
-locTT_table: dict[str, SMG2LocationData]  = {
-    "TT: Heavy Metal Mecha Boswer": SMG2LocationData(["Toy Time Galaxy", "Power Star"], regname.SUPMASS, 170000086, game_address=0),
-    "TT: Mario (or Luigi) Meets Mario": SMG2LocationData(["Toy Time Galaxy", "Power Star"], regname.SUPMASS, 170000087, game_address=1),
-    "TT: Bouncing Down Cake Lane": SMG2LocationData(["Toy Time Galaxy", "Power Star"], regname.SUPMASS, 170000088, game_address=2),
-    "TT: The Flipswitch Chain": SMG2LocationData(["Toy Time Galaxy", "Power Star"], regname.SUPMASS, 170000089, game_address=3),
-    "TT: Fast Foes of Toy Time": SMG2LocationData(["Toy Time Galaxy", "Power Star"], regname.SUPMASS, 170000090, game_address=4)
+# Cosmic Cove S
+COSCCOVE_loc: dict[str, SMG2LocationData] = {
+    locname.COSCCOVESTAR1:  SMG2LocationData(["Power Star Location", regname.COSMICO], regname.COSMICO),
+    locname.COSCCOVESTAR2:  SMG2LocationData(["Power Star Location", regname.COSMICO], regname.COSMICO),
+    locname.COSCCOVESTAR3:  SMG2LocationData(["Power Star Location", regname.COSMICO], regname.COSMICO),
 }
 
-locDD_table: dict[str, SMG2LocationData]  = {
-    "DD: The Underground Ghost Ship": SMG2LocationData(["Deep Dark Galaxy", "Power Star"], regname.FLIPVILL, 170000092, game_address=0),
-    "DD: Bubble Blastoff": SMG2LocationData(["Deep Dark Galaxy", "Power Star"], regname.FLIPVILL, 170000093, game_address=1),
-    "DD: Guppy and the Underground Lake": SMG2LocationData(["Deep Dark Galaxy", "Power Star"], regname.FLIPVILL, 170000094, game_address=2),
-    "DD: Ghost Ship Daredevil Run": SMG2LocationData(["Deep Dark Galaxy", "Power Star"], regname.FLIPVILL, 170000095, game_address=3),
-    "DD: Boo in Box": SMG2LocationData(["Deep Dark Galaxy", "Power Star"], regname.FLIPVILL, 170000097, game_address=4)
+# Wild Glide St
+WILDGLIDE_loc: dict[str, SMG2LocationData] = {
+    locname.WILDGLIDESTAR1: SMG2LocationData(["Power Star Location", regname.WILDGLIDE], regname.WILDGLIDE),
+    locname.WILDGLIDESTAR2: SMG2LocationData(["Power Star Location", regname.WILDGLIDE], regname.WILDGLIDE),
 }
 
-locDN_table: dict[str, SMG2LocationData]  = {
-    "DN: Inflitrating the Dreadnought": SMG2LocationData(["Dreadnought Galaxy", "Power Star"], regname.STARBEACH, 170000098, game_address=0),
-    "DN: Dreadnought's Colossal Cannons": SMG2LocationData(["Dreadnought Galaxy", "Power Star"], regname.STARBEACH, 170000099, game_address=1),
-    "DN: Revenge of the Topman Tribe": SMG2LocationData(["Dreadnought Galaxy", "Power Star"], regname.STARBEACH, 170000100, game_address=2),
-    "DN: Topman Tribe Speed Run": SMG2LocationData(["Dreadnought Galaxy", "Power Star"], regname.STARBEACH, 170000101, game_address=3),
-    "DN: Dreadnought's Garbage Dump": SMG2LocationData(["Dreadnought Galaxy", "Power Star"], regname.STARBEACH, 170000103, game_address=4)
+# Honeybloom St
+BEEBLOOM_loc: dict[str, SMG2LocationData] = {
+    locname.BEEBLOOMSTAR1: SMG2LocationData(["Power Star Location", regname.HONEYBLOOM], regname.HONEYBLOOM),
+    locname.BEEBLOOMSTAR2: SMG2LocationData(["Power Star Location", regname.HONEYBLOOM], regname.HONEYBLOOM),
 }
 
-locMM_table: dict[str, SMG2LocationData]  = {
-    "MM: The Sinking Lava Spire": SMG2LocationData(["Melty Molten Galaxy", "Power Star"], regname.CHOMWORK, 170000104, game_address=0),
-    "MM: Through the Meteor Storm": SMG2LocationData(["Melty Molten Galaxy", "Power Star"], regname.CHOMWORK, 170000105, game_address=1),
-    "MM: Fiery Dino Piranha": SMG2LocationData(["Melty Molten Galaxy", "Power Star"], regname.CHOMWORK, 170000106, game_address=2),
-    "MM: Lava Spire Daredevil Run": SMG2LocationData(["Melty Molten Galaxy", "Power Star"], regname.CHOMWORK, 170000107, game_address=3),
-    "MM Burning Tide": SMG2LocationData(["Melty Molten Galaxy", "Power Star"], regname.CHOMWORK, 170000109, game_address=4)
+# Bowser's Lava
+LAVALAIR_loc: dict[str, SMG2LocationData] = {
+    locname.LAVALAIRSTAR1: SMG2LocationData(["Power Star Location", regname.BOWSER1], regname.BOWSER1),
+    locname.LAVALAIRSTAR2: SMG2LocationData(["Power Star Location", regname.BOWSER1], regname.BOWSER1),
 }
 
-locHL_table: dict[str, SMG2LocationData]  = {
-    "SS: Rocky Road": SMG2LocationData(["Sweet Sweet Galaxy", "Power Star"], regname.HONEYBLOOM, 170000110, game_address=0),
-    "SP: A Very Sticky Situation": SMG2LocationData(["Sling Pod Galaxy", "Power Star"], regname.BEATBLOCK, 170000111, game_address=0),
-    "DDR: Giant Eel Breakout": SMG2LocationData(["Drip Drop Galaxy", "Power Star"], regname.SWEETMYS, 170000112, game_address=0),
-    "BM: Bigmouth's Gold Bait": SMG2LocationData(["Bigmouth Galaxy", "Power Star"], regname.BIGMOUTH, 170000113, game_address=0),
-    "Sandy Spiral: Choosing a Favorite Snack": SMG2LocationData(["Sand Spiral Galaxy", "Power Star"], regname.SANDSPIRAL, 170000114, game_address=0),
-    "Bone's Boneyard: Racing the Spooky Speedster": SMG2LocationData(["Boo's Boneyard Galaxy", "Power Star"], regname.BOOBONE, 170000115, game_address=0),
-    "SC: Star Bunnies in the Snow": SMG2LocationData(["Snow Cap Galaxy", "Power Star"], regname.SNOWCAP, 170000116, game_address=0)
+# World 3
+# Tall Trunk St
+TALLTREE_loc: dict[str, SMG2LocationData] = {
+    locname.TALLTREESTAR1: SMG2LocationData(["Power Star Location", regname.TALLTRUNK], regname.TALLTRUNK),
+    locname.TALLTREESTAR2: SMG2LocationData(["Power Star Location", regname.TALLTRUNK], regname.TALLTRUNK),
+    locname.TALLTREESTAR3: SMG2LocationData(["Power Star Location", regname.TALLTRUNK], regname.TALLTRUNK),
 }
 
-locPC_table: dict[str, SMG2LocationData]  = {
-    "TT: Luigi's Purple Coins": SMG2LocationData(["Toy Time Galaxy", "Power Star", "Purple Coins"], regname.SUPMASS, 170000091, game_address=5),
-    "DN: Battlestation's Purple Coins": SMG2LocationData(["Dreadnought Galaxy", "Power Star", "Purple Coins"], regname.STARBEACH, 170000102, game_address=5),
-    "MM: Red-Hot Purple Coins": SMG2LocationData(["Melty Molten Galaxy", "Power Star", "Purple Coins"], regname.CHOMWORK, 170000108, game_address=5),
-    "DD: Plunder the Purple Coins": SMG2LocationData(["Deep Dark Galaxy", "Power Star", "Purple Coins"], regname.FLIPVILL, 170000096, game_address=5),
-    "SS: Purple Coins by the Seaside": SMG2LocationData(["Sea Slide Galaxy", "Power Star", "Purple Coins"], regname.FREEFLAKE, 170000084, game_address=5),
-    "GE: Purple Coin Omelet": SMG2LocationData(["Good Egg Galaxy", "Power Star", "Purple Coins"], regname.GOODEGG, 170000005, game_address=5),
-    "GG: Gateway's Purple coins": SMG2LocationData([regname.FLIPSWAP, "Power Star", "Purple Coins"], regname.FLIPSWAP, 170000020, game_address=2),
-    "BR: Purple Coins on the Battlerock": SMG2LocationData(["Battlerock Galaxy", "Power Star", "Purple Coins"], regname.PUZZPLAN, 17000121, game_address=5),
-    "SJ: Purple Coin Spacewalk": SMG2LocationData(["Space Junk Galaxy", "Power Star", "Purple Coins"], regname.FLUFFBLUFF, 170000036, game_address=5),
-    "GG: Purple Coins on the Puzzle Cube": SMG2LocationData(["Gusty Garden Galaxy", "Power Star", "Purple Coins"], regname.COSMICO, 170000059, game_address=5),
-    # TODO: change abbreviation for galaxy
-    "BB: Beachcombing for Purple Coins": SMG2LocationData(["Bubble Breeze Galaxy", "Power Star", "Purple Coins"], regname.ROLLMAST, 170000047, game_address=5),
-    "FF: Purple Coins on the Summit": SMG2LocationData(["Freezeflame Galaxy", "Power Star", "Purple Coins"], regname.TALLTRUNK, 170000066, game_address=5),
-    "G: Purple Coins in the Bone Pen": SMG2LocationData([regname.BOULBOWL, "Power Star", "Purple Coins"], regname.BOULBOWL, 170000053, game_address=5),
-    "GL: Purple Coins in the Woods": SMG2LocationData(["Gold Leaf Galaxy", "Power Star", "Purple Coins"], regname.HAUNHALL, 170000078, game_address=5),
-    "DDune: Purple Coin in the Desert": SMG2LocationData(["Dusty Dune Galaxy", "Power Star", "Purple Coins"], regname.CLOUCOUR, 170000070, game_address=5),
-    "HH: The Honeyhive's Purple Coins": SMG2LocationData(["Honeyhive Galaxy", "Power Star", "Purple Coins"], regname.SPINDIG, 170000011, game_address=5)
+# Cloudy Court
+CLOUDCOURT_loc: dict[str, SMG2LocationData] = {
+    locname.CLOUDCOURTSTAR1: SMG2LocationData(["Power Star Location", regname.CLOUCOUR], regname.CLOUCOUR),
+    locname.CLOUDCOURTSTAR2: SMG2LocationData(["Power Star Location", regname.CLOUCOUR], regname.CLOUCOUR),
+    locname.CLOUDCOURTSTAR3: SMG2LocationData(["Power Star Location", regname.CLOUCOUR], regname.CLOUCOUR),
 }
 
-base_stars_locations = {**locGE_table, **locHH_table,
-                   **locSJ_table, **locBR_table, **locBB_table,
-                   **locGG_table, **locFF_table, **locDDune_table, **locG_table,
-                   **locGL_table, **locSS_table, **locTT_table,
-                   **locDD_table, **locDN_table, **locMM_table,
-                   **locHL_table, **locspecialstages_table, **locbosses_table}
+    # Haunty Halls
+HAUNTHALL_loc: dict[str, SMG2LocationData] = {
+    locname.HAUNTHALLSTAR1: SMG2LocationData(["Power Star Location", regname.HAUNHALL], regname.HAUNHALL),
+    locname.HAUNTHALLSTAR2: SMG2LocationData(["Power Star Location", regname.HAUNHALL], regname.HAUNHALL),
+    locname.HAUNTHALLSTAR3: SMG2LocationData(["Power Star Location", regname.HAUNHALL], regname.HAUNHALL),
+}
 
-location_table = { **locGE_table, **locHH_table, 
-                   **locSJ_table, **locBR_table, **locBB_table, 
-                   **locGG_table, **locFF_table, **locDDune_table, **locG_table, 
-                   **locGL_table, **locSS_table, **locTT_table, 
-                   **locDD_table, **locDN_table, **locMM_table, 
-                   **locHL_table, **locspecialstages_table, **locbosses_table, 
-                   **locPC_table,
+    # Freezy Flake
+SNOWFLAKE_loc: dict[str, SMG2LocationData] = {
+    locname.SNOWFLAKESTAR1: SMG2LocationData(["Power Star Location", regname.FREEFLAKE], regname.FREEFLAKE),
+    locname.SNOWFLAKESTAR2: SMG2LocationData(["Power Star Location", regname.FREEFLAKE], regname.FREEFLAKE),
+    locname.SNOWFLAKESTAR3: SMG2LocationData(["Power Star Location", regname.FREEFLAKE], regname.FREEFLAKE),
+}
+
+    # Rolling Maste
+ROLLMAST_loc: dict[str, SMG2LocationData] = {
+    locname.ROLLMASTERSTAR1: SMG2LocationData(["Power Star Location", regname.ROLLMAST], regname.ROLLMAST),
+    locname.ROLLMASTERSTAR2: SMG2LocationData(["Power Star Location", regname.ROLLMAST], regname.ROLLMAST),
+}
+
+    # Beat Block St
+BEATBLOCK_loc: dict[str, SMG2LocationData] = {
+    locname.BEATBLOCKSTAR1: SMG2LocationData(["Power Star Location", regname.BEATBLOCK], regname.BEATBLOCK),
+    locname.BEATBLOCKSTAR2: SMG2LocationData(["Power Star Location", regname.BEATBLOCK], regname.BEATBLOCK),
+}
+
+    # Bowser Jr.'s
+FEARFLET_loc: dict[str, SMG2LocationData] = {
+    locname.FEARFLETSTAR1: SMG2LocationData(["Power Star Location", regname.BOWJR2], regname.BOWJR2),
+    locname.FEARFLETSTAR2: SMG2LocationData(["Power Star Location", regname.BOWJR2], regname.BOWJR2),
+}
+
+    # World 4
+    # Supermassive
+SUPMASS_loc: dict[str, SMG2LocationData] = {
+    locname.SUPERMASSSTAR1: SMG2LocationData(["Power Star Location", regname.SUPMASS], regname.SUPMASS),
+    locname.SUPERMASSSTAR2: SMG2LocationData(["Power Star Location", regname.SUPMASS], regname.SUPMASS),
+    locname.SUPERMASSSTAR3: SMG2LocationData(["Power Star Location", regname.SUPMASS], regname.SUPMASS),
+}
+
+    # Flipsville St
+FLIPVILL_loc: dict[str, SMG2LocationData] = {
+    locname.FLIPVILLESTAR1: SMG2LocationData(["Power Star Location", regname.FLIPVILL], regname.FLIPVILL),
+    locname.FLIPVILLESTAR2: SMG2LocationData(["Power Star Location", regname.FLIPVILL], regname.FLIPVILL),
+    locname.FLIPVILLESTAR3: SMG2LocationData(["Power Star Location", regname.FLIPVILL], regname.FLIPVILL),
+}
+
+    # Starshine Bea
+STARBEACH_loc: dict[str, SMG2LocationData] = {
+    locname.STARBEACHSTAR1: SMG2LocationData(["Power Star Location", regname.STARBEACH], regname.STARBEACH),
+    locname.STARBEACHSTAR2: SMG2LocationData(["Power Star Location", regname.STARBEACH], regname.STARBEACH),
+    locname.STARBEACHSTAR3: SMG2LocationData(["Power Star Location", regname.STARBEACH], regname.STARBEACH),
+}
+
+    # Chompworks St
+CHOMWORK_loc: dict[str, SMG2LocationData] = {
+    locname.CHOMPWORKSTAR1: SMG2LocationData(["Power Star Location", regname.CHOMWORK], regname.CHOMWORK),
+    locname.CHOMPWORKSTAR2: SMG2LocationData(["Power Star Location", regname.CHOMWORK], regname.CHOMWORK),
+    locname.CHOMPWORKSTAR3: SMG2LocationData(["Power Star Location", regname.CHOMWORK], regname.CHOMWORK),
+}
+
+    # Honeyhop Star
+HONEYHOP_loc: dict[str, SMG2LocationData] = {
+    locname.HONEYHOPSTAR1: SMG2LocationData(["Power Star Location", regname.HONEYHOP], regname.HONEYHOP),
+    locname.HONEYHOPSTAR2: SMG2LocationData(["Power Star Location", regname.HONEYHOP], regname.HONEYHOP),
+}
+
+    # Sweet Mystery
+SWEETMYS_loc: dict[str, SMG2LocationData] = {
+    locname.SWEETMYSTSTAR1: SMG2LocationData(["Power Star Location", regname.SWEETMYS], regname.SWEETMYS),
+    locname.SWEETMYSTSTAR2: SMG2LocationData(["Power Star Location", regname.SWEETMYS], regname.SWEETMYS),
+}
+
+    # Bowser's Grav
+GRAVGAUN_loc: dict[str, SMG2LocationData] = {
+    locname.GRAVGAUNSTAR1: SMG2LocationData(["Power Star Location", regname.BOWSER2], regname.BOWSER2),
+    locname.GRAVGAUNSTAR2: SMG2LocationData(["Power Star Location", regname.BOWSER2], regname.BOWSER2),
+}
+
+    # World 5
+    # Space Storm S
+SPACSTOR_loc: dict[str, SMG2LocationData] = {
+    locname.SPACESTORMSTAR1: SMG2LocationData(["Power Star Location", regname.SPACSTOR], regname.SPACSTOR),
+    locname.SPACESTORMSTAR2: SMG2LocationData(["Power Star Location", regname.SPACSTOR], regname.SPACSTOR),
+    locname.SPACESTORMSTAR3: SMG2LocationData(["Power Star Location", regname.SPACSTOR], regname.SPACSTOR),
+}
+
+    # Slipsand Star
+SLIPSAND_loc: dict[str, SMG2LocationData] = {
+    locname.SLIPSANDSTAR1: SMG2LocationData(["Power Star Location", regname.SLIPSAND], regname.SLIPSAND),
+    locname.SLIPSANDSTAR2: SMG2LocationData(["Power Star Location", regname.SLIPSAND], regname.SLIPSAND),
+    locname.SLIPSANDSTAR3: SMG2LocationData(["Power Star Location", regname.SLIPSAND], regname.SLIPSAND),
+}
+
+    # Shiverburn St
+COLDFIRE_loc: dict[str, SMG2LocationData] = {
+    locname.COLDFIRESTAR1: SMG2LocationData(["Power Star Location", regname.SHIVBURN], regname.SHIVBURN),
+    locname.COLDFIRESTAR2: SMG2LocationData(["Power Star Location", regname.SHIVBURN], regname.SHIVBURN),
+    locname.COLDFIRESTAR3: SMG2LocationData(["Power Star Location", regname.SHIVBURN], regname.SHIVBURN),
+}
+
+    # Boo Moon Star
+BOOMOON_loc: dict[str, SMG2LocationData] = {
+    locname.BOOMOONSTAR1: SMG2LocationData(["Power Star Location", regname.BOOMOON], regname.BOOMOON),
+    locname.BOOMOONSTAR2: SMG2LocationData(["Power Star Location", regname.BOOMOON], regname.BOOMOON),
+    locname.BOOMOONSTAR3: SMG2LocationData(["Power Star Location", regname.BOOMOON], regname.BOOMOON),
+}
+
+    # Upside Dizzy
+UPDIZZY_loc: dict[str, SMG2LocationData] = {
+    locname.UPDIZZYSTAR1: SMG2LocationData(["Power Star Location", regname.UPDOWN], regname.UPDOWN),
+    locname.UPDIZZYSTAR2: SMG2LocationData(["Power Star Location", regname.UPDOWN], regname.UPDOWN),
+}
+
+    # Fleet Glide S
+FLETGLIDE_loc: dict[str, SMG2LocationData] = {
+    locname.LEETFLYSTAR1: SMG2LocationData(["Power Star Location", regname.FLEETGLIDE], regname.FLEETGLIDE),
+    locname.LEETFLYSTAR2: SMG2LocationData(["Power Star Location", regname.FLEETGLIDE], regname.FLEETGLIDE),
+}
+
+    # Bowser Jr.'s
+BOOMBUNK_loc: dict[str, SMG2LocationData] = {
+    locname.BOOMBUNKSTAR1: SMG2LocationData(["Power Star Location", regname.BOWJR3], regname.BOWJR3),
+    locname.BOOMBUNKSTAR2: SMG2LocationData(["Power Star Location", regname.BOWJR3], regname.BOWJR3),
+}
+
+    # World 6
+    # Melty Monster
+MELTMONS_loc: dict[str, SMG2LocationData] = {
+    locname.MELTMONSSTAR1: SMG2LocationData(["Power Star Location", regname.MELTY], regname.MELTY),
+    locname.MELTMONSSTAR2: SMG2LocationData(["Power Star Location", regname.MELTY], regname.MELTY),
+    locname.MELTMONSSTAR3: SMG2LocationData(["Power Star Location", regname.MELTY], regname.MELTY),
+}
+
+    # Clockwork Rui
+CLOCKRUIN_loc: dict[str, SMG2LocationData] = {
+    locname.CLOCKRUINSTAR1: SMG2LocationData(["Power Star Location", regname.CLOCKWORK], regname.CLOCKWORK),
+    locname.CLOCKRUINSTAR2: SMG2LocationData(["Power Star Location", regname.CLOCKWORK], regname.CLOCKWORK),
+    locname.CLOCKRUINSTAR3: SMG2LocationData(["Power Star Location", regname.CLOCKWORK], regname.CLOCKWORK),
+}
+
+    # Throwback Sta
+THROWBACK_loc: dict[str, SMG2LocationData] = {
+    locname.THROWBACKSTAR1: SMG2LocationData(["Power Star Location", regname.WHOMPFORT], regname.WHOMPFORT),
+    locname.THROWBACKSTAR2: SMG2LocationData(["Power Star Location", regname.WHOMPFORT], regname.WHOMPFORT),
+    locname.THROWBACKSTAR3: SMG2LocationData(["Power Star Location", regname.WHOMPFORT], regname.WHOMPFORT),
+}
+
+    # Battle Belt S
+BATTBELT_loc: dict[str, SMG2LocationData] = {
+    locname.BATTBELTSTAR1: SMG2LocationData(["Power Star Location", regname.BATTLEBELT], regname.BATTLEBELT),
+    locname.BATTBELTSTAR2: SMG2LocationData(["Power Star Location", regname.BATTLEBELT], regname.BATTLEBELT),
+    locname.BATTBELTSTAR3: SMG2LocationData(["Power Star Location", regname.BATTLEBELT], regname.BATTLEBELT),
+}
+
+    # Flash Black S
+FLASHBLACK_loc: dict[str, SMG2LocationData] = {
+    locname.FLASHBLACKSTAR1: SMG2LocationData(["Power Star Location", regname.FLASHBLACK], regname.FLASHBLACK),
+    locname.FLASHBLACKSTAR2: SMG2LocationData(["Power Star Location", regname.FLASHBLACK], regname.FLASHBLACK),
+}
+
+    # Slimy Spring
+SLIMSPRI_loc: dict[str, SMG2LocationData] = {
+    locname.SLIMYSPRISTAR1: SMG2LocationData(["Power Star Location", regname.SLIMSPRI], regname.SLIMSPRI),
+    locname.SLIMYSPRISTAR2: SMG2LocationData(["Power Star Location", regname.SLIMSPRI], regname.SLIMSPRI),
+}
+
+    # Bowser's Gala
+GALGEN_loc: dict[str, SMG2LocationData] = {
+    locname.GALAXYGENSTAR1: SMG2LocationData(["Power Star Location", regname.BOWSER3], regname.BOWSER3),
+    locname.GALAXYGENSTAR2: SMG2LocationData(["Power Star Location", regname.BOWSER3], regname.BOWSER3),
+}
+
+    # World S
+    # Mario Squared
+MARIOSQ_loc: dict[str, SMG2LocationData] = {
+    locname.MARIOSQRSTAR1: SMG2LocationData(["Power Star Location", regname.MARIO], regname.MARIO),
+    locname.MARIOSQRSTAR2: SMG2LocationData(["Power Star Location", regname.MARIO], regname.MARIO),
+}
+
+    # Rolling Coast
+ROLLSLIDE_loc: dict[str, SMG2LocationData] = {
+    locname.ROLLSLIDESTAR1: SMG2LocationData(["Power Star Location", regname.ROLLCOAST], regname.ROLLCOAST),
+    locname.ROLLSLIDESTAR2: SMG2LocationData(["Power Star Location", regname.ROLLCOAST], regname.ROLLCOAST),
+}
+
+    # Twisty Trials
+TWISTTRI_loc: dict[str, SMG2LocationData] = {
+    locname.TWISTTRIALSTAR1: SMG2LocationData(["Power Star Location", regname.TWISTTRI], regname.TWISTTRI),
+    locname.TWISTTRIALSTAR2: SMG2LocationData(["Power Star Location", regname.TWISTTRI], regname.TWISTTRI),
+}
+
+    # Stone Cyclone
+STONECYC_loc: dict[str, SMG2LocationData] = {
+    locname.STONECYCLOSTAR1: SMG2LocationData(["Power Star Location", regname.STONECYC], regname.STONECYC),
+    locname.STONECYCLOSTAR2: SMG2LocationData(["Power Star Location", regname.STONECYC], regname.STONECYC),
+}
+
+    # Boss Blitz St
+BOSSBLITZ_loc: dict[str, SMG2LocationData] = {
+    locname.BOSSBLITSTAR1: SMG2LocationData(["Power Star Location", regname.BOSSBLITZ], regname.BOSSBLITZ),
+    locname.BOSSBLITSTAR2: SMG2LocationData(["Power Star Location", regname.BOSSBLITZ], regname.BOSSBLITZ),
+}
+
+    # Flip-Out Star
+FLIPOUT_loc: dict[str, SMG2LocationData] = {
+    locname.FLIPOUTSTAR1: SMG2LocationData(["Power Star Location", regname.FLIPOUT], regname.FLIPOUT),
+    locname.FLIPOUTSTAR2: SMG2LocationData(["Power Star Location", regname.FLIPOUT], regname.FLIPOUT),
+}
+
+    # Grandmaster
+GRANDMASTER_loc: dict[str, SMG2LocationData] = {
+    locname.GRANDMASTSTAR1: SMG2LocationData(["Power Star Location", regname.GRANDMASTER], regname.GRANDMASTER),
+    locname.GRANDMASTSTAR2: SMG2LocationData(["Power Star Location", regname.GRANDMASTER], regname.GRANDMASTER),
+}
+
+green_star_locations: dict[str, SMG2LocationData]  = {
+    locname.SKYSTASTARG1:       SMG2LocationData(["Green Star Location", regname.SKYOBS], regname.SKYOBS),
+    locname.SKYSTASTARG2:       SMG2LocationData(["Green Star Location", regname.SKYOBS], regname.SKYOBS),
+    locname.SKYSTASTARG3:       SMG2LocationData(["Green Star Location", regname.SKYOBS], regname.SKYOBS),
+    locname.YOSHSTARSTARG1:     SMG2LocationData(["Green Star Location", regname.GOODEGG], regname.GOODEGG),
+    locname.YOSHSTARSTARG2:     SMG2LocationData(["Green Star Location", regname.GOODEGG], regname.GOODEGG),
+    locname.YOSHSTARSTARG3:     SMG2LocationData(["Green Star Location", regname.GOODEGG], regname.GOODEGG),
+    locname.SPINDIGSTARG1:      SMG2LocationData(["Green Star Location", regname.SPINDIG], regname.SPINDIG),
+    locname.SPINDIGSTARG2:      SMG2LocationData(["Green Star Location", regname.SPINDIG], regname.SPINDIG),
+    locname.SPINDIGSTARG3:      SMG2LocationData(["Green Star Location", regname.SPINDIG], regname.SPINDIG),
+    locname.FLUFBLUFSTARG1:     SMG2LocationData(["Green Star Location", regname.FLUFFBLUFF], regname.FLUFFBLUFF),
+    locname.FLUFBLUFSTARG2:     SMG2LocationData(["Green Star Location", regname.FLUFFBLUFF], regname.FLUFFBLUFF),
+    locname.FLUFBLUFSTARG3:     SMG2LocationData(["Green Star Location", regname.FLUFFBLUFF], regname.FLUFFBLUFF),
+    locname.RIGHTDOWNSTARG1:    SMG2LocationData(["Green Star Location"]),
+    locname.RIGHTDOWNSTARG2:    SMG2LocationData(["Green Star Location"]),
+    locname.FLIPSWAPSTARG1:     SMG2LocationData(["Green Star Location"]),
+    locname.FLIPSWAPSTARG2:     SMG2LocationData(["Green Star Location"]),
+    locname.FIREFLOTSTARG1:     SMG2LocationData(["Green Star Location"]),
+    locname.FIREFLOTSTARG2:     SMG2LocationData(["Green Star Location"]),
+    locname.PUZZPLANKSTARG1:    SMG2LocationData(["Green Star Location"]),
+    locname.PUZZPLANKSTARG2:    SMG2LocationData(["Green Star Location"]),
+    locname.PUZZPLANKSTARG3:    SMG2LocationData(["Green Star Location"]),
+    locname.HIGHFALLSTARG1:     SMG2LocationData(["Green Star Location"]),
+    locname.HIGHFALLSTARG2:     SMG2LocationData(["Green Star Location"]),
+    locname.HIGHFALLSTARG3:     SMG2LocationData(["Green Star Location"]),
+    locname.ROCKBOWLSTARG1:     SMG2LocationData(["Green Star Location"]),
+    locname.ROCKBOWLSTARG2:     SMG2LocationData(["Green Star Location"]),
+    locname.ROCKBOWLSTARG3:     SMG2LocationData(["Green Star Location"]),
+    locname.COSCCOVESTARG1:     SMG2LocationData(["Green Star Location"]),
+    locname.COSCCOVESTARG2:     SMG2LocationData(["Green Star Location"]),
+    locname.COSCCOVESTARG3:     SMG2LocationData(["Green Star Location"]),
+    locname.WILDGLIDESTARG1:    SMG2LocationData(["Green Star Location"]),
+    locname.WILDGLIDESTARG2:    SMG2LocationData(["Green Star Location"]),
+    locname.BEEBLOOMSTARG1:     SMG2LocationData(["Green Star Location"]),
+    locname.BEEBLOOMSTARG2:     SMG2LocationData(["Green Star Location"]),
+    locname.LAVALAIRSTARG1:     SMG2LocationData(["Green Star Location"]),
+    locname.LAVALAIRSTARG2:     SMG2LocationData(["Green Star Location"]),
+    locname.TALLTREESTARG1:     SMG2LocationData(["Green Star Location"]),
+    locname.TALLTREESTARG2:     SMG2LocationData(["Green Star Location"]),
+    locname.TALLTREESTARG3:     SMG2LocationData(["Green Star Location"]),
+    locname.CLOUDCOURTSTARG1:   SMG2LocationData(["Green Star Location"]),
+    locname.CLOUDCOURTSTARG2:   SMG2LocationData(["Green Star Location"]),
+    locname.CLOUDCOURTSTARG3:   SMG2LocationData(["Green Star Location"]),
+    locname.HAUNTHALLSTARG1:    SMG2LocationData(["Green Star Location"]),
+    locname.HAUNTHALLSTARG2:    SMG2LocationData(["Green Star Location"]),
+    locname.HAUNTHALLSTARG3:    SMG2LocationData(["Green Star Location"]),
+    locname.SNOWFLAKESTARG1:    SMG2LocationData(["Green Star Location"]),
+    locname.SNOWFLAKESTARG2:    SMG2LocationData(["Green Star Location"]),
+    locname.SNOWFLAKESTARG3:    SMG2LocationData(["Green Star Location"]),
+    locname.ROLLMASTERSTARG1:   SMG2LocationData(["Green Star Location"]),
+    locname.ROLLMASTERSTARG2:   SMG2LocationData(["Green Star Location"]),
+    locname.BEATBLOCKSTARG1:    SMG2LocationData(["Green Star Location"]),
+    locname.BEATBLOCKSTARG2:    SMG2LocationData(["Green Star Location"]),
+    locname.FEARFLETSTARG1:     SMG2LocationData(["Green Star Location"]),
+    locname.FEARFLETSTARG2:     SMG2LocationData(["Green Star Location"]),
+    locname.SUPERMASSSTARG1:    SMG2LocationData(["Green Star Location"]),
+    locname.SUPERMASSSTARG2:    SMG2LocationData(["Green Star Location"]),
+    locname.SUPERMASSSTARG3:    SMG2LocationData(["Green Star Location"]),
+    locname.FLIPVILLESTARG1:    SMG2LocationData(["Green Star Location"]),
+    locname.FLIPVILLESTARG2:    SMG2LocationData(["Green Star Location"]),
+    locname.FLIPVILLESTARG3:    SMG2LocationData(["Green Star Location"]),
+    locname.STARBEACHSTARG1:    SMG2LocationData(["Green Star Location"]),
+    locname.STARBEACHSTARG2:    SMG2LocationData(["Green Star Location"]),
+    locname.STARBEACHSTARG3:    SMG2LocationData(["Green Star Location"]),
+    locname.CHOMPWORKSTARG1:    SMG2LocationData(["Green Star Location"]),
+    locname.CHOMPWORKSTARG2:    SMG2LocationData(["Green Star Location"]),
+    locname.CHOMPWORKSTARG3:    SMG2LocationData(["Green Star Location"]),
+    locname.HONEYHOPSTARG1:     SMG2LocationData(["Green Star Location"]),
+    locname.HONEYHOPSTARG2:     SMG2LocationData(["Green Star Location"]),
+    locname.SWEETMYSTSTARG1:    SMG2LocationData(["Green Star Location"]),
+    locname.SWEETMYSTSTARG2:    SMG2LocationData(["Green Star Location"]),
+    locname.GRAVGAUNSTARG1:     SMG2LocationData(["Green Star Location"]),
+    locname.GRAVGAUNSTARG2:     SMG2LocationData(["Green Star Location"]),
+    locname.SPACESTORMSTARG1:   SMG2LocationData(["Green Star Location"]),
+    locname.SPACESTORMSTARG2:   SMG2LocationData(["Green Star Location"]),
+    locname.SPACESTORMSTARG3:   SMG2LocationData(["Green Star Location"]),
+    locname.SLIPSANDSTARG1:     SMG2LocationData(["Green Star Location"]),
+    locname.SLIPSANDSTARG2:     SMG2LocationData(["Green Star Location"]),
+    locname.SLIPSANDSTARG3:     SMG2LocationData(["Green Star Location"]),
+    locname.COLDFIRESTARG1:     SMG2LocationData(["Green Star Location"]),
+    locname.COLDFIRESTARG2:     SMG2LocationData(["Green Star Location"]),
+    locname.COLDFIRESTARG3:     SMG2LocationData(["Green Star Location"]),
+    locname.BOOMOONSTARG1:      SMG2LocationData(["Green Star Location"]),
+    locname.BOOMOONSTARG2:      SMG2LocationData(["Green Star Location"]),
+    locname.BOOMOONSTARG3:      SMG2LocationData(["Green Star Location"]),
+    locname.UPDIZZYSTARG1:      SMG2LocationData(["Green Star Location"]),
+    locname.UPDIZZYSTARG2:      SMG2LocationData(["Green Star Location"]),
+    locname.FLEETFLYSTARG1:     SMG2LocationData(["Green Star Location"]),
+    locname.FLEETFLYSTARG2:     SMG2LocationData(["Green Star Location"]),
+    locname.BOOMBUNKSTARG1:     SMG2LocationData(["Green Star Location"]),
+    locname.BOOMBUNKSTARG2:     SMG2LocationData(["Green Star Location"]),
+    locname.MELTMONSSTARG1:     SMG2LocationData(["Green Star Location"]),
+    locname.MELTMONSSTARG2:     SMG2LocationData(["Green Star Location"]),
+    locname.MELTMONSSTARG3:     SMG2LocationData(["Green Star Location"]),
+    locname.CLOCKRUINSTARG1:    SMG2LocationData(["Green Star Location"]),
+    locname.CLOCKRUINSTARG2:    SMG2LocationData(["Green Star Location"]),
+    locname.CLOCKRUINSTARG3:    SMG2LocationData(["Green Star Location"]),
+    locname.THROWBACKSTARG1:    SMG2LocationData(["Green Star Location"]),
+    locname.THROWBACKSTARG2:    SMG2LocationData(["Green Star Location"]),
+    locname.THROWBACKSTARG3:    SMG2LocationData(["Green Star Location"]),
+    locname.BATTBELTSTARG1:     SMG2LocationData(["Green Star Location"]),
+    locname.BATTBELTSTARG2:     SMG2LocationData(["Green Star Location"]),
+    locname.BATTBELTSTARG3:     SMG2LocationData(["Green Star Location"]),
+    locname.FLASHBLACKSTARG1:   SMG2LocationData(["Green Star Location"]),
+    locname.FLASHBLACKSTARG2:   SMG2LocationData(["Green Star Location"]),
+    locname.SLIMYSPRISTARG1:    SMG2LocationData(["Green Star Location"]),
+    locname.SLIMYSPIRSTARG2:    SMG2LocationData(["Green Star Location"]),
+    locname.GALAXYGENSTARG1:    SMG2LocationData(["Green Star Location"]),
+    locname.GALAXYGENSTARG2:    SMG2LocationData(["Green Star Location"]),
+    locname.MARIOSQRSTARG1:     SMG2LocationData(["Green Star Location"]),
+    locname.MARIOSQRSTARG2:     SMG2LocationData(["Green Star Location"]),
+    locname.ROLLSLIDESTARG1:    SMG2LocationData(["Green Star Location"]),
+    locname.ROLLSLIDESTARG2:    SMG2LocationData(["Green Star Location"]),
+    locname.TWISTTRIALSTARG1:   SMG2LocationData(["Green Star Location"]),
+    locname.TWISTTRIALSTARG2:   SMG2LocationData(["Green Star Location"]),
+    locname.STONECYCLOSTARG1:   SMG2LocationData(["Green Star Location"]),
+    locname.STONECYCLOSTARG2:   SMG2LocationData(["Green Star Location"]),
+    locname.BOSSBLITSTARG1:     SMG2LocationData(["Green Star Location"]),
+    locname.BOSSBLITSTARG2:     SMG2LocationData(["Green Star Location"]),
+    locname.FLIPOUTSTARG1:      SMG2LocationData(["Green Star Location"]),
+    locname.FLIPOUTSTARG2:      SMG2LocationData(["Green Star Location"]),
+}
+
+base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_loc, **RIGHTDOWN_loc,
+                        **FLIPSWAP_loc, **WILDGLIDE_loc, **ROLLMAST_loc, **HONEYHOP_loc, **UPDIZZY_loc,
+                        **SLIMSPRI_loc, **BEEBLOOM_loc, **BEATBLOCK_loc, **SWEETMYS_loc, **FLETGLIDE_loc,
+                        **FLASHBLACK_loc, **FLIPOUT_loc, **MARIOSQ_loc, **ROLLSLIDE_loc, **TWISTTRI_loc,
+                        **STONECYC_loc, **BOSSBLITZ_loc, **GRANDMASTER_loc, **FIREFLOT_loc, **GRAVGAUN_loc,
+                        **GALGEN_loc, **LAVALAIR_loc, **FEARFLET_loc, **BOOMBUNK_loc, **PUZZPLANK_loc,
+                        **HIGHFALL_loc, **ROCKBOWL_loc, **COSCCOVE_loc, **TALLTREE_loc, **CLOUDCOURT_loc,
+                        **HAUNTHALL_loc, **SNOWFLAKE_loc, **SUPMASS_loc, **FLIPVILL_loc, **STARBEACH_loc,
+                        **CHOMWORK_loc, **SPACSTOR_loc, **SLIPSAND_loc, **COLDFIRE_loc, **BOOMOON_loc,
+                        **MELTMONS_loc, **CLOCKRUIN_loc, **THROWBACK_loc, **BATTBELT_loc}
+
+location_table = { **base_stars_locations, **green_star_locations
 }
 
 LOCATION_NAME_TO_ID: dict[str, int] =  {
