@@ -18,7 +18,7 @@ class SMG2LocationData(NamedTuple):
     code: Optional[int]  # used to create ap_id, None for events
     default_access: Rule[Any] = True
     game_address: Optional[int] = 0
-
+#TODO Add Hungry Luma, Comets and Checkpoint locations to base table
 # Sky Station S
 SKYOBS_loc: dict[str, SMG2LocationData] = {
     locname.SKYSTASTAR1: SMG2LocationData([regname.SKYOBS, "Power Star Location"], regname.SKYOBS),
@@ -243,8 +243,8 @@ UPDIZZY_loc: dict[str, SMG2LocationData] = {
 
     # Fleet Glide S
 FLETGLIDE_loc: dict[str, SMG2LocationData] = {
-    locname.LEETFLYSTAR1: SMG2LocationData(["Power Star Location", regname.FLEETGLIDE], regname.FLEETGLIDE),
-    locname.LEETFLYSTAR2: SMG2LocationData(["Power Star Location", regname.FLEETGLIDE], regname.FLEETGLIDE),
+    locname.FLEETFLYSTAR1: SMG2LocationData(["Power Star Location", regname.FLEETGLIDE], regname.FLEETGLIDE),
+    locname.FLEETFLYSTAR2: SMG2LocationData(["Power Star Location", regname.FLEETGLIDE], regname.FLEETGLIDE),
 }
 
     # Bowser Jr.'s
@@ -465,6 +465,18 @@ green_star_locations: dict[str, SMG2LocationData]  = {
     locname.FLIPOUTSTARG1:      SMG2LocationData(["Green Star Location", regname.FLIPOUT], regname.FLIPOUT),
     locname.FLIPOUTSTARG2:      SMG2LocationData(["Green Star Location", regname.FLIPOUT], regname.FLIPOUT),
 }
+
+#TODO Comet Medals Table
+
+#TODO Checkpoint Table
+
+#TODO Add Pipe Table
+
+#TODO Add Launch Star table here
+
+#TODO Add NPC table here - vanilla unlock requirement
+
+#TODO Add Mailtoad Letters table here - vanilla unlock requirement
 
 base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_loc, **RIGHTDOWN_loc,
                         **FLIPSWAP_loc, **WILDGLIDE_loc, **ROLLMAST_loc, **HONEYHOP_loc, **UPDIZZY_loc,

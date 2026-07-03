@@ -5,7 +5,7 @@ from dataclasses import fields
 from typing import ClassVar, Counter
 
 import worlds.smgalaxy2.Options
-from BaseClasses import Item
+from BaseClasses import Item, MultiWorld
 from Utils import visualize_regions
 from entrance_rando import randomize_entrances
 from worlds.AutoWorld import World
@@ -62,6 +62,8 @@ class SMG2World(World):
         self.shuffled_levels: dict[str, str] = {} # Entrance Name (Galaxy Slot): Region name (Galaxy)
         self.starting_world: str = "World 1"
         self.star_block_counts: dict[str, dict[str, int]] = {}
+        self.galaxy_key_items: list[SMG2Item] = []
+        self.start_galaxy: str = regname.SKYOBS
 
     def generate_early(self) -> None:
         self.star_block_counts = self.get_star_block_counts()
@@ -135,6 +137,10 @@ class SMG2World(World):
             copies = max(0, items.all_items_table[itemname.GRAND].default_count - exclude.count(itemname.GRAND))
             local_pool += [self.create_item(itemname.GRAND) for i in range(copies)]
 
+        if self.options.galaxy_lock.value:
+            for item in items.galaxy_keys.keys():
+                copies = max(0, items.all_items_table[itemname.GRAND].default_count - exclude.count(itemname.GRAND))
+                local_pool += [self.create_item(itemname.GRAND) for i in range(copies)]
         
         # make sure we don't create more stars than locations, somehow
         copies = max(0, items.all_items_table[itemname.POWER].default_count - exclude.count(itemname.POWER))
@@ -162,6 +168,16 @@ class SMG2World(World):
 
     def pre_fill(self) -> None:
         visualize_regions(self.get_region(self.origin_region_name), "SMG2_region_graph.puml",show_entrance_names=True)
+
+    def post_fill(self) -> None:
+        if not self.options.galaxy_lock.value:
+            return
+
+        starting_galaxy_key_loc = self.multiworld.find_item_locations(f"{self.start_galaxy} Key", self.player)[0]
+        if starting_galaxy_key_loc.player not in self.multiworld.groups:
+            starting_galaxy_key_loc.item.location = None
+            starting_galaxy_key_loc.item = self.create_item(self.get_filler_item_name())
+            starting_galaxy_key_loc.item.location = starting_galaxy_key_loc
 
     # Output options, locations and doors for patcher TODO correct for SMG2
     def generate_output(self, output_directory: str):

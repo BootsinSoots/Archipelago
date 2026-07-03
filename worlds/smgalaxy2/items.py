@@ -22,12 +22,16 @@ class SMG2Item(Item):
 item_table: dict[str, SMG2ItemData] = {
   "Power Star": SMG2ItemData(["Power Star"], 170000004, IC.progression_deprioritized_skip_balancing, 122),
   "Grand Star": SMG2ItemData(["Grand Star", "Power Star"], 170000005, IC.progression, 7),
-  "Green Star": SMG2ItemData(["Green Star"], 170000006, IC.progression, 120),
+  "Green Star": SMG2ItemData(["Power Star", "Green Star"], 170000006, IC.progression, 120),
+  # Comet Medals
   "Progressive Comets": SMG2ItemData(["Comet"], 170000008, IC.progression),
 }
 
 filler_items: dict[str, SMG2ItemData] = {
     "1up Mushroom": SMG2ItemData(["Filler Items"], 170000007, IC.filler),
+    # Life Up
+    # Starbits
+    # Coins
 }
 
 
@@ -43,6 +47,14 @@ keyed_grand_stars: dict[str, SMG2ItemData] = {
     itemname.GRAND5: SMG2ItemData(["Grand Star", "Power Star"], 170000014, IC.progression),
     itemname.GRAND6: SMG2ItemData(["Grand Star", "Power Star"], 170000015, IC.progression),
     itemname.GRAND7: SMG2ItemData(["Grand Star", "Power Star"], 170000016, IC.progression),
+}
+
+keyed_green_stars: dict[str, SMG2ItemData] = {
+
+}
+
+galaxy_keys: dict[str, SMG2ItemData] = {
+
 }
 
 all_items_table: dict[str, SMG2ItemData] = {**keyed_grand_stars, **item_table, **generic_event_items}

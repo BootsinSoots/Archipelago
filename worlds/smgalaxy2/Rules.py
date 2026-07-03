@@ -153,6 +153,10 @@ def rules_from_er_placements(world: "SMG2World"):
             else:
                 available_locations += 2 if galaxy_type == "Major" else 1
 
+    #firs world, get slot 1 galaxy
+    world.start_galaxy = world.get_entrance(f"{list(world.star_block_counts.keys())[0]} Slot 1 Galaxy").connected_region.name
+    if world.options.galaxy_lock.value:
+        world.multiworld.push_precollected(world.create_item(f"{world.start_galaxy} Key"))
     for galaxy_slot in all_galaxy_slots:
         world.shuffled_levels[world.get_entrance(galaxy_slot).name] = world.get_entrance(galaxy_slot).connected_region.name
 
