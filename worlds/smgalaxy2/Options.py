@@ -181,6 +181,27 @@ class GalaxyLock(Toggle):
     display_name = "Galaxy Locks"
     internal_name = "galaxy_lock"
 
+class ActiveCometsGame(Range): # doesn't affect logic
+    """
+    How many comets are allowed to be active at a time across all worlds
+    """
+    display_name = "Active Comets in Game"
+    internal_name = "active_comets_game"
+    range_start = 1
+    range_end = 10
+
+class ActiveCometsWorld(Range): # doesn't affect logic
+    """
+    How many comets are allowed to be active in a single world at a time.
+    """
+    display_name = "Active Comets per World"
+    internal_name = "active_comets_world"
+    range_start = 1
+    range_end = 7
+
+# Comet medals in pool, provide galaxy "order", 1 comet to one level
+
+
 # this defines all the options.
 @dataclass
 class SMG2Options(PerGameCommonOptions):
@@ -195,6 +216,8 @@ class SMG2Options(PerGameCommonOptions):
     galaxy_shuffle: GalaxyShuffle
     galaxy_shuffle_type: GalaxyShuffleType
     galaxy_lock: GalaxyLock
+    active_comets_world: ActiveCometsWorld
+    active_comets_game: ActiveCometsGame
 
 option_groups = [
     Options.OptionGroup("Map Options", [
@@ -205,6 +228,8 @@ option_groups = [
         GalaxyShuffle,
         GalaxyShuffleType,
         GalaxyLock,
+        ActiveCometsWorld.
+        ActiveCometsGame,
     ]),
     Options.OptionGroup("Green Stars", [
         EnableGreenStars,

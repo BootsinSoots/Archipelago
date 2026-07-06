@@ -7,8 +7,7 @@ from rule_builder.rules import CanReachLocation
 from .Constants.Names import region_names as regname
 from .Constants.Names import location_names as locname
 from .Options import SMG2Options
-from .locations import SMG2Location, locPC_table, base_stars_locations, SMG2LocationData, green_star_locations
-from ..generic.Rules import add_rule
+from .locations import SMG2Location, base_stars_locations, SMG2LocationData, green_star_locations
 
 if TYPE_CHECKING:
     from . import SMG2World

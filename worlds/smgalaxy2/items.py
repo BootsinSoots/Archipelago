@@ -49,12 +49,59 @@ keyed_grand_stars: dict[str, SMG2ItemData] = {
     itemname.GRAND7: SMG2ItemData(["Grand Star", "Power Star"], 170000016, IC.progression),
 }
 
-keyed_green_stars: dict[str, SMG2ItemData] = {
+galaxy_green_keys: dict[str, SMG2ItemData] = {
 
 }
 
 galaxy_keys: dict[str, SMG2ItemData] = {
-
+   itemname.SKYPOBSKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.FLIPSWAPKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.HONEYBLOOMKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.SWEETMYSKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.FLEETGLIDEKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.FLASHBLACKKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.FLIPOUTKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.GOODEGGKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.SPINDIGKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.FLUFFBLUFFKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.PUZZPLANKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.HIGHTAILKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.BOULBOWLKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.COSMICOKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.TALLTRUNKKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.CLOUCOURKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.HAUNHALLKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.FREEFLAKEKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.SUPMASSKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.FLIPVILLKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.STARBEACHKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.CHOMWORKKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.SPACSTORKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.SLIPSANDKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.SHIVBURNKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.BOOMOONKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.MELTYKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.CLOCKWORKKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.WHOMPFORTKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.BATTLEBELTKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.MARIOKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.ROLLCOASTKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.TWISTTRIKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.STONECYCKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.GRANDMASTERKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.BOWJR1KEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.BOWJR2KEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.BOWJR3KEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.BOWSER1KEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.BOWSER2KEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.BOWSER3KEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.BOSSBLITZKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.RIGHTDOWNKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.WILDGLIDEKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.ROLLMASTKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.HONEYHOPKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.UPDOWNKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
+   itemname.SLIMSPRIKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
 }
 
 all_items_table: dict[str, SMG2ItemData] = {**keyed_grand_stars, **item_table, **generic_event_items}
