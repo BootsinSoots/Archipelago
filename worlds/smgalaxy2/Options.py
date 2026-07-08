@@ -1,5 +1,6 @@
 from dataclasses import dataclass
-from typing import Dict, Any, Counter
+from typing import Dict, Any
+from collections import Counter
 
 import Options
 from Options import Choice, Range, PerGameCommonOptions, OptionSet, Toggle, OptionCounter, OptionDict
@@ -145,6 +146,7 @@ class GreenStarstoFinish(Range):
     default = 60
 
 class FinalStarBlocks(OptionCounter):
+    value: Counter
     """
     Set the star requirements for the final Star Block in each world.
 
