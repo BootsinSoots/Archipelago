@@ -13,6 +13,16 @@ POWER = "Power Star"
 GREEN = "Green Star"
 ONEUP = "1-up Mushroom"
 
+#Unique individual keys
+GREENCOMETKEY = "Green Star Comet Key"
+GREENCOMETW1 = "Green Star World 1 Key"
+GREENCOMETW2 = "Green Star World 2 Key"
+GREENCOMETW3 = "Green Star World 3 Key"
+GREENCOMETW4 = "Green Star World 4 Key"
+GREENCOMETW5 = "Green Star World 5 Key"
+GREENCOMETW6 = "Green Star World 6 Key"
+GREENCOMETW7 = "Green Star World 7 Key"
+
 # Galaxy Keys
 SKYPOBSKEY = "Sky Station Galaxy Key"
 FLIPSWAPKEY = "Flip Swap Galaxy Key"

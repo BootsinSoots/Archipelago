@@ -1,13 +1,16 @@
 from typing import TYPE_CHECKING, Any
 
-from BaseClasses import Entrance
+from BaseClasses import Entrance, Location
 from rule_builder.field_resolvers import FromOption
 from rule_builder.options import OptionFilter
-from rule_builder.rules import Has, True_, HasFromList, Rule, HasGroup
-from .Options import WorldShuffle, Goal, GreenStarBehavior, StarstoFinish, GreenStarstoFinish, GalaxyLock
+from rule_builder.rules import Has, True_, HasFromList, Rule, HasGroup, CanReachLocation
+from .Options import WorldShuffle, Goal, GreenStarBehavior, StarstoFinish, GreenStarstoFinish, GalaxyLock, \
+    EnableGreenStars
+from .locations import green_star_locations, SMG2Location
 from .regions import region_list, all_galaxy_slots
 from .Constants.Names import region_names as regname
 from .Constants.Names import item_names as itemname
+from .Constants.Names import location_names as locname
 
 if TYPE_CHECKING:
     from . import SMG2World
@@ -159,10 +162,24 @@ def rules_from_er_placements(world: "SMG2World"):
         world.multiworld.push_precollected(world.create_item(f"{world.start_galaxy} Key"))
     for galaxy_slot in all_galaxy_slots:
         world.shuffled_levels[world.get_entrance(galaxy_slot).name] = world.get_entrance(galaxy_slot).connected_region.name
+    # apply rule to green star locations to include correct world key if th
+    if world.options.enable_green_stars.value == 4:
+        for loc_name, data in green_star_locations.items():
+            world_map: str = world.get_region(data.galaxy).entrances[0].parent_region.name
+            world.set_rule(world.get_location(loc_name), data.default_access & Has(f"Green Star {world_map} Key"))
+    elif world.options.enable_green_stars.value !=0 :
+        for loc_name, data in green_star_locations.items():
+            world.set_rule(world.get_location(loc_name), data.default_access & GreenStarRule)
 
 
 
 # Common Rules
 NoGreenList: list[str] = [itemname.POWER, itemname.GRAND, itemname.GRAND1, itemname.GRAND2, itemname.GRAND3, itemname.GRAND4, itemname.GRAND5, itemname.GRAND6,itemname.GRAND7]
-GreenSeparateGoal = ((HasGroup(itemname.GREEN, FromOption(GreenStarstoFinish)) & OptionFilter(GreenStarBehavior, 1))
+GreenSeparateGoal: Rule[Any] = ((HasGroup(itemname.GREEN, FromOption(GreenStarstoFinish)) & OptionFilter(GreenStarBehavior, 1))
                      | OptionFilter(GreenStarBehavior, 2))
+
+GreenStarRule: Rule[Any] = ((True_()&OptionFilter(EnableGreenStars,1))
+                            | (OptionFilter(EnableGreenStars, 2)&CanReachLocation(locname.GALAXYGENSTAR1)
+                               &((HasFromList(*NoGreenList, count=120)&OptionFilter(GreenStarBehavior, 0, operator="ne"))
+                                 |(HasGroup("Power Star", count=120)&OptionFilter(GreenStarBehavior, 0))))
+                            | (OptionFilter(EnableGreenStars, 3)&Has(itemname.GREENCOMETKEY)))

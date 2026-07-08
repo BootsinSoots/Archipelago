@@ -20,7 +20,7 @@ class SMG2Item(Item):
 
 # TODO Replace this item table
 item_table: dict[str, SMG2ItemData] = {
-  "Power Star": SMG2ItemData(["Power Star"], 170000004, IC.progression_deprioritized_skip_balancing, 122),
+  "Power Star": SMG2ItemData(["Power Star"], 170000004, IC.progression_deprioritized_skip_balancing, 115),
   "Grand Star": SMG2ItemData(["Grand Star", "Power Star"], 170000005, IC.progression, 7),
   "Green Star": SMG2ItemData(["Power Star", "Green Star"], 170000006, IC.progression, 120),
   # Comet Medals
@@ -49,8 +49,18 @@ keyed_grand_stars: dict[str, SMG2ItemData] = {
     itemname.GRAND7: SMG2ItemData(["Grand Star", "Power Star"], 170000016, IC.progression),
 }
 
-galaxy_green_keys: dict[str, SMG2ItemData] = {
+green_comet_key: dict[str, SMG2ItemData] = {
+    itemname.GREENCOMETKEY: SMG2ItemData(["Green Comet Key"], 1, IC.progression)
+}
 
+world_green_keys: dict[str, SMG2ItemData] = {
+    itemname.GREENCOMETW1: SMG2ItemData(["World Green Star Key"], 1, IC.progression),
+    itemname.GREENCOMETW2: SMG2ItemData(["World Green Star Key"], 1, IC.progression),
+    itemname.GREENCOMETW3: SMG2ItemData(["World Green Star Key"], 1, IC.progression),
+    itemname.GREENCOMETW4: SMG2ItemData(["World Green Star Key"], 1, IC.progression),
+    itemname.GREENCOMETW5: SMG2ItemData(["World Green Star Key"], 1, IC.progression),
+    itemname.GREENCOMETW6: SMG2ItemData(["World Green Star Key"], 1, IC.progression),
+    itemname.GREENCOMETW7: SMG2ItemData(["World Green Star Key"], 1, IC.progression),
 }
 
 galaxy_keys: dict[str, SMG2ItemData] = {
@@ -104,7 +114,8 @@ galaxy_keys: dict[str, SMG2ItemData] = {
    itemname.SLIMSPRIKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
 }
 
-all_items_table: dict[str, SMG2ItemData] = {**keyed_grand_stars, **item_table, **generic_event_items}
+all_items_table: dict[str, SMG2ItemData] = {**keyed_grand_stars, **item_table, **generic_event_items, **galaxy_keys,
+                                            **world_green_keys, **filler_items}
 
 ITEM_NAME_TO_ID: dict[str, int] =  {
     name: data.code for name, data in all_items_table.items() if data.code is not None}

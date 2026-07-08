@@ -167,18 +167,18 @@ def create_regions(world: "SMG2World"): #TODO Correctly add locations
                                                       & CanReachLocation(locname.GRAVGAUNSTAR1)
                                                       & CanReachLocation(locname.GALAXYGENSTAR1)))
 
-    if world.options.enable_green_stars.value == 1: # Fix for Green star locations
-        create_locations(green_star_locations, world)
+    if world.options.enable_green_stars.value > 0: # Fix for Green star locations
+        create_locations(green_star_locations, world, True)
 
 
 def create_region(name: str, world: "SMG2World") -> Region:
     return Region(name, world.player, world.multiworld, name)
 
-def create_locations(locs: dict[str, SMG2LocationData], world: "SMG2World"):
+def create_locations(locs: dict[str, SMG2LocationData], world: "SMG2World", skip_rules: bool=False):
     for name, data in locs.items():
         reg = world.get_region(data.region)
         location = SMG2Location(world.player, name, reg)
-        if data.default_access:
+        if data.default_access and skip_rules == False:
             world.set_rule(location, data.default_access)
 
         reg.locations += [location]

@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict, Any
+from typing import Dict, Any, Counter
 
 import Options
 from Options import Choice, Range, PerGameCommonOptions, OptionSet, Toggle, OptionCounter, OptionDict
@@ -83,12 +83,27 @@ class WorldShuffle(Choice):
     option_Keyed_Grand_Stars = 1
     option_Open = 2
 
-class EnableGreenStars(Toggle):
+class EnableGreenStars(Choice):
     """
-    Add Green Star locations and items
+    Add Green Star locations and items. Items are not added if Green Star Behavior is set to Disabled
+
+    Off: No Green Stars items of locations are added to the pool
+
+    Unlocked: Green Star Locations are added to the multiworld with no extra logical requirements
+
+    Require Galaxy Generator: Require beating Galaxy Generator with 120 other stars before Green Star locations are in logic
+
+    Green Star Comet: Must receive the Green Star Comet Key before Green Star locations are unlocked
+
+    Require World Green key: Each World has a Green Star key needed before the Green Star Locations in that world are available
     """
     display_name = "Enable Green Stars"
     internal_name = "enable_green_stars"
+    option_Off = 0
+    option_Unlocked = 1
+    option_Require_Galaxy_Generator = 2
+    option_Require_Green_Star_Comet = 3
+    option_Require_World_Green_Key = 4
 
 class StarstoFinish(Range):
     """
@@ -130,7 +145,6 @@ class GreenStarstoFinish(Range):
     default = 60
 
 class FinalStarBlocks(OptionCounter):
-    value: collection.Counter[str, int]
     """
     Set the star requirements for the final Star Block in each world.
 
@@ -188,7 +202,7 @@ class ActiveCometsGame(Range): # doesn't affect logic
     display_name = "Active Comets in Game"
     internal_name = "active_comets_game"
     range_start = 1
-    range_end = 10
+    range_end = 39
 
 class ActiveCometsWorld(Range): # doesn't affect logic
     """

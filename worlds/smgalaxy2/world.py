@@ -7,6 +7,7 @@ from typing import ClassVar, Counter
 import worlds.smgalaxy2.Options
 from BaseClasses import Item, MultiWorld
 from Utils import visualize_regions
+from Options import OptionError
 from entrance_rando import randomize_entrances
 from worlds.AutoWorld import World
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
@@ -19,7 +20,7 @@ from .Constants.constants import AP_WORLD_VERSION_NAME, CLIENT_VERSION
 from .Options import WorldShuffle
 from .Rules import rules_from_er_placements
 from .locations import LOCATION_NAME_TO_ID, get_location_names_per_category, SMG2Location, location_table
-from .items import SMG2Item, ITEM_NAME_TO_ID, get_item_names_per_category
+from .items import SMG2Item, ITEM_NAME_TO_ID, get_item_names_per_category, green_comet_key, world_green_keys
 from .regions import disconnect_from_option, region_list, SMG2RegionData
 from .SMGSettings import SuperMarioGalaxy
 from .Patch.Patch import SMGPlayerContainer
@@ -66,6 +67,9 @@ class SMG2World(World):
         self.start_galaxy: str = regname.SKYOBS
 
     def generate_early(self) -> None:
+        if self.options.goal.value > 2 and self.options.enable_green_stars.value == 2:
+            raise OptionError(f"Green Star Locations cannot be locked behind a Galaxy Generator Goal. This error "
+                              f"occurred in {self.player_name}'s Super Mario Galaxy 2 world. Their YAML must be fixed")
         self.star_block_counts = self.get_star_block_counts()
 
     def create_regions(self):
@@ -74,9 +78,9 @@ class SMG2World(World):
     def get_star_block_counts(self) -> dict[str, dict[str, int]]:
         """Gets all the required star block counts for each world """
         # Determine world order, whether left progressive or randomized
-        star_block_copy = copy.deepcopy(self.options.final_star_blocks.value)
+        star_block_copy = copy.copy(self.options.final_star_blocks.value)
         world_order: list[str] = ["World 1", "World 2", "World 3", "World 4", "World 5", "World 6", "World 7"]
-        world_list_tuple: list[tuple[str, int]] = star_block_copy.most_common().reverse()
+        world_list_tuple: list[tuple[str, int]] = list(reversed(star_block_copy.most_common()))
         world_final_blocks: dict[str, int] = dict(world_list_tuple)
         if self.options.world_shuffle.value in [WorldShuffle.option_Keyed_Grand_Stars, WorldShuffle.option_Open]:
             world_order: list[str] = []
@@ -126,9 +130,16 @@ class SMG2World(World):
         exclude = [item.name for item in self.multiworld.precollected_items[self.player]]
         local_pool: list[SMG2Item] = []
         copies: int = 1
-        if self.options.enable_green_stars.value == 1 and self.options.green_star_behavior != 2:
+        if self.options.enable_green_stars.value > 0 and self.options.green_star_behavior != 2:
             copies = max(0, items.all_items_table["Green Star"].default_count - exclude.count("Green Star"))
             local_pool += [self.create_item("Green Star") for i in range(copies)]
+        if self.options.enable_green_stars.value == self.options.enable_green_stars.option_Require_Green_Star_Comet:
+            copies = max(0, items.all_items_table[itemname.GREENCOMETKEY].default_count - exclude.count(itemname.GREENCOMETKEY))
+            local_pool += [self.create_item(itemname.GREENCOMETKEY) for i in range(copies)]
+        elif self.options.enable_green_stars.value == self.options.enable_green_stars.option_Require_World_Green_Key:
+            for item in world_green_keys:
+                copies = max(0, items.all_items_table[item].default_count - exclude.count(item))
+                local_pool += [self.create_item(item) for _ in range(copies)]
         if self.options.world_shuffle.value == 1:
             for item in items.keyed_grand_stars.keys():
                 copies = max(0, items.all_items_table[item].default_count - exclude.count(item))
