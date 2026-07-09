@@ -245,9 +245,12 @@ SLIPSAND_loc: dict[str, SMG2LocationData] = {
 
     # Shiverburn St
 COLDFIRE_loc: dict[str, SMG2LocationData] = {
-    locname.COLDFIRESTAR1: SMG2LocationData(["Power Star Location", regname.SHIVBURN], regname.SHIVBURN),
-    locname.COLDFIRESTAR2: SMG2LocationData(["Power Star Location", regname.SHIVBURN], regname.SHIVBURN),
-    locname.COLDFIRESTAR3: SMG2LocationData(["Power Star Location", regname.SHIVBURN], regname.SHIVBURN),
+    locname.COLDFIRESTAR1: SMG2LocationData(["Power Star Location", regname.SHIVBURN], regname.SHIVBURN,
+                                            regname.SHIVBURN1BOSS ,1),
+    locname.COLDFIRESTAR2: SMG2LocationData(["Power Star Location", regname.SHIVBURN], regname.SHIVBURN,
+                                            regname.SHIVBURN2ROMP ,1),
+    locname.COLDFIRESTAR3: SMG2LocationData(["Power Star Location", regname.SHIVBURN], regname.SHIVBURN,
+                                            regname.SHIVBURN3CHIMP ,1),
 }
 
     # Boo Moon Star
@@ -522,12 +525,12 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.SLIPSAND1SLIDE , 1, (GreenStarRule)),
     locname.SLIPSANDSTARG3:     SMG2LocationData(["Green Star Location", regname.SLIPSAND], regname.SLIPSAND,
                                                  regname.SLIPSAND1SLIDE , 1, (GreenStarRule)),
-    locname.COLDFIRESTARG1:     SMG2LocationData(["Green Star Location", regname.SHIVBURN], regname.SHIVBURN, 1,
-                                                 (GreenStarRule)),
-    locname.COLDFIRESTARG2:     SMG2LocationData(["Green Star Location", regname.SHIVBURN], regname.SHIVBURN, 1,
-                                                 (GreenStarRule)),
-    locname.COLDFIRESTARG3:     SMG2LocationData(["Green Star Location", regname.SHIVBURN], regname.SHIVBURN, 1,
-                                                 (GreenStarRule)),
+    locname.COLDFIRESTARG1:     SMG2LocationData(["Green Star Location", regname.SHIVBURN], regname.SHIVBURN,
+                                                 regname.SHIVBURN1VOLCANO , 1, (GreenStarRule)),
+    locname.COLDFIRESTARG2:     SMG2LocationData(["Green Star Location", regname.SHIVBURN], regname.SHIVBURN,
+                                                 regname.SHIVBURN1LAVA , 1, (GreenStarRule)),
+    locname.COLDFIRESTARG3:     SMG2LocationData(["Green Star Location", regname.SHIVBURN], regname.SHIVBURN,
+                                                 regname.SHIVBURN1FIREICE , 1, (GreenStarRule)),
     locname.BOOMOONSTARG1:      SMG2LocationData(["Green Star Location", regname.BOOMOON], regname.BOOMOON, 1,
                                                  (GreenStarRule)),
     locname.BOOMOONSTARG2:      SMG2LocationData(["Green Star Location", regname.BOOMOON], regname.BOOMOON, 1,

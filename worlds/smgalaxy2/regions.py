@@ -183,6 +183,14 @@ region_list: dict[str, SMG2RegionData] = {
     regname.SLIPSAND2LONG3:             SMG2RegionData("Planet", [], []),
     regname.SLIPSAND2BIRD:              SMG2RegionData("Planet", [], []),
     regname.SLIPSAND3BOSS:              SMG2RegionData("Planet", [], []),
+    regname.SHIVBURN1VOLCANO:           SMG2RegionData("Planet", [], []),
+    regname.SHIVBURN3CHIMP:             SMG2RegionData("Planet", [], []),
+    regname.SHIVBURN1LAVA:              SMG2RegionData("Planet", [], []),
+    regname.SHIVBURN1FIREICE:           SMG2RegionData("Planet", [], []),
+    regname.SHIVBURN1TOAD:              SMG2RegionData("Planet", [], []),
+    regname.SHIVBURN1BOSS:              SMG2RegionData("Planet", [], []),
+    regname.SHIVBURN2TOAD:              SMG2RegionData("Planet", [], []),
+    regname.SHIVBURN2ROMP:              SMG2RegionData("Planet", [], []),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]

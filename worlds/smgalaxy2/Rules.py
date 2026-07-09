@@ -198,10 +198,34 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                     "Slipsand 1: Cube Launch Star")
     world.get_region(regname.SLIPSAND1SLIDE).connect(world.get_region(regname.SLIPSAND1BOSS),
                                                     "Slipsand 1: Slide Launch Star")
+    world.get_region(regname.SLIPSAND).connect(world.get_region(regname.SLIPSAND2LONG1), "Slipsand Star 2")
+    world.get_region(regname.SLIPSAND2LONG1).connect(world.get_region(regname.SLIPSAND2GRAV),
+                                                    "Slipsand 2: Green Pipe")
+    world.get_region(regname.SLIPSAND2LONG1).connect(world.get_region(regname.SLIPSAND2LONG2))
+    world.get_region(regname.SLIPSAND2GRAV).connect(world.get_region(regname.SLIPSAND2LONG2),
+                                                    "Slipsand 2: Orange Pipe")
+    world.get_region(regname.SLIPSAND2LONG2).connect(world.get_region(regname.SLIPSAND2LONG3))
+    world.get_region(regname.SLIPSAND2LONG2).connect(world.get_region(regname.SLIPSAND2BIRD),
+                                                    "Slipsand 2: Long Launch Star")
+    world.get_region(regname.SLIPSAND).connect(world.get_region(regname.SLIPSAND3BOSS), "Slipsand Star 3")
     # Fleet Glide
     world.get_region(regname.WORLD5).connect(world.get_region(regname.FLEETGLIDE), "World 5 Slot 5 Galaxy")
     #Shiverburn
     world.get_region(regname.WORLD5).connect(world.get_region(regname.SHIVBURN), "World 5 Slot 6 Galaxy")
+    world.get_region(regname.SHIVBURN).connect(world.get_region(regname.SHIVBURN1VOLCANO), "Shiverburn Star 1")
+    world.get_region(regname.SHIVBURN1VOLCANO).connect(world.get_region(regname.SHIVBURN3CHIMP),
+                                                       "Shiverburn 3: Green Pipe")
+    world.get_region(regname.SHIVBURN1VOLCANO).connect(world.get_region(regname.SHIVBURN1LAVA),
+                                                       "Shiverburn 1: Volcano Launch Star")
+    world.get_region(regname.SHIVBURN1LAVA).connect(world.get_region(regname.SHIVBURN1FIREICE),
+                                                       "Shiverburn 1: Lava Ball Launch Star")
+    world.get_region(regname.SHIVBURN1FIREICE).connect(world.get_region(regname.SHIVBURN1TOAD),
+                                                       "Shiverburn 1: Lava Ice Launch Star")
+    world.get_region(regname.SHIVBURN1TOAD).connect(world.get_region(regname.SHIVBURN1BOSS),
+                                                       "Shiverburn 1: Green Toadship Launch Star")
+    world.get_region(regname.SHIVBURN).connect(world.get_region(regname.SHIVBURN2TOAD), "Shiverburn Star 2")
+    world.get_region(regname.SHIVBURN2TOAD).connect(world.get_region(regname.SHIVBURN2ROMP),
+                                                       "Shiverburn 2: Green Toadship Launch Star")
     # Boom bunker
     world.get_region(regname.WORLD5).connect(world.get_region(regname.BOWJR3), "World 5 Slot 7 Galaxy")
     # World 6
