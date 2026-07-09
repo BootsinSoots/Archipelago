@@ -268,8 +268,10 @@ UPDIZZY_loc: dict[str, SMG2LocationData] = {
 
     # Fleet Glide S
 FLETGLIDE_loc: dict[str, SMG2LocationData] = {
-    locname.FLEETFLYSTAR1: SMG2LocationData(["Power Star Location", regname.FLEETGLIDE], regname.FLEETGLIDE),
-    locname.FLEETFLYSTAR2: SMG2LocationData(["Power Star Location", regname.FLEETGLIDE], regname.FLEETGLIDE),
+    locname.FLEETFLYSTAR1: SMG2LocationData(["Power Star Location", regname.FLEETGLIDE], regname.FLEETGLIDE,
+                                            regname.FLEETGLIDECOURSE, 2),
+    locname.FLEETFLYSTAR2: SMG2LocationData(["Power Star Location", regname.FLEETGLIDE], regname.FLEETGLIDE,
+                                            regname.FLEETGLIDECOURSE, 2),
 }
 
     # Bowser Jr.'s
@@ -541,10 +543,10 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  (GreenStarRule)),
     locname.UPDIZZYSTARG2:      SMG2LocationData(["Green Star Location", regname.UPDOWN], regname.UPDOWN, 1,
                                                  (GreenStarRule)),
-    locname.FLEETFLYSTARG1:     SMG2LocationData(["Green Star Location", regname.FLEETGLIDE], regname.FLEETGLIDE, 1,
-                                                 (GreenStarRule)),
-    locname.FLEETFLYSTARG2:     SMG2LocationData(["Green Star Location", regname.FLEETGLIDE], regname.FLEETGLIDE, 1,
-                                                 (GreenStarRule)),
+    locname.FLEETFLYSTARG1:     SMG2LocationData(["Green Star Location", regname.FLEETGLIDE], regname.FLEETGLIDE,
+                                                 regname.FLEETGLIDECOURSE, 1, (GreenStarRule)),
+    locname.FLEETFLYSTARG2:     SMG2LocationData(["Green Star Location", regname.FLEETGLIDE], regname.FLEETGLIDE,
+                                                 regname.FLEETGLIDECOURSE, 1, (GreenStarRule)),
     locname.BOOMBUNKSTARG1:     SMG2LocationData(["Green Star Location", regname.BOWJR3], regname.BOWJR3, 1,
                                                  (GreenStarRule)),
     locname.BOOMBUNKSTARG2:     SMG2LocationData(["Green Star Location", regname.BOWJR3], regname.BOWJR3, 1,
