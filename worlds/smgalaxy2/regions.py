@@ -193,6 +193,14 @@ region_list: dict[str, SMG2RegionData] = {
     regname.SHIVBURN2ROMP:              SMG2RegionData("Planet", [], []),
     regname.FLEETGLIDESTART:            SMG2RegionData("Planet", [], []),
     regname.FLEETGLIDECOURSE:           SMG2RegionData("Planet", [], []),
+    regname.BOOMOON1DARK:               SMG2RegionData("Planet", [], []),
+    regname.BOOMOON1GOOMBONUS:          SMG2RegionData("Planet", [], []),
+    regname.BOOMOON1POISON:             SMG2RegionData("Planet", [], []),
+    regname.BOOMOON1MOON:               SMG2RegionData("Planet", [], []),
+    regname.BOOMOON1POPUP:              SMG2RegionData("Planet", [], []),
+    regname.BOOMOON2DARK:               SMG2RegionData("Planet", [], []),
+    regname.BOOMOON2GOOMBONUS:          SMG2RegionData("Planet", [], []),
+    regname.BOOMOON2TOWER:              SMG2RegionData("Planet", [], []),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]

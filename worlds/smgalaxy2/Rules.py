@@ -185,6 +185,20 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.SPACSTOR2TOPTOWER).connect(world.get_region(regname.SPACSTOR2GSTAR3))
     # Boo Moon
     world.get_region(regname.WORLD5).connect(world.get_region(regname.BOOMOON), "World 5 Slot 2 Galaxy")
+    world.get_region(regname.BOOMOON).connect(world.get_region(regname.BOOMOON1DARK), "Boo Moon Star 1")
+    world.get_region(regname.BOOMOON1DARK).connect(world.get_region(regname.BOOMOON1GOOMBONUS),
+                                                   "Boo Moon 1: Pumpkin Goomba Bonus Teleporter")
+    world.get_region(regname.BOOMOON1DARK).connect(world.get_region(regname.BOOMOON1POISON),
+                                                   "Boo Moon 1: Dark Planet Launch Star")
+    world.get_region(regname.BOOMOON1POISON).connect(world.get_region(regname.BOOMOON1MOON),
+                                                   "Boo Moon 1: Poison Swamp Launch Star")
+    world.get_region(regname.BOOMOON1MOON).connect(world.get_region(regname.BOOMOON1POPUP),
+                                                   "Boo Moon 1: Moon Launch Star")
+    world.get_region(regname.BOOMOON).connect(world.get_region(regname.BOOMOON2DARK), "Boo Moon Star 2")
+    world.get_region(regname.BOOMOON2DARK).connect(world.get_region(regname.BOOMOON2GOOMBONUS),
+                                                   "Boo Moon 2: Pumpkin Goomba Bonus Teleporter")
+    world.get_region(regname.BOOMOON2DARK).connect(world.get_region(regname.BOOMOON2TOWER),
+                                                   "Boo Moon 2: Dark Planet Launch Star")
     # Upside Dizzy
     world.get_region(regname.WORLD5).connect(world.get_region(regname.UPDOWN), "World 5 Slot 3 Galaxy")
     # Slipsand

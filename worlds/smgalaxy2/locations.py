@@ -255,9 +255,12 @@ COLDFIRE_loc: dict[str, SMG2LocationData] = {
 
     # Boo Moon Star
 BOOMOON_loc: dict[str, SMG2LocationData] = {
-    locname.BOOMOONSTAR1: SMG2LocationData(["Power Star Location", regname.BOOMOON], regname.BOOMOON),
-    locname.BOOMOONSTAR2: SMG2LocationData(["Power Star Location", regname.BOOMOON], regname.BOOMOON),
-    locname.BOOMOONSTAR3: SMG2LocationData(["Power Star Location", regname.BOOMOON], regname.BOOMOON),
+    locname.BOOMOONSTAR1: SMG2LocationData(["Power Star Location", regname.BOOMOON], regname.BOOMOON,
+                                           regname.BOOMOON1POPUP , 1),
+    locname.BOOMOONSTAR2: SMG2LocationData(["Power Star Location", regname.BOOMOON], regname.BOOMOON,
+                                           regname.BOOMOON2TOWER , 1),
+    locname.BOOMOONSTAR3: SMG2LocationData(["Power Star Location", regname.BOOMOON], regname.BOOMOON,
+                                           regname.BOOMOON1POISON , 1),
 }
 
     # Upside Dizzy
@@ -533,12 +536,12 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.SHIVBURN1LAVA , 1, (GreenStarRule)),
     locname.COLDFIRESTARG3:     SMG2LocationData(["Green Star Location", regname.SHIVBURN], regname.SHIVBURN,
                                                  regname.SHIVBURN1FIREICE , 1, (GreenStarRule)),
-    locname.BOOMOONSTARG1:      SMG2LocationData(["Green Star Location", regname.BOOMOON], regname.BOOMOON, 1,
-                                                 (GreenStarRule)),
-    locname.BOOMOONSTARG2:      SMG2LocationData(["Green Star Location", regname.BOOMOON], regname.BOOMOON, 1,
-                                                 (GreenStarRule)),
-    locname.BOOMOONSTARG3:      SMG2LocationData(["Green Star Location", regname.BOOMOON], regname.BOOMOON, 1,
-                                                 (GreenStarRule)),
+    locname.BOOMOONSTARG1:      SMG2LocationData(["Green Star Location", regname.BOOMOON], regname.BOOMOON,
+                                                 regname.BOOMOON1POISON ,1, (GreenStarRule)),
+    locname.BOOMOONSTARG2:      SMG2LocationData(["Green Star Location", regname.BOOMOON], regname.BOOMOON,
+                                                 regname.BOOMOON1MOON ,1, (GreenStarRule)),
+    locname.BOOMOONSTARG3:      SMG2LocationData(["Green Star Location", regname.BOOMOON], regname.BOOMOON,
+                                                 regname.BOOMOON1POPUP ,1, (GreenStarRule)),
     locname.UPDIZZYSTARG1:      SMG2LocationData(["Green Star Location", regname.UPDOWN], regname.UPDOWN, 1,
                                                  (GreenStarRule)),
     locname.UPDIZZYSTARG2:      SMG2LocationData(["Green Star Location", regname.UPDOWN], regname.UPDOWN, 1,
