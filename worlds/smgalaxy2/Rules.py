@@ -189,6 +189,15 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.WORLD5).connect(world.get_region(regname.UPDOWN), "World 5 Slot 3 Galaxy")
     # Slipsand
     world.get_region(regname.WORLD5).connect(world.get_region(regname.SLIPSAND), "World 5 Slot 4 Galaxy")
+    world.get_region(regname.SLIPSAND).connect(world.get_region(regname.SLIPSAND1LONG), "Slipsand Star 1")
+    world.get_region(regname.SLIPSAND1LONG).connect(world.get_region(regname.SLIPSAND1COINROOM),
+                                                    "Slipsand 1: Green Pipe")
+    world.get_region(regname.SLIPSAND1LONG).connect(world.get_region(regname.SLIPSAND1CUBE),
+                                                    "Slipsand 1: Long Launch Star")
+    world.get_region(regname.SLIPSAND1CUBE).connect(world.get_region(regname.SLIPSAND1SLIDE),
+                                                    "Slipsand 1: Cube Launch Star")
+    world.get_region(regname.SLIPSAND1SLIDE).connect(world.get_region(regname.SLIPSAND1BOSS),
+                                                    "Slipsand 1: Slide Launch Star")
     # Fleet Glide
     world.get_region(regname.WORLD5).connect(world.get_region(regname.FLEETGLIDE), "World 5 Slot 5 Galaxy")
     #Shiverburn

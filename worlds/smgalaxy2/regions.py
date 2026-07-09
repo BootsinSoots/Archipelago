@@ -172,6 +172,17 @@ region_list: dict[str, SMG2RegionData] = {
     regname.SPACSTOR2TOPTOWER:          SMG2RegionData("Planet", [], []),
     regname.SPACSTOR2COINROOM:          SMG2RegionData("Planet", [], []),
     regname.SPACSTOR2GSTAR3:            SMG2RegionData("Planet", [], []),
+    regname.SLIPSAND1LONG:              SMG2RegionData("Planet", [], []),
+    regname.SLIPSAND1COINROOM:          SMG2RegionData("Planet", [], []),
+    regname.SLIPSAND1CUBE:              SMG2RegionData("Planet", [], []),
+    regname.SLIPSAND1SLIDE:             SMG2RegionData("Planet", [], []),
+    regname.SLIPSAND1BOSS:              SMG2RegionData("Planet", [], []),
+    regname.SLIPSAND2LONG1:             SMG2RegionData("Planet", [], []),
+    regname.SLIPSAND2GRAV:              SMG2RegionData("Planet", [], []),
+    regname.SLIPSAND2LONG2:             SMG2RegionData("Planet", [], []),
+    regname.SLIPSAND2LONG3:             SMG2RegionData("Planet", [], []),
+    regname.SLIPSAND2BIRD:              SMG2RegionData("Planet", [], []),
+    regname.SLIPSAND3BOSS:              SMG2RegionData("Planet", [], []),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]

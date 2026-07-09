@@ -235,9 +235,12 @@ SPACSTOR_loc: dict[str, SMG2LocationData] = {
 
     # Slipsand Star
 SLIPSAND_loc: dict[str, SMG2LocationData] = {
-    locname.SLIPSANDSTAR1: SMG2LocationData(["Power Star Location", regname.SLIPSAND], regname.SLIPSAND),
-    locname.SLIPSANDSTAR2: SMG2LocationData(["Power Star Location", regname.SLIPSAND], regname.SLIPSAND),
-    locname.SLIPSANDSTAR3: SMG2LocationData(["Power Star Location", regname.SLIPSAND], regname.SLIPSAND),
+    locname.SLIPSANDSTAR1: SMG2LocationData(["Power Star Location", regname.SLIPSAND], regname.SLIPSAND,
+                                            regname.SLIPSAND1BOSS, 1),
+    locname.SLIPSANDSTAR2: SMG2LocationData(["Power Star Location", regname.SLIPSAND], regname.SLIPSAND,
+                                            regname.SLIPSAND2BIRD, 1),
+    locname.SLIPSANDSTAR3: SMG2LocationData(["Power Star Location", regname.SLIPSAND], regname.SLIPSAND,
+                                            regname.SLIPSAND3BOSS, 1),
 }
 
     # Shiverburn St
@@ -513,12 +516,12 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.SPACSTOR2TOPTOWERBASE , 1, (GreenStarRule)),
     locname.SPACESTORMSTARG3:   SMG2LocationData(["Green Star Location", regname.SPACSTOR], regname.SPACSTOR,
                                                  regname.SPACSTOR2GSTAR3, 1, (GreenStarRule)),
-    locname.SLIPSANDSTARG1:     SMG2LocationData(["Green Star Location", regname.SLIPSAND], regname.SLIPSAND, 1,
-                                                 (GreenStarRule)),
-    locname.SLIPSANDSTARG2:     SMG2LocationData(["Green Star Location", regname.SLIPSAND], regname.SLIPSAND, 1,
-                                                 (GreenStarRule)),
-    locname.SLIPSANDSTARG3:     SMG2LocationData(["Green Star Location", regname.SLIPSAND], regname.SLIPSAND, 1,
-                                                 (GreenStarRule)),
+    locname.SLIPSANDSTARG1:     SMG2LocationData(["Green Star Location", regname.SLIPSAND], regname.SLIPSAND,
+                                                 regname.SLIPSAND1CUBE , 1, (GreenStarRule)),
+    locname.SLIPSANDSTARG2:     SMG2LocationData(["Green Star Location", regname.SLIPSAND], regname.SLIPSAND,
+                                                 regname.SLIPSAND1SLIDE , 1, (GreenStarRule)),
+    locname.SLIPSANDSTARG3:     SMG2LocationData(["Green Star Location", regname.SLIPSAND], regname.SLIPSAND,
+                                                 regname.SLIPSAND1SLIDE , 1, (GreenStarRule)),
     locname.COLDFIRESTARG1:     SMG2LocationData(["Green Star Location", regname.SHIVBURN], regname.SHIVBURN, 1,
                                                  (GreenStarRule)),
     locname.COLDFIRESTARG2:     SMG2LocationData(["Green Star Location", regname.SHIVBURN], regname.SHIVBURN, 1,
