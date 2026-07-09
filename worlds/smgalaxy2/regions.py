@@ -6,6 +6,7 @@ from rule_builder.rules import CanReachLocation
 
 from .Constants.Names import region_names as regname
 from .Constants.Names import location_names as locname
+from .Constants.Names.region_names import SPACSTOR2GSTAR3
 from .Options import SMG2Options
 from .locations import SMG2Location, base_stars_locations, SMG2LocationData, green_star_locations
 
@@ -114,12 +115,12 @@ region_list: dict[str, SMG2RegionData] = {
     regname.UPDOWN: SMG2RegionData("Minor", [regname.WORLD5], [], 0x58, "HoneyBeeExGalaxy"),
     regname.SLIMSPRI: SMG2RegionData("Minor", [regname.WORLD6], [], 0x58, "HoneyBeeExGalaxy"),
     # World S Galaxies
-    regname.MARIO: SMG2RegionData("Special", [regname.WORLD6], [], 0x58, "HoneyBeeExGalaxy"),
-    regname.ROLLCOAST: SMG2RegionData("Special", [regname.WORLD6], [], 0x58, "HoneyBeeExGalaxy"),
-    regname.TWISTTRI: SMG2RegionData("Special", [regname.WORLD6], [], 0x58, "HoneyBeeExGalaxy"),
-    regname.STONECYC: SMG2RegionData("Special", [regname.WORLD6], [], 0x58, "HoneyBeeExGalaxy"),
+    regname.MARIO: SMG2RegionData("Special", [regname.WORLD7], [], 0x58, "HoneyBeeExGalaxy"),
+    regname.ROLLCOAST: SMG2RegionData("Special", [regname.WORLD7], [], 0x58, "HoneyBeeExGalaxy"),
+    regname.TWISTTRI: SMG2RegionData("Special", [regname.WORLD7], [], 0x58, "HoneyBeeExGalaxy"),
+    regname.STONECYC: SMG2RegionData("Special", [regname.WORLD7], [], 0x58, "HoneyBeeExGalaxy"),
     regname.BOSSBLITZ: SMG2RegionData("Special", [regname.WORLD7], [], 0x94, "KoopaBattleVs3Galaxy"),
-    regname.GRANDMASTER: SMG2RegionData("Goal", [regname.WORLD6], [], 0x58, "HoneyBeeExGalaxy"),
+    regname.GRANDMASTER: SMG2RegionData("Goal", [regname.WORLD7], [], 0x58, "HoneyBeeExGalaxy"),
     # Planetoids
     regname. : SMG2RegionData("Planet", [], []),
     regname.SKYOBS1STARTTOPSIDE:        SMG2RegionData("Planet", [], []),
@@ -160,6 +161,17 @@ region_list: dict[str, SMG2RegionData] = {
     regname.CLOUCOUR2CASTLE1:           SMG2RegionData("Planet", [], []),
     regname.CLOUCOUR2CASTLE2:           SMG2RegionData("Planet", [], []),
     regname.CLOUCOUR2FINAL:             SMG2RegionData("Planet", [], []),
+    regname.SPACSTOR1PULL:              SMG2RegionData("Planet", [], []),
+    regname.SPACSTOR1SATELLITE:         SMG2RegionData("Planet", [], []),
+    regname.SPACSTOR1REDCANOUT:         SMG2RegionData("Planet", [], []),
+    regname.SPACSTOR1REDCANIN:          SMG2RegionData("Planet", [], []),
+    regname.SPACSTOR1TOPMAN:            SMG2RegionData("Planet", [], []),
+    regname.SPACSTOR1PULLPATH:          SMG2RegionData("Planet", [], []),
+    regname.SPACSTOR2PULL:              SMG2RegionData("Planet", [], []),
+    regname.SPACSTOR2TOPTOWERBASE:      SMG2RegionData("Planet", [], []),
+    regname.SPACSTOR2TOPTOWER:          SMG2RegionData("Planet", [], []),
+    regname.SPACSTOR2COINROOM:          SMG2RegionData("Planet", [], []),
+    regname.SPACSTOR2GSTAR3:            SMG2RegionData("Planet", [], []),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]

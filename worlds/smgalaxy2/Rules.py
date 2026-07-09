@@ -164,6 +164,25 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                 | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
     # Space Storm
     world.get_region(regname.WORLD5).connect(world.get_region(regname.SPACSTOR), "World 5 Slot 1 Galaxy")
+    world.get_region(regname.SPACSTOR).connect(world.get_region(regname.SPACSTOR1PULL), "Space Storm Star 1")
+    world.get_region(regname.SPACSTOR1PULL).connect(world.get_region(regname.SPACSTOR1SATELLITE),
+                                                    "Space Storm 1: Pull to Launch Star")
+    world.get_region(regname.SPACSTOR1SATELLITE).connect(world.get_region(regname.SPACSTOR1REDCANOUT),
+                                                    "Space Storm 1: Satellite Launch Star")
+    world.get_region(regname.SPACSTOR1REDCANOUT).connect(world.get_region(regname.SPACSTOR1REDCANIN))
+    world.get_region(regname.SPACSTOR1REDCANIN).connect(world.get_region(regname.SPACSTOR1TOPMAN),
+                                                    "Space Storm 1: Canister Launch Star")
+    world.get_region(regname.SPACSTOR1TOPMAN).connect(world.get_region(regname.SPACSTOR1PULLPATH),
+                                                    "Space Storm 1: Pull Star Path")
+    world.get_region(regname.SPACSTOR).connect(world.get_region(regname.SPACSTOR2PULL), "Space Storm Star 2")
+    world.get_region(regname.SPACSTOR2PULL).connect(world.get_region(regname.SPACSTOR2TOPTOWERBASE),
+                                                    "Space Storm 2: Pull to Launch Star")
+    world.get_region(regname.SPACSTOR2TOPTOWERBASE).connect(world.get_region(regname.SPACSTOR2TOPTOWER),
+                                                    "Space Storm 2: Tower Base Sling Star")
+    world.get_region(regname.SPACSTOR2TOPTOWERBASE).connect(world.get_region(regname.SPACSTOR2GSTAR3))
+    world.get_region(regname.SPACSTOR2TOPTOWER).connect(world.get_region(regname.SPACSTOR2COINROOM),
+                                                    "Space Storm 2: Tower Green Pipe")
+    world.get_region(regname.SPACSTOR2TOPTOWER).connect(world.get_region(regname.SPACSTOR2GSTAR3))
     # Boo Moon
     world.get_region(regname.WORLD5).connect(world.get_region(regname.BOOMOON), "World 5 Slot 2 Galaxy")
     # Upside Dizzy
