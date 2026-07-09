@@ -35,7 +35,7 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.SKYOBS1GREENHILL).connect(world.get_region(regname.SKYOBS1OCTOBONUS),
                                                        "Sky Station 1: Green Hill Teleporter")
     world.get_region(regname.SKYOBS1GREENHILL).connect(world.get_region(regname.SKYOBS1MINIPLANETS),
-                                                       "Sky Station1: Green Hill Launch Star")
+                                                       "Sky Station 1: Green Hill Launch Star")
     world.get_region(regname.SKYOBS1MINIPLANETS).connect(world.get_region(regname.SKYOBS1CYLINDER),
                                                        "Sky Station 1: Mini Planets Launch Star")
     world.get_region(regname.SKYOBS1CYLINDER).connect(world.get_region(regname.SKYOBS1BEFOREBOSS),
@@ -95,12 +95,39 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.TALLTRUNK).connect(world.get_region(regname.TALLTRUNK1BIGTREE), "Tall Trunk Star 1")
     world.get_region(regname.TALLTRUNK1BIGTREE).connect(world.get_region(regname.TALLTRUNK1LOG),
                                                         "Tall Trunk 1: Big Tree Launch Star")
+    world.get_region(regname.TALLTRUNK1BIGTREE).connect(world.get_region(regname.TALLTRUNK1PIRANHABONUS),
+                                                        "Tall Trunk 1: Piranha Bonus Teleporter")
     world.get_region(regname.TALLTRUNK1LOG).connect(world.get_region(regname.TALLTRUNK1WOODCIRClE),
                                                         "Tall Trunk 1: Carved Log Launch Star")
+    world.get_region(regname.TALLTRUNK1LOG).connect(world.get_region(regname.TALLTRUNK1DICEPIPE),
+                                                        "Tall Trunk 1: Carved Log Green pipe")
     world.get_region(regname.TALLTRUNK).connect(world.get_region(regname.TALLTRUNK2BIGTREE), "Tall Trunk Star 2")
+    world.get_region(regname.TALLTRUNK2BIGTREE).connect(world.get_region(regname.TALLTRUNK2PIRANHABONUS),
+                                                        "Tall Trunk 2: Piranha Bonus Teleporter")
+    world.get_region(regname.TALLTRUNK2BIGTREE).connect(world.get_region(regname.TALLTRUNK2SLIDE),
+                                                        "Tall Trunk 2: Big Tree Launch Star")
+    world.get_region(regname.TALLTRUNK2SLIDE).connect(world.get_region(regname.TALLTRUNK2SLIDEND))
     world.get_region(regname.TALLTRUNK).connect(world.get_region(regname.TALLTRUNK3PCOINSLIDE), "Tall Trunk Star 3")
+    world.get_region(regname.TALLTRUNK3PCOINSLIDE).connect(world.get_region(regname.TALLTRUNK3PCOINEND))
     # Cloudy Court
     world.get_region(regname.WORLD3).connect(world.get_region(regname.CLOUCOUR), "World 3 Slot 2 Galaxy")
+    world.get_region(regname.CLOUCOUR).connect(world.get_region(regname.CLOUCOUR1LANDING), "Cloudy Court Star 1")
+    world.get_region(regname.CLOUCOUR1LANDING).connect(world.get_region(regname.CLOUCOUR1CYMBAL))
+    world.get_region(regname.CLOUCOUR1CYMBAL).connect(world.get_region(regname.CLOUCOUR1TOWERS),
+                                                      "Cloudy Court 1: Cymbal Launch Star")
+    world.get_region(regname.CLOUCOUR1TOWERS).connect(world.get_region(regname.CLOUCOUR3PCOINS),
+                                                      "Cloudy Court 3: Hungry Luma")
+    world.get_region(regname.CLOUCOUR1TOWERS).connect(world.get_region(regname.CLOUCOUR1PARAGOOMBONUS),
+                                                      "Cloudy Court 1: Paragoomba Bonus Teleporter")
+    world.get_region(regname.CLOUCOUR1TOWERS).connect(world.get_region(regname.CLOUCOUR1CASTLE),
+                                                      "Cloudy Court 1: Tower Launch Star")
+    world.get_region(regname.CLOUCOUR).connect(world.get_region(regname.CLOUCOUR2LANDING), "Cloudy Court Star 2")
+    world.get_region(regname.CLOUCOUR2LANDING).connect(world.get_region(regname.CLOUCOUR2CASTLE1),
+                                                       "Cloudy Court 2: Launch Star")
+    world.get_region(regname.CLOUCOUR2CASTLE1).connect(world.get_region(regname.CLOUCOUR2CASTLE2),
+                                                       "Cloudy Court 2: Wall Jump Sling Star")
+    world.get_region(regname.CLOUCOUR2CASTLE2).connect(world.get_region(regname.CLOUCOUR2FINAL),
+                                                       "Cloudy Court 2: Final Sling Star")
     # Haunty halls
     world.get_region(regname.WORLD3).connect(world.get_region(regname.HAUNHALL), "World 3 Slot 3 Galaxy")
     # Freezy Flake

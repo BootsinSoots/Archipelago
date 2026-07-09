@@ -125,16 +125,22 @@ LAVALAIR_loc: dict[str, SMG2LocationData] = {
 # World 3
 # Tall Trunk St
 TALLTREE_loc: dict[str, SMG2LocationData] = {
-    locname.TALLTREESTAR1: SMG2LocationData(["Power Star Location", regname.TALLTRUNK], regname.TALLTRUNK),
-    locname.TALLTREESTAR2: SMG2LocationData(["Power Star Location", regname.TALLTRUNK], regname.TALLTRUNK),
-    locname.TALLTREESTAR3: SMG2LocationData(["Power Star Location", regname.TALLTRUNK], regname.TALLTRUNK),
+    locname.TALLTREESTAR1: SMG2LocationData(["Power Star Location", regname.TALLTRUNK], regname.TALLTRUNK,
+                                            regname.TALLTRUNK1WOODCIRClE,1,),
+    locname.TALLTREESTAR2: SMG2LocationData(["Power Star Location", regname.TALLTRUNK], regname.TALLTRUNK,
+                                            regname.TALLTRUNK2SLIDEND,1,),
+    locname.TALLTREESTAR3: SMG2LocationData(["Power Star Location", regname.TALLTRUNK], regname.TALLTRUNK,
+                                            regname.TALLTRUNK3PCOINEND,1,),
 }
 
 # Cloudy Court
 CLOUDCOURT_loc: dict[str, SMG2LocationData] = {
-    locname.CLOUDCOURTSTAR1: SMG2LocationData(["Power Star Location", regname.CLOUCOUR], regname.CLOUCOUR),
-    locname.CLOUDCOURTSTAR2: SMG2LocationData(["Power Star Location", regname.CLOUCOUR], regname.CLOUCOUR),
-    locname.CLOUDCOURTSTAR3: SMG2LocationData(["Power Star Location", regname.CLOUCOUR], regname.CLOUCOUR),
+    locname.CLOUDCOURTSTAR1: SMG2LocationData(["Power Star Location", regname.CLOUCOUR], regname.CLOUCOUR,
+                                              regname.CLOUCOUR1CASTLE,1),
+    locname.CLOUDCOURTSTAR2: SMG2LocationData(["Power Star Location", regname.CLOUCOUR], regname.CLOUCOUR,
+                                              regname.CLOUCOUR2FINAL,1),
+    locname.CLOUDCOURTSTAR3: SMG2LocationData(["Power Star Location", regname.CLOUCOUR], regname.CLOUCOUR,
+                                              regname.CLOUCOUR3PCOINS,1),
 }
 
     # Haunty Halls
@@ -426,12 +432,12 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  (GreenStarRule)),
     locname.LAVALAIRSTARG2:     SMG2LocationData(["Green Star Location", regname.BOWSER1], regname.BOWSER1, 1,
                                                  (GreenStarRule)),
-    locname.TALLTREESTARG1:     SMG2LocationData(["Green Star Location", regname.TALLTRUNK], regname.TALLTRUNK, 1,
-                                                 (GreenStarRule)),
-    locname.TALLTREESTARG2:     SMG2LocationData(["Green Star Location", regname.TALLTRUNK], regname.TALLTRUNK, 1,
-                                                 (GreenStarRule)),
-    locname.TALLTREESTARG3:     SMG2LocationData(["Green Star Location", regname.TALLTRUNK], regname.TALLTRUNK, 1,
-                                                 (GreenStarRule)),
+    locname.TALLTREESTARG1:     SMG2LocationData(["Green Star Location", regname.TALLTRUNK], regname.TALLTRUNK,
+                                                 regname.TALLTRUNK1BIGTREE, 1, (GreenStarRule)),
+    locname.TALLTREESTARG2:     SMG2LocationData(["Green Star Location", regname.TALLTRUNK], regname.TALLTRUNK,
+                                                 regname.TALLTRUNK1LOG, 1, (GreenStarRule)),
+    locname.TALLTREESTARG3:     SMG2LocationData(["Green Star Location", regname.TALLTRUNK], regname.TALLTRUNK,
+                                                 regname.TALLTRUNK2SLIDE, 1, (GreenStarRule)),
     locname.CLOUDCOURTSTARG1:   SMG2LocationData(["Green Star Location", regname.CLOUCOUR], regname.CLOUCOUR, 1,
                                                  (GreenStarRule)),
     locname.CLOUDCOURTSTARG2:   SMG2LocationData(["Green Star Location", regname.CLOUCOUR], regname.CLOUCOUR, 1,
