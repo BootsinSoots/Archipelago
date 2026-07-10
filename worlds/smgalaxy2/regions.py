@@ -265,6 +265,12 @@ region_list: dict[str, SMG2RegionData] = {
     regname.FLUFFBLUFF2TREE:            SMG2RegionData("Planet", [], []),
     regname.FLIPSWAP1:                  SMG2RegionData("Planet", [], []),
     regname.FLIPSWAP2:                  SMG2RegionData("Planet", [], []),
+    regname.RIGHTDOWNLANDING:           SMG2RegionData("Planet", [], []),
+    regname.RIGHTDOWNCORRIDOR:          SMG2RegionData("Planet", [], []),
+    regname.RIGHTDOWNBONUS:             SMG2RegionData("Planet", [], []),
+    regname.RIGHTDOWNCOINROOM:          SMG2RegionData("Planet", [], []),
+    regname.RIGHTDOWNBREAKER:           SMG2RegionData("Planet", [], []),
+    regname.RIGHTDOWNTOPVIEW:           SMG2RegionData("Planet", [], []),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]

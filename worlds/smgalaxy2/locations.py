@@ -68,8 +68,10 @@ FLUFBLUF_loc: dict[str, SMG2LocationData] = {
 
 # Rightside Dow
 RIGHTDOWN_loc: dict[str, SMG2LocationData] = {
-    locname.RIGHTDOWNSTAR1: SMG2LocationData(["Power Star Location",regname.RIGHTDOWN],regname.RIGHTDOWN),
-    locname.RIGHTDOWNSTAR2: SMG2LocationData(["Power Star Location",regname.RIGHTDOWN],regname.RIGHTDOWN),
+    locname.RIGHTDOWNSTAR1: SMG2LocationData(["Power Star Location",regname.RIGHTDOWN],regname.RIGHTDOWN,
+                                             regname.RIGHTDOWNTOPVIEW, 1),
+    locname.RIGHTDOWNSTAR2: SMG2LocationData(["Power Star Location",regname.RIGHTDOWN],regname.RIGHTDOWN,
+                                             regname.RIGHTDOWNBREAKER, 1),
 }
 
 # Flip-Swap Sta
@@ -413,10 +415,10 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.FLUFFBLUFF1BUILDING, 1, ),
     locname.FLUFBLUFSTARG3:     SMG2LocationData(["Green Star Location", regname.FLUFFBLUFF], regname.FLUFFBLUFF,
                                                  regname.FLUFFBLUFF1TREECLIMB, 1, ),
-    locname.RIGHTDOWNSTARG1:    SMG2LocationData(["Green Star Location", regname.RIGHTDOWN], regname.RIGHTDOWN, 1,
-                                                 ),
-    locname.RIGHTDOWNSTARG2:    SMG2LocationData(["Green Star Location", regname.RIGHTDOWN], regname.RIGHTDOWN, 1,
-                                                 ),
+    locname.RIGHTDOWNSTARG1:    SMG2LocationData(["Green Star Location", regname.RIGHTDOWN], regname.RIGHTDOWN,
+                                                 regname.RIGHTDOWNCORRIDOR,1,),
+    locname.RIGHTDOWNSTARG2:    SMG2LocationData(["Green Star Location", regname.RIGHTDOWN], regname.RIGHTDOWN,
+                                                 regname.RIGHTDOWNTOPVIEW,1,),
     locname.FLIPSWAPSTARG1:     SMG2LocationData(["Green Star Location", regname.FLIPSWAP], regname.FLIPSWAP,
                                                  regname.FLIPSWAP1, 1, ),
     locname.FLIPSWAPSTARG2:     SMG2LocationData(["Green Star Location", regname.FLIPSWAP], regname.FLIPSWAP,

@@ -147,6 +147,17 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.FLUFFBLUFF2CLIFF).connect(world.get_region(regname.FLUFFBLUFF2TREE))
     # Righside Down
     world.get_region(regname.WORLD1).connect(world.get_region(regname.RIGHTDOWN), "World 1 Slot 6 Galaxy")
+    world.get_region(regname.RIGHTDOWN).connect(world.get_region(regname.RIGHTDOWNLANDING), "Rightside Down Star 1")
+    world.get_region(regname.RIGHTDOWNLANDING).connect(world.get_region(regname.RIGHTDOWNCORRIDOR),
+                                                "Rightside Down: Flower Fling")
+    world.get_region(regname.RIGHTDOWNCORRIDOR).connect(world.get_region(regname.RIGHTDOWNCOINROOM),
+                                                "Rightside Down: Green Pipe")
+    world.get_region(regname.RIGHTDOWNCOINROOM).connect(world.get_region(regname.RIGHTDOWNBREAKER),
+                                                "Rightside Down: Orange Pipe")
+    world.get_region(regname.RIGHTDOWNCORRIDOR).connect(world.get_region(regname.RIGHTDOWNBONUS),
+                                                "Rightside Down: Paragoomba Bonus Teleporter")
+    world.get_region(regname.RIGHTDOWNCORRIDOR).connect(world.get_region(regname.RIGHTDOWNTOPVIEW),
+                                                "Rightside Down: Flower Fling")
     # Fiery Fleet
     world.get_region(regname.WORLD1).connect(world.get_region(regname.BOWJR1), "World 1 Slot 7 Galaxy")
     # World 2
