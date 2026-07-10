@@ -160,6 +160,12 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                 "Rightside Down: Flower Fling")
     # Fiery Fleet
     world.get_region(regname.WORLD1).connect(world.get_region(regname.BOWJR1), "World 1 Slot 7 Galaxy")
+    world.get_region(regname.BOWJR1).connect(world.get_region(regname.FIREFLOT1LANDING), "Fiery Flotilla Star 1")
+    world.get_region(regname.FIREFLOT1LANDING).connect(world.get_region(regname.FIREFLOT1LAVA),
+                                                       "Fiery Flotilla 1: Fort Sling Star")
+    world.get_region(regname.FIREFLOT1LAVA).connect(world.get_region(regname.FIREFLOT1BOSS),
+                                                       "Fiery Flotilla 1: Lava Planet Launch Star")
+    world.get_region(regname.BOWJR1).connect(world.get_region(regname.FIREFLOT2BOSS), "Fiery Flotilla Star 2")
     # World 2
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD2), "World 2 Map",
                                            rule=(Has(itemname.GRAND)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))

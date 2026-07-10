@@ -84,8 +84,10 @@ FLIPSWAP_loc: dict[str, SMG2LocationData] = {
 
 # Bowser Jr.s F
 FIREFLOT_loc: dict[str, SMG2LocationData] = {
-locname.FIREFLOTSTAR1:  SMG2LocationData(["Power Star Location", regname.BOWJR1], regname.BOWJR1),
-locname.FIREFLOTSTAR2:  SMG2LocationData(["Power Star Location", regname.BOWJR1], regname.BOWJR1),
+locname.FIREFLOTSTAR1:  SMG2LocationData(["Power Star Location", regname.BOWJR1], regname.BOWJR1,
+                                         regname.FIREFLOT1BOSS, 1),
+locname.FIREFLOTSTAR2:  SMG2LocationData(["Power Star Location", regname.BOWJR1], regname.BOWJR1,
+                                         regname.FIREFLOT2BOSS, 1),
 }
 
 # World 2
@@ -423,10 +425,10 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.FLIPSWAP1, 1, ),
     locname.FLIPSWAPSTARG2:     SMG2LocationData(["Green Star Location", regname.FLIPSWAP], regname.FLIPSWAP,
                                                  regname.FLIPSWAP1, 1, ),
-    locname.FIREFLOTSTARG1:     SMG2LocationData(["Green Star Location", regname.BOWJR1], regname.BOWJR1, 1,
-                                                 ),
-    locname.FIREFLOTSTARG2:     SMG2LocationData(["Green Star Location", regname.BOWJR1], regname.BOWJR1, 1,
-                                                 ),
+    locname.FIREFLOTSTARG1:     SMG2LocationData(["Green Star Location", regname.BOWJR1], regname.BOWJR1,
+                                                 regname.FIREFLOT1LANDING, 1,),
+    locname.FIREFLOTSTARG2:     SMG2LocationData(["Green Star Location", regname.BOWJR1], regname.BOWJR1,
+                                                 regname.FIREFLOT1LAVA, 1,),
     locname.PUZZPLANKSTARG1:    SMG2LocationData(["Green Star Location", regname.PUZZPLAN], regname.PUZZPLAN, 1,
                                                  ),
     locname.PUZZPLANKSTARG2:    SMG2LocationData(["Green Star Location", regname.PUZZPLAN], regname.PUZZPLAN, 1,
