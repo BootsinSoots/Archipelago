@@ -396,6 +396,19 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                     "Melty Monster 2: Roll to Launch Star")
     # Clockwork Ruins
     world.get_region(regname.WORLD6).connect(world.get_region(regname.CLOCKWORK), "World 6 Slot 2 Galaxy")
+    world.get_region(regname.CLOCKWORK).connect(world.get_region(regname.CLOCKWORK1COGS), "Clockwork Ruins Star 1")
+    world.get_region(regname.CLOCKWORK1COGS).connect(world.get_region(regname.CLOCKWORK1PUSH),
+                                                     "Clockwork Ruins 1: Cog Wall Launch Star")
+    world.get_region(regname.CLOCKWORK1PUSH).connect(world.get_region(regname.CLOCKWORK1WHEELSB),
+                                                     "Clockwork Ruins 1: Push Block Launch Star")
+    world.get_region(regname.CLOCKWORK1WHEELSB).connect(world.get_region(regname.CLOCKWORK1WHEELST))
+    world.get_region(regname.CLOCKWORK1WHEELST).connect(world.get_region(regname.CLOCKWORK1COINROOM),
+                                                     "Clockwork Ruins 1: Wheel Planet Green Pipe")
+    world.get_region(regname.CLOCKWORK1COGS).connect(world.get_region(regname.CLOCKWORK3HAMMER),
+                                                     "Clockwork Ruins 3: Hungry Luma")
+    world.get_region(regname.CLOCKWORK3HAMMER).connect(world.get_region(regname.CLOCKWORK3HAMMERTOP),
+                                                     "Clockwork Ruins 3: Hammer Zone Green Pipe")
+    world.get_region(regname.CLOCKWORK).connect(world.get_region(regname.CLOCKWORK2COGS), "Clockwork Ruins Star 2")
     # Flash Black
     world.get_region(regname.WORLD6).connect(world.get_region(regname.FLASHBLACK), "World 6 Slot 3 Galaxy")
     # Throwback

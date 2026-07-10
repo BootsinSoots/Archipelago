@@ -315,9 +315,12 @@ MELTMONS_loc: dict[str, SMG2LocationData] = {
 
     # Clockwork Rui
 CLOCKRUIN_loc: dict[str, SMG2LocationData] = {
-    locname.CLOCKRUINSTAR1: SMG2LocationData(["Power Star Location", regname.CLOCKWORK], regname.CLOCKWORK),
-    locname.CLOCKRUINSTAR2: SMG2LocationData(["Power Star Location", regname.CLOCKWORK], regname.CLOCKWORK),
-    locname.CLOCKRUINSTAR3: SMG2LocationData(["Power Star Location", regname.CLOCKWORK], regname.CLOCKWORK),
+    locname.CLOCKRUINSTAR1: SMG2LocationData(["Power Star Location", regname.CLOCKWORK], regname.CLOCKWORK,
+                                             regname.CLOCKWORK1WHEELST, 1),
+    locname.CLOCKRUINSTAR2: SMG2LocationData(["Power Star Location", regname.CLOCKWORK], regname.CLOCKWORK,
+                                             regname.CLOCKWORK2COGS, 1),
+    locname.CLOCKRUINSTAR3: SMG2LocationData(["Power Star Location", regname.CLOCKWORK], regname.CLOCKWORK,
+                                             regname.CLOCKWORK3HAMMERTOP, 1),
 }
 
     # Throwback Sta
@@ -582,12 +585,12 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.MELTY1LAVAWAVE3, 1, ),
     locname.MELTMONSSTARG3:     SMG2LocationData(["Green Star Location", regname.MELTY], regname.MELTY,
                                                  regname.MELTY2BOWLING, 1, ),
-    locname.CLOCKRUINSTARG1:    SMG2LocationData(["Green Star Location", regname.CLOCKWORK], regname.CLOCKWORK, 1,
-                                                 ),
-    locname.CLOCKRUINSTARG2:    SMG2LocationData(["Green Star Location", regname.CLOCKWORK], regname.CLOCKWORK, 1,
-                                                 ),
-    locname.CLOCKRUINSTARG3:    SMG2LocationData(["Green Star Location", regname.CLOCKWORK], regname.CLOCKWORK, 1,
-                                                 ),
+    locname.CLOCKRUINSTARG1:    SMG2LocationData(["Green Star Location", regname.CLOCKWORK], regname.CLOCKWORK,
+                                                 regname.CLOCKWORK1COGS, 1, ),
+    locname.CLOCKRUINSTARG2:    SMG2LocationData(["Green Star Location", regname.CLOCKWORK], regname.CLOCKWORK,
+                                                 regname.CLOCKWORK1PUSH, 1, ),
+    locname.CLOCKRUINSTARG3:    SMG2LocationData(["Green Star Location", regname.CLOCKWORK], regname.CLOCKWORK,
+                                                 regname.CLOCKWORK1WHEELST, 1, ),
     locname.THROWBACKSTARG1:    SMG2LocationData(["Green Star Location", regname.WHOMPFORT], regname.WHOMPFORT, 1,
                                                  ),
     locname.THROWBACKSTARG2:    SMG2LocationData(["Green Star Location", regname.WHOMPFORT], regname.WHOMPFORT, 1,
