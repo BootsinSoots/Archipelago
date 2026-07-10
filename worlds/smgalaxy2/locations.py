@@ -33,7 +33,7 @@ SKYOBS_loc: dict[str, SMG2LocationData] = {
     locname.SKYSTASTAR2: SMG2LocationData([regname.SKYOBS, "Power Star Location"],
                                           regname.SKYOBS, regname.SKYOBS2GRASSFLEET, 1, ),
     locname.SKYSTASTAR3: SMG2LocationData([regname.SKYOBS, "Power Star Location"],
-                                          regname.SKYOBS, regname.SKYOBS1BOSS, 1, ),
+                                          regname.SKYOBS, regname.SKYOBS3BOSS, 1, ),
 }
 
 # Yoshi Star St
