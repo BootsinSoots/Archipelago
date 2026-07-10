@@ -284,8 +284,10 @@ FLETGLIDE_loc: dict[str, SMG2LocationData] = {
 
     # Bowser Jr.'s
 BOOMBUNK_loc: dict[str, SMG2LocationData] = {
-    locname.BOOMBUNKSTAR1: SMG2LocationData(["Power Star Location", regname.BOWJR3], regname.BOWJR3),
-    locname.BOOMBUNKSTAR2: SMG2LocationData(["Power Star Location", regname.BOWJR3], regname.BOWJR3),
+    locname.BOOMBUNKSTAR1: SMG2LocationData(["Power Star Location", regname.BOWJR3], regname.BOWJR3,
+                                            regname.BOOMBUNK1BOSS, 1),
+    locname.BOOMBUNKSTAR2: SMG2LocationData(["Power Star Location", regname.BOWJR3], regname.BOWJR3,
+                                            regname.BOOMBUNK2BOSS, 1),
 }
 
     # World 6
@@ -555,10 +557,10 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.FLEETGLIDECOURSE, 1, ),
     locname.FLEETFLYSTARG2:     SMG2LocationData(["Green Star Location", regname.FLEETGLIDE], regname.FLEETGLIDE,
                                                  regname.FLEETGLIDECOURSE, 1, ),
-    locname.BOOMBUNKSTARG1:     SMG2LocationData(["Green Star Location", regname.BOWJR3], regname.BOWJR3, 1,
-                                                 ),
-    locname.BOOMBUNKSTARG2:     SMG2LocationData(["Green Star Location", regname.BOWJR3], regname.BOWJR3, 1,
-                                                 ),
+    locname.BOOMBUNKSTARG1:     SMG2LocationData(["Green Star Location", regname.BOWJR3], regname.BOWJR3,
+                                                 regname.BOOMBUNK1BOOMER, 1, ),
+    locname.BOOMBUNKSTARG2:     SMG2LocationData(["Green Star Location", regname.BOWJR3], regname.BOWJR3,
+                                                 regname.BOOMBUNK1CHECK, 1, ),
     locname.MELTMONSSTARG1:     SMG2LocationData(["Green Star Location", regname.MELTY], regname.MELTY, 1,
                                                  ),
     locname.MELTMONSSTARG2:     SMG2LocationData(["Green Star Location", regname.MELTY], regname.MELTY, 1,

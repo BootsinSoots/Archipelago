@@ -122,7 +122,6 @@ region_list: dict[str, SMG2RegionData] = {
     regname.BOSSBLITZ: SMG2RegionData("Special", [regname.WORLD7], [], 0x94, "KoopaBattleVs3Galaxy"),
     regname.GRANDMASTER: SMG2RegionData("Goal", [regname.WORLD7], [], 0x58, "HoneyBeeExGalaxy"),
     # Planetoids
-    regname. : SMG2RegionData("Planet", [], []),
     regname.SKYOBS1STARTTOPSIDE:        SMG2RegionData("Planet", [], []),
     regname.SKYOBS2STARTTOPSIDE:        SMG2RegionData("Planet", [], []),
     regname.SKYOBS1STARTBOTTOM:         SMG2RegionData("Planet", [], []),
@@ -219,6 +218,16 @@ region_list: dict[str, SMG2RegionData] = {
     regname.UPDOWNFIRE:                 SMG2RegionData("Planet", [], []),
     regname.UPDOWNGRAV:                 SMG2RegionData("Planet", [], []),
     regname.UPDOWNBREAKER:              SMG2RegionData("Planet", [], []),
+    regname.BOOMBUNK1HAMMER:            SMG2RegionData("Planet", [], []),
+    regname.BOOMBUNK1BOOMER:            SMG2RegionData("Planet", [], []),
+    regname.BOOMBUNK1CHECK:             SMG2RegionData("Planet", [], []),
+    regname.BOOMBUNK1PLAT:              SMG2RegionData("Planet", [], []),
+    regname.BOOMBUNK1BOSS:              SMG2RegionData("Planet", [], []),
+    regname.BOOMBUNK2HAMMER:            SMG2RegionData("Planet", [], []),
+    regname.BOOMBUNK2BOOMER:            SMG2RegionData("Planet", [], []),
+    regname.BOOMBUNK2CHECK:             SMG2RegionData("Planet", [], []),
+    regname.BOOMBUNK2DARK:              SMG2RegionData("Planet", [], []),
+    regname.BOOMBUNK2BOSS:              SMG2RegionData("Planet", [], []),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]

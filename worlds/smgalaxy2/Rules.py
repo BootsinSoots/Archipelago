@@ -274,6 +274,24 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                        "Shiverburn 2: Green Toadship Launch Star")
     # Boom bunker
     world.get_region(regname.WORLD5).connect(world.get_region(regname.BOWJR3), "World 5 Slot 7 Galaxy")
+    world.get_region(regname.BOWJR3).connect(world.get_region(regname.BOOMBUNK1HAMMER), "Boom Bunker Star 1")
+    world.get_region(regname.BOOMBUNK1HAMMER).connect(world.get_region(regname.BOOMBUNK1BOOMER),
+                                                      "Boom Bunker 1: Hammer Hilt Cannon")
+    world.get_region(regname.BOOMBUNK1BOOMER).connect(world.get_region(regname.BOOMBUNK1CHECK),
+                                                      "Boom Bunker 1: Fort Launch Star")
+    world.get_region(regname.BOOMBUNK1CHECK).connect(world.get_region(regname.BOOMBUNK1PLAT),
+                                                      "Boom Bunker 1: Checkpoint Cannon")
+    world.get_region(regname.BOOMBUNK1PLAT).connect(world.get_region(regname.BOOMBUNK1BOSS),
+                                                      "Boom Bunker 1: Platform Launch Star")
+    world.get_region(regname.BOWJR3).connect(world.get_region(regname.BOOMBUNK2HAMMER), "Boom Bunker Star 2")
+    world.get_region(regname.BOOMBUNK2HAMMER).connect(world.get_region(regname.BOOMBUNK2BOOMER),
+                                                      "Boom Bunker 2: Hammer Hilt Cannon")
+    world.get_region(regname.BOOMBUNK2BOOMER).connect(world.get_region(regname.BOOMBUNK2CHECK),
+                                                      "Boom Bunker 2: Fort Launch Star")
+    world.get_region(regname.BOOMBUNK2CHECK).connect(world.get_region(regname.BOOMBUNK2DARK),
+                                                      "Boom Bunker 2: Checkpoint Cannon")
+    world.get_region(regname.BOOMBUNK2DARK).connect(world.get_region(regname.BOOMBUNK2BOSS),
+                                                      "Boom Bunker 2: Dark Matter Launch Star")
     # World 6
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD6), "World 6 Map",
                                            rule=(Has(itemname.GRAND, 5)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
