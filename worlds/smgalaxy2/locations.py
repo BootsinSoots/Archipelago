@@ -6,7 +6,6 @@ from rule_builder.rules import Rule, Has, True_
 from .Constants.Names import region_names as regname
 from .Constants.Names import item_names as itemname
 from .Constants.Names import location_names as locname
-from .Constants.Names.region_names import SKYOBS2GRASSFLEET
 from .Options import EnableGreenStars
 from .Rules import GreenStarRule
 
