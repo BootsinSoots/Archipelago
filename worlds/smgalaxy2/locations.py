@@ -58,9 +58,12 @@ SPINDIG_loc: dict[str, SMG2LocationData] = {
 
 # Fluffy Bluff
 FLUFBLUF_loc: dict[str, SMG2LocationData] = {
-    locname.FLUFBLUFSTAR1: SMG2LocationData(["Power Star Location",regname.FLUFFBLUFF],regname.FLUFFBLUFF),
-    locname.FLUFBLUFSTAR2: SMG2LocationData(["Power Star Location",regname.FLUFFBLUFF],regname.FLUFFBLUFF),
-    locname.FLUFBLUFSTAR3: SMG2LocationData(["Power Star Location",regname.FLUFFBLUFF],regname.FLUFFBLUFF),
+    locname.FLUFBLUFSTAR1: SMG2LocationData(["Power Star Location",regname.FLUFFBLUFF],regname.FLUFFBLUFF,
+                                            regname.FLUFFBLUFF1TREECLIMB, 2),
+    locname.FLUFBLUFSTAR2: SMG2LocationData(["Power Star Location",regname.FLUFFBLUFF],regname.FLUFFBLUFF,
+                                            regname.FLUFFBLUFF2LANDING, 2),
+    locname.FLUFBLUFSTAR3: SMG2LocationData(["Power Star Location",regname.FLUFFBLUFF],regname.FLUFFBLUFF,
+                                            regname.FLUFFBLUFF3TOWER, 2),
 }
 
 # Rightside Dow
@@ -402,12 +405,12 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.SPINDIG1STEEL , 1, ),
     locname.SPINDIGSTARG3:      SMG2LocationData(["Green Star Location", regname.SPINDIG], regname.SPINDIG,
                                                  regname.SPINDIG2DARKIN1 , 1, ),
-    locname.FLUFBLUFSTARG1:     SMG2LocationData(["Green Star Location", regname.FLUFFBLUFF], regname.FLUFFBLUFF, 1,
-                                                 ),
-    locname.FLUFBLUFSTARG2:     SMG2LocationData(["Green Star Location", regname.FLUFFBLUFF], regname.FLUFFBLUFF, 1,
-                                                 ),
-    locname.FLUFBLUFSTARG3:     SMG2LocationData(["Green Star Location", regname.FLUFFBLUFF], regname.FLUFFBLUFF, 1,
-                                                 ),
+    locname.FLUFBLUFSTARG1:     SMG2LocationData(["Green Star Location", regname.FLUFFBLUFF], regname.FLUFFBLUFF,
+                                                 regname.FLUFFBLUFF1LANDING, 1, ),
+    locname.FLUFBLUFSTARG2:     SMG2LocationData(["Green Star Location", regname.FLUFFBLUFF], regname.FLUFFBLUFF,
+                                                 regname.FLUFFBLUFF1BUILDING, 1, ),
+    locname.FLUFBLUFSTARG3:     SMG2LocationData(["Green Star Location", regname.FLUFFBLUFF], regname.FLUFFBLUFF,
+                                                 regname.FLUFFBLUFF1TREECLIMB, 1, ),
     locname.RIGHTDOWNSTARG1:    SMG2LocationData(["Green Star Location", regname.RIGHTDOWN], regname.RIGHTDOWN, 1,
                                                  ),
     locname.RIGHTDOWNSTARG2:    SMG2LocationData(["Green Star Location", regname.RIGHTDOWN], regname.RIGHTDOWN, 1,

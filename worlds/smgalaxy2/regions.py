@@ -243,6 +243,21 @@ region_list: dict[str, SMG2RegionData] = {
     regname.SPINDIG2BTOAD:              SMG2RegionData("Planet", [], []),
     regname.SPINDIG2SQUARE:             SMG2RegionData("Planet", [], []),
     regname.SPINDIG3BOSS:               SMG2RegionData("Planet", [], []),
+    regname.FLUFFBLUFF1LANDING:         SMG2RegionData("Planet", [], []),
+    regname.FLUFFBLUFF1BIGTREE:         SMG2RegionData("Planet", [], []),
+    regname.FLUFFBLUFF1COINROOM:        SMG2RegionData("Planet", [], []),
+    regname.FLUFFBLUFF1BUILDING:        SMG2RegionData("Planet", [], []),
+    regname.FLUFFBLUFF1BIGCLOUD:        SMG2RegionData("Planet", [], []),
+    regname.FLUFFBLUFF1CLIFF1:          SMG2RegionData("Planet", [], []),
+    regname.FLUFFBLUFF1CLIFF2:          SMG2RegionData("Planet", [], []),
+    regname.FLUFFBLUFF1WATER:           SMG2RegionData("Planet", [], []),
+    regname.FLUFFBLUFF1CLOUDCLIMB:      SMG2RegionData("Planet", [], []),
+    regname.FLUFFBLUFF1TREECLIMB:       SMG2RegionData("Planet", [], []),
+    regname.FLUFFBLUFF2LANDING:         SMG2RegionData("Planet", [], []),
+    regname.FLUFFBLUFF3TOWER:           SMG2RegionData("Planet", [], []),
+    regname.FLUFFBLUFF2BUILDING:        SMG2RegionData("Planet", [], []),
+    regname.FLUFFBLUFF2CLIFF:           SMG2RegionData("Planet", [], []),
+    regname.FLUFFBLUFF2TREE:            SMG2RegionData("Planet", [], []),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]
