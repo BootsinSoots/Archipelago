@@ -56,6 +56,27 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                         "Sky Station 2: Flipswitch Fleet Launch Star")
     # Yoshi star
     world.get_region(regname.WORLD1).connect(world.get_region(regname.GOODEGG), "World 1 Slot 2 Galaxy")
+    world.get_region(regname.GOODEGG).connect(world.get_region(regname.GOODEGG1LANDING), "Yoshi Star Star 1")
+    world.get_region(regname.GOODEGG1LANDING).connect(world.get_region(regname.GOODEGG1OCTOBONUS),
+                                                      "Yoshi Star 1: Octogoomba Bonus Teleporter")
+    world.get_region(regname.GOODEGG1LANDING).connect(world.get_region(regname.GOODEGG1EARTH),
+                                                      "Yoshi Star 1: Yoshi Planet Launch Star")
+    world.get_region(regname.GOODEGG1EARTH).connect(world.get_region(regname.GOODEGG1TOWER),
+                                                      "Yoshi Star 1: Earthy Planet Launch Star")
+    world.get_region(regname.GOODEGG1TOWER).connect(world.get_region(regname.GOODEGG1FOSSIL),
+                                                      "Yoshi Star 1: Tower Launch Star")
+    world.get_region(regname.GOODEGG).connect(world.get_region(regname.GOODEGG2LANDING), "Yoshi Star Star 2")
+    world.get_region(regname.GOODEGG2LANDING).connect(world.get_region(regname.GOODEGG2SHOOTING),
+                                              "Yoshi Star 2: Yoshi Planet Launch Star")
+    world.get_region(regname.GOODEGG2SHOOTING).connect(world.get_region(regname.GOODEGG2ORBITS),
+                                              "Yoshi Star 2: Mid-Travel Launch Star")
+    world.get_region(regname.GOODEGG2ORBITS).connect(world.get_region(regname.GOODEGG2MARBLE),
+                                              "Yoshi Star 2: Planetoids Launch Star")
+    world.get_region(regname.GOODEGG2SHOOTING).connect(world.get_region(regname.GOODEGG2MARBLE),
+                                              "Yoshi Star 2: Shooting Gallery Launch Star")
+    world.get_region(regname.GOODEGG2MARBLE).connect(world.get_region(regname.GOODEGG2BOSS),
+                                              "Yoshi Star 2: Marble Block Launch Star")
+    world.get_region(regname.GOODEGG).connect(world.get_region(regname.GOODEGG3LANDING), "Yoshi Star Star 3")
     # Spin-Dig
     world.get_region(regname.WORLD1).connect(world.get_region(regname.SPINDIG), "World 1 Slot 3 Galaxy")
     # FlipSwap
