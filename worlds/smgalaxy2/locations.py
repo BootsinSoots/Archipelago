@@ -325,9 +325,12 @@ CLOCKRUIN_loc: dict[str, SMG2LocationData] = {
 
     # Throwback Sta
 THROWBACK_loc: dict[str, SMG2LocationData] = {
-    locname.THROWBACKSTAR1: SMG2LocationData(["Power Star Location", regname.WHOMPFORT], regname.WHOMPFORT),
-    locname.THROWBACKSTAR2: SMG2LocationData(["Power Star Location", regname.WHOMPFORT], regname.WHOMPFORT),
-    locname.THROWBACKSTAR3: SMG2LocationData(["Power Star Location", regname.WHOMPFORT], regname.WHOMPFORT),
+    locname.THROWBACKSTAR1: SMG2LocationData(["Power Star Location", regname.WHOMPFORT], regname.WHOMPFORT,
+                                             regname.WHOMP1UNDER, 1),
+    locname.THROWBACKSTAR2: SMG2LocationData(["Power Star Location", regname.WHOMPFORT], regname.WHOMPFORT,
+                                             regname.WHOMP2FORT, 1),
+    locname.THROWBACKSTAR3: SMG2LocationData(["Power Star Location", regname.WHOMPFORT], regname.WHOMPFORT,
+                                             regname.WHOMP3FORT, 1),
 }
 
     # Battle Belt S
@@ -591,12 +594,12 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.CLOCKWORK1PUSH, 1, ),
     locname.CLOCKRUINSTARG3:    SMG2LocationData(["Green Star Location", regname.CLOCKWORK], regname.CLOCKWORK,
                                                  regname.CLOCKWORK1WHEELST, 1, ),
-    locname.THROWBACKSTARG1:    SMG2LocationData(["Green Star Location", regname.WHOMPFORT], regname.WHOMPFORT, 1,
-                                                 ),
-    locname.THROWBACKSTARG2:    SMG2LocationData(["Green Star Location", regname.WHOMPFORT], regname.WHOMPFORT, 1,
-                                                 ),
-    locname.THROWBACKSTARG3:    SMG2LocationData(["Green Star Location", regname.WHOMPFORT], regname.WHOMPFORT, 1,
-                                                 ),
+    locname.THROWBACKSTARG1:    SMG2LocationData(["Green Star Location", regname.WHOMPFORT], regname.WHOMPFORT,
+                                                 regname.WHOMP1FORT, 1, ),
+    locname.THROWBACKSTARG2:    SMG2LocationData(["Green Star Location", regname.WHOMPFORT], regname.WHOMPFORT,
+                                                 regname.WHOMP1FORT, 1, ),
+    locname.THROWBACKSTARG3:    SMG2LocationData(["Green Star Location", regname.WHOMPFORT], regname.WHOMPFORT,
+                                                 regname.WHOMP2FORT, 1, ),
     locname.BATTBELTSTARG1:     SMG2LocationData(["Green Star Location", regname.BATTLEBELT],regname.BATTLEBELT, 1,
                                                  ),
     locname.BATTBELTSTARG2:     SMG2LocationData(["Green Star Location", regname.BATTLEBELT], regname.BATTLEBELT, 1,

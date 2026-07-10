@@ -413,6 +413,14 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.WORLD6).connect(world.get_region(regname.FLASHBLACK), "World 6 Slot 3 Galaxy")
     # Throwback
     world.get_region(regname.WORLD6).connect(world.get_region(regname.WHOMPFORT), "World 6 Slot 4 Galaxy")
+    world.get_region(regname.WHOMPFORT).connect(world.get_region(regname.WHOMP1FORT), "Throwback Star 1")
+    world.get_region(regname.WHOMP1FORT).connect(world.get_region(regname.WHOMP1BONUS),
+                                                 "Throwback 1: Piranha Bonus Teleporter")
+    world.get_region(regname.WHOMP1FORT).connect(world.get_region(regname.WHOMP1UNDER))
+    world.get_region(regname.WHOMPFORT).connect(world.get_region(regname.WHOMP2FORT), "Throwback Star 2")
+    world.get_region(regname.WHOMP2FORT).connect(world.get_region(regname.WHOMP2BONUS),
+                                                 "Throwback 2: Piranha Bonus Teleporter")
+    world.get_region(regname.WHOMPFORT).connect(world.get_region(regname.WHOMP3FORT), "Throwback Star 3")
     # Slimy Spring
     world.get_region(regname.WORLD6).connect(world.get_region(regname.SLIMSPRI), "World 6 Slot 5 Galaxy")
     # Battle Belt

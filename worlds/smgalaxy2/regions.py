@@ -292,6 +292,12 @@ region_list: dict[str, SMG2RegionData] = {
     regname.CLOCKWORK2COGS:             SMG2RegionData("Planet", [], []),
     regname.CLOCKWORK3HAMMER:           SMG2RegionData("Planet", [], []),
     regname.CLOCKWORK3HAMMERTOP:        SMG2RegionData("Planet", [], []),
+    regname.WHOMP1FORT:                 SMG2RegionData("Planet", [], []),
+    regname.WHOMP1UNDER:                SMG2RegionData("Planet", [], []),
+    regname.WHOMP1BONUS:                SMG2RegionData("Planet", [], []),
+    regname.WHOMP2BONUS:                SMG2RegionData("Planet", [], []),
+    regname.WHOMP2FORT:                 SMG2RegionData("Planet", [], []),
+    regname.WHOMP3FORT:                 SMG2RegionData("Planet", [], []),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]
