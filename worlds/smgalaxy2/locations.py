@@ -305,9 +305,12 @@ BOOMBUNK_loc: dict[str, SMG2LocationData] = {
     # World 6
     # Melty Monster
 MELTMONS_loc: dict[str, SMG2LocationData] = {
-    locname.MELTMONSSTAR1: SMG2LocationData(["Power Star Location", regname.MELTY], regname.MELTY),
-    locname.MELTMONSSTAR2: SMG2LocationData(["Power Star Location", regname.MELTY], regname.MELTY),
-    locname.MELTMONSSTAR3: SMG2LocationData(["Power Star Location", regname.MELTY], regname.MELTY),
+    locname.MELTMONSSTAR1: SMG2LocationData(["Power Star Location", regname.MELTY], regname.MELTY,
+                                            regname.MELTY1MAGMAW, 2),
+    locname.MELTMONSSTAR2: SMG2LocationData(["Power Star Location", regname.MELTY], regname.MELTY,
+                                            regname.MELTY2BOWLING, 2),
+    locname.MELTMONSSTAR3: SMG2LocationData(["Power Star Location", regname.MELTY], regname.MELTY,
+                                            regname.MELTY3CHIMP, 2),
 }
 
     # Clockwork Rui
@@ -573,12 +576,12 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.BOOMBUNK1BOOMER, 1, ),
     locname.BOOMBUNKSTARG2:     SMG2LocationData(["Green Star Location", regname.BOWJR3], regname.BOWJR3,
                                                  regname.BOOMBUNK1CHECK, 1, ),
-    locname.MELTMONSSTARG1:     SMG2LocationData(["Green Star Location", regname.MELTY], regname.MELTY, 1,
-                                                 ),
-    locname.MELTMONSSTARG2:     SMG2LocationData(["Green Star Location", regname.MELTY], regname.MELTY, 1,
-                                                 ),
-    locname.MELTMONSSTARG3:     SMG2LocationData(["Green Star Location", regname.MELTY], regname.MELTY, 1,
-                                                 ),
+    locname.MELTMONSSTARG1:     SMG2LocationData(["Green Star Location", regname.MELTY], regname.MELTY,
+                                                 regname.MELTY1MAGMAARG, 1, ),
+    locname.MELTMONSSTARG2:     SMG2LocationData(["Green Star Location", regname.MELTY], regname.MELTY,
+                                                 regname.MELTY1LAVAWAVE3, 1, ),
+    locname.MELTMONSSTARG3:     SMG2LocationData(["Green Star Location", regname.MELTY], regname.MELTY,
+                                                 regname.MELTY2BOWLING, 1, ),
     locname.CLOCKRUINSTARG1:    SMG2LocationData(["Green Star Location", regname.CLOCKWORK], regname.CLOCKWORK, 1,
                                                  ),
     locname.CLOCKRUINSTARG2:    SMG2LocationData(["Green Star Location", regname.CLOCKWORK], regname.CLOCKWORK, 1,

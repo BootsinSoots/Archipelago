@@ -378,6 +378,22 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                 | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
     # Melty Monster
     world.get_region(regname.WORLD6).connect(world.get_region(regname.MELTY), "World 6 Slot 1 Galaxy")
+    world.get_region(regname.MELTY).connect(world.get_region(regname.MELTY1LANDING), "Melty Monster Star 1")
+    world.get_region(regname.MELTY1LANDING).connect(world.get_region(regname.MELTY3CHIMP),
+                                                    "Melty Monster 3: Star 1 Green Pipe")
+    world.get_region(regname.MELTY1LANDING).connect(world.get_region(regname.MELTY1MAGMAARG),
+                                                    "Melty Monster 1: Pull Star Path")
+    world.get_region(regname.MELTY1MAGMAARG).connect(world.get_region(regname.MELTY1LAVAWAVE1),
+                                                    "Melty Monster 1: Magmaargh Launch Star")
+    world.get_region(regname.MELTY1LAVAWAVE1).connect(world.get_region(regname.MELTY1LAVAWAVE2))
+    world.get_region(regname.MELTY1LAVAWAVE2).connect(world.get_region(regname.MELTY1LAVAWAVE3))
+    world.get_region(regname.MELTY1LAVAWAVE3).connect(world.get_region(regname.MELTY1MAGMAW),
+                                                      "Melty Monster 1: Lava Wave Launch Star")
+    world.get_region(regname.MELTY).connect(world.get_region(regname.MELTY2LANDING), "Melty Monster Star 2")
+    world.get_region(regname.MELTY2LANDING).connect(world.get_region(regname.MELTY3CHIMP),
+                                                    "Melty Monster 3: Star 2 Green Pipe")
+    world.get_region(regname.MELTY2LANDING).connect(world.get_region(regname.MELTY2BOWLING),
+                                                    "Melty Monster 2: Roll to Launch Star")
     # Clockwork Ruins
     world.get_region(regname.WORLD6).connect(world.get_region(regname.CLOCKWORK), "World 6 Slot 2 Galaxy")
     # Flash Black
