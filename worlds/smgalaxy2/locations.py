@@ -48,9 +48,12 @@ YOSHTAR_loc: dict[str, SMG2LocationData] = {
 
 # Spin-Dig Star
 SPINDIG_loc: dict[str, SMG2LocationData] = {
-    locname.SPINDIGSTAR1: SMG2LocationData([regname.SPINDIG, "Power Star Location"],regname.SPINDIG),
-    locname.SPINDIGSTAR2: SMG2LocationData([regname.SPINDIG, "Power Star Location"],regname.SPINDIG),
-    locname.SPINDIGSTAR3: SMG2LocationData([regname.SPINDIG, "Power Star Location"],regname.SPINDIG),
+    locname.SPINDIGSTAR1: SMG2LocationData([regname.SPINDIG, "Power Star Location"],regname.SPINDIG,
+                                           regname.SPINDIG1BOSS, 2),
+    locname.SPINDIGSTAR2: SMG2LocationData([regname.SPINDIG, "Power Star Location"],regname.SPINDIG,
+                                           regname.SPINDIG2SQUARE, 2),
+    locname.SPINDIGSTAR3: SMG2LocationData([regname.SPINDIG, "Power Star Location"],regname.SPINDIG,
+                                           regname.SPINDIG3BOSS, 2),
 }
 
 # Fluffy Bluff
@@ -393,12 +396,12 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.GOODEGGGSTAR2 , 1, ),
     locname.YOSHSTARSTARG3:     SMG2LocationData(["Green Star Location", regname.GOODEGG], regname.GOODEGG, 
                                                  regname.GOODEGG1FOSSIL , 1, ),
-    locname.SPINDIGSTARG1:      SMG2LocationData(["Green Star Location", regname.SPINDIG], regname.SPINDIG, 1,
-                                                 ),
-    locname.SPINDIGSTARG2:      SMG2LocationData(["Green Star Location", regname.SPINDIG], regname.SPINDIG, 1,
-                                                 ),
-    locname.SPINDIGSTARG3:      SMG2LocationData(["Green Star Location", regname.SPINDIG], regname.SPINDIG, 1,
-                                                 ),
+    locname.SPINDIGSTARG1:      SMG2LocationData(["Green Star Location", regname.SPINDIG], regname.SPINDIG,
+                                                 regname.SPINDIG1DRILL , 1, ),
+    locname.SPINDIGSTARG2:      SMG2LocationData(["Green Star Location", regname.SPINDIG], regname.SPINDIG,
+                                                 regname.SPINDIG1STEEL , 1, ),
+    locname.SPINDIGSTARG3:      SMG2LocationData(["Green Star Location", regname.SPINDIG], regname.SPINDIG,
+                                                 regname.SPINDIG2DARKIN1 , 1, ),
     locname.FLUFBLUFSTARG1:     SMG2LocationData(["Green Star Location", regname.FLUFFBLUFF], regname.FLUFFBLUFF, 1,
                                                  ),
     locname.FLUFBLUFSTARG2:     SMG2LocationData(["Green Star Location", regname.FLUFFBLUFF], regname.FLUFFBLUFF, 1,

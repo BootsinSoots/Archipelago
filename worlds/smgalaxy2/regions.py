@@ -228,6 +228,21 @@ region_list: dict[str, SMG2RegionData] = {
     regname.BOOMBUNK2CHECK:             SMG2RegionData("Planet", [], []),
     regname.BOOMBUNK2DARK:              SMG2RegionData("Planet", [], []),
     regname.BOOMBUNK2BOSS:              SMG2RegionData("Planet", [], []),
+    regname.SPINDIG1TETRA:              SMG2RegionData("Planet", [], []),
+    regname.SPINDIG1DRILL:              SMG2RegionData("Planet", [], []),
+    regname.SPINDIG1STEEL:              SMG2RegionData("Planet", [], []),
+    regname.SPINDIG1BONUS:              SMG2RegionData("Planet", [], []),
+    regname.SPINDIG1DIRTT:              SMG2RegionData("Planet", [], []),
+    regname.SPINDIG1BOSS:               SMG2RegionData("Planet", [], []),
+    regname.SPINDIG1TOADS:              SMG2RegionData("Planet", [], []),
+    regname.SPINDIG2TETRA:              SMG2RegionData("Planet", [], []),
+    regname.SPINDIG2DARKT:              SMG2RegionData("Planet", [], []),
+    regname.SPINDIG2DARKIN1:            SMG2RegionData("Planet", [], []),
+    regname.SPINDIG2DARKIN2:            SMG2RegionData("Planet", [], []),
+    regname.SPINDIG2DARKB:              SMG2RegionData("Planet", [], []),
+    regname.SPINDIG2BTOAD:              SMG2RegionData("Planet", [], []),
+    regname.SPINDIG2SQUARE:             SMG2RegionData("Planet", [], []),
+    regname.SPINDIG3BOSS:               SMG2RegionData("Planet", [], []),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]

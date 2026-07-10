@@ -79,6 +79,33 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.GOODEGG).connect(world.get_region(regname.GOODEGG3LANDING), "Yoshi Star Star 3")
     # Spin-Dig
     world.get_region(regname.WORLD1).connect(world.get_region(regname.SPINDIG), "World 1 Slot 3 Galaxy")
+    world.get_region(regname.SPINDIG).connect(world.get_region(regname.SPINDIG1TETRA), "Spin-Dig Star 1")
+    world.get_region(regname.SPINDIG1TETRA).connect(world.get_region(regname.SPINDIG1DRILL),
+                                                    "Spin-Dig 1: Dig Dirt Launch Star")
+    world.get_region(regname.SPINDIG1DRILL).connect(world.get_region(regname.SPINDIG1STEEL),
+                                                    "Spin-Dig 1: Drill Zone Launch Star")
+    world.get_region(regname.SPINDIG1STEEL).connect(world.get_region(regname.SPINDIG1BONUS),
+                                                    "Spin-Dig 1: Twirlips Bonus Teleporter")
+    world.get_region(regname.SPINDIG1STEEL).connect(world.get_region(regname.SPINDIG1DIRTT),
+                                                    "Spin-Dig 1: Steel Ring Launch Star")
+    world.get_region(regname.SPINDIG1DIRTT).connect(world.get_region(regname.SPINDIG1TOADS),
+                                                    "Spin-Dig 1: Dirt Tower Launch Star")
+    world.get_region(regname.SPINDIG1TOADS).connect(world.get_region(regname.SPINDIG1BOSS),
+                                                    "Spin-Dig 1: Red Toadship Launch Star")
+    world.get_region(regname.SPINDIG).connect(world.get_region(regname.SPINDIG2TETRA), "Spin-Dig Star 2")
+    world.get_region(regname.SPINDIG2TETRA).connect(world.get_region(regname.SPINDIG2DARKT),
+                                                    "Spin-Dig 2: Dig Dirt Sling to Vine")
+    world.get_region(regname.SPINDIG2DARKT).connect(world.get_region(regname.SPINDIG2DARKIN1),
+                                                    "Spin-Dig 2: Dark Canister 1st Green Pipe")
+    world.get_region(regname.SPINDIG2DARKIN1).connect(world.get_region(regname.SPINDIG2DARKIN2),
+                                                    "Spin-Dig 2: Dark Canister 2nd Green Pipe")
+    world.get_region(regname.SPINDIG2DARKIN2).connect(world.get_region(regname.SPINDIG2DARKB),
+                                                    "Spin-Dig 2: Dark Canister Orange Pipe")
+    world.get_region(regname.SPINDIG2DARKB).connect(world.get_region(regname.SPINDIG2BTOAD),
+                                                    "Spin-Dig 2: Dark Canister Launch Star")
+    world.get_region(regname.SPINDIG2BTOAD).connect(world.get_region(regname.SPINDIG2SQUARE),
+                                                    "Spin-Dig 2: Blue Toadship Launch Star")
+    world.get_region(regname.SPINDIG).connect(world.get_region(regname.SPINDIG3BOSS), "Spin-Dig Star 3")
     # FlipSwap
     world.get_region(regname.WORLD1).connect(world.get_region(regname.FLIPSWAP), "World 1 Slot 4 Galaxy")
     # Fluffl Bluff
