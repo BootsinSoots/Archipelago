@@ -108,6 +108,8 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.SPINDIG).connect(world.get_region(regname.SPINDIG3BOSS), "Spin-Dig Star 3")
     # FlipSwap
     world.get_region(regname.WORLD1).connect(world.get_region(regname.FLIPSWAP), "World 1 Slot 4 Galaxy")
+    world.get_region(regname.FLIPSWAP).connect(world.get_region(regname.FLIPSWAP1), "Flip-Swap Star 1")
+    world.get_region(regname.FLIPSWAP).connect(world.get_region(regname.FLIPSWAP2), "Flip-Swap Star 2")
     # Fluffl Bluff
     world.get_region(regname.WORLD1).connect(world.get_region(regname.FLUFFBLUFF), "World 1 Slot 5 Galaxy")
     world.get_region(regname.FLUFFBLUFF).connect(world.get_region(regname.FLUFFBLUFF1LANDING), "Fluffy Bluff Star 1")

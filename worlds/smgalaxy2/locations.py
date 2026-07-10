@@ -74,8 +74,10 @@ RIGHTDOWN_loc: dict[str, SMG2LocationData] = {
 
 # Flip-Swap Sta
 FLIPSWAP_loc: dict[str, SMG2LocationData] = {
-    locname.FLIPSWAPSTAR1: SMG2LocationData(["Power Star Location",regname.FLIPSWAP],regname.FLIPSWAP),
-    locname.FLIPSWAPSTAR2: SMG2LocationData(["Power Star Location",regname.FLIPSWAP],regname.FLIPSWAP),
+    locname.FLIPSWAPSTAR1: SMG2LocationData(["Power Star Location",regname.FLIPSWAP],regname.FLIPSWAP,
+                                            regname.FLIPSWAP1, 2),
+    locname.FLIPSWAPSTAR2: SMG2LocationData(["Power Star Location",regname.FLIPSWAP],regname.FLIPSWAP,
+                                            regname.FLIPSWAP2, 2),
 }
 
 # Bowser Jr.s F
@@ -415,10 +417,10 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  ),
     locname.RIGHTDOWNSTARG2:    SMG2LocationData(["Green Star Location", regname.RIGHTDOWN], regname.RIGHTDOWN, 1,
                                                  ),
-    locname.FLIPSWAPSTARG1:     SMG2LocationData(["Green Star Location", regname.FLIPSWAP], regname.FLIPSWAP, 1,
-                                                 ),
-    locname.FLIPSWAPSTARG2:     SMG2LocationData(["Green Star Location", regname.FLIPSWAP], regname.FLIPSWAP, 1,
-                                                 ),
+    locname.FLIPSWAPSTARG1:     SMG2LocationData(["Green Star Location", regname.FLIPSWAP], regname.FLIPSWAP,
+                                                 regname.FLIPSWAP1, 1, ),
+    locname.FLIPSWAPSTARG2:     SMG2LocationData(["Green Star Location", regname.FLIPSWAP], regname.FLIPSWAP,
+                                                 regname.FLIPSWAP1, 1, ),
     locname.FIREFLOTSTARG1:     SMG2LocationData(["Green Star Location", regname.BOWJR1], regname.BOWJR1, 1,
                                                  ),
     locname.FIREFLOTSTARG2:     SMG2LocationData(["Green Star Location", regname.BOWJR1], regname.BOWJR1, 1,

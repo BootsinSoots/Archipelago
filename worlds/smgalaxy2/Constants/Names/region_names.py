@@ -131,6 +131,8 @@ FLUFFBLUFF2BUILDING = "Fluffy Bluff 2: Small Buildings"
 FLUFFBLUFF2CLIFF = "Fluffy Bluff 2: Upper Cliff"
 FLUFFBLUFF2TREE = "Fluffy Bluff 2: Treetop"
 FLUFFBLUFF3TOWER = "Fluffy Bluff 3: Cone Tower"
+FLIPSWAP1 = "Flip-Swap 1: Think Before You Shake"
+FLIPSWAP2 = "Flip-Swap 2: Purple Coin Flip 'n' Sprint"
 
 TALLTRUNK1BIGTREE = "Tall Trunk 1: Big Tree Planet"
 TALLTRUNK1PIRANHABONUS = "Tall Trunk 1: Piranha Plant Bonus Arena"
