@@ -425,6 +425,54 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.WORLD6).connect(world.get_region(regname.SLIMSPRI), "World 6 Slot 5 Galaxy")
     # Battle Belt
     world.get_region(regname.WORLD6).connect(world.get_region(regname.BATTLEBELT), "World 6 Slot 6 Galaxy")
+    world.get_region(regname.BATTLEBELT).connect(world.get_region(regname.BATTBELT1GOOM), "Battle Belt Star 1")
+    world.get_region(regname.BATTBELT1GOOM).connect(world.get_region(regname.BATTBELT1LAVA),
+                                                    "Battle Belt 1: Goomba Sling Star")
+    world.get_region(regname.BATTBELT1LAVA).connect(world.get_region(regname.BATTBELT1URCH),
+                                                    "Battle Belt 1: Li'l Cinders Sling Star")
+    world.get_region(regname.BATTBELT1URCH).connect(world.get_region(regname.BATTBELT1CRAB),
+                                                    "Battle Belt 1: Urchin Sling Star")
+    world.get_region(regname.BATTBELT1CRAB).connect(world.get_region(regname.BATTBELT1PTOA),
+                                                    "Battle Belt 1: Crab Sling Star")
+    world.get_region(regname.BATTBELT1PTOA).connect(world.get_region(regname.BATTBELT1PUMP),
+                                                    "Battle Belt 1: Pink Toadship Sling Star")
+    world.get_region(regname.BATTBELT1PUMP).connect(world.get_region(regname.BATTBELT1PUMI),
+                                                    "Battle Belt 1: Jack O'Goomba Green Pipe")
+    world.get_region(regname.BATTBELT1PUMP).connect(world.get_region(regname.BATTBELT1RTOA),
+                                                    "Battle Belt 1: Jack O'Goomba Sling Star")
+    world.get_region(regname.BATTBELT1RTOA).connect(world.get_region(regname.BATTBELT1ICEP),
+                                                    "Battle Belt 1: Red Toadship Sling Star")
+    world.get_region(regname.BATTBELT1ICEP).connect(world.get_region(regname.BATTBELT3BOSS),
+                                                    "Battle Belt 3: Hungry Luma")
+    world.get_region(regname.BATTBELT1ICEP).connect(world.get_region(regname.BATTBELT1MOLE),
+                                                    "Battle Belt 1: Li'l Brr Sling Star")
+    world.get_region(regname.BATTBELT1MOLE).connect(world.get_region(regname.BATTBELT1MOLI),
+                                                    "Battle Belt 1: Swapphopper Green Pipe")
+    world.get_region(regname.BATTBELT1MOLE).connect(world.get_region(regname.BATTBELT1CHOM),
+                                                    "Battle Belt 1: Swaphopper Sling Star")
+    world.get_region(regname.BATTLEBELT).connect(world.get_region(regname.BATTBELT2GOOM), "Battle Belt Star 2")
+    world.get_region(regname.BATTBELT2GOOM).connect(world.get_region(regname.BATTBELT2LAVA),
+                                                    "Battle Belt 2: Goomba Sling Star")
+    world.get_region(regname.BATTBELT2LAVA).connect(world.get_region(regname.BATTBELT2URCH),
+                                                    "Battle Belt 2: Li'l Cinders Sling Star")
+    world.get_region(regname.BATTBELT2URCH).connect(world.get_region(regname.BATTBELT2CRAB),
+                                                    "Battle Belt 2: Urchin Sling Star")
+    world.get_region(regname.BATTBELT2CRAB).connect(world.get_region(regname.BATTBELT2PTOA),
+                                                    "Battle Belt 2: Crab Sling Star")
+    world.get_region(regname.BATTBELT2PTOA).connect(world.get_region(regname.BATTBELT2PUMP),
+                                                    "Battle Belt 2: Yellow Toadship Sling Star")
+    world.get_region(regname.BATTBELT2PUMP).connect(world.get_region(regname.BATTBELT2PUMI),
+                                                    "Battle Belt 2: Jack O'Goomba Green Pipe")
+    world.get_region(regname.BATTBELT2PUMP).connect(world.get_region(regname.BATTBELT2RTOA),
+                                                    "Battle Belt 2: Jack O'Goomba Sling Star")
+    world.get_region(regname.BATTBELT2RTOA).connect(world.get_region(regname.BATTBELT2ICEP),
+                                                    "Battle Belt 2: Red Toadship Sling Star")
+    world.get_region(regname.BATTBELT2ICEP).connect(world.get_region(regname.BATTBELT2MOLE),
+                                                    "Battle Belt 2: Li'l Brr Sling Star")
+    world.get_region(regname.BATTBELT2MOLE).connect(world.get_region(regname.BATTBELT2MOLI),
+                                                    "Battle Belt 2: Swapphopper Green Pipe")
+    world.get_region(regname.BATTBELT2MOLE).connect(world.get_region(regname.BATTBELT2CHOM),
+                                                    "Battle Belt 2: Swaphopper Sling Star")
     # Galaxy Generator
     world.get_region(regname.WORLD6).connect(world.get_region(regname.BOWSER3), "World 6 Slot 7 Galaxy")
     # World 7

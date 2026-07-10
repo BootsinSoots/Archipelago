@@ -335,9 +335,12 @@ THROWBACK_loc: dict[str, SMG2LocationData] = {
 
     # Battle Belt S
 BATTBELT_loc: dict[str, SMG2LocationData] = {
-    locname.BATTBELTSTAR1: SMG2LocationData(["Power Star Location", regname.BATTLEBELT], regname.BATTLEBELT),
-    locname.BATTBELTSTAR2: SMG2LocationData(["Power Star Location", regname.BATTLEBELT], regname.BATTLEBELT),
-    locname.BATTBELTSTAR3: SMG2LocationData(["Power Star Location", regname.BATTLEBELT], regname.BATTLEBELT),
+    locname.BATTBELTSTAR1: SMG2LocationData(["Power Star Location", regname.BATTLEBELT], regname.BATTLEBELT,
+                                            regname.BATTBELT1CHOM, 1),
+    locname.BATTBELTSTAR2: SMG2LocationData(["Power Star Location", regname.BATTLEBELT], regname.BATTLEBELT,
+                                            regname.BATTBELT2CHOM, 1),
+    locname.BATTBELTSTAR3: SMG2LocationData(["Power Star Location", regname.BATTLEBELT], regname.BATTLEBELT,
+                                            regname.BATTBELT3BOSS, 1),
 }
 
     # Flash Black S
@@ -600,12 +603,12 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.WHOMP1FORT, 1, ),
     locname.THROWBACKSTARG3:    SMG2LocationData(["Green Star Location", regname.WHOMPFORT], regname.WHOMPFORT,
                                                  regname.WHOMP2FORT, 1, ),
-    locname.BATTBELTSTARG1:     SMG2LocationData(["Green Star Location", regname.BATTLEBELT],regname.BATTLEBELT, 1,
-                                                 ),
-    locname.BATTBELTSTARG2:     SMG2LocationData(["Green Star Location", regname.BATTLEBELT], regname.BATTLEBELT, 1,
-                                                 ),
-    locname.BATTBELTSTARG3:     SMG2LocationData(["Green Star Location", regname.BATTLEBELT], regname.BATTLEBELT, 1,
-                                                 ),
+    locname.BATTBELTSTARG1:     SMG2LocationData(["Green Star Location", regname.BATTLEBELT],regname.BATTLEBELT,
+                                                 regname.BATTBELT1PUMP, 1, ),
+    locname.BATTBELTSTARG2:     SMG2LocationData(["Green Star Location", regname.BATTLEBELT], regname.BATTLEBELT,
+                                                 regname.BATTBELT1MOLE, 1, ),
+    locname.BATTBELTSTARG3:     SMG2LocationData(["Green Star Location", regname.BATTLEBELT], regname.BATTLEBELT,
+                                                 regname.BATTBELT1CHOM, 1, ),
     locname.FLASHBLACKSTARG1:   SMG2LocationData(["Green Star Location", regname.FLASHBLACK], regname.FLASHBLACK, 1,
                                                  ),
     locname.FLASHBLACKSTARG2:   SMG2LocationData(["Green Star Location", regname.FLASHBLACK], regname.FLASHBLACK, 1,
