@@ -6,7 +6,7 @@ from rule_builder.rules import CanReachLocation
 
 from .Constants.Names import region_names as regname
 from .Constants.Names import location_names as locname
-from .Constants.Names.region_names import SPACSTOR2GSTAR3
+from .Constants.Names.region_names import SPACSTOR2GSTAR2
 from .Options import SMG2Options
 from .locations import SMG2Location, base_stars_locations, SMG2LocationData, green_star_locations
 
@@ -175,7 +175,7 @@ region_list: dict[str, SMG2RegionData] = {
     regname.SPACSTOR2TOPTOWERBASE:      SMG2RegionData("Planet", [], []),
     regname.SPACSTOR2TOPTOWER:          SMG2RegionData("Planet", [], []),
     regname.SPACSTOR2COINROOM:          SMG2RegionData("Planet", [], []),
-    regname.SPACSTOR2GSTAR3:            SMG2RegionData("Planet", [], []),
+    regname.SPACSTOR2GSTAR2:            SMG2RegionData("Planet", [], []),
     regname.SLIPSAND1LONG:              SMG2RegionData("Planet", [], []),
     regname.SLIPSAND1COINROOM:          SMG2RegionData("Planet", [], []),
     regname.SLIPSAND1CUBE:              SMG2RegionData("Planet", [], []),

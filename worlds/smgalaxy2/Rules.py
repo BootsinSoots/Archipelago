@@ -279,10 +279,10 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                     "Space Storm 2: Pull to Launch Star")
     world.get_region(regname.SPACSTOR2TOPTOWERBASE).connect(world.get_region(regname.SPACSTOR2TOPTOWER),
                                                     "Space Storm 2: Tower Base Sling Star")
-    world.get_region(regname.SPACSTOR2TOPTOWERBASE).connect(world.get_region(regname.SPACSTOR2GSTAR3))
+    world.get_region(regname.SPACSTOR2TOPTOWERBASE).connect(world.get_region(regname.SPACSTOR2GSTAR2))
     world.get_region(regname.SPACSTOR2TOPTOWER).connect(world.get_region(regname.SPACSTOR2COINROOM),
                                                     "Space Storm 2: Tower Green Pipe")
-    world.get_region(regname.SPACSTOR2TOPTOWER).connect(world.get_region(regname.SPACSTOR2GSTAR3))
+    world.get_region(regname.SPACSTOR2TOPTOWER).connect(world.get_region(regname.SPACSTOR2GSTAR2))
     # Boo Moon
     world.get_region(regname.WORLD5).connect(world.get_region(regname.BOOMOON), "World 5 Slot 2 Galaxy")
     world.get_region(regname.BOOMOON).connect(world.get_region(regname.BOOMOON1DARK), "Boo Moon Star 1")

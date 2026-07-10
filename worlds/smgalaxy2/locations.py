@@ -548,7 +548,7 @@ green_star_locations: dict[str, SMG2LocationData]  = {
     locname.SPACESTORMSTARG2:   SMG2LocationData(["Green Star Location", regname.SPACSTOR], regname.SPACSTOR,
                                                  regname.SPACSTOR2TOPTOWERBASE , 1, ),
     locname.SPACESTORMSTARG3:   SMG2LocationData(["Green Star Location", regname.SPACSTOR], regname.SPACSTOR,
-                                                 regname.SPACSTOR2GSTAR3, 1, ),
+                                                 regname.SPACSTOR2GSTAR2, 1, ),
     locname.SLIPSANDSTARG1:     SMG2LocationData(["Green Star Location", regname.SLIPSAND], regname.SLIPSAND,
                                                  regname.SLIPSAND1CUBE , 1, ),
     locname.SLIPSANDSTARG2:     SMG2LocationData(["Green Star Location", regname.SLIPSAND], regname.SLIPSAND,
