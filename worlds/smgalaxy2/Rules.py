@@ -495,8 +495,8 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     # Grandmaster
     world.get_region(regname.WORLD7).connect(world.get_region(regname.GRANDMASTER), "World 7 Slot 7 Galaxy")
 
-
-    world.get_region(regname.SHIP).connect(world.get_region(regname.SHIPINSIDE)), "Inside Starship Mario"
+    world.get_region(regname.SHIP).connect(world.get_region(regname.SHIP2)),
+    world.get_region(regname.SHIP2).connect(world.get_region(regname.SHIPINSIDE)),
     world.set_completion_rule(Has("Peach"))
 
 def rules_from_er_placements(world: "SMG2World"):

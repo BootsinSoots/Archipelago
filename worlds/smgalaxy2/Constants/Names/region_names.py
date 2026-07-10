@@ -1,5 +1,6 @@
 # Origin Region
 SHIP = "Starship Mario"
+SHIP2 = "Starship Mario Full"
 
 # Hub Regions
 WORLD1 = "World 1"
