@@ -268,8 +268,10 @@ BOOMOON_loc: dict[str, SMG2LocationData] = {
 
     # Upside Dizzy
 UPDIZZY_loc: dict[str, SMG2LocationData] = {
-    locname.UPDIZZYSTAR1: SMG2LocationData(["Power Star Location", regname.UPDOWN], regname.UPDOWN),
-    locname.UPDIZZYSTAR2: SMG2LocationData(["Power Star Location", regname.UPDOWN], regname.UPDOWN),
+    locname.UPDIZZYSTAR1: SMG2LocationData(["Power Star Location", regname.UPDOWN], regname.UPDOWN,
+                                           regname.UPDOWNGRAV, 1),
+    locname.UPDIZZYSTAR2: SMG2LocationData(["Power Star Location", regname.UPDOWN], regname.UPDOWN,
+                                           regname.UPDOWNBREAKER, 1),
 }
 
     # Fleet Glide S
@@ -371,9 +373,8 @@ FLIPOUT_loc: dict[str, SMG2LocationData] = {
 }
 
     # Grandmaster
-GRANDMASTER_loc: dict[str, SMG2LocationData] = \
-    regname. , {
-  locname.GRANDMASTSTAR1: SMG2LocationData(["Power Star Location", regname.GRANDMASTER], regname.GRANDMASTER),
+GRANDMASTER_loc: dict[str, SMG2LocationData] = {
+    locname.GRANDMASTSTAR1: SMG2LocationData(["Power Star Location", regname.GRANDMASTER], regname.GRANDMASTER),
     locname.GRANDMASTSTAR2: SMG2LocationData(["Power Star Location", regname.GRANDMASTER], regname.GRANDMASTER),
 }
 
@@ -546,10 +547,10 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.BOOMOON1MOON ,1, ),
     locname.BOOMOONSTARG3:      SMG2LocationData(["Green Star Location", regname.BOOMOON], regname.BOOMOON,
                                                  regname.BOOMOON1POPUP ,1, ),
-    locname.UPDIZZYSTARG1:      SMG2LocationData(["Green Star Location", regname.UPDOWN], regname.UPDOWN, 1,
-                                                 ),
-    locname.UPDIZZYSTARG2:      SMG2LocationData(["Green Star Location", regname.UPDOWN], regname.UPDOWN, 1,
-                                                 ),
+    locname.UPDIZZYSTARG1:      SMG2LocationData(["Green Star Location", regname.UPDOWN], regname.UPDOWN,
+                                                 regname.UPDOWNINSIDE, 1,),
+    locname.UPDIZZYSTARG2:      SMG2LocationData(["Green Star Location", regname.UPDOWN], regname.UPDOWN,
+                                                 regname.UPDOWNINSIDE, 1,),
     locname.FLEETFLYSTARG1:     SMG2LocationData(["Green Star Location", regname.FLEETGLIDE], regname.FLEETGLIDE,
                                                  regname.FLEETGLIDECOURSE, 1, ),
     locname.FLEETFLYSTARG2:     SMG2LocationData(["Green Star Location", regname.FLEETGLIDE], regname.FLEETGLIDE,

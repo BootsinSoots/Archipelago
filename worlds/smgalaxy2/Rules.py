@@ -222,6 +222,15 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                    "Boo Moon 2: Dark Planet Launch Star")
     # Upside Dizzy
     world.get_region(regname.WORLD5).connect(world.get_region(regname.UPDOWN), "World 5 Slot 3 Galaxy")
+    world.get_region(regname.UPDOWN).connect(world.get_region(regname.UPDOWNCASTLE), "Upside Dizzy Castle")
+    world.get_region(regname.UPDOWNCASTLE).connect(world.get_region(regname.UPDOWNINSIDE),
+                                                   "Upside Dizzy: Castle Pipe")
+    world.get_region(regname.UPDOWNINSIDE).connect(world.get_region(regname.UPDOWNFIRE),
+                                                   "Upside Dizzy: 1st Green Pipe")
+    world.get_region(regname.UPDOWNFIRE).connect(world.get_region(regname.UPDOWNBREAKER),
+                                                   "Upside Dizzy: Fiery Orange Pipe")
+    world.get_region(regname.UPDOWNINSIDE).connect(world.get_region(regname.UPDOWNGRAV),
+                                                   "Upside Dizzy: Final Green Pipe")
     # Slipsand
     world.get_region(regname.WORLD5).connect(world.get_region(regname.SLIPSAND), "World 5 Slot 4 Galaxy")
     world.get_region(regname.SLIPSAND).connect(world.get_region(regname.SLIPSAND1LONG), "Slipsand Star 1")
