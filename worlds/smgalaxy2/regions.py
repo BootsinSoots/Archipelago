@@ -335,6 +335,21 @@ region_list: dict[str, SMG2RegionData] = {
     regname.SLIMSPRI2CAVE1:             SMG2RegionData("Planet", [], []),
     regname.SLIMSPRI2MOUTH2:            SMG2RegionData("Planet", [], []),
     regname.SLIMSPRI2CAVE2:             SMG2RegionData("Planet", [], []),
+    regname.GRANDMASTER1YOSHI:          SMG2RegionData("Planet", [], []),
+    regname.GRANDMASTER1SWITCH:         SMG2RegionData("Planet", [], []),
+    regname.GRANDMASTER1CLOUD:          SMG2RegionData("Planet", [], []),
+    regname.GRANDMASTER1SWAP:           SMG2RegionData("Planet", [], []),
+    regname.GRANDMASTER1PULL:           SMG2RegionData("Planet", [], []),
+    regname.GRANDMASTER1BROS1:          SMG2RegionData("Planet", [], []),
+    regname.GRANDMASTER1BROS2:          SMG2RegionData("Planet", [], []),
+    regname.GRANDMASTER2YOSHI:          SMG2RegionData("Planet", [], []),
+    regname.GRANDMASTER2SWITCH:         SMG2RegionData("Planet", [], []),
+    regname.GRANDMASTER2CLOUD:          SMG2RegionData("Planet", [], []),
+    regname.GRANDMASTER2SWAP:           SMG2RegionData("Planet", [], []),
+    regname.GRANDMASTER2PULL:           SMG2RegionData("Planet", [], []),
+    regname.GRANDMASTER2BROS1:          SMG2RegionData("Planet", [], []),
+    regname.GRANDMASTER2BROS2:          SMG2RegionData("Planet", [], []),
+    regname.GRANDMASTER2ROSA:           SMG2RegionData("Planet", [], []),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]

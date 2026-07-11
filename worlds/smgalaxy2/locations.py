@@ -403,8 +403,10 @@ FLIPOUT_loc: dict[str, SMG2LocationData] = {
 
     # Grandmaster
 GRANDMASTER_loc: dict[str, SMG2LocationData] = {
-    locname.GRANDMASTSTAR1: SMG2LocationData(["Power Star Location", regname.GRANDMASTER], regname.GRANDMASTER),
-    locname.GRANDMASTSTAR2: SMG2LocationData(["Power Star Location", regname.GRANDMASTER], regname.GRANDMASTER),
+    locname.GRANDMASTSTAR1: SMG2LocationData(["Power Star Location", regname.GRANDMASTER], regname.GRANDMASTER,
+                                             regname.GRANDMASTER1BROS2,1),
+    locname.GRANDMASTSTAR2: SMG2LocationData(["Power Star Location", regname.GRANDMASTER], regname.GRANDMASTER,
+                                             regname.GRANDMASTER2ROSA,1),
 }
 
 green_star_locations: dict[str, SMG2LocationData]  = {
@@ -749,7 +751,7 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
     locname.FLIPOUTCM: SMG2LocationData(["Comet Medal Location", regname.FLIPOUT], regname.FLIPOUT,
                                         regname.,  1, ),
     locname.GRANDMASTRCM: SMG2LocationData(["Comet Medal Location", regname.GRANDMASTER], regname.GRANDMASTER,
-                                           regname.,  1, ),
+                                           regname.GRANDMASTER1BROS2,  1, ),
 }
 
 #TODO Checkpoint Table

@@ -510,6 +510,35 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.WORLD7).connect(world.get_region(regname.FLIPOUT), "World 7 Slot 6 Galaxy")
     # Grandmaster
     world.get_region(regname.WORLD7).connect(world.get_region(regname.GRANDMASTER), "World 7 Slot 7 Galaxy")
+    world.get_region(regname.GRANDMASTER).connect(world.get_region(regname.GRANDMASTER1YOSHI), "Grandmaster Star")
+    world.get_region(regname.GRANDMASTER1YOSHI).connect(world.get_region(regname.GRANDMASTER1SWITCH),
+                                                        "Grandmaster: Yoshi Flower Launch Star")
+    world.get_region(regname.GRANDMASTER1SWITCH).connect(world.get_region(regname.GRANDMASTER1CLOUD),
+                                                        "Grandmaster: Flipswitch Launch Star")
+    world.get_region(regname.GRANDMASTER1CLOUD).connect(world.get_region(regname.GRANDMASTER1SWAP),
+                                                        "Grandmaster: Electric Clouds Launch Star")
+    world.get_region(regname.GRANDMASTER1SWAP).connect(world.get_region(regname.GRANDMASTER1PULL),
+                                                        "Grandmaster: Flip-Swap Launch Star")
+    world.get_region(regname.GRANDMASTER1PULL).connect(world.get_region(regname.GRANDMASTER1BROS1),
+                                                        "Grandmaster: Pull Star Launch Star")
+    world.get_region(regname.GRANDMASTER1BROS1).connect(world.get_region(regname.GRANDMASTER1BROS2),
+                                                        "Grandmaster: Bros Landing Sling Star")
+    world.get_region(regname.GRANDMASTER).connect(world.get_region(regname.GRANDMASTER2YOSHI), "Grandmaster Star Comet")
+    world.get_region(regname.GRANDMASTER2YOSHI).connect(world.get_region(regname.GRANDMASTER2SWITCH),
+                                                        "Grandmaster Comet: Yoshi Flower Launch Star")
+    world.get_region(regname.GRANDMASTER2SWITCH).connect(world.get_region(regname.GRANDMASTER2CLOUD),
+                                                        "Grandmaster Comet: Flipswitch Launch Star")
+    world.get_region(regname.GRANDMASTER2CLOUD).connect(world.get_region(regname.GRANDMASTER2SWAP),
+                                                        "Grandmaster Comet: Electric Clouds Launch Star")
+    world.get_region(regname.GRANDMASTER2SWAP).connect(world.get_region(regname.GRANDMASTER2PULL),
+                                                        "Grandmaster Comet: Flip-Swap Launch Star")
+    world.get_region(regname.GRANDMASTER2PULL).connect(world.get_region(regname.GRANDMASTER2BROS1),
+                                                        "Grandmaster Comet: Pull Star Launch Star")
+    world.get_region(regname.GRANDMASTER2BROS1).connect(world.get_region(regname.GRANDMASTER2BROS2),
+                                                        "Grandmaster Comet: Bros Landing Sling Star")
+    world.get_region(regname.GRANDMASTER2BROS2).connect(world.get_region(regname.GRANDMASTER2ROSA),
+                                                        "Grandmaster Comet: Jumping Bros Launch Star")
+
 
     world.get_region(regname.SHIP).connect(world.get_region(regname.SHIP2)),
     world.get_region(regname.SHIP2).connect(world.get_region(regname.SHIPINSIDE)),
