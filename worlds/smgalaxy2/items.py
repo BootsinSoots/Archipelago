@@ -38,6 +38,7 @@ filler_items: dict[str, SMG2ItemData] = {
 generic_event_items: dict[str, SMG2ItemData] = {
     "Peach": SMG2ItemData([], None, IC.progression),
     "Silver Star": SMG2ItemData([], None, IC.progression),
+    "Purple Coin": SMG2ItemData([], None, IC.progression),
 }
 
 keyed_grand_stars: dict[str, SMG2ItemData] = {

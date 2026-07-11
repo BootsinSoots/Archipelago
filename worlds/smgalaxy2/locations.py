@@ -367,8 +367,10 @@ GALGEN_loc: dict[str, SMG2LocationData] = {
     # World S
     # Mario Squared
 MARIOSQ_loc: dict[str, SMG2LocationData] = {
-    locname.MARIOSQRSTAR1: SMG2LocationData(["Power Star Location", regname.MARIO], regname.MARIO),
-    locname.MARIOSQRSTAR2: SMG2LocationData(["Power Star Location", regname.MARIO], regname.MARIO),
+    locname.MARIOSQRSTAR1: SMG2LocationData(["Power Star Location", regname.MARIO], regname.MARIO,
+                                            regname.MARIOSQ1RIGHT, 1),
+    locname.MARIOSQRSTAR2: SMG2LocationData(["Power Star Location", regname.MARIO], regname.MARIO,
+                                            regname.MARIOSQ2LEFT, 1),
 }
 
     # Rolling Coast
@@ -626,10 +628,10 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  ),
     locname.GALAXYGENSTARG2:    SMG2LocationData(["Green Star Location", regname.BOWSER3], regname.BOWSER3, 1,
                                                  ),
-    locname.MARIOSQRSTARG1:     SMG2LocationData(["Green Star Location", regname.MARIO], regname.MARIO, 1,
-                                                 ),
-    locname.MARIOSQRSTARG2:     SMG2LocationData(["Green Star Location", regname.MARIO], regname.MARIO, 1,
-                                                 ),
+    locname.MARIOSQRSTARG1:     SMG2LocationData(["Green Star Location", regname.MARIO], regname.MARIO,
+                                                 regname.MARIOSQ1MAIN, 1,),
+    locname.MARIOSQRSTARG2:     SMG2LocationData(["Green Star Location", regname.MARIO], regname.MARIO,
+                                                 regname.MARIOSQ1MAIN, 1,),
     locname.ROLLSLIDESTARG1:    SMG2LocationData(["Green Star Location", regname.ROLLCOAST], regname.ROLLCOAST, 1,
                                                  ),
     locname.ROLLSLIDESTARG2:    SMG2LocationData(["Green Star Location", regname.ROLLCOAST], regname.ROLLCOAST, 1,
@@ -739,7 +741,7 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
     locname.GLXYGENCM: SMG2LocationData(["Comet Medal Location", regname.BOWSER3], regname.BOWSER3,
                                         regname.,  1, ),
     locname.MARIOSQRCM: SMG2LocationData(["Comet Medal Location", regname.MARIO], regname.MARIO,
-                                         regname.,  1, ),
+                                         regname.MARIOSQ1LEFT,  1, ),
     locname.ROLLSLIDECM: SMG2LocationData(["Comet Medal Location", regname.ROLLCOAST], regname.ROLLCOAST,
                                           regname.,  1, ),
     locname.TWISTTRIALCM: SMG2LocationData(["Comet Medal Location", regname.TWISTTRI], regname.TWISTTRI,

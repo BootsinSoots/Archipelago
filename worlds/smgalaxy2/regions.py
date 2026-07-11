@@ -335,6 +335,13 @@ region_list: dict[str, SMG2RegionData] = {
     regname.SLIMSPRI2CAVE1:             SMG2RegionData("Planet", [], []),
     regname.SLIMSPRI2MOUTH2:            SMG2RegionData("Planet", [], []),
     regname.SLIMSPRI2CAVE2:             SMG2RegionData("Planet", [], []),
+
+    regname.MARIOSQ1RIGHT:              SMG2RegionData("Planet", [], []),
+    regname.MARIOSQ1LEFT:               SMG2RegionData("Planet", [], []),
+    regname.MARIOSQ1MAIN:               SMG2RegionData("Planet", [], []),
+    regname.MARIOSQ2RIGHT:              SMG2RegionData("Planet", [], []),
+    regname.MARIOSQ2LEFT:               SMG2RegionData("Planet", [], []),
+    regname.MARIOSQ2MAIN:               SMG2RegionData("Planet", [], []),
     regname.GRANDMASTER1YOSHI:          SMG2RegionData("Planet", [], []),
     regname.GRANDMASTER1SWITCH:         SMG2RegionData("Planet", [], []),
     regname.GRANDMASTER1CLOUD:          SMG2RegionData("Planet", [], []),
