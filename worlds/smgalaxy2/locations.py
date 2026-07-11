@@ -352,8 +352,10 @@ FLASHBLACK_loc: dict[str, SMG2LocationData] = {
 
     # Slimy Spring
 SLIMSPRI_loc: dict[str, SMG2LocationData] = {
-    locname.SLIMYSPRISTAR1: SMG2LocationData(["Power Star Location", regname.SLIMSPRI], regname.SLIMSPRI),
-    locname.SLIMYSPRISTAR2: SMG2LocationData(["Power Star Location", regname.SLIMSPRI], regname.SLIMSPRI),
+    locname.SLIMYSPRISTAR1: SMG2LocationData(["Power Star Location", regname.SLIMSPRI], regname.SLIMSPRI,
+                                             regname.SLIMSPRI1CAVE2, 1),
+    locname.SLIMYSPRISTAR2: SMG2LocationData(["Power Star Location", regname.SLIMSPRI], regname.SLIMSPRI,
+                                             regname.SLIMSPRI2MOUTH1, 1),
 }
 
     # Bowser's Gala
@@ -614,10 +616,10 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.FLASHBLACK1TOWER, 1,),
     locname.FLASHBLACKSTARG2:   SMG2LocationData(["Green Star Location", regname.FLASHBLACK], regname.FLASHBLACK,
                                                  regname.FLASHBLACK1PATH, 1,),
-    locname.SLIMYSPRISTARG1:    SMG2LocationData(["Green Star Location", regname.SLIMSPRI], regname.SLIMSPRI, 1,
-                                                 ),
-    locname.SLIMYSPIRSTARG2:    SMG2LocationData(["Green Star Location", regname.SLIMSPRI], regname.SLIMSPRI, 1,
-                                                 ),
+    locname.SLIMYSPRISTARG1:    SMG2LocationData(["Green Star Location", regname.SLIMSPRI], regname.SLIMSPRI,
+                                                 regname.SLIMSPRI1CAVE1, 1, ),
+    locname.SLIMYSPIRSTARG2:    SMG2LocationData(["Green Star Location", regname.SLIMSPRI], regname.SLIMSPRI,
+                                                 regname.SLIMSPRI1CAVE1, 1, ),
     locname.GALAXYGENSTARG1:    SMG2LocationData(["Green Star Location", regname.BOWSER3], regname.BOWSER3, 1,
                                                  ),
     locname.GALAXYGENSTARG2:    SMG2LocationData(["Green Star Location", regname.BOWSER3], regname.BOWSER3, 1,
@@ -731,7 +733,7 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
     locname.FLASHBLACKCM: SMG2LocationData(["Comet Medal Location", regname.FLASHBLACK], regname.FLASHBLACK,
                                            regname.FLASHBLACK1TOWER,  1, ),
     locname.SLIMYSPRICM: SMG2LocationData(["Comet Medal Location", regname.SLIMSPRI], regname.SLIMSPRI,
-                                          regname.,  1, ),
+                                          regname.SLIMSPRI1CAVE1,  1, ),
     locname.GLXYGENCM: SMG2LocationData(["Comet Medal Location", regname.BOWSER3], regname.BOWSER3,
                                         regname.,  1, ),
     locname.MARIOSQRCM: SMG2LocationData(["Comet Medal Location", regname.MARIO], regname.MARIO,
