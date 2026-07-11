@@ -360,8 +360,10 @@ SLIMSPRI_loc: dict[str, SMG2LocationData] = {
 
     # Bowser's Gala
 GALGEN_loc: dict[str, SMG2LocationData] = {
-    locname.GALAXYGENSTAR1: SMG2LocationData(["Power Star Location", regname.BOWSER3], regname.BOWSER3),
-    locname.GALAXYGENSTAR2: SMG2LocationData(["Power Star Location", regname.BOWSER3], regname.BOWSER3),
+    locname.GALAXYGENSTAR1: SMG2LocationData(["Power Star Location", regname.BOWSER3], regname.BOWSER3,
+                                             regname.GALGEN1BOSS, 1),
+    locname.GALAXYGENSTAR2: SMG2LocationData(["Power Star Location", regname.BOWSER3], regname.BOWSER3,
+                                             regname.GALGEN2STATUE, 1),
 }
 
     # World S
@@ -626,10 +628,10 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.SLIMSPRI1CAVE1, 1, ),
     locname.SLIMYSPIRSTARG2:    SMG2LocationData(["Green Star Location", regname.SLIMSPRI], regname.SLIMSPRI,
                                                  regname.SLIMSPRI1CAVE1, 1, ),
-    locname.GALAXYGENSTARG1:    SMG2LocationData(["Green Star Location", regname.BOWSER3], regname.BOWSER3, 1,
-                                                 ),
-    locname.GALAXYGENSTARG2:    SMG2LocationData(["Green Star Location", regname.BOWSER3], regname.BOWSER3, 1,
-                                                 ),
+    locname.GALAXYGENSTARG1:    SMG2LocationData(["Green Star Location", regname.BOWSER3], regname.BOWSER3,
+                                                 regname.GALGEN1VOLCANO, 1,),
+    locname.GALAXYGENSTARG2:    SMG2LocationData(["Green Star Location", regname.BOWSER3], regname.BOWSER3,
+                                                 regname.GALGEN1DASHCAS, 1,),
     locname.MARIOSQRSTARG1:     SMG2LocationData(["Green Star Location", regname.MARIO], regname.MARIO,
                                                  regname.MARIOSQ1MAIN, 1,),
     locname.MARIOSQRSTARG2:     SMG2LocationData(["Green Star Location", regname.MARIO], regname.MARIO,
@@ -741,7 +743,7 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
     locname.SLIMYSPRICM: SMG2LocationData(["Comet Medal Location", regname.SLIMSPRI], regname.SLIMSPRI,
                                           regname.SLIMSPRI1CAVE1,  1, ),
     locname.GLXYGENCM: SMG2LocationData(["Comet Medal Location", regname.BOWSER3], regname.BOWSER3,
-                                        regname.,  1, ),
+                                        regname.GALGEN1LAVASNA,  1, ),
     locname.MARIOSQRCM: SMG2LocationData(["Comet Medal Location", regname.MARIO], regname.MARIO,
                                          regname.MARIOSQ1LEFT,  1, ),
     locname.ROLLSLIDECM: SMG2LocationData(["Comet Medal Location", regname.ROLLCOAST], regname.ROLLCOAST,

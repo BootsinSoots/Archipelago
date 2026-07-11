@@ -491,6 +491,35 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                     "Battle Belt 2: Swaphopper Sling Star")
     # Galaxy Generator
     world.get_region(regname.WORLD6).connect(world.get_region(regname.BOWSER3), "World 6 Slot 7 Galaxy")
+    world.get_region(regname.BOWSER3).connect(world.get_region(regname.GALGEN1LANDING), "Galaxy Generator Star")
+    world.get_region(regname.GALGEN1LANDING).connect(world.get_region(regname.GALGEN1HAMMER),
+                                                     "Galaxy Generator: Landing Launch Star")
+    world.get_region(regname.GALGEN1HAMMER).connect(world.get_region(regname.GALGEN1VOLCANO))
+    world.get_region(regname.GALGEN1VOLCANO).connect(world.get_region(regname.GALGEN1LAVACYL))
+    world.get_region(regname.GALGEN1LAVACYL).connect(world.get_region(regname.GALGEN1TOWER),
+                                                     "Galaxy Generator: Lava Cylinder Launch Star")
+    world.get_region(regname.GALGEN1TOWER).connect(world.get_region(regname.GALGEN1YOSHI),
+                                                     "Galaxy Generator: Tower Launch Star")
+    world.get_region(regname.GALGEN1YOSHI).connect(world.get_region(regname.GALGEN1DASHCAS))
+    world.get_region(regname.GALGEN1DASHCAS).connect(world.get_region(regname.GALGEN1LAVASNA),
+                                                     "Galaxy Generator: Dash Castle Sling Star")
+    world.get_region(regname.GALGEN1LAVASNA).connect(world.get_region(regname.GALGEN1STATUE))
+    world.get_region(regname.GALGEN1STATUE).connect(world.get_region(regname.GALGEN1THEDOOR))
+    world.get_region(regname.GALGEN1THEDOOR).connect(world.get_region(regname.GALGEN1BOSS),
+                                                     "Galaxy Generator: The Door")
+    world.get_region(regname.BOWSER3).connect(world.get_region(regname.GALGEN2LANDING), "Galaxy Generator Comet Star")
+    world.get_region(regname.GALGEN2LANDING).connect(world.get_region(regname.GALGEN2BOOMER),
+                                                     "Galaxy Generator Comet: Landing Sling Star")
+    world.get_region(regname.GALGEN2BOOMER).connect(world.get_region(regname.GALGEN2VOLCANO))
+    world.get_region(regname.GALGEN2VOLCANO).connect(world.get_region(regname.GALGEN2LAVACYL))
+    world.get_region(regname.GALGEN2LAVACYL).connect(world.get_region(regname.GALGEN2TOWER),
+                                                     "Galaxy Generator Comet: Lava Cylinder Launch Star")
+    world.get_region(regname.GALGEN2TOWER).connect(world.get_region(regname.GALGEN2YOSHI),
+                                                     "Galaxy Generator Comet: Tower Launch Star")
+    world.get_region(regname.GALGEN2YOSHI).connect(world.get_region(regname.GALGEN2DASHCAS))
+    world.get_region(regname.GALGEN2DASHCAS).connect(world.get_region(regname.GALGEN2LAVASNA),
+                                                     "Galaxy Generator Comet: Dash Castle Sling Star")
+    world.get_region(regname.GALGEN2LAVASNA).connect(world.get_region(regname.GALGEN2STATUE))
     # World 7
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD7), "World S Map",
                                            rule=(Has(itemname.GRAND, 6)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
