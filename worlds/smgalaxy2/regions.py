@@ -323,6 +323,9 @@ region_list: dict[str, SMG2RegionData] = {
     regname.BATTBELT2MOLE:              SMG2RegionData("Planet", [], []),
     regname.BATTBELT2MOLI:              SMG2RegionData("Planet", [], []),
     regname.BATTBELT2CHOM:              SMG2RegionData("Planet", [], []),
+    regname.FLASHBLACK1TOWER:           SMG2RegionData("Planet", [], []),
+    regname.FLASHBLACK1PATH:            SMG2RegionData("Planet", [], []),
+    regname.FLASHBLACK2PATH:            SMG2RegionData("Planet", [], []),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]

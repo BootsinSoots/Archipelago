@@ -411,6 +411,10 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.CLOCKWORK).connect(world.get_region(regname.CLOCKWORK2COGS), "Clockwork Ruins Star 2")
     # Flash Black
     world.get_region(regname.WORLD6).connect(world.get_region(regname.FLASHBLACK), "World 6 Slot 3 Galaxy")
+    world.get_region(regname.FLASHBLACK).connect(world.get_region(regname.FLASHBLACK1TOWER), "Flash Black Star 1")
+    world.get_region(regname.FLASHBLACK1TOWER).connect(world.get_region(regname.FLASHBLACK1PATH),
+                                                       "Flash Black 1: Tower Launch Star")
+    world.get_region(regname.FLASHBLACK).connect(world.get_region(regname.FLASHBLACK2PATH), "Flash Black Comet Star")
     # Throwback
     world.get_region(regname.WORLD6).connect(world.get_region(regname.WHOMPFORT), "World 6 Slot 4 Galaxy")
     world.get_region(regname.WHOMPFORT).connect(world.get_region(regname.WHOMP1FORT), "Throwback Star 1")
