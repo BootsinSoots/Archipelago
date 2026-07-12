@@ -395,6 +395,21 @@ region_list: dict[str, SMG2RegionData] = {
     regname.COSMIC2TOADSHI:             SMG2RegionData("Planet", [], []),
     regname.COSMIC2WATERPL1:            SMG2RegionData("Planet", [], []),
     regname.COSMIC2WATERPL2:            SMG2RegionData("Planet", [], []),
+    regname.LAVALAIR1LANDING:           SMG2RegionData("Planet", [], []),
+    regname.LAVALAIR1LAVACYL1:          SMG2RegionData("Planet", [], []),
+    regname.LAVALAIR1LAVACYL2:          SMG2RegionData("Planet", [], []),
+    regname.LAVALAIR1LAVAPLA1B:         SMG2RegionData("Planet", [], []),
+    regname.LAVALAIR1LAVAPLA1W:         SMG2RegionData("Planet", [], []),
+    regname.LAVALAIR1LAVAPLA2C:         SMG2RegionData("Planet", [], []),
+    regname.LAVALAIR1LAVAPLA2S:         SMG2RegionData("Planet", [], []),
+    regname.LAVALAIR1BOSSPLA:           SMG2RegionData("Planet", [], []),
+    regname.LAVALAIR2LANDING:           SMG2RegionData("Planet", [], []),
+    regname.LAVALAIR2LAVACYL1:          SMG2RegionData("Planet", [], []),
+    regname.LAVALAIR2LAVACYL2:          SMG2RegionData("Planet", [], []),
+    regname.LAVALAIR2LAVAPLA1B:         SMG2RegionData("Planet", [], []),
+    regname.LAVALAIR2LAVAPLA1W:         SMG2RegionData("Planet", [], []),
+    regname.LAVALAIR2LAVAPLA2C:         SMG2RegionData("Planet", [], []),
+    regname.LAVALAIR2LAVAPLA2S:         SMG2RegionData("Planet", [], []),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]

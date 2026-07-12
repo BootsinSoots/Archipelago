@@ -135,8 +135,10 @@ BEEBLOOM_loc: dict[str, SMG2LocationData] = {
 
 # Bowser's Lava
 LAVALAIR_loc: dict[str, SMG2LocationData] = {
-    locname.LAVALAIRSTAR1: SMG2LocationData(["Power Star Location", regname.BOWSER1], regname.BOWSER1),
-    locname.LAVALAIRSTAR2: SMG2LocationData(["Power Star Location", regname.BOWSER1], regname.BOWSER1),
+    locname.LAVALAIRSTAR1: SMG2LocationData(["Power Star Location", regname.BOWSER1], regname.BOWSER1,
+                                            regname.LAVALAIR1BOSSPLA,1 ),
+    locname.LAVALAIRSTAR2: SMG2LocationData(["Power Star Location", regname.BOWSER1], regname.BOWSER1,
+                                            regname.LAVALAIR2LAVAPLA2S,1 ),
 }
 
 # World 3
@@ -487,10 +489,10 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  ),
     locname.BEEBLOOMSTARG2:     SMG2LocationData(["Green Star Location", regname.HONEYBLOOM], regname.HONEYBLOOM, 1,
                                                  ),
-    locname.LAVALAIRSTARG1:     SMG2LocationData(["Green Star Location", regname.BOWSER1], regname.BOWSER1, 1,
-                                                 ),
-    locname.LAVALAIRSTARG2:     SMG2LocationData(["Green Star Location", regname.BOWSER1], regname.BOWSER1, 1,
-                                                 ),
+    locname.LAVALAIRSTARG1:     SMG2LocationData(["Green Star Location", regname.BOWSER1], regname.BOWSER1,
+                                                 regname.LAVALAIR1LAVAPLA1W, 1,),
+    locname.LAVALAIRSTARG2:     SMG2LocationData(["Green Star Location", regname.BOWSER1], regname.BOWSER1,
+                                                 regname.LAVALAIR1LAVAPLA2C, 1,),
     locname.TALLTREESTARG1:     SMG2LocationData(["Green Star Location", regname.TALLTRUNK], regname.TALLTRUNK,
                                                  regname.TALLTRUNK1BIGTREE, 1, ),
     locname.TALLTREESTARG2:     SMG2LocationData(["Green Star Location", regname.TALLTRUNK], regname.TALLTRUNK,
@@ -690,7 +692,7 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
     locname.BEEBLOOMCM: SMG2LocationData(["Comet Medal Location", regname.HONEYBLOOM], regname.HONEYBLOOM,
                                          regname.,  1, ),
     locname.LAVALAIRCM: SMG2LocationData(["Comet Medal Location", regname.BOWSER1], regname.BOWSER1,
-                                         regname.,  1, ),
+                                         regname.LAVALAIR1LAVAPLA1W,  1, ),
     locname.TALLTREECM: SMG2LocationData(["Comet Medal Location", regname.TALLTRUNK], regname.TALLTRUNK,
                                          regname.,  1, ),
     locname.CLOUDCOURTCM: SMG2LocationData(["Comet Medal Location", regname.CLOUCOUR], regname.CLOUCOUR,
