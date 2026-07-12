@@ -384,6 +384,17 @@ region_list: dict[str, SMG2RegionData] = {
     regname.GRANDMASTER2BROS1:          SMG2RegionData("Planet", [], []),
     regname.GRANDMASTER2BROS2:          SMG2RegionData("Planet", [], []),
     regname.GRANDMASTER2ROSA:           SMG2RegionData("Planet", [], []),
+    regname.COSMIC1LANDING:             SMG2RegionData("Planet", [], []),
+    regname.COSMIC1POOL:                SMG2RegionData("Planet", [], []),
+    regname.COSMIC3WATER:               SMG2RegionData("Planet", [], []),
+    regname.COSMIC1WATERFA:             SMG2RegionData("Planet", [], []),
+    regname.COSMIC1DICEROOM:            SMG2RegionData("Planet", [], []),
+    regname.COSMIC2LANDING:             SMG2RegionData("Planet", [], []),
+    regname.COSMIC2INPIPE:              SMG2RegionData("Planet", [], []),
+    regname.COSMIC2WATERPA:             SMG2RegionData("Planet", [], []),
+    regname.COSMIC2TOADSHI:             SMG2RegionData("Planet", [], []),
+    regname.COSMIC2WATERPL1:            SMG2RegionData("Planet", [], []),
+    regname.COSMIC2WATERPL2:            SMG2RegionData("Planet", [], []),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]

@@ -181,6 +181,26 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.WORLD2).connect(world.get_region(regname.WILDGLIDE), "World 2 Slot 4 Galaxy")
     # Cosmic Cove
     world.get_region(regname.WORLD2).connect(world.get_region(regname.COSMICO), "World 2 Slot 5 Galaxy")
+    world.get_region(regname.COSMICO).connect(world.get_region(regname.COSMIC1LANDING), "Cosmic Cove Star 1")
+    world.get_region(regname.COSMIC1LANDING).connect(world.get_region(regname.COSMIC1POOL))
+    world.get_region(regname.COSMIC1POOL).connect(world.get_region(regname.COSMIC1DICEROOM),
+                                                  "Cosmic Cove 1: Green Pipe")
+    world.get_region(regname.COSMIC1POOL).connect(world.get_region(regname.COSMIC3WATER),
+                                                  "Cosmic Cove Hungry Luma")
+    world.get_region(regname.COSMIC1POOL).connect(world.get_region(regname.COSMIC1WATERFA),
+                                                  "Cosmic Cove 1: Icy Waterfall")
+    world.get_region(regname.COSMICO).connect(world.get_region(regname.COSMIC2LANDING), "Cosmic Cove Star 2")
+    world.get_region(regname.COSMIC2LANDING).connect(world.get_region(regname.COSMIC2INPIPE),
+                                                  "Cosmic Cove 2: Green Pipe to Cave")
+    world.get_region(regname.COSMIC2INPIPE).connect(world.get_region(regname.COSMIC2WATERPA),
+                                                  "Cosmic Cove 2: Green Pipe in Cave")
+    world.get_region(regname.COSMIC2WATERPA).connect(world.get_region(regname.COSMIC2LANDING),
+                                                  "Cosmic Cove 2: Return Green Pipe")
+    world.get_region(regname.COSMIC2LANDING).connect(world.get_region(regname.COSMIC2TOADSHI),
+                                                  "Cosmic Cove 2: Landing Launch Star")
+    world.get_region(regname.COSMIC2TOADSHI).connect(world.get_region(regname.COSMIC2WATERPL1),
+                                                  "Cosmic Cove 2: Toadship Launch Star")
+    world.get_region(regname.COSMIC2WATERPL1).connect(world.get_region(regname.COSMIC2WATERPL2))
     # Honeybloom
     world.get_region(regname.WORLD2).connect(world.get_region(regname.HONEYBLOOM), "World 2 Slot 6 Galaxy")
     # Lava Lair

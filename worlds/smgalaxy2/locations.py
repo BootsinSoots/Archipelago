@@ -113,9 +113,12 @@ ROCKBOWL_loc: dict[str, SMG2LocationData] = {
 
 # Cosmic Cove S
 COSCCOVE_loc: dict[str, SMG2LocationData] = {
-    locname.COSCCOVESTAR1:  SMG2LocationData(["Power Star Location", regname.COSMICO], regname.COSMICO),
-    locname.COSCCOVESTAR2:  SMG2LocationData(["Power Star Location", regname.COSMICO], regname.COSMICO),
-    locname.COSCCOVESTAR3:  SMG2LocationData(["Power Star Location", regname.COSMICO], regname.COSMICO),
+    locname.COSCCOVESTAR1:  SMG2LocationData(["Power Star Location", regname.COSMICO], regname.COSMICO,
+                                             regname.COSMIC1WATERFA,1 ),
+    locname.COSCCOVESTAR2:  SMG2LocationData(["Power Star Location", regname.COSMICO], regname.COSMICO,
+                                             regname.COSMIC2WATERPL2, 1),
+    locname.COSCCOVESTAR3:  SMG2LocationData(["Power Star Location", regname.COSMICO], regname.COSMICO,
+                                             regname.COSMIC3WATER,1 ),
 }
 
 # Wild Glide St
@@ -470,12 +473,12 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  ),
     locname.ROCKBOWLSTARG3:     SMG2LocationData(["Green Star Location", regname.BOULBOWL], regname.BOULBOWL, 1,
                                                  ),
-    locname.COSCCOVESTARG1:     SMG2LocationData(["Green Star Location", regname.COSMICO], regname.COSMICO, 1,
-                                                 ),
-    locname.COSCCOVESTARG2:     SMG2LocationData(["Green Star Location", regname.COSMICO], regname.COSMICO, 1,
-                                                 ),
-    locname.COSCCOVESTARG3:     SMG2LocationData(["Green Star Location", regname.COSMICO], regname.COSMICO, 1,
-                                                 ),
+    locname.COSCCOVESTARG1:     SMG2LocationData(["Green Star Location", regname.COSMICO], regname.COSMICO,
+                                                 regname.COSMIC1WATERFA, 1, ),
+    locname.COSCCOVESTARG2:     SMG2LocationData(["Green Star Location", regname.COSMICO], regname.COSMICO,
+                                                 regname.COSMIC2WATERPA, 1, ),
+    locname.COSCCOVESTARG3:     SMG2LocationData(["Green Star Location", regname.COSMICO], regname.COSMICO,
+                                                 regname.COSMIC2WATERPA, 1, ),
     locname.WILDGLIDESTARG1:    SMG2LocationData(["Green Star Location", regname.WILDGLIDE], regname.WILDGLIDE, 1,
                                                  ),
     locname.WILDGLIDESTARG2:    SMG2LocationData(["Green Star Location", regname.WILDGLIDE], regname.WILDGLIDE, 1,
@@ -681,7 +684,7 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
     locname.ROCKBOWLCM: SMG2LocationData(["Comet Medal Location", regname.BOULBOWL], regname.BOULBOWL,
                                          regname.,  1, ),
     locname.COSCCOVECM: SMG2LocationData(["Comet Medal Location", regname.COSMICO], regname.COSMICO,
-                                         regname.,  1, ),
+                                         regname.COSMIC1POOL,  1, ),
     locname.WILDGLIDECM: SMG2LocationData(["Comet Medal Location", regname.WILDGLIDE], regname.WILDGLIDE,
                                           regname.,  1, ),
     locname.BEEBLOOMCM: SMG2LocationData(["Comet Medal Location", regname.HONEYBLOOM], regname.HONEYBLOOM,
