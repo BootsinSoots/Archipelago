@@ -360,6 +360,15 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                        "Rolling Masterpiece Comet: Bob-omb Ball Launcher")
     # Fearsome Fleet
     world.get_region(regname.WORLD3).connect(world.get_region(regname.BOWJR2), "World 3 Slot 7 Galaxy")
+    world.get_region(regname.BOWJR2).connect(world.get_region(regname.FEARFLET1LANDING), "Fearsome Fleet Grand Star")
+    world.get_region(regname.FEARFLET1LANDING).connect(world.get_region(regname.FEARFLET1UNDERGR),
+                                                       "Fearsome Fleet: First Electric Cage")
+    world.get_region(regname.FEARFLET1UNDERGR).connect(world.get_region(regname.FEARFLET1BULLETB),
+                                                       "Fearsome Fleet: Firing Line Sling Star")
+    world.get_region(regname.FEARFLET1BULLETB).connect(world.get_region(regname.FEARFLET1AIRSHIP))
+    world.get_region(regname.FEARFLET1AIRSHIP).connect(world.get_region(regname.FEARFLET1MEGAHAM),
+                                                       "Fearsome Fleet: Airship Launch Star")
+    world.get_region(regname.BOWJR2).connect(world.get_region(regname.FEARFLET2MEGAHAM), "Fearsome Fleet Comet Star")
     # World 4
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD4), "World 4 Map",
                                            rule=(Has(itemname.GRAND, 3)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))

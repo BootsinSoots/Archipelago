@@ -477,6 +477,12 @@ region_list: dict[str, SMG2RegionData] = {
     regname.ROLLMAST2SILVERC:           SMG2RegionData("Planet", [], []),
     regname.BEATBLOK1:                  SMG2RegionData("Planet", [], []),
     regname.BEATBLOK2:                  SMG2RegionData("Planet", [], []),
+    regname.FEARFLET1LANDING:           SMG2RegionData("Planet", [], []),
+    regname.FEARFLET1UNDERGR:           SMG2RegionData("Planet", [], []),
+    regname.FEARFLET1BULLETB:           SMG2RegionData("Planet", [], []),
+    regname.FEARFLET1AIRSHIP:           SMG2RegionData("Planet", [], []),
+    regname.FEARFLET1MEGAHAM:           SMG2RegionData("Planet", [], []),
+    regname.FEARFLET2MEGAHAM:           SMG2RegionData("Planet", [], []),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]
