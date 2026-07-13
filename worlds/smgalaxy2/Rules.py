@@ -192,6 +192,19 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                       "Puzzle Plank Comet: Green Pipe")
     # Boulder Bowl
     world.get_region(regname.WORLD2).connect(world.get_region(regname.BOULBOWL), "World 2 Slot 2 Galaxy")
+    world.get_region(regname.BOULBOWL).connect(world.get_region(regname.BOULBOWL1CRYSTAL), "Boulder Bowl Star")
+    world.get_region(regname.BOULBOWL1CRYSTAL).connect(world.get_region(regname.BOULBOWL1FALLING))
+    world.get_region(regname.BOULBOWL1FALLING).connect(world.get_region(regname.BOULBOWL1BOULDER),
+                                                       "Boulder Bowl: Falling Rocks Launch Star")
+    world.get_region(regname.BOULBOWL1BOULDER).connect(world.get_region(regname.BOULBOWL1DODECAH),
+                                                       "Boulder Bowl: Boulder Sling Star")
+    world.get_region(regname.BOULBOWL1BOULDER).connect(world.get_region(regname.BOULBOWL1DICEROOM),
+                                                       "Boulder Bowl: Boulder Green Pipe")
+    world.get_region(regname.BOULBOWL1DODECAH).connect(world.get_region(regname.BOULBOWL1BOSS),
+                                                       "Boulder Bowl: Dodecahedron Launch Star")
+    world.get_region(regname.BOULBOWL).connect(world.get_region(regname.BOULBOWL2ASTEROI), "Boulder Bowl Comet Star")
+    world.get_region(regname.BOULBOWL2ASTEROI).connect(world.get_region(regname.BOULBOWL2CAGEPLA),
+                                                       "Boulder Bowl: Asteroid Launch Star")
     # Hightail Falls
     world.get_region(regname.WORLD2).connect(world.get_region(regname.HIGHTAIL), "World 2 Slot 3 Galaxy")
     world.get_region(regname.HIGHTAIL).connect(world.get_region(regname.HIGHTAIL1LANDING), "Hightail Falls Star")
@@ -222,6 +235,8 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.HIGHTAIL2DASHWAL1).connect(world.get_region(regname.HIGHTAILGSTAR3))
     # Wild Glide
     world.get_region(regname.WORLD2).connect(world.get_region(regname.WILDGLIDE), "World 2 Slot 4 Galaxy")
+    world.get_region(regname.WILDGLIDE).connect(world.get_region(regname.WILDGLIDESTART), "Wild Glide Star")
+    world.get_region(regname.WILDGLIDESTART).connect(world.get_region(regname.WILDGLIDECOURSE))
     # Cosmic Cove
     world.get_region(regname.WORLD2).connect(world.get_region(regname.COSMICO), "World 2 Slot 5 Galaxy")
     world.get_region(regname.COSMICO).connect(world.get_region(regname.COSMIC1LANDING), "Cosmic Cove Star 1")
