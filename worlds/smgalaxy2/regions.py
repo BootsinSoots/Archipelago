@@ -430,6 +430,16 @@ region_list: dict[str, SMG2RegionData] = {
     regname.FLIPOUT1CLIMB:              SMG2RegionData("Planet", [], []),
     regname.FLIPOUT2LANDING:            SMG2RegionData("Planet", [], []),
     regname.FLIPOUT2CLIMB:              SMG2RegionData("Planet", [], []),
+    regname.PUZZPLAN1BLOCK:             SMG2RegionData("Planet", [], []),
+    regname.PUZZPLAN1GROUND:            SMG2RegionData("Planet", [], []),
+    regname.PUZZPLAN1GRUZZY:            SMG2RegionData("Planet", [], []),
+    regname.PUZZPLAN3BUGABO:            SMG2RegionData("Planet", [], []),
+    regname.PUZZPLAN1COINRO:            SMG2RegionData("Planet", [], []),
+    regname.PUZZPLAN1SAWBLA:            SMG2RegionData("Planet", [], []),
+    regname.PUZZPLAN1CHECKP:            SMG2RegionData("Planet", [], []),
+    regname.PUZZPLAN1MANDIB:            SMG2RegionData("Planet", [], []),
+    regname.PUZZPLAN2GRUZZY:            SMG2RegionData("Planet", [], []),
+    regname.PUZZPLAN2COINRO:            SMG2RegionData("Planet", [], []),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]

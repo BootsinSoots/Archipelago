@@ -92,9 +92,12 @@ locname.FIREFLOTSTAR2:  SMG2LocationData(["Power Star Location", regname.BOWJR1]
 # World 2
 # Puzzle Plank
 PUZZPLANK_loc: dict[str, SMG2LocationData] = {
-    locname.PUZZPLANKSTAR1:  SMG2LocationData(["Power Star Location", regname.PUZZPLAN], regname.PUZZPLAN),
-    locname.PUZZPLANKSTAR2:  SMG2LocationData(["Power Star Location", regname.PUZZPLAN], regname.PUZZPLAN),
-    locname.PUZZPLANKSTAR3:  SMG2LocationData(["Power Star Location", regname.PUZZPLAN], regname.PUZZPLAN),
+    locname.PUZZPLANKSTAR1:  SMG2LocationData(["Power Star Location", regname.PUZZPLAN], regname.PUZZPLAN,
+                                              regname.PUZZPLAN1MANDIB, 1),
+    locname.PUZZPLANKSTAR2:  SMG2LocationData(["Power Star Location", regname.PUZZPLAN], regname.PUZZPLAN,
+                                              regname.PUZZPLAN2COINRO, 1),
+    locname.PUZZPLANKSTAR3:  SMG2LocationData(["Power Star Location", regname.PUZZPLAN], regname.PUZZPLAN,
+                                              regname.PUZZPLAN3BUGABO, 1),
 }
 
 # Hightail Fall
@@ -465,12 +468,12 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.FIREFLOT1LANDING, 1,),
     locname.FIREFLOTSTARG2:     SMG2LocationData(["Green Star Location", regname.BOWJR1], regname.BOWJR1,
                                                  regname.FIREFLOT1LAVA, 1,),
-    locname.PUZZPLANKSTARG1:    SMG2LocationData(["Green Star Location", regname.PUZZPLAN], regname.PUZZPLAN, 1,
-                                                 ),
-    locname.PUZZPLANKSTARG2:    SMG2LocationData(["Green Star Location", regname.PUZZPLAN], regname.PUZZPLAN, 1,
-                                                 ),
-    locname.PUZZPLANKSTARG3:    SMG2LocationData(["Green Star Location", regname.PUZZPLAN], regname.PUZZPLAN, 1,
-                                                 ),
+    locname.PUZZPLANKSTARG1:    SMG2LocationData(["Green Star Location", regname.PUZZPLAN], regname.PUZZPLAN,
+                                                 regname.PUZZPLAN1BLOCK, 1,),
+    locname.PUZZPLANKSTARG2:    SMG2LocationData(["Green Star Location", regname.PUZZPLAN], regname.PUZZPLAN,
+                                                 regname.PUZZPLAN1SAWBLA, 1,),
+    locname.PUZZPLANKSTARG3:    SMG2LocationData(["Green Star Location", regname.PUZZPLAN], regname.PUZZPLAN,
+                                                 regname.PUZZPLAN1SAWBLA, 1,),
     locname.HIGHFALLSTARG1:     SMG2LocationData(["Green Star Location", regname.HIGHTAIL], regname.HIGHTAIL, 1,
                                                  ),
     locname.HIGHFALLSTARG2:     SMG2LocationData(["Green Star Location", regname.HIGHTAIL], regname.HIGHTAIL, 1,
@@ -688,7 +691,7 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
     locname.FIREFLOTCM: SMG2LocationData(["Comet Medal Location", regname.BOWJR1], regname.BOWJR1,
                                          regname., 1, ),
     locname.PUZZPLANKCM: SMG2LocationData(["Comet Medal Location", regname.PUZZPLAN], regname.PUZZPLAN,
-                                          regname.,  1, ),
+                                          regname.PUZZPLAN1SAWBLA,  1, ),
     locname.HIGHFALLCM: SMG2LocationData(["Comet Medal Location", regname.HIGHTAIL], regname.HIGHTAIL,
                                          regname.,  1, ),
     locname.ROCKBOWLCM: SMG2LocationData(["Comet Medal Location", regname.BOULBOWL], regname.BOULBOWL,

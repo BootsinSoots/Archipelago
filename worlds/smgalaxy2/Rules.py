@@ -173,6 +173,23 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                 | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
     # Puzzle Plank
     world.get_region(regname.WORLD2).connect(world.get_region(regname.PUZZPLAN), "World 2 Slot 1 Galaxy")
+    world.get_region(regname.PUZZPLAN).connect(world.get_region(regname.PUZZPLAN1BLOCK), "Puzzle Plank Star")
+    world.get_region(regname.PUZZPLAN1BLOCK).connect(world.get_region(regname.PUZZPLAN1GROUND))
+    world.get_region(regname.PUZZPLAN1GROUND).connect(world.get_region(regname.PUZZPLAN1GRUZZY),
+                                                      "Puzzle Plank: Wiggler Platform Launch Star")
+    world.get_region(regname.PUZZPLAN1GRUZZY).connect(world.get_region(regname.PUZZPLAN1COINRO),
+                                                      "Puzzle Plank: Grassy Buzzsaw Green Pipe")
+    world.get_region(regname.PUZZPLAN1GRUZZY).connect(world.get_region(regname.PUZZPLAN3BUGABO),
+                                                      "Puzzle Plank Hungry Luma")
+    world.get_region(regname.PUZZPLAN1GRUZZY).connect(world.get_region(regname.PUZZPLAN1SAWBLA),
+                                                      "Puzzle Plank: Grassy Buzzsaw Launch Star")
+    world.get_region(regname.PUZZPLAN1SAWBLA).connect(world.get_region(regname.PUZZPLAN1CHECKP),
+                                                      "Puzzle Plank: Saws & Planks Sling Star")
+    world.get_region(regname.PUZZPLAN1CHECKP).connect(world.get_region(regname.PUZZPLAN1MANDIB),
+                                                      "Puzzle Plank: Checkpoint Launch Star")
+    world.get_region(regname.PUZZPLAN).connect(world.get_region(regname.PUZZPLAN2GRUZZY), "Puzzle Plank Comet Star")
+    world.get_region(regname.PUZZPLAN2GRUZZY).connect(world.get_region(regname.PUZZPLAN2COINRO),
+                                                      "Puzzle Plank Comet: Green Pipe")
     # Boulder Bowl
     world.get_region(regname.WORLD2).connect(world.get_region(regname.BOULBOWL), "World 2 Slot 2 Galaxy")
     # Hightail Falls
