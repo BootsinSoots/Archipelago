@@ -621,6 +621,10 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                         "Boss Blitz Comet: Tiny Meteor Launch Star")
     # Flipout
     world.get_region(regname.WORLD7).connect(world.get_region(regname.FLIPOUT), "World 7 Slot 6 Galaxy")
+    world.get_region(regname.FLIPOUT).connect(world.get_region(regname.FLIPOUT1LANDING), "Flip-Out Star")
+    world.get_region(regname.FLIPOUT1LANDING).connect(world.get_region(regname.FLIPOUT1CLIMB), "Flip-Out: Green Pipe")
+    world.get_region(regname.FLIPOUT).connect(world.get_region(regname.FLIPOUT2LANDING), "Flip-Out Comet Star")
+    world.get_region(regname.FLIPOUT2LANDING).connect(world.get_region(regname.FLIPOUT2CLIMB), "Flip-Out Comet: Green Pipe")
     # Grandmaster
     world.get_region(regname.WORLD7).connect(world.get_region(regname.GRANDMASTER), "World 7 Slot 7 Galaxy")
     world.get_region(regname.GRANDMASTER).connect(world.get_region(regname.GRANDMASTER1YOSHI), "Grandmaster Star")

@@ -414,8 +414,10 @@ BOSSBLITZ_loc: dict[str, SMG2LocationData] = {
 
     # Flip-Out Star
 FLIPOUT_loc: dict[str, SMG2LocationData] = {
-    locname.FLIPOUTSTAR1: SMG2LocationData(["Power Star Location", regname.FLIPOUT], regname.FLIPOUT),
-    locname.FLIPOUTSTAR2: SMG2LocationData(["Power Star Location", regname.FLIPOUT], regname.FLIPOUT),
+    locname.FLIPOUTSTAR1: SMG2LocationData(["Power Star Location", regname.FLIPOUT], regname.FLIPOUT,
+                                           regname.FLIPOUT1CLIMB, 1),
+    locname.FLIPOUTSTAR2: SMG2LocationData(["Power Star Location", regname.FLIPOUT], regname.FLIPOUT,
+                                           regname.FLIPOUT2CLIMB, 1),
 }
 
     # Grandmaster
@@ -663,10 +665,10 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.BOSSBLITZ1MAJORBU, 1,),
     locname.BOSSBLITSTARG2:     SMG2LocationData(["Green Star Location", regname.BOSSBLITZ], regname.BOSSBLITZ,
                                                  regname.BOSSBLITZ1BOULDER, 1,),
-    locname.FLIPOUTSTARG1:      SMG2LocationData(["Green Star Location", regname.FLIPOUT], regname.FLIPOUT, 1,
-                                                 ),
-    locname.FLIPOUTSTARG2:      SMG2LocationData(["Green Star Location", regname.FLIPOUT], regname.FLIPOUT, 1,
-                                                 ),
+    locname.FLIPOUTSTARG1:      SMG2LocationData(["Green Star Location", regname.FLIPOUT], regname.FLIPOUT,
+                                                 regname.FLIPOUT1CLIMB, 1,),
+    locname.FLIPOUTSTARG2:      SMG2LocationData(["Green Star Location", regname.FLIPOUT], regname.FLIPOUT,
+                                                 regname.FLIPOUT2CLIMB, 1,),
 }
 
 #TODO Comet Medals Table
@@ -766,7 +768,7 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
     locname.BOSSBLITCM: SMG2LocationData(["Comet Medal Location", regname.BOSSBLITZ], regname.BOSSBLITZ,
                                          regname.BOSSBLITZ1KINGKAL,  1, ),
     locname.FLIPOUTCM: SMG2LocationData(["Comet Medal Location", regname.FLIPOUT], regname.FLIPOUT,
-                                        regname.,  1, ),
+                                        regname.FLIPOUT1CLIMB,  1, ),
     locname.GRANDMASTRCM: SMG2LocationData(["Comet Medal Location", regname.GRANDMASTER], regname.GRANDMASTER,
                                            regname.GRANDMASTER1BROS2,  1, ),
 }
