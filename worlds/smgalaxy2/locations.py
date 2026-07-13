@@ -398,8 +398,10 @@ TWISTTRI_loc: dict[str, SMG2LocationData] = {
 
     # Stone Cyclone
 STONECYC_loc: dict[str, SMG2LocationData] = {
-    locname.STONECYCLOSTAR1: SMG2LocationData(["Power Star Location", regname.STONECYC], regname.STONECYC),
-    locname.STONECYCLOSTAR2: SMG2LocationData(["Power Star Location", regname.STONECYC], regname.STONECYC),
+    locname.STONECYCLOSTAR1: SMG2LocationData(["Power Star Location", regname.STONECYC], regname.STONECYC,
+                                              regname.STONECYC1, 1),
+    locname.STONECYCLOSTAR2: SMG2LocationData(["Power Star Location", regname.STONECYC], regname.STONECYC,
+                                              regname.STONECYC2, 1),
 }
 
     # Boss Blitz St
@@ -653,10 +655,10 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.TWISTY1PLAT2, 1,),
     locname.TWISTTRIALSTARG2:   SMG2LocationData(["Green Star Location", regname.TWISTTRI], regname.TWISTTRI,
                                                  regname.TWISTY1PLAT4, 1,),
-    locname.STONECYCLOSTARG1:   SMG2LocationData(["Green Star Location", regname.STONECYC], regname.STONECYC, 1,
-                                                 ),
-    locname.STONECYCLOSTARG2:   SMG2LocationData(["Green Star Location", regname.STONECYC], regname.STONECYC, 1,
-                                                 ),
+    locname.STONECYCLOSTARG1:   SMG2LocationData(["Green Star Location", regname.STONECYC], regname.STONECYC,
+                                                 regname.STONECYC1, 1,),
+    locname.STONECYCLOSTARG2:   SMG2LocationData(["Green Star Location", regname.STONECYC], regname.STONECYC,
+                                                 regname.STONECYC1, 1,),
     locname.BOSSBLITSTARG1:     SMG2LocationData(["Green Star Location", regname.BOSSBLITZ], regname.BOSSBLITZ,
                                                  regname.BOSSBLITZ1MAJORBU, 1,),
     locname.BOSSBLITSTARG2:     SMG2LocationData(["Green Star Location", regname.BOSSBLITZ], regname.BOSSBLITZ,
@@ -760,7 +762,7 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
     locname.TWISTTRIALCM: SMG2LocationData(["Comet Medal Location", regname.TWISTTRI], regname.TWISTTRI,
                                            regname.TWISTY1PLAT4,  1, ),
     locname.STONECYCLOCM: SMG2LocationData(["Comet Medal Location", regname.STONECYC], regname.STONECYC,
-                                           regname.,  1, ),
+                                           regname.STONECYC1,  1, ),
     locname.BOSSBLITCM: SMG2LocationData(["Comet Medal Location", regname.BOSSBLITZ], regname.BOSSBLITZ,
                                          regname.BOSSBLITZ1KINGKAL,  1, ),
     locname.FLIPOUTCM: SMG2LocationData(["Comet Medal Location", regname.FLIPOUT], regname.FLIPOUT,

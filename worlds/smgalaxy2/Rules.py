@@ -593,6 +593,8 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.TWISTY2PLAT3).connect(world.get_region(regname.TWISTY2PLAT4))
     # Stone Cyclone
     world.get_region(regname.WORLD7).connect(world.get_region(regname.STONECYC), "World 7 Slot 4 Galaxy")
+    world.get_region(regname.STONECYC).connect(world.get_region(regname.STONECYC1), "Stone Cyclone Star")
+    world.get_region(regname.STONECYC).connect(world.get_region(regname.STONECYC2), "Stone Cyclone Comet Star")
     # Boss Blitz
     world.get_region(regname.WORLD7).connect(world.get_region(regname.BOSSBLITZ), "World 7 Slot 5 Galaxy")
     world.get_region(regname.BOSSBLITZ).connect(world.get_region(regname.BOSSBLITZ1DINOPIR), "Boss Blitz Star")
