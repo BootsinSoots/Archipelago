@@ -308,6 +308,28 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.HAUNHALL).connect(world.get_region(regname.HAUNHALL3CREEPYH), "Haunty Halls Comet Star")
     # Freezy Flake
     world.get_region(regname.WORLD3).connect(world.get_region(regname.FREEFLAKE), "World 3 Slot 4 Galaxy")
+    world.get_region(regname.FREEFLAKE).connect(world.get_region(regname.FREEFLAK1LOGCABI), "Freezy Flake 1")
+    world.get_region(regname.FREEFLAK1LOGCABI).connect(world.get_region(regname.FREEFLAK1SNOWBYH),
+                                                       "Freezy Flake 1: Log Cabin Launch Star")
+    world.get_region(regname.FREEFLAK1SNOWBYH).connect(world.get_region(regname.FREEFLAK3CHIMP),
+                                                       "Freezy Flake 1: Snowy Hill 1 Green Pipe")
+    world.get_region(regname.FREEFLAK1SNOWBYH).connect(world.get_region(regname.FREEFLAK1SLIDELA),
+                                                       "Freezy Flake 1: Snow Slide")
+    world.get_region(regname.FREEFLAK1SLIDELA).connect(world.get_region(regname.FREEFLAK1LAVASNO),
+                                                       "Freezy Flake 1: Slide Landing Green Pipe")
+    world.get_region(regname.FREEFLAKE).connect(world.get_region(regname.FREEFLAK2LOGCABI), "Freezy Flake 2")
+    world.get_region(regname.FREEFLAK2LOGCABI).connect(world.get_region(regname.FREEFLAK2SNOWBYH),
+                                                       "Freezy Flake 2: Log Cabin Launch Star")
+    world.get_region(regname.FREEFLAK2SNOWBYH).connect(world.get_region(regname.FREEFLAK3CHIMP),
+                                                       "Freezy Flake 2: Snowy Hill 2 Green Pipe")
+    world.get_region(regname.FREEFLAK2SNOWBYH).connect(world.get_region(regname.FREEFLAK2WHITOUT),
+                                                       "Freezy Flake 2: Snowy Hill Launch Star")
+    world.get_region(regname.FREEFLAK2WHITOUT).connect(world.get_region(regname.FREEFLAK2DICEROOM),
+                                                       "Freezy Flake 2: Whiteout Green Pipe")
+    world.get_region(regname.FREEFLAK2WHITOUT).connect(world.get_region(regname.FREEFLAK2SORBHEA),
+                                                       "Freezy Flake 2: Whiteout Launch Star")
+    world.get_region(regname.FREEFLAK2SORBHEA).connect(world.get_region(regname.FREEFLAK2SORBETT),
+                                                       "Freezy Flake 2: Sorbetti's Head Sling Star")
     # Beat Block
     world.get_region(regname.WORLD3).connect(world.get_region(regname.BEATBLOCK), "World 3 Slot 5 Galaxy")
     #Rolling masterpiece
@@ -456,7 +478,7 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.WORLD6).connect(world.get_region(regname.MELTY), "World 6 Slot 1 Galaxy")
     world.get_region(regname.MELTY).connect(world.get_region(regname.MELTY1LANDING), "Melty Monster Star 1")
     world.get_region(regname.MELTY1LANDING).connect(world.get_region(regname.MELTY3CHIMP),
-                                                    "Melty Monster 3: Star 1 Green Pipe")
+                                                    "Melty Monster Chimp: Star 1 Green Pipe")
     world.get_region(regname.MELTY1LANDING).connect(world.get_region(regname.MELTY1MAGMAARG),
                                                     "Melty Monster 1: Pull Star Path")
     world.get_region(regname.MELTY1MAGMAARG).connect(world.get_region(regname.MELTY1LAVAWAVE1),
@@ -467,7 +489,7 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                       "Melty Monster 1: Lava Wave Launch Star")
     world.get_region(regname.MELTY).connect(world.get_region(regname.MELTY2LANDING), "Melty Monster Star 2")
     world.get_region(regname.MELTY2LANDING).connect(world.get_region(regname.MELTY3CHIMP),
-                                                    "Melty Monster 3: Star 2 Green Pipe")
+                                                    "Melty Monster Chimp: Star 2 Green Pipe")
     world.get_region(regname.MELTY2LANDING).connect(world.get_region(regname.MELTY2BOWLING),
                                                     "Melty Monster 2: Roll to Launch Star")
     # Clockwork Ruins
