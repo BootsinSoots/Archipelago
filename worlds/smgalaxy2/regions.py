@@ -410,6 +410,18 @@ region_list: dict[str, SMG2RegionData] = {
     regname.LAVALAIR2LAVAPLA1W:         SMG2RegionData("Planet", [], []),
     regname.LAVALAIR2LAVAPLA2C:         SMG2RegionData("Planet", [], []),
     regname.LAVALAIR2LAVAPLA2S:         SMG2RegionData("Planet", [], []),
+    regname.BOSSBLITZ1DINOPIR:          SMG2RegionData("Planet", [], []),
+    regname.BOSSBLITZ1KINGKAL:          SMG2RegionData("Planet", [], []),
+    regname.BOSSBLITZ1MAJORBU:          SMG2RegionData("Planet", [], []),
+    regname.BOSSBLITZ1BOULDER:          SMG2RegionData("Planet", [], []),
+    regname.BOSSBLITZ1TINYMET:          SMG2RegionData("Planet", [], []),
+    regname.BOSSBLITZ1FIREDIN:          SMG2RegionData("Planet", [], []),
+    regname.BOSSBLITZ2DINOPIR:          SMG2RegionData("Planet", [], []),
+    regname.BOSSBLITZ2KINGKAL:          SMG2RegionData("Planet", [], []),
+    regname.BOSSBLITZ2MAJORBU:          SMG2RegionData("Planet", [], []),
+    regname.BOSSBLITZ2BOULDER:          SMG2RegionData("Planet", [], []),
+    regname.BOSSBLITZ2TINYMET:          SMG2RegionData("Planet", [], []),
+    regname.BOSSBLITZ2FIREDIN:          SMG2RegionData("Planet", [], []),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]

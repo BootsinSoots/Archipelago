@@ -593,6 +593,28 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.WORLD7).connect(world.get_region(regname.STONECYC), "World 7 Slot 4 Galaxy")
     # Boss Blitz
     world.get_region(regname.WORLD7).connect(world.get_region(regname.BOSSBLITZ), "World 7 Slot 5 Galaxy")
+    world.get_region(regname.BOSSBLITZ).connect(world.get_region(regname.BOSSBLITZ1DINOPIR), "Boss Blitz Star")
+    world.get_region(regname.BOSSBLITZ1DINOPIR).connect(world.get_region(regname.BOSSBLITZ1KINGKAL),
+                                                        "Boss Blitz: Dino Piranha Launch Star")
+    world.get_region(regname.BOSSBLITZ1KINGKAL).connect(world.get_region(regname.BOSSBLITZ1MAJORBU),
+                                                        "Boss Blitz: King Kaliente Launch Star")
+    world.get_region(regname.BOSSBLITZ1MAJORBU).connect(world.get_region(regname.BOSSBLITZ1BOULDER),
+                                                        "Boss Blitz: Major Burrows Launch Star")
+    world.get_region(regname.BOSSBLITZ1BOULDER).connect(world.get_region(regname.BOSSBLITZ1TINYMET),
+                                                        "Boss Blitz: Bouldergeist Launch Star")
+    world.get_region(regname.BOSSBLITZ1TINYMET).connect(world.get_region(regname.BOSSBLITZ1FIREDIN),
+                                                        "Boss Blitz: Tiny Meteor Launch Star")
+    world.get_region(regname.BOSSBLITZ).connect(world.get_region(regname.BOSSBLITZ2DINOPIR), "Boss Blitz Comet Star")
+    world.get_region(regname.BOSSBLITZ2DINOPIR).connect(world.get_region(regname.BOSSBLITZ2KINGKAL),
+                                                        "Boss Blitz Comet: Dino Piranha Launch Star")
+    world.get_region(regname.BOSSBLITZ2KINGKAL).connect(world.get_region(regname.BOSSBLITZ2MAJORBU),
+                                                        "Boss Blitz Comet: King Kaliente Launch Star")
+    world.get_region(regname.BOSSBLITZ2MAJORBU).connect(world.get_region(regname.BOSSBLITZ2BOULDER),
+                                                        "Boss Blitz Comet: Major Burrows Launch Star")
+    world.get_region(regname.BOSSBLITZ2BOULDER).connect(world.get_region(regname.BOSSBLITZ2TINYMET),
+                                                        "Boss Blitz Comet: Bouldergeist Launch Star")
+    world.get_region(regname.BOSSBLITZ2TINYMET).connect(world.get_region(regname.BOSSBLITZ2FIREDIN),
+                                                        "Boss Blitz Comet: Tiny Meteor Launch Star")
     # Flipout
     world.get_region(regname.WORLD7).connect(world.get_region(regname.FLIPOUT), "World 7 Slot 6 Galaxy")
     # Grandmaster
