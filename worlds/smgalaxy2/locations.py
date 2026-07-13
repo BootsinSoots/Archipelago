@@ -132,8 +132,10 @@ WILDGLIDE_loc: dict[str, SMG2LocationData] = {
 
 # Honeybloom St
 BEEBLOOM_loc: dict[str, SMG2LocationData] = {
-    locname.BEEBLOOMSTAR1: SMG2LocationData(["Power Star Location", regname.HONEYBLOOM], regname.HONEYBLOOM),
-    locname.BEEBLOOMSTAR2: SMG2LocationData(["Power Star Location", regname.HONEYBLOOM], regname.HONEYBLOOM),
+    locname.BEEBLOOMSTAR1: SMG2LocationData(["Power Star Location", regname.HONEYBLOOM], regname.HONEYBLOOM,
+                                            regname.HONEYBLOOM1HONELOG,1),
+    locname.BEEBLOOMSTAR2: SMG2LocationData(["Power Star Location", regname.HONEYBLOOM], regname.HONEYBLOOM,
+                                            regname.HONEYBLOOM1SECRET,1),
 }
 
 # Bowser's Lava
@@ -502,10 +504,10 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  ),
     locname.WILDGLIDESTARG2:    SMG2LocationData(["Green Star Location", regname.WILDGLIDE], regname.WILDGLIDE, 1,
                                                  ),
-    locname.BEEBLOOMSTARG1:     SMG2LocationData(["Green Star Location", regname.HONEYBLOOM], regname.HONEYBLOOM, 1,
-                                                 ),
-    locname.BEEBLOOMSTARG2:     SMG2LocationData(["Green Star Location", regname.HONEYBLOOM], regname.HONEYBLOOM, 1,
-                                                 ),
+    locname.BEEBLOOMSTARG1:     SMG2LocationData(["Green Star Location", regname.HONEYBLOOM], regname.HONEYBLOOM,
+                                                 regname.HONEYBLOOM1WALL3,1,),
+    locname.BEEBLOOMSTARG2:     SMG2LocationData(["Green Star Location", regname.HONEYBLOOM], regname.HONEYBLOOM,
+                                                 regname.HONEYBLOOM1WALL3,1,),
     locname.LAVALAIRSTARG1:     SMG2LocationData(["Green Star Location", regname.BOWSER1], regname.BOWSER1,
                                                  regname.LAVALAIR1LAVAPLA1W, 1,),
     locname.LAVALAIRSTARG2:     SMG2LocationData(["Green Star Location", regname.BOWSER1], regname.BOWSER1,
@@ -707,7 +709,7 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
     locname.WILDGLIDECM: SMG2LocationData(["Comet Medal Location", regname.WILDGLIDE], regname.WILDGLIDE,
                                           regname.,  1, ),
     locname.BEEBLOOMCM: SMG2LocationData(["Comet Medal Location", regname.HONEYBLOOM], regname.HONEYBLOOM,
-                                         regname.,  1, ),
+                                         regname.HONEYBLOOM1WALL2,  1, ),
     locname.LAVALAIRCM: SMG2LocationData(["Comet Medal Location", regname.BOWSER1], regname.BOWSER1,
                                          regname.LAVALAIR1LAVAPLA1W,  1, ),
     locname.TALLTREECM: SMG2LocationData(["Comet Medal Location", regname.TALLTRUNK], regname.TALLTRUNK,
