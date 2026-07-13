@@ -291,6 +291,21 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                        "Cloudy Court 2: Final Sling Star")
     # Haunty halls
     world.get_region(regname.WORLD3).connect(world.get_region(regname.HAUNHALL), "World 3 Slot 3 Galaxy")
+    world.get_region(regname.HAUNHALL).connect(world.get_region(regname.HAUNHALL1HALLWAY), "Haunty Halls Star 1")
+    world.get_region(regname.HAUNHALL1HALLWAY).connect(world.get_region(regname.HAUNHALL1JACKBON),
+                                               "Haunty Halls 1: Jack O'Goomba Bonus Teleporter")
+    world.get_region(regname.HAUNHALL1HALLWAY).connect(world.get_region(regname.HAUNHALL1DISAPPE),
+                                               "Haunty Halls 1: Hallway Launch Star")
+    world.get_region(regname.HAUNHALL1DISAPPE).connect(world.get_region(regname.HAUNHALL1BULBBER),
+                                               "Haunty Halls 1: Green Pipe")
+    world.get_region(regname.HAUNHALL).connect(world.get_region(regname.HAUNHALL2HALLWAY), "Haunty Halls Star 2")
+    world.get_region(regname.HAUNHALL2HALLWAY).connect(world.get_region(regname.HAUNHALL2JACKBON),
+                                               "Haunty Halls 2: Jack O'Goomba Bonus Teleporter")
+    world.get_region(regname.HAUNHALL2HALLWAY).connect(world.get_region(regname.HAUNHALL2CREEPYC),
+                                               "Haunty Halls 2: Hallway Launch Star")
+    world.get_region(regname.HAUNHALL2CREEPYC).connect(world.get_region(regname.HAUNHALL2CREEPYH),
+                                               "Haunty Halls 2: Creepy Platforms Sling Star")
+    world.get_region(regname.HAUNHALL).connect(world.get_region(regname.HAUNHALL3CREEPYH), "Haunty Halls Comet Star")
     # Freezy Flake
     world.get_region(regname.WORLD3).connect(world.get_region(regname.FREEFLAKE), "World 3 Slot 4 Galaxy")
     # Beat Block

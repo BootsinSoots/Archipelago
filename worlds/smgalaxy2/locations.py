@@ -167,9 +167,12 @@ CLOUDCOURT_loc: dict[str, SMG2LocationData] = {
 
     # Haunty Halls
 HAUNTHALL_loc: dict[str, SMG2LocationData] = {
-    locname.HAUNTHALLSTAR1: SMG2LocationData(["Power Star Location", regname.HAUNHALL], regname.HAUNHALL),
-    locname.HAUNTHALLSTAR2: SMG2LocationData(["Power Star Location", regname.HAUNHALL], regname.HAUNHALL),
-    locname.HAUNTHALLSTAR3: SMG2LocationData(["Power Star Location", regname.HAUNHALL], regname.HAUNHALL),
+    locname.HAUNTHALLSTAR1: SMG2LocationData(["Power Star Location", regname.HAUNHALL], regname.HAUNHALL,
+                                             regname.HAUNHALL1BULBBER),
+    locname.HAUNTHALLSTAR2: SMG2LocationData(["Power Star Location", regname.HAUNHALL], regname.HAUNHALL,
+                                             regname.HAUNHALL2CREEPYH),
+    locname.HAUNTHALLSTAR3: SMG2LocationData(["Power Star Location", regname.HAUNHALL], regname.HAUNHALL,
+                                             regname.HAUNHALL3CREEPYH),
 }
 
     # Freezy Flake
@@ -516,12 +519,12 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.CLOUCOUR1CYMBAL, 1, ),
     locname.CLOUDCOURTSTARG3:   SMG2LocationData(["Green Star Location", regname.CLOUCOUR], regname.CLOUCOUR,
                                                  regname.CLOUCOUR1CASTLE , 1, ),
-    locname.HAUNTHALLSTARG1:    SMG2LocationData(["Green Star Location",regname.HAUNHALL],regname.HAUNHALL, 1,
-                                                 ),
-    locname.HAUNTHALLSTARG2:    SMG2LocationData(["Green Star Location",regname.HAUNHALL],regname.HAUNHALL, 1,
-                                                 ),
-    locname.HAUNTHALLSTARG3:    SMG2LocationData(["Green Star Location",regname.HAUNHALL],regname.HAUNHALL, 1,
-                                                 ),
+    locname.HAUNTHALLSTARG1:    SMG2LocationData(["Green Star Location",regname.HAUNHALL],regname.HAUNHALL,
+                                                 regname.HAUNHALL1HALLWAY, 1,),
+    locname.HAUNTHALLSTARG2:    SMG2LocationData(["Green Star Location",regname.HAUNHALL],regname.HAUNHALL,
+                                                 regname.HAUNHALL1DISAPPE, 1,),
+    locname.HAUNTHALLSTARG3:    SMG2LocationData(["Green Star Location",regname.HAUNHALL],regname.HAUNHALL,
+                                                 regname.HAUNHALL2CREEPYH, 1,),
     locname.SNOWFLAKESTARG1:    SMG2LocationData(["Green Star Location", regname.FREEFLAKE], regname.FREEFLAKE, 1,
                                                  ),
     locname.SNOWFLAKESTARG2:    SMG2LocationData(["Green Star Location", regname.FREEFLAKE], regname.FREEFLAKE, 1,
@@ -709,7 +712,7 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
     locname.CLOUDCOURTCM: SMG2LocationData(["Comet Medal Location", regname.CLOUCOUR], regname.CLOUCOUR,
                                            regname.,  1, ),
     locname.HAUNTHALLCM: SMG2LocationData(["Comet Medal Location", regname.HAUNHALL], regname.HAUNHALL,
-                                          regname.,  1, ),
+                                          regname.HAUNHALL1DISAPPE,  1, ),
     locname.SNOWFLAKECM: SMG2LocationData(["Comet Medal Location", regname.FREEFLAKE], regname.FREEFLAKE,
                                           regname.,  1, ),
     locname.ROLLMASTERCM: SMG2LocationData(["Comet Medal Location", regname.ROLLMAST], regname.ROLLMAST,
