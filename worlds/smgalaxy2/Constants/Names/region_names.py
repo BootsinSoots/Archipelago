@@ -242,6 +242,8 @@ ROLLMAST2PAINTBR = "Rolling Masterpiece: Paintbrush Planet"
 ROLLMAST2ELEVATO = "Rolling Masterpiece: Elevator Planet"
 ROLLMAST2BOMBOMB = "Rolling Masterpiece: Bob-omb Planet"
 ROLLMAST2SILVERC = "Rolling Masterpiece: Silver Chomp Arena"
+BEATBLOK1 = "Beat Block: Blocks on the Beat"
+BEATBLOK2 = "Beat Block Comet: Blocks on the Beat"
 
 SPACSTOR1PULL = "Space Storm 1: Pull Star Planet"
 SPACSTOR1SATELLITE = "Space Storm 1: Deep Space Satellite"

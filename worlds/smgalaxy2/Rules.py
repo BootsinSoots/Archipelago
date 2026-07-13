@@ -337,6 +337,8 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                        "Freezy Flake 2: Sorbetti's Head Sling Star")
     # Beat Block
     world.get_region(regname.WORLD3).connect(world.get_region(regname.BEATBLOCK), "World 3 Slot 5 Galaxy")
+    world.get_region(regname.BEATBLOCK).connect(world.get_region(regname.BEATBLOK1), "Beat Block Star")
+    world.get_region(regname.BEATBLOCK).connect(world.get_region(regname.BEATBLOK2), "Beat Block Comet Star")
     #Rolling masterpiece
     world.get_region(regname.WORLD3).connect(world.get_region(regname.ROLLMAST), "World 3 Slot 6 Galaxy")
     world.get_region(regname.ROLLMAST).connect(world.get_region(regname.ROLLMAST1LANDING), "Rolling Masterpiece Star")
