@@ -54,14 +54,14 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                       "Sky Station 2: Sky Fleet Launch Star")
     world.get_region(regname.SKYOBS2FLIPSWITCH).connect(world.get_region(regname.SKYOBS2GRASSFLEET),
                                                         "Sky Station 2: Flipswitch Fleet Launch Star")
-    world.get_region(regname.SKYOBS).connect(world.get_region(regname.SKYOBS3STARTTOPSIDE), "Sky Station Star 3")
+    world.get_region(regname.SKYOBS).connect(world.get_region(regname.SKYOBS3STARTTOPSIDE), "Sky Station Comet Star")
     world.get_region(regname.SKYOBS3STARTTOPSIDE).connect(world.get_region(regname.SKYOBS3STARTBOTTOM))
     world.get_region(regname.SKYOBS3STARTTOPSIDE).connect(world.get_region(regname.SKYOBS3TOPOFHOUSE))
     world.get_region(regname.SKYOBS3STARTBOTTOM).connect(world.get_region(regname.SKYOBS3TOPOFHOUSE))
     world.get_region(regname.SKYOBS3TOPOFHOUSE).connect(world.get_region(regname.SKYOBS3CYLINDER),
-                                                        "Sky Station 3: House Launch Star")
+                                                        "Sky Station Comet: House Launch Star")
     world.get_region(regname.SKYOBS3CYLINDER).connect(world.get_region(regname.SKYOBS3BOSS),
-                                                        "Sky Station 3: Cylinder Launch Star")
+                                                        "Sky Station Comet: Cylinder Launch Star")
 
     # Yoshi star
     world.get_region(regname.WORLD1).connect(world.get_region(regname.GOODEGG), "World 1 Slot 2 Galaxy")
@@ -85,7 +85,7 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                               "Yoshi Star 2: Shooting Gallery Launch Star")
     world.get_region(regname.GOODEGG2MARBLE).connect(world.get_region(regname.GOODEGG2BOSS),
                                               "Yoshi Star 2: Marble Block Launch Star")
-    world.get_region(regname.GOODEGG).connect(world.get_region(regname.GOODEGG3LANDING), "Yoshi Star Star 3")
+    world.get_region(regname.GOODEGG).connect(world.get_region(regname.GOODEGG3LANDING), "Yoshi Star Comet Star")
     # Spin-Dig
     world.get_region(regname.WORLD1).connect(world.get_region(regname.SPINDIG), "World 1 Slot 3 Galaxy")
     world.get_region(regname.SPINDIG).connect(world.get_region(regname.SPINDIG1TETRA), "Spin-Dig Star 1")
@@ -114,40 +114,40 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                     "Spin-Dig 2: Dark Canister Launch Star")
     world.get_region(regname.SPINDIG2BTOAD).connect(world.get_region(regname.SPINDIG2SQUARE),
                                                     "Spin-Dig 2: Blue Toadship Launch Star")
-    world.get_region(regname.SPINDIG).connect(world.get_region(regname.SPINDIG3BOSS), "Spin-Dig Star 3")
+    world.get_region(regname.SPINDIG).connect(world.get_region(regname.SPINDIG3BOSS), "Spin-Dig Coemt")
     # FlipSwap
     world.get_region(regname.WORLD1).connect(world.get_region(regname.FLIPSWAP), "World 1 Slot 4 Galaxy")
-    world.get_region(regname.FLIPSWAP).connect(world.get_region(regname.FLIPSWAP1), "Flip-Swap Star 1")
-    world.get_region(regname.FLIPSWAP).connect(world.get_region(regname.FLIPSWAP2), "Flip-Swap Star 2")
+    world.get_region(regname.FLIPSWAP).connect(world.get_region(regname.FLIPSWAP1), "Flip-Swap Star")
+    world.get_region(regname.FLIPSWAP).connect(world.get_region(regname.FLIPSWAP2), "Flip-Swap Comet Star")
     # Fluffl Bluff
     world.get_region(regname.WORLD1).connect(world.get_region(regname.FLUFFBLUFF), "World 1 Slot 5 Galaxy")
-    world.get_region(regname.FLUFFBLUFF).connect(world.get_region(regname.FLUFFBLUFF1LANDING), "Fluffy Bluff Star 1")
+    world.get_region(regname.FLUFFBLUFF).connect(world.get_region(regname.FLUFFBLUFF1LANDING), "Fluffy Bluff Star")
     world.get_region(regname.FLUFFBLUFF1LANDING).connect(world.get_region(regname.FLUFFBLUFF1COINROOM),
-                                                         "Fluffy Bluff 1: Landing Green Pipe")
+                                                         "Fluffy Bluff: Landing Green Pipe")
     world.get_region(regname.FLUFFBLUFF1LANDING).connect(world.get_region(regname.FLUFFBLUFF1BUILDING))
     world.get_region(regname.FLUFFBLUFF1LANDING).connect(world.get_region(regname.FLUFFBLUFF1BIGTREE))
     world.get_region(regname.FLUFFBLUFF1BUILDING).connect(world.get_region(regname.FLUFFBLUFF1CLIFF1))
     world.get_region(regname.FLUFFBLUFF1CLIFF1).connect(world.get_region(regname.FLUFFBLUFF1BIGTREE))
     world.get_region(regname.FLUFFBLUFF1BIGTREE).connect(world.get_region(regname.FLUFFBLUFF1BIGCLOUD),
-                                                         "Fluffy Bluff 1: Landing Big Tree Sling Star")
+                                                         "Fluffy Bluff: Landing Big Tree Sling Star")
     world.get_region(regname.FLUFFBLUFF1BIGCLOUD).connect(world.get_region(regname.FLUFFBLUFF3TOWER),
-                                                         "Fluffy Bluff 1: Hungry Luma")
+                                                         "Fluffy Bluff: Hungry Luma")
     world.get_region(regname.FLUFFBLUFF1CLIFF1).connect(world.get_region(regname.FLUFFBLUFF1CLIFF2))
     world.get_region(regname.FLUFFBLUFF1CLIFF2).connect(world.get_region(regname.FLUFFBLUFF1WATER),
-                                                         "Fluffy Bluff 1: Wall Jump Launch Star")
+                                                         "Fluffy Bluff: Wall Jump Launch Star")
     world.get_region(regname.FLUFFBLUFF1WATER).connect(world.get_region(regname.FLUFFBLUFF1CLOUDCLIMB),
-                                                         "Fluffy Bluff 1: Water Sphere Launch Star")
+                                                         "Fluffy Bluff: Water Sphere Launch Star")
     world.get_region(regname.FLUFFBLUFF1CLOUDCLIMB).connect(world.get_region(regname.FLUFFBLUFF1TREECLIMB),
-                                                         "Fluffy Bluff 1: Vine Swing")
-    world.get_region(regname.FLUFFBLUFF).connect(world.get_region(regname.FLUFFBLUFF2LANDING), "Fluffy Bluff Star 2")
+                                                         "Fluffy Bluff: Vine Swing")
+    world.get_region(regname.FLUFFBLUFF).connect(world.get_region(regname.FLUFFBLUFF2LANDING), "Fluffy Bluff Chimp Star")
     world.get_region(regname.FLUFFBLUFF2LANDING).connect(world.get_region(regname.FLUFFBLUFF2BUILDING))
     world.get_region(regname.FLUFFBLUFF2LANDING).connect(world.get_region(regname.FLUFFBLUFF2TREE))
     world.get_region(regname.FLUFFBLUFF2BUILDING).connect(world.get_region(regname.FLUFFBLUFF2CLIFF),
-                                                          "Fluffy Bluff 2: Buildings Sling Star")
+                                                          "Fluffy Bluff Chimp: Buildings Sling Star")
     world.get_region(regname.FLUFFBLUFF2CLIFF).connect(world.get_region(regname.FLUFFBLUFF2TREE))
     # Righside Down
     world.get_region(regname.WORLD1).connect(world.get_region(regname.RIGHTDOWN), "World 1 Slot 6 Galaxy")
-    world.get_region(regname.RIGHTDOWN).connect(world.get_region(regname.RIGHTDOWNLANDING), "Rightside Down Star 1")
+    world.get_region(regname.RIGHTDOWN).connect(world.get_region(regname.RIGHTDOWNLANDING), "Rightside Down Star")
     world.get_region(regname.RIGHTDOWNLANDING).connect(world.get_region(regname.RIGHTDOWNCORRIDOR),
                                                 "Rightside Down: Flower Fling")
     world.get_region(regname.RIGHTDOWNCORRIDOR).connect(world.get_region(regname.RIGHTDOWNCOINROOM),
@@ -160,12 +160,12 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                 "Rightside Down: Flower Fling")
     # Fiery Fleet
     world.get_region(regname.WORLD1).connect(world.get_region(regname.BOWJR1), "World 1 Slot 7 Galaxy")
-    world.get_region(regname.BOWJR1).connect(world.get_region(regname.FIREFLOT1LANDING), "Fiery Flotilla Star 1")
+    world.get_region(regname.BOWJR1).connect(world.get_region(regname.FIREFLOT1LANDING), "Fiery Flotilla Grand Star")
     world.get_region(regname.FIREFLOT1LANDING).connect(world.get_region(regname.FIREFLOT1LAVA),
-                                                       "Fiery Flotilla 1: Fort Sling Star")
+                                                       "Fiery Flotilla: Fort Sling Star")
     world.get_region(regname.FIREFLOT1LAVA).connect(world.get_region(regname.FIREFLOT1BOSS),
-                                                       "Fiery Flotilla 1: Lava Planet Launch Star")
-    world.get_region(regname.BOWJR1).connect(world.get_region(regname.FIREFLOT2BOSS), "Fiery Flotilla Star 2")
+                                                       "Fiery Flotilla: Lava Planet Launch Star")
+    world.get_region(regname.BOWJR1).connect(world.get_region(regname.FIREFLOT2BOSS), "Fiery Flotilla Comet Star")
     # World 2
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD2), "World 2 Map",
                                            rule=(Has(itemname.GRAND)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
@@ -268,14 +268,14 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                        "Lava Lair: Red Bowser Door")
     world.get_region(regname.BOWSER1).connect(world.get_region(regname.LAVALAIR2LANDING), "Lava Lair Comet Star")
     world.get_region(regname.LAVALAIR2LANDING).connect(world.get_region(regname.LAVALAIR2LAVACYL1),
-                                                       "Lava Lair: Pull Star to Lava")
+                                                       "Lava Lair Comet: Pull Star to Lava")
     world.get_region(regname.LAVALAIR2LAVACYL1).connect(world.get_region(regname.LAVALAIR2LAVACYL2))
     world.get_region(regname.LAVALAIR2LAVACYL2).connect(world.get_region(regname.LAVALAIR2LAVAPLA1B),
-                                                       "Lava Lair: Lava Cylinder Launch Star")
+                                                       "Lava Lair Comet: Lava Cylinder Launch Star")
     world.get_region(regname.LAVALAIR2LAVAPLA1B).connect(world.get_region(regname.LAVALAIR2LAVAPLA1W),
-                                                       "Lava Lair: Lava Sling Star")
+                                                       "Lava Lair Comet: Lava Sling Star")
     world.get_region(regname.LAVALAIR2LAVAPLA1W).connect(world.get_region(regname.LAVALAIR2LAVAPLA2C),
-                                                       "Lava Lair: Purple Bowser Door")
+                                                       "Lava Lair Comet: Purple Bowser Door")
     world.get_region(regname.LAVALAIR2LAVAPLA2C).connect(world.get_region(regname.LAVALAIR2LAVAPLA2S))
     # World 3
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD3), "World 3 Map",
@@ -299,27 +299,27 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.TALLTRUNK2BIGTREE).connect(world.get_region(regname.TALLTRUNK2SLIDE),
                                                         "Tall Trunk 2: Big Tree Launch Star")
     world.get_region(regname.TALLTRUNK2SLIDE).connect(world.get_region(regname.TALLTRUNK2SLIDEND))
-    world.get_region(regname.TALLTRUNK).connect(world.get_region(regname.TALLTRUNK3PCOINSLIDE), "Tall Trunk Star 3")
+    world.get_region(regname.TALLTRUNK).connect(world.get_region(regname.TALLTRUNK3PCOINSLIDE), "Tall Trunk Comet Star")
     world.get_region(regname.TALLTRUNK3PCOINSLIDE).connect(world.get_region(regname.TALLTRUNK3PCOINEND))
     # Cloudy Court
     world.get_region(regname.WORLD3).connect(world.get_region(regname.CLOUCOUR), "World 3 Slot 2 Galaxy")
-    world.get_region(regname.CLOUCOUR).connect(world.get_region(regname.CLOUCOUR1LANDING), "Cloudy Court Star 1")
+    world.get_region(regname.CLOUCOUR).connect(world.get_region(regname.CLOUCOUR1LANDING), "Cloudy Court Star1")
     world.get_region(regname.CLOUCOUR1LANDING).connect(world.get_region(regname.CLOUCOUR1CYMBAL))
     world.get_region(regname.CLOUCOUR1CYMBAL).connect(world.get_region(regname.CLOUCOUR1TOWERS),
-                                                      "Cloudy Court 1: Cymbal Launch Star")
+                                                      "Cloudy Court: Cymbal Launch Star")
     world.get_region(regname.CLOUCOUR1TOWERS).connect(world.get_region(regname.CLOUCOUR3PCOINS),
-                                                      "Cloudy Court 1: Hungry Luma")
+                                                      "Cloudy Court: Hungry Luma")
     world.get_region(regname.CLOUCOUR1TOWERS).connect(world.get_region(regname.CLOUCOUR1PARAGOOMBONUS),
-                                                      "Cloudy Court 1: Paragoomba Bonus Teleporter")
+                                                      "Cloudy Court: Paragoomba Bonus Teleporter")
     world.get_region(regname.CLOUCOUR1TOWERS).connect(world.get_region(regname.CLOUCOUR1CASTLE),
-                                                      "Cloudy Court 1: Tower Launch Star")
-    world.get_region(regname.CLOUCOUR).connect(world.get_region(regname.CLOUCOUR2LANDING), "Cloudy Court Star 2")
+                                                      "Cloudy Court: Tower Launch Star")
+    world.get_region(regname.CLOUCOUR).connect(world.get_region(regname.CLOUCOUR2LANDING), "Cloudy Court Comet Star")
     world.get_region(regname.CLOUCOUR2LANDING).connect(world.get_region(regname.CLOUCOUR2CASTLE1),
-                                                       "Cloudy Court 2: Launch Star")
+                                                       "Cloudy Court Comet: Launch Star")
     world.get_region(regname.CLOUCOUR2CASTLE1).connect(world.get_region(regname.CLOUCOUR2CASTLE2),
-                                                       "Cloudy Court 2: Wall Jump Sling Star")
+                                                       "Cloudy Court Comet: Wall Jump Sling Star")
     world.get_region(regname.CLOUCOUR2CASTLE2).connect(world.get_region(regname.CLOUCOUR2FINAL),
-                                                       "Cloudy Court 2: Final Sling Star")
+                                                       "Cloudy Court Comet: Final Sling Star")
     # Haunty halls
     world.get_region(regname.WORLD3).connect(world.get_region(regname.HAUNHALL), "World 3 Slot 3 Galaxy")
     world.get_region(regname.HAUNHALL).connect(world.get_region(regname.HAUNHALL1HALLWAY), "Haunty Halls Star 1")
@@ -487,47 +487,47 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.SLIPSAND2LONG2).connect(world.get_region(regname.SLIPSAND2LONG3))
     world.get_region(regname.SLIPSAND2LONG2).connect(world.get_region(regname.SLIPSAND2BIRD),
                                                     "Slipsand 2: Long Launch Star")
-    world.get_region(regname.SLIPSAND).connect(world.get_region(regname.SLIPSAND3BOSS), "Slipsand Star 3")
+    world.get_region(regname.SLIPSAND).connect(world.get_region(regname.SLIPSAND3BOSS), "Slipsand Comet Star")
     # Fleet Glide
     world.get_region(regname.WORLD5).connect(world.get_region(regname.FLEETGLIDE), "World 5 Slot 5 Galaxy")
     world.get_region(regname.FLEETGLIDE).connect(world.get_region(regname.FLEETGLIDESTART))
     world.get_region(regname.FLEETGLIDESTART).connect(world.get_region(regname.FLEETGLIDECOURSE))
     #Shiverburn
     world.get_region(regname.WORLD5).connect(world.get_region(regname.SHIVBURN), "World 5 Slot 6 Galaxy")
-    world.get_region(regname.SHIVBURN).connect(world.get_region(regname.SHIVBURN1VOLCANO), "Shiverburn Star 1")
+    world.get_region(regname.SHIVBURN).connect(world.get_region(regname.SHIVBURN1VOLCANO), "Shiverburn Star")
     world.get_region(regname.SHIVBURN1VOLCANO).connect(world.get_region(regname.SHIVBURN3CHIMP),
-                                                       "Shiverburn 3: Green Pipe")
+                                                       "Shiverburn: Green Pipe")
     world.get_region(regname.SHIVBURN1VOLCANO).connect(world.get_region(regname.SHIVBURN1LAVA),
-                                                       "Shiverburn 1: Volcano Launch Star")
+                                                       "Shiverburn: Volcano Launch Star")
     world.get_region(regname.SHIVBURN1LAVA).connect(world.get_region(regname.SHIVBURN1FIREICE),
-                                                       "Shiverburn 1: Lava Ball Launch Star")
+                                                       "Shiverburn: Lava Ball Launch Star")
     world.get_region(regname.SHIVBURN1FIREICE).connect(world.get_region(regname.SHIVBURN1TOAD),
-                                                       "Shiverburn 1: Lava Ice Launch Star")
+                                                       "Shiverburn: Lava Ice Launch Star")
     world.get_region(regname.SHIVBURN1TOAD).connect(world.get_region(regname.SHIVBURN1BOSS),
-                                                       "Shiverburn 1: Green Toadship Launch Star")
-    world.get_region(regname.SHIVBURN).connect(world.get_region(regname.SHIVBURN2TOAD), "Shiverburn Star 2")
+                                                       "Shiverburn: Green Toadship Launch Star")
+    world.get_region(regname.SHIVBURN).connect(world.get_region(regname.SHIVBURN2TOAD), "Shiverburn Comet Star")
     world.get_region(regname.SHIVBURN2TOAD).connect(world.get_region(regname.SHIVBURN2ROMP),
-                                                       "Shiverburn 2: Green Toadship Launch Star")
+                                                       "Shiverburn Comet: Green Toadship Launch Star")
     # Boom bunker
     world.get_region(regname.WORLD5).connect(world.get_region(regname.BOWJR3), "World 5 Slot 7 Galaxy")
-    world.get_region(regname.BOWJR3).connect(world.get_region(regname.BOOMBUNK1HAMMER), "Boom Bunker Star 1")
+    world.get_region(regname.BOWJR3).connect(world.get_region(regname.BOOMBUNK1HAMMER), "Boom Bunker Grand Star")
     world.get_region(regname.BOOMBUNK1HAMMER).connect(world.get_region(regname.BOOMBUNK1BOOMER),
-                                                      "Boom Bunker 1: Hammer Hilt Cannon")
+                                                      "Boom Bunker: Hammer Hilt Cannon")
     world.get_region(regname.BOOMBUNK1BOOMER).connect(world.get_region(regname.BOOMBUNK1CHECK),
-                                                      "Boom Bunker 1: Fort Launch Star")
+                                                      "Boom Bunker: Fort Launch Star")
     world.get_region(regname.BOOMBUNK1CHECK).connect(world.get_region(regname.BOOMBUNK1PLAT),
-                                                      "Boom Bunker 1: Checkpoint Cannon")
+                                                      "Boom Bunker: Checkpoint Cannon")
     world.get_region(regname.BOOMBUNK1PLAT).connect(world.get_region(regname.BOOMBUNK1BOSS),
-                                                      "Boom Bunker 1: Platform Launch Star")
-    world.get_region(regname.BOWJR3).connect(world.get_region(regname.BOOMBUNK2HAMMER), "Boom Bunker Star 2")
+                                                      "Boom Bunker: Platform Launch Star")
+    world.get_region(regname.BOWJR3).connect(world.get_region(regname.BOOMBUNK2HAMMER), "Boom Bunker Comet Star")
     world.get_region(regname.BOOMBUNK2HAMMER).connect(world.get_region(regname.BOOMBUNK2BOOMER),
-                                                      "Boom Bunker 2: Hammer Hilt Cannon")
+                                                      "Boom Bunker Comet: Hammer Hilt Cannon")
     world.get_region(regname.BOOMBUNK2BOOMER).connect(world.get_region(regname.BOOMBUNK2CHECK),
-                                                      "Boom Bunker 2: Fort Launch Star")
+                                                      "Boom Bunker Comet: Fort Launch Star")
     world.get_region(regname.BOOMBUNK2CHECK).connect(world.get_region(regname.BOOMBUNK2DARK),
-                                                      "Boom Bunker 2: Checkpoint Cannon")
+                                                      "Boom Bunker Comet: Checkpoint Cannon")
     world.get_region(regname.BOOMBUNK2DARK).connect(world.get_region(regname.BOOMBUNK2BOSS),
-                                                      "Boom Bunker 2: Dark Matter Launch Star")
+                                                      "Boom Bunker Comet: Dark Matter Launch Star")
     # World 6
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD6), "World 6 Map",
                                            rule=(Has(itemname.GRAND, 5)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
@@ -537,7 +537,7 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.WORLD6).connect(world.get_region(regname.MELTY), "World 6 Slot 1 Galaxy")
     world.get_region(regname.MELTY).connect(world.get_region(regname.MELTY1LANDING), "Melty Monster Star 1")
     world.get_region(regname.MELTY1LANDING).connect(world.get_region(regname.MELTY3CHIMP),
-                                                    "Melty Monster Chimp: Star 1 Green Pipe")
+                                                    "Melty Monster 1: Green Pipe")
     world.get_region(regname.MELTY1LANDING).connect(world.get_region(regname.MELTY1MAGMAARG),
                                                     "Melty Monster 1: Pull Star Path")
     world.get_region(regname.MELTY1MAGMAARG).connect(world.get_region(regname.MELTY1LAVAWAVE1),
@@ -548,29 +548,29 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                       "Melty Monster 1: Lava Wave Launch Star")
     world.get_region(regname.MELTY).connect(world.get_region(regname.MELTY2LANDING), "Melty Monster Star 2")
     world.get_region(regname.MELTY2LANDING).connect(world.get_region(regname.MELTY3CHIMP),
-                                                    "Melty Monster Chimp: Star 2 Green Pipe")
+                                                    "Melty Monster 2: Green Pipe")
     world.get_region(regname.MELTY2LANDING).connect(world.get_region(regname.MELTY2BOWLING),
                                                     "Melty Monster 2: Roll to Launch Star")
     # Clockwork Ruins
     world.get_region(regname.WORLD6).connect(world.get_region(regname.CLOCKWORK), "World 6 Slot 2 Galaxy")
-    world.get_region(regname.CLOCKWORK).connect(world.get_region(regname.CLOCKWORK1COGS), "Clockwork Ruins Star 1")
+    world.get_region(regname.CLOCKWORK).connect(world.get_region(regname.CLOCKWORK1COGS), "Clockwork Ruins Star")
     world.get_region(regname.CLOCKWORK1COGS).connect(world.get_region(regname.CLOCKWORK1PUSH),
-                                                     "Clockwork Ruins 1: Cog Wall Launch Star")
+                                                     "Clockwork Ruins: Cog Wall Launch Star")
     world.get_region(regname.CLOCKWORK1PUSH).connect(world.get_region(regname.CLOCKWORK1WHEELSB),
-                                                     "Clockwork Ruins 1: Push Block Launch Star")
+                                                     "Clockwork Ruins: Push Block Launch Star")
     world.get_region(regname.CLOCKWORK1WHEELSB).connect(world.get_region(regname.CLOCKWORK1WHEELST))
     world.get_region(regname.CLOCKWORK1WHEELST).connect(world.get_region(regname.CLOCKWORK1COINROOM),
-                                                     "Clockwork Ruins 1: Wheel Planet Green Pipe")
+                                                     "Clockwork Ruins: Wheel Planet Green Pipe")
     world.get_region(regname.CLOCKWORK1COGS).connect(world.get_region(regname.CLOCKWORK3HAMMER),
-                                                     "Clockwork Ruins 1: Hungry Luma")
+                                                     "Clockwork Ruins: Hungry Luma")
     world.get_region(regname.CLOCKWORK3HAMMER).connect(world.get_region(regname.CLOCKWORK3HAMMERTOP),
-                                                     "Clockwork Ruins 3: Hammer Zone Green Pipe")
-    world.get_region(regname.CLOCKWORK).connect(world.get_region(regname.CLOCKWORK2COGS), "Clockwork Ruins Star 2")
+                                                     "Clockwork Ruins Hungry Luma: Hammer Zone Green Pipe")
+    world.get_region(regname.CLOCKWORK).connect(world.get_region(regname.CLOCKWORK2COGS), "Clockwork Ruins Comet Star")
     # Flash Black
     world.get_region(regname.WORLD6).connect(world.get_region(regname.FLASHBLACK), "World 6 Slot 3 Galaxy")
-    world.get_region(regname.FLASHBLACK).connect(world.get_region(regname.FLASHBLACK1TOWER), "Flash Black Star 1")
+    world.get_region(regname.FLASHBLACK).connect(world.get_region(regname.FLASHBLACK1TOWER), "Flash Black Star")
     world.get_region(regname.FLASHBLACK1TOWER).connect(world.get_region(regname.FLASHBLACK1PATH),
-                                                       "Flash Black 1: Tower Launch Star")
+                                                       "Flash Black: Tower Launch Star")
     world.get_region(regname.FLASHBLACK).connect(world.get_region(regname.FLASHBLACK2PATH), "Flash Black Comet Star")
     # Throwback
     world.get_region(regname.WORLD6).connect(world.get_region(regname.WHOMPFORT), "World 6 Slot 4 Galaxy")
@@ -581,7 +581,7 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.WHOMPFORT).connect(world.get_region(regname.WHOMP2FORT), "Throwback Star 2")
     world.get_region(regname.WHOMP2FORT).connect(world.get_region(regname.WHOMP2BONUS),
                                                  "Throwback 2: Piranha Bonus Teleporter")
-    world.get_region(regname.WHOMPFORT).connect(world.get_region(regname.WHOMP3FORT), "Throwback Star 3")
+    world.get_region(regname.WHOMPFORT).connect(world.get_region(regname.WHOMP3FORT), "Throwback Comet Star")
     # Slimy Spring
     world.get_region(regname.WORLD6).connect(world.get_region(regname.SLIMSPRI), "World 6 Slot 5 Galaxy")
     world.get_region(regname.SLIMSPRI).connect(world.get_region(regname.SLIMSPRI1MOUTH1), "Slimy Spring Star")
@@ -598,54 +598,54 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.SLIMSPRI2MOUTH2).connect(world.get_region(regname.SLIMSPRI2CAVE2))
     # Battle Belt
     world.get_region(regname.WORLD6).connect(world.get_region(regname.BATTLEBELT), "World 6 Slot 6 Galaxy")
-    world.get_region(regname.BATTLEBELT).connect(world.get_region(regname.BATTBELT1GOOM), "Battle Belt Star 1")
+    world.get_region(regname.BATTLEBELT).connect(world.get_region(regname.BATTBELT1GOOM), "Battle Belt Star")
     world.get_region(regname.BATTBELT1GOOM).connect(world.get_region(regname.BATTBELT1LAVA),
-                                                    "Battle Belt 1: Goomba Sling Star")
+                                                    "Battle Belt: Goomba Sling Star")
     world.get_region(regname.BATTBELT1LAVA).connect(world.get_region(regname.BATTBELT1URCH),
-                                                    "Battle Belt 1: Li'l Cinders Sling Star")
+                                                    "Battle Belt: Li'l Cinders Sling Star")
     world.get_region(regname.BATTBELT1URCH).connect(world.get_region(regname.BATTBELT1CRAB),
-                                                    "Battle Belt 1: Urchin Sling Star")
+                                                    "Battle Belt: Urchin Sling Star")
     world.get_region(regname.BATTBELT1CRAB).connect(world.get_region(regname.BATTBELT1PTOA),
-                                                    "Battle Belt 1: Crab Sling Star")
+                                                    "Battle Belt: Crab Sling Star")
     world.get_region(regname.BATTBELT1PTOA).connect(world.get_region(regname.BATTBELT1PUMP),
-                                                    "Battle Belt 1: Pink Toadship Sling Star")
+                                                    "Battle Belt: Pink Toadship Sling Star")
     world.get_region(regname.BATTBELT1PUMP).connect(world.get_region(regname.BATTBELT1PUMI),
-                                                    "Battle Belt 1: Jack O'Goomba Green Pipe")
+                                                    "Battle Belt: Jack O'Goomba Green Pipe")
     world.get_region(regname.BATTBELT1PUMP).connect(world.get_region(regname.BATTBELT1RTOA),
-                                                    "Battle Belt 1: Jack O'Goomba Sling Star")
+                                                    "Battle Belt: Jack O'Goomba Sling Star")
     world.get_region(regname.BATTBELT1RTOA).connect(world.get_region(regname.BATTBELT1ICEP),
-                                                    "Battle Belt 1: Red Toadship Sling Star")
+                                                    "Battle Belt: Red Toadship Sling Star")
     world.get_region(regname.BATTBELT1ICEP).connect(world.get_region(regname.BATTBELT3BOSS),
-                                                    "Battle Belt 1: Hungry Luma")
+                                                    "Battle Belt: Hungry Luma")
     world.get_region(regname.BATTBELT1ICEP).connect(world.get_region(regname.BATTBELT1MOLE),
-                                                    "Battle Belt 1: Li'l Brr Sling Star")
+                                                    "Battle Belt: Li'l Brr Sling Star")
     world.get_region(regname.BATTBELT1MOLE).connect(world.get_region(regname.BATTBELT1MOLI),
-                                                    "Battle Belt 1: Swapphopper Green Pipe")
+                                                    "Battle Belt: Swapphopper Green Pipe")
     world.get_region(regname.BATTBELT1MOLE).connect(world.get_region(regname.BATTBELT1CHOM),
-                                                    "Battle Belt 1: Swaphopper Sling Star")
-    world.get_region(regname.BATTLEBELT).connect(world.get_region(regname.BATTBELT2GOOM), "Battle Belt Star 2")
+                                                    "Battle Belt: Swaphopper Sling Star")
+    world.get_region(regname.BATTLEBELT).connect(world.get_region(regname.BATTBELT2GOOM), "Battle Belt Comet Star")
     world.get_region(regname.BATTBELT2GOOM).connect(world.get_region(regname.BATTBELT2LAVA),
-                                                    "Battle Belt 2: Goomba Sling Star")
+                                                    "Battle Belt Comet: Goomba Sling Star")
     world.get_region(regname.BATTBELT2LAVA).connect(world.get_region(regname.BATTBELT2URCH),
-                                                    "Battle Belt 2: Li'l Cinders Sling Star")
+                                                    "Battle Belt Comet: Li'l Cinders Sling Star")
     world.get_region(regname.BATTBELT2URCH).connect(world.get_region(regname.BATTBELT2CRAB),
-                                                    "Battle Belt 2: Urchin Sling Star")
+                                                    "Battle Belt Comet: Urchin Sling Star")
     world.get_region(regname.BATTBELT2CRAB).connect(world.get_region(regname.BATTBELT2PTOA),
-                                                    "Battle Belt 2: Crab Sling Star")
+                                                    "Battle Belt Comet: Crab Sling Star")
     world.get_region(regname.BATTBELT2PTOA).connect(world.get_region(regname.BATTBELT2PUMP),
-                                                    "Battle Belt 2: Yellow Toadship Sling Star")
+                                                    "Battle Belt Comet: Yellow Toadship Sling Star")
     world.get_region(regname.BATTBELT2PUMP).connect(world.get_region(regname.BATTBELT2PUMI),
-                                                    "Battle Belt 2: Jack O'Goomba Green Pipe")
+                                                    "Battle Belt Comet: Jack O'Goomba Green Pipe")
     world.get_region(regname.BATTBELT2PUMP).connect(world.get_region(regname.BATTBELT2RTOA),
-                                                    "Battle Belt 2: Jack O'Goomba Sling Star")
+                                                    "Battle Belt Comet: Jack O'Goomba Sling Star")
     world.get_region(regname.BATTBELT2RTOA).connect(world.get_region(regname.BATTBELT2ICEP),
-                                                    "Battle Belt 2: Red Toadship Sling Star")
+                                                    "Battle Belt Comet: Red Toadship Sling Star")
     world.get_region(regname.BATTBELT2ICEP).connect(world.get_region(regname.BATTBELT2MOLE),
-                                                    "Battle Belt 2: Li'l Brr Sling Star")
+                                                    "Battle Belt Comet: Li'l Brr Sling Star")
     world.get_region(regname.BATTBELT2MOLE).connect(world.get_region(regname.BATTBELT2MOLI),
-                                                    "Battle Belt 2: Swapphopper Green Pipe")
+                                                    "Battle Belt Comet: Swapphopper Green Pipe")
     world.get_region(regname.BATTBELT2MOLE).connect(world.get_region(regname.BATTBELT2CHOM),
-                                                    "Battle Belt 2: Swaphopper Sling Star")
+                                                    "Battle Belt Comet: Swaphopper Sling Star")
     # Galaxy Generator
     world.get_region(regname.WORLD6).connect(world.get_region(regname.BOWSER3), "World 6 Slot 7 Galaxy")
     world.get_region(regname.BOWSER3).connect(world.get_region(regname.GALGEN1LANDING), "Galaxy Generator Grand Star")
