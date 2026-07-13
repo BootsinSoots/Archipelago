@@ -498,6 +498,14 @@ region_list: dict[str, SMG2RegionData] = {
     regname.HIGHTAILGSTAR1:             SMG2RegionData("Planet", [], []),
     regname.HIGHTAILGSTAR2:             SMG2RegionData("Planet", [], []),
     regname.HIGHTAILGSTAR3:             SMG2RegionData("Planet", [], []),
+    regname.BOULBOWL1CRYSTAL:           SMG2RegionData("Planet", [], []),
+    regname.BOULBOWL1FALLING:           SMG2RegionData("Planet", [], []),
+    regname.BOULBOWL1BOULDER:           SMG2RegionData("Planet", [], []),
+    regname.BOULBOWL1DICEROOM:          SMG2RegionData("Planet", [], []),
+    regname.BOULBOWL1DODECAH:           SMG2RegionData("Planet", [], []),
+    regname.BOULBOWL1BOSS:              SMG2RegionData("Planet", [], []),
+    regname.BOULBOWL2ASTEROI:           SMG2RegionData("Planet", [], []),
+    regname.BOULBOWL2CAGEPLA:           SMG2RegionData("Planet", [], []),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]
