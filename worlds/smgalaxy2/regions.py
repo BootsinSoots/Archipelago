@@ -483,6 +483,21 @@ region_list: dict[str, SMG2RegionData] = {
     regname.FEARFLET1AIRSHIP:           SMG2RegionData("Planet", [], []),
     regname.FEARFLET1MEGAHAM:           SMG2RegionData("Planet", [], []),
     regname.FEARFLET2MEGAHAM:           SMG2RegionData("Planet", [], []),
+    regname.HIGHTAIL1LANDING:           SMG2RegionData("Planet", [], []),
+    regname.HIGHTAIL1GIANTRA:           SMG2RegionData("Planet", [], []),
+    regname.HIGHTAIL1PLATDAS:           SMG2RegionData("Planet", [], []),
+    regname.HIGHTAIL1DASHWAL1:          SMG2RegionData("Planet", [], []),
+    regname.HIGHTAIL1DASHWAL2:          SMG2RegionData("Planet", [], []),
+    regname.HIGHTAIL1BONUS:             SMG2RegionData("Planet", [], []),
+    regname.HIGHTAIL3SILVERS:           SMG2RegionData("Planet", [], []),
+    regname.HIGHTAIL2LANDING:           SMG2RegionData("Planet", [], []),
+    regname.HIGHTAIL2GIANTRA:           SMG2RegionData("Planet", [], []),
+    regname.HIGHTAIL2PLATDAS:           SMG2RegionData("Planet", [], []),
+    regname.HIGHTAIL2DASHWAL1:          SMG2RegionData("Planet", [], []),
+    regname.HIGHTAIL2DASHWAL2:          SMG2RegionData("Planet", [], []),
+    regname.HIGHTAILGSTAR1:             SMG2RegionData("Planet", [], []),
+    regname.HIGHTAILGSTAR2:             SMG2RegionData("Planet", [], []),
+    regname.HIGHTAILGSTAR3:             SMG2RegionData("Planet", [], []),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]
