@@ -579,6 +579,8 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.MARIOSQ2MAIN).connect(world.get_region(regname.MARIOSQ2RIGHT))
     # Rolling Coaster
     world.get_region(regname.WORLD7).connect(world.get_region(regname.ROLLCOAST), "World 7 Slot 2 Galaxy")
+    world.get_region(regname.ROLLCOAST).connect(world.get_region(regname.ROLLCOAST1), "Rolling Coaster Star")
+    world.get_region(regname.ROLLCOAST).connect(world.get_region(regname.ROLLCOAST2), "Rolling Coaster Comet Star")
     # Twisty Trials
     world.get_region(regname.WORLD7).connect(world.get_region(regname.TWISTTRI), "World 7 Slot 3 Galaxy")
     world.get_region(regname.TWISTTRI).connect(world.get_region(regname.TWISTY1PLAT1), "Mario Squared Star")

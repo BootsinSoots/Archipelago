@@ -382,8 +382,10 @@ MARIOSQ_loc: dict[str, SMG2LocationData] = {
 
     # Rolling Coast
 ROLLSLIDE_loc: dict[str, SMG2LocationData] = {
-    locname.ROLLSLIDESTAR1: SMG2LocationData(["Power Star Location", regname.ROLLCOAST], regname.ROLLCOAST),
-    locname.ROLLSLIDESTAR2: SMG2LocationData(["Power Star Location", regname.ROLLCOAST], regname.ROLLCOAST),
+    locname.ROLLSLIDESTAR1: SMG2LocationData(["Power Star Location", regname.ROLLCOAST], regname.ROLLCOAST,
+                                             regname.ROLLCOAST1, 1),
+    locname.ROLLSLIDESTAR2: SMG2LocationData(["Power Star Location", regname.ROLLCOAST], regname.ROLLCOAST,
+                                             regname.ROLLCOAST2, 1),
 }
 
     # Twisty Trials
@@ -403,9 +405,9 @@ STONECYC_loc: dict[str, SMG2LocationData] = {
     # Boss Blitz St
 BOSSBLITZ_loc: dict[str, SMG2LocationData] = {
     locname.BOSSBLITSTAR1: SMG2LocationData(["Power Star Location", regname.BOSSBLITZ], regname.BOSSBLITZ,
-                                            regname.BOSSBLITZ1DINOPIR),
+                                            regname.BOSSBLITZ1DINOPIR, 1),
     locname.BOSSBLITSTAR2: SMG2LocationData(["Power Star Location", regname.BOSSBLITZ], regname.BOSSBLITZ,
-                                            regname.BOSSBLITZ2DINOPIR),
+                                            regname.BOSSBLITZ2DINOPIR, 1),
 }
 
     # Flip-Out Star
@@ -643,10 +645,10 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.MARIOSQ1MAIN, 1,),
     locname.MARIOSQRSTARG2:     SMG2LocationData(["Green Star Location", regname.MARIO], regname.MARIO,
                                                  regname.MARIOSQ1MAIN, 1,),
-    locname.ROLLSLIDESTARG1:    SMG2LocationData(["Green Star Location", regname.ROLLCOAST], regname.ROLLCOAST, 1,
-                                                 ),
-    locname.ROLLSLIDESTARG2:    SMG2LocationData(["Green Star Location", regname.ROLLCOAST], regname.ROLLCOAST, 1,
-                                                 ),
+    locname.ROLLSLIDESTARG1:    SMG2LocationData(["Green Star Location", regname.ROLLCOAST], regname.ROLLCOAST,
+                                                 regname.ROLLCOAST1, 1, ),
+    locname.ROLLSLIDESTARG2:    SMG2LocationData(["Green Star Location", regname.ROLLCOAST], regname.ROLLCOAST,
+                                                 regname.ROLLCOAST1, 1, ),
     locname.TWISTTRIALSTARG1:   SMG2LocationData(["Green Star Location", regname.TWISTTRI], regname.TWISTTRI,
                                                  regname.TWISTY1PLAT2, 1,),
     locname.TWISTTRIALSTARG2:   SMG2LocationData(["Green Star Location", regname.TWISTTRI], regname.TWISTTRI,
@@ -754,7 +756,7 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
     locname.MARIOSQRCM: SMG2LocationData(["Comet Medal Location", regname.MARIO], regname.MARIO,
                                          regname.MARIOSQ1LEFT,  1, ),
     locname.ROLLSLIDECM: SMG2LocationData(["Comet Medal Location", regname.ROLLCOAST], regname.ROLLCOAST,
-                                          regname.,  1, ),
+                                          regname.ROLLCOAST1,  1, ),
     locname.TWISTTRIALCM: SMG2LocationData(["Comet Medal Location", regname.TWISTTRI], regname.TWISTTRI,
                                            regname.TWISTY1PLAT4,  1, ),
     locname.STONECYCLOCM: SMG2LocationData(["Comet Medal Location", regname.STONECYC], regname.STONECYC,
