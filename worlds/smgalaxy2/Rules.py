@@ -405,7 +405,7 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.SUPMASS).connect(world.get_region(regname.SUPMASS1START), "Supermassive Star 1")
     world.get_region(regname.SUPMASS1START).connect(world.get_region(regname.SUPMASS1PIPES))
     world.get_region(regname.SUPMASS1PIPES).connect(world.get_region(regname.SUPMASS1THWOMPS))
-    world.get_region(regname.SUPMASS1PIPES).connect.(world.get_region(regname.SUPMASS1GSTAR2))
+    world.get_region(regname.SUPMASS1PIPES).connect(world.get_region(regname.SUPMASS1GSTAR2))
     world.get_region(regname.SUPMASS1THWOMPS).connect(world.get_region(regname.SUPMASS1GSTAR2))
     world.get_region(regname.SUPMASS1THWOMPS).connect(world.get_region(regname.SUPMASS1KOOPAS),
                                                       "Supermassive 1: Thwomps Launch Star")
@@ -420,6 +420,52 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.WORLD4).connect(world.get_region(regname.SWEETMYS), "World 4 Slot 2 Galaxy")
     # Flipville
     world.get_region(regname.WORLD4).connect(world.get_region(regname.FLIPVILL), "World 4 Slot 3 Galaxy")
+    world.get_region(regname.FLIPVILL).connect(world.get_region(regname.FLIPVILL1MAZESTART), "Flipsville Star 1")
+    world.get_region(regname.FLIPVILL1MAZESTART).connect(world.get_region(regname.FLIPVILL1MAZEBOTTOM))
+    world.get_region(regname.FLIPVILL1MAZESTART).connect(world.get_region(regname.FLIPVILL1MAZEBACK))
+    world.get_region(regname.FLIPVILL1MAZEBOTTOM).connect(world.get_region(regname.FLIPVILL1MAZEBACK))
+    world.get_region(regname.FLIPVILL1MAZEBOTTOM).connect(world.get_region(regname.FLIPVILL1MAZETOP))
+    world.get_region(regname.FLIPVILL1MAZEBACK).connect(world.get_region(regname.FLIPVILL1MAZETOP))
+    world.get_region(regname.FLIPVILL1MAZEBOTTOM).connect(world.get_region(regname.FLIPVILL1COMETMEDAL))
+    world.get_region(regname.FLIPVILL1MAZEBACK).connect(world.get_region(regname.FLIPVILL1COMETMEDAL))
+    world.get_region(regname.FLIPVILL1MAZEBACK).connect(world.get_region(regname.FLIPVILL1TWIRLIP),
+                                                        "Flipsville 1: Twirlip Bonus Teleporter")
+    world.get_region(regname.FLIPVILL1MAZETOP).connect(world.get_region(regname.FLIPVILL1WANWANSTART),
+                                                       "Flipsville 1: Dollhouse Launch Star")
+    world.get_region(regname.FLIPVILL1WANWANSTART).connect(world.get_region(regname.FLIPVILL1WANWANALLEY))
+    world.get_region(regname.FLIPVILL1WANWANSTART).connect(world.get_region(regname.FLIPVILL1WANWANLANE))
+    world.get_region(regname.FLIPVILL1WANWANALLEY).connect(world.get_region(regname.FLIPVILL1WANWANLANE))
+    world.get_region(regname.FLIPVILL1MAZEBOTTOM).connect(world.get_region(regname.FLIPVILL1WANWANLANE))
+    world.get_region(regname.FLIPVILL1WANWANLANE).connect(world.get_region(regname.FLIPVILL1WANWANBACK))
+    world.get_region(regname.FLIPVILL1WANWANBACK).connect(world.get_region(regname.FLIPVILL1LIFTSTART),
+                                                          "Flipsville 1: Chomps Launch Star")
+    world.get_region(regname.FLIPVILL1MAZEBACK).connect(world.get_region(regname.FLIPVILL1LIFTSTART))
+    world.get_region(regname.FLIPVILL1LIFTSTART).connect(world.get_region(regname.FLIPVILL1LIFTBELOW))
+    world.get_region(regname.FLIPVILL1LIFTSTART).connect(world.get_region(regname.FLIPVILL1LIFTTOP))
+    world.get_region(regname.FLIPVILL1LIFTBELOW).connect(world.get_region(regname.FLIPVILL1LIFTTOP))
+    world.get_region(regname.FLIPVILL1LIFTTOP).connect(world.get_region(regname.FLIPVILL1STARSHROOM),
+                                                       "Flipsville 1: Lifts Launch Star")
+    world.get_region(regname.FLIPVILL1WANWANLANE).connect(world.get_region(regname.FLIPVILL1STARSHROOM))
+    world.get_region(regname.FLIPVILL1STARSHROOM).connect(world.get_region(regname.FLIPVILL1GLAM),
+                                                          "Flipsville 1: Starshroom Launch Star")
+    world.get_region(regname.FLIPVILL1WANWANLANE).connect(world.get_region(regname.FLIPVILL1GLAM))
+    world.get_region(regname.FLIPVILL1GLAM).connect(world.get_region(regname.FLIPVILL1STAR))
+    world.get_region(regname.FLIPVILL2MAZESTART).connect(world.get_region(regname.FLIPVILL2MAZEBOTTOM))
+    world.get_region(regname.FLIPVILL2MAZESTART).connect(world.get_region(regname.FLIPVILL2MAZEBACK))
+    world.get_region(regname.FLIPVILL2MAZEBOTTOM).connect(world.get_region(regname.FLIPVILL2MAZEBACK))
+    world.get_region(regname.FLIPVILL2MAZEBACK).connect(world.get_region(regname.FLIPVILL2TWIRLIP))
+    world.get_region(regname.FLIPVILL1MAZEBOTTOM).connect(world.get_region(regname.FLIPVILL1MAZETOP))
+    world.get_region(regname.FLIPVILL1MAZEBACK).connect(world.get_region(regname.FLIPVILL1MAZETOP))
+    world.get_region(regname.FLIPVILL2MAZETOP).connect(world.get_region(regname.FLIPVILL2MAZELAUNCH))
+    world.get_region(regname.FLIPVILL2MAZEBACK).connect(world.get_region(regname.FLIPVILL2MAZELAUNCH))
+    world.get_region(regname.FLIPVILL2MAZELAUNCH).connect(world.get_region(regname.FLIPVILL2TOWERSTART),
+                                                          "Flipsville 2: Dollhouse Planet Launch Star")
+    world.get_region(regname.FLIPVILL2TOWERSTART).connect(world.get_region(regname.FLIPVILL2TOWERBELOW))
+    world.get_region(regname.FLIPVILL2TOWERSTART).connect(world.get_region(regname.FLIPVILL2PIPE))
+    world.get_region(regname.FLIPVILL2TOWERBELOW).connect(world.get_region(regname.FLIPVILL2PIPE))
+    world.get_region(regname.FLIPVILL2PIPE).connect(world.get_region(regname.FLIPVILL2GRAVITYSTART),
+                                                    "Flipsville 2: Spin-Drill Tower Pipe")
+    world.get_region(regname.FLIPVILL2GRAVITYSTART).connect(world.get_region(regname.FLIPVILL2GRAVITYMAIN))
     # Honeyhop
     world.get_region(regname.WORLD4).connect(world.get_region(regname.HONEYHOP), "World 4 Slot 4 Galaxy")
     # Starshine beach
