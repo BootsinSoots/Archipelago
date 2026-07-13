@@ -339,6 +339,23 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.WORLD3).connect(world.get_region(regname.BEATBLOCK), "World 3 Slot 5 Galaxy")
     #Rolling masterpiece
     world.get_region(regname.WORLD3).connect(world.get_region(regname.ROLLMAST), "World 3 Slot 6 Galaxy")
+    world.get_region(regname.ROLLMAST).connect(world.get_region(regname.ROLLMAST1LANDING), "Rolling Masterpiece Star")
+    world.get_region(regname.ROLLMAST1LANDING).connect(world.get_region(regname.ROLLMAST1PAINTBR),
+                                                       "Rolling Masterpiece: Landing Ball Launcher")
+    world.get_region(regname.ROLLMAST1PAINTBR).connect(world.get_region(regname.ROLLMAST1ELEVATO),
+                                                       "Rolling Masterpiece: Paintbrush Ball Launcher")
+    world.get_region(regname.ROLLMAST1ELEVATO).connect(world.get_region(regname.ROLLMAST1SAWBLAD),
+                                                       "Rolling Masterpiece: Elevator Ball Launcher")
+    world.get_region(regname.ROLLMAST1SAWBLAD).connect(world.get_region(regname.ROLLMAST1SILVERC))
+    world.get_region(regname.ROLLMAST).connect(world.get_region(regname.ROLLMAST2LANDING), "Rolling Masterpiece Comet Star")
+    world.get_region(regname.ROLLMAST2LANDING).connect(world.get_region(regname.ROLLMAST2PAINTBR),
+                                                       "Rolling Masterpiece Comet: Landing Ball Launcher")
+    world.get_region(regname.ROLLMAST2PAINTBR).connect(world.get_region(regname.ROLLMAST2ELEVATO),
+                                                       "Rolling Masterpiece Comet: Paintbrush Ball Launcher")
+    world.get_region(regname.ROLLMAST2ELEVATO).connect(world.get_region(regname.ROLLMAST2BOMBOMB),
+                                                       "Rolling Masterpiece Comet: Elevator Ball Launcher")
+    world.get_region(regname.ROLLMAST2BOMBOMB).connect(world.get_region(regname.ROLLMAST2SILVERC),
+                                                       "Rolling Masterpiece Comet: Bob-omb Ball Launcher")
     # Fearsome Fleet
     world.get_region(regname.WORLD3).connect(world.get_region(regname.BOWJR2), "World 3 Slot 7 Galaxy")
     # World 4
