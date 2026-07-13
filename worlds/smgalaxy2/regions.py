@@ -506,6 +506,8 @@ region_list: dict[str, SMG2RegionData] = {
     regname.BOULBOWL1BOSS:              SMG2RegionData("Planet", [], []),
     regname.BOULBOWL2ASTEROI:           SMG2RegionData("Planet", [], []),
     regname.BOULBOWL2CAGEPLA:           SMG2RegionData("Planet", [], []),
+    regname.WILDGLIDESTART:             SMG2RegionData("Planet", [], []),
+    regname.WILDGLIDECOURSE:            SMG2RegionData("Planet", [], []),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]

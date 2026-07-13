@@ -6,6 +6,7 @@ from rule_builder.rules import Rule, Has, True_
 from .Constants.Names import region_names as regname
 from .Constants.Names import item_names as itemname
 from .Constants.Names import location_names as locname
+from .Constants.Names.region_names import WILDGLIDECOURSE
 from .Options import EnableGreenStars
 from .Rules import GreenStarRule
 
@@ -132,8 +133,10 @@ COSCCOVE_loc: dict[str, SMG2LocationData] = {
 
 # Wild Glide St
 WILDGLIDE_loc: dict[str, SMG2LocationData] = {
-    locname.WILDGLIDESTAR1: SMG2LocationData(["Power Star Location", regname.WILDGLIDE], regname.WILDGLIDE),
-    locname.WILDGLIDESTAR2: SMG2LocationData(["Power Star Location", regname.WILDGLIDE], regname.WILDGLIDE),
+    locname.WILDGLIDESTAR1: SMG2LocationData(["Power Star Location", regname.WILDGLIDE], regname.WILDGLIDE,
+                                             WILDGLIDECOURSE, 1),
+    locname.WILDGLIDESTAR2: SMG2LocationData(["Power Star Location", regname.WILDGLIDE], regname.WILDGLIDE,
+                                             WILDGLIDECOURSE, 1),
 }
 
 # Honeybloom St
@@ -512,10 +515,10 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.COSMIC2WATERPA, 1, ),
     locname.COSCCOVESTARG3:     SMG2LocationData(["Green Star Location", regname.COSMICO], regname.COSMICO,
                                                  regname.COSMIC2WATERPA, 1, ),
-    locname.WILDGLIDESTARG1:    SMG2LocationData(["Green Star Location", regname.WILDGLIDE], regname.WILDGLIDE, 1,
-                                                 ),
-    locname.WILDGLIDESTARG2:    SMG2LocationData(["Green Star Location", regname.WILDGLIDE], regname.WILDGLIDE, 1,
-                                                 ),
+    locname.WILDGLIDESTARG1:    SMG2LocationData(["Green Star Location", regname.WILDGLIDE], regname.WILDGLIDE,
+                                                 regname.WILDGLIDECOURSE, 1,),
+    locname.WILDGLIDESTARG2:    SMG2LocationData(["Green Star Location", regname.WILDGLIDE], regname.WILDGLIDE,
+                                                 regname.WILDGLIDECOURSE, 1,),
     locname.BEEBLOOMSTARG1:     SMG2LocationData(["Green Star Location", regname.HONEYBLOOM], regname.HONEYBLOOM,
                                                  regname.HONEYBLOOM1WALL3,1,),
     locname.BEEBLOOMSTARG2:     SMG2LocationData(["Green Star Location", regname.HONEYBLOOM], regname.HONEYBLOOM,
@@ -719,7 +722,7 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
     locname.COSCCOVECM: SMG2LocationData(["Comet Medal Location", regname.COSMICO], regname.COSMICO,
                                          regname.COSMIC1POOL,  1, ),
     locname.WILDGLIDECM: SMG2LocationData(["Comet Medal Location", regname.WILDGLIDE], regname.WILDGLIDE,
-                                          regname.,  1, ),
+                                          regname.WILDGLIDECOURSE,  1, ),
     locname.BEEBLOOMCM: SMG2LocationData(["Comet Medal Location", regname.HONEYBLOOM], regname.HONEYBLOOM,
                                          regname.HONEYBLOOM1WALL2,  1, ),
     locname.LAVALAIRCM: SMG2LocationData(["Comet Medal Location", regname.BOWSER1], regname.BOWSER1,
