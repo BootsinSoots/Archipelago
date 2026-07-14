@@ -222,6 +222,18 @@ class PowerupRando(Toggle):
     display_name = "Power-Up Rando"
     internal_name = "powerup_rando"
 
+class PowerUpFiller(Choice):
+    """
+    Add consumable Power-Ups as filler items to the itempool
+
+    Ice Mario and the Flight Star from Super Mario Galaxy 1 are only included as consumables if chosen
+    """
+    display_name = "Power-Up Consumables"
+    internal_name = ("powerup_consumables")
+    option_Off = 0
+    option_Exclude_Ice_and_Fly = 1
+    option_All = 2
+
 # Comet medals in pool, provide galaxy "order", 1 comet to one level
 
 
@@ -242,6 +254,7 @@ class SMG2Options(PerGameCommonOptions):
     active_comets_world: ActiveCometsWorld
     active_comets_game: ActiveCometsGame
     powerup_rando: PowerupRando
+    powerup_consumables: PowerUpFiller
 
 option_groups = [
     Options.OptionGroup("Map Options", [
@@ -265,6 +278,9 @@ option_groups = [
     ]),
     Options.OptionGroup("Extra Locations", [
 
+    ]),
+    Options.OptionGroup("Itempool Changes", [
+        PowerUpFiller
     ]),
     Options.OptionGroup("Cosmetics", [
         MarioColors

@@ -43,6 +43,9 @@ powerup_consumables: dict[str, SMG2ItemData] = {
     itemname.CLOUDFLOW: SMG2ItemData(["Consumable"], 2, IC.useful),
     itemname.ROCKSHROOM: SMG2ItemData(["Consumable"], 2, IC.useful),
     itemname.DRILLHAT: SMG2ItemData(["Consumable"], 2, IC.useful),
+}
+
+smg1_consumables: dict[str, SMG2ItemData] = {
     itemname.ICEFLOWER: SMG2ItemData(["Consumable"], 2, IC.useful),
     itemname.REDSTAR: SMG2ItemData(["Consumable"], 2, IC.useful),
 }
@@ -139,8 +142,12 @@ galaxy_keys: dict[str, SMG2ItemData] = {
    itemname.SLIMSPRIKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
 }
 
+expanded_filler: dict[str, SMG2ItemData] = {**filler_items, **powerup_consumables}
+
+all_filler: dict[str, SMG2ItemData] = {**expanded_filler, **smg1_consumables}
+
 all_items_table: dict[str, SMG2ItemData] = {**keyed_grand_stars, **item_table, **generic_event_items, **galaxy_keys,
-                                            **world_green_keys, **filler_items, **powerup_consumables, **powerup_unlocks,
+                                            **world_green_keys, **all_filler, **powerup_consumables, **powerup_unlocks,
                                             }
 
 ITEM_NAME_TO_ID: dict[str, int] =  {
