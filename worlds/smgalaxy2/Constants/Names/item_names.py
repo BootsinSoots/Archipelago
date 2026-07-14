@@ -13,6 +13,28 @@ POWER = "Power Star"
 GREEN = "Green Star"
 ONEUP = "1-up Mushroom"
 
+# Consumable Power-Ups
+INVINCIBILITY = "Consumable Rainbow Star"
+FIREBALLFLO = "Consumable Fire FLower"
+BEESHROOM = "Consumable Bee Mushroom"
+SPRINGSHROOM = "Consumable Spring Mushroom"
+BOOSHROOM = "Consumable Boo Mushroom"
+CLOUDFLOW = "Consumable Cloud Flower"
+ROCKSHROOM = "Consumable Rock Mushroom"
+DRILLHAT = "Consumable Spin Drill"
+ICEFLOWER = "Consumable Ice Flower"
+REDSTAR = "Consumable Flight Star"
+
+# Power-Up Rando
+SUPASTAR    = "Rainbow Star"
+FIREFLOWER  = "Fire Flower"
+BEEMARIO    = "Bee Mushroom"
+SPRING      = "Spring Mushroom"
+BOOMARIO    = "Boo Mushroom"
+CLOUD       = "Cloud Mushroom"
+ROCK        = "Rock Mushroom"
+SPINDRILL   = "Spin Drill"
+
 #Unique individual keys
 GREENCOMETKEY = "Green Star Comet Key"
 GREENCOMETW1 = "Green Star World 1 Key"

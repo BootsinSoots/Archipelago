@@ -244,7 +244,7 @@ option_groups = [
         GalaxyShuffle,
         GalaxyShuffleType,
         GalaxyLock,
-        ActiveCometsWorld.
+        ActiveCometsWorld,
         ActiveCometsGame,
     ]),
     Options.OptionGroup("Green Stars", [
