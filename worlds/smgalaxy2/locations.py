@@ -233,9 +233,12 @@ SUPMASS_loc: dict[str, SMG2LocationData] = {
 
     # Flipsville St
 FLIPVILL_loc: dict[str, SMG2LocationData] = {
-    locname.FLIPVILLESTAR1: SMG2LocationData(["Power Star Location", regname.FLIPVILL], regname.FLIPVILL),
-    locname.FLIPVILLESTAR2: SMG2LocationData(["Power Star Location", regname.FLIPVILL], regname.FLIPVILL),
-    locname.FLIPVILLESTAR3: SMG2LocationData(["Power Star Location", regname.FLIPVILL], regname.FLIPVILL),
+    locname.FLIPVILLESTAR1: SMG2LocationData(["Power Star Location", regname.FLIPVILL], regname.FLIPVILL,
+                                             regname.FLIPVILL1STAR, 1),
+    locname.FLIPVILLESTAR2: SMG2LocationData(["Power Star Location", regname.FLIPVILL], regname.FLIPVILL,
+                                             regname.FLIPVILL2GRAVITYMAIN, 1),
+    locname.FLIPVILLESTAR3: SMG2LocationData(["Power Star Location", regname.FLIPVILL], regname.FLIPVILL,
+                                             regname.FLIPVILL3GRAVITY, 1),
 }
 
     # Starshine Bea
@@ -572,12 +575,12 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.SUPMASS1GSTAR2, 1,),
     locname.SUPERMASSSTARG3:    SMG2LocationData(["Green Star Location", regname.SUPMASS], regname.SUPMASS,
                                                  regname.SUPMASS1KOOPAS, 1,),
-    locname.FLIPVILLESTARG1:    SMG2LocationData(["Green Star Location", regname.FLIPVILL], regname.FLIPVILL, 1,
-                                                 ),
-    locname.FLIPVILLESTARG2:    SMG2LocationData(["Green Star Location", regname.FLIPVILL], regname.FLIPVILL, 1,
-                                                 ),
-    locname.FLIPVILLESTARG3:    SMG2LocationData(["Green Star Location", regname.FLIPVILL], regname.FLIPVILL, 1,
-                                                 ),
+    locname.FLIPVILLESTARG1:    SMG2LocationData(["Green Star Location", regname.FLIPVILL], regname.FLIPVILL,
+                                                 regname.FLIPVILL1MAZETOP, 1,),
+    locname.FLIPVILLESTARG2:    SMG2LocationData(["Green Star Location", regname.FLIPVILL], regname.FLIPVILL,
+                                                 regname.FLIPVILL1WANWANLANE, 1,),
+    locname.FLIPVILLESTARG3:    SMG2LocationData(["Green Star Location", regname.FLIPVILL], regname.FLIPVILL,
+                                                 regname.FLIPVILL1LIFTBELOW, 1,),
     locname.STARBEACHSTARG1:    SMG2LocationData(["Green Star Location", regname.STARBEACH], regname.STARBEACH, 1,
                                                  ),
     locname.STARBEACHSTARG2:    SMG2LocationData(["Green Star Location", regname.STARBEACH], regname.STARBEACH, 1,
@@ -747,7 +750,7 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
     locname.SUPERMASSCM: SMG2LocationData(["Comet Medal Location", regname.SUPMASS], regname.SUPMASS,
                                           regname.SUPMASS1START,  1, ),
     locname.FLIPVILLECM: SMG2LocationData(["Comet Medal Location", regname.FLIPVILL], regname.FLIPVILL,
-                                          regname.,  1, ),
+                                          regname.FLIPVILL1COMETMEDAL,  1, ),
     locname.STARBEACHCM: SMG2LocationData(["Comet Medal Location", regname.STARBEACH], regname.STARBEACH,
                                           regname.,  1, ),
     locname.CHOMPWORKCM: SMG2LocationData(["Comet Medal Location", regname.CHOMWORK], regname.CHOMWORK,
