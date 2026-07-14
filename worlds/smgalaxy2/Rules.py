@@ -481,9 +481,10 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.FLIPVILL2MAZESTART).connect(world.get_region(regname.FLIPVILL2MAZEBOTTOM))
     world.get_region(regname.FLIPVILL2MAZESTART).connect(world.get_region(regname.FLIPVILL2MAZEBACK))
     world.get_region(regname.FLIPVILL2MAZEBOTTOM).connect(world.get_region(regname.FLIPVILL2MAZEBACK))
-    world.get_region(regname.FLIPVILL2MAZEBACK).connect(world.get_region(regname.FLIPVILL2TWIRLIP))
-    world.get_region(regname.FLIPVILL1MAZEBOTTOM).connect(world.get_region(regname.FLIPVILL1MAZETOP))
-    world.get_region(regname.FLIPVILL1MAZEBACK).connect(world.get_region(regname.FLIPVILL1MAZETOP)) # Trick Entrance
+    world.get_region(regname.FLIPVILL2MAZEBACK).connect(world.get_region(regname.FLIPVILL2TWIRLIP),
+                                                        "Flipsville 2: Twirlip Bonus Teleporter")
+    world.get_region(regname.FLIPVILL2MAZEBOTTOM).connect(world.get_region(regname.FLIPVILL2MAZETOP))
+    world.get_region(regname.FLIPVILL2MAZEBACK).connect(world.get_region(regname.FLIPVILL2MAZETOP))
     world.get_region(regname.FLIPVILL2MAZETOP).connect(world.get_region(regname.FLIPVILL2MAZELAUNCH))
     world.get_region(regname.FLIPVILL2MAZEBACK).connect(world.get_region(regname.FLIPVILL2MAZELAUNCH))
     world.get_region(regname.FLIPVILL2MAZELAUNCH).connect(world.get_region(regname.FLIPVILL2TOWERSTART),
@@ -495,7 +496,8 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                     "Flipsville 2: Spin-Drill Tower Pipe")
     world.get_region(regname.FLIPVILL2GRAVITYSTART).connect(world.get_region(regname.FLIPVILL2GRAVITYMAIN))
     world.get_region(regname.FLIPVILL).connect(world.get_region(regname.FLIPVILL3TOWER), "Flipsville Comet Star")
-    world.get_region(regname.FLIPVILL3TOWER).connect(world.get_region(regname.FLIPVILL3GRAVITY), "Flipsville Comet: Green Pipe")
+    world.get_region(regname.FLIPVILL3TOWER).connect(world.get_region(regname.FLIPVILL3GRAVITY),
+                                                     "Flipsville 3: Spin-Drill Tower Pipe")
     # Honeyhop
     world.get_region(regname.WORLD4).connect(world.get_region(regname.HONEYHOP), "World 4 Slot 4 Galaxy")
     # Starshine beach
@@ -518,6 +520,21 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.STARBEACH).connect(world.get_region(regname.STARBEACH3MAIN), "Starshine Comet Star")
     # Chompworks
     world.get_region(regname.WORLD4).connect(world.get_region(regname.CHOMWORK), "World 4 Slot 6 Galaxy")
+    world.get_region(regname.CHOMWORK).connect(world.get_region(regname.CHOMWORK1START), "Chompworks Star 1")
+    world.get_region(regname.CHOMWORK1START).connect(world.get_region(regname.CHOMWORK1ROLLING),
+                                                     "Chompworks 1: Start Launch Star")
+    world.get_region(regname.CHOMWORK1ROLLING).connect(world.get_region(regname.CHOMWORK1BONUS),
+                                                       "Chompworks 1: Bonus Room Pipe")
+    world.get_region(regname.CHOMWORK1ROLLING).connect(world.get_region(regname.CHOMWORK1FLIPSWAP),
+                                                       "Chompworks 1: Rolling Chomps Launch Star")
+    world.get_region(regname.CHOMWORK1FLIPSWAP).connect(world.get_region(regname.CHOMWORK1LAVA),
+                                                        "Chompworks 1: Flipping Platforms Launch Star")
+    world.get_region(regname.CHOMWORK).connect(world.get_region(regname.CHOMWORK2START), "Chompworks Star 2")
+    world.get_region(regname.CHOMWORK2START).connect(world.get_region(regname.CHOMWORK2ROLLING),
+                                                     "Chompworks 2: Start Launch Star")
+    world.get_region(regname.CHOMWORK2ROLLING).connect(world.get_region(regname.CHOMWORK2TOWER),
+                                                       "Chompworks 2: Rolling Chomps Launch Star")
+    world.get_region(regname.CHOMWORK).connect(world.get_region(regname.CHOMWORK3LAVA), "Chompworks Comet Star")
     # Gravity Gauntlet
     world.get_region(regname.WORLD4).connect(world.get_region(regname.BOWSER2), "World 4 Slot 7 Galaxy")
     world.get_region(regname.BOWSER2).connect(world.get_region(regname.GRAVGAUN1LANDING), "Gravity Gauntlet Grand Star")

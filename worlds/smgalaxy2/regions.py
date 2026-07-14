@@ -202,6 +202,9 @@ region_list: dict[str, SMG2RegionData] = {
     regname.FLIPVILL2GRAVITYMAIN:       SMG2RegionData("Planet", [], []),
     regname.FLIPVILL3TOWER:             SMG2RegionData("Planet", [], []),
     regname.FLIPVILL3GRAVITY:           SMG2RegionData("Planet", [], []),
+
+
+
     regname.SPACSTOR1PULL:              SMG2RegionData("Planet", [], []),
     regname.SPACSTOR1SATELLITE:         SMG2RegionData("Planet", [], []),
     regname.SPACSTOR1REDCANOUT:         SMG2RegionData("Planet", [], []),
@@ -562,6 +565,15 @@ region_list: dict[str, SMG2RegionData] = {
     regname.STARBEACH2COINR:            SMG2RegionData("Planet", [], []),
     regname.STARBEACH2DEEPW:            SMG2RegionData("Planet", [], []),
     regname.STARBEACH3MAIN:             SMG2RegionData("Planet", [], []),
+    regname.CHOMWORK1START:             SMG2RegionData("Planet", [], []),
+    regname.CHOMWORK1ROLLING:           SMG2RegionData("Planet", [], []),
+    regname.CHOMWORK1BONUS:             SMG2RegionData("Planet", [], []),
+    regname.CHOMWORK1FLIPSWAP:          SMG2RegionData("Planet", [], []),
+    regname.CHOMWORK1LAVA:              SMG2RegionData("Planet", [], []),
+    regname.CHOMWORK2START:             SMG2RegionData("Planet", [], []),
+    regname.CHOMWORK2ROLLING:           SMG2RegionData("Planet", [], []),
+    regname.CHOMWORK2TOWER:             SMG2RegionData("Planet", [], []),
+    regname.CHOMWORK3LAVA:              SMG2RegionData("Planet", [], []),
     regname.GRAVGAUN1LANDING:           SMG2RegionData("Planet", [], []),
     regname.GRAVGAUN1WATERCO:           SMG2RegionData("Planet", [], []),
     regname.GRAVGAUN1WHOMPWA:           SMG2RegionData("Planet", [], []),
