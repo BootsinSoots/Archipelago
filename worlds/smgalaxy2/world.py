@@ -148,6 +148,11 @@ class SMG2World(World):
             copies = max(0, items.all_items_table[itemname.GRAND].default_count - exclude.count(itemname.GRAND))
             local_pool += [self.create_item(itemname.GRAND) for i in range(copies)]
 
+        if self.options.powerup_rando.value:
+            for item in items.powerup_unlocks.keys():
+                copies = max(0, items.all_items_table[item].default_count - exclude.count(item))
+                local_pool += [self.create_item(item) for _ in range(copies)]
+
         if self.options.galaxy_lock.value:
             for item in items.galaxy_keys.keys():
                 copies = max(0, items.all_items_table[itemname.GRAND].default_count - exclude.count(itemname.GRAND))

@@ -5,7 +5,7 @@ from rule_builder.field_resolvers import FromOption
 from rule_builder.options import OptionFilter
 from rule_builder.rules import Has, True_, HasFromList, Rule, HasGroup, CanReachLocation
 from .Options import WorldShuffle, Goal, GreenStarBehavior, StarstoFinish, GreenStarstoFinish, GalaxyLock, \
-    EnableGreenStars
+    EnableGreenStars, PowerupRando
 from .locations import green_star_locations, SMG2Location
 from .regions import region_list, all_galaxy_slots
 from .Constants.Names import region_names as regname
@@ -947,3 +947,13 @@ GreenStarRule: Rule[Any] = ((True_()&OptionFilter(EnableGreenStars,1))
 CometAccessBase: Rule[Any] = # CanReach previous star/CanReach Comet Medal/Both/Neither
 
 Comet1ItemAccess: Rule[Any] = # Has All Comet Key and option or unlocked
+
+PowerUpOff: Rule[Any] = True_()&OptionFilter(PowerupRando,0)
+BeeFlight: Rule[Any] = PowerUpOff|(Has(itemname.BEEMARIO)&OptionFilter(PowerupRando,1))
+SUPAPOWA: Rule[Any] = PowerUpOff|(Has(itemname.SUPASTAR)&OptionFilter(PowerupRando,1))
+FireMario: Rule[Any] = PowerUpOff|(Has(itemname.FIREFLOWER)&OptionFilter(PowerupRando,1))
+SPRONGIN: Rule[Any] = PowerUpOff|(Has(itemname.SPRING)&OptionFilter(PowerupRando,1))
+BooMario: Rule[Any] = PowerUpOff|(Has(itemname.BOOMARIO)&OptionFilter(PowerupRando,1))
+CloudMario: Rule[Any] = PowerUpOff|(Has(itemname.CLOUD)&OptionFilter(PowerupRando,1))
+ROCKNROLLIN: Rule[Any] = PowerUpOff|(Has(itemname.ROCK)&OptionFilter(PowerupRando,1))
+DRILLMASTER: Rule[Any] = PowerUpOff|(Has(itemname.SPINDRILL)&OptionFilter(PowerupRando,1))

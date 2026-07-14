@@ -215,6 +215,13 @@ class ActiveCometsWorld(Range): # doesn't affect logic
     range_start = 1
     range_end = 7
 
+class PowerupRando(Toggle):
+    """
+    Requires you to receive an item before you can use the related power-up
+    """
+    display_name = "Power-Up Rando"
+    internal_name = "powerup_rando"
+
 # Comet medals in pool, provide galaxy "order", 1 comet to one level
 
 
@@ -234,6 +241,7 @@ class SMG2Options(PerGameCommonOptions):
     galaxy_lock: GalaxyLock
     active_comets_world: ActiveCometsWorld
     active_comets_game: ActiveCometsGame
+    powerup_rando: PowerupRando
 
 option_groups = [
     Options.OptionGroup("Map Options", [
@@ -249,11 +257,11 @@ option_groups = [
     ]),
     Options.OptionGroup("Green Stars", [
         EnableGreenStars,
-        GreenStarstoFinish,
         GreenStarBehavior,
+        GreenStarstoFinish,
     ]),
     Options.OptionGroup("Logic Options", [
-
+        PowerupRando,
     ]),
     Options.OptionGroup("Extra Locations", [
 
