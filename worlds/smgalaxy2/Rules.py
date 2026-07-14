@@ -500,10 +500,39 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.WORLD4).connect(world.get_region(regname.HONEYHOP), "World 4 Slot 4 Galaxy")
     # Starshine beach
     world.get_region(regname.WORLD4).connect(world.get_region(regname.STARBEACH), "World 4 Slot 5 Galaxy")
+    world.get_region(regname.STARBEACH).connect(world.get_region(regname.STARSHINE1WATER), "Starshine Star 1")
+    world.get_region(regname.STARSHINE1WATER).connect(world.get_region(regname.STARSHINE1MAIN),
+                                                      "Starshine Star 1: Waterdrop Launch Star")
+    world.get_region(regname.STARSHINE1MAIN).connect(world.get_region(regname.STARSHINE1BONUS),
+                                                      "Starshine Star 1: Crabber Bonus Teleporter")
+    world.get_region(regname.STARSHINE1MAIN).connect(world.get_region(regname.STARSHINE1COINR),
+                                                      "Starshine Star 1: Tropical Beach Green Pipe")
+    world.get_region(regname.STARBEACH).connect(world.get_region(regname.STARSHINE2WATER), "Starshine Star 2")
+    world.get_region(regname.STARSHINE2WATER).connect(world.get_region(regname.STARSHINE2MAIN),
+                                                      "Starshine Star 2: Waterdrop Launch Star")
+    world.get_region(regname.STARSHINE2MAIN).connect(world.get_region(regname.STARSHINE2DEEPW))
+    world.get_region(regname.STARSHINE2MAIN).connect(world.get_region(regname.STARSHINE2BONUS),
+                                                      "Starshine Star 2: Crabber Bonus Teleporter")
+    world.get_region(regname.STARSHINE2MAIN).connect(world.get_region(regname.STARSHINE2COINR),
+                                                      "Starshine Star 2: Tropical Beach Green Pipe")
+    world.get_region(regname.STARBEACH).connect(world.get_region(regname.STARSHINE3MAIN), "Starshine Comet Star")
     # Chompworks
     world.get_region(regname.WORLD4).connect(world.get_region(regname.CHOMWORK), "World 4 Slot 6 Galaxy")
     # Gravity Gauntlet
     world.get_region(regname.WORLD4).connect(world.get_region(regname.BOWSER2), "World 4 Slot 7 Galaxy")
+    world.get_region(regname.BOWSER2).connect(world.get_region(regname.GRAVGAUN1LANDING), "Gravity Gauntlet Grand Star")
+    world.get_region(regname.GRAVGAUN1LANDING).connect(world.get_region(regname.GRAVGAUN1WATERCO))
+    world.get_region(regname.GRAVGAUN1LANDING).connect(world.get_region(regname.GRAVGAUNGSTAR1))
+    world.get_region(regname.GRAVGAUN1WATERCO).connect(world.get_region(regname.GRAVGAUN1WHOMPWA))
+    world.get_region(regname.GRAVGAUN1WHOMPWA).connect(world.get_region(regname.GRAVGAUNGSTAR2))
+    world.get_region(regname.GRAVGAUN1WHOMPWA).connect(world.get_region(regname.GRAVGAUN1DOORTOD),
+                                                       "Gravity Gauntlet: Fire Wheel Launch Star")
+    world.get_region(regname.GRAVGAUN1DOORTOD).connect(world.get_region(regname.GRAVGAUN1BOSSARE))
+    world.get_region(regname.BOWSER2).connect(world.get_region(regname.GRAVGAUN2LANDING), "Gravity Gauntlet Comet Star")
+    world.get_region(regname.GRAVGAUN2LANDING).connect(world.get_region(regname.GRAVGAUN2WATERCO))
+    world.get_region(regname.GRAVGAUN2LANDING).connect(world.get_region(regname.GRAVGAUNGSTAR1))
+    world.get_region(regname.GRAVGAUN2WATERCO).connect(world.get_region(regname.GRAVGAUN2WHOMPWA))
+    world.get_region(regname.GRAVGAUN2WHOMPWA).connect(world.get_region(regname.GRAVGAUNGSTAR2))
     # World 5
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD5), "World 5 Map",
                                            rule=(Has(itemname.GRAND, 4)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
