@@ -1,3 +1,4 @@
+from pickle import FALSE
 from typing import NamedTuple, Optional, List
 from BaseClasses import Location, Region
 from .Helper_Functions import LMRamData
@@ -441,7 +442,8 @@ DECOR_LOCATION_TABLE: dict[str, LMLocationData] = {
     "Study Book (on Desk closer to Bookshelves)": LMLocationData("Study", 146, "Furniture", 504, [], 2,
                                                                  update_ram_addr=[LMRamData(in_game_room_id=35)]),
     "Lydia's Vanity (Master Bedroom)": LMLocationData("Master Bedroom", 159, "Furniture", 375, [], 2,
-                                                      update_ram_addr=[LMRamData(in_game_room_id=34)], require_poltergust=False),
+                                                      update_ram_addr=[LMRamData(in_game_room_id=34)], require_poltergust=False,
+                                                      hide_boo=False),
     "Master Bedroom Lamp": LMLocationData("Master Bedroom", 165, "Furniture", 493, [], 2,
                                           update_ram_addr=[LMRamData(in_game_room_id=34)]),
     "Nursery Vase": LMLocationData("Nursery", 166, "Furniture", 488, [], 2,
@@ -963,7 +965,8 @@ SEATING_LOCATION_TABLE: dict[str, LMLocationData] = {
     "Study Chair": LMLocationData("Study", 144, "Furniture", 350, [], 2, remote_only=True,
                                   update_ram_addr=[LMRamData(in_game_room_id=35)], require_poltergust=False),
     "Master Bedroom Stool": LMLocationData("Master Bedroom", 158, "Furniture", 376, [], 2,
-                                           update_ram_addr=[LMRamData(in_game_room_id=34)], require_poltergust=False),
+                                           update_ram_addr=[LMRamData(in_game_room_id=34)], require_poltergust=False,
+                                           hide_boo=False),
     "Nursery Chair L": LMLocationData("Nursery", 170, "Furniture", 365, [], 2,
                                       update_ram_addr=[LMRamData(in_game_room_id=26)], require_poltergust=False),
     "Nursery Chair R": LMLocationData("Nursery", 171, "Furniture", 366, [], 2,
