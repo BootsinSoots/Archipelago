@@ -126,10 +126,12 @@ class SMG2World(World):
     def get_filler_item_name(self) -> str:
         if self.options.powerup_consumables.value == 0:
             return self.random.choice(list(items.filler_items.keys()))
-        if self.options.powerup_consumables.value == 1:
+        elif self.options.powerup_consumables.value == 1:
             return self.random.choice(list(items.expanded_filler.keys()))
-        if self.options.powerup_consumables.value == 2:
+        elif self.options.powerup_consumables.value == 2:
             return self.random.choice(list(items.all_filler.keys()))
+        else:
+            return itemname.ONEUP
     
     def create_items(self):
         exclude = [item.name for item in self.multiworld.precollected_items[self.player]]
