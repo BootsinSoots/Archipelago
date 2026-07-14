@@ -5,7 +5,7 @@ from rule_builder.field_resolvers import FromOption
 from rule_builder.options import OptionFilter
 from rule_builder.rules import Has, True_, HasFromList, Rule, HasGroup, CanReachLocation
 from .Options import WorldShuffle, Goal, GreenStarBehavior, StarstoFinish, GreenStarstoFinish, GalaxyLock, \
-    EnableGreenStars
+    EnableGreenStars, PowerupRando
 from .locations import green_star_locations, SMG2Location
 from .regions import region_list, all_galaxy_slots
 from .Constants.Names import region_names as regname
@@ -452,7 +452,7 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.FLIPVILL1MAZESTART).connect(world.get_region(regname.FLIPVILL1MAZEBACK))
     world.get_region(regname.FLIPVILL1MAZEBOTTOM).connect(world.get_region(regname.FLIPVILL1MAZEBACK))
     world.get_region(regname.FLIPVILL1MAZEBOTTOM).connect(world.get_region(regname.FLIPVILL1MAZETOP))
-    world.get_region(regname.FLIPVILL1MAZEBACK).connect(world.get_region(regname.FLIPVILL1MAZETOP))
+    world.get_region(regname.FLIPVILL1MAZEBACK).connect(world.get_region(regname.FLIPVILL1MAZETOP)) # Trick Entrance
     world.get_region(regname.FLIPVILL1MAZEBOTTOM).connect(world.get_region(regname.FLIPVILL1COMETMEDAL))
     world.get_region(regname.FLIPVILL1MAZEBACK).connect(world.get_region(regname.FLIPVILL1COMETMEDAL))
     world.get_region(regname.FLIPVILL1MAZEBACK).connect(world.get_region(regname.FLIPVILL1TWIRLIP),
@@ -460,29 +460,30 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.FLIPVILL1MAZETOP).connect(world.get_region(regname.FLIPVILL1WANWANSTART),
                                                        "Flipsville 1: Dollhouse Launch Star")
     world.get_region(regname.FLIPVILL1WANWANSTART).connect(world.get_region(regname.FLIPVILL1WANWANALLEY))
-    world.get_region(regname.FLIPVILL1WANWANSTART).connect(world.get_region(regname.FLIPVILL1WANWANLANE))
+    world.get_region(regname.FLIPVILL1WANWANSTART).connect(world.get_region(regname.FLIPVILL1WANWANLANE)) #Advanced Logic
     world.get_region(regname.FLIPVILL1WANWANALLEY).connect(world.get_region(regname.FLIPVILL1WANWANLANE))
-    world.get_region(regname.FLIPVILL1MAZEBOTTOM).connect(world.get_region(regname.FLIPVILL1WANWANLANE))
+    world.get_region(regname.FLIPVILL1MAZEBOTTOM).connect(world.get_region(regname.FLIPVILL1WANWANLANE)) # Trick Entrance
     world.get_region(regname.FLIPVILL1WANWANLANE).connect(world.get_region(regname.FLIPVILL1WANWANBACK))
     world.get_region(regname.FLIPVILL1WANWANBACK).connect(world.get_region(regname.FLIPVILL1LIFTSTART),
                                                           "Flipsville 1: Chomps Launch Star")
-    world.get_region(regname.FLIPVILL1MAZEBACK).connect(world.get_region(regname.FLIPVILL1LIFTSTART))
+    world.get_region(regname.FLIPVILL1MAZEBACK).connect(world.get_region(regname.FLIPVILL1LIFTSTART)) # Trick Entrance
     world.get_region(regname.FLIPVILL1LIFTSTART).connect(world.get_region(regname.FLIPVILL1LIFTBELOW))
     world.get_region(regname.FLIPVILL1LIFTSTART).connect(world.get_region(regname.FLIPVILL1LIFTTOP))
     world.get_region(regname.FLIPVILL1LIFTBELOW).connect(world.get_region(regname.FLIPVILL1LIFTTOP))
     world.get_region(regname.FLIPVILL1LIFTTOP).connect(world.get_region(regname.FLIPVILL1STARSHROOM),
                                                        "Flipsville 1: Lifts Launch Star")
-    world.get_region(regname.FLIPVILL1WANWANLANE).connect(world.get_region(regname.FLIPVILL1STARSHROOM))
+    world.get_region(regname.FLIPVILL1WANWANLANE).connect(world.get_region(regname.FLIPVILL1STARSHROOM)) # Trick Entrance
     world.get_region(regname.FLIPVILL1STARSHROOM).connect(world.get_region(regname.FLIPVILL1GLAM),
                                                           "Flipsville 1: Starshroom Launch Star")
-    world.get_region(regname.FLIPVILL1WANWANLANE).connect(world.get_region(regname.FLIPVILL1GLAM))
+    world.get_region(regname.FLIPVILL1WANWANLANE).connect(world.get_region(regname.FLIPVILL1GLAM)) # Trick Entrance
     world.get_region(regname.FLIPVILL1GLAM).connect(world.get_region(regname.FLIPVILL1STAR))
+    world.get_region(regname.FLIPVILL).connect(world.get_region(regname.FLIPVILL2MAZESTART), "Flipsville Star 2")
     world.get_region(regname.FLIPVILL2MAZESTART).connect(world.get_region(regname.FLIPVILL2MAZEBOTTOM))
     world.get_region(regname.FLIPVILL2MAZESTART).connect(world.get_region(regname.FLIPVILL2MAZEBACK))
     world.get_region(regname.FLIPVILL2MAZEBOTTOM).connect(world.get_region(regname.FLIPVILL2MAZEBACK))
     world.get_region(regname.FLIPVILL2MAZEBACK).connect(world.get_region(regname.FLIPVILL2TWIRLIP))
     world.get_region(regname.FLIPVILL1MAZEBOTTOM).connect(world.get_region(regname.FLIPVILL1MAZETOP))
-    world.get_region(regname.FLIPVILL1MAZEBACK).connect(world.get_region(regname.FLIPVILL1MAZETOP))
+    world.get_region(regname.FLIPVILL1MAZEBACK).connect(world.get_region(regname.FLIPVILL1MAZETOP)) # Trick Entrance
     world.get_region(regname.FLIPVILL2MAZETOP).connect(world.get_region(regname.FLIPVILL2MAZELAUNCH))
     world.get_region(regname.FLIPVILL2MAZEBACK).connect(world.get_region(regname.FLIPVILL2MAZELAUNCH))
     world.get_region(regname.FLIPVILL2MAZELAUNCH).connect(world.get_region(regname.FLIPVILL2TOWERSTART),
@@ -493,6 +494,8 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.FLIPVILL2PIPE).connect(world.get_region(regname.FLIPVILL2GRAVITYSTART),
                                                     "Flipsville 2: Spin-Drill Tower Pipe")
     world.get_region(regname.FLIPVILL2GRAVITYSTART).connect(world.get_region(regname.FLIPVILL2GRAVITYMAIN))
+    world.get_region(regname.FLIPVILL).connect(world.get_region(regname.FLIPVILL3TOWER), "Flipsville Comet Star")
+    world.get_region(regname.FLIPVILL3TOWER).connect(world.get_region(regname.FLIPVILL3GRAVITY), "Flipsville Comet: Green Pipe")
     # Honeyhop
     world.get_region(regname.WORLD4).connect(world.get_region(regname.HONEYHOP), "World 4 Slot 4 Galaxy")
     # Starshine beach
@@ -944,3 +947,13 @@ GreenStarRule: Rule[Any] = ((True_()&OptionFilter(EnableGreenStars,1))
 CometAccessBase: Rule[Any] = # CanReach previous star/CanReach Comet Medal/Both/Neither
 
 Comet1ItemAccess: Rule[Any] = # Has All Comet Key and option or unlocked
+
+PowerUpOff: Rule[Any] = True_()&OptionFilter(PowerupRando,0)
+BeeFlight: Rule[Any] = PowerUpOff|(Has(itemname.BEEMARIO)&OptionFilter(PowerupRando,1))
+SUPAPOWA: Rule[Any] = PowerUpOff|(Has(itemname.SUPASTAR)&OptionFilter(PowerupRando,1))
+FireMario: Rule[Any] = PowerUpOff|(Has(itemname.FIREFLOWER)&OptionFilter(PowerupRando,1))
+SPRONGIN: Rule[Any] = PowerUpOff|(Has(itemname.SPRING)&OptionFilter(PowerupRando,1))
+BooMario: Rule[Any] = PowerUpOff|(Has(itemname.BOOMARIO)&OptionFilter(PowerupRando,1))
+CloudMario: Rule[Any] = PowerUpOff|(Has(itemname.CLOUD)&OptionFilter(PowerupRando,1))
+ROCKNROLLIN: Rule[Any] = PowerUpOff|(Has(itemname.ROCK)&OptionFilter(PowerupRando,1))
+DRILLMASTER: Rule[Any] = PowerUpOff|(Has(itemname.SPINDRILL)&OptionFilter(PowerupRando,1))

@@ -124,7 +124,14 @@ class SMG2World(World):
         return item
 
     def get_filler_item_name(self) -> str:
-        return self.random.choice(list(items.filler_items.keys()))
+        if self.options.powerup_consumables.value == 0:
+            return self.random.choice(list(items.filler_items.keys()))
+        elif self.options.powerup_consumables.value == 1:
+            return self.random.choice(list(items.expanded_filler.keys()))
+        elif self.options.powerup_consumables.value == 2:
+            return self.random.choice(list(items.all_filler.keys()))
+        else:
+            return itemname.ONEUP
     
     def create_items(self):
         exclude = [item.name for item in self.multiworld.precollected_items[self.player]]
@@ -147,6 +154,11 @@ class SMG2World(World):
         else:
             copies = max(0, items.all_items_table[itemname.GRAND].default_count - exclude.count(itemname.GRAND))
             local_pool += [self.create_item(itemname.GRAND) for i in range(copies)]
+
+        if self.options.powerup_rando.value:
+            for item in items.powerup_unlocks.keys():
+                copies = max(0, items.all_items_table[item].default_count - exclude.count(item))
+                local_pool += [self.create_item(item) for _ in range(copies)]
 
         if self.options.galaxy_lock.value:
             for item in items.galaxy_keys.keys():

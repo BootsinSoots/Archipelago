@@ -34,6 +34,32 @@ filler_items: dict[str, SMG2ItemData] = {
     # Coins
 }
 
+powerup_consumables: dict[str, SMG2ItemData] = {
+    itemname.INVINCIBILITY: SMG2ItemData(["Consumable"], 2, IC.useful),
+    itemname.FIREBALLFLO: SMG2ItemData(["Consumable"], 2, IC.useful),
+    itemname.BEESHROOM: SMG2ItemData(["Consumable"], 2, IC.useful),
+    itemname.SPRINGSHROOM: SMG2ItemData(["Consumable"], 2, IC.useful),
+    itemname.BOOSHROOM: SMG2ItemData(["Consumable"], 2, IC.useful),
+    itemname.CLOUDFLOW: SMG2ItemData(["Consumable"], 2, IC.useful),
+    itemname.ROCKSHROOM: SMG2ItemData(["Consumable"], 2, IC.useful),
+    itemname.DRILLHAT: SMG2ItemData(["Consumable"], 2, IC.useful),
+}
+
+smg1_consumables: dict[str, SMG2ItemData] = {
+    itemname.ICEFLOWER: SMG2ItemData(["Consumable"], 2, IC.useful),
+    itemname.REDSTAR: SMG2ItemData(["Consumable"], 2, IC.useful),
+}
+
+powerup_unlocks: dict[str, SMG2ItemData] = {
+    itemname.SUPASTAR: SMG2ItemData(["Power-Up"], 3, IC.progression),
+    itemname.FIREFLOWER: SMG2ItemData(["Power-Up"], 3, IC.progression),
+    itemname.BEEMARIO: SMG2ItemData(["Power-Up"], 3, IC.progression),
+    itemname.SPRING: SMG2ItemData(["Power-Up"], 3, IC.progression),
+    itemname.BOOMARIO: SMG2ItemData(["Power-Up"], 3, IC.progression),
+    itemname.CLOUD: SMG2ItemData(["Power-Up"], 3, IC.progression),
+    itemname.ROCK: SMG2ItemData(["Power-Up"], 3, IC.progression),
+    itemname.SPINDRILL: SMG2ItemData(["Power-Up"], 3, IC.progression),
+}
 
 generic_event_items: dict[str, SMG2ItemData] = {
     "Peach": SMG2ItemData([], None, IC.progression),
@@ -116,8 +142,13 @@ galaxy_keys: dict[str, SMG2ItemData] = {
    itemname.SLIMSPRIKEY : SMG2ItemData(["Galaxy Key"], 45, IC.progression),
 }
 
+expanded_filler: dict[str, SMG2ItemData] = {**filler_items, **powerup_consumables}
+
+all_filler: dict[str, SMG2ItemData] = {**expanded_filler, **smg1_consumables}
+
 all_items_table: dict[str, SMG2ItemData] = {**keyed_grand_stars, **item_table, **generic_event_items, **galaxy_keys,
-                                            **world_green_keys, **filler_items}
+                                            **world_green_keys, **all_filler, **powerup_consumables, **powerup_unlocks,
+                                            }
 
 ITEM_NAME_TO_ID: dict[str, int] =  {
     name: data.code for name, data in all_items_table.items() if data.code is not None}
