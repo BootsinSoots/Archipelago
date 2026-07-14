@@ -248,6 +248,13 @@ class MoveRando(Choice):
     option_Progressive_Jumps = 1
     option_Separate_Jumps = 2
 
+class YoshiRando(Toggle):
+    """
+    Lock Yoshi and his fruits until you receive a related item.
+    """
+    display_name = "Yoshi Rando"
+    internal_name = "yoshi_rando"
+
 # Comet medals in pool, provide galaxy "order", 1 comet to one level
 
 
@@ -270,6 +277,7 @@ class SMG2Options(PerGameCommonOptions):
     powerup_rando: PowerupRando
     powerup_consumables: PowerUpFiller
     move_rando: MoveRando
+    yoshi_rando: YoshiRando
 
 option_groups = [
     Options.OptionGroup("Map Options", [
@@ -291,6 +299,7 @@ option_groups = [
     Options.OptionGroup("Logic Options", [
         PowerupRando,
         MoveRando,
+        YoshiRando
     ]),
     Options.OptionGroup("Extra Locations", [
 

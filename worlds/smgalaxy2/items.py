@@ -34,6 +34,14 @@ filler_items: dict[str, SMG2ItemData] = {
     # Coins
 }
 
+yoshi_moves: dict[str, SMG2ItemData] = {
+    itemname.YOSHI: SMG2ItemData(["Yoshi Move"], 1, IC.progression),
+    itemname.YOSHIBLIMP: SMG2ItemData(["Yoshi Move"], 1, IC.progression),
+    itemname.YOSHIPEPPER: SMG2ItemData(["Yoshi Move"], 1, IC.progression),
+    itemname.YOSHIBULB: SMG2ItemData(["Yoshi Move"], 1, IC.progression),
+    itemname.YOSHIFLOWER: SMG2ItemData(["Yoshi Move"], 1, IC.progression),
+}
+
 separate_jump: dict[str, SMG2ItemData] = {
     itemname.MARIODOUBLE: SMG2ItemData(["Mario Move"], 1, IC.progression),
     itemname.MARIOTRIPLE: SMG2ItemData(["Mario Move"], 1, IC.progression),

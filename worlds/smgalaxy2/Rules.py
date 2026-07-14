@@ -5,7 +5,7 @@ from rule_builder.field_resolvers import FromOption
 from rule_builder.options import OptionFilter
 from rule_builder.rules import Has, True_, HasFromList, Rule, HasGroup, CanReachLocation
 from .Options import WorldShuffle, Goal, GreenStarBehavior, StarstoFinish, GreenStarstoFinish, GalaxyLock, \
-    EnableGreenStars, PowerupRando, MoveRando
+    EnableGreenStars, PowerupRando, MoveRando, YoshiRando
 from .locations import green_star_locations, SMG2Location
 from .regions import region_list, all_galaxy_slots
 from .Constants.Names import region_names as regname
@@ -986,6 +986,13 @@ BooMario: Rule[Any] = PowerUpOff|(Has(itemname.BOOMARIO)&OptionFilter(PowerupRan
 CloudMario: Rule[Any] = PowerUpOff|(Has(itemname.CLOUD)&OptionFilter(PowerupRando,1))
 ROCKNROLLIN: Rule[Any] = PowerUpOff|(Has(itemname.ROCK)&OptionFilter(PowerupRando,1))
 DRILLMASTER: Rule[Any] = PowerUpOff|(Has(itemname.SPINDRILL)&OptionFilter(PowerupRando,1))
+
+YoshiRandoOff: Rule[Any] = True_()&OptionFilter(YoshiRando, 0)
+CanRideDino: Rule[Any] = YoshiRandoOff|(Has(itemname.YOSHI)&OptionFilter(YoshiRando, 1))
+CanDinoBlimp: Rule[Any] = YoshiRandoOff|(CanRideDino&Has(itemname.YOSHIBLIMP)&OptionFilter(YoshiRando, 1))
+CanDinoRun: Rule[Any] = YoshiRandoOff|(CanRideDino&Has(itemname.YOSHIPEPPER)&OptionFilter(YoshiRando, 1))
+CanDinoGlow: Rule[Any] = YoshiRandoOff|(CanRideDino&Has(itemname.YOSHIBULB)&OptionFilter(YoshiRando, 1))
+CanDinoSwing: Rule[Any] = YoshiRandoOff|(CanRideDino&Has(itemname.YOSHIFLOWER)&OptionFilter(YoshiRando, 1))
 
 MoveRandoOff: Rule[Any] = True_()&OptionFilter(MoveRando,0)
 CanStarbitShoot: Rule[Any] = MoveRandoOff| (Has(itemname.MARIOSTARBIT)&OptionFilter(MoveRando, 0, operator="gt"))
