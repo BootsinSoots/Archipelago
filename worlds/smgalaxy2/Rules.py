@@ -5,7 +5,7 @@ from rule_builder.field_resolvers import FromOption
 from rule_builder.options import OptionFilter
 from rule_builder.rules import Has, True_, HasFromList, Rule, HasGroup, CanReachLocation
 from .Options import WorldShuffle, Goal, GreenStarBehavior, StarstoFinish, GreenStarstoFinish, GalaxyLock, \
-    EnableGreenStars, PowerupRando
+    EnableGreenStars, PowerupRando, MoveRando
 from .locations import green_star_locations, SMG2Location
 from .regions import region_list, all_galaxy_slots
 from .Constants.Names import region_names as regname
@@ -986,3 +986,31 @@ BooMario: Rule[Any] = PowerUpOff|(Has(itemname.BOOMARIO)&OptionFilter(PowerupRan
 CloudMario: Rule[Any] = PowerUpOff|(Has(itemname.CLOUD)&OptionFilter(PowerupRando,1))
 ROCKNROLLIN: Rule[Any] = PowerUpOff|(Has(itemname.ROCK)&OptionFilter(PowerupRando,1))
 DRILLMASTER: Rule[Any] = PowerUpOff|(Has(itemname.SPINDRILL)&OptionFilter(PowerupRando,1))
+
+MoveRandoOff: Rule[Any] = True_()&OptionFilter(MoveRando,0)
+CanStarbitShoot: Rule[Any] = MoveRandoOff| (Has(itemname.MARIOSTARBIT)&OptionFilter(MoveRando, 0, operator="gt"))
+CanBackflip: Rule[Any] = MoveRandoOff| (Has(itemname.MARIOBACK)&OptionFilter(MoveRando, 0, operator="gt"))
+CanSideflip: Rule[Any] = MoveRandoOff| (Has(itemname.MARIOSIDE)&OptionFilter(MoveRando, 0, operator="gt"))
+CanAirSpin: Rule[Any] = MoveRandoOff| (Has(itemname.MARIOAIRSPIN)&OptionFilter(MoveRando, 0, operator="gt"))
+CanLongJump: Rule[Any] = MoveRandoOff| (Has(itemname.MARIOLONG)&OptionFilter(MoveRando, 0, operator="gt"))
+CanSwim: Rule[Any] = MoveRandoOff| (Has(itemname.MARIOSWIM)&OptionFilter(MoveRando, 0, operator="gt"))
+CanWallJump: Rule[Any] = MoveRandoOff| (Has(itemname.MARIOWALL)&OptionFilter(MoveRando, 0, operator="gt"))
+CanPound: Rule[Any] = MoveRandoOff| (Has(itemname.MARIOPOUND)&OptionFilter(MoveRando, 0, operator="gt"))
+CanClimbPole: Rule[Any] = MoveRandoOff| (Has(itemname.MARIOCLIMB)&OptionFilter(MoveRando, 0, operator="gt"))
+CanSlide: Rule[Any] = MoveRandoOff| (Has(itemname.MARIOSLIDE)&OptionFilter(MoveRando, 0, operator="gt"))
+CanGrabLedge: Rule[Any] = MoveRandoOff| (Has(itemname.MARIOLEDGE)&OptionFilter(MoveRando, 0, operator="gt"))
+CanBalance: Rule[Any] = MoveRandoOff| (Has(itemname.MARIOSTARBALL)&OptionFilter(MoveRando, 0, operator="gt"))
+CanRideBird: Rule[Any] = MoveRandoOff| (Has(itemname.MARIOFLUZZ)&OptionFilter(MoveRando, 0, operator="gt"))
+CanTriple: Rule[Any] = (MoveRandoOff
+                        |(Has(itemname.MARIOPROGJUMP, 2)&OptionFilter(MoveRando, 1))
+                        |(Has(itemname.MARIOTRIPLE)&OptionFilter(MoveRando,2)))
+CanDouble: Rule[Any] = (MoveRandoOff
+                        |(Has(itemname.MARIOPROGJUMP)&OptionFilter(MoveRando, 1))
+                        |(Has(itemname.MARIODOUBLE)&OptionFilter(MoveRando,2))
+                        |CanTriple)
+JumpHeight6: Rule[Any] = (CanTriple&CanAirSpin)
+JumpHeight5: Rule[Any] = (CanTriple|(CanSideflip&CanAirSpin)|(CanBackflip&CanAirSpin))
+JumpHeight4: Rule[Any] = (CanDouble&CanAirSpin|JumpHeight5)
+JumpHeight3: Rule[Any] = (CanAirSpin|CanSideflip|CanBackflip|JumpHeight4)
+JumpHeight2: Rule[Any] = (CanDouble|JumpHeight3)
+JumpHeight1: Rule[Any] = True_()
