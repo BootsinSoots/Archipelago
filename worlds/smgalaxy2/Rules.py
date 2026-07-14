@@ -520,6 +520,19 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.WORLD4).connect(world.get_region(regname.CHOMWORK), "World 4 Slot 6 Galaxy")
     # Gravity Gauntlet
     world.get_region(regname.WORLD4).connect(world.get_region(regname.BOWSER2), "World 4 Slot 7 Galaxy")
+    world.get_region(regname.BOWSER2).connect(world.get_region(regname.GRAVGAUN1LANDING), "Gravity Gauntlet Grand Star")
+    world.get_region(regname.GRAVGAUN1LANDING).connect(world.get_region(regname.GRAVGAUN1WATERCO))
+    world.get_region(regname.GRAVGAUN1LANDING).connect(world.get_region(regname.GRAVGAUNGSTAR1))
+    world.get_region(regname.GRAVGAUN1WATERCO).connect(world.get_region(regname.GRAVGAUN1WHOMPWA))
+    world.get_region(regname.GRAVGAUN1WHOMPWA).connect(world.get_region(regname.GRAVGAUNGSTAR2))
+    world.get_region(regname.GRAVGAUN1WHOMPWA).connect(world.get_region(regname.GRAVGAUN1DOORTOD),
+                                                       "Gravity Gauntlet: Fire Wheel Launch Star")
+    world.get_region(regname.GRAVGAUN1DOORTOD).connect(world.get_region(regname.GRAVGAUN1BOSSARE))
+    world.get_region(regname.BOWSER2).connect(world.get_region(regname.GRAVGAUN2LANDING), "Gravity Gauntlet Comet Star")
+    world.get_region(regname.GRAVGAUN2LANDING).connect(world.get_region(regname.GRAVGAUN2WATERCO))
+    world.get_region(regname.GRAVGAUN2LANDING).connect(world.get_region(regname.GRAVGAUNGSTAR1))
+    world.get_region(regname.GRAVGAUN2WATERCO).connect(world.get_region(regname.GRAVGAUN2WHOMPWA))
+    world.get_region(regname.GRAVGAUN2WHOMPWA).connect(world.get_region(regname.GRAVGAUNGSTAR2))
     # World 5
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD5), "World 5 Map",
                                            rule=(Has(itemname.GRAND, 4)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))

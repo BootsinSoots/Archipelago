@@ -562,6 +562,16 @@ region_list: dict[str, SMG2RegionData] = {
     regname.STARSHINE2COINR:            SMG2RegionData("Planet", [], []),
     regname.STARSHINE2DEEPW:            SMG2RegionData("Planet", [], []),
     regname.STARSHINE3MAIN:             SMG2RegionData("Planet", [], []),
+    regname.GRAVGAUN1LANDING:           SMG2RegionData("Planet", [], []),
+    regname.GRAVGAUN1WATERCO:           SMG2RegionData("Planet", [], []),
+    regname.GRAVGAUN1WHOMPWA:           SMG2RegionData("Planet", [], []),
+    regname.GRAVGAUN1DOORTOD:           SMG2RegionData("Planet", [], []),
+    regname.GRAVGAUN1BOSSARE:           SMG2RegionData("Planet", [], []),
+    regname.GRAVGAUNGSTAR1:             SMG2RegionData("Planet", [], []),
+    regname.GRAVGAUNGSTAR2:             SMG2RegionData("Planet", [], []),
+    regname.GRAVGAUN2LANDING:           SMG2RegionData("Planet", [], []),
+    regname.GRAVGAUN2WATERCO:           SMG2RegionData("Planet", [], []),
+    regname.GRAVGAUN2WHOMPWA:           SMG2RegionData("Planet", [], []),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]
