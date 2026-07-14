@@ -234,6 +234,20 @@ class PowerUpFiller(Choice):
     option_Exclude_Ice_and_Fly = 1
     option_All = 2
 
+class MoveRando(Choice):
+    """
+    Lock Mario's movement abilities until they have been received. Basic Jump and Ground Spin are never removed.
+
+    Progressive jumps: Unlock Double Jump then Triple Jump.
+
+    Separate jumps: unlock Double and Triple jump separately
+    """
+    display_name = "Move Rando"
+    internal_name = "move_rando"
+    option_Off = 0
+    option_Progressive_Jumps = 1
+    option_Separate_Jumps = 2
+
 # Comet medals in pool, provide galaxy "order", 1 comet to one level
 
 
@@ -255,6 +269,7 @@ class SMG2Options(PerGameCommonOptions):
     active_comets_game: ActiveCometsGame
     powerup_rando: PowerupRando
     powerup_consumables: PowerUpFiller
+    move_rando: MoveRando
 
 option_groups = [
     Options.OptionGroup("Map Options", [
@@ -275,6 +290,7 @@ option_groups = [
     ]),
     Options.OptionGroup("Logic Options", [
         PowerupRando,
+        MoveRando,
     ]),
     Options.OptionGroup("Extra Locations", [
 

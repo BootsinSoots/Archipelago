@@ -34,6 +34,35 @@ filler_items: dict[str, SMG2ItemData] = {
     # Coins
 }
 
+separate_jump: dict[str, SMG2ItemData] = {
+    itemname.MARIODOUBLE: SMG2ItemData(["Mario Move"], 1, IC.progression),
+    itemname.MARIOTRIPLE: SMG2ItemData(["Mario Move"], 1, IC.progression),
+}
+
+prog_jumps: dict[str, SMG2ItemData] = {
+    itemname.MARIOPROGJUMP: SMG2ItemData(["Mario Move"], 1, IC.progression, 2),
+}
+
+move_rando: dict[str, SMG2ItemData] = {
+    itemname.MARIOSWIM:      SMG2ItemData(["Mario Move"], 1, IC.progression),
+    itemname.MARIOLONG:      SMG2ItemData(["Mario Move"], 1, IC.progression),
+    itemname.MARIOBACK:      SMG2ItemData(["Mario Move"], 1, IC.progression),
+    itemname.MARIOSIDE:      SMG2ItemData(["Mario Move"], 1, IC.progression),
+    itemname.MARIOCLIMB:     SMG2ItemData(["Mario Move"], 1, IC.progression),
+    itemname.MARIOPOUND:     SMG2ItemData(["Mario Move"], 1, IC.progression),
+    itemname.MARIOWALL:      SMG2ItemData(["Mario Move"], 1, IC.progression),
+    itemname.MARIOLEDGE:     SMG2ItemData(["Mario Move"], 1, IC.progression),
+    itemname.MARIOSLIDE:     SMG2ItemData(["Mario Move"], 1, IC.progression),
+    itemname.MARIOSTARBALL:  SMG2ItemData(["Mario Move"], 1, IC.progression),
+    itemname.MARIOFLUZZ:     SMG2ItemData(["Mario Move"], 1, IC.progression),
+    itemname.MARIOSTARBIT:   SMG2ItemData(["Mario Move"], 1, IC.progression),
+    itemname.MARIOAIRSPIN:   SMG2ItemData(["Mario Move"], 1, IC.progression),
+}
+
+move_rando_prog_jump: dict[str, SMG2ItemData] = {**move_rando, **prog_jumps}
+
+move_rando_separate_jump: dict[str, SMG2ItemData] = {**move_rando, **separate_jump}
+
 powerup_consumables: dict[str, SMG2ItemData] = {
     itemname.INVINCIBILITY: SMG2ItemData(["Consumable"], 2, IC.useful),
     itemname.FIREBALLFLO: SMG2ItemData(["Consumable"], 2, IC.useful),

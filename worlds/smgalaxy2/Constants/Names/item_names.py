@@ -35,6 +35,40 @@ CLOUD       = "Cloud Mushroom"
 ROCK        = "Rock Mushroom"
 SPINDRILL   = "Spin Drill"
 
+# Mario Move Rando
+MARIOSWIM = "Swimming Lessons"
+MARIOLONG = "Long Jump"
+MARIOBACK = "Backflip"
+MARIOSIDE = "Sideflip"
+MARIOCLIMB = "Pole Climbing"
+MARIODOUBLE = "Double Jump"
+MARIOTRIPLE = "Triple Jump"
+MARIOPROGJUMP = "Progressive Jump"
+MARIOPOUND = "Ground Pound"
+MARIOWALL = "Wall Jump"
+MARIOLEDGE = "Ledge Grab"
+MARIOSLIDE = "Slide"
+MARIOSTARBALL = "Star Ball"
+MARIOFLUZZ = "Fluzzard Boarding Pass"
+MARIOSTARBIT = "Starbit Shooting"
+MARIOAIRSPIN = "Air Spin"
+
+# Other Locks
+MARIOCANNON = "Cannon License"
+MARIOSHELL = "Shell Carry"
+MARIOSWING = "Swings"
+
+# Yoshi Move
+YOSHI = "Yoshi Riding Permit"
+YOSHIBLIMP = "Yoshi's Taste for Blimp Fruit"
+YOSHIPEPPER = "Yoshi's Taste for Dash Peppers"
+YOSHIBULB = "Yoshi's Taste for Bulb Berries"
+
+# Chimp Passes
+CHIMPSKATE = "Chimp Skating Pass"
+CHIMPSCORE = "Chimp Score Pass"
+CHIMPBOWL = "Chimp Bowling Pass"
+
 #Unique individual keys
 GREENCOMETKEY = "Green Star Comet Key"
 GREENCOMETW1 = "Green Star World 1 Key"
