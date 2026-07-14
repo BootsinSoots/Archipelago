@@ -500,22 +500,22 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.WORLD4).connect(world.get_region(regname.HONEYHOP), "World 4 Slot 4 Galaxy")
     # Starshine beach
     world.get_region(regname.WORLD4).connect(world.get_region(regname.STARBEACH), "World 4 Slot 5 Galaxy")
-    world.get_region(regname.STARBEACH).connect(world.get_region(regname.STARSHINE1WATER), "Starshine Star 1")
-    world.get_region(regname.STARSHINE1WATER).connect(world.get_region(regname.STARSHINE1MAIN),
+    world.get_region(regname.STARBEACH).connect(world.get_region(regname.STARBEACH1WATER), "Starshine Star 1")
+    world.get_region(regname.STARBEACH1WATER).connect(world.get_region(regname.STARBEACH1MAIN),
                                                       "Starshine Star 1: Waterdrop Launch Star")
-    world.get_region(regname.STARSHINE1MAIN).connect(world.get_region(regname.STARSHINE1BONUS),
+    world.get_region(regname.STARBEACH1MAIN).connect(world.get_region(regname.STARBEACH1BONUS),
                                                       "Starshine Star 1: Crabber Bonus Teleporter")
-    world.get_region(regname.STARSHINE1MAIN).connect(world.get_region(regname.STARSHINE1COINR),
+    world.get_region(regname.STARBEACH1MAIN).connect(world.get_region(regname.STARBEACH1COINR),
                                                       "Starshine Star 1: Tropical Beach Green Pipe")
-    world.get_region(regname.STARBEACH).connect(world.get_region(regname.STARSHINE2WATER), "Starshine Star 2")
-    world.get_region(regname.STARSHINE2WATER).connect(world.get_region(regname.STARSHINE2MAIN),
+    world.get_region(regname.STARBEACH).connect(world.get_region(regname.STARBEACH2WATER), "Starshine Star 2")
+    world.get_region(regname.STARBEACH2WATER).connect(world.get_region(regname.STARBEACH2MAIN),
                                                       "Starshine Star 2: Waterdrop Launch Star")
-    world.get_region(regname.STARSHINE2MAIN).connect(world.get_region(regname.STARSHINE2DEEPW))
-    world.get_region(regname.STARSHINE2MAIN).connect(world.get_region(regname.STARSHINE2BONUS),
+    world.get_region(regname.STARBEACH2MAIN).connect(world.get_region(regname.STARBEACH2DEEPW))
+    world.get_region(regname.STARBEACH2MAIN).connect(world.get_region(regname.STARBEACH2BONUS),
                                                       "Starshine Star 2: Crabber Bonus Teleporter")
-    world.get_region(regname.STARSHINE2MAIN).connect(world.get_region(regname.STARSHINE2COINR),
+    world.get_region(regname.STARBEACH2MAIN).connect(world.get_region(regname.STARBEACH2COINR),
                                                       "Starshine Star 2: Tropical Beach Green Pipe")
-    world.get_region(regname.STARBEACH).connect(world.get_region(regname.STARSHINE3MAIN), "Starshine Comet Star")
+    world.get_region(regname.STARBEACH).connect(world.get_region(regname.STARBEACH3MAIN), "Starshine Comet Star")
     # Chompworks
     world.get_region(regname.WORLD4).connect(world.get_region(regname.CHOMWORK), "World 4 Slot 6 Galaxy")
     # Gravity Gauntlet
