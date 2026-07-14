@@ -445,6 +445,18 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                      "Supermassive Comet: Garden Planet Launch Star")
     # Sweet Mystery
     world.get_region(regname.WORLD4).connect(world.get_region(regname.SWEETMYS), "World 4 Slot 2 Galaxy")
+    world.get_region(regname.SWEETMYS).connect(world.get_region(regname.SWEETMYS1START), "Sweet Mystery Star")
+    world.get_region(regname.SWEETMYS1START).connect(world.get_region(regname.SWEETMYS1COOKIE))
+    world.get_region(regname.SWEETMYS1COOKIE).connect(world.get_region(regname.SWEETMYS1CHOCO))
+    world.get_region(regname.SWEETMYS1CHOCO).connect(world.get_region(regname.SWEETMYS1BISCUIT))
+    world.get_region(regname.SWEETMYS1BISCUIT).connect(world.get_region(regname.SWEETMYS1SWITCHES))
+    world.get_region(regname.SWEETMYS1SWITCHES).connect(world.get_region(regname.SWEETMYS1CAKE),
+                                                        "Sweet Mystery: Flipswitch Launch Star")
+    world.get_region(regname.SWEETMYS).connect(world.get_region(regname.SWEETMYS2START), "Sweet Mystery Comet Star")
+    world.get_region(regname.SWEETMYS2START).connect(world.get_region(regname.SWEETMYS2COOKIE))
+    world.get_region(regname.SWEETMYS2COOKIE).connect(world.get_region(regname.SWEETMYS2CHOCO))
+    world.get_region(regname.SWEETMYS2CHOCO).connect(world.get_region(regname.SWEETMYS2BISCUIT))
+    world.get_region(regname.SWEETMYS2BISCUIT).connect(world.get_region(regname.SWEETMYS2END))
     # Flipsville
     world.get_region(regname.WORLD4).connect(world.get_region(regname.FLIPVILL), "World 4 Slot 3 Galaxy")
     world.get_region(regname.FLIPVILL).connect(world.get_region(regname.FLIPVILL1MAZESTART), "Flipsville Star 1")
@@ -500,7 +512,7 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                      "Flipsville 3: Spin-Drill Tower Pipe")
     # Honeyhop
     world.get_region(regname.WORLD4).connect(world.get_region(regname.HONEYHOP), "World 4 Slot 4 Galaxy")
-    # Starshine beach
+    # Starshine Beach
     world.get_region(regname.WORLD4).connect(world.get_region(regname.STARBEACH), "World 4 Slot 5 Galaxy")
     world.get_region(regname.STARBEACH).connect(world.get_region(regname.STARBEACH1WATER), "Starshine Star 1")
     world.get_region(regname.STARBEACH1WATER).connect(world.get_region(regname.STARBEACH1MAIN),
