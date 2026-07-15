@@ -262,8 +262,10 @@ CHOMWORK_loc: dict[str, SMG2LocationData] = {
 
     # Honeyhop Star
 HONEYHOP_loc: dict[str, SMG2LocationData] = {
-    locname.HONEYHOPSTAR1: SMG2LocationData(["Power Star Location", regname.HONEYHOP], regname.HONEYHOP),
-    locname.HONEYHOPSTAR2: SMG2LocationData(["Power Star Location", regname.HONEYHOP], regname.HONEYHOP),
+    locname.HONEYHOPSTAR1: SMG2LocationData(["Power Star Location", regname.HONEYHOP], regname.HONEYHOP,
+                                            regname.HONEYHOP1QBTOP, 1),
+    locname.HONEYHOPSTAR2: SMG2LocationData(["Power Star Location", regname.HONEYHOP], regname.HONEYHOP,
+                                            regname.HONEYHOP1QBBASE, 1),
 }
 
     # Sweet Mystery
@@ -601,10 +603,10 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  ),
     locname.CHOMPWORKSTARG3:    SMG2LocationData(["Green Star Location", regname.CHOMWORK], regname.CHOMWORK, 1,
                                                  ),
-    locname.HONEYHOPSTARG1:     SMG2LocationData(["Green Star Location", regname.HONEYHOP], regname.HONEYHOP, 1,
-                                                 ),
-    locname.HONEYHOPSTARG2:     SMG2LocationData(["Green Star Location", regname.HONEYHOP], regname.HONEYHOP, 1,
-                                                 ),
+    locname.HONEYHOPSTARG1:     SMG2LocationData(["Green Star Location", regname.HONEYHOP], regname.HONEYHOP,
+                                                 regname.HONEYHOP1CLOUDS, 1,),
+    locname.HONEYHOPSTARG2:     SMG2LocationData(["Green Star Location", regname.HONEYHOP], regname.HONEYHOP,
+                                                 regname.HONEYHOP1QBTOP, 1,),
     locname.SWEETMYSTSTARG1:    SMG2LocationData(["Green Star Location", regname.SWEETMYS], regname.SWEETMYS, 1,
                                                  ),
     locname.SWEETMYSTSTARG2:    SMG2LocationData(["Green Star Location", regname.SWEETMYS], regname.SWEETMYS, 1,
@@ -765,7 +767,7 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
     locname.CHOMPWORKCM: SMG2LocationData(["Comet Medal Location", regname.CHOMWORK], regname.CHOMWORK,
                                           regname.,  1, ),
     locname.HONEYHOPCM: SMG2LocationData(["Comet Medal Location", regname.HONEYHOP], regname.HONEYHOP,
-                                         regname.,  1, ),
+                                         regname.HONEYHOP1QBBUBBLE,  1, ),
     locname.SWEETMYSTCM: SMG2LocationData(["Comet Medal Location", regname.SWEETMYS], regname.SWEETMYS,
                                           regname.,  1, ),
     locname.GRAVGAUNTCM: SMG2LocationData(["Comet Medal Location", regname.BOWSER2], regname.BOWSER2,
