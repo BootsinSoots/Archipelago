@@ -63,6 +63,7 @@ YOSHI = "Yoshi Riding Permit"
 YOSHIBLIMP = "Yoshi's Taste for Blimp Fruit"
 YOSHIPEPPER = "Yoshi's Taste for Dash Peppers"
 YOSHIBULB = "Yoshi's Taste for Bulb Berries"
+YOSHIFLOWER = "Yoshi's Taste for Flowers"
 
 # Chimp Passes
 CHIMPSKATE = "Chimp Skating Pass"
