@@ -20,9 +20,9 @@ class SMG2Item(Item):
 
 # TODO Replace this item table
 item_table: dict[str, SMG2ItemData] = {
-  "Power Star": SMG2ItemData(["Power Star"], 170000004, IC.progression_deprioritized_skip_balancing, 115),
-  "Grand Star": SMG2ItemData(["Grand Star", "Power Star"], 170000005, IC.progression, 7),
-  "Green Star": SMG2ItemData(["Power Star", "Green Star"], 170000006, IC.progression, 120),
+  "Power Star": SMG2ItemData(["Power Stars"], 170000004, IC.progression_deprioritized_skip_balancing, 115),
+  "Grand Star": SMG2ItemData(["Grand Stars", "Power Stars"], 170000005, IC.progression, 7),
+  "Green Star": SMG2ItemData(["Power Stars", "Green Stars"], 170000006, IC.progression, 120),
   # Comet Medals
   "Progressive Comets": SMG2ItemData(["Comet"], 170000008, IC.progression),
 }
@@ -105,13 +105,13 @@ generic_event_items: dict[str, SMG2ItemData] = {
 }
 
 keyed_grand_stars: dict[str, SMG2ItemData] = {
-    itemname.GRAND1: SMG2ItemData(["Grand Star", "Power Star"], 170000010, IC.progression),
-    itemname.GRAND2: SMG2ItemData(["Grand Star", "Power Star"], 170000011, IC.progression),
-    itemname.GRAND3: SMG2ItemData(["Grand Star", "Power Star"], 170000012, IC.progression),
-    itemname.GRAND4: SMG2ItemData(["Grand Star", "Power Star"], 170000013, IC.progression),
-    itemname.GRAND5: SMG2ItemData(["Grand Star", "Power Star"], 170000014, IC.progression),
-    itemname.GRAND6: SMG2ItemData(["Grand Star", "Power Star"], 170000015, IC.progression),
-    itemname.GRAND7: SMG2ItemData(["Grand Star", "Power Star"], 170000016, IC.progression),
+    itemname.GRAND1: SMG2ItemData(["Grand Stars", "Power Stars"], 170000010, IC.progression),
+    itemname.GRAND2: SMG2ItemData(["Grand Stars", "Power Stars"], 170000011, IC.progression),
+    itemname.GRAND3: SMG2ItemData(["Grand Stars", "Power Stars"], 170000012, IC.progression),
+    itemname.GRAND4: SMG2ItemData(["Grand Stars", "Power Stars"], 170000013, IC.progression),
+    itemname.GRAND5: SMG2ItemData(["Grand Stars", "Power Stars"], 170000014, IC.progression),
+    itemname.GRAND6: SMG2ItemData(["Grand Stars", "Power Stars"], 170000015, IC.progression),
+    itemname.GRAND7: SMG2ItemData(["Grand Stars", "Power Stars"], 170000016, IC.progression),
 }
 
 green_comet_key: dict[str, SMG2ItemData] = {
