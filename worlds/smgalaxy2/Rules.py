@@ -457,17 +457,26 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     # Sweet Mystery
     world.get_region(regname.WORLD4).connect(world.get_region(regname.SWEETMYS), "World 4 Slot 2 Galaxy")
     world.get_region(regname.SWEETMYS).connect(world.get_region(regname.SWEETMYS1START), "Sweet Mystery Star")
-    world.get_region(regname.SWEETMYS1START).connect(world.get_region(regname.SWEETMYS1COOKIE))
-    world.get_region(regname.SWEETMYS1COOKIE).connect(world.get_region(regname.SWEETMYS1CHOCO))
-    world.get_region(regname.SWEETMYS1CHOCO).connect(world.get_region(regname.SWEETMYS1BISCUIT))
-    world.get_region(regname.SWEETMYS1BISCUIT).connect(world.get_region(regname.SWEETMYS1SWITCHES))
+    world.get_region(regname.SWEETMYS1START).connect(world.get_region(regname.SWEETMYS1COOKIE),
+                                                     rule=CanDinoGlow)
+    world.get_region(regname.SWEETMYS1COOKIE).connect(world.get_region(regname.SWEETMYS1CHOCO),
+                                                      rule=CanDinoGlow)
+    world.get_region(regname.SWEETMYS1CHOCO).connect(world.get_region(regname.SWEETMYS1BISCUIT),
+                                                     rule=CanDinoGlow)
+    world.get_region(regname.SWEETMYS1BISCUIT).connect(world.get_region(regname.SWEETMYS1SWITCHES),
+                                                       rule=CanDinoGlow)
     world.get_region(regname.SWEETMYS1SWITCHES).connect(world.get_region(regname.SWEETMYS1CAKE),
-                                                        "Sweet Mystery: Flipswitch Launch Star")
+                                                        "Sweet Mystery: Flipswitch Launch Star",
+                                                        CanDinoGlow)
     world.get_region(regname.SWEETMYS).connect(world.get_region(regname.SWEETMYS2START), "Sweet Mystery Comet Star")
-    world.get_region(regname.SWEETMYS2START).connect(world.get_region(regname.SWEETMYS2COOKIE))
-    world.get_region(regname.SWEETMYS2COOKIE).connect(world.get_region(regname.SWEETMYS2CHOCO))
-    world.get_region(regname.SWEETMYS2CHOCO).connect(world.get_region(regname.SWEETMYS2BISCUIT))
-    world.get_region(regname.SWEETMYS2BISCUIT).connect(world.get_region(regname.SWEETMYS2END))
+    world.get_region(regname.SWEETMYS2START).connect(world.get_region(regname.SWEETMYS2COOKIE),
+                                                     rule=CanDinoGlow)
+    world.get_region(regname.SWEETMYS2COOKIE).connect(world.get_region(regname.SWEETMYS2CHOCO),
+                                                      rule=CanDinoGlow)
+    world.get_region(regname.SWEETMYS2CHOCO).connect(world.get_region(regname.SWEETMYS2BISCUIT),
+                                                     rule=CanDinoGlow)
+    world.get_region(regname.SWEETMYS2BISCUIT).connect(world.get_region(regname.SWEETMYS2END),
+                                                       rule=CanDinoGlow)
     # Flipsville
     world.get_region(regname.WORLD4).connect(world.get_region(regname.FLIPVILL), "World 4 Slot 3 Galaxy")
     world.get_region(regname.FLIPVILL).connect(world.get_region(regname.FLIPVILL1MAZESTART), "Flipsville Star 1")
