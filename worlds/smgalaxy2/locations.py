@@ -26,6 +26,7 @@ class SMG2LocationData(NamedTuple):
     code: Optional[int]  # used to create ap_id, None for events
     default_access: Rule[Any] = True_()
     game_address: Optional[int] = 0
+    locked_item: str = None
 #TODO Add Hungry Luma, Comets and Checkpoint locations to base table
 # Sky Station S
 SKYOBS_loc: dict[str, SMG2LocationData] = {
@@ -832,6 +833,13 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
 
 #TODO Add Mailtoad Letters table here - vanilla unlock requirement
 
+event_locations: dict[str, SMG2LocationData] = {
+    "Melty Monster 2 Starbit Farming": SMG2LocationData(["Event"], regname.MELTY, regname.MELTY2BOWLING, None,
+                                                        Rules.CanStarbitShoot, locked_item="Can Farm Starbits"),
+    "Sweet Mystery Starbit Farming": SMG2LocationData(["Event"], regname.SWEETMYS, regname.SWEETMYS1CHOCO, None,
+                                                        Rules.CanStarbitShoot, locked_item="Can Farm Starbits")
+}
+
 base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_loc, **RIGHTDOWN_loc,
                         **FLIPSWAP_loc, **WILDGLIDE_loc, **ROLLMAST_loc, **HONEYHOP_loc, **UPDIZZY_loc,
                         **SLIMSPRI_loc, **BEEBLOOM_loc, **BEATBLOCK_loc, **SWEETMYS_loc, **FLETGLIDE_loc,
@@ -843,7 +851,7 @@ base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_l
                         **CHOMWORK_loc, **SPACSTOR_loc, **SLIPSAND_loc, **COLDFIRE_loc, **BOOMOON_loc,
                         **MELTMONS_loc, **CLOCKRUIN_loc, **THROWBACK_loc, **BATTBELT_loc}
 
-location_table = { **base_stars_locations, **green_star_locations
+location_table = { **base_stars_locations, **green_star_locations, **COMETMEDAL_loc
 }
 
 LOCATION_NAME_TO_ID: dict[str, int] =  {

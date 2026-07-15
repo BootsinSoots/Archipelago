@@ -70,7 +70,7 @@ CHIMPSKATE = "Chimp Skating Pass"
 CHIMPSCORE = "Chimp Score Pass"
 CHIMPBOWL = "Chimp Bowling Pass"
 
-#Unique individual keys
+# Unique individual keys
 GREENCOMETKEY = "Green Star Comet Key"
 GREENCOMETW1 = "Green Star World 1 Key"
 GREENCOMETW2 = "Green Star World 2 Key"
@@ -79,6 +79,14 @@ GREENCOMETW4 = "Green Star World 4 Key"
 GREENCOMETW5 = "Green Star World 5 Key"
 GREENCOMETW6 = "Green Star World 6 Key"
 GREENCOMETW7 = "Green Star World 7 Key"
+STARBITLUMAKEY = "Starbit Lumas"
+STARBITHL1 = "Starbit Luma World 1"
+STARBITHL2 = "Starbit Luma World 2"
+STARBITHL3 = "Starbit Luma World 3"
+STARBITHL4 = "Starbit Luma World 4"
+STARBITHL5 = "Starbit Luma World 5"
+STARBITHL6 = "Starbit Luma World 6"
+STARBITHL7 = "Starbit Luma World 7"
 
 # Galaxy Keys
 SKYPOBSKEY = "Sky Station Galaxy Key"

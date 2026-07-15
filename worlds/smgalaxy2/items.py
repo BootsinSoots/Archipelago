@@ -118,6 +118,20 @@ green_comet_key: dict[str, SMG2ItemData] = {
     itemname.GREENCOMETKEY: SMG2ItemData(["Green Comet Key"], 1, IC.progression)
 }
 
+starbit_luma_key: dict[str, SMG2ItemData] = {
+    itemname.STARBITLUMAKEY: SMG2ItemData(["Starbit All Key"], 1, IC.progression)
+}
+
+starbit_world_keys: dict[str, SMG2ItemData] ={
+    itemname.STARBITHL1: SMG2ItemData(["Starbit World Key"], 1, IC.progression),
+    itemname.STARBITHL2: SMG2ItemData(["Starbit World Key"], 1, IC.progression),
+    itemname.STARBITHL3: SMG2ItemData(["Starbit World Key"], 1, IC.progression),
+    itemname.STARBITHL4: SMG2ItemData(["Starbit World Key"], 1, IC.progression),
+    itemname.STARBITHL5: SMG2ItemData(["Starbit World Key"], 1, IC.progression),
+    itemname.STARBITHL6: SMG2ItemData(["Starbit World Key"], 1, IC.progression),
+    itemname.STARBITHL7: SMG2ItemData(["Starbit World Key"], 1, IC.progression),
+}
+
 world_green_keys: dict[str, SMG2ItemData] = {
     itemname.GREENCOMETW1: SMG2ItemData(["World Green Star Key"], 1, IC.progression),
     itemname.GREENCOMETW2: SMG2ItemData(["World Green Star Key"], 1, IC.progression),
@@ -185,7 +199,8 @@ all_filler: dict[str, SMG2ItemData] = {**expanded_filler, **smg1_consumables}
 
 all_items_table: dict[str, SMG2ItemData] = {**keyed_grand_stars, **item_table, **generic_event_items, **galaxy_keys,
                                             **world_green_keys, **all_filler, **powerup_consumables, **powerup_unlocks,
-                                            }
+                                            **starbit_luma_key, **starbit_world_keys, **move_rando_separate_jump,
+                                            **prog_jumps, **yoshi_moves}
 
 ITEM_NAME_TO_ID: dict[str, int] =  {
     name: data.code for name, data in all_items_table.items() if data.code is not None}

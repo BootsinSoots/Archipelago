@@ -255,6 +255,41 @@ class YoshiRando(Toggle):
     display_name = "Yoshi Rando"
     internal_name = "yoshi_rando"
 
+class StarbitLumaLocks(Choice):
+    """
+    Determine if Starbit lumas require extra items, in addition of starbits, to unlock
+
+    Global: One key opens all Starbit Lumas
+
+    Individual: Each Luma requires their own key to open.
+    """
+    display_name = "Starbit Luma Locks"
+    internal_name = "starbit_luma_locks"
+    option_Off = 0
+    option_Global = 1
+    option_Individual = 2
+
+
+class StarbitLumaCounts(OptionCounter):
+    """
+    Determine how many starbits are required for each Starbit Luma
+    """
+    display_name = "Starbit Luma Counts"
+    internal_name = "starbit_luma_counts"
+    min = 0
+    max = 9999
+    valid_keys = ["World 1 Starbit Luma", "World 2 Starbit Luma", "World 3 Starbit Luma","World 4 Starbit Luma",
+                  "World 5 Starbit Luma", "World 6 Starbit Luma", "World 7 Starbit Luma"]
+    default = {
+        "World 1 Starbit Luma": 300,
+        "World 2 Starbit Luma": 700,
+        "World 3 Starbit Luma": 1000,
+        "World 4 Starbit Luma": 1200,
+        "World 5 Starbit Luma": 1500,
+        "World 6 Starbit Luma": 1800,
+        "World 7 Starbit Luma": 2000
+    }
+
 # Comet medals in pool, provide galaxy "order", 1 comet to one level
 
 
@@ -278,6 +313,8 @@ class SMG2Options(PerGameCommonOptions):
     powerup_consumables: PowerUpFiller
     move_rando: MoveRando
     yoshi_rando: YoshiRando
+    starbit_luma_locks: StarbitLumaLocks
+    starbit_luma_counts: StarbitLumaCounts
 
 option_groups = [
     Options.OptionGroup("Map Options", [
@@ -288,6 +325,8 @@ option_groups = [
         GalaxyShuffle,
         GalaxyShuffleType,
         GalaxyLock,
+        StarbitLumaLocks,
+        StarbitLumaCounts,
         ActiveCometsWorld,
         ActiveCometsGame,
     ]),

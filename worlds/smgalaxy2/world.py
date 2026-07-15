@@ -20,7 +20,7 @@ from .Constants.constants import AP_WORLD_VERSION_NAME, CLIENT_VERSION
 from .Options import WorldShuffle
 from .Rules import rules_from_er_placements
 from .locations import LOCATION_NAME_TO_ID, get_location_names_per_category, SMG2Location, location_table
-from .items import SMG2Item, ITEM_NAME_TO_ID, get_item_names_per_category, green_comet_key, world_green_keys
+from .items import SMG2Item, ITEM_NAME_TO_ID, get_item_names_per_category, world_green_keys
 from .regions import disconnect_from_option, region_list, SMG2RegionData
 from .SMGSettings import SuperMarioGalaxy
 from .Patch.Patch import SMGPlayerContainer
@@ -138,54 +138,42 @@ class SMG2World(World):
         local_pool: list[SMG2Item] = []
         copies: int = 1
         if self.options.enable_green_stars.value > 0 and self.options.green_star_behavior != 2:
-            copies = max(0, items.all_items_table["Green Star"].default_count - exclude.count("Green Star"))
-            local_pool += [self.create_item("Green Star") for i in range(copies)]
+            local_pool += self.create_items_from_list([itemname.GREEN], exclude)
+
         if self.options.enable_green_stars.value == self.options.enable_green_stars.option_Require_Green_Star_Comet:
-            copies = max(0, items.all_items_table[itemname.GREENCOMETKEY].default_count - exclude.count(itemname.GREENCOMETKEY))
-            local_pool += [self.create_item(itemname.GREENCOMETKEY) for i in range(copies)]
+            local_pool += self.create_items_from_list([itemname.GREENCOMETKEY], exclude)
         elif self.options.enable_green_stars.value == self.options.enable_green_stars.option_Require_World_Green_Key:
-            for item in world_green_keys:
-                copies = max(0, items.all_items_table[item].default_count - exclude.count(item))
-                local_pool += [self.create_item(item) for _ in range(copies)]
-        if self.options.world_shuffle.value == 1:
-            for item in items.keyed_grand_stars.keys():
-                copies = max(0, items.all_items_table[item].default_count - exclude.count(item))
-                local_pool += [self.create_item(item) for _ in range(copies)]
+            local_pool += self.create_items_from_list(list(world_green_keys.keys()), exclude)
+
+        if self.options.starbit_luma_locks.value == self.options.starbit_luma_locks.option_Global:
+            local_pool += self.create_items_from_list([itemname.STARBITLUMAKEY], exclude)
+        elif self.options.starbit_luma_locks.value == self.options.starbit_luma_locks.option_Individual:
+            local_pool += self.create_items_from_list(list(items.starbit_world_keys.keys()), exclude)
+
+        if self.options.world_shuffle.value == self.options.world_shuffle.option_Keyed_Grand_Stars:
+            local_pool += self.create_items_from_list(list(items.keyed_grand_stars.keys()), exclude)
         else:
-            copies = max(0, items.all_items_table[itemname.GRAND].default_count - exclude.count(itemname.GRAND))
-            local_pool += [self.create_item(itemname.GRAND) for i in range(copies)]
+            local_pool += self.create_items_from_list([itemname.GRAND], exclude)
 
         if self.options.powerup_rando.value:
-            for item in items.powerup_unlocks.keys():
-                copies = max(0, items.all_items_table[item].default_count - exclude.count(item))
-                local_pool += [self.create_item(item) for _ in range(copies)]
+            local_pool += self.create_items_from_list(list(items.powerup_unlocks.keys()), exclude)
 
         if self.options.move_rando.value == 1:
-            for item in items.move_rando_prog_jump.keys():
-                copies = max(0, items.all_items_table[item].default_count - exclude.count(item))
-                local_pool += [self.create_item(item) for _ in range(copies)]
+            local_pool += self.create_items_from_list(list(items.move_rando_prog_jump.keys()), exclude)
         elif self.options.move_rando.value == 2:
-            for item in items.move_rando_separate_jump.keys():
-                copies = max(0, items.all_items_table[item].default_count - exclude.count(item))
-                local_pool += [self.create_item(item) for _ in range(copies)]
+            local_pool += self.create_items_from_list(list(items.move_rando_separate_jump.keys()), exclude)
 
         if self.options.yoshi_rando.value:
-            for item in items.yoshi_moves.keys():
-                copies = max(0, items.all_items_table[item].default_count - exclude.count(item))
-                local_pool += [self.create_item(item) for _ in range(copies)]
+            local_pool += self.create_items_from_list(list(items.yoshi_moves.keys()), exclude)
 
         if self.options.galaxy_lock.value:
-            for item in items.galaxy_keys.keys():
-                copies = max(0, items.all_items_table[itemname.GRAND].default_count - exclude.count(itemname.GRAND))
-                local_pool += [self.create_item(itemname.GRAND) for i in range(copies)]
+            local_pool += self.create_items_from_list(list(items.galaxy_keys.keys()), exclude)
         
         # make sure we don't create more stars than locations, somehow
-        copies = max(0, items.all_items_table[itemname.POWER].default_count - exclude.count(itemname.POWER))
-        local_pool += [self.create_item(itemname.POWER) for i in range(copies)]
+        local_pool += self.create_items_from_list([itemname.POWER], exclude)
         
         # Calculate the number of additional filler items to create to fill all locations
         n_locations = len(self.multiworld.get_unfilled_locations(self.player))
-        leftover_locations = min([109, (len(list(self.multiworld.get_unfilled_locations(self.player))) - len(local_pool))])
         n_filler_items = n_locations - len(local_pool)
 
         # Create filler
@@ -193,6 +181,13 @@ class SMG2World(World):
             local_pool.append(self.create_item(self.get_filler_item_name()))
 
         self.multiworld.itempool += local_pool
+
+    def create_items_from_list(self, item_names: list[str], excluded_items: list[str]) -> list[SMG2Item]:
+        created_items: list[SMG2Item] = []
+        for item in item_names:
+            copies = max(0, items.all_items_table[item].default_count - excluded_items.count(item))
+            created_items += [self.create_item(item) for _ in range(copies)]
+        return created_items
 
     def connect_entrances(self) -> None:
         if self.options.galaxy_shuffle:
