@@ -255,9 +255,12 @@ STARBEACH_loc: dict[str, SMG2LocationData] = {
 
     # Chompworks St
 CHOMWORK_loc: dict[str, SMG2LocationData] = {
-    locname.CHOMPWORKSTAR1: SMG2LocationData(["Power Star Location", regname.CHOMWORK], regname.CHOMWORK),
-    locname.CHOMPWORKSTAR2: SMG2LocationData(["Power Star Location", regname.CHOMWORK], regname.CHOMWORK),
-    locname.CHOMPWORKSTAR3: SMG2LocationData(["Power Star Location", regname.CHOMWORK], regname.CHOMWORK),
+    locname.CHOMPWORKSTAR1: SMG2LocationData(["Power Star Location", regname.CHOMWORK], regname.CHOMWORK,
+                                             regname.CHOMWORK1LAVA, 1),
+    locname.CHOMPWORKSTAR2: SMG2LocationData(["Power Star Location", regname.CHOMWORK], regname.CHOMWORK,
+                                             regname.CHOMWORK2TOWER, 1),
+    locname.CHOMPWORKSTAR3: SMG2LocationData(["Power Star Location", regname.CHOMWORK], regname.CHOMWORK,
+                                             regname.CHOMWORK3LAVA, 1),
 }
 
     # Honeyhop Star
@@ -599,12 +602,12 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.STARBEACH1MAIN, 1, ),
     locname.STARBEACHSTARG3:    SMG2LocationData(["Green Star Location", regname.STARBEACH], regname.STARBEACH,
                                                  regname.STARBEACH2MAIN, 1, ),
-    locname.CHOMPWORKSTARG1:    SMG2LocationData(["Green Star Location", regname.CHOMWORK], regname.CHOMWORK, 1,
-                                                 ),
-    locname.CHOMPWORKSTARG2:    SMG2LocationData(["Green Star Location", regname.CHOMWORK], regname.CHOMWORK, 1,
-                                                 ),
-    locname.CHOMPWORKSTARG3:    SMG2LocationData(["Green Star Location", regname.CHOMWORK], regname.CHOMWORK, 1,
-                                                 ),
+    locname.CHOMPWORKSTARG1:    SMG2LocationData(["Green Star Location", regname.CHOMWORK], regname.CHOMWORK,
+                                                 regname.CHOMWORK1START, 1,),
+    locname.CHOMPWORKSTARG2:    SMG2LocationData(["Green Star Location", regname.CHOMWORK], regname.CHOMWORK,
+                                                 regname.CHOMWORK1FLIPSWAP, 1,),
+    locname.CHOMPWORKSTARG3:    SMG2LocationData(["Green Star Location", regname.CHOMWORK], regname.CHOMWORK,
+                                                 regname.CHOMWORK2TOWER, 1,),
     locname.HONEYHOPSTARG1:     SMG2LocationData(["Green Star Location", regname.HONEYHOP], regname.HONEYHOP,
                                                  regname.HONEYHOP1CLOUDS, 1,),
     locname.HONEYHOPSTARG2:     SMG2LocationData(["Green Star Location", regname.HONEYHOP], regname.HONEYHOP,
@@ -767,7 +770,7 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
     locname.STARBEACHCM: SMG2LocationData(["Comet Medal Location", regname.STARBEACH], regname.STARBEACH,
                                           regname.STARBEACH1MAIN, 1, ),
     locname.CHOMPWORKCM: SMG2LocationData(["Comet Medal Location", regname.CHOMWORK], regname.CHOMWORK,
-                                          regname.,  1, ),
+                                          regname.CHOMWORK1START,  1, ),
     locname.HONEYHOPCM: SMG2LocationData(["Comet Medal Location", regname.HONEYHOP], regname.HONEYHOP,
                                          regname.HONEYHOP1QBBUBBLE,  1, ),
     locname.SWEETMYSTCM: SMG2LocationData(["Comet Medal Location", regname.SWEETMYS], regname.SWEETMYS,
