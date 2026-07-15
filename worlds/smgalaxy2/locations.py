@@ -8,7 +8,8 @@ from .Constants.Names import item_names as itemname
 from .Constants.Names import location_names as locname
 from .Constants.Names.region_names import WILDGLIDECOURSE
 from .Options import EnableGreenStars
-from .Rules import GreenStarRule
+from . import Rules
+from .Rules import JumpHeight2, CanGrabLedge
 
 
 class SMG2Location(Location):
@@ -29,11 +30,12 @@ class SMG2LocationData(NamedTuple):
 # Sky Station S
 SKYOBS_loc: dict[str, SMG2LocationData] = {
     locname.SKYSTASTAR1: SMG2LocationData([regname.SKYOBS, "Power Star Location"],
-                                          regname.SKYOBS, regname.SKYOBS1BOSS, 1, ),
+                                          regname.SKYOBS, regname.SKYOBS1BOSS, 1),
     locname.SKYSTASTAR2: SMG2LocationData([regname.SKYOBS, "Power Star Location"],
-                                          regname.SKYOBS, regname.SKYOBS2GRASSFLEET, 1, ),
+                                          regname.SKYOBS, regname.SKYOBS2GRASSFLEET, 1,
+                                          (Rules.CanClimbPole|(Rules.JumpHeight2&Rules.CanGrabLedge)|Rules.JumpHeight3)),
     locname.SKYSTASTAR3: SMG2LocationData([regname.SKYOBS, "Power Star Location"],
-                                          regname.SKYOBS, regname.SKYOBS3BOSS, 1, ),
+                                          regname.SKYOBS, regname.SKYOBS3BOSS, 1),
 }
 
 # Yoshi Star St
@@ -467,11 +469,12 @@ GRANDMASTER_loc: dict[str, SMG2LocationData] = {
 
 green_star_locations: dict[str, SMG2LocationData]  = {
     locname.SKYSTASTARG1:       SMG2LocationData(["Green Star Location", regname.SKYOBS], regname.SKYOBS,
-                                                 regname.SKYOBS1GSTAR1, 1, ),
+                                                 regname.SKYOBS1GSTAR1, 1),
     locname.SKYSTASTARG2:       SMG2LocationData(["Green Star Location", regname.SKYOBS], regname.SKYOBS,
-                                                 regname.SKYOBS1GREENHILL, 1, ),
+                                                 regname.SKYOBS1GREENHILL, 1),
     locname.SKYSTASTARG3:       SMG2LocationData(["Green Star Location", regname.SKYOBS], regname.SKYOBS,
-                                                 regname.SKYOBS2SKYFLEET, 1, ),
+                                                 regname.SKYOBS2SKYFLEET, 1,
+                                                 Rules.CanLongJump|Rules.JumpHeight5|(Rules.JumpHeight3&Rules.CanWallJump)),
     locname.YOSHSTARSTARG1:     SMG2LocationData(["Green Star Location", regname.GOODEGG], regname.GOODEGG, 
                                                  regname.GOODEGGGSTAR1 , 1,),
     locname.YOSHSTARSTARG2:     SMG2LocationData(["Green Star Location", regname.GOODEGG], regname.GOODEGG, 
@@ -711,7 +714,8 @@ green_star_locations: dict[str, SMG2LocationData]  = {
 #TODO Comet Medals Table
 COMETMEDAL_loc:dict[str, SMG2LocationData] = {
     locname.SKYSTACM: SMG2LocationData(["Comet Medal Location", regname.SKYOBS], regname.SKYOBS,
-                                       regname.SKYOBS1CYLINDER,  1, ),
+                                       regname.SKYOBS1CYLINDER,  1,
+                                       Rules.JumpHeight2),
     locname.YOSHSTARCM: SMG2LocationData(["Comet Medal Location", regname.GOODEGG], regname.GOODEGG,
                                          regname.GOODEGG1LANDING,  1, ),
     locname.SPINDIGCM: SMG2LocationData(["Comet Medal Location", regname.SPINDIG], regname.SPINDIG,
