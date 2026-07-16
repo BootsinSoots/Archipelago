@@ -837,7 +837,9 @@ event_locations: dict[str, SMG2LocationData] = {
     "Melty Monster 2 Starbit Farming": SMG2LocationData(["Event"], regname.MELTY, regname.MELTY2BOWLING, None,
                                                         Rules.CanStarbitShoot, locked_item="Can Farm Starbits"),
     "Sweet Mystery Starbit Farming": SMG2LocationData(["Event"], regname.SWEETMYS, regname.SWEETMYS1CHOCO, None,
-                                                        Rules.CanStarbitShoot, locked_item="Can Farm Starbits")
+                                                        Rules.CanStarbitShoot, locked_item="Can Farm Starbits"),
+    "Rightside Down Coin Farming": SMG2LocationData(["Event"], regname.RIGHTDOWN, regname.RIGHTDOWNTOPVIEW, None,
+                                                    locked_item="Can Farm Coins")
 }
 
 base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_loc, **RIGHTDOWN_loc,
