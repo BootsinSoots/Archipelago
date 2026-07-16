@@ -273,13 +273,15 @@ class StarbitLumaLocks(Choice):
 class StarbitLumaCounts(OptionCounter):
     """
     Determine how many starbits are required for each Starbit Luma
+
+    Adding 'random: XXX' will roll ALL values somewhere between 0 and XXX
     """
     display_name = "Starbit Luma Counts"
     internal_name = "starbit_luma_counts"
     min = 0
     max = 9999
     valid_keys = ["World 1 Starbit Luma", "World 2 Starbit Luma", "World 3 Starbit Luma","World 4 Starbit Luma",
-                  "World 5 Starbit Luma", "World 6 Starbit Luma", "World 7 Starbit Luma"]
+                  "World 5 Starbit Luma", "World 6 Starbit Luma", "World 7 Starbit Luma", "random"]
     default = {
         "World 1 Starbit Luma": 300,
         "World 2 Starbit Luma": 700,

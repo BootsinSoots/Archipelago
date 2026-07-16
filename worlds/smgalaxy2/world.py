@@ -67,6 +67,17 @@ class SMG2World(World):
         self.start_galaxy: str = regname.SKYOBS
 
     def generate_early(self) -> None:
+        if "random" in self.options.starbit_luma_counts.value.keys():
+            random_cap: int = self.options.starbit_luma_counts.value["random"]
+            self.options.starbit_luma_counts.value = {
+                "World 1 Starbit Luma": self.random.choice(range(random_cap)),
+                "World 2 Starbit Luma": self.random.choice(range(random_cap)),
+                "World 3 Starbit Luma": self.random.choice(range(random_cap)),
+                "World 4 Starbit Luma": self.random.choice(range(random_cap)),
+                "World 5 Starbit Luma": self.random.choice(range(random_cap)),
+                "World 6 Starbit Luma": self.random.choice(range(random_cap)),
+                "World 7 Starbit Luma": self.random.choice(range(random_cap))
+            }
         if self.options.goal.value > 2 and self.options.enable_green_stars.value == 2:
             raise OptionError(f"Green Star Locations cannot be locked behind a Galaxy Generator Goal. This error "
                               f"occurred in {self.player_name}'s Super Mario Galaxy 2 world. Their YAML must be fixed")
