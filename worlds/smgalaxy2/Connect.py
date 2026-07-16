@@ -73,6 +73,7 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                       "Yoshi Star 1: Yoshi Planet Launch Star")
     world.get_region(regname.GOODEGG1EARTH).connect(world.get_region(regname.GOODEGG1TOWER),
                                                       "Yoshi Star 1: Earthy Planet Launch Star")
+    world.get_region(regname.GOODEGG1LANDING).connect(world.get_region(regname.GOODEGG1TOWER)) #Trick Entrance
     world.get_region(regname.GOODEGG1TOWER).connect(world.get_region(regname.GOODEGG1FOSSIL),
                                                       "Yoshi Star 1: Tower Launch Star")
     world.get_region(regname.GOODEGG).connect(world.get_region(regname.GOODEGG2LANDING), "Yoshi Star Star 2")
@@ -86,6 +87,7 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                               "Yoshi Star 2: Shooting Gallery Launch Star")
     world.get_region(regname.GOODEGG2MARBLE).connect(world.get_region(regname.GOODEGG2BOSS),
                                               "Yoshi Star 2: Marble Block Launch Star")
+    world.get_region(regname.GOODEGG2LANDING).connect(world.get_region(regname.GOODEGG2BOSS)) #Trick Entrance
     world.get_region(regname.GOODEGG).connect(world.get_region(regname.GOODEGG3LANDING), "Yoshi Star Comet Star")
     # Spin-Dig
     world.get_region(regname.WORLD1).connect(world.get_region(regname.SPINDIG), "World 1 Slot 3 Galaxy")
@@ -133,11 +135,13 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                          "Fluffy Bluff: Landing Big Tree Sling Star")
     world.get_region(regname.FLUFFBLUFF1BIGCLOUD).connect(world.get_region(regname.FLUFFBLUFF3TOWER),
                                                          "Fluffy Bluff: Hungry Luma")
+    world.get_region(regname.FLUFFBLUFF1BIGCLOUD).connect(world.get_region(regname.FLUFFBLUFF1CLIFF1))
     world.get_region(regname.FLUFFBLUFF1CLIFF1).connect(world.get_region(regname.FLUFFBLUFF1CLIFF2))
     world.get_region(regname.FLUFFBLUFF1CLIFF2).connect(world.get_region(regname.FLUFFBLUFF1WATER),
                                                          "Fluffy Bluff: Wall Jump Launch Star")
     world.get_region(regname.FLUFFBLUFF1WATER).connect(world.get_region(regname.FLUFFBLUFF1CLOUDCLIMB),
                                                          "Fluffy Bluff: Water Sphere Launch Star")
+    world.get_region(regname.FLUFFBLUFF1BIGCLOUD).connect(world.get_region(regname.FLUFFBLUFF1CLOUDCLIMB)) #Trick Entrance
     world.get_region(regname.FLUFFBLUFF1CLOUDCLIMB).connect(world.get_region(regname.FLUFFBLUFF1TREECLIMB),
                                                          "Fluffy Bluff: Vine Swing")
     world.get_region(regname.FLUFFBLUFF).connect(world.get_region(regname.FLUFFBLUFF2LANDING), "Fluffy Bluff Chimp Star")
@@ -166,6 +170,7 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                        "Fiery Flotilla: Fort Sling Star")
     world.get_region(regname.FIREFLOT1LAVA).connect(world.get_region(regname.FIREFLOT1BOSS),
                                                        "Fiery Flotilla: Lava Planet Launch Star")
+    world.get_region(regname.FIREFLOT1LANDING).connect(world.get_region(regname.FIREFLOT1BOSS)) #Trick Entrance
     world.get_region(regname.BOWJR1).connect(world.get_region(regname.FIREFLOT2BOSS), "Fiery Flotilla Comet Star")
     # World 2
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD2), "World 2 Map",
@@ -197,6 +202,7 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.BOULBOWL1CRYSTAL).connect(world.get_region(regname.BOULBOWL1FALLING))
     world.get_region(regname.BOULBOWL1FALLING).connect(world.get_region(regname.BOULBOWL1BOULDER),
                                                        "Boulder Bowl: Falling Rocks Launch Star")
+    world.get_region(regname.BOULBOWL1CRYSTAL).connect(world.get_region(regname.BOULBOWL1BOULDER)) #Trick Entrance
     world.get_region(regname.BOULBOWL1BOULDER).connect(world.get_region(regname.BOULBOWL1DODECAH),
                                                        "Boulder Bowl: Boulder Sling Star")
     world.get_region(regname.BOULBOWL1BOULDER).connect(world.get_region(regname.BOULBOWL1DICEROOM),
@@ -221,8 +227,8 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.HIGHTAIL1DASHWAL1).connect(world.get_region(regname.HIGHTAIL1DASHWAL2))
     world.get_region(regname.HIGHTAIL1DASHWAL1).connect(world.get_region(regname.HIGHTAIL3SILVERS),
                                                         "Hightail Falls: Hungry Luma")
-    world.get_region(regname.HIGHTAIL1DASHWAL2).connect(world.get_region(regname.HIGHTAILGSTAR2))
-    world.get_region(regname.HIGHTAIL1DASHWAL1).connect(world.get_region(regname.HIGHTAILGSTAR3))
+    world.get_region(regname.HIGHTAIL1DASHWAL2).connect(world.get_region(regname.HIGHTAILGSTAR3))
+    world.get_region(regname.HIGHTAIL1DASHWAL1).connect(world.get_region(regname.HIGHTAILGSTAR2))
     world.get_region(regname.HIGHTAIL).connect(world.get_region(regname.HIGHTAIL2LANDING), "Hightail Falls Comet Star")
     world.get_region(regname.HIGHTAIL2LANDING).connect(world.get_region(regname.HIGHTAIL2GIANTRA),
                                                        "Hightail Falls Comet: Hot Pepper Landing Launch Star")
@@ -232,8 +238,8 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.HIGHTAIL2PLATDAS).connect(world.get_region(regname.HIGHTAIL2DASHWAL1),
                                                        "Hightail Falls Comet: Hot Pepper Dash Launch Star")
     world.get_region(regname.HIGHTAIL2DASHWAL1).connect(world.get_region(regname.HIGHTAIL2DASHWAL2))
-    world.get_region(regname.HIGHTAIL2DASHWAL2).connect(world.get_region(regname.HIGHTAILGSTAR2))
-    world.get_region(regname.HIGHTAIL2DASHWAL1).connect(world.get_region(regname.HIGHTAILGSTAR3))
+    world.get_region(regname.HIGHTAIL2DASHWAL2).connect(world.get_region(regname.HIGHTAILGSTAR3))
+    world.get_region(regname.HIGHTAIL2DASHWAL1).connect(world.get_region(regname.HIGHTAILGSTAR2))
     # Wild Glide
     world.get_region(regname.WORLD2).connect(world.get_region(regname.WILDGLIDE), "World 2 Slot 4 Galaxy")
     world.get_region(regname.WILDGLIDE).connect(world.get_region(regname.WILDGLIDESTART), "Wild Glide Star")
@@ -773,7 +779,7 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     world.get_region(regname.BATTBELT1URCH).connect(world.get_region(regname.BATTBELT1CRAB),
                                                     "Battle Belt: Urchin Sling Star")
     world.get_region(regname.BATTBELT1CRAB).connect(world.get_region(regname.BATTBELT1PTOA),
-                                                    "Battle Belt: Crab Sling Star")
+                                                    "Battle Belt: Crabber Sling Star")
     world.get_region(regname.BATTBELT1PTOA).connect(world.get_region(regname.BATTBELT1PUMP),
                                                     "Battle Belt: Pink Toadship Sling Star")
     world.get_region(regname.BATTBELT1PUMP).connect(world.get_region(regname.BATTBELT1PUMI),
@@ -829,6 +835,7 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
                                                      "Galaxy Generator: Dash Castle Sling Star")
     world.get_region(regname.GALGEN1LAVASNA).connect(world.get_region(regname.GALGEN1STATUE))
     world.get_region(regname.GALGEN1STATUE).connect(world.get_region(regname.GALGEN1THEDOOR))
+    world.get_region(regname.GALGEN1YOSHI).connect(world.get_region(regname.GALGEN1THEDOOR)) #Trick Entrance
     world.get_region(regname.GALGEN1THEDOOR).connect(world.get_region(regname.GALGEN1BOSS),
                                                      "Galaxy Generator: The Door")
     world.get_region(regname.BOWSER3).connect(world.get_region(regname.GALGEN2LANDING), "Galaxy Generator Comet Star")
