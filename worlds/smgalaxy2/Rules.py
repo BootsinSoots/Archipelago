@@ -5,7 +5,7 @@ from rule_builder.field_resolvers import FromOption
 from rule_builder.options import OptionFilter
 from rule_builder.rules import Has, True_, HasFromList, Rule, HasGroup, CanReachLocation
 from .Options import WorldShuffle, Goal, GreenStarBehavior, StarstoFinish, GreenStarstoFinish, GalaxyLock, \
-    EnableGreenStars, PowerupRando, MoveRando, YoshiRando
+    EnableGreenStars, PowerupRando, MoveRando, YoshiRando, StarbitLumaLocks
 from .locations import green_star_locations, SMG2Location
 from .regions import region_list, all_galaxy_slots
 from .Constants.Names import region_names as regname
@@ -457,17 +457,26 @@ def set_rules(world: "SMG2World", player: int): #TODO fix connections
     # Sweet Mystery
     world.get_region(regname.WORLD4).connect(world.get_region(regname.SWEETMYS), "World 4 Slot 2 Galaxy")
     world.get_region(regname.SWEETMYS).connect(world.get_region(regname.SWEETMYS1START), "Sweet Mystery Star")
-    world.get_region(regname.SWEETMYS1START).connect(world.get_region(regname.SWEETMYS1COOKIE))
-    world.get_region(regname.SWEETMYS1COOKIE).connect(world.get_region(regname.SWEETMYS1CHOCO))
-    world.get_region(regname.SWEETMYS1CHOCO).connect(world.get_region(regname.SWEETMYS1BISCUIT))
-    world.get_region(regname.SWEETMYS1BISCUIT).connect(world.get_region(regname.SWEETMYS1SWITCHES))
+    world.get_region(regname.SWEETMYS1START).connect(world.get_region(regname.SWEETMYS1COOKIE),
+                                                     rule=CanDinoGlow)
+    world.get_region(regname.SWEETMYS1COOKIE).connect(world.get_region(regname.SWEETMYS1CHOCO),
+                                                      rule=CanDinoGlow)
+    world.get_region(regname.SWEETMYS1CHOCO).connect(world.get_region(regname.SWEETMYS1BISCUIT),
+                                                     rule=CanDinoGlow)
+    world.get_region(regname.SWEETMYS1BISCUIT).connect(world.get_region(regname.SWEETMYS1SWITCHES),
+                                                       rule=CanDinoGlow)
     world.get_region(regname.SWEETMYS1SWITCHES).connect(world.get_region(regname.SWEETMYS1CAKE),
-                                                        "Sweet Mystery: Flipswitch Launch Star")
+                                                        "Sweet Mystery: Flipswitch Launch Star",
+                                                        CanDinoGlow)
     world.get_region(regname.SWEETMYS).connect(world.get_region(regname.SWEETMYS2START), "Sweet Mystery Comet Star")
-    world.get_region(regname.SWEETMYS2START).connect(world.get_region(regname.SWEETMYS2COOKIE))
-    world.get_region(regname.SWEETMYS2COOKIE).connect(world.get_region(regname.SWEETMYS2CHOCO))
-    world.get_region(regname.SWEETMYS2CHOCO).connect(world.get_region(regname.SWEETMYS2BISCUIT))
-    world.get_region(regname.SWEETMYS2BISCUIT).connect(world.get_region(regname.SWEETMYS2END))
+    world.get_region(regname.SWEETMYS2START).connect(world.get_region(regname.SWEETMYS2COOKIE),
+                                                     rule=CanDinoGlow)
+    world.get_region(regname.SWEETMYS2COOKIE).connect(world.get_region(regname.SWEETMYS2CHOCO),
+                                                      rule=CanDinoGlow)
+    world.get_region(regname.SWEETMYS2CHOCO).connect(world.get_region(regname.SWEETMYS2BISCUIT),
+                                                     rule=CanDinoGlow)
+    world.get_region(regname.SWEETMYS2BISCUIT).connect(world.get_region(regname.SWEETMYS2END),
+                                                       rule=CanDinoGlow)
     # Flipsville
     world.get_region(regname.WORLD4).connect(world.get_region(regname.FLIPVILL), "World 4 Slot 3 Galaxy")
     world.get_region(regname.FLIPVILL).connect(world.get_region(regname.FLIPVILL1MAZESTART), "Flipsville Star 1")
@@ -964,18 +973,27 @@ def rules_from_er_placements(world: "SMG2World"):
                     last_block_count = block_dict[f"Block 5"]
 
             req_star_count = min(last_block_count, available_locations)
-            world.set_rule(galaxy_entr, (HasFromList(*NoGreenList, count=req_star_count)
+            lumarule: Rule[Any] = True_()
+            match (world_num, gal_slot_num):
+                case (1,4)|(2,6)|(3,5)|(4,2)|(5,5)|(6,3)|(6,5)|(7,6)|(7,7):
+                    starbit_count_grind = bool(world.options.starbit_luma_counts.value[f"World {world_num} Starbit Luma"]< 1000)
+                    dontneedgrind = True_() if starbit_count_grind else Has("Can Farm Starbits")
+                    lumarule: Rule[Any] = ((Has(itemname.STARBITLUMAKEY)&OptionFilter(StarbitLumaLocks, 1))
+                                          |(Has(f"Starbit Luma World {world_num}")&OptionFilter(StarbitLumaLocks,2))) & dontneedgrind
+                case _:
+                    lumarule: Rule[Any] = True_()
+            world.set_rule(galaxy_entr, ((HasFromList(*NoGreenList, count=req_star_count)
                                          & OptionFilter(GreenStarBehavior, 0, operator="gt"))
                                          | (OptionFilter(GreenStarBehavior, 0) &
                                              HasGroup("Power Stars", count=req_star_count))
                            & ((OptionFilter(GalaxyLock, 1) & Has(f"{galaxy_entr.connected_region.name} Key"))
-                              | (OptionFilter(GalaxyLock, 0)&True_())))
+                              | (OptionFilter(GalaxyLock, 0)&True_()))&lumarule))
             world.star_block_counts[world_num][f"Block {gal_slot_num}"] = req_star_count
             last_block_count = req_star_count
             if ((world.options.goal.value < 2 and (world_num, gal_slot_num) == (6, 7))
-                    or (4 > world.options.goal.value > 1 and (world_num, gal_slot_num) == (7, 7))): # TODO add in starbit requirements somehow
+                    or (4 > world.options.goal.value > 1 and (world_num, gal_slot_num) == (7, 7))):
                 world.set_rule(galaxy_entr,
-                               ((OptionFilter(Goal, Goal.option_Green_Star_Cutscene)
+                               (((OptionFilter(Goal, Goal.option_Green_Star_Cutscene)
                                  & ((HasGroup("Power Stars", count=max(world.options.stars_to_finish.value, 120))
                                  & OptionFilter(GreenStarBehavior, 0))
                                |(HasFromList(*NoGreenList, count=120)
@@ -987,14 +1005,14 @@ def rules_from_er_placements(world: "SMG2World"):
                                    HasFromList(*NoGreenList, count=min(world.options.stars_to_finish.value, 120))
                                    & OptionFilter(Goal, Goal.option_Green_Star_Cutscene, operator="ne")))
                                & ((OptionFilter(GalaxyLock, 1) & Has(f"{galaxy_entr.connected_region.name} Key"))
-                              | (OptionFilter(GalaxyLock, 0)&True_())))
+                              | (OptionFilter(GalaxyLock, 0)&True_())))&lumarule)
 
             if world.options.enable_green_stars.value == 1 and world.options.green_star_behavior.value == 0:
                 available_locations += 5 if galaxy_type == "Major" else 3
             else:
                 available_locations += 2 if galaxy_type == "Major" else 1
 
-    #firs world, get slot 1 galaxy
+    #first world, get slot 1 galaxy
     world.start_galaxy = world.get_entrance(f"{list(world.star_block_counts.keys())[0]} Slot 1 Galaxy").connected_region.name
     if world.options.galaxy_lock.value:
         world.multiworld.push_precollected(world.create_item(f"{world.start_galaxy} Key"))

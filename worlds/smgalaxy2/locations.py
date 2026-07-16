@@ -26,6 +26,7 @@ class SMG2LocationData(NamedTuple):
     code: Optional[int]  # used to create ap_id, None for events
     default_access: Rule[Any] = True_()
     game_address: Optional[int] = 0
+    locked_item: str = None
 #TODO Add Hungry Luma, Comets and Checkpoint locations to base table
 # Sky Station S
 SKYOBS_loc: dict[str, SMG2LocationData] = {
@@ -255,21 +256,28 @@ STARBEACH_loc: dict[str, SMG2LocationData] = {
 
     # Chompworks St
 CHOMWORK_loc: dict[str, SMG2LocationData] = {
-    locname.CHOMPWORKSTAR1: SMG2LocationData(["Power Star Location", regname.CHOMWORK], regname.CHOMWORK),
-    locname.CHOMPWORKSTAR2: SMG2LocationData(["Power Star Location", regname.CHOMWORK], regname.CHOMWORK),
-    locname.CHOMPWORKSTAR3: SMG2LocationData(["Power Star Location", regname.CHOMWORK], regname.CHOMWORK),
+    locname.CHOMPWORKSTAR1: SMG2LocationData(["Power Star Location", regname.CHOMWORK], regname.CHOMWORK,
+                                             regname.CHOMWORK1LAVA, 1),
+    locname.CHOMPWORKSTAR2: SMG2LocationData(["Power Star Location", regname.CHOMWORK], regname.CHOMWORK,
+                                             regname.CHOMWORK2TOWER, 1),
+    locname.CHOMPWORKSTAR3: SMG2LocationData(["Power Star Location", regname.CHOMWORK], regname.CHOMWORK,
+                                             regname.CHOMWORK3LAVA, 1),
 }
 
     # Honeyhop Star
 HONEYHOP_loc: dict[str, SMG2LocationData] = {
-    locname.HONEYHOPSTAR1: SMG2LocationData(["Power Star Location", regname.HONEYHOP], regname.HONEYHOP),
-    locname.HONEYHOPSTAR2: SMG2LocationData(["Power Star Location", regname.HONEYHOP], regname.HONEYHOP),
+    locname.HONEYHOPSTAR1: SMG2LocationData(["Power Star Location", regname.HONEYHOP], regname.HONEYHOP,
+                                            regname.HONEYHOP1QBTOP, 1),
+    locname.HONEYHOPSTAR2: SMG2LocationData(["Power Star Location", regname.HONEYHOP], regname.HONEYHOP,
+                                            regname.HONEYHOP1QBBASE, 1),
 }
 
     # Sweet Mystery
 SWEETMYS_loc: dict[str, SMG2LocationData] = {
-    locname.SWEETMYSTSTAR1: SMG2LocationData(["Power Star Location", regname.SWEETMYS], regname.SWEETMYS),
-    locname.SWEETMYSTSTAR2: SMG2LocationData(["Power Star Location", regname.SWEETMYS], regname.SWEETMYS),
+    locname.SWEETMYSTSTAR1: SMG2LocationData(["Power Star Location", regname.SWEETMYS], regname.SWEETMYS,
+                                             regname.SWEETMYS1CAKE, 1, Rules.CanDinoGlow),
+    locname.SWEETMYSTSTAR2: SMG2LocationData(["Power Star Location", regname.SWEETMYS], regname.SWEETMYS,
+                                             regname.SWEETMYS2END, 1, Rules.CanDinoGlow),
 }
 
     # Bowser's Grav
@@ -595,20 +603,20 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.STARBEACH1MAIN, 1, ),
     locname.STARBEACHSTARG3:    SMG2LocationData(["Green Star Location", regname.STARBEACH], regname.STARBEACH,
                                                  regname.STARBEACH2MAIN, 1, ),
-    locname.CHOMPWORKSTARG1:    SMG2LocationData(["Green Star Location", regname.CHOMWORK], regname.CHOMWORK, 1,
-                                                 ),
-    locname.CHOMPWORKSTARG2:    SMG2LocationData(["Green Star Location", regname.CHOMWORK], regname.CHOMWORK, 1,
-                                                 ),
-    locname.CHOMPWORKSTARG3:    SMG2LocationData(["Green Star Location", regname.CHOMWORK], regname.CHOMWORK, 1,
-                                                 ),
-    locname.HONEYHOPSTARG1:     SMG2LocationData(["Green Star Location", regname.HONEYHOP], regname.HONEYHOP, 1,
-                                                 ),
-    locname.HONEYHOPSTARG2:     SMG2LocationData(["Green Star Location", regname.HONEYHOP], regname.HONEYHOP, 1,
-                                                 ),
-    locname.SWEETMYSTSTARG1:    SMG2LocationData(["Green Star Location", regname.SWEETMYS], regname.SWEETMYS, 1,
-                                                 ),
-    locname.SWEETMYSTSTARG2:    SMG2LocationData(["Green Star Location", regname.SWEETMYS], regname.SWEETMYS, 1,
-                                                 ),
+    locname.CHOMPWORKSTARG1:    SMG2LocationData(["Green Star Location", regname.CHOMWORK], regname.CHOMWORK,
+                                                 regname.CHOMWORK1START, 1,),
+    locname.CHOMPWORKSTARG2:    SMG2LocationData(["Green Star Location", regname.CHOMWORK], regname.CHOMWORK,
+                                                 regname.CHOMWORK1FLIPSWAP, 1,),
+    locname.CHOMPWORKSTARG3:    SMG2LocationData(["Green Star Location", regname.CHOMWORK], regname.CHOMWORK,
+                                                 regname.CHOMWORK2TOWER, 1,),
+    locname.HONEYHOPSTARG1:     SMG2LocationData(["Green Star Location", regname.HONEYHOP], regname.HONEYHOP,
+                                                 regname.HONEYHOP1CLOUDS, 1,),
+    locname.HONEYHOPSTARG2:     SMG2LocationData(["Green Star Location", regname.HONEYHOP], regname.HONEYHOP,
+                                                 regname.HONEYHOP1QBTOP, 1,),
+    locname.SWEETMYSTSTARG1:    SMG2LocationData(["Green Star Location", regname.SWEETMYS], regname.SWEETMYS,
+                                                 regname.SWEETMYS1CHOCO, 1, Rules.CanDinoGlow),
+    locname.SWEETMYSTSTARG2:    SMG2LocationData(["Green Star Location", regname.SWEETMYS], regname.SWEETMYS,
+                                                 regname.SWEETMYS1CHOCO, 1, Rules.CanDinoGlow&Rules.CanLongJump),
     locname.GRAVGAUNSTARG1:     SMG2LocationData(["Green Star Location", regname.BOWSER2], regname.BOWSER2,
                                                  regname.GRAVGAUNGSTAR1, 1,),
     locname.GRAVGAUNSTARG2:     SMG2LocationData(["Green Star Location", regname.BOWSER2], regname.BOWSER2,
@@ -763,11 +771,12 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
     locname.STARBEACHCM: SMG2LocationData(["Comet Medal Location", regname.STARBEACH], regname.STARBEACH,
                                           regname.STARBEACH1MAIN, 1, ),
     locname.CHOMPWORKCM: SMG2LocationData(["Comet Medal Location", regname.CHOMWORK], regname.CHOMWORK,
-                                          regname.,  1, ),
+                                          regname.CHOMWORK1START,  1, ),
     locname.HONEYHOPCM: SMG2LocationData(["Comet Medal Location", regname.HONEYHOP], regname.HONEYHOP,
-                                         regname.,  1, ),
+                                         regname.HONEYHOP1QBBUBBLE,  1, ),
     locname.SWEETMYSTCM: SMG2LocationData(["Comet Medal Location", regname.SWEETMYS], regname.SWEETMYS,
-                                          regname.,  1, ),
+                                          regname.SWEETMYS1CHOCO,  1,
+                                          Rules.CanDinoGlow),
     locname.GRAVGAUNTCM: SMG2LocationData(["Comet Medal Location", regname.BOWSER2], regname.BOWSER2,
                                           regname.GRAVGAUN1LANDING,  1, ),
     locname.SPACESTORMCM: SMG2LocationData(["Comet Medal Location", regname.SPACSTOR], regname.SPACSTOR,
@@ -824,6 +833,13 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
 
 #TODO Add Mailtoad Letters table here - vanilla unlock requirement
 
+event_locations: dict[str, SMG2LocationData] = {
+    "Melty Monster 2 Starbit Farming": SMG2LocationData(["Event"], regname.MELTY, regname.MELTY2BOWLING, None,
+                                                        Rules.CanStarbitShoot, locked_item="Can Farm Starbits"),
+    "Sweet Mystery Starbit Farming": SMG2LocationData(["Event"], regname.SWEETMYS, regname.SWEETMYS1CHOCO, None,
+                                                        Rules.CanStarbitShoot, locked_item="Can Farm Starbits")
+}
+
 base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_loc, **RIGHTDOWN_loc,
                         **FLIPSWAP_loc, **WILDGLIDE_loc, **ROLLMAST_loc, **HONEYHOP_loc, **UPDIZZY_loc,
                         **SLIMSPRI_loc, **BEEBLOOM_loc, **BEATBLOCK_loc, **SWEETMYS_loc, **FLETGLIDE_loc,
@@ -835,7 +851,7 @@ base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_l
                         **CHOMWORK_loc, **SPACSTOR_loc, **SLIPSAND_loc, **COLDFIRE_loc, **BOOMOON_loc,
                         **MELTMONS_loc, **CLOCKRUIN_loc, **THROWBACK_loc, **BATTBELT_loc}
 
-location_table = { **base_stars_locations, **green_star_locations
+location_table = { **base_stars_locations, **green_star_locations, **COMETMEDAL_loc
 }
 
 LOCATION_NAME_TO_ID: dict[str, int] =  {

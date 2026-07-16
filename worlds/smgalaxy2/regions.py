@@ -1,5 +1,7 @@
 import copy
 from typing import NamedTuple, Optional, Callable, TYPE_CHECKING
+
+import locations
 from BaseClasses import Region, Entrance, MultiWorld
 from entrance_rando import disconnect_entrance_for_randomization
 from rule_builder.rules import CanReachLocation
@@ -8,7 +10,8 @@ from .Constants.Names import region_names as regname
 from .Constants.Names import location_names as locname
 from .Constants.Names.region_names import SPACSTOR2GSTAR2
 from .Options import SMG2Options
-from .locations import SMG2Location, base_stars_locations, SMG2LocationData, green_star_locations
+from .items import SMG2Item
+from .locations import SMG2Location, base_stars_locations, SMG2LocationData, green_star_locations, COMETMEDAL_loc, event_locations
 
 if TYPE_CHECKING:
     from . import SMG2World
@@ -202,9 +205,6 @@ region_list: dict[str, SMG2RegionData] = {
     regname.FLIPVILL2GRAVITYMAIN:       SMG2RegionData("Planet", [], []),
     regname.FLIPVILL3TOWER:             SMG2RegionData("Planet", [], []),
     regname.FLIPVILL3GRAVITY:           SMG2RegionData("Planet", [], []),
-
-
-
     regname.SPACSTOR1PULL:              SMG2RegionData("Planet", [], []),
     regname.SPACSTOR1SATELLITE:         SMG2RegionData("Planet", [], []),
     regname.SPACSTOR1REDCANOUT:         SMG2RegionData("Planet", [], []),
@@ -629,8 +629,11 @@ def create_regions(world: "SMG2World"): #TODO Correctly add locations
         world.multiworld.regions.append(SMGRegion(region_name, region_list[region_name], world.player, world.multiworld))
 
     create_locations(base_stars_locations, world)
+    create_locations(COMETMEDAL_loc, world)
+    for loc, data in event_locations.items():
+        world.get_region(data.region).add_event(loc, data.locked_item, data.default_access, SMG2Location, SMG2Item)
 
-    # match case Goal to place item on correct location. Case 4 is placed ealier
+    # match case Goal to place item on correct location. Case 4 is placed earlier
     match world.options.goal.value:
         case 0 | 1:
             world.multiworld.get_location(locname.GALAXYGENSTAR1, world.player).place_locked_item(
