@@ -1,12 +1,15 @@
+from typing import TYPE_CHECKING
+
 from rule_builder.options import OptionFilter
 from rule_builder.rules import True_, Has
-from worlds.smgalaxy2 import SMG2World
-from worlds.smgalaxy2.Constants.Names import region_names as regname, item_names as itemname
-from worlds.smgalaxy2.Options import WorldShuffle
-from worlds.smgalaxy2.Rules import JumpHeight3, JumpHeight5, JumpHeight1, CanAirSpin, CanDinoGlow
+if TYPE_CHECKING:
+    from . import SMG2World
+from .Constants.Names import region_names as regname, item_names as itemname
+from .Options import WorldShuffle
+from .Rules import JumpHeight3, JumpHeight5, JumpHeight1, CanAirSpin, CanDinoGlow
 
 
-def set_rules(world: "SMG2World", player: int): #TODO fix connections
+def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     # World 1
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD1), "World 1 Map",
                                            rule=(True_()&
