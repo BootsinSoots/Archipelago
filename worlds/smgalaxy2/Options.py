@@ -257,7 +257,7 @@ class YoshiRando(Toggle):
 
 class StarbitLumaLocks(Choice):
     """
-    Determine if Starbit lumas require extra items, in addition of starbits, to unlock
+    Determine if Starbit lumas require extra items, in addition to starbits, to unlock
 
     Global: One key opens all Starbit Lumas
 
@@ -292,6 +292,43 @@ class StarbitLumaCounts(OptionCounter):
         "World 7 Starbit Luma": 2000
     }
 
+class CoinLumaLocks(Choice):
+    """
+    Determine if Coin Lumas require extra items, in addition to coins, to unlock
+
+    Global: One key opens all Coin Lumas
+
+    Individual: Each Luma requires their own key to open.
+    """
+    display_name = "Coin Luma Locks"
+    internal_name = "coin_luma_locks"
+    option_Off = 0
+    option_Global = 1
+    option_Individual = 2
+
+
+class CoinLumaCounts(OptionCounter):
+    """
+    Determine how many coins are required for each Coin Luma
+
+    Adding 'random: XXX' will roll ALL values somewhere between 0 and XXX
+    """
+    display_name = "Coin Luma Counts"
+    internal_name = "Coin_luma_counts"
+    min = 0
+    max = 9999
+    valid_keys = ["Fluffy Bluff Coin Luma", "Puzzle Plank Coin Luma", "Hightail Falls Coin Luma","Cosmic Cove Coin Luma",
+                  "Cloudy Court Coin Luma", "Clockwork Ruins Coin Luma", "Battle Belt Coin Luma", "random"]
+    default = {
+        "Fluffy Bluff Coin Luma": 100,
+        "Puzzle Plank Coin Luma": 70,
+        "Hightail Falls Coin Luma": 30,
+        "Cosmic Cove Coin Luma": 15,
+        "Cloudy Court Coin Luma": 30,
+        "Clockwork Ruins Coin Luma": 30,
+        "Battle Belt Coin Luma": 20
+    }
+
 # Comet medals in pool, provide galaxy "order", 1 comet to one level
 
 
@@ -317,6 +354,8 @@ class SMG2Options(PerGameCommonOptions):
     yoshi_rando: YoshiRando
     starbit_luma_locks: StarbitLumaLocks
     starbit_luma_counts: StarbitLumaCounts
+    coin_luma_locks: CoinLumaLocks
+    coin_luma_counts: CoinLumaCounts
 
 option_groups = [
     Options.OptionGroup("Map Options", [
@@ -340,7 +379,9 @@ option_groups = [
     Options.OptionGroup("Logic Options", [
         PowerupRando,
         MoveRando,
-        YoshiRando
+        YoshiRando,
+        CoinLumaLocks,
+        CoinLumaCounts,
     ]),
     Options.OptionGroup("Extra Locations", [
 

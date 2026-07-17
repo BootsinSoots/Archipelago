@@ -119,17 +119,31 @@ green_comet_key: dict[str, SMG2ItemData] = {
 }
 
 starbit_luma_key: dict[str, SMG2ItemData] = {
-    itemname.STARBITLUMAKEY: SMG2ItemData(["Starbit All Key"], 1, IC.progression)
+    itemname.STARBITLUMAKEY: SMG2ItemData(["All Starbit Luma Key"], 1, IC.progression)
 }
 
 starbit_world_keys: dict[str, SMG2ItemData] ={
-    itemname.STARBITHL1: SMG2ItemData(["Starbit World Key"], 1, IC.progression),
-    itemname.STARBITHL2: SMG2ItemData(["Starbit World Key"], 1, IC.progression),
-    itemname.STARBITHL3: SMG2ItemData(["Starbit World Key"], 1, IC.progression),
-    itemname.STARBITHL4: SMG2ItemData(["Starbit World Key"], 1, IC.progression),
-    itemname.STARBITHL5: SMG2ItemData(["Starbit World Key"], 1, IC.progression),
-    itemname.STARBITHL6: SMG2ItemData(["Starbit World Key"], 1, IC.progression),
-    itemname.STARBITHL7: SMG2ItemData(["Starbit World Key"], 1, IC.progression),
+    itemname.STARBITHL1: SMG2ItemData(["Starbit Luma Key"], 1, IC.progression),
+    itemname.STARBITHL2: SMG2ItemData(["Starbit Luma Key"], 1, IC.progression),
+    itemname.STARBITHL3: SMG2ItemData(["Starbit Luma Key"], 1, IC.progression),
+    itemname.STARBITHL4: SMG2ItemData(["Starbit Luma Key"], 1, IC.progression),
+    itemname.STARBITHL5: SMG2ItemData(["Starbit Luma Key"], 1, IC.progression),
+    itemname.STARBITHL6: SMG2ItemData(["Starbit Luma Key"], 1, IC.progression),
+    itemname.STARBITHL7: SMG2ItemData(["Starbit Luma Key"], 1, IC.progression),
+}
+
+coin_luma_key: dict[str, SMG2ItemData] = {
+    itemname.COINLUMAKEY: SMG2ItemData(["All Coin Luma Key"], 1, IC.progression)
+}
+
+coin_world_keys: dict[str, SMG2ItemData] ={
+    itemname.COINHL1: SMG2ItemData(["Coin Luma Key"], 1, IC.progression),
+    itemname.COINHL2: SMG2ItemData(["Coin Luma Key"], 1, IC.progression),
+    itemname.COINHL3: SMG2ItemData(["Coin Luma Key"], 1, IC.progression),
+    itemname.COINHL4: SMG2ItemData(["Coin Luma Key"], 1, IC.progression),
+    itemname.COINHL5: SMG2ItemData(["Coin Luma Key"], 1, IC.progression),
+    itemname.COINHL6: SMG2ItemData(["Coin Luma Key"], 1, IC.progression),
+    itemname.COINHL7: SMG2ItemData(["Coin Luma Key"], 1, IC.progression),
 }
 
 world_green_keys: dict[str, SMG2ItemData] = {

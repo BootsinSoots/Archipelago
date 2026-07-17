@@ -12,7 +12,7 @@ from entrance_rando import randomize_entrances
 from worlds.AutoWorld import World
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
 
-from . import items, regions, Rules, web_world, Options
+from . import items, regions, Rules, web_world, Options, Connect
 from .Constants.Names import region_names as regname
 from .Constants.Names import item_names as itemname
 from .Constants.Names import location_names as locname
@@ -78,6 +78,17 @@ class SMG2World(World):
                 "World 6 Starbit Luma": self.random.choice(range(random_cap)),
                 "World 7 Starbit Luma": self.random.choice(range(random_cap))
             }
+        if "random" in self.options.coin_luma_counts.value.keys():
+            random_cap: int = self.options.coin_luma_counts.value["random"]
+            self.options.coin_luma_counts.value = {
+                "Fluffy Bluff Coin Luma": self.random.choice(range(random_cap)),
+                "Puzzle Plank Coin Luma": self.random.choice(range(random_cap)),
+                "Hightail Falls Coin Luma": self.random.choice(range(random_cap)),
+                "Cosmic Cove Coin Luma": self.random.choice(range(random_cap)),
+                "Cloudy Court Coin Luma": self.random.choice(range(random_cap)),
+                "Clockwork Ruins Coin Luma": self.random.choice(range(random_cap)),
+                "Battle Belt Coin Luma": self.random.choice(range(random_cap))
+            }
         if self.options.goal.value > 2 and self.options.enable_green_stars.value == 2:
             raise OptionError(f"Green Star Locations cannot be locked behind a Galaxy Generator Goal. This error "
                               f"occurred in {self.player_name}'s Super Mario Galaxy 2 world. Their YAML must be fixed")
@@ -127,7 +138,7 @@ class SMG2World(World):
         return block_counts
 
     def set_rules(self):
-        Rules.set_rules(self, self.player)
+        Connect.set_rules(self, self.player)
     
     def create_item(self, name: str) -> SMG2Item:
         item = items.SMG2Item(name, self.player, items.all_items_table[name])
@@ -160,6 +171,11 @@ class SMG2World(World):
             local_pool += self.create_items_from_list([itemname.STARBITLUMAKEY], exclude)
         elif self.options.starbit_luma_locks.value == self.options.starbit_luma_locks.option_Individual:
             local_pool += self.create_items_from_list(list(items.starbit_world_keys.keys()), exclude)
+
+        if self.options.coin_luma_locks.value == self.options.coin_luma_locks.option_Global:
+            local_pool += self.create_items_from_list([itemname.COINLUMAKEY], exclude)
+        elif self.options.coin_luma_locks.value == self.options.coin_luma_locks.option_Individual:
+            local_pool += self.create_items_from_list(list(items.coin_world_keys.keys()), exclude)
 
         if self.options.world_shuffle.value == self.options.world_shuffle.option_Keyed_Grand_Stars:
             local_pool += self.create_items_from_list(list(items.keyed_grand_stars.keys()), exclude)

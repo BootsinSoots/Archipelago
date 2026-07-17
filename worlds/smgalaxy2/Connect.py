@@ -5,47 +5,48 @@ from rule_builder.rules import True_, Has
 if TYPE_CHECKING:
     from . import SMG2World
 from .Constants.Names import region_names as regname, item_names as itemname
-from .Options import WorldShuffle
-from .Rules import JumpHeight3, JumpHeight5, JumpHeight1, CanAirSpin, CanDinoGlow
+from .Options import WorldShuffle, CoinLumaLocks
+from . import Rules as RB
 
 
 def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     # World 1
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD1), "World 1 Map",
-                                           rule=(True_()&
-                                                 OptionFilter(WorldShuffle, WorldShuffle.option_Progressive)|(True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open))
+                                           rule=((True_()&
+                                                 OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
+                                                 |(True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open))
                                                 | (Has(itemname.GRAND1) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))))
     # Sky Station
     world.get_region(regname.WORLD1).connect(world.get_region(regname.SKYOBS), "World 1 Slot 1 Galaxy")
     world.get_region(regname.SKYOBS).connect(world.get_region(regname.SKYOBS1STARTTOPSIDE), "Sky Station Star 1")
     world.get_region(regname.SKYOBS1STARTTOPSIDE).connect(world.get_region(regname.SKYOBS1STARTBOTTOM),
-                                                          rule=True_()|Has(itemname.MARIOLONG)|JumpHeight3)
+                                                          rule=True_()|Has(itemname.MARIOLONG)|RB.JumpHeight3) # replace the True_() with a pipe once pipes are in
     world.get_region(regname.SKYOBS1STARTTOPSIDE).connect(world.get_region(regname.SKYOBS1TOPOFHOUSE),
-                                                          rule=JumpHeight5)
+                                                          rule=RB.JumpHeight5)
     world.get_region(regname.SKYOBS1STARTBOTTOM).connect(world.get_region(regname.SKYOBS1TOPOFHOUSE))
     world.get_region(regname.SKYOBS1STARTTOPSIDE).connect(world.get_region(regname.SKYOBS1GSTAR1),
-                                                          rule=JumpHeight3) #Needs move rando rules
+                                                          rule=RB.JumpHeight3) #Needs move rando rules
     world.get_region(regname.SKYOBS1TOPOFHOUSE).connect(world.get_region(regname.SKYOBS1GSTAR1),
-                                                        rule=JumpHeight1)
+                                                        rule=RB.JumpHeight1)
     world.get_region(regname.SKYOBS1TOPOFHOUSE).connect(world.get_region(regname.SKYOBS1GREENHILL),
                                                         "Sky Station 1: House Launch Star")
     world.get_region(regname.SKYOBS1GREENHILL).connect(world.get_region(regname.SKYOBS1OCTOBONUS),
                                                        "Sky Station 1: Green Hill Teleporter",)
     world.get_region(regname.SKYOBS1GREENHILL).connect(world.get_region(regname.SKYOBS1MINIPLANETS),
                                                        "Sky Station 1: Green Hill Launch Star",
-                                                       CanAirSpin)
+                                                       RB.CanAirSpin)
     world.get_region(regname.SKYOBS1MINIPLANETS).connect(world.get_region(regname.SKYOBS1CYLINDER),
                                                        "Sky Station 1: Mini Planets Launch Star",
-                                                         CanAirSpin)
+                                                         RB.CanAirSpin)
     world.get_region(regname.SKYOBS1CYLINDER).connect(world.get_region(regname.SKYOBS1BEFOREBOSS),
                                                        "Sky Station 1: Cylinder Launch Star")
     world.get_region(regname.SKYOBS1BEFOREBOSS).connect(world.get_region(regname.SKYOBS1BOSS),
                                                        "Sky Station 1: Two-Sided Launch Star")
     world.get_region(regname.SKYOBS).connect(world.get_region(regname.SKYOBS2STARTTOPSIDE), "Sky Station Star 2")
     world.get_region(regname.SKYOBS2STARTTOPSIDE).connect(world.get_region(regname.SKYOBS2STARTBOTTOM),
-                                                          rule=True_()|Has(itemname.MARIOLONG)|JumpHeight3)
+                                                          rule=True_()|Has(itemname.MARIOLONG)|RB.JumpHeight3) # replace the True_() with a pipe once pipes are in
     world.get_region(regname.SKYOBS2STARTTOPSIDE).connect(world.get_region(regname.SKYOBS2TOPOFHOUSE),
-                                                          rule=JumpHeight5)
+                                                          rule=RB.JumpHeight5)
     world.get_region(regname.SKYOBS2STARTBOTTOM).connect(world.get_region(regname.SKYOBS2TOPOFHOUSE))
     world.get_region(regname.SKYOBS2STARTBOTTOM).connect(world.get_region(regname.SKYOBS2SKYFLEET),
                                                         "Sky Station 2: House Launch Star")
@@ -57,15 +58,15 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                         "Sky Station 2: Flipswitch Fleet Launch Star")
     world.get_region(regname.SKYOBS).connect(world.get_region(regname.SKYOBS3STARTTOPSIDE), "Sky Station Comet Star")
     world.get_region(regname.SKYOBS3STARTTOPSIDE).connect(world.get_region(regname.SKYOBS3STARTBOTTOM),
-                                                          rule=True_()|Has(itemname.MARIOLONG)|JumpHeight3)
+                                                          rule=True_()|Has(itemname.MARIOLONG)|RB.JumpHeight3) # replace the True_() with a pipe once pipes are in
     world.get_region(regname.SKYOBS3STARTTOPSIDE).connect(world.get_region(regname.SKYOBS3TOPOFHOUSE),
-                                                          rule=JumpHeight5)
+                                                          rule=RB.JumpHeight5)
     world.get_region(regname.SKYOBS3STARTBOTTOM).connect(world.get_region(regname.SKYOBS3TOPOFHOUSE))
     world.get_region(regname.SKYOBS3TOPOFHOUSE).connect(world.get_region(regname.SKYOBS3CYLINDER),
                                                         "Sky Station Comet: House Launch Star")
     world.get_region(regname.SKYOBS3CYLINDER).connect(world.get_region(regname.SKYOBS3BOSS),
                                                         "Sky Station Comet: Cylinder Launch Star",
-                                                      CanAirSpin)
+                                                      RB.CanAirSpin)
 
     # Yoshi star
     world.get_region(regname.WORLD1).connect(world.get_region(regname.GOODEGG), "World 1 Slot 2 Galaxy")
@@ -135,7 +136,10 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.FLUFFBLUFF1BIGTREE).connect(world.get_region(regname.FLUFFBLUFF1BIGCLOUD),
                                                          "Fluffy Bluff: Landing Big Tree Sling Star")
     world.get_region(regname.FLUFFBLUFF1BIGCLOUD).connect(world.get_region(regname.FLUFFBLUFF3TOWER),
-                                                         "Fluffy Bluff: Hungry Luma")
+                                                         "Fluffy Bluff: Hungry Luma",                                                     rule=((RB.CoinLumaBase|
+                                                           (OptionFilter(CoinLumaLocks,2)&Has(itemname.COINHL1)))
+                                                     &(True_() if world.options.coin_luma_counts.value["Fluffy Bluff Coin Luma"]<100
+                                                       else Has("Can Farm Coins")))),
     world.get_region(regname.FLUFFBLUFF1CLIFF1).connect(world.get_region(regname.FLUFFBLUFF1CLIFF2))
     world.get_region(regname.FLUFFBLUFF1CLIFF2).connect(world.get_region(regname.FLUFFBLUFF1WATER),
                                                          "Fluffy Bluff: Wall Jump Launch Star")
@@ -184,7 +188,11 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.PUZZPLAN1GRUZZY).connect(world.get_region(regname.PUZZPLAN1COINRO),
                                                       "Puzzle Plank: Grassy Buzzsaw Green Pipe")
     world.get_region(regname.PUZZPLAN1GRUZZY).connect(world.get_region(regname.PUZZPLAN3BUGABO),
-                                                      "Puzzle Plank: Hungry Luma")
+                                                      "Puzzle Plank: Hungry Luma",
+                                                      rule=((RB.CoinLumaBase|
+                                                           (OptionFilter(CoinLumaLocks,2)&Has(itemname.COINHL2)))
+                                                     &(True_() if world.options.coin_luma_counts.value["Puzzle Plank Coin Luma"]<100
+                                                       else Has("Can Farm Coins"))))
     world.get_region(regname.PUZZPLAN1GRUZZY).connect(world.get_region(regname.PUZZPLAN1SAWBLA),
                                                       "Puzzle Plank: Grassy Buzzsaw Launch Star")
     world.get_region(regname.PUZZPLAN1SAWBLA).connect(world.get_region(regname.PUZZPLAN1CHECKP),
@@ -223,7 +231,12 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                        "Hightail Falls: Hot Pepper Dash Launch Star")
     world.get_region(regname.HIGHTAIL1DASHWAL1).connect(world.get_region(regname.HIGHTAIL1DASHWAL2))
     world.get_region(regname.HIGHTAIL1DASHWAL1).connect(world.get_region(regname.HIGHTAIL3SILVERS),
-                                                        "Hightail Falls: Hungry Luma")
+                                                        "Hightail Falls: Hungry Luma",
+                                                        rule=((RB.CoinLumaBase |
+                                                               (OptionFilter(CoinLumaLocks, 2) & Has(itemname.COINHL3)))
+                                                              & (True_() if world.options.coin_luma_counts.value[
+                                                                                "Hightail Falls Coin Luma"] < 100
+                                                                 else Has("Can Farm Coins"))))
     world.get_region(regname.HIGHTAIL1DASHWAL2).connect(world.get_region(regname.HIGHTAILGSTAR2))
     world.get_region(regname.HIGHTAIL1DASHWAL1).connect(world.get_region(regname.HIGHTAILGSTAR3))
     world.get_region(regname.HIGHTAIL).connect(world.get_region(regname.HIGHTAIL2LANDING), "Hightail Falls Comet Star")
@@ -248,7 +261,12 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.COSMIC1POOL).connect(world.get_region(regname.COSMIC1DICEROOM),
                                                   "Cosmic Cove 1: Green Pipe")
     world.get_region(regname.COSMIC1POOL).connect(world.get_region(regname.COSMIC3WATER),
-                                                  "Cosmic Cove: Hungry Luma")
+                                                  "Cosmic Cove: Hungry Luma",
+                                                  rule=((RB.CoinLumaBase |
+                                                         (OptionFilter(CoinLumaLocks, 2) & Has(itemname.COINHL4)))
+                                                        & (True_() if world.options.coin_luma_counts.value[
+                                                                          "Cosmic Cove Coin Luma"] < 100
+                                                           else Has("Can Farm Coins")))   )
     world.get_region(regname.COSMIC1POOL).connect(world.get_region(regname.COSMIC1WATERFA),
                                                   "Cosmic Cove 1: Icy Waterfall")
     world.get_region(regname.COSMICO).connect(world.get_region(regname.COSMIC2LANDING), "Cosmic Cove Star 2")
@@ -327,7 +345,12 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.CLOUCOUR1CYMBAL).connect(world.get_region(regname.CLOUCOUR1TOWERS),
                                                       "Cloudy Court: Cymbal Launch Star")
     world.get_region(regname.CLOUCOUR1TOWERS).connect(world.get_region(regname.CLOUCOUR3PCOINS),
-                                                      "Cloudy Court: Hungry Luma")
+                                                      "Cloudy Court: Hungry Luma",
+                                                      rule=((RB.CoinLumaBase |
+                                                             (OptionFilter(CoinLumaLocks, 2) & Has(itemname.COINHL5)))
+                                                            & (True_() if world.options.coin_luma_counts.value[
+                                                                              "Cloudy Court Coin Luma"] < 100
+                                                               else Has("Can Farm Coins"))))
     world.get_region(regname.CLOUCOUR1TOWERS).connect(world.get_region(regname.CLOUCOUR1PARAGOOMBONUS),
                                                       "Cloudy Court: Paragoomba Bonus Teleporter")
     world.get_region(regname.CLOUCOUR1TOWERS).connect(world.get_region(regname.CLOUCOUR1CASTLE),
@@ -451,25 +474,25 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.WORLD4).connect(world.get_region(regname.SWEETMYS), "World 4 Slot 2 Galaxy")
     world.get_region(regname.SWEETMYS).connect(world.get_region(regname.SWEETMYS1START), "Sweet Mystery Star")
     world.get_region(regname.SWEETMYS1START).connect(world.get_region(regname.SWEETMYS1COOKIE),
-                                                     rule=CanDinoGlow)
+                                                     rule=RB.CanDinoGlow)
     world.get_region(regname.SWEETMYS1COOKIE).connect(world.get_region(regname.SWEETMYS1CHOCO),
-                                                      rule=CanDinoGlow)
+                                                      rule=RB.CanDinoGlow)
     world.get_region(regname.SWEETMYS1CHOCO).connect(world.get_region(regname.SWEETMYS1BISCUIT),
-                                                     rule=CanDinoGlow)
+                                                     rule=RB.CanDinoGlow)
     world.get_region(regname.SWEETMYS1BISCUIT).connect(world.get_region(regname.SWEETMYS1SWITCHES),
-                                                       rule=CanDinoGlow)
+                                                       rule=RB.CanDinoGlow)
     world.get_region(regname.SWEETMYS1SWITCHES).connect(world.get_region(regname.SWEETMYS1CAKE),
                                                         "Sweet Mystery: Flipswitch Launch Star",
-                                                        CanDinoGlow)
+                                                        RB.CanDinoGlow)
     world.get_region(regname.SWEETMYS).connect(world.get_region(regname.SWEETMYS2START), "Sweet Mystery Comet Star")
     world.get_region(regname.SWEETMYS2START).connect(world.get_region(regname.SWEETMYS2COOKIE),
-                                                     rule=CanDinoGlow)
+                                                     rule=RB.CanDinoGlow)
     world.get_region(regname.SWEETMYS2COOKIE).connect(world.get_region(regname.SWEETMYS2CHOCO),
-                                                      rule=CanDinoGlow)
+                                                      rule=RB.CanDinoGlow)
     world.get_region(regname.SWEETMYS2CHOCO).connect(world.get_region(regname.SWEETMYS2BISCUIT),
-                                                     rule=CanDinoGlow)
+                                                     rule=RB.CanDinoGlow)
     world.get_region(regname.SWEETMYS2BISCUIT).connect(world.get_region(regname.SWEETMYS2END),
-                                                       rule=CanDinoGlow)
+                                                       rule=RB.CanDinoGlow)
     # Flipsville
     world.get_region(regname.WORLD4).connect(world.get_region(regname.FLIPVILL), "World 4 Slot 3 Galaxy")
     world.get_region(regname.FLIPVILL).connect(world.get_region(regname.FLIPVILL1MAZESTART), "Flipsville Star 1")
@@ -732,7 +755,11 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.CLOCKWORK1WHEELST).connect(world.get_region(regname.CLOCKWORK1COINROOM),
                                                      "Clockwork Ruins: Wheel Planet Green Pipe")
     world.get_region(regname.CLOCKWORK1COGS).connect(world.get_region(regname.CLOCKWORK3HAMMER),
-                                                     "Clockwork Ruins: Hungry Luma")
+                                                     "Clockwork Ruins: Hungry Luma",
+                                                     rule=((RB.CoinLumaBase|
+                                                           (OptionFilter(CoinLumaLocks,2)&Has(itemname.COINHL6)))
+                                                     &(True_() if world.options.coin_luma_counts.value["Clockwork Ruins Coin Luma"]<100
+                                                       else Has("Can Farm Coins"))))
     world.get_region(regname.CLOCKWORK3HAMMER).connect(world.get_region(regname.CLOCKWORK3HAMMERTOP),
                                                      "Clockwork Ruins Hungry Luma: Hammer Zone Green Pipe")
     world.get_region(regname.CLOCKWORK).connect(world.get_region(regname.CLOCKWORK2COGS), "Clockwork Ruins Comet Star")
@@ -786,7 +813,12 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.BATTBELT1RTOA).connect(world.get_region(regname.BATTBELT1ICEP),
                                                     "Battle Belt: Red Toadship Sling Star")
     world.get_region(regname.BATTBELT1ICEP).connect(world.get_region(regname.BATTBELT3BOSS),
-                                                    "Battle Belt: Hungry Luma")
+                                                    "Battle Belt: Hungry Luma",
+                                                    rule=((RB.CoinLumaBase |
+                                                           (OptionFilter(CoinLumaLocks, 2) & Has(itemname.COINHL7)))
+                                                          & (True_() if world.options.coin_luma_counts.value[
+                                                                            "Battle Belt Coin Luma"] < 100
+                                                             else Has("Can Farm Coins"))))
     world.get_region(regname.BATTBELT1ICEP).connect(world.get_region(regname.BATTBELT1MOLE),
                                                     "Battle Belt: Li'l Brr Sling Star")
     world.get_region(regname.BATTBELT1MOLE).connect(world.get_region(regname.BATTBELT1MOLI),

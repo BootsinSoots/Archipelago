@@ -19,7 +19,7 @@ class SMG2WebWorld(WebWorld):
         "English",
         "setup_en.md",
         "setup/en",
-        ["Squidy"],
+        ["CosmicCarbon"],
         # This is mostly placeholder till someone writes the full guide
     )
     tutorials = [setup_en]
