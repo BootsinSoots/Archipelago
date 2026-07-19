@@ -255,6 +255,13 @@ class YoshiRando(Toggle):
     display_name = "Yoshi Rando"
     internal_name = "yoshi_rando"
 
+class ObjectRando(Toggle):
+    """
+    Lock various kinds of items until you receive a related item
+    """
+    display_name = "Object Rando"
+    internal_name = "object_rando"
+
 class StarbitLumaLocks(Choice):
     """
     Determine if Starbit lumas require extra items, in addition to starbits, to unlock
@@ -352,6 +359,7 @@ class SMG2Options(PerGameCommonOptions):
     powerup_consumables: PowerUpFiller
     move_rando: MoveRando
     yoshi_rando: YoshiRando
+    object_rando: ObjectRando
     starbit_luma_locks: StarbitLumaLocks
     starbit_luma_counts: StarbitLumaCounts
     coin_luma_locks: CoinLumaLocks
@@ -380,6 +388,7 @@ option_groups = [
         PowerupRando,
         MoveRando,
         YoshiRando,
+        ObjectRando,
         CoinLumaLocks,
         CoinLumaCounts,
     ]),

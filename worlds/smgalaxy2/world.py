@@ -185,6 +185,9 @@ class SMG2World(World):
         if self.options.powerup_rando.value:
             local_pool += self.create_items_from_list(list(items.powerup_unlocks.keys()), exclude)
 
+        if self.options.object_rando.value:
+            local_pool += self.create_items_from_list(list(items.object_unlocks.keys()), exclude)
+
         if self.options.move_rando.value == 1:
             local_pool += self.create_items_from_list(list(items.move_rando_prog_jump.keys()), exclude)
         elif self.options.move_rando.value == 2:

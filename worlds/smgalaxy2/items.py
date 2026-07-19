@@ -98,6 +98,13 @@ powerup_unlocks: dict[str, SMG2ItemData] = {
     itemname.SPINDRILL: SMG2ItemData(["Power-Up"], 3, IC.progression),
 }
 
+object_unlocks: dict[str, SMG2ItemData] = {
+    itemname.MARIOCANNON:       SMG2ItemData(["Objects"], 3, IC.progression),
+    itemname.MARIOSHELL:        SMG2ItemData(["Objects"], 3, IC.progression),
+    itemname.MARIOSWING:        SMG2ItemData(["Objects"], 3, IC.progression),
+    itemname.MARIOSTARCHIPS:    SMG2ItemData(["Objects"], 3, IC.progression),
+}
+
 generic_event_items: dict[str, SMG2ItemData] = {
     "Peach": SMG2ItemData([], None, IC.progression),
     "Silver Star": SMG2ItemData([], None, IC.progression),

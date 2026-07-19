@@ -57,6 +57,7 @@ MARIOAIRSPIN = "Air Spin"
 MARIOCANNON = "Cannon License"
 MARIOSHELL = "Shell Carry"
 MARIOSWING = "Swings"
+MARIOSTARCHIPS = "Star Chips"
 
 # Yoshi Move
 YOSHI = "Yoshi Riding Permit"

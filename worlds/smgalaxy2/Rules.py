@@ -5,7 +5,7 @@ from rule_builder.field_resolvers import FromOption
 from rule_builder.options import OptionFilter
 from rule_builder.rules import Has, True_, HasFromList, Rule, HasGroup, CanReachLocation
 from .Options import Goal, GreenStarBehavior, GreenStarstoFinish, GalaxyLock, \
-    EnableGreenStars, PowerupRando, MoveRando, YoshiRando, StarbitLumaLocks, CoinLumaLocks
+    EnableGreenStars, PowerupRando, MoveRando, YoshiRando, StarbitLumaLocks, CoinLumaLocks, ObjectRando
 from .locations import green_star_locations
 from .regions import region_list, all_galaxy_slots
 from .Constants.Names import item_names as itemname
@@ -154,6 +154,12 @@ JumpHeight4: Rule[Any] = (CanDouble&CanAirSpin|JumpHeight5)
 JumpHeight3: Rule[Any] = (CanAirSpin|CanSideflip|CanBackflip|JumpHeight4)
 JumpHeight2: Rule[Any] = (CanDouble|JumpHeight3)
 JumpHeight1: Rule[Any] = True_()
+
+ObjectRandoOff: Rule[Any] = True_()&OptionFilter(ObjectRando, 1)
+CanSwing: Rule[Any] = ObjectRandoOff|(Has(itemname.MARIOSWING)&OptionFilter(ObjectRando,1))
+CanCannon: Rule[Any] = ObjectRandoOff|(Has(itemname.MARIOCANNON)&OptionFilter(ObjectRando,1))
+CanShell: Rule[Any] = ObjectRandoOff|(Has(itemname.MARIOSHELL)&OptionFilter(ObjectRando,1))
+CanCollectStarChips: Rule[Any] = ObjectRandoOff|(Has(itemname.MARIOSTARCHIPS)&OptionFilter(ObjectRando,1))
 
 CoinLumaBase: Rule[Any] = ((True_()&OptionFilter(CoinLumaLocks, 0))
                            |(Has(itemname.COINLUMAKEY)&OptionFilter(CoinLumaLocks,1)))
