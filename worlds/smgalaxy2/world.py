@@ -193,6 +193,11 @@ class SMG2World(World):
         elif self.options.move_rando.value == 2:
             local_pool += self.create_items_from_list(list(items.move_rando_separate_jump.keys()), exclude)
 
+        if self.options.comet_items.value == self.options.comet_items.option_Global:
+            local_pool += self.create_items_from_list([itemname.ALLCOMETSKEY], exclude)
+        elif self.options.comet_items.value == self.options.comet_items.option_Type:
+            local_pool += self.create_items_from_list(list(items.comet_type_keys.keys()), exclude)
+
         if self.options.yoshi_rando.value:
             local_pool += self.create_items_from_list(list(items.yoshi_moves.keys()), exclude)
 

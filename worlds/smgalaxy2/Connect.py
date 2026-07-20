@@ -1,11 +1,12 @@
 from typing import TYPE_CHECKING
 
 from rule_builder.options import OptionFilter
-from rule_builder.rules import True_, Has
+from rule_builder.rules import True_, Has, CanReachLocation
+
 if TYPE_CHECKING:
     from . import SMG2World
-from .Constants.Names import region_names as regname, item_names as itemname
-from .Options import WorldShuffle, CoinLumaLocks
+from .Constants.Names import region_names as regname, item_names as itemname, location_names as locname
+from .Options import WorldShuffle, CoinLumaLocks, CometItems, CometMission
 from . import Rules as RB
 
 
@@ -14,7 +15,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD1), "World 1 Map",
                                            rule=((True_()&
                                                  OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
-                                                 |(True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open))
+                                                 | RB.OpenWorlds
                                                 | (Has(itemname.GRAND1) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))))
     # Sky Station
     world.get_region(regname.WORLD1).connect(world.get_region(regname.SKYOBS), "World 1 Slot 1 Galaxy")
@@ -56,7 +57,13 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                       "Sky Station 2: Sky Fleet Launch Star")
     world.get_region(regname.SKYOBS2FLIPSWITCH).connect(world.get_region(regname.SKYOBS2GRASSFLEET),
                                                         "Sky Station 2: Flipswitch Fleet Launch Star")
-    world.get_region(regname.SKYOBS).connect(world.get_region(regname.SKYOBS3STARTTOPSIDE), "Sky Station Comet Star")
+    world.get_region(regname.SKYOBS).connect(world.get_region(regname.SKYOBS3STARTTOPSIDE), "Sky Station Comet Star",
+                                             rule=((RB.Comet1ItemAccess|(OptionFilter(CometItems, 2)&Has(itemname.SPEEDYCOMET)))
+                                                   &(RB.CometMissionOff
+                                                     |(OptionFilter(CometMission, 1)&CanReachLocation(locname.SKYSTACM))
+                                                     |(OptionFilter(CometMission, 2)&CanReachLocation(locname.SKYSTASTAR1))
+                                                     |(OptionFilter(CometMission, 3)&CanReachLocation(locname.SKYSTACM)
+                                                       &CanReachLocation(locname.SKYSTASTAR1)))))
     world.get_region(regname.SKYOBS3STARTTOPSIDE).connect(world.get_region(regname.SKYOBS3STARTBOTTOM),
                                                           rule=True_()|Has(itemname.MARIOLONG)|RB.JumpHeight3) # replace the True_() with a pipe once pipes are in
     world.get_region(regname.SKYOBS3STARTTOPSIDE).connect(world.get_region(regname.SKYOBS3TOPOFHOUSE),
@@ -90,7 +97,18 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                               "Yoshi Star 2: Shooting Gallery Launch Star")
     world.get_region(regname.GOODEGG2MARBLE).connect(world.get_region(regname.GOODEGG2BOSS),
                                               "Yoshi Star 2: Marble Block Launch Star")
-    world.get_region(regname.GOODEGG).connect(world.get_region(regname.GOODEGG3LANDING), "Yoshi Star Comet Star")
+    world.get_region(regname.GOODEGG).connect(world.get_region(regname.GOODEGG3LANDING), "Yoshi Star Comet Star",
+                                              rule=((RB.Comet1ItemAccess | (
+                                                          OptionFilter(CometItems, 2) & Has(itemname.ROMPCOMET)))
+                                                    & (RB.CometMissionOff
+                                                       | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                  locname.YOSHSTARCM))
+                                                       | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                  locname.YOSHSTARSTAR1))
+                                                       | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                  locname.YOSHSTARCM)
+                                                          & CanReachLocation(locname.YOSHSTARSTAR1))))
+                                              )
     # Spin-Dig
     world.get_region(regname.WORLD1).connect(world.get_region(regname.SPINDIG), "World 1 Slot 3 Galaxy")
     world.get_region(regname.SPINDIG).connect(world.get_region(regname.SPINDIG1TETRA), "Spin-Dig Star 1")
@@ -119,11 +137,33 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                     "Spin-Dig 2: Dark Canister Launch Star")
     world.get_region(regname.SPINDIG2BTOAD).connect(world.get_region(regname.SPINDIG2SQUARE),
                                                     "Spin-Dig 2: Blue Toadship Launch Star")
-    world.get_region(regname.SPINDIG).connect(world.get_region(regname.SPINDIG3BOSS), "Spin-Dig Coemt")
+    world.get_region(regname.SPINDIG).connect(world.get_region(regname.SPINDIG3BOSS), "Spin-Dig Comet Star",
+                                              rule=((RB.Comet1ItemAccess | (
+                                                          OptionFilter(CometItems, 2) & Has(itemname.DAREDEVILCOMET)))
+                                                    & (RB.CometMissionOff
+                                                       | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                  locname.SPINDIGCM))
+                                                       | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                  locname.SPINDIGSTAR1))
+                                                       | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                  locname.SPINDIGCM)
+                                                          & CanReachLocation(locname.SPINDIGSTAR1))))
+                                              )
     # FlipSwap
     world.get_region(regname.WORLD1).connect(world.get_region(regname.FLIPSWAP), "World 1 Slot 4 Galaxy")
     world.get_region(regname.FLIPSWAP).connect(world.get_region(regname.FLIPSWAP1), "Flip-Swap Star")
-    world.get_region(regname.FLIPSWAP).connect(world.get_region(regname.FLIPSWAP2), "Flip-Swap Comet Star")
+    world.get_region(regname.FLIPSWAP).connect(world.get_region(regname.FLIPSWAP2), "Flip-Swap Comet Star",
+                                               rule=((RB.Comet1ItemAccess | (
+                                                           OptionFilter(CometItems, 2) & Has(itemname.PURPLECOMET)))
+                                                     & (RB.CometMissionOff
+                                                        | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                   locname.FLIPSWAPCM))
+                                                        | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                   locname.FLIPSWAPSTAR1))
+                                                        | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                   locname.FLIPSWAPCM)
+                                                           & CanReachLocation(locname.FLIPSWAPSTAR1))))
+                                               )
     # Fluffl Bluff
     world.get_region(regname.WORLD1).connect(world.get_region(regname.FLUFFBLUFF), "World 1 Slot 5 Galaxy")
     world.get_region(regname.FLUFFBLUFF).connect(world.get_region(regname.FLUFFBLUFF1LANDING), "Fluffy Bluff Star")
@@ -173,12 +213,23 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                        "Fiery Flotilla: Fort Sling Star")
     world.get_region(regname.FIREFLOT1LAVA).connect(world.get_region(regname.FIREFLOT1BOSS),
                                                        "Fiery Flotilla: Lava Planet Launch Star")
-    world.get_region(regname.BOWJR1).connect(world.get_region(regname.FIREFLOT2BOSS), "Fiery Flotilla Comet Star")
+    world.get_region(regname.BOWJR1).connect(world.get_region(regname.FIREFLOT2BOSS), "Fiery Flotilla Comet Star",
+                                             rule=((RB.Comet1ItemAccess | (
+                                                         OptionFilter(CometItems, 2) & Has(itemname.SPEEDYCOMET)))
+                                                   & (RB.CometMissionOff
+                                                      | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                 locname.FIREFLOTCM))
+                                                      | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                 locname.FIREFLOTSTAR1))
+                                                      | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                 locname.FIREFLOTCM)
+                                                         & CanReachLocation(locname.FIREFLOTSTAR1))))
+                                             )
     # World 2
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD2), "World 2 Map",
                                            rule=(Has(itemname.GRAND)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
                                                 | (Has(itemname.GRAND2) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))
-                                                | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
+                                                | RB.OpenWorlds)
     # Puzzle Plank
     world.get_region(regname.WORLD2).connect(world.get_region(regname.PUZZPLAN), "World 2 Slot 1 Galaxy")
     world.get_region(regname.PUZZPLAN).connect(world.get_region(regname.PUZZPLAN1BLOCK), "Puzzle Plank Star")
@@ -199,7 +250,18 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                       "Puzzle Plank: Saws & Planks Sling Star")
     world.get_region(regname.PUZZPLAN1CHECKP).connect(world.get_region(regname.PUZZPLAN1MANDIB),
                                                       "Puzzle Plank: Checkpoint Launch Star")
-    world.get_region(regname.PUZZPLAN).connect(world.get_region(regname.PUZZPLAN2GRUZZY), "Puzzle Plank Comet Star")
+    world.get_region(regname.PUZZPLAN).connect(world.get_region(regname.PUZZPLAN2GRUZZY), "Puzzle Plank Comet Star",
+                                               rule=((RB.Comet1ItemAccess | (
+                                                           OptionFilter(CometItems, 2) & Has(itemname.PURPLECOMET)))
+                                                     & (RB.CometMissionOff
+                                                        | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                   locname.PUZZPLANKCM))
+                                                        | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                   locname.PUZZPLANKSTAR1))
+                                                        | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                   locname.PUZZPLANKCM)
+                                                           & CanReachLocation(locname.PUZZPLANKSTAR1))))
+                                               )
     world.get_region(regname.PUZZPLAN2GRUZZY).connect(world.get_region(regname.PUZZPLAN2COINRO),
                                                       "Puzzle Plank Comet: Green Pipe")
     # Boulder Bowl
@@ -214,7 +276,18 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                        "Boulder Bowl: Boulder Green Pipe")
     world.get_region(regname.BOULBOWL1DODECAH).connect(world.get_region(regname.BOULBOWL1BOSS),
                                                        "Boulder Bowl: Dodecahedron Launch Star")
-    world.get_region(regname.BOULBOWL).connect(world.get_region(regname.BOULBOWL2ASTEROI), "Boulder Bowl Comet Star")
+    world.get_region(regname.BOULBOWL).connect(world.get_region(regname.BOULBOWL2ASTEROI), "Boulder Bowl Comet Star",
+                                               rule=((RB.Comet1ItemAccess | (
+                                                           OptionFilter(CometItems, 2) & Has(itemname.ROMPCOMET)))
+                                                     & (RB.CometMissionOff
+                                                        | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                   locname.ROCKBOWLCM))
+                                                        | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                   locname.ROCKBOWLSTAR1))
+                                                        | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                   locname.ROCKBOWLCM)
+                                                           & CanReachLocation(locname.ROCKBOWLSTAR1))))
+                                               )
     world.get_region(regname.BOULBOWL2ASTEROI).connect(world.get_region(regname.BOULBOWL2CAGEPLA),
                                                        "Boulder Bowl: Asteroid Launch Star")
     # Hightail Falls
@@ -239,7 +312,18 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                                  else Has("Can Farm Coins"))))
     world.get_region(regname.HIGHTAIL1DASHWAL2).connect(world.get_region(regname.HIGHTAILGSTAR2))
     world.get_region(regname.HIGHTAIL1DASHWAL1).connect(world.get_region(regname.HIGHTAILGSTAR3))
-    world.get_region(regname.HIGHTAIL).connect(world.get_region(regname.HIGHTAIL2LANDING), "Hightail Falls Comet Star")
+    world.get_region(regname.HIGHTAIL).connect(world.get_region(regname.HIGHTAIL2LANDING), "Hightail Falls Comet Star",
+                                               rule=((RB.Comet1ItemAccess | (
+                                                           OptionFilter(CometItems, 2) & Has(itemname.SPEEDYCOMET)))
+                                                     & (RB.CometMissionOff
+                                                        | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                   locname.HIGHFALLCM))
+                                                        | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                   locname.HIGHFALLSTAR1))
+                                                        | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                   locname.HIGHFALLCM)
+                                                           & CanReachLocation(locname.HIGHFALLSTAR1))))
+                                               )
     world.get_region(regname.HIGHTAIL2LANDING).connect(world.get_region(regname.HIGHTAIL2GIANTRA),
                                                        "Hightail Falls Comet: Hot Pepper Landing Launch Star")
     world.get_region(regname.HIGHTAIL2GIANTRA).connect(world.get_region(regname.HIGHTAILGSTAR1))
@@ -303,7 +387,18 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.LAVALAIR1LAVAPLA2C).connect(world.get_region(regname.LAVALAIR1LAVAPLA2S))
     world.get_region(regname.LAVALAIR1LAVAPLA2S).connect(world.get_region(regname.LAVALAIR1BOSSPLA),
                                                        "Lava Lair: Red Bowser Door")
-    world.get_region(regname.BOWSER1).connect(world.get_region(regname.LAVALAIR2LANDING), "Lava Lair Comet Star")
+    world.get_region(regname.BOWSER1).connect(world.get_region(regname.LAVALAIR2LANDING), "Lava Lair Comet Star",
+                                              rule=((RB.Comet1ItemAccess | (
+                                                          OptionFilter(CometItems, 2) & Has(itemname.SPEEDYCOMET)))
+                                                    & (RB.CometMissionOff
+                                                       | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                  locname.LAVALAIRCM))
+                                                       | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                  locname.LAVALAIRSTAR1))
+                                                       | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                  locname.LAVALAIRCM)
+                                                          & CanReachLocation(locname.LAVALAIRSTAR1))))
+                                              )
     world.get_region(regname.LAVALAIR2LANDING).connect(world.get_region(regname.LAVALAIR2LAVACYL1),
                                                        "Lava Lair Comet: Pull Star to Lava")
     world.get_region(regname.LAVALAIR2LAVACYL1).connect(world.get_region(regname.LAVALAIR2LAVACYL2))
@@ -318,7 +413,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD3), "World 3 Map",
                                            rule=(Has(itemname.GRAND, 2)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
                                                 | (Has(itemname.GRAND3) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))
-                                                | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
+                                                | RB.OpenWorlds)
     # Tall Trunk
     world.get_region(regname.WORLD3).connect(world.get_region(regname.TALLTRUNK), "World 3 Slot 1 Galaxy")
     world.get_region(regname.TALLTRUNK).connect(world.get_region(regname.TALLTRUNK1BIGTREE), "Tall Trunk Star 1")
@@ -336,11 +431,22 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.TALLTRUNK2BIGTREE).connect(world.get_region(regname.TALLTRUNK2SLIDE),
                                                         "Tall Trunk 2: Big Tree Launch Star")
     world.get_region(regname.TALLTRUNK2SLIDE).connect(world.get_region(regname.TALLTRUNK2SLIDEND))
-    world.get_region(regname.TALLTRUNK).connect(world.get_region(regname.TALLTRUNK3PCOINSLIDE), "Tall Trunk Comet Star")
+    world.get_region(regname.TALLTRUNK).connect(world.get_region(regname.TALLTRUNK3PCOINSLIDE), "Tall Trunk Comet Star",
+                                                rule=((RB.Comet1ItemAccess | (
+                                                            OptionFilter(CometItems, 2) & Has(itemname.PURPLECOMET)))
+                                                      & (RB.CometMissionOff
+                                                         | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                    locname.TALLTREECM))
+                                                         | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                    locname.TALLTREESTAR2))
+                                                         | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                    locname.TALLTREECM)
+                                                            & CanReachLocation(locname.TALLTREESTAR2))))
+                                                )
     world.get_region(regname.TALLTRUNK3PCOINSLIDE).connect(world.get_region(regname.TALLTRUNK3PCOINEND))
     # Cloudy Court
     world.get_region(regname.WORLD3).connect(world.get_region(regname.CLOUCOUR), "World 3 Slot 2 Galaxy")
-    world.get_region(regname.CLOUCOUR).connect(world.get_region(regname.CLOUCOUR1LANDING), "Cloudy Court Star1")
+    world.get_region(regname.CLOUCOUR).connect(world.get_region(regname.CLOUCOUR1LANDING), "Cloudy Court Star")
     world.get_region(regname.CLOUCOUR1LANDING).connect(world.get_region(regname.CLOUCOUR1CYMBAL))
     world.get_region(regname.CLOUCOUR1CYMBAL).connect(world.get_region(regname.CLOUCOUR1TOWERS),
                                                       "Cloudy Court: Cymbal Launch Star")
@@ -355,7 +461,18 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                       "Cloudy Court: Paragoomba Bonus Teleporter")
     world.get_region(regname.CLOUCOUR1TOWERS).connect(world.get_region(regname.CLOUCOUR1CASTLE),
                                                       "Cloudy Court: Tower Launch Star")
-    world.get_region(regname.CLOUCOUR).connect(world.get_region(regname.CLOUCOUR2LANDING), "Cloudy Court Comet Star")
+    world.get_region(regname.CLOUCOUR).connect(world.get_region(regname.CLOUCOUR2LANDING), "Cloudy Court Comet Star",
+                                               rule=((RB.Comet1ItemAccess | (
+                                                           OptionFilter(CometItems, 2) & Has(itemname.COSMICCLONE)))
+                                                     & (RB.CometMissionOff
+                                                        | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                   locname.CLOUDCOURTCM))
+                                                        | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                   locname.CLOUDCOURTSTAR1))
+                                                        | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                   locname.CLOUDCOURTCM)
+                                                           & CanReachLocation(locname.CLOUDCOURTSTAR1))))
+                                               )
     world.get_region(regname.CLOUCOUR2LANDING).connect(world.get_region(regname.CLOUCOUR2CASTLE1),
                                                        "Cloudy Court Comet: Launch Star")
     world.get_region(regname.CLOUCOUR2CASTLE1).connect(world.get_region(regname.CLOUCOUR2CASTLE2),
@@ -378,7 +495,18 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                "Haunty Halls 2: Hallway Launch Star")
     world.get_region(regname.HAUNHALL2CREEPYC).connect(world.get_region(regname.HAUNHALL2CREEPYH),
                                                "Haunty Halls 2: Creepy Platforms Sling Star")
-    world.get_region(regname.HAUNHALL).connect(world.get_region(regname.HAUNHALL3CREEPYH), "Haunty Halls Comet Star")
+    world.get_region(regname.HAUNHALL).connect(world.get_region(regname.HAUNHALL3CREEPYH), "Haunty Halls Comet Star",
+                                               rule=((RB.Comet1ItemAccess | (
+                                                           OptionFilter(CometItems, 2) & Has(itemname.COSMICCLONE)))
+                                                     & (RB.CometMissionOff
+                                                        | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                   locname.HAUNTHALLCM))
+                                                        | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                   locname.HAUNTHALLSTAR2))
+                                                        | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                   locname.HAUNTHALLCM)
+                                                           & CanReachLocation(locname.HAUNTHALLSTAR2))))
+                                               )
     # Freezy Flake
     world.get_region(regname.WORLD3).connect(world.get_region(regname.FREEFLAKE), "World 3 Slot 4 Galaxy")
     world.get_region(regname.FREEFLAKE).connect(world.get_region(regname.FREEFLAK1LOGCABI), "Freezy Flake 1")
@@ -406,7 +534,18 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     # Beat Block
     world.get_region(regname.WORLD3).connect(world.get_region(regname.BEATBLOCK), "World 3 Slot 5 Galaxy")
     world.get_region(regname.BEATBLOCK).connect(world.get_region(regname.BEATBLOK1), "Beat Block Star")
-    world.get_region(regname.BEATBLOCK).connect(world.get_region(regname.BEATBLOK2), "Beat Block Comet Star")
+    world.get_region(regname.BEATBLOCK).connect(world.get_region(regname.BEATBLOK2), "Beat Block Comet Star",
+                                                rule=((RB.Comet1ItemAccess | (
+                                                            OptionFilter(CometItems, 2) & Has(itemname.DOUBLETIME)))
+                                                      & (RB.CometMissionOff
+                                                         | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                    locname.BEATBLOCKCM))
+                                                         | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                    locname.BEATBLOCKSTAR1))
+                                                         | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                    locname.BEATBLOCKCM)
+                                                            & CanReachLocation(locname.BEATBLOCKSTAR1))))
+                                                )
     #Rolling masterpiece
     world.get_region(regname.WORLD3).connect(world.get_region(regname.ROLLMAST), "World 3 Slot 6 Galaxy")
     world.get_region(regname.ROLLMAST).connect(world.get_region(regname.ROLLMAST1LANDING), "Rolling Masterpiece Star")
@@ -417,7 +556,18 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.ROLLMAST1ELEVATO).connect(world.get_region(regname.ROLLMAST1SAWBLAD),
                                                        "Rolling Masterpiece: Elevator Ball Launcher")
     world.get_region(regname.ROLLMAST1SAWBLAD).connect(world.get_region(regname.ROLLMAST1SILVERC))
-    world.get_region(regname.ROLLMAST).connect(world.get_region(regname.ROLLMAST2LANDING), "Rolling Masterpiece Comet Star")
+    world.get_region(regname.ROLLMAST).connect(world.get_region(regname.ROLLMAST2LANDING), "Rolling Masterpiece Comet Star",
+                                               rule=((RB.Comet1ItemAccess | (
+                                                           OptionFilter(CometItems, 2) & Has(itemname.SPEEDYCOMET)))
+                                                     & (RB.CometMissionOff
+                                                        | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                   locname.ROLLMASTERCM))
+                                                        | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                   locname.ROLLMASTERSTAR1))
+                                                        | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                   locname.ROLLMASTERCM)
+                                                           & CanReachLocation(locname.ROLLMASTERSTAR1))))
+                                               )
     world.get_region(regname.ROLLMAST2LANDING).connect(world.get_region(regname.ROLLMAST2PAINTBR),
                                                        "Rolling Masterpiece Comet: Landing Ball Launcher")
     world.get_region(regname.ROLLMAST2PAINTBR).connect(world.get_region(regname.ROLLMAST2ELEVATO),
@@ -436,12 +586,23 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.FEARFLET1BULLETB).connect(world.get_region(regname.FEARFLET1AIRSHIP))
     world.get_region(regname.FEARFLET1AIRSHIP).connect(world.get_region(regname.FEARFLET1MEGAHAM),
                                                        "Fearsome Fleet: Airship Launch Star")
-    world.get_region(regname.BOWJR2).connect(world.get_region(regname.FEARFLET2MEGAHAM), "Fearsome Fleet Comet Star")
+    world.get_region(regname.BOWJR2).connect(world.get_region(regname.FEARFLET2MEGAHAM), "Fearsome Fleet Comet Star",
+                                             rule=((RB.Comet1ItemAccess | (
+                                                         OptionFilter(CometItems, 2) & Has(itemname.DAREDEVILCOMET)))
+                                                   & (RB.CometMissionOff
+                                                      | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                 locname.FEARFLEETCM))
+                                                      | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                 locname.FEARFLETSTAR1))
+                                                      | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                 locname.FEARFLEETCM)
+                                                         & CanReachLocation(locname.FEARFLETSTAR1))))
+                                             )
     # World 4
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD4), "World 4 Map",
                                            rule=(Has(itemname.GRAND, 3)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
                                                 | (Has(itemname.GRAND4) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))
-                                                | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
+                                                | RB.OpenWorlds)
     # Supermassive
     world.get_region(regname.WORLD4).connect(world.get_region(regname.SUPMASS), "World 4 Slot 1 Galaxy")
     world.get_region(regname.SUPMASS).connect(world.get_region(regname.SUPMASS1START), "Supermassive Star")
@@ -458,7 +619,18 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.SUPMASS1STARCHIPS).connect(world.get_region(regname.SUPMASS1WIGGLERS)) # Trick Entrance
     world.get_region(regname.SUPMASS1GARDEN).connect(world.get_region(regname.SUPMASS1WIGGLERS),
                                                      "Supermassive 1: Garden Planet Launch Star")
-    world.get_region(regname.SUPMASS).connect(world.get_region(regname.SUPMASS1START), "Supermassive Comet Star")
+    world.get_region(regname.SUPMASS).connect(world.get_region(regname.SUPMASS1START), "Supermassive Comet Star",
+                                              rule=((RB.Comet1ItemAccess | (
+                                                          OptionFilter(CometItems, 2) & Has(itemname.SPEEDYCOMET)))
+                                                    & (RB.CometMissionOff
+                                                       | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                  locname.SUPERMASSCM))
+                                                       | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                  locname.SUPERMASSSTAR1))
+                                                       | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                  locname.SUPERMASSCM)
+                                                          & CanReachLocation(locname.SUPERMASSSTAR1))))
+                                              )
     world.get_region(regname.SUPMASS2START).connect(world.get_region(regname.SUPMASS2PIPES))
     world.get_region(regname.SUPMASS2PIPES).connect(world.get_region(regname.SUPMASS2THWOMPS))
     world.get_region(regname.SUPMASS2THWOMPS).connect(world.get_region(regname.SUPMASS2KOOPAS),
@@ -484,7 +656,18 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.SWEETMYS1SWITCHES).connect(world.get_region(regname.SWEETMYS1CAKE),
                                                         "Sweet Mystery: Flipswitch Launch Star",
                                                         RB.CanDinoGlow)
-    world.get_region(regname.SWEETMYS).connect(world.get_region(regname.SWEETMYS2START), "Sweet Mystery Comet Star")
+    world.get_region(regname.SWEETMYS).connect(world.get_region(regname.SWEETMYS2START), "Sweet Mystery Comet Star",
+                                               rule=((RB.Comet1ItemAccess | (
+                                                           OptionFilter(CometItems, 2) & Has(itemname.PURPLECOMET)))
+                                                     & (RB.CometMissionOff
+                                                        | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                   locname.SWEETMYSTCM))
+                                                        | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                   locname.SWEETMYSTSTAR1))
+                                                        | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                   locname.SWEETMYSTCM)
+                                                           & CanReachLocation(locname.SWEETMYSTSTAR1))))
+                                               )
     world.get_region(regname.SWEETMYS2START).connect(world.get_region(regname.SWEETMYS2COOKIE),
                                                      rule=RB.CanDinoGlow)
     world.get_region(regname.SWEETMYS2COOKIE).connect(world.get_region(regname.SWEETMYS2CHOCO),
@@ -543,7 +726,18 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.FLIPVILL2PIPE).connect(world.get_region(regname.FLIPVILL2GRAVITYSTART),
                                                     "Flipsville 2: Spin-Drill Tower Pipe")
     world.get_region(regname.FLIPVILL2GRAVITYSTART).connect(world.get_region(regname.FLIPVILL2GRAVITYMAIN))
-    world.get_region(regname.FLIPVILL).connect(world.get_region(regname.FLIPVILL3TOWER), "Flipsville Comet Star")
+    world.get_region(regname.FLIPVILL).connect(world.get_region(regname.FLIPVILL3TOWER), "Flipsville Comet Star",
+                                               rule=((RB.Comet1ItemAccess | (
+                                                           OptionFilter(CometItems, 2) & Has(itemname.PURPLECOMET)))
+                                                     & (RB.CometMissionOff
+                                                        | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                   locname.FLIPVILLECM))
+                                                        | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                   locname.FLIPVILLESTAR2))
+                                                        | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                   locname.FLIPVILLECM)
+                                                           & CanReachLocation(locname.FLIPVILLESTAR2))))
+                                               )
     world.get_region(regname.FLIPVILL3TOWER).connect(world.get_region(regname.FLIPVILL3GRAVITY),
                                                      "Flipsville 3: Spin-Drill Tower Pipe")
     # Honeyhop
@@ -574,7 +768,18 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                       "Starshine Star 2: Crabber Bonus Teleporter")
     world.get_region(regname.STARBEACH2MAIN).connect(world.get_region(regname.STARBEACH2COINR),
                                                       "Starshine Star 2: Tropical Beach Green Pipe")
-    world.get_region(regname.STARBEACH).connect(world.get_region(regname.STARBEACH3MAIN), "Starshine Comet Star")
+    world.get_region(regname.STARBEACH).connect(world.get_region(regname.STARBEACH3MAIN), "Starshine Comet Star",
+                                                rule=((RB.Comet1ItemAccess | (
+                                                            OptionFilter(CometItems, 2) & Has(itemname.PURPLECOMET)))
+                                                      & (RB.CometMissionOff
+                                                         | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                    locname.STARBEACHCM))
+                                                         | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                    locname.STARBEACHSTAR2))
+                                                         | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                    locname.STARBEACHCM)
+                                                            & CanReachLocation(locname.STARBEACHSTAR2))))
+                                                )
     # Chompworks
     world.get_region(regname.WORLD4).connect(world.get_region(regname.CHOMWORK), "World 4 Slot 6 Galaxy")
     world.get_region(regname.CHOMWORK).connect(world.get_region(regname.CHOMWORK1START), "Chompworks Star 1")
@@ -591,7 +796,18 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                      "Chompworks 2: Start Launch Star")
     world.get_region(regname.CHOMWORK2ROLLING).connect(world.get_region(regname.CHOMWORK2TOWER),
                                                        "Chompworks 2: Rolling Chomps Launch Star")
-    world.get_region(regname.CHOMWORK).connect(world.get_region(regname.CHOMWORK3LAVA), "Chompworks Comet Star")
+    world.get_region(regname.CHOMWORK).connect(world.get_region(regname.CHOMWORK3LAVA), "Chompworks Comet Star",
+                                               rule=((RB.Comet1ItemAccess | (
+                                                           OptionFilter(CometItems, 2) & Has(itemname.COSMICCLONE)))
+                                                     & (RB.CometMissionOff
+                                                        | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                   locname.CHOMPWORKCM))
+                                                        | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                   locname.CHOMPWORKSTAR1))
+                                                        | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                   locname.CHOMPWORKCM)
+                                                           & CanReachLocation(locname.CHOMPWORKSTAR1))))
+                                               )
     # Gravity Gauntlet
     world.get_region(regname.WORLD4).connect(world.get_region(regname.BOWSER2), "World 4 Slot 7 Galaxy")
     world.get_region(regname.BOWSER2).connect(world.get_region(regname.GRAVGAUN1LANDING), "Gravity Gauntlet Grand Star")
@@ -602,7 +818,18 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.GRAVGAUN1WHOMPWA).connect(world.get_region(regname.GRAVGAUN1DOORTOD),
                                                        "Gravity Gauntlet: Fire Wheel Launch Star")
     world.get_region(regname.GRAVGAUN1DOORTOD).connect(world.get_region(regname.GRAVGAUN1BOSSARE))
-    world.get_region(regname.BOWSER2).connect(world.get_region(regname.GRAVGAUN2LANDING), "Gravity Gauntlet Comet Star")
+    world.get_region(regname.BOWSER2).connect(world.get_region(regname.GRAVGAUN2LANDING), "Gravity Gauntlet Comet Star",
+                                              rule=((RB.Comet1ItemAccess | (
+                                                          OptionFilter(CometItems, 2) & Has(itemname.SPEEDYCOMET)))
+                                                    & (RB.CometMissionOff
+                                                       | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                  locname.GRAVGAUNTCM))
+                                                       | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                  locname.GRAVGAUNSTAR1))
+                                                       | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                  locname.GRAVGAUNTCM)
+                                                          & CanReachLocation(locname.GRAVGAUNSTAR1))))
+                                              )
     world.get_region(regname.GRAVGAUN2LANDING).connect(world.get_region(regname.GRAVGAUN2WATERCO))
     world.get_region(regname.GRAVGAUN2LANDING).connect(world.get_region(regname.GRAVGAUNGSTAR1))
     world.get_region(regname.GRAVGAUN2WATERCO).connect(world.get_region(regname.GRAVGAUN2WHOMPWA))
@@ -611,7 +838,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD5), "World 5 Map",
                                            rule=(Has(itemname.GRAND, 4)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
                                                 | (Has(itemname.GRAND5) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))
-                                                | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
+                                                | RB.OpenWorlds)
     # Space Storm
     world.get_region(regname.WORLD5).connect(world.get_region(regname.SPACSTOR), "World 5 Slot 1 Galaxy")
     world.get_region(regname.SPACSTOR).connect(world.get_region(regname.SPACSTOR1PULL), "Space Storm Star 1")
@@ -680,7 +907,18 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.SLIPSAND2LONG2).connect(world.get_region(regname.SLIPSAND2LONG3))
     world.get_region(regname.SLIPSAND2LONG2).connect(world.get_region(regname.SLIPSAND2BIRD),
                                                     "Slipsand 2: Long Launch Star")
-    world.get_region(regname.SLIPSAND).connect(world.get_region(regname.SLIPSAND3BOSS), "Slipsand Comet Star")
+    world.get_region(regname.SLIPSAND).connect(world.get_region(regname.SLIPSAND3BOSS), "Slipsand Comet Star",
+                                               rule=((RB.Comet1ItemAccess | (
+                                                           OptionFilter(CometItems, 2) & Has(itemname.DAREDEVILCOMET)))
+                                                     & (RB.CometMissionOff
+                                                        | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                   locname.SLIPSANDCM))
+                                                        | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                   locname.SLIPSANDSTAR1))
+                                                        | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                   locname.SLIPSANDCM)
+                                                           & CanReachLocation(locname.SLIPSANDSTAR1))))
+                                               )
     # Fleet Glide
     world.get_region(regname.WORLD5).connect(world.get_region(regname.FLEETGLIDE), "World 5 Slot 5 Galaxy")
     world.get_region(regname.FLEETGLIDE).connect(world.get_region(regname.FLEETGLIDESTART))
@@ -698,7 +936,18 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                        "Shiverburn: Lava Ice Launch Star")
     world.get_region(regname.SHIVBURN1TOAD).connect(world.get_region(regname.SHIVBURN1BOSS),
                                                        "Shiverburn: Green Toadship Launch Star")
-    world.get_region(regname.SHIVBURN).connect(world.get_region(regname.SHIVBURN2TOAD), "Shiverburn Comet Star")
+    world.get_region(regname.SHIVBURN).connect(world.get_region(regname.SHIVBURN2TOAD), "Shiverburn Comet Star",
+                                               rule=((RB.Comet1ItemAccess | (
+                                                           OptionFilter(CometItems, 2) & Has(itemname.ROMPCOMET)))
+                                                     & (RB.CometMissionOff
+                                                        | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                   locname.COLDFIRECM))
+                                                        | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                   locname.COLDFIRESTAR1))
+                                                        | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                   locname.COLDFIRECM)
+                                                           & CanReachLocation(locname.COLDFIRESTAR1))))
+                                               )
     world.get_region(regname.SHIVBURN2TOAD).connect(world.get_region(regname.SHIVBURN2ROMP),
                                                        "Shiverburn Comet: Green Toadship Launch Star")
     # Boom bunker
@@ -712,7 +961,18 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                       "Boom Bunker: Checkpoint Cannon")
     world.get_region(regname.BOOMBUNK1PLAT).connect(world.get_region(regname.BOOMBUNK1BOSS),
                                                       "Boom Bunker: Platform Launch Star")
-    world.get_region(regname.BOWJR3).connect(world.get_region(regname.BOOMBUNK2HAMMER), "Boom Bunker Comet Star")
+    world.get_region(regname.BOWJR3).connect(world.get_region(regname.BOOMBUNK2HAMMER), "Boom Bunker Comet Star",
+                                             rule=((RB.Comet1ItemAccess | (
+                                                         OptionFilter(CometItems, 2) & Has(itemname.DAREDEVILCOMET)))
+                                                   & (RB.CometMissionOff
+                                                      | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                 locname.BOOMBUNKCM))
+                                                      | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                 locname.BOOMBUNKSTAR1))
+                                                      | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                 locname.BOOMBUNKCM)
+                                                         & CanReachLocation(locname.BOOMBUNKSTAR1))))
+                                             )
     world.get_region(regname.BOOMBUNK2HAMMER).connect(world.get_region(regname.BOOMBUNK2BOOMER),
                                                       "Boom Bunker Comet: Hammer Hilt Cannon")
     world.get_region(regname.BOOMBUNK2BOOMER).connect(world.get_region(regname.BOOMBUNK2CHECK),
@@ -725,7 +985,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD6), "World 6 Map",
                                            rule=(Has(itemname.GRAND, 5)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
                                                 | (Has(itemname.GRAND6) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))
-                                                | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
+                                                | RB.OpenWorlds)
     # Melty Monster
     world.get_region(regname.WORLD6).connect(world.get_region(regname.MELTY), "World 6 Slot 1 Galaxy")
     world.get_region(regname.MELTY).connect(world.get_region(regname.MELTY1LANDING), "Melty Monster Star 1")
@@ -762,13 +1022,35 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                        else Has("Can Farm Coins"))))
     world.get_region(regname.CLOCKWORK3HAMMER).connect(world.get_region(regname.CLOCKWORK3HAMMERTOP),
                                                      "Clockwork Ruins Hungry Luma: Hammer Zone Green Pipe")
-    world.get_region(regname.CLOCKWORK).connect(world.get_region(regname.CLOCKWORK2COGS), "Clockwork Ruins Comet Star")
+    world.get_region(regname.CLOCKWORK).connect(world.get_region(regname.CLOCKWORK2COGS), "Clockwork Ruins Comet Star",
+                                                rule=((RB.Comet1ItemAccess | (
+                                                            OptionFilter(CometItems, 2) & Has(itemname.PURPLECOMET)))
+                                                      & (RB.CometMissionOff
+                                                         | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                    locname.CLOCKRUINSCM))
+                                                         | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                    locname.CLOCKRUINSTAR1))
+                                                         | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                    locname.CLOCKRUINSCM)
+                                                            & CanReachLocation(locname.CLOCKRUINSTAR1))))
+                                                )
     # Flash Black
     world.get_region(regname.WORLD6).connect(world.get_region(regname.FLASHBLACK), "World 6 Slot 3 Galaxy")
     world.get_region(regname.FLASHBLACK).connect(world.get_region(regname.FLASHBLACK1TOWER), "Flash Black Star")
     world.get_region(regname.FLASHBLACK1TOWER).connect(world.get_region(regname.FLASHBLACK1PATH),
                                                        "Flash Black: Tower Launch Star")
-    world.get_region(regname.FLASHBLACK).connect(world.get_region(regname.FLASHBLACK2PATH), "Flash Black Comet Star")
+    world.get_region(regname.FLASHBLACK).connect(world.get_region(regname.FLASHBLACK2PATH), "Flash Black Comet Star",
+                                                 rule=((RB.Comet1ItemAccess | (
+                                                             OptionFilter(CometItems, 2) & Has(itemname.ROMPCOMET)))
+                                                       & (RB.CometMissionOff
+                                                          | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                     locname.FLASHBLACKCM))
+                                                          | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                     locname.FLASHBLACKSTAR1))
+                                                          | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                     locname.FLASHBLACKCM)
+                                                             & CanReachLocation(locname.FLASHBLACKSTAR1))))
+                                                 )
     # Throwback
     world.get_region(regname.WORLD6).connect(world.get_region(regname.WHOMPFORT), "World 6 Slot 4 Galaxy")
     world.get_region(regname.WHOMPFORT).connect(world.get_region(regname.WHOMP1FORT), "Throwback Star 1")
@@ -778,7 +1060,18 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.WHOMPFORT).connect(world.get_region(regname.WHOMP2FORT), "Throwback Star 2")
     world.get_region(regname.WHOMP2FORT).connect(world.get_region(regname.WHOMP2BONUS),
                                                  "Throwback 2: Piranha Bonus Teleporter")
-    world.get_region(regname.WHOMPFORT).connect(world.get_region(regname.WHOMP3FORT), "Throwback Comet Star")
+    world.get_region(regname.WHOMPFORT).connect(world.get_region(regname.WHOMP3FORT), "Throwback Comet Star",
+                                                rule=((RB.Comet1ItemAccess | (
+                                                            OptionFilter(CometItems, 2) & Has(itemname.SPEEDYCOMET)))
+                                                      & (RB.CometMissionOff
+                                                         | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                    locname.THROWBACKCM))
+                                                         | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                    locname.THROWBACKSTAR2))
+                                                         | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                    locname.THROWBACKCM)
+                                                            & CanReachLocation(locname.THROWBACKSTAR2))))
+                                                )
     # Slimy Spring
     world.get_region(regname.WORLD6).connect(world.get_region(regname.SLIMSPRI), "World 6 Slot 5 Galaxy")
     world.get_region(regname.SLIMSPRI).connect(world.get_region(regname.SLIMSPRI1MOUTH1), "Slimy Spring Star")
@@ -825,7 +1118,18 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                     "Battle Belt: Swapphopper Green Pipe")
     world.get_region(regname.BATTBELT1MOLE).connect(world.get_region(regname.BATTBELT1CHOM),
                                                     "Battle Belt: Swaphopper Sling Star")
-    world.get_region(regname.BATTLEBELT).connect(world.get_region(regname.BATTBELT2GOOM), "Battle Belt Comet Star")
+    world.get_region(regname.BATTLEBELT).connect(world.get_region(regname.BATTBELT2GOOM), "Battle Belt Comet Star",
+                                                 rule=((RB.Comet1ItemAccess | (
+                                                             OptionFilter(CometItems, 2) & Has(itemname.DAREDEVILCOMET)))
+                                                       & (RB.CometMissionOff
+                                                          | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                     locname.BATTBELTCM))
+                                                          | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                     locname.BATTBELTSTAR1))
+                                                          | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                     locname.BATTBELTCM)
+                                                             & CanReachLocation(locname.BATTBELTSTAR1))))
+                                                 )
     world.get_region(regname.BATTBELT2GOOM).connect(world.get_region(regname.BATTBELT2LAVA),
                                                     "Battle Belt Comet: Goomba Sling Star")
     world.get_region(regname.BATTBELT2LAVA).connect(world.get_region(regname.BATTBELT2URCH),
@@ -866,7 +1170,18 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.GALGEN1STATUE).connect(world.get_region(regname.GALGEN1THEDOOR))
     world.get_region(regname.GALGEN1THEDOOR).connect(world.get_region(regname.GALGEN1BOSS),
                                                      "Galaxy Generator: The Door")
-    world.get_region(regname.BOWSER3).connect(world.get_region(regname.GALGEN2LANDING), "Galaxy Generator Comet Star")
+    world.get_region(regname.BOWSER3).connect(world.get_region(regname.GALGEN2LANDING), "Galaxy Generator Comet Star",
+                                              rule=((RB.Comet1ItemAccess | (
+                                                          OptionFilter(CometItems, 2) & Has(itemname.SPEEDYCOMET)))
+                                                    & (RB.CometMissionOff
+                                                       | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                  locname.GLXYGENCM))
+                                                       | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                  locname.GALAXYGENSTAR1))
+                                                       | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                  locname.GLXYGENCM)
+                                                          & CanReachLocation(locname.GALAXYGENSTAR1))))
+                                              )
     world.get_region(regname.GALGEN2LANDING).connect(world.get_region(regname.GALGEN2BOOMER),
                                                      "Galaxy Generator Comet: Landing Sling Star")
     world.get_region(regname.GALGEN2BOOMER).connect(world.get_region(regname.GALGEN2VOLCANO))
@@ -883,33 +1198,77 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD7), "World S Map",
                                            rule=(Has(itemname.GRAND, 6)&OptionFilter(WorldShuffle, WorldShuffle.option_Progressive))
                                                 | (Has(itemname.GRAND7) & OptionFilter(WorldShuffle, WorldShuffle.option_Keyed_Grand_Stars))
-                                                | (True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)))
+                                                | RB.OpenWorlds)
     # Mario Squared
     world.get_region(regname.WORLD7).connect(world.get_region(regname.MARIO), "World 7 Slot 1 Galaxy")
     world.get_region(regname.MARIO).connect(world.get_region(regname.MARIOSQ1RIGHT), "Mario Squared Star")
     world.get_region(regname.MARIOSQ1RIGHT).connect(world.get_region(regname.MARIOSQ1MAIN))
     world.get_region(regname.MARIOSQ1MAIN).connect(world.get_region(regname.MARIOSQ1LEFT))
-    world.get_region(regname.MARIO).connect(world.get_region(regname.MARIOSQ2LEFT), "Mario Squared Comet Star")
+    world.get_region(regname.MARIO).connect(world.get_region(regname.MARIOSQ2LEFT), "Mario Squared Comet Star",
+                                            rule=((RB.Comet1ItemAccess | (
+                                                        OptionFilter(CometItems, 2) & Has(itemname.PURPLECOMET)))
+                                                  & (RB.CometMissionOff
+                                                     | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                locname.MARIOSQRCM))
+                                                     | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                locname.MARIOSQRSTAR1))
+                                                     | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                locname.MARIOSQRCM)
+                                                        & CanReachLocation(locname.MARIOSQRSTAR1))))
+                                            )
     world.get_region(regname.MARIOSQ2LEFT).connect(world.get_region(regname.MARIOSQ2MAIN))
     world.get_region(regname.MARIOSQ2MAIN).connect(world.get_region(regname.MARIOSQ2RIGHT))
     # Rolling Coaster
     world.get_region(regname.WORLD7).connect(world.get_region(regname.ROLLCOAST), "World 7 Slot 2 Galaxy")
     world.get_region(regname.ROLLCOAST).connect(world.get_region(regname.ROLLCOAST1), "Rolling Coaster Star")
-    world.get_region(regname.ROLLCOAST).connect(world.get_region(regname.ROLLCOAST2), "Rolling Coaster Comet Star")
+    world.get_region(regname.ROLLCOAST).connect(world.get_region(regname.ROLLCOAST2), "Rolling Coaster Comet Star",
+                                                rule=((RB.Comet1ItemAccess | (
+                                                            OptionFilter(CometItems, 2) & Has(itemname.PURPLECOMET)))
+                                                      & (RB.CometMissionOff
+                                                         | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                    locname.ROLLSLIDECM))
+                                                         | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                    locname.ROLLSLIDESTAR1))
+                                                         | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                    locname.ROLLSLIDECM)
+                                                            & CanReachLocation(locname.ROLLSLIDESTAR1))))
+                                                )
     # Twisty Trials
     world.get_region(regname.WORLD7).connect(world.get_region(regname.TWISTTRI), "World 7 Slot 3 Galaxy")
-    world.get_region(regname.TWISTTRI).connect(world.get_region(regname.TWISTY1PLAT1), "Mario Squared Star")
+    world.get_region(regname.TWISTTRI).connect(world.get_region(regname.TWISTY1PLAT1), "Twisty Trials Star")
     world.get_region(regname.TWISTY1PLAT1).connect(world.get_region(regname.TWISTY1PLAT2))
     world.get_region(regname.TWISTY1PLAT2).connect(world.get_region(regname.TWISTY1PLAT3))
     world.get_region(regname.TWISTY1PLAT3).connect(world.get_region(regname.TWISTY1PLAT4))
-    world.get_region(regname.TWISTTRI).connect(world.get_region(regname.TWISTY2PLAT1), "Mario Squared Comet Star")
+    world.get_region(regname.TWISTTRI).connect(world.get_region(regname.TWISTY2PLAT1), "Twisty Trials Comet Star",
+                                               rule=((RB.Comet1ItemAccess | (
+                                                           OptionFilter(CometItems, 2) & Has(itemname.DOUBLETIME)))
+                                                     & (RB.CometMissionOff
+                                                        | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                   locname.TWISTTRIALCM))
+                                                        | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                   locname.TWISTTRIALSTAR1))
+                                                        | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                   locname.TWISTTRIALCM)
+                                                           & CanReachLocation(locname.TWISTTRIALSTAR1))))
+                                               )
     world.get_region(regname.TWISTY2PLAT1).connect(world.get_region(regname.TWISTY2PLAT2))
     world.get_region(regname.TWISTY2PLAT2).connect(world.get_region(regname.TWISTY2PLAT3))
     world.get_region(regname.TWISTY2PLAT3).connect(world.get_region(regname.TWISTY2PLAT4))
     # Stone Cyclone
     world.get_region(regname.WORLD7).connect(world.get_region(regname.STONECYC), "World 7 Slot 4 Galaxy")
     world.get_region(regname.STONECYC).connect(world.get_region(regname.STONECYC1), "Stone Cyclone Star")
-    world.get_region(regname.STONECYC).connect(world.get_region(regname.STONECYC2), "Stone Cyclone Comet Star")
+    world.get_region(regname.STONECYC).connect(world.get_region(regname.STONECYC2), "Stone Cyclone Comet Star",
+                                               rule=((RB.Comet1ItemAccess | (
+                                                           OptionFilter(CometItems, 2) & Has(itemname.SPEEDYCOMET)))
+                                                     & (RB.CometMissionOff
+                                                        | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                   locname.STONECYCLOCM))
+                                                        | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                   locname.STONECYCLOSTAR1))
+                                                        | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                   locname.STONECYCLOCM)
+                                                           & CanReachLocation(locname.STONECYCLOSTAR1))))
+                                               )
     # Boss Blitz
     world.get_region(regname.WORLD7).connect(world.get_region(regname.BOSSBLITZ), "World 7 Slot 5 Galaxy")
     world.get_region(regname.BOSSBLITZ).connect(world.get_region(regname.BOSSBLITZ1DINOPIR), "Boss Blitz Star")
@@ -923,7 +1282,18 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                         "Boss Blitz: Bouldergeist Launch Star")
     world.get_region(regname.BOSSBLITZ1TINYMET).connect(world.get_region(regname.BOSSBLITZ1FIREDIN),
                                                         "Boss Blitz: Tiny Meteor Launch Star")
-    world.get_region(regname.BOSSBLITZ).connect(world.get_region(regname.BOSSBLITZ2DINOPIR), "Boss Blitz Comet Star")
+    world.get_region(regname.BOSSBLITZ).connect(world.get_region(regname.BOSSBLITZ2DINOPIR), "Boss Blitz Comet Star",
+                                                rule=((RB.Comet1ItemAccess | (
+                                                            OptionFilter(CometItems, 2) & Has(itemname.SPEEDYCOMET)))
+                                                      & (RB.CometMissionOff
+                                                         | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                    locname.BOSSBLITCM))
+                                                         | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                    locname.BOSSBLITSTAR1))
+                                                         | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                    locname.BOSSBLITCM)
+                                                            & CanReachLocation(locname.BOSSBLITSTAR1))))
+                                                )
     world.get_region(regname.BOSSBLITZ2DINOPIR).connect(world.get_region(regname.BOSSBLITZ2KINGKAL),
                                                         "Boss Blitz Comet: Dino Piranha Launch Star")
     world.get_region(regname.BOSSBLITZ2KINGKAL).connect(world.get_region(regname.BOSSBLITZ2MAJORBU),
@@ -938,7 +1308,18 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.WORLD7).connect(world.get_region(regname.FLIPOUT), "World 7 Slot 6 Galaxy")
     world.get_region(regname.FLIPOUT).connect(world.get_region(regname.FLIPOUT1LANDING), "Flip-Out Star")
     world.get_region(regname.FLIPOUT1LANDING).connect(world.get_region(regname.FLIPOUT1CLIMB), "Flip-Out: Green Pipe")
-    world.get_region(regname.FLIPOUT).connect(world.get_region(regname.FLIPOUT2LANDING), "Flip-Out Comet Star")
+    world.get_region(regname.FLIPOUT).connect(world.get_region(regname.FLIPOUT2LANDING), "Flip-Out Comet Star",
+                                              rule=((RB.Comet1ItemAccess | (
+                                                          OptionFilter(CometItems, 2) & Has(itemname.COSMICCLONE)))
+                                                    & (RB.CometMissionOff
+                                                       | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                  locname.FLIPOUTCM))
+                                                       | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                  locname.FLIPOUTSTAR1))
+                                                       | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                  locname.FLIPOUTCM)
+                                                          & CanReachLocation(locname.FLIPOUTSTAR1))))
+                                              )
     world.get_region(regname.FLIPOUT2LANDING).connect(world.get_region(regname.FLIPOUT2CLIMB), "Flip-Out Comet: Green Pipe")
     # Grandmaster
     world.get_region(regname.WORLD7).connect(world.get_region(regname.GRANDMASTER), "World 7 Slot 7 Galaxy")
@@ -955,7 +1336,18 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                         "Grandmaster: Pull Star Launch Star")
     world.get_region(regname.GRANDMASTER1BROS1).connect(world.get_region(regname.GRANDMASTER1BROS2),
                                                         "Grandmaster: Bros Landing Sling Star")
-    world.get_region(regname.GRANDMASTER).connect(world.get_region(regname.GRANDMASTER2YOSHI), "Grandmaster Star Comet")
+    world.get_region(regname.GRANDMASTER).connect(world.get_region(regname.GRANDMASTER2YOSHI), "Grandmaster Star Comet",
+                                                  rule=((RB.Comet1ItemAccess | (
+                                                              OptionFilter(CometItems, 2) & Has(itemname.DAREDEVILCOMET)))
+                                                        & (RB.CometMissionOff
+                                                           | (OptionFilter(CometMission, 1) & CanReachLocation(
+                                                                      locname.GRANDMASTRCM))
+                                                           | (OptionFilter(CometMission, 2) & CanReachLocation(
+                                                                      locname.GRANDMASTSTAR1))
+                                                           | (OptionFilter(CometMission, 3) & CanReachLocation(
+                                                                      locname.GRANDMASTRCM)
+                                                              & CanReachLocation(locname.GRANDMASTSTAR1))))
+                                                  )
     world.get_region(regname.GRANDMASTER2YOSHI).connect(world.get_region(regname.GRANDMASTER2SWITCH),
                                                         "Grandmaster Comet: Yoshi Flower Launch Star")
     world.get_region(regname.GRANDMASTER2SWITCH).connect(world.get_region(regname.GRANDMASTER2CLOUD),

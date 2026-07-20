@@ -336,6 +336,39 @@ class CoinLumaCounts(OptionCounter):
         "Battle Belt Coin Luma": 20
     }
 
+class CometItems(Choice):
+    """
+    Choose whether comet stars require an item to unlock them.
+
+    Global: All comets unlock after receiving a single item
+
+    Type: Comets unlock based on what kind of comet star they are
+    """
+    display_name = "Comet Items"
+    internal_name = "comet_items"
+    option_Off = 0
+    option_Global = 1
+    option_Type = 2
+
+class CometMission(Choice):
+    """
+    Choose whether comets require the galaxy's Comet medal or the vanilla mission to be beaten first
+
+    Off: Neither is required
+
+    Medal: Requires you to get the Comet Medal for the galaxy before the Comet Star mission appears
+
+    Mission: Requires the vanilla mission to be cleared before the comet version can be completed
+
+    Both: Requires both the Comet Medal and vanilla mission to be completed before the Comet Star unlocks
+    """
+    display_name = "Comet Missions"
+    internal_name = "comet_mission"
+    option_Off = 0
+    option_Medal = 1
+    option_Mission = 2
+    option_Both = 3
+
 # Comet medals in pool, provide galaxy "order", 1 comet to one level
 
 
@@ -364,6 +397,8 @@ class SMG2Options(PerGameCommonOptions):
     starbit_luma_counts: StarbitLumaCounts
     coin_luma_locks: CoinLumaLocks
     coin_luma_counts: CoinLumaCounts
+    comet_items: CometItems
+    comet_mission: CometMission
 
 option_groups = [
     Options.OptionGroup("Map Options", [
@@ -391,6 +426,8 @@ option_groups = [
         ObjectRando,
         CoinLumaLocks,
         CoinLumaCounts,
+        CometMission,
+        CometItems,
     ]),
     Options.OptionGroup("Extra Locations", [
 

@@ -72,7 +72,7 @@ CHIMPSCORE = "Chimp Score Pass"
 CHIMPBOWL = "Chimp Bowling Pass"
 
 # Unique individual keys
-GREENCOMETKEY = "Green Star Comet Key"
+GREENCOMETKEY = "Green Star Comet"
 GREENCOMETW1 = "Green Star World 1 Key"
 GREENCOMETW2 = "Green Star World 2 Key"
 GREENCOMETW3 = "Green Star World 3 Key"
@@ -96,6 +96,13 @@ COINHL4 = "Cosmic Cove Coin Luma"
 COINHL5 = "Cloudy Court Coin Luma"
 COINHL6 = "Clockwork Ruins Coin Luma"
 COINHL7 = "Battle Belt Coin Luma"
+ALLCOMETSKEY = "Comet Unlock Key"
+SPEEDYCOMET = "Speedy Comet"
+DAREDEVILCOMET = "Daredevil Comet"
+PURPLECOMET = "Purple Comet"
+COSMICCLONE = "Cosmic Clone Comet"
+ROMPCOMET = "Romp Comet"
+DOUBLETIME = "Double Time Comet"
 
 # Galaxy Keys
 SKYPOBSKEY = "Sky Station Galaxy Key"

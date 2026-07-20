@@ -5,7 +5,8 @@ from rule_builder.field_resolvers import FromOption
 from rule_builder.options import OptionFilter
 from rule_builder.rules import Has, True_, HasFromList, Rule, HasGroup, CanReachLocation
 from .Options import Goal, GreenStarBehavior, GreenStarstoFinish, GalaxyLock, \
-    EnableGreenStars, PowerupRando, MoveRando, YoshiRando, StarbitLumaLocks, CoinLumaLocks, ObjectRando
+    EnableGreenStars, PowerupRando, MoveRando, YoshiRando, StarbitLumaLocks, CoinLumaLocks, ObjectRando, CometMission, \
+    CometItems, WorldShuffle
 from .locations import green_star_locations
 from .regions import region_list, all_galaxy_slots
 from .Constants.Names import item_names as itemname
@@ -106,9 +107,11 @@ GreenStarRule: Rule[Any] = ((True_()&OptionFilter(EnableGreenStars,1))
                                  |(HasGroup("Power Stars", count=120)&OptionFilter(GreenStarBehavior, 0))))
                             | (OptionFilter(EnableGreenStars, 3)&Has(itemname.GREENCOMETKEY)))
 
-CometAccessBase: Rule[Any] = # CanReach previous star/CanReach Comet Medal/Both/Neither
+CometMissionOff: Rule[Any] = True_()&OptionFilter(CometMission, 0) # CanReach previous star/CanReach Comet Medal/Both/Neither
+CometItemsOff: Rule[Any] = True_()&OptionFilter(CometItems, 0)
+Comet1ItemAccess: Rule[Any] = CometItemsOff|(Has(itemname.ALLCOMETSKEY)&OptionFilter(CometItems, 1))# Has All Comet Key and option or unlocked
 
-Comet1ItemAccess: Rule[Any] = # Has All Comet Key and option or unlocked
+OpenWorlds: Rule[Any] = True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)
 
 PowerUpOff: Rule[Any] = True_()&OptionFilter(PowerupRando,0)
 BeeFlight: Rule[Any] = PowerUpOff|(Has(itemname.BEEMARIO)&OptionFilter(PowerupRando,1))

@@ -853,8 +853,7 @@ base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_l
                         **CHOMWORK_loc, **SPACSTOR_loc, **SLIPSAND_loc, **COLDFIRE_loc, **BOOMOON_loc,
                         **MELTMONS_loc, **CLOCKRUIN_loc, **THROWBACK_loc, **BATTBELT_loc}
 
-location_table = { **base_stars_locations, **green_star_locations, **COMETMEDAL_loc
-}
+location_table = { **base_stars_locations, **green_star_locations, **COMETMEDAL_loc}
 
 LOCATION_NAME_TO_ID: dict[str, int] =  {
     name: data.code for name, data in location_table.items() if data.code is not None}
