@@ -6,30 +6,37 @@ on:
         description: Run the fuzzer test for Universal Tracker.
         default: true
         required: false
+        type: boolean
       run_determinism_fuzz:
         description: Run the fuzzer test for Determinism.
         default: true
         required: false
+        type: boolean
       run_item_count_fuzz:
         description: Run the fuzzer test for Item Count matching Location Count.
         default: true
         required: false
+        type: boolean
       run_item_placement_fuzz:
         description: Run the fuzzer test for Item Placement.
         default: true
         required: false
+        type: boolean
       run_gerpocalypse_fuzz:
         description: Run the fuzzer test for GER apocalypse.
         default: true
         required: false
+        type: boolean
       run_lambda_fuzz:
         description: Run the fuzzer test for Lambda Capture.
         default: true
         required: false
+        type: boolean
       run_indirect_conditions_fuzz:
         description: Run the fuzzer test for Indirect Conditions.
         default: true
         required: false
+        type: boolean
   workflow_call:
     inputs:
       run_ut_fuzz:
@@ -91,14 +98,14 @@ jobs:
 
     # Get the latest release of UT's tracker world, which also contains a UT hook check.
     - name: Get Latest UT Tracker Release Tag
-      if: ${{ github.event.inputs.run_ut_fuzz != 'false' }}
+      if: ${{ inputs.run_ut_fuzz != false }}
       id: getTrackerTag
       shell: bash
       run: |
         echo "releasetag=$(curl -fsL -H "Authorization: Bearer ${{ github.token }}" \
         https://api.github.com/repos/FarisTheAncient/Archipelago/releases/latest | jq -r '.tag_name' )" >> $GITHUB_OUTPUT
     - name: Download Latest UT APWorld Release
-      if: ${{ github.event.inputs.run_ut_fuzz != 'false' }}
+      if: ${{ inputs.run_ut_fuzz != false }}
       run: |      
         curl --fail --create-dirs -L -H "Authorization: Bearer ${{ github.token }}" \
           -H "Accept: application/octet-stream" \
@@ -194,7 +201,7 @@ jobs:
     # Fuzz determinism
     - name: LM Determinism Run
       id: determ_fuzz
-      if: ${{ github.event.inputs.run_determinism_fuzz != 'false' }}
+      if: ${{ inputs.run_determinism_fuzz != false }}
       continue-on-error: true
       run: |
         cd archipelago
@@ -202,7 +209,7 @@ jobs:
         python fuzz.py -r 500 -j 4 -g luigismansion -n 3 -m worlds/luigismansion/luigis-mansion-meta.yml \
         --dump-ignored --hook determinism:Hook
     - name: Zip Determinism Fuzz Output
-      if: ${{ failure() && github.event.inputs.run_determinism_fuzz != 'false' && steps.determ_fuzz.outcome == 'failure' }}
+      if: ${{ failure() && inputs.run_determinism_fuzz != false && steps.determ_fuzz.outcome == 'failure' }}
       uses: actions/upload-artifact@v4
       with:
         name: fuzz_determinism_output
@@ -211,7 +218,7 @@ jobs:
     # Fuzz UT
     - name: LM UT Run
       id: ut_fuzz
-      if: ${{ github.event.inputs.run_ut_fuzz != 'false' }}
+      if: ${{ inputs.run_ut_fuzz != false }}
       continue-on-error: true
       run: |
         cd archipelago
@@ -219,7 +226,7 @@ jobs:
         python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
         --dump-ignored --hook worlds.tracker.fuzzer_hook:Hook
     - name: Zip UT Fuzz Output
-      if: ${{ failure() && github.event.inputs.run_ut_fuzz != 'false' && steps.ut_fuzz.outcome == 'failure' }}
+      if: ${{ failure() && inputs.run_ut_fuzz != false && steps.ut_fuzz.outcome == 'failure' }}
       uses: actions/upload-artifact@v4
       with:
         name: fuzz_ut_output
@@ -228,7 +235,7 @@ jobs:
     # Fuzz Lambda Capture
     - name: LM Lambda Capture Run
       id: lambda_fuzz
-      if: ${{ github.event.inputs.run_lambda_fuzz != 'false' }}
+      if: ${{ inputs.run_lambda_fuzz != false }}
       continue-on-error: true
       run: |
         cd archipelago
@@ -236,7 +243,7 @@ jobs:
         python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
         --dump-ignored --hook lambda_check:Hook
     - name: Zip Lambda Capture Output
-      if: ${{ failure() && github.event.inputs.run_lambda_fuzz != 'false' && steps.lambda_fuzz.outcome == 'failure' }}
+      if: ${{ failure() && inputs.run_lambda_fuzz != false && steps.lambda_fuzz.outcome == 'failure' }}
       uses: actions/upload-artifact@v4
       with:
         name: fuzz_lambda_capture_output
@@ -245,7 +252,7 @@ jobs:
     # Fuzz Gerpocalypse
     - name: LM Gerpocalypse Run
       id: gerpoc_fuzz
-      if: ${{ github.event.inputs.run_gerpocalypse_fuzz != 'false' }}
+      if: ${{ inputs.run_gerpocalypse_fuzz != false }}
       continue-on-error: true
       run: |
         cd archipelago
@@ -253,7 +260,7 @@ jobs:
         python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
         --dump-ignored --hook gerpocalypse:Hook
     - name: Zip Gerpocalypse Output
-      if: ${{ failure() && github.event.inputs.run_gerpocalypse_fuzz != 'false' && steps.gerpoc_fuzz.outcome == 'failure' }}
+      if: ${{ failure() && inputs.run_gerpocalypse_fuzz != false && steps.gerpoc_fuzz.outcome == 'failure' }}
       uses: actions/upload-artifact@v4
       with:
         name: fuzz_gerpocalypse_output
@@ -262,7 +269,7 @@ jobs:
     # Fuzz Item Placement
     - name: LM Item Placement Run
       id: item_place_fuzz
-      if: ${{ github.event.inputs.run_item_placement_fuzz != 'false' }}
+      if: ${{ inputs.run_item_placement_fuzz != false }}
       continue-on-error: true
       run: |
         cd archipelago
@@ -270,7 +277,7 @@ jobs:
         python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
         --dump-ignored --hook item_placement:Hook
     - name: Zip Item Placement Output
-      if: ${{ failure() && github.event.inputs.run_item_placement_fuzz != 'false' && steps.item_place_fuzz.outcome == 'failure' }}
+      if: ${{ failure() && inputs.run_item_placement_fuzz != false && steps.item_place_fuzz.outcome == 'failure' }}
       uses: actions/upload-artifact@v4
       with:
         name: fuzz_item_placement_output
@@ -279,7 +286,7 @@ jobs:
     # Fuzz Item Loc Count
     - name: LM Item Loc Run
       id: item_loc_fuzz
-      if: ${{ github.event.inputs.run_item_count_fuzz != 'false' }}
+      if: ${{ inputs.run_item_count_fuzz != false }}
       continue-on-error: true
       run: |
         cd archipelago
@@ -287,7 +294,7 @@ jobs:
         python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
         --dump-ignored --hook item_loc:Hook
     - name: Zip Item Loc Output
-      if: ${{ failure() && github.event.inputs.run_item_count_fuzz != 'false' && steps.item_loc_fuzz.outcome == 'failure' }}
+      if: ${{ failure() && inputs.run_item_count_fuzz != false && steps.item_loc_fuzz.outcome == 'failure' }}
       uses: actions/upload-artifact@v4
       with:
         name: fuzz_item_loc_output
@@ -296,7 +303,7 @@ jobs:
     # Fuzz Indirect Conditions Count
     - name: LM Indirect Conditions Run
       id: indirect_fuzz
-      if: ${{ github.event.inputs.run_indirect_conditions_fuzz != 'false' }}
+      if: ${{ inputs.run_indirect_conditions_fuzz != false }}
       continue-on-error: true
       run: |
         cd archipelago
@@ -304,7 +311,7 @@ jobs:
         python fuzz.py -r 500 -j 4 -g luigismansion -n 1 -m worlds/luigismansion/luigis-mansion-meta.yml \
         --dump-ignored --hook indirect_cond:Hook
     - name: Zip Indirect Conditions Output
-      if: ${{ failure() && github.event.inputs.run_indirect_conditions_fuzz != 'false' && steps.indirect_fuzz.outcome == 'failure' }}
+      if: ${{ failure() && inputs.run_indirect_conditions_fuzz != false && steps.indirect_fuzz.outcome == 'failure' }}
       uses: actions/upload-artifact@v4
       with:
         name: fuzz_indirect_cond_output
