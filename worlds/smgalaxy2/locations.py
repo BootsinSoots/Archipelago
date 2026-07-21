@@ -46,7 +46,7 @@ YOSHTAR_loc: dict[str, SMG2LocationData] = {
     locname.YOSHSTARSTAR2: SMG2LocationData([regname.GOODEGG, "Power Star Location"], regname.GOODEGG,
                                             regname.GOODEGG2BOSS ,1),
     locname.YOSHSTARSTAR3: SMG2LocationData([regname.GOODEGG, "Power Star Location"], regname.GOODEGG,
-                                            regname.GOODEGG3LANDING ,1),
+                                            regname.GOODEGG3MUDDY ,1),
 }
 
 # Spin-Dig Star
@@ -725,7 +725,7 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
                                        regname.SKYOBS1CYLINDER,  1,
                                        Rules.JumpHeight2),
     locname.YOSHSTARCM: SMG2LocationData(["Comet Medal Location", regname.GOODEGG], regname.GOODEGG,
-                                         regname.GOODEGG1LANDING,  1, ),
+                                         regname.GOODEGG1MUDDY,  1, ),
     locname.SPINDIGCM: SMG2LocationData(["Comet Medal Location", regname.SPINDIG], regname.SPINDIG,
                                         regname.SPINDIG1DRILL,  1, ),
     locname.FLUFBLUFCM: SMG2LocationData(["Comet Medal Location", regname.FLUFFBLUFF], regname.FLUFFBLUFF,

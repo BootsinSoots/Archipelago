@@ -21,12 +21,12 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.WORLD1).connect(world.get_region(regname.SKYOBS), "World 1 Slot 1 Galaxy")
     world.get_region(regname.SKYOBS).connect(world.get_region(regname.SKYOBS1STARTTOPSIDE), "Sky Station Star 1")
     world.get_region(regname.SKYOBS1STARTTOPSIDE).connect(world.get_region(regname.SKYOBS1STARTBOTTOM),
-                                                          rule=True_()|Has(itemname.MARIOLONG)|RB.JumpHeight3) # replace the True_() with a pipe once pipes are in
+                                                          rule=True_()|RB.CanLongJump|RB.JumpHeight3) # replace the True_() with a pipe once pipes are in
     world.get_region(regname.SKYOBS1STARTTOPSIDE).connect(world.get_region(regname.SKYOBS1TOPOFHOUSE),
                                                           rule=RB.JumpHeight5)
     world.get_region(regname.SKYOBS1STARTBOTTOM).connect(world.get_region(regname.SKYOBS1TOPOFHOUSE))
     world.get_region(regname.SKYOBS1STARTTOPSIDE).connect(world.get_region(regname.SKYOBS1GSTAR1),
-                                                          rule=RB.JumpHeight3) #Needs move rando rules
+                                                          rule=RB.JumpHeight3)
     world.get_region(regname.SKYOBS1TOPOFHOUSE).connect(world.get_region(regname.SKYOBS1GSTAR1),
                                                         rule=RB.JumpHeight1)
     world.get_region(regname.SKYOBS1TOPOFHOUSE).connect(world.get_region(regname.SKYOBS1GREENHILL),
@@ -45,7 +45,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                        "Sky Station 1: Two-Sided Launch Star")
     world.get_region(regname.SKYOBS).connect(world.get_region(regname.SKYOBS2STARTTOPSIDE), "Sky Station Star 2")
     world.get_region(regname.SKYOBS2STARTTOPSIDE).connect(world.get_region(regname.SKYOBS2STARTBOTTOM),
-                                                          rule=True_()|Has(itemname.MARIOLONG)|RB.JumpHeight3) # replace the True_() with a pipe once pipes are in
+                                                          rule=True_()|RB.CanLongJump|RB.JumpHeight3) # replace the True_() with a pipe once pipes are in
     world.get_region(regname.SKYOBS2STARTTOPSIDE).connect(world.get_region(regname.SKYOBS2TOPOFHOUSE),
                                                           rule=RB.JumpHeight5)
     world.get_region(regname.SKYOBS2STARTBOTTOM).connect(world.get_region(regname.SKYOBS2TOPOFHOUSE))
@@ -78,23 +78,31 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     # Yoshi star
     world.get_region(regname.WORLD1).connect(world.get_region(regname.GOODEGG), "World 1 Slot 2 Galaxy")
     world.get_region(regname.GOODEGG).connect(world.get_region(regname.GOODEGG1LANDING), "Yoshi Star Star 1")
-    world.get_region(regname.GOODEGG1LANDING).connect(world.get_region(regname.GOODEGG1OCTOBONUS),
+    world.get_region(regname.GOODEGG1LANDING).connect(world.get_region(regname.GOODEGG1MUDDY))
+    world.get_region(regname.GOODEGG1MUDDY).connect(world.get_region(regname.GOODEGG1OCTOBONUS),
                                                       "Yoshi Star 1: Octogoomba Bonus Teleporter")
-    world.get_region(regname.GOODEGG1LANDING).connect(world.get_region(regname.GOODEGG1EARTH),
-                                                      "Yoshi Star 1: Yoshi Planet Launch Star")
+    world.get_region(regname.GOODEGG1MUDDY).connect(world.get_region(regname.GOODEGG1EARTH),
+                                                      "Yoshi Star 1: Yoshi Planet Launch Star",
+                                                    rule=RB.CanRideDino)
     world.get_region(regname.GOODEGG1EARTH).connect(world.get_region(regname.GOODEGG1TOWER),
                                                       "Yoshi Star 1: Earthy Planet Launch Star")
     world.get_region(regname.GOODEGG1TOWER).connect(world.get_region(regname.GOODEGG1FOSSIL),
-                                                      "Yoshi Star 1: Tower Launch Star")
+                                                      "Yoshi Star 1: Tower Launch Star",
+                                                    rule=RB.CanDinoSwing)
     world.get_region(regname.GOODEGG).connect(world.get_region(regname.GOODEGG2LANDING), "Yoshi Star Star 2")
-    world.get_region(regname.GOODEGG2LANDING).connect(world.get_region(regname.GOODEGG2SHOOTING),
-                                              "Yoshi Star 2: Yoshi Planet Launch Star")
+    world.get_region(regname.GOODEGG2LANDING).connect(world.get_region(regname.GOODEGG2MUDDY))
+    world.get_region(regname.GOODEGG2MUDDY).connect(world.get_region(regname.GOODEGG2SHOOTING),
+                                              "Yoshi Star 2: Yoshi Planet Launch Star",
+                                                    rule=RB.CanRideDino)
     world.get_region(regname.GOODEGG2SHOOTING).connect(world.get_region(regname.GOODEGG2ORBITS),
-                                              "Yoshi Star 2: Mid-Travel Launch Star")
+                                              "Yoshi Star 2: Mid-Travel Launch Star",
+                                                       rule=RB.CanRideDino&RB.CanAirSpin)
     world.get_region(regname.GOODEGG2ORBITS).connect(world.get_region(regname.GOODEGG2MARBLE),
-                                              "Yoshi Star 2: Planetoids Launch Star")
+                                              "Yoshi Star 2: Planetoids Launch Star",
+                                                     rule=RB.CanRideDino)
     world.get_region(regname.GOODEGG2SHOOTING).connect(world.get_region(regname.GOODEGG2MARBLE),
-                                              "Yoshi Star 2: Shooting Gallery Launch Star")
+                                              "Yoshi Star 2: Shooting Gallery Launch Star",
+                                                       rule=RB.CanRideDino)
     world.get_region(regname.GOODEGG2MARBLE).connect(world.get_region(regname.GOODEGG2BOSS),
                                               "Yoshi Star 2: Marble Block Launch Star")
     world.get_region(regname.GOODEGG).connect(world.get_region(regname.GOODEGG3LANDING), "Yoshi Star Comet Star",
@@ -109,34 +117,42 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                                   locname.YOSHSTARCM)
                                                           & CanReachLocation(locname.YOSHSTARSTAR1))))
                                               )
+    world.get_region(regname.GOODEGG3LANDING).connect(world.get_region(regname.GOODEGG3MUDDY))
     # Spin-Dig
     world.get_region(regname.WORLD1).connect(world.get_region(regname.SPINDIG), "World 1 Slot 3 Galaxy")
     world.get_region(regname.SPINDIG).connect(world.get_region(regname.SPINDIG1TETRA), "Spin-Dig Star 1")
     world.get_region(regname.SPINDIG1TETRA).connect(world.get_region(regname.SPINDIG1DRILL),
-                                                    "Spin-Dig 1: Dig Dirt Launch Star")
+                                                    "Spin-Dig 1: Dig Dirt Launch Star",
+                                                    rule=RB.DRILLMASTER)
     world.get_region(regname.SPINDIG1DRILL).connect(world.get_region(regname.SPINDIG1STEEL),
-                                                    "Spin-Dig 1: Drill Zone Launch Star")
+                                                    "Spin-Dig 1: Drill Zone Launch Star",
+                                                    rule=RB.DRILLMASTER)
     world.get_region(regname.SPINDIG1STEEL).connect(world.get_region(regname.SPINDIG1BONUS),
                                                     "Spin-Dig 1: Twirlips Bonus Teleporter")
     world.get_region(regname.SPINDIG1STEEL).connect(world.get_region(regname.SPINDIG1DIRTT),
                                                     "Spin-Dig 1: Steel Ring Launch Star")
     world.get_region(regname.SPINDIG1DIRTT).connect(world.get_region(regname.SPINDIG1TOADS),
-                                                    "Spin-Dig 1: Dirt Tower Launch Star")
+                                                    "Spin-Dig 1: Dirt Tower Launch Star",
+                                                    rule=RB.DRILLMASTER&RB.CanAirSpin)
     world.get_region(regname.SPINDIG1TOADS).connect(world.get_region(regname.SPINDIG1BOSS),
-                                                    "Spin-Dig 1: Red Toadship Launch Star")
+                                                    "Spin-Dig 1: Red Toadship Launch Star",
+                                                    rule=RB.CanAirSpin)
     world.get_region(regname.SPINDIG).connect(world.get_region(regname.SPINDIG2TETRA), "Spin-Dig Star 2")
     world.get_region(regname.SPINDIG2TETRA).connect(world.get_region(regname.SPINDIG2DARKT),
                                                     "Spin-Dig 2: Dig Dirt Sling to Vine")
     world.get_region(regname.SPINDIG2DARKT).connect(world.get_region(regname.SPINDIG2DARKIN1),
                                                     "Spin-Dig 2: Dark Canister 1st Green Pipe")
     world.get_region(regname.SPINDIG2DARKIN1).connect(world.get_region(regname.SPINDIG2DARKIN2),
-                                                    "Spin-Dig 2: Dark Canister 2nd Green Pipe")
+                                                    "Spin-Dig 2: Dark Canister 2nd Green Pipe",
+                                                      rule=RB.DRILLMASTER)
     world.get_region(regname.SPINDIG2DARKIN2).connect(world.get_region(regname.SPINDIG2DARKB),
-                                                    "Spin-Dig 2: Dark Canister Orange Pipe")
+                                                    "Spin-Dig 2: Dark Canister Orange Pipe",
+                                                      rule=RB.DRILLMASTER)
     world.get_region(regname.SPINDIG2DARKB).connect(world.get_region(regname.SPINDIG2BTOAD),
                                                     "Spin-Dig 2: Dark Canister Launch Star")
     world.get_region(regname.SPINDIG2BTOAD).connect(world.get_region(regname.SPINDIG2SQUARE),
-                                                    "Spin-Dig 2: Blue Toadship Launch Star")
+                                                    "Spin-Dig 2: Blue Toadship Launch Star",
+                                                    rule=RB.CanAirSpin)
     world.get_region(regname.SPINDIG).connect(world.get_region(regname.SPINDIG3BOSS), "Spin-Dig Comet Star",
                                               rule=((RB.Comet1ItemAccess | (
                                                           OptionFilter(CometItems, 2) & Has(itemname.DAREDEVILCOMET)))
