@@ -293,7 +293,7 @@ class LMContext(BaseContext):
                 self.send_hints = bool(slot_data["send_hints"])
 
                 # Debug Breaker Door
-                self.breaker_should_be_open = bool(slot_data["door rando list"][71])
+                self.breaker_should_be_open = bool(slot_data["door rando list"]["71"])
 
                 # Update Tags for relevant links
                 Utils.async_start(self.network_engine.update_tags_async(bool(slot_data[EnergyLinkConstants.INTERNAL_NAME]),
@@ -463,11 +463,11 @@ class LMContext(BaseContext):
 
         blackout_addr = 0x803D3399 + 8
         blackout_flag_byte = dme.read_byte(blackout_addr)
-        logger.info("Blackout Flag #" + str(8 * 8 + 5) + " is set to: " + "True" if (blackout_flag_byte & (1 << 5)) > 0 else "False")
-        logger.info("Blackout Door should be closed/open per settings: " + str(self.breaker_should_be_open))
+        logger.info(f"Blackout Flag #{str(8 * 8 + 5)} is set to: {"True" if (blackout_flag_byte & (1 << 5)) > 0 else "False"}")
+        logger.info(f"Blackout Door should be closed/open per settings: {str(self.breaker_should_be_open)}")
 
         blackout_door_byte = dme.read_byte(0x803D5E1C)
-        logger.info("Breaker Door Locked State: " + "True" if (blackout_door_byte & (1 << 7)) > 0 else "False")
+        logger.info(f"Breaker Door Locked State: {"True" if (blackout_door_byte & (1 << 7)) > 0 else "False"}")
 
         return
 
