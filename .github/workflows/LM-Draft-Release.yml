@@ -30,7 +30,7 @@ jobs:
           if [ "$os_name" = "ubuntu" ]; then os_name="linux"; fi
           py_ver="${{ matrix.python-version }}"
           py_ver="${py_ver//./-}"
-          echo "name=lib-${os_name}-${py_ver}" >> "$GITHUB_OUTPUT"
+          echo "name=lib-${os_name}${py_ver}" >> "$GITHUB_OUTPUT"
       - name: Create Lib Folder
         run: mkdir ${{ steps.libzip.outputs.name }}
       - name: Install Dependencies
