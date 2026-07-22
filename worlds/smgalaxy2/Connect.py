@@ -1,8 +1,7 @@
 from typing import TYPE_CHECKING
 
 from rule_builder.options import OptionFilter
-from rule_builder.rules import True_, Has, CanReachLocation
-from .Rules import CanAirSpin
+from rule_builder.rules import True_, Has, CanReachLocation, CanReachEntrance
 
 if TYPE_CHECKING:
     from . import SMG2World
@@ -282,7 +281,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                       "Puzzle Plank: Saws & Planks Sling Star")
     world.get_region(regname.PUZZPLAN1CHECKP).connect(world.get_region(regname.PUZZPLAN1MANDIB),
                                                       "Puzzle Plank: Checkpoint Launch Star",
-                                                      rule=CanAirSpin)
+                                                      rule=RB.CanAirSpin)
     world.get_region(regname.PUZZPLAN).connect(world.get_region(regname.PUZZPLAN2GRUZZY), "Puzzle Plank Comet Star",
                                                rule=((RB.Comet1ItemAccess | (
                                                            OptionFilter(CometItems, 2) & Has(itemname.PURPLECOMET)))
@@ -386,11 +385,13 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     # Wild Glide
     world.get_region(regname.WORLD2).connect(world.get_region(regname.WILDGLIDE), "World 2 Slot 4 Galaxy")
     world.get_region(regname.WILDGLIDE).connect(world.get_region(regname.WILDGLIDESTART), "Wild Glide Star")
-    world.get_region(regname.WILDGLIDESTART).connect(world.get_region(regname.WILDGLIDECOURSE))
+    world.get_region(regname.WILDGLIDESTART).connect(world.get_region(regname.WILDGLIDECOURSE),
+                                                     rule=RB.CanRideBird)
     # Cosmic Cove
     world.get_region(regname.WORLD2).connect(world.get_region(regname.COSMICO), "World 2 Slot 5 Galaxy")
     world.get_region(regname.COSMICO).connect(world.get_region(regname.COSMIC1LANDING), "Cosmic Cove Star 1")
-    world.get_region(regname.COSMIC1LANDING).connect(world.get_region(regname.COSMIC1POOL))
+    world.get_region(regname.COSMIC1LANDING).connect(world.get_region(regname.COSMIC1POOL),
+                                                     rule=RB.CanSwim)
     world.get_region(regname.COSMIC1POOL).connect(world.get_region(regname.COSMIC1DICEROOM),
                                                   "Cosmic Cove 1: Green Pipe")
     world.get_region(regname.COSMIC1POOL).connect(world.get_region(regname.COSMIC3WATER),
@@ -401,26 +402,36 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                                           "Cosmic Cove Coin Luma"] < 100
                                                            else Has("Can Farm Coins")))   )
     world.get_region(regname.COSMIC1POOL).connect(world.get_region(regname.COSMIC1WATERFA),
-                                                  "Cosmic Cove 1: Icy Waterfall")
+                                                  "Cosmic Cove 1: Icy Waterfall",
+                                                  rule=RB.CanPound)
     world.get_region(regname.COSMICO).connect(world.get_region(regname.COSMIC2LANDING), "Cosmic Cove Star 2")
     world.get_region(regname.COSMIC2LANDING).connect(world.get_region(regname.COSMIC2INPIPE),
                                                   "Cosmic Cove 2: Green Pipe to Cave")
     world.get_region(regname.COSMIC2INPIPE).connect(world.get_region(regname.COSMIC2WATERPA),
-                                                  "Cosmic Cove 2: Green Pipe in Cave")
+                                                  "Cosmic Cove 2: Green Pipe in Cave",
+                                                    rule=RB.CanSwim)
     world.get_region(regname.COSMIC2WATERPA).connect(world.get_region(regname.COSMIC2LANDING),
-                                                  "Cosmic Cove 2: Return Green Pipe")
+                                                  "Cosmic Cove 2: Return Green Pipe",
+                                                     rule=RB.CanSwim)
     world.get_region(regname.COSMIC2LANDING).connect(world.get_region(regname.COSMIC2TOADSHI),
-                                                  "Cosmic Cove 2: Landing Launch Star")
+                                                  "Cosmic Cove 2: Landing Launch Star",
+                                                     rule=CanReachEntrance("Cosmic Cove 2: Return Green Pipe"))
     world.get_region(regname.COSMIC2TOADSHI).connect(world.get_region(regname.COSMIC2WATERPL1),
                                                   "Cosmic Cove 2: Toadship Launch Star")
-    world.get_region(regname.COSMIC2WATERPL1).connect(world.get_region(regname.COSMIC2WATERPL2))
+    world.get_region(regname.COSMIC2WATERPL1).connect(world.get_region(regname.COSMIC2WATERPL2),
+                                                      rule=RB.CanSwim&RB.DRILLMASTER)
     # Honeybloom
     world.get_region(regname.WORLD2).connect(world.get_region(regname.HONEYBLOOM), "World 2 Slot 6 Galaxy")
     world.get_region(regname.HONEYBLOOM).connect(world.get_region(regname.HONEYBLOOM1LANDING), "Honeybloom Star")
-    world.get_region(regname.HONEYBLOOM1LANDING).connect(world.get_region(regname.HONEYBLOOM1SECRET))
-    world.get_region(regname.HONEYBLOOM1LANDING).connect(world.get_region(regname.HONEYBLOOM1WALL2))
-    world.get_region(regname.HONEYBLOOM1WALL2).connect(world.get_region(regname.HONEYBLOOM1WALL3))
-    world.get_region(regname.HONEYBLOOM1WALL3).connect(world.get_region(regname.HONEYBLOOM1HONELOG))
+    world.get_region(regname.HONEYBLOOM1LANDING).connect(world.get_region(regname.HONEYBLOOM1SECRET),
+                                                         rule=RB.CanSwing&RB.CanWallJump)
+    world.get_region(regname.HONEYBLOOM1LANDING).connect(world.get_region(regname.HONEYBLOOM1WALL2),
+                                                         rule=(RB.CanSwing&RB.CanWallJump)&
+                                                              (RB.BeeFlight|RB.JumpHeight3))
+    world.get_region(regname.HONEYBLOOM1WALL2).connect(world.get_region(regname.HONEYBLOOM1WALL3),
+                                                       rule=RB.BeeFlight)
+    world.get_region(regname.HONEYBLOOM1WALL3).connect(world.get_region(regname.HONEYBLOOM1HONELOG),
+                                                       rule=RB.CanSwing&RB.BeeFlight)
     # Lava Lair
     world.get_region(regname.WORLD2).connect(world.get_region(regname.BOWSER1), "World 2 Slot 7 Galaxy")
     world.get_region(regname.BOWSER1).connect(world.get_region(regname.LAVALAIR1LANDING), "Lava Lair Grand Star")
