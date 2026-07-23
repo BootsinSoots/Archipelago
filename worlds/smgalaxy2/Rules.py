@@ -6,7 +6,7 @@ from rule_builder.options import OptionFilter
 from rule_builder.rules import Has, True_, HasFromList, Rule, HasGroup, CanReachLocation
 from .Options import Goal, GreenStarBehavior, GreenStarstoFinish, GalaxyLock, \
     EnableGreenStars, PowerupRando, MoveRando, YoshiRando, StarbitLumaLocks, CoinLumaLocks, ObjectRando, CometMission, \
-    CometItems, WorldShuffle
+    CometItems, WorldShuffle, LogicDifficulty
 from .locations import green_star_locations
 from .regions import region_list, all_galaxy_slots
 from .Constants.Names import item_names as itemname
@@ -166,3 +166,8 @@ CanCollectStarChips: Rule[Any] = ObjectRandoOff|(Has(itemname.MARIOSTARCHIPS)&Op
 
 CoinLumaBase: Rule[Any] = ((True_()&OptionFilter(CoinLumaLocks, 0))
                            |(Has(itemname.COINLUMAKEY)&OptionFilter(CoinLumaLocks,1)))
+
+EasyLogic: Rule[Any] = True_()&OptionFilter(LogicDifficulty, 0)
+MediumLogic: Rule[Any] = True_()&OptionFilter(LogicDifficulty, 1)
+HardLogic: Rule[Any] = True_()&OptionFilter(LogicDifficulty, 2)
+HellLogic: Rule[Any] = True_()&OptionFilter(LogicDifficulty, 3)

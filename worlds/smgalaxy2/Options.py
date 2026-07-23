@@ -369,6 +369,26 @@ class CometMission(Choice):
     option_Mission = 2
     option_Both = 3
 
+class LogicDifficulty(Choice):
+    """
+    Set required difficulty for logic. This makes a difference primarily with move randomizations on
+
+    Vanilla: Only vanilla expected requirements for jumps and item usage
+
+    Medium: Turns on some skips that could be found through repeated gameplay
+
+    Hard: Turns on both medium skips and skips used in speedrunning communities
+
+    Hell: Infinite Flutter could be required for some transitions
+    """
+    display_name = "Logic Difficulty"
+    internal_name = "logic_difficulty"
+    option_Vanilla = 0
+    option_Medium = 1
+    option_Hard = 2
+    option_Hell = 3
+
+
 # Comet medals in pool, provide galaxy "order", 1 comet to one level
 
 
@@ -399,6 +419,7 @@ class SMG2Options(PerGameCommonOptions):
     coin_luma_counts: CoinLumaCounts
     comet_items: CometItems
     comet_mission: CometMission
+    logic_difficulty: LogicDifficulty
 
 option_groups = [
     Options.OptionGroup("Map Options", [
@@ -420,6 +441,7 @@ option_groups = [
         GreenStarstoFinish,
     ]),
     Options.OptionGroup("Logic Options", [
+        LogicDifficulty,
         PowerupRando,
         MoveRando,
         YoshiRando,
