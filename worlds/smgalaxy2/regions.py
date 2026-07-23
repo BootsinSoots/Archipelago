@@ -603,6 +603,7 @@ region_list: dict[str, SMG2RegionData] = {
     regname.GRAVGAUN2LANDING:           SMG2RegionData("Planet", [], []),
     regname.GRAVGAUN2WATERCO:           SMG2RegionData("Planet", [], []),
     regname.GRAVGAUN2WHOMPWA:           SMG2RegionData("Planet", [], []),
+    regname.HONEYHOP1DICEROOM:          SMG2RegionData("Planet", [], []),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]

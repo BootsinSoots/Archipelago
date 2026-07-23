@@ -838,14 +838,22 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     # Honeyhop
     world.get_region(regname.WORLD4).connect(world.get_region(regname.HONEYHOP), "World 4 Slot 4 Galaxy")
     world.get_region(regname.HONEYHOP).connect(world.get_region(regname.HONEYHOP1START), "Honeyhop Star 1")
-    world.get_region(regname.HONEYHOP1START).connect(world.get_region(regname.HONEYHOP1POND))
+    world.get_region(regname.HONEYHOP1START).connect(world.get_region(regname.HONEYHOP1POND),
+                                                     rule=RB.BeeFlight&RB.CanSwing)
     world.get_region(regname.HONEYHOP1POND).connect(world.get_region(regname.HONEYHOP1CLOUDS))
-    world.get_region(regname.HONEYHOP1CLOUDS).connect(world.get_region(regname.HONEYHOP1QBBASE))
-    world.get_region(regname.HONEYHOP1QBBASE).connect(world.get_region(regname.HONEYHOP1QBBUBBLE))
-    world.get_region(regname.HONEYHOP1QBBUBBLE).connect(world.get_region(regname.HONEYHOP1QBTOP))
+    world.get_region(regname.HONEYHOP1POND).connect(world.get_region(regname.HONEYHOP1DICEROOM),
+                                                    "Honeyhop: Pond Green Pipe")
+    world.get_region(regname.HONEYHOP1CLOUDS).connect(world.get_region(regname.HONEYHOP1QBBASE),
+                                                      rule=RB.BeeFlight&RB.CanSwing)
+    world.get_region(regname.HONEYHOP1QBBASE).connect(world.get_region(regname.HONEYHOP1QBBUBBLE),
+                                                      rule=RB.BeeFlight|(RB.CanWallJump&(RB.CanLongJump|RB.JumpHeight3)))
+    world.get_region(regname.HONEYHOP1QBBUBBLE).connect(world.get_region(regname.HONEYHOP1QBTOP),
+                                                        rule=(RB.BeeFlight|RB.CanWallJump)&RB.CanSwing)
     world.get_region(regname.HONEYHOP).connect(world.get_region(regname.HONEYHOP2QBBASE), "Honeyhop Chimp Star")
-    world.get_region(regname.HONEYHOP2QBBASE).connect(world.get_region(regname.HONEYHOP2QBBUBBLE))
-    world.get_region(regname.HONEYHOP2QBBUBBLE).connect(world.get_region(regname.HONEYHOP2QBTOP))
+    world.get_region(regname.HONEYHOP2QBBASE).connect(world.get_region(regname.HONEYHOP2QBBUBBLE),
+                                                      rule=True_()|RB.CanWallJump) # Replace True_() with sling star rule in the future
+    world.get_region(regname.HONEYHOP2QBBUBBLE).connect(world.get_region(regname.HONEYHOP2QBTOP),
+                                                        rule=RB.CanSwing)
     # Starshine Beach
     world.get_region(regname.WORLD4).connect(world.get_region(regname.STARBEACH), "World 4 Slot 5 Galaxy")
     world.get_region(regname.STARBEACH).connect(world.get_region(regname.STARBEACH1WATER), "Starshine Star 1")
