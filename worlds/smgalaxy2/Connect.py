@@ -962,7 +962,8 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.SPACSTOR1PULL).connect(world.get_region(regname.SPACSTOR1SATELLITE),
                                                     "Space Storm 1: Pull to Launch Star")
     world.get_region(regname.SPACSTOR1SATELLITE).connect(world.get_region(regname.SPACSTOR1REDCANOUT),
-                                                    "Space Storm 1: Satellite Launch Star")
+                                                    "Space Storm 1: Satellite Launch Star",
+                                                         rule=RB.CanLongJump|RB.JumpHeight3)
     world.get_region(regname.SPACSTOR1REDCANOUT).connect(world.get_region(regname.SPACSTOR1REDCANIN))
     world.get_region(regname.SPACSTOR1REDCANIN).connect(world.get_region(regname.SPACSTOR1TOPMAN),
                                                     "Space Storm 1: Canister Launch Star")
@@ -973,7 +974,8 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                     "Space Storm 2: Pull to Launch Star")
     world.get_region(regname.SPACSTOR2TOPTOWERBASE).connect(world.get_region(regname.SPACSTOR2TOPTOWER),
                                                     "Space Storm 2: Tower Base Sling Star")
-    world.get_region(regname.SPACSTOR2TOPTOWERBASE).connect(world.get_region(regname.SPACSTOR2GSTAR2))
+    world.get_region(regname.SPACSTOR2TOPTOWERBASE).connect(world.get_region(regname.SPACSTOR2GSTAR2),
+                                                            rule=RB.JumpHeight6|(RB.CanWallJump&RB.CanAirSpin))
     world.get_region(regname.SPACSTOR2TOPTOWER).connect(world.get_region(regname.SPACSTOR2COINROOM),
                                                     "Space Storm 2: Tower Green Pipe")
     world.get_region(regname.SPACSTOR2TOPTOWER).connect(world.get_region(regname.SPACSTOR2GSTAR2))
@@ -987,7 +989,8 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.BOOMOON1POISON).connect(world.get_region(regname.BOOMOON1MOON),
                                                    "Boo Moon 1: Poison Swamp Launch Star")
     world.get_region(regname.BOOMOON1MOON).connect(world.get_region(regname.BOOMOON1POPUP),
-                                                   "Boo Moon 1: Moon Launch Star")
+                                                   "Boo Moon 1: Moon Launch Star",
+                                                   rule=RB.CanCollectStarChips&RB.JumpHeight3)
     world.get_region(regname.BOOMOON).connect(world.get_region(regname.BOOMOON2DARK), "Boo Moon Star 2")
     world.get_region(regname.BOOMOON2DARK).connect(world.get_region(regname.BOOMOON2GOOMBONUS),
                                                    "Boo Moon 2: Jack O'Gomba Bonus Teleporter")
@@ -1014,10 +1017,12 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.SLIPSAND1CUBE).connect(world.get_region(regname.SLIPSAND1SLIDE),
                                                     "Slipsand 1: Cube Launch Star")
     world.get_region(regname.SLIPSAND1SLIDE).connect(world.get_region(regname.SLIPSAND1BOSS),
-                                                    "Slipsand 1: Slide Launch Star")
+                                                    "Slipsand 1: Slide Launch Star",
+                                                     rule=RB.CanSlide)
     world.get_region(regname.SLIPSAND).connect(world.get_region(regname.SLIPSAND2LONG1), "Slipsand Star 2")
     world.get_region(regname.SLIPSAND2LONG1).connect(world.get_region(regname.SLIPSAND2GRAV),
-                                                    "Slipsand 2: Green Pipe")
+                                                    "Slipsand 2: Green Pipe",
+                                                     rule=RB.JumpHeight3)
     world.get_region(regname.SLIPSAND2LONG1).connect(world.get_region(regname.SLIPSAND2LONG2))
     world.get_region(regname.SLIPSAND2GRAV).connect(world.get_region(regname.SLIPSAND2LONG2),
                                                     "Slipsand 2: Orange Pipe")
