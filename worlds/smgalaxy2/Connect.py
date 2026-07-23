@@ -695,14 +695,17 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     # Supermassive
     world.get_region(regname.WORLD4).connect(world.get_region(regname.SUPMASS), "World 4 Slot 1 Galaxy")
     world.get_region(regname.SUPMASS).connect(world.get_region(regname.SUPMASS1START), "Supermassive Star")
-    world.get_region(regname.SUPMASS1START).connect(world.get_region(regname.SUPMASS1PIPES))
+    world.get_region(regname.SUPMASS1START).connect(world.get_region(regname.SUPMASS1PIPES),
+                                                    rule=RB.CanWallJump)
     world.get_region(regname.SUPMASS1PIPES).connect(world.get_region(regname.SUPMASS1THWOMPS))
     world.get_region(regname.SUPMASS1PIPES).connect(world.get_region(regname.SUPMASS1GSTAR2))
     world.get_region(regname.SUPMASS1THWOMPS).connect(world.get_region(regname.SUPMASS1GSTAR2))
     world.get_region(regname.SUPMASS1THWOMPS).connect(world.get_region(regname.SUPMASS1KOOPAS),
-                                                      "Supermassive 1: Thwomps Launch Star")
+                                                      "Supermassive 1: Thwomps Launch Star",
+                                                      rule=(RB.CanWallJump|RB.JumpHeight4)&RB.CanAirSpin)
     world.get_region(regname.SUPMASS1KOOPAS).connect(world.get_region(regname.SUPMASS1STARCHIPS),
-                                                     "Supermassive 1: Koopa Launch Star")
+                                                     "Supermassive 1: Koopa Launch Star",
+                                                     rule=RB.CanAirSpin)
     world.get_region(regname.SUPMASS1STARCHIPS).connect(world.get_region(regname.SUPMASS1GARDEN),
                                                         "Supermassive 1: ? Block Launch Star")
     world.get_region(regname.SUPMASS1STARCHIPS).connect(world.get_region(regname.SUPMASS1WIGGLERS)) # Trick Entrance
@@ -720,12 +723,15 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                                   locname.SUPERMASSCM)
                                                           & CanReachLocation(locname.SUPERMASSSTAR1))))
                                               )
-    world.get_region(regname.SUPMASS2START).connect(world.get_region(regname.SUPMASS2PIPES))
+    world.get_region(regname.SUPMASS2START).connect(world.get_region(regname.SUPMASS2PIPES),
+                                                    rule=RB.CanWallJump)
     world.get_region(regname.SUPMASS2PIPES).connect(world.get_region(regname.SUPMASS2THWOMPS))
     world.get_region(regname.SUPMASS2THWOMPS).connect(world.get_region(regname.SUPMASS2KOOPAS),
-                                                      "Supermassive Comet: Thwomps Launch Star")
+                                                      "Supermassive Comet: Thwomps Launch Star",
+                                                      rule=(RB.CanWallJump|RB.JumpHeight4)&RB.CanAirSpin)
     world.get_region(regname.SUPMASS2KOOPAS).connect(world.get_region(regname.SUPMASS2STARCHIPS),
-                                                     "Supermassive Comet: Koopa Launch Star")
+                                                     "Supermassive Comet: Koopa Launch Star",
+                                                     rule=RB.CanAirSpin)
     world.get_region(regname.SUPMASS2STARCHIPS).connect(world.get_region(regname.SUPMASS2GARDEN),
                                                         "Supermassive Comet: ? Block Launch Star")
     world.get_region(regname.SUPMASS2STARCHIPS).connect(world.get_region(regname.SUPMASS2WIGGLERS)) # Trick Entrance
