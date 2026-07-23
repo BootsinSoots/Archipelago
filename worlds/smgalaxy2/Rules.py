@@ -167,7 +167,8 @@ CanCollectStarChips: Rule[Any] = ObjectRandoOff|(Has(itemname.MARIOSTARCHIPS)&Op
 CoinLumaBase: Rule[Any] = ((True_()&OptionFilter(CoinLumaLocks, 0))
                            |(Has(itemname.COINLUMAKEY)&OptionFilter(CoinLumaLocks,1)))
 
-EasyLogic: Rule[Any] = True_()&OptionFilter(LogicDifficulty, 0)
-MediumLogic: Rule[Any] = True_()&OptionFilter(LogicDifficulty, 1)
-HardLogic: Rule[Any] = True_()&OptionFilter(LogicDifficulty, 2)
 HellLogic: Rule[Any] = True_()&OptionFilter(LogicDifficulty, 3)
+HardLogic: Rule[Any] = True_()&OptionFilter(LogicDifficulty, 2)
+MediumLogic: Rule[Any] = True_()&OptionFilter(LogicDifficulty, 1)
+EasyLogic: Rule[Any] = True_()&OptionFilter(LogicDifficulty, 0)
+CanInfiniteFlutter: Rule[Any] = HellLogic&CanRideDino
