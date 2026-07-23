@@ -87,6 +87,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                     rule=RB.CanRideDino)
     world.get_region(regname.GOODEGG1EARTH).connect(world.get_region(regname.GOODEGG1TOWER),
                                                       "Yoshi Star 1: Earthy Planet Launch Star")
+    world.get_region(regname.GOODEGG1LANDING).connect(world.get_region(regname.GOODEGG1TOWER)) #Trick Entrance
     world.get_region(regname.GOODEGG1TOWER).connect(world.get_region(regname.GOODEGG1FOSSIL),
                                                       "Yoshi Star 1: Tower Launch Star",
                                                     rule=RB.CanDinoSwing)
@@ -106,6 +107,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                        rule=RB.CanRideDino)
     world.get_region(regname.GOODEGG2MARBLE).connect(world.get_region(regname.GOODEGG2BOSS),
                                               "Yoshi Star 2: Marble Block Launch Star")
+    world.get_region(regname.GOODEGG2LANDING).connect(world.get_region(regname.GOODEGG2BOSS))  # Trick Entrance
     world.get_region(regname.GOODEGG).connect(world.get_region(regname.GOODEGG3LANDING), "Yoshi Star Comet Star",
                                               rule=((RB.Comet1ItemAccess | (
                                                           OptionFilter(CometItems, 2) & Has(itemname.ROMPCOMET)))
@@ -201,6 +203,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                            (OptionFilter(CoinLumaLocks,2)&Has(itemname.COINHL1)))
                                                      &(True_() if world.options.coin_luma_counts.value["Fluffy Bluff Coin Luma"]<100
                                                        else Has("Can Farm Coins")))),
+    world.get_region(regname.FLUFFBLUFF1BIGCLOUD).connect(world.get_region(regname.FLUFFBLUFF1CLIFF1))
     world.get_region(regname.FLUFFBLUFF1CLIFF1).connect(world.get_region(regname.FLUFFBLUFF1CLIFF2),
                                                         rule=RB.CloudMario)
     world.get_region(regname.FLUFFBLUFF1CLIFF2).connect(world.get_region(regname.FLUFFBLUFF1WATER),
@@ -209,6 +212,8 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.FLUFFBLUFF1WATER).connect(world.get_region(regname.FLUFFBLUFF1CLOUDCLIMB),
                                                          "Fluffy Bluff: Water Sphere Launch Star",
                                                        rule=RB.CanCollectStarChips)
+    world.get_region(regname.FLUFFBLUFF1BIGCLOUD).connect(
+    world.get_region(regname.FLUFFBLUFF1CLOUDCLIMB))  # Trick Entrance
     world.get_region(regname.FLUFFBLUFF1CLOUDCLIMB).connect(world.get_region(regname.FLUFFBLUFF1TREECLIMB),
                                                          "Fluffy Bluff: Vine Swing",
                                                             rule=RB.CloudMario)
@@ -242,6 +247,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.FIREFLOT1LAVA).connect(world.get_region(regname.FIREFLOT1BOSS),
                                                        "Fiery Flotilla: Lava Planet Launch Star",
                                                     rule=RB.CanAirSpin)
+    world.get_region(regname.FIREFLOT1LANDING).connect(world.get_region(regname.FIREFLOT1BOSS))  # Trick Entrance
     world.get_region(regname.BOWJR1).connect(world.get_region(regname.FIREFLOT2BOSS), "Fiery Flotilla Comet Star",
                                              rule=((RB.Comet1ItemAccess | (
                                                          OptionFilter(CometItems, 2) & Has(itemname.SPEEDYCOMET)))
@@ -304,6 +310,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                        rule=RB.ROCKNROLLIN)
     world.get_region(regname.BOULBOWL1FALLING).connect(world.get_region(regname.BOULBOWL1BOULDER),
                                                        "Boulder Bowl: Falling Rocks Launch Star")
+    world.get_region(regname.BOULBOWL1CRYSTAL).connect(world.get_region(regname.BOULBOWL1BOULDER)) #Trick Entrance
     world.get_region(regname.BOULBOWL1BOULDER).connect(world.get_region(regname.BOULBOWL1DODECAH),
                                                        "Boulder Bowl: Boulder Sling Star",
                                                        rule=RB.ROCKNROLLIN)
@@ -1218,7 +1225,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.BATTBELT1URCH).connect(world.get_region(regname.BATTBELT1CRAB),
                                                     "Battle Belt: Urchin Sling Star")
     world.get_region(regname.BATTBELT1CRAB).connect(world.get_region(regname.BATTBELT1PTOA),
-                                                    "Battle Belt: Crab Sling Star")
+                                                    "Battle Belt: Crabber Sling Star")
     world.get_region(regname.BATTBELT1PTOA).connect(world.get_region(regname.BATTBELT1PUMP),
                                                     "Battle Belt: Pink Toadship Sling Star")
     world.get_region(regname.BATTBELT1PUMP).connect(world.get_region(regname.BATTBELT1PUMI),
@@ -1290,6 +1297,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                      "Galaxy Generator: Dash Castle Sling Star")
     world.get_region(regname.GALGEN1LAVASNA).connect(world.get_region(regname.GALGEN1STATUE))
     world.get_region(regname.GALGEN1STATUE).connect(world.get_region(regname.GALGEN1THEDOOR))
+    world.get_region(regname.GALGEN1YOSHI).connect(world.get_region(regname.GALGEN1THEDOOR)) #Trick Entrance
     world.get_region(regname.GALGEN1THEDOOR).connect(world.get_region(regname.GALGEN1BOSS),
                                                      "Galaxy Generator: The Door")
     world.get_region(regname.BOWSER3).connect(world.get_region(regname.GALGEN2LANDING), "Galaxy Generator Comet Star",
