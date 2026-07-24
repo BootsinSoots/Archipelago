@@ -160,6 +160,7 @@ JumpHeight1: Rule[Any] = True_()
 
 CanMakeCloud: Rule[Any] = CloudMario&CanAirSpin
 CanWallSpin: Rule[Any] = CanWallJump&CanAirSpin
+CanLongSpin: Rule[Any] = CanLongJump&CanAirSpin
 
 ObjectRandoOff: Rule[Any] = True_()&OptionFilter(ObjectRando, 1)
 CanSwing: Rule[Any] = ObjectRandoOff|(Has(itemname.MARIOSWING)&OptionFilter(ObjectRando,1))
