@@ -300,7 +300,7 @@ SWEETMYS_loc: dict[str, SMG2LocationData] = {
     # Bowser's Grav
 GRAVGAUN_loc: dict[str, SMG2LocationData] = {
     locname.GRAVGAUNSTAR1: SMG2LocationData(["Power Star Location", regname.BOWSER2], regname.BOWSER2,
-                                            regname.GRAVGAUN1BOSSARE, 1),
+                                            regname.GRAVGAUN1BOSSARE, 1, RB.CanPound),
     locname.GRAVGAUNSTAR2: SMG2LocationData(["Power Star Location", regname.BOWSER2], regname.BOWSER2,
                                             regname.GRAVGAUN2WHOMPWA, 1),
 }
@@ -820,7 +820,7 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
                                           regname.SWEETMYS1CHOCO,  1,
                                           RB.CanDinoGlow),
     locname.GRAVGAUNTCM: SMG2LocationData(["Comet Medal Location", regname.BOWSER2], regname.BOWSER2,
-                                          regname.GRAVGAUN1LANDING,  1, ),
+                                          regname.GRAVGAUN1LANDING,  1, RB.CanGrabLedge|RB.JumpHeight2),
     locname.SPACESTORMCM: SMG2LocationData(["Comet Medal Location", regname.SPACSTOR], regname.SPACSTOR,
                                            regname.SPACSTOR1SATELLITE,  1, ),
     locname.SLIPSANDCM: SMG2LocationData(["Comet Medal Location", regname.SLIPSAND], regname.SLIPSAND,
