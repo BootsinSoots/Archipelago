@@ -28,7 +28,7 @@ item_table: dict[str, SMG2ItemData] = {
 }
 
 filler_items: dict[str, SMG2ItemData] = {
-    "1up Mushroom": SMG2ItemData(["Filler Items"], 170000007, IC.filler),
+    "1-up Mushroom": SMG2ItemData(["Filler Items"], 170000007, IC.filler),
     # Life Up
     # Starbits
     # Coins
