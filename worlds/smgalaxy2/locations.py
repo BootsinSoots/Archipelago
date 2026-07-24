@@ -285,7 +285,8 @@ HONEYHOP_loc: dict[str, SMG2LocationData] = {
     locname.HONEYHOPSTAR1: SMG2LocationData(["Power Star Location", regname.HONEYHOP], regname.HONEYHOP,
                                             regname.HONEYHOP1QBTOP, 1),
     locname.HONEYHOPSTAR2: SMG2LocationData(["Power Star Location", regname.HONEYHOP], regname.HONEYHOP,
-                                            regname.HONEYHOP1QBBASE, 1),
+                                            regname.HONEYHOP1QBBASE, 1,
+                                            CanReachRegion(regname.HONEYHOP2QBBUBBLE)&CanReachRegion(regname.HONEYHOP2QBTOP)),
 }
 
     # Sweet Mystery
@@ -644,9 +645,9 @@ green_star_locations: dict[str, SMG2LocationData]  = {
     locname.CHOMPWORKSTARG3:    SMG2LocationData(["Green Star Location", regname.CHOMWORK], regname.CHOMWORK,
                                                  regname.CHOMWORK2TOWER, 1, RB.SPRONGIN),
     locname.HONEYHOPSTARG1:     SMG2LocationData(["Green Star Location", regname.HONEYHOP], regname.HONEYHOP,
-                                                 regname.HONEYHOP1CLOUDS, 1,),
+                                                 regname.HONEYHOP1CLOUDS, 1, RB.BeeFlight),
     locname.HONEYHOPSTARG2:     SMG2LocationData(["Green Star Location", regname.HONEYHOP], regname.HONEYHOP,
-                                                 regname.HONEYHOP1QBTOP, 1,),
+                                                 regname.HONEYHOP1QBTOP, 1, RB.BeeFlight),
     locname.SWEETMYSTSTARG1:    SMG2LocationData(["Green Star Location", regname.SWEETMYS], regname.SWEETMYS,
                                                  regname.SWEETMYS1CHOCO, 1, RB.CanDinoGlow),
     locname.SWEETMYSTSTARG2:    SMG2LocationData(["Green Star Location", regname.SWEETMYS], regname.SWEETMYS,
@@ -813,7 +814,8 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
     locname.CHOMPWORKCM: SMG2LocationData(["Comet Medal Location", regname.CHOMWORK], regname.CHOMWORK,
                                           regname.CHOMWORK1START,  1, RB.JumpHeight5),
     locname.HONEYHOPCM: SMG2LocationData(["Comet Medal Location", regname.HONEYHOP], regname.HONEYHOP,
-                                         regname.HONEYHOP1QBBUBBLE,  1, ),
+                                         regname.HONEYHOP1QBBUBBLE,  1,
+                                         RB.JumpHeight6|RB.CanWallJump),
     locname.SWEETMYSTCM: SMG2LocationData(["Comet Medal Location", regname.SWEETMYS], regname.SWEETMYS,
                                           regname.SWEETMYS1CHOCO,  1,
                                           RB.CanDinoGlow),
