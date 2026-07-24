@@ -84,6 +84,9 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.GOODEGG1MUDDY).connect(world.get_region(regname.GOODEGG1EARTH),
                                                       "Yoshi Star 1: Yoshi Planet Launch Star",
                                                     rule=RB.CanRideDino)
+    world.get_region(regname.GOODEGG1MUDDY).connect(world.get_region(regname.GOODEGGGSTAR1))
+    world.get_region(regname.GOODEGG1MUDDY).connect(world.get_region(regname.GOODEGGGSTAR2),
+                                                    rule=(RB.CanRideDino|RB.CanLongSpin|RB.JumpHeight4))
     world.get_region(regname.GOODEGG1EARTH).connect(world.get_region(regname.GOODEGG1TOWER),
                                                       "Yoshi Star 1: Earthy Planet Launch Star")
     world.get_region(regname.GOODEGG1LANDING).connect(world.get_region(regname.GOODEGG1TOWER)) #Trick Entrance
@@ -95,6 +98,9 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.GOODEGG2MUDDY).connect(world.get_region(regname.GOODEGG2SHOOTING),
                                               "Yoshi Star 2: Yoshi Planet Launch Star",
                                                     rule=RB.CanRideDino)
+    world.get_region(regname.GOODEGG2MUDDY).connect(world.get_region(regname.GOODEGGGSTAR1))
+    world.get_region(regname.GOODEGG2MUDDY).connect(world.get_region(regname.GOODEGGGSTAR2),
+                                                    rule=(RB.CanRideDino | RB.CanLongSpin | RB.JumpHeight4))
     world.get_region(regname.GOODEGG2SHOOTING).connect(world.get_region(regname.GOODEGG2ORBITS),
                                               "Yoshi Star 2: Mid-Travel Launch Star",
                                                        rule=RB.CanRideDino&RB.CanAirSpin)
@@ -120,6 +126,10 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                           & CanReachLocation(locname.YOSHSTARSTAR1))))
                                               )
     world.get_region(regname.GOODEGG3LANDING).connect(world.get_region(regname.GOODEGG3MUDDY))
+    world.get_region(regname.GOODEGG3MUDDY).connect(world.get_region(regname.GOODEGGGSTAR1),
+                                                    rule=RB.JumpHeight4)
+    world.get_region(regname.GOODEGG3MUDDY).connect(world.get_region(regname.GOODEGGGSTAR2),
+                                                    rule=(RB.CanRideDino | RB.CanLongSpin | RB.JumpHeight4))
     # Spin-Dig
     world.get_region(regname.WORLD1).connect(world.get_region(regname.SPINDIG), "World 1 Slot 3 Galaxy")
     world.get_region(regname.SPINDIG).connect(world.get_region(regname.SPINDIG1TETRA), "Spin-Dig Star 1")
