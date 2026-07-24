@@ -717,8 +717,10 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.SUPMASS1START).connect(world.get_region(regname.SUPMASS1PIPES),
                                                     rule=RB.CanWallJump)
     world.get_region(regname.SUPMASS1PIPES).connect(world.get_region(regname.SUPMASS1THWOMPS))
-    world.get_region(regname.SUPMASS1PIPES).connect(world.get_region(regname.SUPMASS1GSTAR2))
-    world.get_region(regname.SUPMASS1THWOMPS).connect(world.get_region(regname.SUPMASS1GSTAR2))
+    world.get_region(regname.SUPMASS1PIPES).connect(world.get_region(regname.SUPMASS1GSTAR2),
+                                                    rule=RB.CanLongSpin)
+    world.get_region(regname.SUPMASS1THWOMPS).connect(world.get_region(regname.SUPMASS1GSTAR2),
+                                                      rule=RB.CanAirSpin)
     world.get_region(regname.SUPMASS1THWOMPS).connect(world.get_region(regname.SUPMASS1KOOPAS),
                                                       "Supermassive 1: Thwomps Launch Star",
                                                       rule=(RB.CanWallJump|RB.JumpHeight4)&RB.CanAirSpin)
