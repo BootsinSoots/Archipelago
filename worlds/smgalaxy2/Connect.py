@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 
 from rule_builder.options import OptionFilter
 from rule_builder.rules import True_, Has, CanReachLocation, CanReachEntrance
+from .Rules import CanLongJump
 
 if TYPE_CHECKING:
     from . import SMG2World
@@ -294,7 +295,8 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                       "Puzzle Plank: Grassy Buzzsaw Launch Star",
                                                       rule=RB.CanPound|RB.JumpHeight6)
     world.get_region(regname.PUZZPLAN1SAWBLA).connect(world.get_region(regname.PUZZPLAN1CHECKP),
-                                                      "Puzzle Plank: Saws & Planks Sling Star")
+                                                      "Puzzle Plank: Saws & Planks Sling Star",
+                                                      rule=RB.CanWallJump&RB.CanPound)
     world.get_region(regname.PUZZPLAN1CHECKP).connect(world.get_region(regname.PUZZPLAN1MANDIB),
                                                       "Puzzle Plank: Checkpoint Launch Star",
                                                       rule=RB.CanAirSpin)
@@ -370,7 +372,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                                  else Has("Can Farm Coins"))))
     world.get_region(regname.HIGHTAIL1DASHWAL2).connect(world.get_region(regname.HIGHTAILGSTAR3))
     world.get_region(regname.HIGHTAIL1DASHWAL1).connect(world.get_region(regname.HIGHTAILGSTAR2),
-                                                        rule=RB.CanDinoRun)
+                                                        rule=RB.CanDinoRun&CanLongJump)
     world.get_region(regname.HIGHTAIL).connect(world.get_region(regname.HIGHTAIL2LANDING), "Hightail Falls Comet Star",
                                                rule=((RB.Comet1ItemAccess | (
                                                            OptionFilter(CometItems, 2) & Has(itemname.SPEEDYCOMET)))
@@ -398,7 +400,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                         rule=RB.CanDinoRun&RB.CanDinoSwing)
     world.get_region(regname.HIGHTAIL2DASHWAL2).connect(world.get_region(regname.HIGHTAILGSTAR3))
     world.get_region(regname.HIGHTAIL2DASHWAL1).connect(world.get_region(regname.HIGHTAILGSTAR2),
-                                                        rule=RB.CanDinoRun)
+                                                        rule=RB.CanDinoRun&RB.CanLongJump)
     # Wild Glide
     world.get_region(regname.WORLD2).connect(world.get_region(regname.WILDGLIDE), "World 2 Slot 4 Galaxy")
     world.get_region(regname.WILDGLIDE).connect(world.get_region(regname.WILDGLIDESTART), "Wild Glide Star")
