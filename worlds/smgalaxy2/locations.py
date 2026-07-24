@@ -6,10 +6,8 @@ from rule_builder.rules import Rule, Has, True_
 from .Constants.Names import region_names as regname
 from .Constants.Names import item_names as itemname
 from .Constants.Names import location_names as locname
-from .Constants.Names.region_names import WILDGLIDECOURSE
 from .Options import EnableGreenStars
-from . import Rules
-from .Rules import JumpHeight2, CanGrabLedge
+from . import Rules as RB
 
 
 class SMG2Location(Location):
@@ -34,7 +32,7 @@ SKYOBS_loc: dict[str, SMG2LocationData] = {
                                           regname.SKYOBS, regname.SKYOBS1BOSS, 1),
     locname.SKYSTASTAR2: SMG2LocationData([regname.SKYOBS, "Power Star Location"],
                                           regname.SKYOBS, regname.SKYOBS2GRASSFLEET, 1,
-                                          (Rules.CanClimbPole|(Rules.JumpHeight2&Rules.CanGrabLedge)|Rules.JumpHeight3)),
+                                          (RB.CanClimbPole|(RB.JumpHeight2&RB.CanGrabLedge)|RB.JumpHeight3)),
     locname.SKYSTASTAR3: SMG2LocationData([regname.SKYOBS, "Power Star Location"],
                                           regname.SKYOBS, regname.SKYOBS3BOSS, 1),
 }
@@ -137,9 +135,9 @@ COSCCOVE_loc: dict[str, SMG2LocationData] = {
 # Wild Glide St
 WILDGLIDE_loc: dict[str, SMG2LocationData] = {
     locname.WILDGLIDESTAR1: SMG2LocationData(["Power Star Location", regname.WILDGLIDE], regname.WILDGLIDE,
-                                             WILDGLIDECOURSE, 1),
+                                             regname.WILDGLIDECOURSE, 1),
     locname.WILDGLIDESTAR2: SMG2LocationData(["Power Star Location", regname.WILDGLIDE], regname.WILDGLIDE,
-                                             WILDGLIDECOURSE, 1),
+                                             regname.WILDGLIDECOURSE, 1),
 }
 
 # Honeybloom St
@@ -275,9 +273,9 @@ HONEYHOP_loc: dict[str, SMG2LocationData] = {
     # Sweet Mystery
 SWEETMYS_loc: dict[str, SMG2LocationData] = {
     locname.SWEETMYSTSTAR1: SMG2LocationData(["Power Star Location", regname.SWEETMYS], regname.SWEETMYS,
-                                             regname.SWEETMYS1CAKE, 1, Rules.CanDinoGlow),
+                                             regname.SWEETMYS1CAKE, 1, RB.CanDinoGlow),
     locname.SWEETMYSTSTAR2: SMG2LocationData(["Power Star Location", regname.SWEETMYS], regname.SWEETMYS,
-                                             regname.SWEETMYS2END, 1, Rules.CanDinoGlow),
+                                             regname.SWEETMYS2END, 1, RB.CanDinoGlow),
 }
 
     # Bowser's Grav
@@ -482,7 +480,7 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.SKYOBS1GREENHILL, 1),
     locname.SKYSTASTARG3:       SMG2LocationData(["Green Star Location", regname.SKYOBS], regname.SKYOBS,
                                                  regname.SKYOBS2SKYFLEET, 1,
-                                                 Rules.CanLongJump|Rules.JumpHeight5|(Rules.JumpHeight3&Rules.CanWallJump)),
+                                                 RB.CanLongJump|RB.JumpHeight5|(RB.JumpHeight3&RB.CanWallJump)),
     locname.YOSHSTARSTARG1:     SMG2LocationData(["Green Star Location", regname.GOODEGG], regname.GOODEGG, 
                                                  regname.GOODEGGGSTAR1 , 1,),
     locname.YOSHSTARSTARG2:     SMG2LocationData(["Green Star Location", regname.GOODEGG], regname.GOODEGG, 
@@ -614,9 +612,9 @@ green_star_locations: dict[str, SMG2LocationData]  = {
     locname.HONEYHOPSTARG2:     SMG2LocationData(["Green Star Location", regname.HONEYHOP], regname.HONEYHOP,
                                                  regname.HONEYHOP1QBTOP, 1,),
     locname.SWEETMYSTSTARG1:    SMG2LocationData(["Green Star Location", regname.SWEETMYS], regname.SWEETMYS,
-                                                 regname.SWEETMYS1CHOCO, 1, Rules.CanDinoGlow),
+                                                 regname.SWEETMYS1CHOCO, 1, RB.CanDinoGlow),
     locname.SWEETMYSTSTARG2:    SMG2LocationData(["Green Star Location", regname.SWEETMYS], regname.SWEETMYS,
-                                                 regname.SWEETMYS1CHOCO, 1, Rules.CanDinoGlow&Rules.CanLongJump),
+                                                 regname.SWEETMYS1CHOCO, 1, RB.CanDinoGlow&RB.CanLongJump),
     locname.GRAVGAUNSTARG1:     SMG2LocationData(["Green Star Location", regname.BOWSER2], regname.BOWSER2,
                                                  regname.GRAVGAUNGSTAR1, 1,),
     locname.GRAVGAUNSTARG2:     SMG2LocationData(["Green Star Location", regname.BOWSER2], regname.BOWSER2,
@@ -723,7 +721,7 @@ green_star_locations: dict[str, SMG2LocationData]  = {
 COMETMEDAL_loc:dict[str, SMG2LocationData] = {
     locname.SKYSTACM: SMG2LocationData(["Comet Medal Location", regname.SKYOBS], regname.SKYOBS,
                                        regname.SKYOBS1CYLINDER,  1,
-                                       Rules.JumpHeight2),
+                                       RB.JumpHeight2),
     locname.YOSHSTARCM: SMG2LocationData(["Comet Medal Location", regname.GOODEGG], regname.GOODEGG,
                                          regname.GOODEGG1MUDDY,  1, ),
     locname.SPINDIGCM: SMG2LocationData(["Comet Medal Location", regname.SPINDIG], regname.SPINDIG,
@@ -776,7 +774,7 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
                                          regname.HONEYHOP1QBBUBBLE,  1, ),
     locname.SWEETMYSTCM: SMG2LocationData(["Comet Medal Location", regname.SWEETMYS], regname.SWEETMYS,
                                           regname.SWEETMYS1CHOCO,  1,
-                                          Rules.CanDinoGlow),
+                                          RB.CanDinoGlow),
     locname.GRAVGAUNTCM: SMG2LocationData(["Comet Medal Location", regname.BOWSER2], regname.BOWSER2,
                                           regname.GRAVGAUN1LANDING,  1, ),
     locname.SPACESTORMCM: SMG2LocationData(["Comet Medal Location", regname.SPACSTOR], regname.SPACSTOR,
@@ -835,9 +833,9 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
 
 event_locations: dict[str, SMG2LocationData] = {
     "Melty Monster 2 Starbit Farming": SMG2LocationData(["Event"], regname.MELTY, regname.MELTY2BOWLING, None,
-                                                        Rules.CanStarbitShoot, locked_item="Can Farm Starbits"),
+                                                        RB.CanStarbitShoot, locked_item="Can Farm Starbits"),
     "Sweet Mystery Starbit Farming": SMG2LocationData(["Event"], regname.SWEETMYS, regname.SWEETMYS1CHOCO, None,
-                                                        Rules.CanStarbitShoot, locked_item="Can Farm Starbits"),
+                                                        RB.CanStarbitShoot, locked_item="Can Farm Starbits"),
     "Rightside Down Coin Farming": SMG2LocationData(["Event"], regname.RIGHTDOWN, regname.RIGHTDOWNTOPVIEW, None,
                                                     locked_item="Can Farm Coins")
 }
