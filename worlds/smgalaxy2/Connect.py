@@ -1064,7 +1064,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.SHIVBURN).connect(world.get_region(regname.SHIVBURN1VOLCANO), "Shiverburn Star")
     world.get_region(regname.SHIVBURN1VOLCANO).connect(world.get_region(regname.SHIVBURN3CHIMP),
                                                        "Shiverburn: Green Pipe",
-                                                       rule=RB.CanMakeCloud&RB.CanPound&RB.CanLongSpin)
+                                                       rule=RB.CanMakeCloud&RB.CanPound)
     world.get_region(regname.SHIVBURN1VOLCANO).connect(world.get_region(regname.SHIVBURN1LAVA),
                                                        "Shiverburn: Volcano Launch Star",
                                                        rule=RB.CanMakeCloud&RB.CanPound)
@@ -1226,7 +1226,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.WORLD6).connect(world.get_region(regname.SLIMSPRI), "World 6 Slot 5 Galaxy")
     world.get_region(regname.SLIMSPRI).connect(world.get_region(regname.SLIMSPRI1MOUTH1), "Slimy Spring Star")
     world.get_region(regname.SLIMSPRI1MOUTH1).connect(world.get_region(regname.SLIMSPRI1CAVE1),
-                                                      rule=RB.CanSwim)
+                                                      rule=RB.CanSwim&RB.CanSlide)
     world.get_region(regname.SLIMSPRI1MOUTH1).connect(world.get_region(regname.SLIMSPRI1CHESTROOM),
                                                       "Slimy Spring: Green Pipe")
     world.get_region(regname.SLIMSPRI1CAVE1).connect(world.get_region(regname.SLIMSPRI1MOUTH2),
@@ -1236,7 +1236,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                       rule=RB.CanSwim)
     world.get_region(regname.SLIMSPRI).connect(world.get_region(regname.SLIMSPRI2MOUTH1), "Slimy Spring Chimp Star")
     world.get_region(regname.SLIMSPRI2MOUTH1).connect(world.get_region(regname.SLIMSPRI2CAVE1),
-                                                      rule=RB.CanSwim)
+                                                      rule=RB.CanSwim&RB.CanSlide)
     world.get_region(regname.SLIMSPRI2CAVE1).connect(world.get_region(regname.SLIMSPRI2MOUTH2),
                                                      "Slimy Spring Chimp: First Cave Launch Star",
                                                      rule=(RB.CanSwim & (RB.CanShell | RB.HardLogic)))
@@ -1421,7 +1421,10 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.TWISTTRI).connect(world.get_region(regname.TWISTY1PLAT1), "Twisty Trials Star")
     world.get_region(regname.TWISTY1PLAT1).connect(world.get_region(regname.TWISTY1PLAT2),
                                                    rule=(RB.CanLongJump | RB.CanAirSpin | RB.MediumLogic ))
-    world.get_region(regname.TWISTY1PLAT2).connect(world.get_region(regname.TWISTY1PLAT3))
+    world.get_region(regname.TWISTY1PLAT2).connect(world.get_region(regname.TWISTY1PLAT3),
+                                                   rule=((RB.CanAirSpin & RB.CanRideDino)
+                                                         | RB.MediumLogic)
+                                                   )
     world.get_region(regname.TWISTY1PLAT3).connect(world.get_region(regname.TWISTY1PLAT4))
     world.get_region(regname.TWISTTRI).connect(world.get_region(regname.TWISTY2PLAT1), "Twisty Trials Comet Star",
                                                rule=((RB.Comet1ItemAccess | (
@@ -1436,7 +1439,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                            & CanReachLocation(locname.TWISTTRIALSTAR1))))
                                                )
     world.get_region(regname.TWISTY2PLAT1).connect(world.get_region(regname.TWISTY2PLAT2),
-                                                   rule=(RB.CanAirSpin | RB.MediumLogic))
+                                                   rule=(RB.CanLongJump | RB.CanAirSpin | RB.MediumLogic))
     world.get_region(regname.TWISTY2PLAT2).connect(world.get_region(regname.TWISTY2PLAT3),
                                                    rule=((RB.CanAirSpin&RB.CanRideDino)
                                                          | RB.MediumLogic))
