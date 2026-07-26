@@ -2,6 +2,7 @@ from BaseClasses import Item
 from BaseClasses import ItemClassification as IC
 from typing import NamedTuple, Optional, Dict, Set
 from .Constants.Names import item_names as itemname
+from .locations import all_location_table
 
 
 class SMG2ItemData(NamedTuple):
@@ -16,7 +17,7 @@ class SMG2Item(Item):
     def __init__(self, name: str, player: int, data: SMG2ItemData):
         super(SMG2Item, self).__init__(name, data.classification, data.code, player)
         self.type = data.type
-        self.code = data.code
+        self.code: int = list(all_location_table.keys()).index(name)
 
 # TODO Replace this item table
 item_table: dict[str, SMG2ItemData] = {
@@ -231,14 +232,14 @@ expanded_filler: dict[str, SMG2ItemData] = {**filler_items, **powerup_consumable
 
 all_filler: dict[str, SMG2ItemData] = {**expanded_filler, **smg1_consumables}
 
-all_items_table: dict[str, SMG2ItemData] = {**keyed_grand_stars, **item_table, **generic_event_items, **galaxy_keys,
+all_items_table: dict[str, SMG2ItemData] = {**keyed_grand_stars, **item_table, **galaxy_keys,
                                             **world_green_keys, **all_filler, **powerup_consumables, **powerup_unlocks,
                                             **starbit_luma_key, **starbit_world_keys, **move_rando_separate_jump,
                                             **prog_jumps, **yoshi_moves, **object_unlocks, **coin_world_keys,
                                             **coin_luma_key, **comet_type_keys, **comet_all_key}
 
 ITEM_NAME_TO_ID: dict[str, int] =  {
-    name: data.code for name, data in all_items_table.items() if data.code is not None}
+    name: list(all_items_table.keys()).index(name) for name in list(all_items_table.keys()) }
 
 def get_item_names_per_category() -> Dict[str, Set[str]]:
     categories: Dict[str, Set[str]] = {}

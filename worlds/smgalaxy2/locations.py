@@ -14,8 +14,8 @@ class SMG2Location(Location):
     game: str = "Super Mario Galaxy"
 
     def __init__(self, player: int, name: str, parent: Region):
-        super(SMG2Location, self).__init__(player, name, address=location_table[name].code, parent=parent)
-        self.code = location_table[name].code
+        super(SMG2Location, self).__init__(player, name, address=all_location_table[name].code, parent=parent)
+        self.code: int = list(all_location_table.keys()).index(name)
 
 class SMG2LocationData(NamedTuple):
     location_groups: list[str]
@@ -896,15 +896,15 @@ base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_l
                         **CHOMWORK_loc, **SPACSTOR_loc, **SLIPSAND_loc, **COLDFIRE_loc, **BOOMOON_loc,
                         **MELTMONS_loc, **CLOCKRUIN_loc, **THROWBACK_loc, **BATTBELT_loc}
 
-location_table = { **base_stars_locations, **green_star_locations, **COMETMEDAL_loc}
+all_location_table = {**base_stars_locations, **green_star_locations, **COMETMEDAL_loc}
 
 LOCATION_NAME_TO_ID: dict[str, int] =  {
-    name: data.code for name, data in location_table.items() if data.code is not None}
+    name: list(all_location_table.keys()).index(name) for name in all_location_table.keys() }
 
 def get_location_names_per_category() -> Dict[str, Set[str]]:
     categories: Dict[str, Set[str]] = {}
 
-    for name, data in location_table.items():
+    for name, data in all_location_table.items():
         for category in data.location_groups:
             categories.setdefault(category, set()).add(name)
 

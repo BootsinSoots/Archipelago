@@ -10,7 +10,7 @@ from typing import Callable, NamedTuple, Optional
 from CommonClient import CommonContext, ClientCommandProcessor, logger, server_loop, gui_enabled, get_base_parser
 from worlds.smgalaxy.Patch.Patch import SuperMarioGalaxyRandomiser
 
-from .locations import SMG2LocationData, location_table
+from .locations import SMG2LocationData, all_location_table
 from .regions import SMG2RegionData, region_list
 from .Constants.ram_constants import *
 from .items import SMG2ItemData, item_table
@@ -164,7 +164,7 @@ class GalaxyContext(CommonContext):
         star_bit_flag: int | None = None
 
         for loc_id in local_missing_locs:
-            local_loc: SMG2LocationData = location_table[self.location_names.lookup_in_game(loc_id)]
+            local_loc: SMG2LocationData = all_location_table[self.location_names.lookup_in_game(loc_id)]
             region_data: SMG2RegionData = region_list[local_loc.region]
 
             if region_data.in_game_name != self.last_galaxy:
