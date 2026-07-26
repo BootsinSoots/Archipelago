@@ -2,6 +2,7 @@ from BaseClasses import Item
 from BaseClasses import ItemClassification as IC
 from typing import NamedTuple, Optional, Dict, Set
 from .Constants.Names import item_names as itemname
+from .locations import all_location_table
 
 
 class SMG2ItemData(NamedTuple):
@@ -16,7 +17,7 @@ class SMG2Item(Item):
     def __init__(self, name: str, player: int, data: SMG2ItemData):
         super(SMG2Item, self).__init__(name, data.classification, data.code, player)
         self.type = data.type
-        self.code = data.code
+        self.code: int = list(all_location_table.keys()).index(name)
 
 # TODO Replace this item table
 item_table: dict[str, SMG2ItemData] = {
