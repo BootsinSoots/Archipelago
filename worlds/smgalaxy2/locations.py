@@ -899,7 +899,7 @@ base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_l
 location_table = { **base_stars_locations, **green_star_locations, **COMETMEDAL_loc}
 
 LOCATION_NAME_TO_ID: dict[str, int] =  {
-    name: data.code for name, data in location_table.items() if data.code is not None}
+    name: list(location_table.keys()).index(name) for name in location_table.keys() }
 
 def get_location_names_per_category() -> Dict[str, Set[str]]:
     categories: Dict[str, Set[str]] = {}
