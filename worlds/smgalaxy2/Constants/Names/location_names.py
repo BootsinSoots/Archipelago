@@ -430,7 +430,7 @@ RIGHTDOWNCORRIDORCP2 = "Rightside Down: Main Corridor Checkpoint 2"
 RIGHTDOWNCORRIDORCP3 = "Rightside Down: Main Corridor Checkpoint 3"
 FIREFLOT1LAVACP = "Fiery Flotilla: Lava Planet Checkpoint"
 
-# World 2
+# World 2 Checkpoints
 PUZZPLAN1SAWBLACP = "Puzzle Plank: Saws & Planks Checkpoint"
 PUZZPLAN1CHECKPCP = "Puzzle Plank: Checkpoint Planet Checkpoint"
 PUZZPLAN3BUGABOCP = "Puzzle Plank Hungry Luma: Bugaboom Tree Checkpoint"
@@ -449,7 +449,7 @@ LAVALAIR1LAVAPLA1CP = "Lava Lair: Lava Planet 1 Checkpoint"
 LAVALAIR1LAVAPLA2CP1 = "Lava Lair: Lava Planet 2 Start Checkpoint"
 LAVALAIR1LAVAPLA2CP2 = "Lava Lair: Lava Planet 2 Before Boss Checkpoint"
 
-# World 3
+# World 3 Checkpoints
 TALLTRUNK1LOGCP = "Tall Trunk 1: Carved Log Planet Checkpoint"
 TALLTRUNK1WOODCIRClECP = "Tall Trunk 1: Wood Circle Planet Checkpoint"
 TALLTRUNK2SLIDECP = "Tall Trunk 2: Log Slide Checkpoint"
@@ -472,4 +472,39 @@ BEATBLOK2CP2 = "Beat Block Comet: Beats on the Blocks Second Checkpoint"
 FEARFLET1BULLETBCP = "Fearsome Fleet: Bullet Bill Platform Checkpoint"
 FEARFLET1AIRSHIPCP = "Fearsome Fleet: Airship Autoscroller Checkpoint"
 
-# World 4
+# World 4 Checkpoints
+SUPMASS1THWOMPSCP = "Supermassive: Giant Thwomps Checkpoint"
+SUPMASS1STARCHIPSCP = "Supermassive: Giant Star Chips Checkpoint"
+SUPMASS1WIGGLERSCP = "Supermassive: Big Wigglers Checkpoint"
+FLIPVILL1WANWANCP = "Flipsville 1: Chomp Planet Checkpoint"
+FLIPVILL1LIFTCP = "Flipsville 1: Lift Section Checkpoint"
+FLIPVILL1STARSHROOMCP = "Flipsville 1: Starshroom Checkpoint"
+FLIPVILL2TOWERSTARTCP = "Flipsville 2: Spin-Drill Tower Checkpoint"
+CHOMWORK1ROLLINGCP = "Chompworks 1: Rolling Chomps Planet Checkpoint"
+CHOMWORK1LAVACP = "Chompworks 1: Lava Chomp Planet Checkpoint"
+CHOMWORK2ROLLINGCP = "Chompworks 2: Rolling Chomps Planet Checkpoint"
+CHOMWORK2TOWERCP = "Chompworks 2: Spring Tower Checkpoint"
+SWEETMYS1COOKIECP = "Sweet Mystery: Cookie End Checkpoint"
+SWEETMYS1SWITCHESCP = "Sweet Mystery: Flipswitch Panel Checkpoint"
+SWEETMYS1CAKECP = "Sweet Mystery: Final Cake Planet Checkpoint"
+HONEYHOP1QBBASECP = "Honeyhop: Queen Bee Planet Checkpoint"
+GRAVGAUN1LANDINGCP = "Gravity Gauntlet: Before Water Checkpoint"
+GRAVGAUN1WHOMPWACP = "Gravity Gauntlet: Whomp Walls Checkpoint"
+GRAVGAUN1DOORTODCP = "Gravity Gauntlet: Before Bowser Door Checkpoint"
+
+# World 5 Checkpoints
+SPACSTOR1TOPMANCP = "Space Storm 1: Top Man Planet Checkpoint"
+SPACSTOR2TOPTOWERCP = "Space Storm 2: Topman Tower Checkpoint"
+SLIPSAND1CUBECP = "Slipsand 1: Sand Cube Planet Checkpoint"
+SLIPSAND1SLIDECP = "Slipsand 1: Pyramid Slide Planet Checkpoint"
+SLIPSAND2BIRDCP = "Slipsand 2: Sand Bird Checkpoint"
+SHIVBURN1LAVACP = "Shiverburn: Lava Ball Planet Checkpoint"
+SHIVBURN1FIREICECP = "Shiverburn: Lava Ice Path Checkpoint"
+SHIVBURN1TOADCP = "Shiverburn: Green Toadship Checkpoint"
+BOOMOON1POISONCP = "Boo Moon 1: Poison Swamp Checkpoint"
+BOOMOON2TOWERCP = "Boo Moon 2: Howling Tower Checkpoint"
+UPDOWNINSIDECP = "Upside Dizzy: Castle Interior Checkpoint"
+BOOMBUNK1CHECKCP = "Boom Bunker: Checkpoint Sphere Checkpoint"
+BOOMBUNK2DARKCP = "Boom Bunker Comet: Dark Matter Planet Checkpoint"
+
+# World 6
