@@ -255,7 +255,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                        "Fiery Flotilla: Lava Planet Launch Star",
                                                     rule=RB.CanAirSpin)
     world.create_entrance(world.get_region(regname.FIREFLOT1LANDING),world.get_region(regname.FIREFLOT1BOSS), # Trick Entrance
-                          RB.CanInfiniteFlutter)
+                          (RB.CanInfiniteFlutter)|(RB.MediumLogic&RB.CanAirSpin))
     world.get_region(regname.BOWJR1).connect(world.get_region(regname.FIREFLOT2BOSS), "Fiery Flotilla Comet Star",
                                              rule=((RB.Comet1ItemAccess | (
                                                          OptionFilter(CometItems, 2) & Has(itemname.SPEEDYCOMET)))
