@@ -250,12 +250,14 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.WORLD1).connect(world.get_region(regname.BOWJR1), "World 1 Slot 7 Galaxy")
     world.get_region(regname.BOWJR1).connect(world.get_region(regname.FIREFLOT1LANDING), "Fiery Flotilla Grand Star")
     world.get_region(regname.FIREFLOT1LANDING).connect(world.get_region(regname.FIREFLOT1LAVA),
-                                                       "Fiery Flotilla: Fort Sling Star")
+                                                       "Fiery Flotilla: Fort Sling Star",
+                                                       rule= True_()|(RB.HardLogic&RB.CanLongJump)) # Replace True_() with locked sling start rule in future versions
+    
     world.get_region(regname.FIREFLOT1LAVA).connect(world.get_region(regname.FIREFLOT1BOSS),
                                                        "Fiery Flotilla: Lava Planet Launch Star",
                                                     rule=RB.CanAirSpin)
     world.create_entrance(world.get_region(regname.FIREFLOT1LANDING),world.get_region(regname.FIREFLOT1BOSS), # Trick Entrance
-                          (RB.CanInfiniteFlutter)|(RB.MediumLogic&RB.CanAirSpin))
+                          RB.CanInfiniteFlutter|(RB.MediumLogic&(RB.JumpHeight3|RB.CanLongJump)))
     world.get_region(regname.BOWJR1).connect(world.get_region(regname.FIREFLOT2BOSS), "Fiery Flotilla Comet Star",
                                              rule=((RB.Comet1ItemAccess | (
                                                          OptionFilter(CometItems, 2) & Has(itemname.SPEEDYCOMET)))
