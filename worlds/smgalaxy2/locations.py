@@ -538,8 +538,8 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.FLIPSWAP1, 1, RB.JumpHeight6),
     locname.FIREFLOTSTARG1:     SMG2LocationData(["Green Star Location", regname.BOWJR1], regname.BOWJR1,
                                                  regname.FIREFLOT1LANDING, 1,
-                                                 ((RB.CanWallSpin|RB.JumpHeight3)
-                                                  &(RB.CanBackflip&RB.CanAirSpin))),
+                                                 ((RB.CanWallSpin|RB.JumpHeight3
+                                                   |(RB.MediumLogic|RB.CanLongJump)))),
     locname.FIREFLOTSTARG2:     SMG2LocationData(["Green Star Location", regname.BOWJR1], regname.BOWJR1,
                                                  regname.FIREFLOT1LAVA, 1,
                                                  RB.CanLongSpin),
