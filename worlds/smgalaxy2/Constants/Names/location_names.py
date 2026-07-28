@@ -507,7 +507,7 @@ UPDOWNINSIDECP = "Upside Dizzy: Castle Interior Checkpoint"
 BOOMBUNK1CHECKCP = "Boom Bunker: Checkpoint Sphere Checkpoint"
 BOOMBUNK2DARKCP = "Boom Bunker Comet: Dark Matter Planet Checkpoint"
 
-# World 6
+# World 6 Checkpoints
 MELTY1LAVAWAVE1CP = "Melty Monster 1: Lava Wave Landing Checkpoint"
 MELTY1LAVAWAVE3CP = "Melty Monster 1: Lava Wave Before Tornadoes Checkpoint"
 MELTY2BOWLINGCP = "Melty Monster 2: Bowling Platforms Checkpoint"
@@ -527,3 +527,14 @@ GALGEN1TOWERCP = "Galaxy Generator: Tower Planet Checkpoint"
 GALGEN1YOSHICP = "Galaxy Generator: Yoshi Platform Checkpoint"
 GALGEN1STATUECP = "Galaxy Generator: Bowser Statue Checkpoint"
 GALGEN2YOSHICP = "Galaxy Generator Comet: Yoshi Platform Checkpoint"
+
+# World S(7) Checkpoints
+TWISTY2PLAT2CP = "Twisty Trials Comet: Walls Platform Checkpoint"
+BOSSBLITZ1BOULDERCP = "Boss Blitz: Bouldergeist Checkpoint"
+FLIPOUT1CLIMBCP1 = "Flip-Out: Flip-Out Climb First Checkpoint"
+FLIPOUT1CLIMBCP2 = "Flip-Out: Flip-Out Climb Second Checkpoint"
+FLIPOUT2CLIMBCP1 = "Flip-Out Comet: Flip-Out Climb First Checkpoint"
+FLIPOUT2CLIMBCP2 = "Flip-Out Comet: Flip-Out Climb Second Checkpoint"
+GRANDMASTER1CLOUDCP = "Grandmaster: Electric Clouds Checkpoint"
+GRANDMASTER1SWAPCP = "Grandmaster: Flip-Swap Lane Checkpoint"
+GRANDMASTER1PULLCP = "Grandmaster: Pull Star Path Checkpoint"
