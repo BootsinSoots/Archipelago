@@ -1009,7 +1009,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.SPACSTOR2TOPTOWERBASE).connect(world.get_region(regname.SPACSTOR2TOPTOWER),
                                                     "Space Storm 2: Tower Base Sling Star")
     world.get_region(regname.SPACSTOR2TOPTOWERBASE).connect(world.get_region(regname.SPACSTOR2GSTAR2),
-                                                            rule=RB.JumpHeight6|(RB.CanWallSpin))
+                                                            rule=RB.JumpHeight6|RB.CanWallSpin)
     world.get_region(regname.SPACSTOR2TOPTOWER).connect(world.get_region(regname.SPACSTOR2COINROOM),
                                                     "Space Storm 2: Tower Green Pipe")
     world.get_region(regname.SPACSTOR2TOPTOWER).connect(world.get_region(regname.SPACSTOR2GSTAR2))
@@ -1180,7 +1180,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                      "Clockwork Ruins: Push Block Launch Star",
                                                      rule=RB.CanPound)
     world.get_region(regname.CLOCKWORK1WHEELSB).connect(world.get_region(regname.CLOCKWORK1WHEELST),
-                                                        rule=(RB.CanWallJump))
+                                                        rule=RB.CanWallJump)
     world.get_region(regname.CLOCKWORK1WHEELST).connect(world.get_region(regname.CLOCKWORK1COINROOM),
                                                      "Clockwork Ruins: Wheel Planet Green Pipe")
     world.get_region(regname.CLOCKWORK1COGS).connect(world.get_region(regname.CLOCKWORK3HAMMER),
