@@ -557,3 +557,21 @@ ROSALETTR5 = "Letter from Rosalina 5: Starbits"
 HONEYBEE = "Letter from a Honeybee"
 STARBUNNY = "Letter from a Star Bunny"
 PEACHLETTR = "Letter from Peach"
+
+# Starbit Lumas
+WORLD1SL = "Feed World 1 Starbit Luma"
+WORLD2SL = "Feed World 2 Starbit Luma"
+WORLD3SL = "Feed World 3 Starbit Luma"
+WORLD4SL = "Feed World 4 Starbit Luma"
+WORLD5SL = "Feed World 5 Starbit Luma"
+WORLD6SL = "Feed World 6 Starbit Luma"
+WORLD7SL = "Feed World S Starbit Luma"
+
+# Coin Lumas
+FLUFFYCL = "Feed Fluffy Bluff Coin Luma"
+PUZZLECL = "Feed Puzzle Plank Coin Luma"
+HIGHTACL = "Feed Hightail Falls Coin Luma"
+COSMICCL = "Feed Cosmic Cove Coin Luma"
+CLOUDYCL = "Feed Cloudy Court Coin Luma"
+CLOCKWCL = "Feed Clockwork Ruins Coin Luma"
+BATTLECL = "Feed Battle Belt Coin Luma"
