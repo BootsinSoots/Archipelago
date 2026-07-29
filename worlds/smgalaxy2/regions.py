@@ -659,6 +659,8 @@ def create_regions(world: "SMG2World"): #TODO Correctly add locations
     if world.options.enable_green_stars.value > 0: # Fix for Green star locations
         create_locations(green_star_locations, world, True)
 
+    if world.options.mailtoad_letters:
+        create_locations(mailtoad_locations, world)
 
 def create_region(name: str, world: "SMG2World") -> Region:
     return Region(name, world.player, world.multiworld, name)

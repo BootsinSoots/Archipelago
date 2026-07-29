@@ -88,7 +88,7 @@ class EnableGreenStars(Choice):
     """
     Add Green Star locations and items. Items are not added if Green Star Behavior is set to Disabled
 
-    Off: No Green Stars items of locations are added to the pool
+    Off: No Green Stars items or locations are added to the pool
 
     Unlocked: Green Star Locations are added to the multiworld with no extra logical requirements
 
@@ -388,6 +388,13 @@ class LogicDifficulty(Choice):
     option_Hard = 2
     option_Hell = 3
 
+class MailtoadLetters(Toggle):
+    """
+    Turns Mailtoad's letters into locations that will also give you an item when you receive them.
+    """
+    display_name = "Mailtoad Letters"
+    internal_name = "mailtoad_letters"
+
 
 # Comet medals in pool, provide galaxy "order", 1 comet to one level
 
@@ -420,6 +427,7 @@ class SMG2Options(PerGameCommonOptions):
     comet_items: CometItems
     comet_mission: CometMission
     logic_difficulty: LogicDifficulty
+    mailtoad_letters: MailtoadLetters
 
 option_groups = [
     Options.OptionGroup("Map Options", [
@@ -452,7 +460,7 @@ option_groups = [
         CometItems,
     ]),
     Options.OptionGroup("Extra Locations", [
-
+        MailtoadLetters,
     ]),
     Options.OptionGroup("Itempool Changes", [
         PowerUpFiller
