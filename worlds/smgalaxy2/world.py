@@ -22,14 +22,14 @@ from .EntranceRando import rules_from_er_placements
 from .locations import LOCATION_NAME_TO_ID, get_location_names_per_category, SMG2Location
 from .items import SMG2Item, ITEM_NAME_TO_ID, get_item_names_per_category, world_green_keys
 from .regions import disconnect_from_option, region_list, SMG2RegionData
-from .SMGSettings import SuperMarioGalaxy
+from .SMG2Settings import SuperMarioGalaxy2
 from .Patch.Patch import SMGPlayerContainer
 
-def runClient(*args):
-    from .SMGClient import launch
-    launch_subprocess(launch, name = "SMG2 Client", args = args)
-
-components.append(Component("SMG2 Client", func=runClient, component_type=Type.CLIENT, file_identifier=SuffixIdentifier(".apsmg2")))
+# def runClient(*args):
+#     from .SMG2Client import launch
+#     launch_subprocess(launch, name = "SMG2 Client", args = args)
+#
+# components.append(Component("SMG2 Client", func=runClient, component_type=Type.CLIENT, file_identifier=SuffixIdentifier(".apsmg2")))
 
 class SMG2World(World):
     """
@@ -46,7 +46,7 @@ class SMG2World(World):
     #option definitions
     options_dataclass = Options.SMG2Options
     options: Options.SMG2Options
-    settings: ClassVar[SuperMarioGalaxy]
+    settings: ClassVar[SuperMarioGalaxy2]
 
     item_name_to_id: ClassVar[dict[str, int]] = ITEM_NAME_TO_ID
     location_name_to_id: ClassVar[dict[str, int]] = LOCATION_NAME_TO_ID

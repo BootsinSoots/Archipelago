@@ -8,7 +8,7 @@ import Utils
 
 from typing import Callable, NamedTuple, Optional
 from CommonClient import CommonContext, ClientCommandProcessor, logger, server_loop, gui_enabled, get_base_parser
-from worlds.smgalaxy.Patch.Patch import SuperMarioGalaxyRandomiser
+from .Patch.Patch import SuperMarioGalaxyRandomiser
 
 from .locations import SMG2LocationData, all_location_table
 from .regions import SMG2RegionData, region_list
