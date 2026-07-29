@@ -1170,7 +1170,7 @@ base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_l
                         **CHOMWORK_loc, **SPACSTOR_loc, **SLIPSAND_loc, **COLDFIRE_loc, **BOOMOON_loc,
                         **MELTMONS_loc, **CLOCKRUIN_loc, **THROWBACK_loc, **BATTBELT_loc}
 
-all_location_table = {**base_stars_locations, **green_star_locations, **COMETMEDAL_loc}
+all_location_table = {**base_stars_locations, **green_star_locations, **COMETMEDAL_loc, **mailtoad_locations, **checkpoint_loc_table}
 
 LOCATION_NAME_TO_ID: dict[str, int] =  {
     name: list(all_location_table.keys()).index(name) for name in all_location_table.keys() }
