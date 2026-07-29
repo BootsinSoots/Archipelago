@@ -18,7 +18,7 @@ from .Constants.Names import item_names as itemname
 from .Constants.Names import location_names as locname
 from .Constants.constants import AP_WORLD_VERSION_NAME, CLIENT_VERSION
 from .Options import WorldShuffle
-from .Rules import rules_from_er_placements
+from .EntranceRando import rules_from_er_placements
 from .locations import LOCATION_NAME_TO_ID, get_location_names_per_category, SMG2Location
 from .items import SMG2Item, ITEM_NAME_TO_ID, get_item_names_per_category, world_green_keys
 from .regions import disconnect_from_option, region_list, SMG2RegionData
