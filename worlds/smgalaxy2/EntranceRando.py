@@ -7,7 +7,7 @@ from rule_builder.options import OptionFilter
 from rule_builder.rules import Rule, True_, Has, HasFromList, HasGroup
 from .Constants.Names import item_names as itemname
 from .Options import StarbitLumaLocks, GreenStarBehavior, GalaxyLock, Goal
-from .Rules import NoGreenList, GreenSeparateGoal, GreenStarRule
+from .Rules import NoGreenList, GreenSeparateGoal, GreenStarLocationRule
 from .locations import green_star_locations
 from .regions import region_list, all_galaxy_slots
 
@@ -89,4 +89,4 @@ def rules_from_er_placements(world: "SMG2World"):
             world.set_rule(world.get_location(loc_name), data.default_access & Has(f"Green Star {world_map} Key"))
     elif world.options.enable_green_stars.value !=0 :
         for loc_name, data in green_star_locations.items():
-            world.set_rule(world.get_location(loc_name), data.default_access & GreenStarRule)
+            world.set_rule(world.get_location(loc_name), data.default_access & GreenStarLocationRule)

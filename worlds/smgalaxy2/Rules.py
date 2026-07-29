@@ -14,11 +14,16 @@ NoGreenList: list[str] = [itemname.POWER, itemname.GRAND, itemname.GRAND1, itemn
 GreenSeparateGoal: Rule[Any] = ((Has(itemname.GREEN, FromOption(GreenStarstoFinish)) & OptionFilter(GreenStarBehavior, 1))
                      | OptionFilter(GreenStarBehavior, 2))
 
-GreenStarRule: Rule[Any] = ((True_()&OptionFilter(EnableGreenStars,1))
-                            | (OptionFilter(EnableGreenStars, 2)&CanReachLocation(locname.GALAXYGENSTAR1)
+GreenStarLocationRule: Rule[Any] = ((True_() & OptionFilter(EnableGreenStars, 1))
+                                    | (OptionFilter(EnableGreenStars, 2)&CanReachLocation(locname.GALAXYGENSTAR1)
                                &((HasFromList(*NoGreenList, count=120)&OptionFilter(GreenStarBehavior, 0, operator="ne"))
                                  |(HasGroup("Power Stars", count=120)&OptionFilter(GreenStarBehavior, 0))))
-                            | (OptionFilter(EnableGreenStars, 3)&Has(itemname.GREENCOMETKEY)))
+                                    | (OptionFilter(EnableGreenStars, 3)&Has(itemname.GREENCOMETKEY)))
+
+GreenStarsSeparate: Rule[Any] = (True_() & OptionFilter(GreenStarBehavior, 0, operator="gt")
+                                 |True_() & OptionFilter(EnableGreenStars, 0))
+IncludeGreenStars: Rule[Any] = (True_() & OptionFilter(GreenStarBehavior, 0)
+                                & OptionFilter(EnableGreenStars, 0, operator="gt"))
 
 CometMissionOff: Rule[Any] = True_()&OptionFilter(CometMission, 0) # CanReach previous star/CanReach Comet Medal/Both/Neither
 CometItemsOff: Rule[Any] = True_()&OptionFilter(CometItems, 0)
