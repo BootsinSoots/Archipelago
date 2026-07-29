@@ -11,7 +11,8 @@ from .Constants.Names import location_names as locname
 from .Constants.Names.region_names import SPACSTOR2GSTAR2
 from .Options import SMG2Options
 from .items import SMG2Item
-from .locations import SMG2Location, base_stars_locations, SMG2LocationData, green_star_locations, COMETMEDAL_loc, event_locations
+from .locations import SMG2Location, base_stars_locations, SMG2LocationData, green_star_locations, COMETMEDAL_loc, \
+    event_locations, mailtoad_locations
 
 if TYPE_CHECKING:
     from . import SMG2World
