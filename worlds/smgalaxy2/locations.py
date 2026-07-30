@@ -67,8 +67,7 @@ FLUFBLUF_loc: dict[str, SMG2LocationData] = {
                                             regname.FLUFFBLUFF2LANDING,
                                             ((CanReachRegion(regname.FLUFFBLUFF2CLIFF)&(RB.CanClimbPole|RB.JumpHeight5)
                                               &CanReachRegion(regname.FLUFFBLUFF2TREE)))
-                                            & (RB.GreenStarsSeparate & HasFromList(*RB.NoGreenList, count=15)
-                                               |RB.IncludeGreenStars & HasGroup("Power Stars", count=15))),
+                                            & RB.PowerStarCount(15) & RB.MailtoadOpen),
     locname.FLUFBLUFSTAR3: SMG2LocationData(["Power Star Location",regname.FLUFFBLUFF],regname.FLUFFBLUFF,
                                             regname.FLUFFBLUFF3TOWER, RB.CanMakeCloud),
 }
@@ -129,7 +128,8 @@ ROCKBOWL_loc: dict[str, SMG2LocationData] = {
     locname.ROCKBOWLSTAR3:  SMG2LocationData(["Power Star Location", regname.BOULBOWL], regname.BOULBOWL,
                                              regname.BOULBOWL1BOULDER, (RB.ROCKNROLLIN
                                                                         & CanReachLocation(locname.CHOMPWORKSTAR1)
-                                                                        & CanReachLocation(locname.ROCKBOWLSTAR1))),
+                                                                        & CanReachLocation(locname.ROCKBOWLSTAR1)
+                                                                        & RB.MailtoadOpen)),
 }
 
 # Cosmic Cove S
@@ -147,7 +147,8 @@ WILDGLIDE_loc: dict[str, SMG2LocationData] = {
     locname.WILDGLIDESTAR1: SMG2LocationData(["Power Star Location", regname.WILDGLIDE], regname.WILDGLIDE,
                                              regname.WILDGLIDECOURSE),
     locname.WILDGLIDESTAR2: SMG2LocationData(["Power Star Location", regname.WILDGLIDE], regname.WILDGLIDE,
-                                             regname.WILDGLIDECOURSE, CanReachLocation(locname.BEATBLOCKSTAR1)),
+                                             regname.WILDGLIDECOURSE, (CanReachLocation(locname.BEATBLOCKSTAR1)
+                                                                       & RB.MailtoadOpen)),
 }
 
 # Honeybloom St
@@ -281,7 +282,8 @@ HONEYHOP_loc: dict[str, SMG2LocationData] = {
                                             regname.HONEYHOP1QBBASE,
                                             (CanReachRegion(regname.HONEYHOP2QBBUBBLE)
                                              & CanReachRegion(regname.HONEYHOP2QBTOP)
-                                             & CanReachLocation(locname.CLOCKRUINSTAR1))),
+                                             & CanReachLocation(locname.CLOCKRUINSTAR1)
+                                             & RB.MailtoadOpen)),
 }
 
     # Sweet Mystery
@@ -309,7 +311,8 @@ SPACSTOR_loc: dict[str, SMG2LocationData] = {
                                               regname.SPACSTOR2TOPTOWER, RB.JumpHeight5),
     locname.SPACESTORMSTAR3: SMG2LocationData(["Power Star Location", regname.SPACSTOR], regname.SPACSTOR,
                                               regname.SPACSTOR1TOPMAN, (CanReachLocation(locname.BOOMOONSTAR1)
-                                                                        & CanReachLocation(locname.SPACESTORMSTAR2))),
+                                                                        & CanReachLocation(locname.SPACESTORMSTAR2)
+                                                                        & RB.MailtoadOpen)),
 }
 
     # Slipsand Star
@@ -356,7 +359,8 @@ FLETGLIDE_loc: dict[str, SMG2LocationData] = {
                                             regname.FLEETGLIDECOURSE, RB.CanRideBird),
     locname.FLEETFLYSTAR2: SMG2LocationData(["Power Star Location", regname.FLEETGLIDE], regname.FLEETGLIDE,
                                             regname.FLEETGLIDECOURSE, (RB.CanRideBird
-                                                                       & CanReachLocation(locname.BATTBELTSTAR1))),
+                                                                       & CanReachLocation(locname.BATTBELTSTAR1)
+                                                                       & RB.MailtoadOpen)),
 }
 
     # Bowser Jr.'s
@@ -422,7 +426,8 @@ SLIMSPRI_loc: dict[str, SMG2LocationData] = {
                                              regname.SLIMSPRI1CAVE2, RB.CanShell),
     locname.SLIMYSPRISTAR2: SMG2LocationData(["Power Star Location", regname.SLIMSPRI], regname.SLIMSPRI,
                                              regname.SLIMSPRI2MOUTH1, (CanReachRegion(regname.SLIMSPRI2CAVE2)
-                                                                       & CanReachLocation(locname.GALAXYGENSTAR2))),
+                                                                       & CanReachLocation(locname.GALAXYGENSTAR2)
+                                                                       & RB.MailtoadOpen)),
 }
 
     # Bowser's Gala
