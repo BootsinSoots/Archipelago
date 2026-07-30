@@ -554,8 +554,8 @@ ROSALETTR2 = "Letter from Rosalina 2: Starbits"
 ROSALETTR3 = "Letter from Rosalina 3: Starbits"
 ROSALETTR4 = "Letter from Rosalina 4: Starbits"
 ROSALETTR5 = "Letter from Rosalina 5: Starbits"
-HONEYBEE = "Letter from a Honeybee"
-STARBUNNY = "Letter from a Star Bunny"
+HONEYBEELTR = "Letter from a Honeybee"
+STARBUNNYLTR = "Letter from a Star Bunny"
 PEACHLETTR = "Letter from Peach"
 
 # Starbit Lumas

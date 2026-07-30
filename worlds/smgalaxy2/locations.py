@@ -1,7 +1,8 @@
 from typing import Dict, NamedTuple, Optional, Set, Any
 from BaseClasses import Location, Region
 from rule_builder.options import OptionFilter
-from rule_builder.rules import Rule, Has, True_, CanReachRegion, CanReachLocation, HasFromList, HasGroup
+from rule_builder.rules import Rule, Has, True_, CanReachRegion, CanReachLocation, HasFromList, HasGroup, \
+    CanReachEntrance
 
 from .Constants.Names import region_names as regname
 from .Constants.Names import item_names as itemname
@@ -1140,12 +1141,44 @@ mailtoad_locations: dict[str, SMG2LocationData] = {
                                                  regname.SHIP2),
     locname.ROSALETTR5:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
                                                  regname.SHIP2),
-    locname.HONEYBEE:           SMG2LocationData(["Letter Locations"], regname.SHIP2,
-                                                 regname.SHIP2),
-    locname.STARBUNNY:          SMG2LocationData(["Letter Locations"], regname.SHIP2,
-                                                 regname.SHIP2),
+    locname.HONEYBEELTR:           SMG2LocationData(["Letter Locations"], regname.SHIP2,
+                                                    regname.SHIP2),
+    locname.STARBUNNYLTR:          SMG2LocationData(["Letter Locations"], regname.SHIP2,
+                                                    regname.SHIP2),
     locname.PEACHLETTR:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
                                                  regname.SHIP2),
+}
+
+hungry_luma_loc: dict[str, SMG2LocationData] ={
+    locname.WORLD1SL: SMG2LocationData(["Hungry Luma Location"], regname.WORLD1, regname.WORLD1,
+                                       CanReachEntrance("World 1 Starbit Luma")),
+    locname.WORLD2SL: SMG2LocationData(["Hungry Luma Location"], regname.WORLD2, regname.WORLD2,
+                                       CanReachEntrance("World 2 Starbit Luma")),
+    locname.WORLD3SL: SMG2LocationData(["Hungry Luma Location"], regname.WORLD3, regname.WORLD3,
+                                       CanReachEntrance("World 3 Starbit Luma")),
+    locname.WORLD4SL: SMG2LocationData(["Hungry Luma Location"], regname.WORLD4, regname.WORLD4,
+                                       CanReachEntrance("World 4 Starbit Luma")),
+    locname.WORLD5SL: SMG2LocationData(["Hungry Luma Location"], regname.WORLD5, regname.WORLD5,
+                                       CanReachEntrance("World 5 Starbit Luma")),
+    locname.WORLD6SL: SMG2LocationData(["Hungry Luma Location"], regname.WORLD6, regname.WORLD6,
+                                       CanReachEntrance("World 6 Starbit Luma")),
+    locname.WORLD7SL: SMG2LocationData(["Hungry Luma Location"], regname.WORLD7, regname.WORLD7,
+                                       CanReachEntrance("World 7 Starbit Luma")),
+    locname.FLUFFYCL: SMG2LocationData(["Hungry Luma Location"], regname.FLUFFBLUFF,
+                                       regname.FLUFFBLUFF1BIGCLOUD,
+                                       CanReachEntrance("Fluffy Bluff: Hungry Luma")),
+    locname.PUZZLECL: SMG2LocationData(["Hungry Luma Location"], regname.PUZZPLAN, regname.PUZZPLAN1GRUZZY,
+                                       CanReachEntrance("Puzzle Plank: Hungry Luma")),
+    locname.HIGHTACL: SMG2LocationData(["Hungry Luma Location"], regname.HIGHTAIL, regname.HIGHTAIL1DASHWAL1,
+                                       CanReachEntrance("Hightail Falls: Hungry Luma")),
+    locname.COSMICCL: SMG2LocationData(["Hungry Luma Location"], regname.COSMICO, regname.COSMIC1POOL,
+                                       CanReachEntrance("Cosmic Cove: Hungry Luma")),
+    locname.CLOUDYCL: SMG2LocationData(["Hungry Luma Location"], regname.CLOUCOUR, regname.CLOUCOUR1TOWERS,
+                                       CanReachEntrance("Cloudy Court: Hungry Luma")),
+    locname.CLOCKWCL: SMG2LocationData(["Hungry Luma Location"], regname.CLOCKWORK, regname.CLOCKWORK1COGS,
+                                       CanReachEntrance("Clockwork Ruins: Hungry Luma")),
+    locname.BATTLECL: SMG2LocationData(["Hungry Luma Location"], regname.BATTLEBELT, regname.BATTBELT1ICEP,
+                                       CanReachEntrance("Battle Belt: Hungry Luma")),
 }
 
 event_locations: dict[str, SMG2LocationData] = {

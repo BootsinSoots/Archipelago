@@ -12,7 +12,7 @@ from .Constants.Names.region_names import SPACSTOR2GSTAR2
 from .Options import SMG2Options
 from .items import SMG2Item
 from .locations import SMG2Location, base_stars_locations, SMG2LocationData, green_star_locations, COMETMEDAL_loc, \
-    event_locations, mailtoad_locations, checkpoint_loc_table
+    event_locations, mailtoad_locations, checkpoint_loc_table, hungry_luma_loc
 
 if TYPE_CHECKING:
     from . import SMG2World
@@ -633,6 +633,7 @@ def create_regions(world: "SMG2World"): #TODO Correctly add locations
     create_locations(base_stars_locations, world)
     create_locations(COMETMEDAL_loc, world)
     create_locations(checkpoint_loc_table, world)
+    create_locations(hungry_luma_loc, world)
     for loc, data in event_locations.items():
         world.get_region(data.region).add_event(loc, data.locked_item, data.default_access, SMG2Location, SMG2Item)
 
