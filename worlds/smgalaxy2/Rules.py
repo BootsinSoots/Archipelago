@@ -1,3 +1,4 @@
+from turtledemo.penrose import star
 from typing import TYPE_CHECKING, Any
 
 from rule_builder.field_resolvers import FromOption
@@ -96,8 +97,11 @@ MediumLogic: Rule[Any] = True_()&OptionFilter(LogicDifficulty, 1)
 EasyLogic: Rule[Any] = True_()&OptionFilter(LogicDifficulty, 0)
 CanInfiniteFlutter: Rule[Any] = HellLogic&CanRideDino
 
-def StarbitLumaRule(starbit_count: int) -> Rule[Any]:
-
+MailtoadOpen: Rule[Any] = PowerStarCount(13) # May need additional rules here in the future
 
 def CoinLumaRule(coin_count: int) -> Rule[Any]:
     return (True_() if coin_count < 100 else Has("Can Farm Coins"))
+
+def PowerStarCount(star_count: int) - > Rule[Any]:
+    return (GreenStarsSeparate & HasFromList(*RB.NoGreenList, count = (min(star_count, 120))) |
+            IncludeGreenStars & HasGroup("Power Stars", count = star_count)

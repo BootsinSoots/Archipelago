@@ -1121,8 +1121,7 @@ mailtoad_locations: dict[str, SMG2LocationData] = {
                                                  regname.SHIP2, CanReachLocation(locname.BATTBELTSTAR1)),
     locname.CHIMPSTOMP:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
                                                  regname.SHIP2,
-                                                 (RB.GreenStarsSeparate & HasFromList(*RB.NoGreenList, count=15)
-                                                  | RB.IncludeGreenStars & HasGroup("Power Stars", count=15))),
+                                                 RB.PowerStarCount(15)),
     locname.CHIMPSCORE:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
                                                  regname.SHIP2, CanReachLocation(locname.CLOCKRUINSTAR1)),
     locname.CHIMPCOINS:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
