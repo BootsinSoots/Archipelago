@@ -215,8 +215,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                          "Fluffy Bluff: Hungry Luma",
                                                           rule=((RB.CoinLumaBase|
                                                            (OptionFilter(CoinLumaLocks,2)&Has(itemname.COINHL1)))
-                                                     &(True_() if world.options.coin_luma_counts.value["Fluffy Bluff Coin Luma"]<100
-                                                       else Has("Can Farm Coins")))),
+                                                     & RB.CoinLumaRule(world.options.coin_luma_counts.value["Fluffy Bluff Coin Luma"]))),
     world.get_region(regname.FLUFFBLUFF1BIGCLOUD).connect(world.get_region(regname.FLUFFBLUFF1CLIFF1))
     world.get_region(regname.FLUFFBLUFF1CLIFF1).connect(world.get_region(regname.FLUFFBLUFF1CLIFF2),
                                                         rule=(RB.CloudMario & RB.CanLongJump) | RB.CanMakeCloud
@@ -297,8 +296,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                       "Puzzle Plank: Hungry Luma",
                                                       rule=((RB.CoinLumaBase|
                                                            (OptionFilter(CoinLumaLocks,2)&Has(itemname.COINHL2)))
-                                                     &(True_() if world.options.coin_luma_counts.value["Puzzle Plank Coin Luma"]<100
-                                                       else Has("Can Farm Coins"))))
+                                                     & RB.CoinLumaRule(world.options.coin_luma_counts.value["Puzzle Plank Coin Luma"])))
     world.get_region(regname.PUZZPLAN1GRUZZY).connect(world.get_region(regname.PUZZPLAN1SAWBLA),
                                                       "Puzzle Plank: Grassy Buzzsaw Launch Star",
                                                       rule=RB.CanPound|RB.JumpHeight6)
@@ -376,9 +374,8 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                         "Hightail Falls: Hungry Luma",
                                                         rule=((RB.CoinLumaBase |
                                                                (OptionFilter(CoinLumaLocks, 2) & Has(itemname.COINHL3)))
-                                                              & (True_() if world.options.coin_luma_counts.value[
-                                                                                "Hightail Falls Coin Luma"] < 100
-                                                                 else Has("Can Farm Coins"))))
+                                                              & RB.CoinLumaRule(world.options.coin_luma_counts.value[
+                                                                                "Hightail Falls Coin Luma"])))
     world.get_region(regname.HIGHTAIL1DASHWAL2).connect(world.get_region(regname.HIGHTAILGSTAR3))
     world.get_region(regname.HIGHTAIL1DASHWAL1).connect(world.get_region(regname.HIGHTAILGSTAR2),
                                                         rule=RB.CanDinoRun&CanLongJump)
@@ -426,9 +423,8 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                   "Cosmic Cove: Hungry Luma",
                                                   rule=((RB.CoinLumaBase |
                                                          (OptionFilter(CoinLumaLocks, 2) & Has(itemname.COINHL4)))
-                                                        & (True_() if world.options.coin_luma_counts.value[
-                                                                          "Cosmic Cove Coin Luma"] < 100
-                                                           else Has("Can Farm Coins")))   )
+                                                        & RB.CoinLumaRule(world.options.coin_luma_counts.value[
+                                                                          "Cosmic Cove Coin Luma"])))
     world.get_region(regname.COSMIC1POOL).connect(world.get_region(regname.COSMIC1WATERFA),
                                                   "Cosmic Cove 1: Icy Waterfall",
                                                   rule=RB.CanPound)
@@ -551,9 +547,8 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                       "Cloudy Court: Hungry Luma",
                                                       rule=((RB.CoinLumaBase |
                                                              (OptionFilter(CoinLumaLocks, 2) & Has(itemname.COINHL5)))
-                                                            & (True_() if world.options.coin_luma_counts.value[
-                                                                              "Cloudy Court Coin Luma"] < 100
-                                                               else Has("Can Farm Coins"))))
+                                                            & RB.CoinLumaRule(world.options.coin_luma_counts.value[
+                                                                              "Cloudy Court Coin Luma"])))
     world.get_region(regname.CLOUCOUR1TOWERS).connect(world.get_region(regname.CLOUCOUR1PARAGOOMBONUS),
                                                       "Cloudy Court: Paragoomba Bonus Teleporter",
                                                       rule=RB.CanMakeCloud)
@@ -1182,8 +1177,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                      "Clockwork Ruins: Hungry Luma",
                                                      rule=((RB.CoinLumaBase|
                                                            (OptionFilter(CoinLumaLocks,2)&Has(itemname.COINHL6)))
-                                                     &(True_() if world.options.coin_luma_counts.value["Clockwork Ruins Coin Luma"]<100
-                                                       else Has("Can Farm Coins"))))
+                                                     & RB.CoinLumaRule(world.options.coin_luma_counts.value["Clockwork Ruins Coin Luma"])))
     world.get_region(regname.CLOCKWORK3HAMMER).connect(world.get_region(regname.CLOCKWORK3HAMMERTOP),
                                                      "Clockwork Ruins Hungry Luma: Hammer Zone Green Pipe")
     world.get_region(regname.CLOCKWORK).connect(world.get_region(regname.CLOCKWORK2COGS), "Clockwork Ruins Comet Star",

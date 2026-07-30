@@ -95,3 +95,9 @@ HardLogic: Rule[Any] = True_()&OptionFilter(LogicDifficulty, 2)
 MediumLogic: Rule[Any] = True_()&OptionFilter(LogicDifficulty, 1)
 EasyLogic: Rule[Any] = True_()&OptionFilter(LogicDifficulty, 0)
 CanInfiniteFlutter: Rule[Any] = HellLogic&CanRideDino
+
+def StarbitLumaRule(starbit_count: int) -> Rule[Any]:
+
+
+def CoinLumaRule(coin_count: int) -> Rule[Any]:
+    return (True_() if coin_count < 100 else Has("Can Farm Coins"))
