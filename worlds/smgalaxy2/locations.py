@@ -1138,7 +1138,8 @@ mailtoad_locations: dict[str, SMG2LocationData] = {
                                                  regname.SHIP2, (CanReachLocation(locname.GALAXYGENSTAR2)
                                                                  & RB.MailtoadOpen)),
     locname.LUIGILETTR:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
-                                                 regname.SHIP2, RB.MailtoadOpen),
+                                                 regname.SHIP2, (RB.MailtoadOpen
+                                                                 & CanReachLocation(locname.GALAXYGENSTAR1))),
     locname.ROSALETTRL:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
                                                  regname.SHIP2,RB.MailtoadOpen),
     locname.ROSALETTR1:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
@@ -1152,9 +1153,11 @@ mailtoad_locations: dict[str, SMG2LocationData] = {
     locname.ROSALETTR5:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
                                                  regname.SHIP2, RB.MailtoadOpen),
     locname.HONEYBEELTR:           SMG2LocationData(["Letter Locations"], regname.SHIP2,
-                                                    regname.SHIP2, RB.MailtoadOpen),
+                                                    regname.SHIP2, (RB.MailtoadOpen
+                                                                    & RB.CanReachLocation(locname.BEEBLOOMSTAR2))),
     locname.STARBUNNYLTR:          SMG2LocationData(["Letter Locations"], regname.SHIP2,
-                                                    regname.SHIP2, RB.MailtoadOpen),
+                                                    regname.SHIP2, (RB.MailtoadOpen
+                                                                    & CanReachLocation(locname.FLIPSWAPSTAR1))),
     locname.PEACHLETTR:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
                                                  regname.SHIP2, RB.MailtoadOpen),
 }
