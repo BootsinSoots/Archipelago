@@ -12,7 +12,7 @@ from .Constants.Names.region_names import SPACSTOR2GSTAR2
 from .Options import SMG2Options
 from .items import SMG2Item
 from .locations import SMG2Location, base_stars_locations, SMG2LocationData, green_star_locations, COMETMEDAL_loc, \
-    event_locations, mailtoad_locations, checkpoint_loc_table, hungry_luma_loc
+    event_locations, mailtoad_locations, checkpoint_loc_table, hungry_luma_loc, passenger_loc
 
 if TYPE_CHECKING:
     from . import SMG2World
@@ -660,8 +660,11 @@ def create_regions(world: "SMG2World"): #TODO Correctly add locations
     if world.options.enable_green_stars.value > 0: # Fix for Green star locations
         create_locations(green_star_locations, world, True)
 
-    if world.options.mailtoad_letters:
+    if world.options.mailtoad_letters.value:
         create_locations(mailtoad_locations, world)
+
+    if world.options.passengers.value:
+        create_locations(passenger_loc, world)
 
 def create_region(name: str, world: "SMG2World") -> Region:
     return Region(name, world.player, world.multiworld, name)
