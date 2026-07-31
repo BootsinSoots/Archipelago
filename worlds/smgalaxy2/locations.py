@@ -147,7 +147,7 @@ WILDGLIDE_loc: dict[str, SMG2LocationData] = {
     locname.WILDGLIDESTAR1: SMG2LocationData(["Power Star Location", regname.WILDGLIDE], regname.WILDGLIDE,
                                              regname.WILDGLIDE1COURSE),
     locname.WILDGLIDESTAR2: SMG2LocationData(["Power Star Location", regname.WILDGLIDE], regname.WILDGLIDE,
-                                             regname.WILDGLIDE1COURSE, (CanReachLocation(locname.BEATBLOCKSTAR1)
+                                             regname.WILDGLIDE2COURSE, (CanReachLocation(locname.BEATBLOCKSTAR1)
                                                                        & RB.MailtoadOpen)),
 }
 

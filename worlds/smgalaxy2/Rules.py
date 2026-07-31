@@ -30,6 +30,10 @@ CometMissionOff: Rule[Any] = True_()&OptionFilter(CometMission, 0) # CanReach pr
 CometItemsOff: Rule[Any] = True_()&OptionFilter(CometItems, 0)
 Comet1ItemAccess: Rule[Any] = CometItemsOff|(Has(itemname.ALLCOMETSKEY)&OptionFilter(CometItems, 1))# Has All Comet Key and option or unlocked
 
+def PowerStarCount(star_count: int) -> Rule[Any]:
+    return (GreenStarsSeparate & HasFromList(*NoGreenList, count = (min(star_count, 120))) |
+            IncludeGreenStars & HasGroup("Power Stars", count = star_count))
+
 OpenWorlds: Rule[Any] = True_()&OptionFilter(WorldShuffle, WorldShuffle.option_Open)
 
 PowerUpOff: Rule[Any] = True_()&OptionFilter(PowerupRando,0)
@@ -102,6 +106,3 @@ MailtoadOpen: Rule[Any] = PowerStarCount(13) # May need additional rules here in
 def CoinLumaRule(coin_count: int) -> Rule[Any]:
     return (True_() if coin_count < 100 else Has("Can Farm Coins"))
 
-def PowerStarCount(star_count: int) - > Rule[Any]:
-    return (GreenStarsSeparate & HasFromList(*RB.NoGreenList, count = (min(star_count, 120))) |
-            IncludeGreenStars & HasGroup("Power Stars", count = star_count)
