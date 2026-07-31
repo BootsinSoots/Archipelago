@@ -28,10 +28,16 @@ item_table: dict[str, SMG2ItemData] = {
 }
 
 filler_items: dict[str, SMG2ItemData] = {
-    "1-up Mushroom": SMG2ItemData(["Filler Items"], IC.filler),
-    # Life Up
-    # Starbits
-    # Coins
+    itemname.ONEUP: SMG2ItemData(["Filler Items"], IC.filler),
+    itemname.LIFEUP: SMG2ItemData(["Filler Items"], IC.filler),
+    itemname.STARBIT10: SMG2ItemData(["Filler Items"], IC.filler),
+    itemname.STARBIT25: SMG2ItemData(["Filler Items"], IC.filler),
+    itemname.STARBIT50: SMG2ItemData(["Filler Items"], IC.filler),
+    itemname.STARBI100: SMG2ItemData(["Filler Items"], IC.filler),
+    itemname.COINS1: SMG2ItemData(["Filler Items"], IC.filler),
+    itemname.COINS5: SMG2ItemData(["Filler Items"], IC.filler),
+    itemname.COIN10: SMG2ItemData(["Filler Items"], IC.filler),
+    itemname.COIN20: SMG2ItemData(["Filler Items"], IC.filler),
 }
 
 yoshi_moves: dict[str, SMG2ItemData] = {
@@ -43,7 +49,7 @@ yoshi_moves: dict[str, SMG2ItemData] = {
 }
 
 separate_jump: dict[str, SMG2ItemData] = {
-    itemname.MARIODOUBLE: SMG2ItemData(["Mario Move"], IC.progression),
+    itemname.MARIODOUBLE: SMG2ItemData(["Mario Move"], (IC.progression | IC.trap)),
     itemname.MARIOTRIPLE: SMG2ItemData(["Mario Move"], IC.progression),
 }
 
