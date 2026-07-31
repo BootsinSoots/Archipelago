@@ -23,7 +23,7 @@ from .locations import LOCATION_NAME_TO_ID, get_location_names_per_category, SMG
 from .items import SMG2Item, ITEM_NAME_TO_ID, get_item_names_per_category, world_green_keys
 from .regions import disconnect_from_option, region_list, SMG2RegionData
 from .SMG2Settings import SuperMarioGalaxy2
-from .Patch.Patch import SMGPlayerContainer
+# from .Patch.Patch import SMGPlayerContainer
 
 # def runClient(*args):
 #     from .SMG2Client import launch
@@ -307,9 +307,9 @@ class SMG2World(World):
         # # Write the expected output zip container to the Generated Seed folder.
         # smg_container.write()
 
-        patch_path = os.path.join(output_directory, f"{self.multiworld.get_out_file_name_base(self.player)}"
-                    f"{SMGPlayerContainer.patch_file_ending}")
-        
-        player_container: SMGPlayerContainer = SMGPlayerContainer(output_data, patch_path, self.player_name, self.player)
-        player_container.write()
+        # patch_path = os.path.join(output_directory, f"{self.multiworld.get_out_file_name_base(self.player)}"
+        #             f"{SMGPlayerContainer.patch_file_ending}")
+        #
+        # player_container: SMGPlayerContainer = SMGPlayerContainer(output_data, patch_path, self.player_name, self.player)
+        # player_container.write()
         
