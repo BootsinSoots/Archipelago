@@ -395,6 +395,13 @@ class MailtoadLetters(Toggle):
     display_name = "Mailtoad Letters"
     internal_name = "mailtoad_letters"
 
+class Passengers(Toggle):
+    """
+    Speak to each new passenger on Starship Mario for an item!
+    """
+    display_name = "Passengers"
+    internal_name = "passengers"
+
 
 # Comet medals in pool, provide galaxy "order", 1 comet to one level
 
@@ -428,6 +435,7 @@ class SMG2Options(PerGameCommonOptions):
     comet_mission: CometMission
     logic_difficulty: LogicDifficulty
     mailtoad_letters: MailtoadLetters
+    passengers: Passengers
 
 option_groups = [
     Options.OptionGroup("Map Options", [
@@ -461,6 +469,7 @@ option_groups = [
     ]),
     Options.OptionGroup("Extra Locations", [
         MailtoadLetters,
+        Passengers,
     ]),
     Options.OptionGroup("Itempool Changes", [
         PowerUpFiller

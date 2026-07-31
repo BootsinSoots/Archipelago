@@ -1,7 +1,8 @@
 from typing import Dict, NamedTuple, Optional, Set, Any
 from BaseClasses import Location, Region
 from rule_builder.options import OptionFilter
-from rule_builder.rules import Rule, Has, True_, CanReachRegion, CanReachLocation, HasFromList, HasGroup
+from rule_builder.rules import Rule, Has, True_, CanReachRegion, CanReachLocation, HasFromList, HasGroup, \
+    CanReachEntrance
 
 from .Constants.Names import region_names as regname
 from .Constants.Names import item_names as itemname
@@ -66,8 +67,7 @@ FLUFBLUF_loc: dict[str, SMG2LocationData] = {
                                             regname.FLUFFBLUFF2LANDING,
                                             ((CanReachRegion(regname.FLUFFBLUFF2CLIFF)&(RB.CanClimbPole|RB.JumpHeight5)
                                               &CanReachRegion(regname.FLUFFBLUFF2TREE)))
-                                            & (RB.GreenStarsSeparate & HasFromList(*RB.NoGreenList, count=15)
-                                               |RB.IncludeGreenStars & HasGroup("Power Stars", count=15))),
+                                            & RB.PowerStarCount(15) & RB.MailtoadOpen),
     locname.FLUFBLUFSTAR3: SMG2LocationData(["Power Star Location",regname.FLUFFBLUFF],regname.FLUFFBLUFF,
                                             regname.FLUFFBLUFF3TOWER, RB.CanMakeCloud),
 }
@@ -128,7 +128,8 @@ ROCKBOWL_loc: dict[str, SMG2LocationData] = {
     locname.ROCKBOWLSTAR3:  SMG2LocationData(["Power Star Location", regname.BOULBOWL], regname.BOULBOWL,
                                              regname.BOULBOWL1BOULDER, (RB.ROCKNROLLIN
                                                                         & CanReachLocation(locname.CHOMPWORKSTAR1)
-                                                                        & CanReachLocation(locname.ROCKBOWLSTAR1))),
+                                                                        & CanReachLocation(locname.ROCKBOWLSTAR1)
+                                                                        & RB.MailtoadOpen)),
 }
 
 # Cosmic Cove S
@@ -146,7 +147,8 @@ WILDGLIDE_loc: dict[str, SMG2LocationData] = {
     locname.WILDGLIDESTAR1: SMG2LocationData(["Power Star Location", regname.WILDGLIDE], regname.WILDGLIDE,
                                              regname.WILDGLIDE1COURSE),
     locname.WILDGLIDESTAR2: SMG2LocationData(["Power Star Location", regname.WILDGLIDE], regname.WILDGLIDE,
-                                             regname.WILDGLIDE1COURSE),
+                                             regname.WILDGLIDE1COURSE, (CanReachLocation(locname.BEATBLOCKSTAR1)
+                                                                       & RB.MailtoadOpen)),
 }
 
 # Honeybloom St
@@ -280,7 +282,8 @@ HONEYHOP_loc: dict[str, SMG2LocationData] = {
                                             regname.HONEYHOP1QBBASE,
                                             (CanReachRegion(regname.HONEYHOP2QBBUBBLE)
                                              & CanReachRegion(regname.HONEYHOP2QBTOP)
-                                             & CanReachLocation(locname.CLOCKRUINSTAR1))),
+                                             & CanReachLocation(locname.CLOCKRUINSTAR1)
+                                             & RB.MailtoadOpen)),
 }
 
     # Sweet Mystery
@@ -308,7 +311,8 @@ SPACSTOR_loc: dict[str, SMG2LocationData] = {
                                               regname.SPACSTOR2TOPTOWER, RB.JumpHeight5),
     locname.SPACESTORMSTAR3: SMG2LocationData(["Power Star Location", regname.SPACSTOR], regname.SPACSTOR,
                                               regname.SPACSTOR1TOPMAN, (CanReachLocation(locname.BOOMOONSTAR1)
-                                                                        & CanReachLocation(locname.SPACESTORMSTAR2))),
+                                                                        & CanReachLocation(locname.SPACESTORMSTAR2)
+                                                                        & RB.MailtoadOpen)),
 }
 
     # Slipsand Star
@@ -355,7 +359,8 @@ FLETGLIDE_loc: dict[str, SMG2LocationData] = {
                                             regname.FLEETGLIDECOURSE, RB.CanRideBird),
     locname.FLEETFLYSTAR2: SMG2LocationData(["Power Star Location", regname.FLEETGLIDE], regname.FLEETGLIDE,
                                             regname.FLEETGLIDECOURSE, (RB.CanRideBird
-                                                                       & CanReachLocation(locname.BATTBELTSTAR1))),
+                                                                       & CanReachLocation(locname.BATTBELTSTAR1)
+                                                                       & RB.MailtoadOpen)),
 }
 
     # Bowser Jr.'s
@@ -421,7 +426,8 @@ SLIMSPRI_loc: dict[str, SMG2LocationData] = {
                                              regname.SLIMSPRI1CAVE2, RB.CanShell),
     locname.SLIMYSPRISTAR2: SMG2LocationData(["Power Star Location", regname.SLIMSPRI], regname.SLIMSPRI,
                                              regname.SLIMSPRI2MOUTH1, (CanReachRegion(regname.SLIMSPRI2CAVE2)
-                                                                       & CanReachLocation(locname.GALAXYGENSTAR2))),
+                                                                       & CanReachLocation(locname.GALAXYGENSTAR2)
+                                                                       & RB.MailtoadOpen)),
 }
 
     # Bowser's Gala
@@ -1111,43 +1117,127 @@ mailtoad_locations: dict[str, SMG2LocationData] = {
     locname.GOLDGEARMO:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
                                                  regname.SHIP2,
                                                  CanReachLocation(locname.CHOMPWORKSTAR1)
-                                                 & CanReachLocation(locname.ROCKBOWLSTAR1)),
+                                                 & CanReachLocation(locname.ROCKBOWLSTAR1)
+                                                 & RB.MailtoadOpen),
     locname.SILVGEARMO:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
                                                  regname.SHIP2,
                                                  (CanReachLocation(locname.BOOMOONSTAR1)
-                                                  & CanReachLocation(locname.SPACESTORMSTAR2))),
+                                                  & CanReachLocation(locname.SPACESTORMSTAR2)
+                                                  & RB.MailtoadOpen)),
     locname.JIBBERJAY1:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
-                                                 regname.SHIP2, CanReachLocation(locname.BEATBLOCKSTAR1)),
+                                                 regname.SHIP2, (CanReachLocation(locname.BEATBLOCKSTAR1)
+                                                                 & RB.MailtoadOpen)),
     locname.JIBBERJAY2:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
-                                                 regname.SHIP2, CanReachLocation(locname.BATTBELTSTAR1)),
+                                                 regname.SHIP2, (CanReachLocation(locname.BATTBELTSTAR1)
+                                                                 & RB.MailtoadOpen)),
     locname.CHIMPSTOMP:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
                                                  regname.SHIP2,
-                                                 (RB.GreenStarsSeparate & HasFromList(*RB.NoGreenList, count=15)
-                                                  | RB.IncludeGreenStars & HasGroup("Power Stars", count=15))),
+                                                 RB.PowerStarCount(15) & RB.MailtoadOpen),
     locname.CHIMPSCORE:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
-                                                 regname.SHIP2, CanReachLocation(locname.CLOCKRUINSTAR1)),
+                                                 regname.SHIP2, (CanReachLocation(locname.CLOCKRUINSTAR1)
+                                                                 & RB.MailtoadOpen)),
     locname.CHIMPCOINS:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
-                                                 regname.SHIP2, CanReachLocation(locname.GALAXYGENSTAR2)),
+                                                 regname.SHIP2, (CanReachLocation(locname.GALAXYGENSTAR2)
+                                                                 & RB.MailtoadOpen)),
     locname.LUIGILETTR:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
-                                                 regname.SHIP2),
+                                                 regname.SHIP2, (RB.MailtoadOpen
+                                                                 & CanReachLocation(locname.GALAXYGENSTAR1))),
     locname.ROSALETTRL:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
-                                                 regname.SHIP2),
+                                                 regname.SHIP2,RB.MailtoadOpen),
     locname.ROSALETTR1:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
-                                                 regname.SHIP2),
+                                                 regname.SHIP2, RB.MailtoadOpen),
     locname.ROSALETTR2:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
-                                                 regname.SHIP2),
+                                                 regname.SHIP2, RB.MailtoadOpen),
     locname.ROSALETTR3:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
-                                                 regname.SHIP2),
+                                                 regname.SHIP2, RB.MailtoadOpen),
     locname.ROSALETTR4:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
-                                                 regname.SHIP2),
+                                                 regname.SHIP2, RB.MailtoadOpen),
     locname.ROSALETTR5:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
-                                                 regname.SHIP2),
-    locname.HONEYBEE:           SMG2LocationData(["Letter Locations"], regname.SHIP2,
-                                                 regname.SHIP2),
-    locname.STARBUNNY:          SMG2LocationData(["Letter Locations"], regname.SHIP2,
-                                                 regname.SHIP2),
+                                                 regname.SHIP2, RB.MailtoadOpen),
+    locname.HONEYBEELTR:           SMG2LocationData(["Letter Locations"], regname.SHIP2,
+                                                    regname.SHIP2, (RB.MailtoadOpen
+                                                                    & RB.CanReachLocation(locname.BEEBLOOMSTAR2))),
+    locname.STARBUNNYLTR:          SMG2LocationData(["Letter Locations"], regname.SHIP2,
+                                                    regname.SHIP2, (RB.MailtoadOpen
+                                                                    & CanReachLocation(locname.FLIPSWAPSTAR1))),
     locname.PEACHLETTR:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
-                                                 regname.SHIP2),
+                                                 regname.SHIP2, RB.MailtoadOpen),
+}
+
+hungry_luma_loc: dict[str, SMG2LocationData] ={
+    locname.WORLD1SL: SMG2LocationData(["Hungry Luma Location"], regname.WORLD1, regname.WORLD1,
+                                       CanReachEntrance("World 1 Starbit Luma", parent_region_name=regname.WORLD1)),
+    locname.WORLD2SL: SMG2LocationData(["Hungry Luma Location"], regname.WORLD2, regname.WORLD2,
+                                       CanReachEntrance("World 2 Starbit Luma", parent_region_name=regname.WORLD2)),
+    locname.WORLD3SL: SMG2LocationData(["Hungry Luma Location"], regname.WORLD3, regname.WORLD3,
+                                       CanReachEntrance("World 3 Starbit Luma", parent_region_name=regname.WORLD3)),
+    locname.WORLD4SL: SMG2LocationData(["Hungry Luma Location"], regname.WORLD4, regname.WORLD4,
+                                       CanReachEntrance("World 4 Starbit Luma", parent_region_name=regname.WORLD4)),
+    locname.WORLD5SL: SMG2LocationData(["Hungry Luma Location"], regname.WORLD5, regname.WORLD5,
+                                       CanReachEntrance("World 5 Starbit Luma", parent_region_name=regname.WORLD5)),
+    locname.WORLD6SL: SMG2LocationData(["Hungry Luma Location"], regname.WORLD6, regname.WORLD6,
+                                       CanReachEntrance("World 6 Starbit Luma", parent_region_name=regname.WORLD6)),
+    locname.WORLD7SL: SMG2LocationData(["Hungry Luma Location"], regname.WORLD7, regname.WORLD7,
+                                       CanReachEntrance("World 7 Starbit Luma", parent_region_name=regname.WORLD7)),
+    locname.FLUFFYCL: SMG2LocationData(["Hungry Luma Location"], regname.FLUFFBLUFF,
+                                       regname.FLUFFBLUFF1BIGCLOUD,
+                                       CanReachEntrance("Fluffy Bluff: Hungry Luma",
+                                                        parent_region_name=regname.FLUFFBLUFF1BIGCLOUD)),
+    locname.PUZZLECL: SMG2LocationData(["Hungry Luma Location"], regname.PUZZPLAN, regname.PUZZPLAN1GRUZZY,
+                                       CanReachEntrance("Puzzle Plank: Hungry Luma",
+                                                        parent_region_name=regname.PUZZPLAN1GRUZZY)),
+    locname.HIGHTACL: SMG2LocationData(["Hungry Luma Location"], regname.HIGHTAIL, regname.HIGHTAIL1DASHWAL1,
+                                       CanReachEntrance("Hightail Falls: Hungry Luma",
+                                                        parent_region_name=regname.HIGHTAIL1DASHWAL1)),
+    locname.COSMICCL: SMG2LocationData(["Hungry Luma Location"], regname.COSMICO, regname.COSMIC1POOL,
+                                       CanReachEntrance("Cosmic Cove: Hungry Luma",
+                                                        parent_region_name=regname.COSMIC1POOL)),
+    locname.CLOUDYCL: SMG2LocationData(["Hungry Luma Location"], regname.CLOUCOUR, regname.CLOUCOUR1TOWERS,
+                                       CanReachEntrance("Cloudy Court: Hungry Luma",
+                                                        parent_region_name=regname.CLOUCOUR1TOWERS)),
+    locname.CLOCKWCL: SMG2LocationData(["Hungry Luma Location"], regname.CLOCKWORK, regname.CLOCKWORK1COGS,
+                                       CanReachEntrance("Clockwork Ruins: Hungry Luma",
+                                                        parent_region_name=regname.CLOCKWORK1COGS)),
+    locname.BATTLECL: SMG2LocationData(["Hungry Luma Location"], regname.BATTLEBELT, regname.BATTBELT1ICEP,
+                                       CanReachEntrance("Battle Belt: Hungry Luma",
+                                                        parent_region_name=regname.BATTBELT1ICEP)),
+}
+
+passenger_loc: dict[str, SMG2LocationData] = {
+    locname.YOSHIPASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
+                                        CanReachLocation(locname.YOSHSTARSTAR1)),
+    locname.YTOADPASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
+                                        CanReachLocation(locname.SPINDIGSTAR1)),
+    locname.BTOADPASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
+                                        RB.PowerStarCount(7)),
+    locname.MTOADPASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
+                                        RB.PowerStarCount(13)),
+    locname.BUNNYPASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
+                                        CanReachLocation(locname.FLIPSWAPSTAR1)),
+    locname.HONEYPASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
+                                        CanReachLocation(locname.BEEBLOOMSTAR2)),
+    locname.PENGUPASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
+                                        CanReachLocation(locname.COSCCOVESTAR2)),
+    locname.JIBBEPASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
+                                        CanReachLocation(locname.WILDGLIDESTAR2)),
+    locname.LUMA1PASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
+                                        RB.PowerStarCount(18)),
+    locname.LUMA2PASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
+                                        CanReachLocation(locname.MELTMONSSTAR1)),
+    locname.WHITTPASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
+                                        CanReachLocation(locname.TALLTREESTAR2)),
+    locname.GOLDGPASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
+                                        CanReachLocation(locname.ROCKBOWLSTAR3)),
+    locname.SILVGPASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
+                                        CanReachLocation(locname.SPACESTORMSTAR3)),
+    locname.BOBOMPASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
+                                        CanReachLocation(locname.THROWBACKSTAR1)),
+    locname.GLUM1PASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
+                                        CanReachLocation(locname.BOSSBLITSTAR1)),
+    locname.GLUM2PASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
+                                        RB.PowerStarCount(120)),
+    locname.ROSALPASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
+                                        CanReachLocation(locname.GRANDMASTSTAR2)),
 }
 
 event_locations: dict[str, SMG2LocationData] = {
@@ -1172,7 +1262,8 @@ base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_l
                         **CHOMWORK_loc, **SPACSTOR_loc, **SLIPSAND_loc, **COLDFIRE_loc, **BOOMOON_loc,
                         **MELTMONS_loc, **CLOCKRUIN_loc, **THROWBACK_loc, **BATTBELT_loc}
 
-all_location_table = {**base_stars_locations, **green_star_locations, **COMETMEDAL_loc}
+all_location_table = {**base_stars_locations, **green_star_locations, **COMETMEDAL_loc, **mailtoad_locations,
+                      **checkpoint_loc_table, **hungry_luma_loc, **passenger_loc}
 
 LOCATION_NAME_TO_ID: dict[str, int] =  {
     name: list(all_location_table.keys()).index(name) for name in all_location_table.keys() }
