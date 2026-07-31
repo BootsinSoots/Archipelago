@@ -24,7 +24,6 @@ item_table: dict[str, SMG2ItemData] = {
   "Grand Star": SMG2ItemData(["Grand Stars", "Power Stars"], IC.progression, 7),
   "Green Star": SMG2ItemData(["Power Stars", "Green Stars"], IC.progression, 120),
   # Comet Medals
-  "Progressive Comets": SMG2ItemData(["Comet"], IC.progression),
 }
 
 filler_items: dict[str, SMG2ItemData] = {
