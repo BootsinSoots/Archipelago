@@ -1,5 +1,5 @@
 import copy
-from typing import NamedTuple, Optional, Callable, TYPE_CHECKING
+from typing import NamedTuple, Optional, TYPE_CHECKING
 
 from BaseClasses import Region, Entrance, MultiWorld
 from entrance_rando import disconnect_entrance_for_randomization
