@@ -111,7 +111,7 @@ class SMG2World(World):
             self.starting_world = ("World " + list(world_final_blocks.keys())[0][17]) # Get world number from string in option
             if self.options.world_shuffle.value == WorldShuffle.option_Keyed_Grand_Stars:
                 self.multiworld.push_precollected(self.create_item("Grand Star - " + self.starting_world))
-            for i in range(7):
+            for i in range(1,6):
                 world_order.append("World " + str(list(world_final_blocks.keys())[i][17])) # Get world number from string in option
 
         block_counts: dict[str, dict[str, int]] = {}
