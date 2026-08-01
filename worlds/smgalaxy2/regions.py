@@ -746,7 +746,7 @@ def disconnect_from_option(world: "SMG2World"):
         disconnect_entrance_for_randomization(world.get_entrance("World 5 Slot 5 Galaxy"), 0, regname.FLEETGLIDE)
         disconnect_entrance_for_randomization(world.get_entrance("World 6 Slot 3 Galaxy"), 0, regname.FLASHBLACK)
         disconnect_entrance_for_randomization(world.get_entrance("World 7 Slot 6 Galaxy"), 0, regname.FLIPOUT)
-        disconnect_entrance_for_randomization(world.get_entrance("World 1 Slot 3 Galaxy"), 0, regname.FLIPSWAP)
+        disconnect_entrance_for_randomization(world.get_entrance("World 1 Slot 4 Galaxy"), 0, regname.FLIPSWAP)
         if world.options.galaxy_shuffle_type.value == 0:
             by_type_shuffle(world, copy.deepcopy(luma_entr_list), copy.deepcopy(specials_galaxy_list))
     if "World S Specials" in world.options.galaxy_shuffle.value or "Full" in world.options.galaxy_shuffle.value:
