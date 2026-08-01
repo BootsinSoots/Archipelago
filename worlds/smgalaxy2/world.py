@@ -301,12 +301,12 @@ class SMG2World(World):
             else:
                 item_info = {"name": "Nothing", "game": self.game, "classification": "filler"}
             output_data["Locations"][location.name] = item_info
-        # # Outputs the plando details to our expected output file
-        # # Create the output path based on the current player + expected patch file ending.
+        # Outputs the plando details to our expected output file
+        # Create the output path based on the current player + expected patch file ending.
         patch_path = os.path.join(output_directory,
             f"{self.multiworld.get_out_file_name_base(self.player)}{SMGPlayerContainer.patch_file_ending}")
         # Create a zip (container) that will contain all the necessary output files for us to use during patching.
         smg_container: SMGPlayerContainer = SMGPlayerContainer(output_data, patch_path, self.player_name, self.player)
-        # # Write the expected output zip container to the Generated Seed folder.
+        # Write the expected output zip container to the Generated Seed folder.
         smg_container.write()
         
