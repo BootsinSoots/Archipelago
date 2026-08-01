@@ -7,6 +7,7 @@ from typing import ClassVar, Counter
 import worlds.smgalaxy2.Options
 from BaseClasses import Item, MultiWorld
 from Utils import visualize_regions
+from BaseClasses import ItemClassification
 from Options import OptionError
 from entrance_rando import randomize_entrances
 from worlds.AutoWorld import World
@@ -143,9 +144,10 @@ class SMG2World(World):
         Connect.set_rules(self, self.player)
     
     def create_item(self, name: str) -> SMG2Item:
-        item_data: SMG2ItemData = items.all_items_table[name]
+        item_data: SMG2ItemData = items.all_items_table[name] if name in items.all_location_table else None
         item_id: int | None = self.item_name_to_id[name] if name in self.item_id_to_name else None
-        item = items.SMG2Item(name, item_data.classification, item_id, self.player)
+        item_class = item_data.classification if item_data else ItemClassification.progression
+        item = items.SMG2Item(name, item_class, item_id, self.player)
         
         return item
 
