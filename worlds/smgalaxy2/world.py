@@ -19,6 +19,7 @@ from .Constants.Names import location_names as locname
 from .Constants.constants import AP_WORLD_VERSION_NAME, CLIENT_VERSION, GAME_NAME
 from .Options import WorldShuffle
 from .EntranceRando import rules_from_er_placements
+from .Patch.Patch import SMGPlayerContainer
 from .locations import LOCATION_NAME_TO_ID, get_location_names_per_category, SMG2Location
 from .items import SMG2Item, ITEM_NAME_TO_ID, get_item_names_per_category, world_green_keys, SMG2ItemData
 from .regions import disconnect_from_option, region_list, SMG2RegionData
@@ -302,17 +303,10 @@ class SMG2World(World):
             output_data["Locations"][location.name] = item_info
         # # Outputs the plando details to our expected output file
         # # Create the output path based on the current player + expected patch file ending.
-        # patch_path = os.path.join(output_directory, f"{self.multiworld.get_out_file_name_base(self.player)}"
-        #                                             f"{SMGPlayerContainer.patch_file_ending}")
-        # # Create a zip (container) that will contain all the necessary output files for us to use during patching.
-        # smg_container = SMGPlayerContainer(output_data, patch_path, self.multiworld.player_name[self.player],
-        #                                  self.player)
+        patch_path = os.path.join(output_directory,
+            f"{self.multiworld.get_out_file_name_base(self.player)}{SMGPlayerContainer.patch_file_ending}")
+        # Create a zip (container) that will contain all the necessary output files for us to use during patching.
+        smg_container: SMGPlayerContainer = SMGPlayerContainer(output_data, patch_path, self.player_name, self.player)
         # # Write the expected output zip container to the Generated Seed folder.
-        # smg_container.write()
-
-        # patch_path = os.path.join(output_directory, f"{self.multiworld.get_out_file_name_base(self.player)}"
-        #             f"{SMGPlayerContainer.patch_file_ending}")
-        #
-        # player_container: SMGPlayerContainer = SMGPlayerContainer(output_data, patch_path, self.player_name, self.player)
-        # player_container.write()
+        smg_container.write()
         
