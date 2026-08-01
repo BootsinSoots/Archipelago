@@ -746,7 +746,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.create_entrance(world.get_region(regname.SUPMASS1STARCHIPS),world.get_region(regname.SUPMASS1WIGGLERS)) #Trick Entrance
     world.get_region(regname.SUPMASS1GARDEN).connect(world.get_region(regname.SUPMASS1WIGGLERS),
                                                      "Supermassive 1: Garden Planet Launch Star")
-    world.get_region(regname.SUPMASS).connect(world.get_region(regname.SUPMASS1START), "Supermassive Comet Star",
+    world.get_region(regname.SUPMASS).connect(world.get_region(regname.SUPMASS2START), "Supermassive Comet Star",
                                               rule=((RB.Comet1ItemAccess | (
                                                           OptionFilter(CometItems, 2) & Has(itemname.SPEEDYCOMET)))
                                                     & (RB.CometMissionOff
