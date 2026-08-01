@@ -205,6 +205,7 @@ class ActiveCometsGame(Range): # doesn't affect logic
     internal_name = "active_comets_game"
     range_start = 1
     range_end = 39
+    default = 1
 
 class ActiveCometsWorld(Range): # doesn't affect logic
     """
@@ -214,6 +215,7 @@ class ActiveCometsWorld(Range): # doesn't affect logic
     internal_name = "active_comets_world"
     range_start = 1
     range_end = 7
+    default = 1
 
 class PowerupRando(Toggle):
     """

@@ -7,6 +7,7 @@ from typing import ClassVar, Counter
 import worlds.smgalaxy2.Options
 from BaseClasses import Item, MultiWorld
 from Utils import visualize_regions
+from BaseClasses import ItemClassification
 from Options import OptionError
 from entrance_rando import randomize_entrances
 from worlds.AutoWorld import World
@@ -16,11 +17,12 @@ from . import items, regions, Rules, web_world, Options, Connect
 from .Constants.Names import region_names as regname
 from .Constants.Names import item_names as itemname
 from .Constants.Names import location_names as locname
-from .Constants.constants import AP_WORLD_VERSION_NAME, CLIENT_VERSION
+from .Constants.constants import AP_WORLD_VERSION_NAME, CLIENT_VERSION, GAME_NAME
 from .Options import WorldShuffle
 from .EntranceRando import rules_from_er_placements
+from .Patch.Patch import SMGPlayerContainer
 from .locations import LOCATION_NAME_TO_ID, get_location_names_per_category, SMG2Location
-from .items import SMG2Item, ITEM_NAME_TO_ID, get_item_names_per_category, world_green_keys
+from .items import SMG2Item, ITEM_NAME_TO_ID, get_item_names_per_category, world_green_keys, SMG2ItemData
 from .regions import disconnect_from_option, region_list, SMG2RegionData
 from .SMG2Settings import SuperMarioGalaxy2
 # from .Patch.Patch import SMGPlayerContainer
@@ -38,7 +40,7 @@ class SMG2World(World):
     center of the universe in order to save Princess Peach from Bowser's clutches.
     """
 
-    game = "Super Mario Galaxy 2"
+    game = GAME_NAME
     topology_present = False
     
     web = web_world.SMG2WebWorld()
@@ -116,23 +118,24 @@ class SMG2World(World):
 
         # put out dict with str star block to int star count
         for world in world_order:
+            world_final_block_count = world_final_blocks[f"Final Star Block {world[6]}"]
             dict_entry: dict[str, int] = {}
             match world:
                 case "World 1":
-                    dict_entry = {"Block 1": (max(world_final_blocks[world]-4, 0)),
-                                  "Block 2": (max(world_final_blocks[world], 0))}
+                    dict_entry = {"Block 1": (max(world_final_block_count - 4, 0)),
+                                  "Block 2": (max(world_final_block_count, 0))}
                 case "World 6":
-                    dict_entry = {"Block 1": (max(world_final_blocks[world] - 10, 0)),
-                                  "Block 2": (max(world_final_blocks[world] - 5, 0)),
-                                  "Block 3": (max(world_final_blocks[world], 0))}
+                    dict_entry = {"Block 1": (max(world_final_block_count - 10, 0)),
+                                  "Block 2": (max(world_final_block_count - 5, 0)),
+                                  "Block 3": (max(world_final_block_count, 0))}
                 case "World 7":
-                    dict_entry = {"Block 1": (max(world_final_blocks[world] - 35, 0)),
-                                  "Block 2": (max(world_final_blocks[world] - 30, 0)),
-                                  "Block 3": (max(world_final_blocks[world] - 20, 0)),
-                                  "Block 4": (max(world_final_blocks[world] - 10, 0)),
-                                  "blick 5": (max(world_final_blocks[world], 0))}
+                    dict_entry = {"Block 1": (max(world_final_block_count - 35, 0)),
+                                  "Block 2": (max(world_final_block_count - 30, 0)),
+                                  "Block 3": (max(world_final_block_count - 20, 0)),
+                                  "Block 4": (max(world_final_block_count - 10, 0)),
+                                  "blick 5": (max(world_final_block_count, 0))}
                 case _:
-                    dict_entry = {"Block 1": (max(world_final_blocks[world], 0)),}
+                    dict_entry = {"Block 1": (max(world_final_block_count, 0)), }
             block_counts.update({world: dict_entry})
 
         return block_counts
@@ -141,7 +144,10 @@ class SMG2World(World):
         Connect.set_rules(self, self.player)
     
     def create_item(self, name: str) -> SMG2Item:
-        item = items.SMG2Item(name, self.player, items.all_items_table[name])
+        item_data: SMG2ItemData = items.all_items_table[name] if name in items.all_location_table else None
+        item_id: int | None = self.item_name_to_id[name] if name in self.item_id_to_name else None
+        item_class = item_data.classification if item_data else ItemClassification.progression
+        item = items.SMG2Item(name, item_class, item_id, self.player)
         
         return item
 
@@ -297,19 +303,12 @@ class SMG2World(World):
             else:
                 item_info = {"name": "Nothing", "game": self.game, "classification": "filler"}
             output_data["Locations"][location.name] = item_info
-        # # Outputs the plando details to our expected output file
-        # # Create the output path based on the current player + expected patch file ending.
-        # patch_path = os.path.join(output_directory, f"{self.multiworld.get_out_file_name_base(self.player)}"
-        #                                             f"{SMGPlayerContainer.patch_file_ending}")
-        # # Create a zip (container) that will contain all the necessary output files for us to use during patching.
-        # smg_container = SMGPlayerContainer(output_data, patch_path, self.multiworld.player_name[self.player],
-        #                                  self.player)
-        # # Write the expected output zip container to the Generated Seed folder.
-        # smg_container.write()
-
-        # patch_path = os.path.join(output_directory, f"{self.multiworld.get_out_file_name_base(self.player)}"
-        #             f"{SMGPlayerContainer.patch_file_ending}")
-        #
-        # player_container: SMGPlayerContainer = SMGPlayerContainer(output_data, patch_path, self.player_name, self.player)
-        # player_container.write()
+        # Outputs the plando details to our expected output file
+        # Create the output path based on the current player + expected patch file ending.
+        patch_path = os.path.join(output_directory,
+            f"{self.multiworld.get_out_file_name_base(self.player)}{SMGPlayerContainer.patch_file_ending}")
+        # Create a zip (container) that will contain all the necessary output files for us to use during patching.
+        smg_container: SMGPlayerContainer = SMGPlayerContainer(output_data, patch_path, self.player_name, self.player)
+        # Write the expected output zip container to the Generated Seed folder.
+        smg_container.write()
         

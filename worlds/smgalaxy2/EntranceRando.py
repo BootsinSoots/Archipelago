@@ -86,7 +86,8 @@ def rules_from_er_placements(world: "SMG2World"):
     if world.options.enable_green_stars.value == 4:
         for loc_name, data in green_star_locations.items():
             world_map: str = world.get_region(data.galaxy).entrances[0].parent_region.name
-            world.set_rule(world.get_location(loc_name), data.default_access & Has(f"Green Star {world_map} Key"))
+            world.set_rule(world.get_location(loc_name),
+                           ((data.default_access if data.default_access is not None else True_()) & Has(f"Green Star {world_map} Key")))
     elif world.options.enable_green_stars.value !=0 :
         for loc_name, data in green_star_locations.items():
             world.set_rule(world.get_location(loc_name), data.default_access & GreenStarLocationRule)

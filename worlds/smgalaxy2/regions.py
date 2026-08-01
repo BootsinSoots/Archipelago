@@ -1,18 +1,15 @@
 import copy
-from typing import NamedTuple, Optional, Callable, TYPE_CHECKING
+from typing import NamedTuple, Optional, TYPE_CHECKING
 
-import locations
 from BaseClasses import Region, Entrance, MultiWorld
 from entrance_rando import disconnect_entrance_for_randomization
 from rule_builder.rules import CanReachLocation
 
 from .Constants.Names import region_names as regname
 from .Constants.Names import location_names as locname
-from .Constants.Names.region_names import SPACSTOR2GSTAR2
-from .Options import SMG2Options
 from .items import SMG2Item
 from .locations import SMG2Location, base_stars_locations, SMG2LocationData, green_star_locations, COMETMEDAL_loc, \
-    event_locations, mailtoad_locations, checkpoint_loc_table, hungry_luma_loc, passenger_loc
+    event_locations, mailtoad_locations, checkpoint_loc_table, hungry_luma_loc, passenger_loc, all_location_table
 
 if TYPE_CHECKING:
     from . import SMG2World
@@ -63,6 +60,7 @@ all_galaxy_slots: list[str] = (major_entr_list + gal_minor_entr_list + luma_entr
 # TODO Replace in game name for galaxies, or remove entirely
 region_list: dict[str, SMG2RegionData] = {
     regname.SHIP: SMG2RegionData("Main", [], []),
+    regname.SHIP2: SMG2RegionData("Main", [], []),
     regname.WORLD1: SMG2RegionData("World", [regname.SHIP], []),
     regname.WORLD2: SMG2RegionData("World", [regname.SHIP], []),
     regname.WORLD5: SMG2RegionData("World", [regname.SHIP], []),
@@ -607,6 +605,10 @@ region_list: dict[str, SMG2RegionData] = {
     regname.GRAVGAUN2WATERCO:           SMG2RegionData("Planet", [], []),
     regname.GRAVGAUN2WHOMPWA:           SMG2RegionData("Planet", [], []),
     regname.HONEYHOP1DICEROOM:          SMG2RegionData("Planet", [], []),
+    regname.GOODEGG3MUDDY:              SMG2RegionData("Planet", [], []),
+    regname.SWEETMYS1CAKE:              SMG2RegionData("Planet", [], []),
+    regname.GOODEGG1MUDDY:              SMG2RegionData("Planet", [], []),
+    regname.GOODEGG2MUDDY:              SMG2RegionData("Planet", [], []),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]
@@ -637,7 +639,8 @@ def create_regions(world: "SMG2World"): #TODO Correctly add locations
     create_locations(checkpoint_loc_table, world)
     create_locations(hungry_luma_loc, world)
     for loc, data in event_locations.items():
-        world.get_region(data.region).add_event(loc, data.locked_item, data.default_access, SMG2Location, SMG2Item)
+        world.get_region(data.region).add_event(loc, data.locked_item, data.default_access,
+                                                location_type=SMG2Location, item_type=SMG2Item)
 
     # match case Goal to place item on correct location. Case 4 is placed earlier
     match world.options.goal.value:
@@ -674,8 +677,8 @@ def create_region(name: str, world: "SMG2World") -> Region:
 def create_locations(locs: dict[str, SMG2LocationData], world: "SMG2World", skip_rules: bool=False):
     for name, data in locs.items():
         reg = world.get_region(data.region)
-        location = SMG2Location(world.player, name, reg)
-        if data.default_access and skip_rules == False:
+        location = SMG2Location(world.player, name, list(all_location_table.keys()).index(name), reg)
+        if data.default_access is not None and skip_rules == False:
             world.set_rule(location, data.default_access)
 
         reg.locations += [location]
@@ -743,7 +746,7 @@ def disconnect_from_option(world: "SMG2World"):
         disconnect_entrance_for_randomization(world.get_entrance("World 5 Slot 5 Galaxy"), 0, regname.FLEETGLIDE)
         disconnect_entrance_for_randomization(world.get_entrance("World 6 Slot 3 Galaxy"), 0, regname.FLASHBLACK)
         disconnect_entrance_for_randomization(world.get_entrance("World 7 Slot 6 Galaxy"), 0, regname.FLIPOUT)
-        disconnect_entrance_for_randomization(world.get_entrance("World 1 Slot 3 Galaxy"), 0, regname.FLIPSWAP)
+        disconnect_entrance_for_randomization(world.get_entrance("World 1 Slot 4 Galaxy"), 0, regname.FLIPSWAP)
         if world.options.galaxy_shuffle_type.value == 0:
             by_type_shuffle(world, copy.deepcopy(luma_entr_list), copy.deepcopy(specials_galaxy_list))
     if "World S Specials" in world.options.galaxy_shuffle.value or "Full" in world.options.galaxy_shuffle.value:
