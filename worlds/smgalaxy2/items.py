@@ -15,7 +15,7 @@ class SMG2Item(Item):
 
     def __init__(self, name: str, classification: IC, code: Optional[int], player: int):
         super(SMG2Item, self).__init__(name, classification, code, player)
-        self.data = item_table[name]
+        self.data = item_table[name] if name in item_table else None
 
 # TODO Replace this item table
 item_table: dict[str, SMG2ItemData] = {
