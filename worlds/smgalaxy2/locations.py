@@ -15,7 +15,8 @@ class SMG2Location(Location):
 
     def __init__(self, player: int, name: str, address: Optional[int], parent: Optional[Region]):
         super(SMG2Location, self).__init__(player, name, address, parent)
-        self.data = all_location_table[name]
+        self.data = all_location_table[name] if name in all_location_table else \
+            event_locations[name] if name in event_locations else None
 
 class SMG2LocationData(NamedTuple):
     location_groups: list[str]
