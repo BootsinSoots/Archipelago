@@ -16,11 +16,11 @@ from . import items, regions, Rules, web_world, Options, Connect
 from .Constants.Names import region_names as regname
 from .Constants.Names import item_names as itemname
 from .Constants.Names import location_names as locname
-from .Constants.constants import AP_WORLD_VERSION_NAME, CLIENT_VERSION
+from .Constants.constants import AP_WORLD_VERSION_NAME, CLIENT_VERSION, GAME_NAME
 from .Options import WorldShuffle
 from .EntranceRando import rules_from_er_placements
 from .locations import LOCATION_NAME_TO_ID, get_location_names_per_category, SMG2Location
-from .items import SMG2Item, ITEM_NAME_TO_ID, get_item_names_per_category, world_green_keys
+from .items import SMG2Item, ITEM_NAME_TO_ID, get_item_names_per_category, world_green_keys, SMG2ItemData
 from .regions import disconnect_from_option, region_list, SMG2RegionData
 from .SMG2Settings import SuperMarioGalaxy2
 # from .Patch.Patch import SMGPlayerContainer
@@ -38,7 +38,7 @@ class SMG2World(World):
     center of the universe in order to save Princess Peach from Bowser's clutches.
     """
 
-    game = "Super Mario Galaxy 2"
+    game = GAME_NAME
     topology_present = False
     
     web = web_world.SMG2WebWorld()
@@ -142,7 +142,9 @@ class SMG2World(World):
         Connect.set_rules(self, self.player)
     
     def create_item(self, name: str) -> SMG2Item:
-        item = items.SMG2Item(name, items.all_items_table[name], )
+        item_data: SMG2ItemData = items.all_items_table[name]
+        item_id: int | None = self.item_name_to_id[name] if name in self.item_id_to_name else None
+        item = items.SMG2Item(name, item_data.classification, item_id, self.player)
         
         return item
 
