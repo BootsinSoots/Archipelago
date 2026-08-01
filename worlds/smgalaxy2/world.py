@@ -116,23 +116,24 @@ class SMG2World(World):
 
         # put out dict with str star block to int star count
         for world in world_order:
+            world_final_block_count = world_final_blocks[f"Final Star Block {world[6]}"]
             dict_entry: dict[str, int] = {}
             match world:
                 case "World 1":
-                    dict_entry = {"Block 1": (max(world_final_blocks[world]-4, 0)),
-                                  "Block 2": (max(world_final_blocks[world], 0))}
+                    dict_entry = {"Block 1": (max(world_final_block_count - 4, 0)),
+                                  "Block 2": (max(world_final_block_count, 0))}
                 case "World 6":
-                    dict_entry = {"Block 1": (max(world_final_blocks[world] - 10, 0)),
-                                  "Block 2": (max(world_final_blocks[world] - 5, 0)),
-                                  "Block 3": (max(world_final_blocks[world], 0))}
+                    dict_entry = {"Block 1": (max(world_final_block_count - 10, 0)),
+                                  "Block 2": (max(world_final_block_count - 5, 0)),
+                                  "Block 3": (max(world_final_block_count, 0))}
                 case "World 7":
-                    dict_entry = {"Block 1": (max(world_final_blocks[world] - 35, 0)),
-                                  "Block 2": (max(world_final_blocks[world] - 30, 0)),
-                                  "Block 3": (max(world_final_blocks[world] - 20, 0)),
-                                  "Block 4": (max(world_final_blocks[world] - 10, 0)),
-                                  "blick 5": (max(world_final_blocks[world], 0))}
+                    dict_entry = {"Block 1": (max(world_final_block_count - 35, 0)),
+                                  "Block 2": (max(world_final_block_count - 30, 0)),
+                                  "Block 3": (max(world_final_block_count - 20, 0)),
+                                  "Block 4": (max(world_final_block_count - 10, 0)),
+                                  "blick 5": (max(world_final_block_count, 0))}
                 case _:
-                    dict_entry = {"Block 1": (max(world_final_blocks[world], 0)),}
+                    dict_entry = {"Block 1": (max(world_final_block_count, 0)), }
             block_counts.update({world: dict_entry})
 
         return block_counts
@@ -141,7 +142,7 @@ class SMG2World(World):
         Connect.set_rules(self, self.player)
     
     def create_item(self, name: str) -> SMG2Item:
-        item = items.SMG2Item(name, self.player, items.all_items_table[name])
+        item = items.SMG2Item(name, items.all_items_table[name], )
         
         return item
 

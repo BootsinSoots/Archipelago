@@ -13,15 +13,15 @@ from . import Rules as RB
 class SMG2Location(Location):
     game: str = "Super Mario Galaxy"
 
-    def __init__(self, player: int, name: str, parent: Region):
-        super(SMG2Location, self).__init__(player, name, address=all_location_table[name].code, parent=parent)
-        self.code: int = list(all_location_table.keys()).index(name)
+    def __init__(self, player: int, name: str, address: Optional[int], parent: Optional[Region]):
+        super(SMG2Location, self).__init__(player, name, address, parent)
+        self.data = all_location_table[name]
 
 class SMG2LocationData(NamedTuple):
     location_groups: list[str]
     galaxy: str# type of randomization option table and group []
     region: str
-    default_access: Rule[Any] = True_()
+    default_access: Rule[Any] = None
     game_address: Optional[int] = 0
     locked_item: str = None
 
@@ -127,7 +127,8 @@ ROCKBOWL_loc: dict[str, SMG2LocationData] = {
                                              regname.BOULBOWL2CAGEPLA, RB.ROCKNROLLIN),
     locname.ROCKBOWLSTAR3:  SMG2LocationData(["Power Star Location", regname.BOULBOWL], regname.BOULBOWL,
                                              regname.BOULBOWL1BOULDER, (RB.ROCKNROLLIN
-                                                                        & CanReachLocation(locname.CHOMPWORKSTAR1)
+                                                                        & CanReachLocation(locname.CHOMPWORKSTAR1,
+                                                                                           parent_region_name=regname.CHOMWORK1LAVA)
                                                                         & CanReachLocation(locname.ROCKBOWLSTAR1)
                                                                         & RB.MailtoadOpen)),
 }
@@ -147,7 +148,8 @@ WILDGLIDE_loc: dict[str, SMG2LocationData] = {
     locname.WILDGLIDESTAR1: SMG2LocationData(["Power Star Location", regname.WILDGLIDE], regname.WILDGLIDE,
                                              regname.WILDGLIDE1COURSE),
     locname.WILDGLIDESTAR2: SMG2LocationData(["Power Star Location", regname.WILDGLIDE], regname.WILDGLIDE,
-                                             regname.WILDGLIDE2COURSE, (CanReachLocation(locname.BEATBLOCKSTAR1)
+                                             regname.WILDGLIDE2COURSE, (CanReachLocation(locname.BEATBLOCKSTAR1,
+                                                                                         parent_region_name=regname.BEATBLOK1)
                                                                        & RB.MailtoadOpen)),
 }
 
@@ -282,7 +284,8 @@ HONEYHOP_loc: dict[str, SMG2LocationData] = {
                                             regname.HONEYHOP1QBBASE,
                                             (CanReachRegion(regname.HONEYHOP2QBBUBBLE)
                                              & CanReachRegion(regname.HONEYHOP2QBTOP)
-                                             & CanReachLocation(locname.CLOCKRUINSTAR1)
+                                             & CanReachLocation(locname.CLOCKRUINSTAR1,
+                                                                parent_region_name=regname.CLOCKWORK1WHEELST)
                                              & RB.MailtoadOpen)),
 }
 
@@ -310,7 +313,8 @@ SPACSTOR_loc: dict[str, SMG2LocationData] = {
     locname.SPACESTORMSTAR2: SMG2LocationData(["Power Star Location", regname.SPACSTOR], regname.SPACSTOR,
                                               regname.SPACSTOR2TOPTOWER, RB.JumpHeight5),
     locname.SPACESTORMSTAR3: SMG2LocationData(["Power Star Location", regname.SPACSTOR], regname.SPACSTOR,
-                                              regname.SPACSTOR1TOPMAN, (CanReachLocation(locname.BOOMOONSTAR1)
+                                              regname.SPACSTOR1TOPMAN, (CanReachLocation(locname.BOOMOONSTAR1,
+                                                                                         parent_region_name=regname.BOOMOON1POPUP)
                                                                         & CanReachLocation(locname.SPACESTORMSTAR2)
                                                                         & RB.MailtoadOpen)),
 }
@@ -359,7 +363,8 @@ FLETGLIDE_loc: dict[str, SMG2LocationData] = {
                                             regname.FLEETGLIDECOURSE, RB.CanRideBird),
     locname.FLEETFLYSTAR2: SMG2LocationData(["Power Star Location", regname.FLEETGLIDE], regname.FLEETGLIDE,
                                             regname.FLEETGLIDECOURSE, (RB.CanRideBird
-                                                                       & CanReachLocation(locname.BATTBELTSTAR1)
+                                                                       & CanReachLocation(locname.BATTBELTSTAR1,
+                                                                                          parent_region_name=regname.BATTBELT1CHOM)
                                                                        & RB.MailtoadOpen)),
 }
 
@@ -426,7 +431,8 @@ SLIMSPRI_loc: dict[str, SMG2LocationData] = {
                                              regname.SLIMSPRI1CAVE2, RB.CanShell),
     locname.SLIMYSPRISTAR2: SMG2LocationData(["Power Star Location", regname.SLIMSPRI], regname.SLIMSPRI,
                                              regname.SLIMSPRI2MOUTH1, (CanReachRegion(regname.SLIMSPRI2CAVE2)
-                                                                       & CanReachLocation(locname.GALAXYGENSTAR2)
+                                                                       & CanReachLocation(locname.GALAXYGENSTAR2,
+                                                                                          parent_region_name=regname.GALGEN1BOSS)
                                                                        & RB.MailtoadOpen)),
 }
 

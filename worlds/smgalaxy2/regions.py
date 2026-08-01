@@ -12,7 +12,7 @@ from .Constants.Names.region_names import SPACSTOR2GSTAR2
 from .Options import SMG2Options
 from .items import SMG2Item
 from .locations import SMG2Location, base_stars_locations, SMG2LocationData, green_star_locations, COMETMEDAL_loc, \
-    event_locations, mailtoad_locations, checkpoint_loc_table, hungry_luma_loc, passenger_loc
+    event_locations, mailtoad_locations, checkpoint_loc_table, hungry_luma_loc, passenger_loc, all_location_table
 
 if TYPE_CHECKING:
     from . import SMG2World
@@ -607,6 +607,9 @@ region_list: dict[str, SMG2RegionData] = {
     regname.GRAVGAUN2WATERCO:           SMG2RegionData("Planet", [], []),
     regname.GRAVGAUN2WHOMPWA:           SMG2RegionData("Planet", [], []),
     regname.HONEYHOP1DICEROOM:          SMG2RegionData("Planet", [], []),
+    regname.GOODEGG3MUDDY:              SMG2RegionData("Planet", [], []),
+    regname.SWEETMYS1CAKE:              SMG2RegionData("Planet", [], []),
+    regname.GOODEGG1MUDDY:              SMG2RegionData("Planet", [], []),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]
@@ -637,7 +640,8 @@ def create_regions(world: "SMG2World"): #TODO Correctly add locations
     create_locations(checkpoint_loc_table, world)
     create_locations(hungry_luma_loc, world)
     for loc, data in event_locations.items():
-        world.get_region(data.region).add_event(loc, data.locked_item, data.default_access, SMG2Location, SMG2Item)
+        world.get_region(data.region).add_event(loc, data.locked_item, data.default_access,
+                                                location_type=SMG2Location, item_type=SMG2Item)
 
     # match case Goal to place item on correct location. Case 4 is placed earlier
     match world.options.goal.value:
@@ -674,8 +678,8 @@ def create_region(name: str, world: "SMG2World") -> Region:
 def create_locations(locs: dict[str, SMG2LocationData], world: "SMG2World", skip_rules: bool=False):
     for name, data in locs.items():
         reg = world.get_region(data.region)
-        location = SMG2Location(world.player, name, reg)
-        if data.default_access and skip_rules == False:
+        location = SMG2Location(world.player, name, list(all_location_table.keys()).index(name), reg)
+        if data.default_access is not None and skip_rules == False:
             world.set_rule(location, data.default_access)
 
         reg.locations += [location]

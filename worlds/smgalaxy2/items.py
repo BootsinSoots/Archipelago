@@ -13,10 +13,9 @@ class SMG2ItemData(NamedTuple):
 class SMG2Item(Item):
     game: str = "Super Mario Galaxy 2"
 
-    def __init__(self, name: str, player: int, data: SMG2ItemData):
-        super(SMG2Item, self).__init__(name, data.classification, data.code, player)
-        self.type = data.type
-        self.code: int = list(all_location_table.keys()).index(name)
+    def __init__(self, name: str, classification: IC, code: Optional[int], player: int):
+        super(SMG2Item, self).__init__(name, classification, code, player)
+        self.data = item_table[name]
 
 # TODO Replace this item table
 item_table: dict[str, SMG2ItemData] = {
