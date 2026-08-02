@@ -31,7 +31,7 @@ class SMGRegion(Region):
 
 major_entr_list: list[str] = ["World 1 Slot 1 Galaxy", "World 1 Slot 2 Galaxy", "World 1 Slot 3 Galaxy",
                               "World 1 Slot 5 Galaxy", "World 2 Slot 1 Galaxy", "World 2 Slot 2 Galaxy",
-                              "World 2 Slot 3 Galaxy", "World 2 Slot 3 Galaxy", "World 3 Slot 1 Galaxy",
+                              "World 2 Slot 3 Galaxy", "World 2 Slot 5 Galaxy", "World 3 Slot 1 Galaxy",
                               "World 3 Slot 2 Galaxy", "World 3 Slot 3 Galaxy", "World 3 Slot 4 Galaxy",
                               "World 4 Slot 1 Galaxy", "World 4 Slot 3 Galaxy", "World 4 Slot 5 Galaxy",
                               "World 4 Slot 6 Galaxy", "World 5 Slot 1 Galaxy", "World 5 Slot 2 Galaxy",
@@ -748,7 +748,7 @@ def disconnect_from_option(world: "SMG2World"):
         disconnect_entrance_for_randomization(world.get_entrance("World 7 Slot 6 Galaxy"), 0, regname.FLIPOUT)
         disconnect_entrance_for_randomization(world.get_entrance("World 1 Slot 4 Galaxy"), 0, regname.FLIPSWAP)
         if world.options.galaxy_shuffle_type.value == 0:
-            by_type_shuffle(world, copy.deepcopy(luma_entr_list), copy.deepcopy(specials_galaxy_list))
+            by_type_shuffle(world, copy.deepcopy(luma_entr_list), copy.deepcopy(luma_galaxy_list))
     if "World S Specials" in world.options.galaxy_shuffle.value or "Full" in world.options.galaxy_shuffle.value:
         disconnect_entrance_for_randomization(world.get_entrance("World 7 Slot 1 Galaxy"), 0, regname.MARIO)
         disconnect_entrance_for_randomization(world.get_entrance("World 7 Slot 2 Galaxy"), 0, regname.ROLLCOAST)

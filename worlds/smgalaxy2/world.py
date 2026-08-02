@@ -269,9 +269,7 @@ class SMG2World(World):
             "Seed": self.multiworld.seed,
             "Slot": self.player,
             "Name": self.player_name,
-            "Options": {
-                "character_select": getattr(self.options, "character_select").value
-            },
+            "Options": {},
             "Locations": {},
             "Galaxies": self.shuffled_levels,
             "Galaxy Counts": self.star_block_counts,
@@ -285,7 +283,6 @@ class SMG2World(World):
             output_data["Options"][field.name] = getattr(self.options, field.name).value
             if isinstance(output_data["Options"][field.name], set):
                 output_data["Options"][field.name] = list(output_data["Options"][field.name])
-        output_data["Options"]["character_select"] = getattr(self.options, "character_select").value
         output_data["Options"]["mario_colors"] = getattr(self.options, "mario_colors").value
 
         # Output which item has been placed at each location
