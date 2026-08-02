@@ -14,8 +14,11 @@ class SMG2Item(Item):
     game: str = "Super Mario Galaxy 2"
 
     def __init__(self, name: str, classification: IC, code: Optional[int], player: int):
-        super(SMG2Item, self).__init__(name, classification, code, player)
-        self.data = item_table[name] if name in item_table else None
+        super(SMG2Item, self).__init__(name, classification,
+                                       list(all_items_table.keys()).index(name)
+                                       if name in all_items_table.keys() else None
+                                       , player)
+        self.data = all_items_table[name] if name in all_items_table.keys() else None
 
 # TODO Replace this item table
 item_table: dict[str, SMG2ItemData] = {
@@ -113,6 +116,8 @@ generic_event_items: dict[str, SMG2ItemData] = {
     "Peach": SMG2ItemData([], IC.progression),
     "Silver Star": SMG2ItemData([], IC.progression),
     "Purple Coin": SMG2ItemData([], IC.progression),
+    "Can Farm Coins": SMG2ItemData([], IC.progression),
+    "Can Farm Starbits": SMG2ItemData([], IC.progression),
 }
 
 keyed_grand_stars: dict[str, SMG2ItemData] = {
@@ -196,6 +201,7 @@ galaxy_keys: dict[str, SMG2ItemData] = {
    itemname.SPINDIGKEY : SMG2ItemData(["Galaxy Key"], IC.progression),
    itemname.FLUFFBLUFFKEY : SMG2ItemData(["Galaxy Key"], IC.progression),
    itemname.PUZZPLANKEY : SMG2ItemData(["Galaxy Key"], IC.progression),
+   itemname.BEATBLOCKKEY: SMG2ItemData(["Galaxy Key"], IC.progression),
    itemname.HIGHTAILKEY : SMG2ItemData(["Galaxy Key"], IC.progression),
    itemname.BOULBOWLKEY : SMG2ItemData(["Galaxy Key"], IC.progression),
    itemname.COSMICOKEY : SMG2ItemData(["Galaxy Key"], IC.progression),
@@ -243,7 +249,7 @@ all_items_table: dict[str, SMG2ItemData] = {**keyed_grand_stars, **item_table, *
                                             **world_green_keys, **all_filler, **powerup_consumables, **powerup_unlocks,
                                             **starbit_luma_key, **starbit_world_keys, **move_rando_separate_jump,
                                             **prog_jumps, **yoshi_moves, **object_unlocks, **coin_world_keys,
-                                            **coin_luma_key, **comet_type_keys, **comet_all_key, **green_star_all_key}
+                                            **coin_luma_key, **comet_type_keys, **comet_all_key, **green_star_all_key,}
 
 ITEM_NAME_TO_ID: dict[str, int] =  {
     name: list(all_items_table.keys()).index(name) for name in list(all_items_table.keys()) }

@@ -14,7 +14,10 @@ class SMG2Location(Location):
     game: str = "Super Mario Galaxy"
 
     def __init__(self, player: int, name: str, address: Optional[int], parent: Optional[Region]):
-        super(SMG2Location, self).__init__(player, name, address, parent)
+        super(SMG2Location, self).__init__(player, name,
+                                           list(all_location_table.keys()).index(name)
+                                           if name in all_location_table.keys() else None,
+                                           parent)
         self.data = all_location_table[name] if name in all_location_table else \
             event_locations[name] if name in event_locations else None
 

@@ -647,12 +647,15 @@ def create_regions(world: "SMG2World"): #TODO Correctly add locations
         case 0 | 1:
             world.multiworld.get_location(locname.GALAXYGENSTAR1, world.player).place_locked_item(
                 world.create_item("Peach"))
+            world.multiworld.get_location(locname.GALAXYGENSTAR1, world.player).address = None
         case 2:
             world.multiworld.get_location(locname.GRANDMASTSTAR1, world.player).place_locked_item(
                 world.create_item("Peach"))
+            world.multiworld.get_location(locname.GRANDMASTSTAR1, world.player).address = None
         case 3:
             world.multiworld.get_location(locname.GRANDMASTSTAR2, world.player).place_locked_item(
                 world.create_item("Peach"))
+            world.multiworld.get_location(locname.GRANDMASTSTAR2, world.player).address = None
         case 4:
             world.get_region(regname.SHIP).add_event("Boss Rush Goal", "Peach",
                                                      (CanReachLocation(locname.FIREFLOTSTAR1)
