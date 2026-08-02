@@ -80,6 +80,9 @@ class SMG2World(World):
                 "World 6 Starbit Luma": self.random.choice(range(random_cap)),
                 "World 7 Starbit Luma": self.random.choice(range(random_cap))
             }
+        for key in self.options.starbit_luma_counts.valid_keys:
+            if key not in self.options.starbit_luma_counts.value.keys():
+                self.options.starbit_luma_counts.value.update({key: 0})
         if "random" in self.options.coin_luma_counts.value.keys():
             random_cap: int = self.options.coin_luma_counts.value["random"]
             self.options.coin_luma_counts.value = {
@@ -91,6 +94,9 @@ class SMG2World(World):
                 "Clockwork Ruins Coin Luma": self.random.choice(range(random_cap)),
                 "Battle Belt Coin Luma": self.random.choice(range(random_cap))
             }
+        for key in self.options.coin_luma_counts.valid_keys:
+            if key not in self.options.coin_luma_counts.value.keys():
+                self.options.coin_luma_counts.value.update({key: 0})
         for key in self.options.final_star_blocks.valid_keys:
             if key not in self.options.final_star_blocks.value.keys():
                 self.options.final_star_blocks.value.update({key: 0})

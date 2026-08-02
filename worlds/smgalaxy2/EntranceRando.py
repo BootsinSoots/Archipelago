@@ -39,7 +39,7 @@ def rules_from_er_placements(world: "SMG2World"):
             lumarule: Rule[Any] = True_()
             match (int(world_num[6]), gal_slot_num):
                 case (1,4)|(2,6)|(3,5)|(4,2)|(5,5)|(6,3)|(6,5)|(7,6)|(7,7):
-                    starbit_count_grind = bool(world.options.starbit_luma_counts.value[f"World {world_num} Starbit Luma"]< 1000)
+                    starbit_count_grind = bool(world.options.starbit_luma_counts.value[f"{world_num} Starbit Luma"]< 1000)
                     dontneedgrind = True_() if starbit_count_grind else Has("Can Farm Starbits")
                     lumarule: Rule[Any] = ((True_()&OptionFilter(StarbitLumaLocks, 0))|
                                            (Has(itemname.STARBITLUMAKEY)&OptionFilter(StarbitLumaLocks, 1))

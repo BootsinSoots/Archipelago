@@ -160,7 +160,7 @@ coin_luma_key: dict[str, SMG2ItemData] = {
     itemname.COINLUMAKEY: SMG2ItemData(["All Coin Luma Key"], IC.progression)
 }
 
-coin_world_keys: dict[str, SMG2ItemData] ={
+coin_world_keys: dict[str, SMG2ItemData] = {
     itemname.COINHL1: SMG2ItemData(["Coin Luma Key"], IC.progression),
     itemname.COINHL2: SMG2ItemData(["Coin Luma Key"], IC.progression),
     itemname.COINHL3: SMG2ItemData(["Coin Luma Key"], IC.progression),
@@ -168,6 +168,10 @@ coin_world_keys: dict[str, SMG2ItemData] ={
     itemname.COINHL5: SMG2ItemData(["Coin Luma Key"], IC.progression),
     itemname.COINHL6: SMG2ItemData(["Coin Luma Key"], IC.progression),
     itemname.COINHL7: SMG2ItemData(["Coin Luma Key"], IC.progression),
+}
+
+green_star_all_key: dict[str, SMG2ItemData] = {
+    itemname.GREENCOMETKEY: SMG2ItemData(["All Green Star Key"], IC.progression),
 }
 
 world_green_keys: dict[str, SMG2ItemData] = {
