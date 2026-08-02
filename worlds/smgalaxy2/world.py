@@ -91,6 +91,9 @@ class SMG2World(World):
                 "Clockwork Ruins Coin Luma": self.random.choice(range(random_cap)),
                 "Battle Belt Coin Luma": self.random.choice(range(random_cap))
             }
+        for key in self.options.final_star_blocks.valid_keys:
+            if key not in self.options.final_star_blocks.value.keys():
+                self.options.final_star_blocks.append({key: 0})
         if self.options.goal.value > 2 and self.options.enable_green_stars.value == 2:
             raise OptionError(f"Green Star Locations cannot be locked behind a Galaxy Generator Goal. This error "
                               f"occurred in {self.player_name}'s Super Mario Galaxy 2 world. Their YAML must be fixed")
