@@ -75,7 +75,7 @@ CanDouble: Rule[Any] = (MoveRandoOff
                         |(Has(itemname.MARIODOUBLE)&OptionFilter(MoveRando,2))
                         |CanTriple)
 JumpHeight6: Rule[Any] = (CanTriple&CanAirSpin)
-JumpHeight5: Rule[Any] = (CanTriple|(CanSideflip&CanAirSpin)|(CanBackflip&CanAirSpin))
+JumpHeight5: Rule[Any] = (CanTriple|(CanSideflip&CanAirSpin)|(CanBackflip&CanAirSpin)|JumpHeight6)
 JumpHeight4: Rule[Any] = (CanDouble&CanAirSpin|JumpHeight5)
 JumpHeight3: Rule[Any] = (CanAirSpin|CanSideflip|CanBackflip|JumpHeight4)
 JumpHeight2: Rule[Any] = (CanDouble|JumpHeight3)

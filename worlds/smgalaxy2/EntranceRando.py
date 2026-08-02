@@ -43,7 +43,7 @@ def rules_from_er_placements(world: "SMG2World"):
                     dontneedgrind = True_() if starbit_count_grind else Has("Can Farm Starbits")
                     lumarule: Rule[Any] = ((True_()&OptionFilter(StarbitLumaLocks, 0))|
                                            (Has(itemname.STARBITLUMAKEY)&OptionFilter(StarbitLumaLocks, 1))
-                                          |(Has(f"Starbit Luma World {world_num}")&OptionFilter(StarbitLumaLocks,2))) & dontneedgrind
+                                          |(Has(f"Starbit Luma {world_num}")&OptionFilter(StarbitLumaLocks,2))) & dontneedgrind
                 case _:
                     lumarule: Rule[Any] = True_()
             world.set_rule(galaxy_entr, ((HasFromList(*NoGreenList, count=req_star_count)
