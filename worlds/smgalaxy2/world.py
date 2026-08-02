@@ -80,6 +80,9 @@ class SMG2World(World):
                 "World 6 Starbit Luma": self.random.choice(range(random_cap)),
                 "World 7 Starbit Luma": self.random.choice(range(random_cap))
             }
+        for key in self.options.starbit_luma_counts.valid_keys:
+            if key not in self.options.starbit_luma_counts.value.keys():
+                self.options.starbit_luma_counts.value.update({key: 0})
         if "random" in self.options.coin_luma_counts.value.keys():
             random_cap: int = self.options.coin_luma_counts.value["random"]
             self.options.coin_luma_counts.value = {
@@ -91,6 +94,12 @@ class SMG2World(World):
                 "Clockwork Ruins Coin Luma": self.random.choice(range(random_cap)),
                 "Battle Belt Coin Luma": self.random.choice(range(random_cap))
             }
+        for key in self.options.coin_luma_counts.valid_keys:
+            if key not in self.options.coin_luma_counts.value.keys():
+                self.options.coin_luma_counts.value.update({key: 0})
+        for key in self.options.final_star_blocks.valid_keys:
+            if key not in self.options.final_star_blocks.value.keys():
+                self.options.final_star_blocks.value.update({key: 0})
         if self.options.goal.value > 2 and self.options.enable_green_stars.value == 2:
             raise OptionError(f"Green Star Locations cannot be locked behind a Galaxy Generator Goal. This error "
                               f"occurred in {self.player_name}'s Super Mario Galaxy 2 world. Their YAML must be fixed")
@@ -111,7 +120,7 @@ class SMG2World(World):
             self.starting_world = ("World " + list(world_final_blocks.keys())[0][17]) # Get world number from string in option
             if self.options.world_shuffle.value == WorldShuffle.option_Keyed_Grand_Stars:
                 self.multiworld.push_precollected(self.create_item("Grand Star - " + self.starting_world))
-            for i in range(7):
+            for i in range(1,6):
                 world_order.append("World " + str(list(world_final_blocks.keys())[i][17])) # Get world number from string in option
 
         block_counts: dict[str, dict[str, int]] = {}
@@ -133,7 +142,7 @@ class SMG2World(World):
                                   "Block 2": (max(world_final_block_count - 30, 0)),
                                   "Block 3": (max(world_final_block_count - 20, 0)),
                                   "Block 4": (max(world_final_block_count - 10, 0)),
-                                  "blick 5": (max(world_final_block_count, 0))}
+                                  "Block 5": (max(world_final_block_count, 0))}
                 case _:
                     dict_entry = {"Block 1": (max(world_final_block_count, 0)), }
             block_counts.update({world: dict_entry})
@@ -144,7 +153,8 @@ class SMG2World(World):
         Connect.set_rules(self, self.player)
     
     def create_item(self, name: str) -> SMG2Item:
-        item_data: SMG2ItemData = items.all_items_table[name] if name in items.all_location_table else None
+        item_data: SMG2ItemData = items.all_items_table[name] if name in items.all_items_table.keys() \
+            else items.generic_event_items[name]
         item_id: int | None = self.item_name_to_id[name] if name in self.item_id_to_name else None
         item_class = item_data.classification if item_data else ItemClassification.progression
         item = items.SMG2Item(name, item_class, item_id, self.player)
@@ -260,9 +270,7 @@ class SMG2World(World):
             "Seed": self.multiworld.seed,
             "Slot": self.player,
             "Name": self.player_name,
-            "Options": {
-                "character_select": getattr(self.options, "character_select").value
-            },
+            "Options": {},
             "Locations": {},
             "Galaxies": self.shuffled_levels,
             "Galaxy Counts": self.star_block_counts,
@@ -276,7 +284,6 @@ class SMG2World(World):
             output_data["Options"][field.name] = getattr(self.options, field.name).value
             if isinstance(output_data["Options"][field.name], set):
                 output_data["Options"][field.name] = list(output_data["Options"][field.name])
-        output_data["Options"]["character_select"] = getattr(self.options, "character_select").value
         output_data["Options"]["mario_colors"] = getattr(self.options, "mario_colors").value
 
         # Output which item has been placed at each location

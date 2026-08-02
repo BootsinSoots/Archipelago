@@ -9,7 +9,7 @@ WORLD6 = "World 6"
 WORLD5 = "World 5"
 WORLD4 = "World 4"
 WORLD3 = "World 3"
-WORLD7 = "World S"
+WORLD7 = "World 7"
 SHIPINSIDE = "Inside Starship Mario"
 
 # Hungry Luma Galaxies - 7

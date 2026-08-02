@@ -23,7 +23,7 @@ def rules_from_er_placements(world: "SMG2World"):
             galaxy_entr: Entrance = world.get_entrance(f"World {world_num[6]} Slot {gal_slot_num} Galaxy")
             galaxy_type: str = region_list[galaxy_entr.connected_region.name].type
 
-            match (world_num, gal_slot_num): # Match the correct pairing or world/slot to the correct block number to determine when to update the current count
+            match (int(world_num[6]), gal_slot_num): # Match the correct pairing or world/slot to the correct block number to determine when to update the current count
                 case (7, 2)|(1, 3)|(2, 7)|(3, 7)|(4, 7)|(5, 7)|(6, 4):
                     last_block_count = block_dict[f"Block 1"]
                 case (7, 3)|(1, 7)|(6, 6):
@@ -37,13 +37,13 @@ def rules_from_er_placements(world: "SMG2World"):
 
             req_star_count = min(last_block_count, available_locations)
             lumarule: Rule[Any] = True_()
-            match (world_num, gal_slot_num):
+            match (int(world_num[6]), gal_slot_num):
                 case (1,4)|(2,6)|(3,5)|(4,2)|(5,5)|(6,3)|(6,5)|(7,6)|(7,7):
-                    starbit_count_grind = bool(world.options.starbit_luma_counts.value[f"World {world_num} Starbit Luma"]< 1000)
+                    starbit_count_grind = bool(world.options.starbit_luma_counts.value[f"{world_num} Starbit Luma"]< 1000)
                     dontneedgrind = True_() if starbit_count_grind else Has("Can Farm Starbits")
                     lumarule: Rule[Any] = ((True_()&OptionFilter(StarbitLumaLocks, 0))|
                                            (Has(itemname.STARBITLUMAKEY)&OptionFilter(StarbitLumaLocks, 1))
-                                          |(Has(f"Starbit Luma World {world_num}")&OptionFilter(StarbitLumaLocks,2))) & dontneedgrind
+                                          |(Has(f"Starbit Luma {world_num}")&OptionFilter(StarbitLumaLocks,2))) & dontneedgrind
                 case _:
                     lumarule: Rule[Any] = True_()
             world.set_rule(galaxy_entr, ((HasFromList(*NoGreenList, count=req_star_count)
@@ -90,4 +90,5 @@ def rules_from_er_placements(world: "SMG2World"):
                            ((data.default_access if data.default_access is not None else True_()) & Has(f"Green Star {world_map} Key")))
     elif world.options.enable_green_stars.value !=0 :
         for loc_name, data in green_star_locations.items():
-            world.set_rule(world.get_location(loc_name), data.default_access & GreenStarLocationRule)
+            world.set_rule(world.get_location(loc_name),
+                           (data.default_access if data.default_access is not None else True_()) & GreenStarLocationRule)
