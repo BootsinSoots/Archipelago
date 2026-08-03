@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Any
 from rule_builder.field_resolvers import FromOption
 from rule_builder.options import OptionFilter
 from rule_builder.rules import Has, True_, HasFromList, Rule, HasGroup, CanReachLocation
-from .Options import GreenStarBehavior, GreenStarstoFinish, EnableGreenStars, PowerupRando, MoveRando, YoshiRando, \
+from .SMG2Options import GreenStarBehavior, GreenStarstoFinish, EnableGreenStars, PowerupRando, MoveRando, YoshiRando, \
     CoinLumaLocks, ObjectRando, CometMission, \
     CometItems, WorldShuffle, LogicDifficulty
 from .Constants.Names import item_names as itemname
@@ -86,7 +86,7 @@ CanWallSpin: Rule[Any] = CanWallJump&CanAirSpin
 CanLongSpin: Rule[Any] = CanLongJump&CanAirSpin
 CanBackOrSideflip: Rule[Any] = CanBackflip|CanSideflip
 
-ObjectRandoOff: Rule[Any] = True_()&OptionFilter(ObjectRando, 1)
+ObjectRandoOff: Rule[Any] = True_()&OptionFilter(ObjectRando, 0)
 CanSwing: Rule[Any] = ObjectRandoOff|(Has(itemname.MARIOSWING)&OptionFilter(ObjectRando,1))
 CanCannon: Rule[Any] = ObjectRandoOff|(Has(itemname.MARIOCANNON)&OptionFilter(ObjectRando,1))
 CanShell: Rule[Any] = ObjectRandoOff|(Has(itemname.MARIOSHELL)&OptionFilter(ObjectRando,1))
@@ -104,5 +104,5 @@ CanInfiniteFlutter: Rule[Any] = HellLogic&CanRideDino
 MailtoadOpen: Rule[Any] = PowerStarCount(13) # May need additional rules here in the future
 
 def CoinLumaRule(coin_count: int) -> Rule[Any]:
-    return (True_() if coin_count < 100 else Has("Can Farm Coins"))
+    return True_() if coin_count < 100 else Has("Can Farm Coins")
 

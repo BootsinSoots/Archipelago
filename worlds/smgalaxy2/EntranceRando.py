@@ -6,7 +6,7 @@ from BaseClasses import Entrance
 from rule_builder.options import OptionFilter
 from rule_builder.rules import Rule, True_, Has, HasFromList, HasGroup
 from .Constants.Names import item_names as itemname
-from .Options import StarbitLumaLocks, GreenStarBehavior, GalaxyLock, Goal
+from .SMG2Options import StarbitLumaLocks, GreenStarBehavior, GalaxyLock, Goal
 from .Rules import NoGreenList, GreenSeparateGoal, GreenStarLocationRule
 from .locations import green_star_locations
 from .regions import region_list, all_galaxy_slots

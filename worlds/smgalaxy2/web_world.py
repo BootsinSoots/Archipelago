@@ -2,7 +2,7 @@ from BaseClasses import Tutorial
 from worlds.AutoWorld import WebWorld
 
 
-from .Options import option_groups, option_presets
+from .SMG2Options import option_groups, option_presets
 
 
 # For our game to display correctly on the website, we need to define a WebWorld subclass.

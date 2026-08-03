@@ -4,7 +4,7 @@ import os
 from dataclasses import fields
 from typing import ClassVar, Counter
 
-import worlds.smgalaxy2.Options
+
 from BaseClasses import Item, MultiWorld
 from Utils import visualize_regions
 from BaseClasses import ItemClassification
@@ -13,12 +13,12 @@ from entrance_rando import randomize_entrances
 from worlds.AutoWorld import World
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
 
-from . import items, regions, Rules, web_world, Options, Connect
+from . import items, regions, Rules, web_world, SMG2Options, Connect
 from .Constants.Names import region_names as regname
 from .Constants.Names import item_names as itemname
 from .Constants.Names import location_names as locname
 from .Constants.constants import AP_WORLD_VERSION_NAME, CLIENT_VERSION, GAME_NAME
-from .Options import WorldShuffle
+from .SMG2Options import WorldShuffle
 from .EntranceRando import rules_from_er_placements
 from .Patch.Patch import SMGPlayerContainer
 from .locations import LOCATION_NAME_TO_ID, get_location_names_per_category, SMG2Location
@@ -46,8 +46,8 @@ class SMG2World(World):
     web = web_world.SMG2WebWorld()
     
     #option definitions
-    options_dataclass = Options.SMG2Options
-    options: Options.SMG2Options
+    options_dataclass = SMG2Options.SMG2Options
+    options: SMG2Options.SMG2Options
     settings: ClassVar[SuperMarioGalaxy2]
 
     item_name_to_id: ClassVar[dict[str, int]] = ITEM_NAME_TO_ID
@@ -241,7 +241,7 @@ class SMG2World(World):
         return created_items
 
     def connect_entrances(self) -> None:
-        if self.options.galaxy_shuffle:
+        if self.options.galaxy_shuffle.value:
             # Disconnect entrances based on options choice. Also ensures first available slot is a major galaxy
             disconnect_from_option(self)
             # Run randomize entrances, but do not get pairings - we create our own method for them
