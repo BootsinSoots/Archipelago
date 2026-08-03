@@ -1095,7 +1095,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                     "Slipsand 1: Cube Launch Star")
     world.get_region(regname.SLIPSAND1SLIDE).connect(world.get_region(regname.SLIPSAND1BOSS),
                                                     "Slipsand 1: Slide Launch Star",
-                                                     rule=RB.CanSlide)
+                                                     rule=RB.CanSlide) #Add/remove CanSlide if needed
     world.get_region(regname.SLIPSAND).connect(world.get_region(regname.SLIPSAND2LONG1), "Slipsand Star 2")
     world.get_region(regname.SLIPSAND2LONG1).connect(world.get_region(regname.SLIPSAND2GRAV),
                                                     "Slipsand 2: Green Pipe")

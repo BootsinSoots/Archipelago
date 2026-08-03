@@ -692,9 +692,9 @@ green_star_locations: dict[str, SMG2LocationData]  = {
     locname.SLIPSANDSTARG1:     SMG2LocationData(["Green Star Location", regname.SLIPSAND], regname.SLIPSAND,
                                                  regname.SLIPSAND1CUBE),
     locname.SLIPSANDSTARG2:     SMG2LocationData(["Green Star Location", regname.SLIPSAND], regname.SLIPSAND,
-                                                 regname.SLIPSAND1SLIDE, RB.CanSlide),
+                                                 regname.SLIPSAND1SLIDE, RB.CanSlide), #Add/remove CanSlide if needed
     locname.SLIPSANDSTARG3:     SMG2LocationData(["Green Star Location", regname.SLIPSAND], regname.SLIPSAND,
-                                                 regname.SLIPSAND1SLIDE, RB.CanSlide),
+                                                 regname.SLIPSAND1SLIDE, RB.CanSlide), #Add/remove CanSlide if needed
     locname.COLDFIRESTARG1:     SMG2LocationData(["Green Star Location", regname.SHIVBURN], regname.SHIVBURN,
                                                  regname.SHIVBURN1VOLCANO , RB.CanMakeCloud&RB.CanLongJump),
     locname.COLDFIRESTARG2:     SMG2LocationData(["Green Star Location", regname.SHIVBURN], regname.SHIVBURN,
