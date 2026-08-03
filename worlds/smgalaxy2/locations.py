@@ -1273,7 +1273,19 @@ event_locations: dict[str, SMG2LocationData] = {
     "Rightside Down Coin Farming": SMG2LocationData(["Event"], regname.RIGHTDOWN, regname.RIGHTDOWNTOPVIEW,
                                                     locked_item="Can Farm Coins"),
     "Fluffy Bluff Coin Farming": SMG2LocationData(["Event"], regname.FLUFFBLUFF, regname.FLUFFBLUFF1BIGCLOUD,
-                                                    locked_item="Can Farm Coins")
+                                                    locked_item="Can Farm Coins"),
+    "Tall Trunk 2 Starbit Farming": SMG2LocationData(["Event"], regname.TALLTRUNK, regname.TALLTRUNK2SLIDE,
+                                                     locked_item="Can Farm Starbits"),
+    "Tall Trunk 2 Coin Farming": SMG2LocationData(["Event"], regname.TALLTRUNK, regname.TALLTRUNK2SLIDE,
+                                                     locked_item="Can Farm Coins"),
+    "Shiverburn Comet Starbit Farming": SMG2LocationData(["Event"], regname.SHIVBURN, regname.SHIVBURN2ROMP,
+                                                         locked_item="Can Farm Starbits", default_access=RB.SUPAPOWA),
+    "Puzzle Plank Comet Starbit Farming": SMG2LocationData(["Event"], regname.PUZZPLAN, regname.PUZZPLAN2COINRO,
+                                                         locked_item="Can Farm Starbits"),
+    "Cloudy Court Comet Starbit Farming": SMG2LocationData(["Event"], regname.PUZZPLAN, regname.PUZZPLAN2COINRO,
+                                                           locked_item="Can Farm Starbits", default_access=RB.CanWallJump),
+    "Twisty Trials Starbit Farming": SMG2LocationData(["Event"], regname.TWISTTRI, regname.TWISTY1PLAT4,
+                                                           locked_item="Can Farm Starbits"),
 }
 
 base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_loc, **RIGHTDOWN_loc,
