@@ -241,7 +241,7 @@ class SMG2World(World):
         return created_items
 
     def connect_entrances(self) -> None:
-        if self.options.galaxy_shuffle:
+        if self.options.galaxy_shuffle.value:
             # Disconnect entrances based on options choice. Also ensures first available slot is a major galaxy
             disconnect_from_option(self)
             # Run randomize entrances, but do not get pairings - we create our own method for them

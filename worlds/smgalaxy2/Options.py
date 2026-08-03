@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from typing import Dict, Any
 from collections import Counter
 
-import Options
-from Options import Choice, Range, PerGameCommonOptions, OptionSet, Toggle, OptionCounter, OptionDict
+
+from Options import Choice, Range, PerGameCommonOptions, OptionSet, Toggle, OptionCounter, OptionDict, OptionGroup
 
 class Goal(Choice):
     """
@@ -440,7 +440,7 @@ class SMG2Options(PerGameCommonOptions):
     passengers: Passengers
 
 option_groups = [
-    Options.OptionGroup("Map Options", [
+    OptionGroup("Map Options", [
         Goal,
         StarstoFinish,
         WorldShuffle,
@@ -453,12 +453,12 @@ option_groups = [
         ActiveCometsWorld,
         ActiveCometsGame,
     ]),
-    Options.OptionGroup("Green Stars", [
+    OptionGroup("Green Stars", [
         EnableGreenStars,
         GreenStarBehavior,
         GreenStarstoFinish,
     ]),
-    Options.OptionGroup("Logic Options", [
+    OptionGroup("Logic Options", [
         LogicDifficulty,
         PowerupRando,
         MoveRando,
@@ -469,14 +469,14 @@ option_groups = [
         CometMission,
         CometItems,
     ]),
-    Options.OptionGroup("Extra Locations", [
+    OptionGroup("Extra Locations", [
         MailtoadLetters,
         Passengers,
     ]),
-    Options.OptionGroup("Itempool Changes", [
+    OptionGroup("Itempool Changes", [
         PowerUpFiller
     ]),
-    Options.OptionGroup("Cosmetics", [
+    OptionGroup("Cosmetics", [
         MarioColors
     ]),
 ]
