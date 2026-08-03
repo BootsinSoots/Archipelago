@@ -851,11 +851,15 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                        "Flipsville 1: Lifts Launch Star",
                                                        rule=RB.CanPound | (RB.CanWallSpin & RB.HardLogic))
     world.create_entrance(world.get_region(regname.FLIPVILL1WANWANLANE),world.get_region(regname.FLIPVILL1STARSHROOM),
-                          RB.JumpHeight6 & RB.CanWallJump & RB.CanBackflip & CanReachEntrance("Flipsville 1: Jump to Chomp Planet")) # Trick Entrance
+                          RB.JumpHeight6 & RB.CanWallJump & RB.CanBackflip & RB.HellLogic
+                          & CanReachEntrance("Flipsville 1: Jump to Chomp Planet",
+                                             parent_region_name=regname.FLIPVILL1MAZEBOTTOM)) # Trick Entrance
     world.get_region(regname.FLIPVILL1STARSHROOM).connect(world.get_region(regname.FLIPVILL1GLAM),
                                                           "Flipsville 1: Starshroom Launch Star")
     world.create_entrance(world.get_region(regname.FLIPVILL1WANWANLANE),world.get_region(regname.FLIPVILL1GLAM),
-                          RB.JumpHeight6 & RB.CanWallJump & RB.CanBackflip & CanReachEntrance("Flipsville 1: Jump to Chomp Planet")) # Trick Entrance
+                          RB.JumpHeight6 & RB.CanWallJump & RB.CanBackflip & RB.HellLogic
+                          & CanReachEntrance("Flipsville 1: Jump to Chomp Planet",
+                                             parent_region_name=regname.FLIPVILL1MAZEBOTTOM)) # Trick Entrance
     world.get_region(regname.FLIPVILL1GLAM).connect(world.get_region(regname.FLIPVILL1STAR),
                                                     rule=RB.CanPound)
     world.get_region(regname.FLIPVILL).connect(world.get_region(regname.FLIPVILL2MAZESTART), "Flipsville Star 2")
