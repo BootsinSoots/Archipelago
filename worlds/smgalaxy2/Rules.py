@@ -86,7 +86,7 @@ CanWallSpin: Rule[Any] = CanWallJump&CanAirSpin
 CanLongSpin: Rule[Any] = CanLongJump&CanAirSpin
 CanBackOrSideflip: Rule[Any] = CanBackflip|CanSideflip
 
-ObjectRandoOff: Rule[Any] = True_()&OptionFilter(ObjectRando, 1)
+ObjectRandoOff: Rule[Any] = True_()&OptionFilter(ObjectRando, 0)
 CanSwing: Rule[Any] = ObjectRandoOff|(Has(itemname.MARIOSWING)&OptionFilter(ObjectRando,1))
 CanCannon: Rule[Any] = ObjectRandoOff|(Has(itemname.MARIOCANNON)&OptionFilter(ObjectRando,1))
 CanShell: Rule[Any] = ObjectRandoOff|(Has(itemname.MARIOSHELL)&OptionFilter(ObjectRando,1))
