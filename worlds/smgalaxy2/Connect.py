@@ -7,7 +7,7 @@ from .Rules import CanLongJump, ROCKNROLLIN, CanSwim
 if TYPE_CHECKING:
     from . import SMG2World
 from .Constants.Names import region_names as regname, item_names as itemname, location_names as locname
-from .Options import WorldShuffle, CoinLumaLocks, CometItems, CometMission
+from .SMG2Options import WorldShuffle, CoinLumaLocks, CometItems, CometMission
 from . import Rules as RB
 
 
