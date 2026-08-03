@@ -1273,7 +1273,11 @@ event_locations: dict[str, SMG2LocationData] = {
     "Rightside Down Coin Farming": SMG2LocationData(["Event"], regname.RIGHTDOWN, regname.RIGHTDOWNTOPVIEW,
                                                     locked_item="Can Farm Coins"),
     "Fluffy Bluff Coin Farming": SMG2LocationData(["Event"], regname.FLUFFBLUFF, regname.FLUFFBLUFF1BIGCLOUD,
-                                                    locked_item="Can Farm Coins")
+                                                    locked_item="Can Farm Coins"),
+    "Tall Trunk 2 Starbit Farming": SMG2LocationData(["Event"], regname.TALLTRUNK, regname.TALLTRUNK2SLIDE,
+                                                     locked_item="Can Farm Starbits"),
+    "Tall Trunk 2 Coin Farming": SMG2LocationData(["Event"], regname.TALLTRUNK, regname.TALLTRUNK2SLIDE,
+                                                     locked_item="Can Farm Coins"),
 }
 
 base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_loc, **RIGHTDOWN_loc,
