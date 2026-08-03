@@ -39,9 +39,6 @@ SKYOBS_loc: dict[str, SMG2LocationData] = {
                                           (RB.CanClimbPole | RB.JumpHeight2 | RB.CanGrabLedge | RB.MediumLogic)),
     locname.SKYSTASTAR3: SMG2LocationData([regname.SKYOBS, "Power Star Location"],
                                           regname.SKYOBS, regname.SKYOBS3BOSS),
-    "Fake Location 1": SMG2LocationData(["Fake Location"], regname.SHIP, regname.SHIP),
-    "Fake Location 2": SMG2LocationData(["Fake Location"], regname.SHIP, regname.SHIP),
-    "Fake Location 3": SMG2LocationData(["Fake Location"], regname.SHIP, regname.SHIP),
 }
 
 # Yoshi Star St
