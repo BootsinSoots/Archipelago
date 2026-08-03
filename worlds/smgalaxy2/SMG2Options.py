@@ -3,7 +3,7 @@ from typing import Dict, Any
 from collections import Counter
 
 
-from SMG2Options import Choice, Range, PerGameCommonOptions, OptionSet, Toggle, OptionCounter, OptionDict, OptionGroup
+from Options import Choice, Range, PerGameCommonOptions, OptionSet, Toggle, OptionCounter, OptionDict, OptionGroup
 
 class Goal(Choice):
     """
