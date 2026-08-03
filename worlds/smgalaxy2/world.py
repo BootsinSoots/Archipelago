@@ -5,7 +5,7 @@ from dataclasses import fields
 from typing import ClassVar, Counter
 
 
-from BaseClasses import Item, MultiWorld
+from BaseClasses import Item, MultiWorld, Location
 from Utils import visualize_regions
 from BaseClasses import ItemClassification
 from Options import OptionError
@@ -69,6 +69,8 @@ class SMG2World(World):
         self.start_galaxy: str = regname.SKYOBS
 
     def generate_early(self) -> None:
+        start_inv: list[str] = [start_item.name for start_item in self.multiworld.precollected_items[self.player]]
+
         if "random" in self.options.starbit_luma_counts.value.keys():
             random_cap: int = self.options.starbit_luma_counts.value["random"]
             self.options.starbit_luma_counts.value = {
@@ -100,6 +102,17 @@ class SMG2World(World):
         for key in self.options.final_star_blocks.valid_keys:
             if key not in self.options.final_star_blocks.value.keys():
                 self.options.final_star_blocks.value.update({key: 0})
+
+        if self.options.move_rando.value:
+            move_list = [move_name for move_name in list(items.move_rando.keys()) if not move_name in start_inv]
+            early_move = self.random.choice(move_list)
+            self.multiworld.early_items[self.player].update({early_move: 1})
+
+        if self.options.powerup_rando.value:
+            move_list = [move_name for move_name in list(items.powerup_unlocks.keys()) if not move_name in start_inv]
+            early_move = self.random.choice(move_list)
+            self.multiworld.early_items[self.player].update({early_move: 1})
+
         if self.options.goal.value < 2 and self.options.enable_green_stars.value == 2:
             raise OptionError(f"Green Star Locations cannot be locked behind a Galaxy Generator Goal. This error "
                               f"occurred in {self.player_name}'s Super Mario Galaxy 2 world. Their YAML must be fixed")
@@ -251,6 +264,45 @@ class SMG2World(World):
 
     def pre_fill(self) -> None:
         visualize_regions(self.get_region(self.origin_region_name), "SMG2_region_graph.puml",show_entrance_names=True)
+
+    @classmethod
+    def stage_fill_hook(cls, multiworld: MultiWorld, progitempool: list[Item], usefulitempool: list[Item],
+        filleritempool: list[Item], fill_locations: list[Location]) -> None:
+
+        # Credit to @Mysteryem for this hook and the sort_fuc.
+        game_players = multiworld.get_game_players(cls.game)
+        # Get all player IDs that require either power stars to complete their goal or green stars
+        smg2_excessive_prog_items = {player for player in game_players if
+            multiworld.worlds[player].options.stars_to_finish > 0 or multiworld.worlds[player].options.green_stars_to_finish > 0}
+        # Get the player IDs of those that are using minimal accessibility.
+        smg2_minimal_players = {player for player in game_players
+            if multiworld.worlds[player].options.accessibility == "minimal"}
+
+        def sort_func(item: Item):
+            # Credit once again for @Mysteryem for this function AND very nice description
+            if item.player in smg2_excessive_prog_items and item.name in ["Power Star", "Green Star"]:
+                if item.player in smg2_minimal_players:
+                    # For minimal players, place goal macguffins first. This helps prevent fill from dumping logically
+                    # relevant items into unreachable locations and reducing the number of reachable locations to fewer
+                    # than the number of items remaining to be placed.
+                    #
+                    # Placing only the non-required goal macguffins first or slightly more than the number of
+                    # non-required goal macguffins first was also tried, but placing all goal macguffins first seems to
+                    # give fill the best chance of succeeding.
+                    #
+                    # All power stars and green stars are given the *deprioritized* classification for minimal players,
+                    # which avoids them being placed on priority locations, which would otherwise occur due to them
+                    # being sorted to be placed first. They also skip progression balancing in larger multiworlds.
+                    return 1
+                else:
+                    # For non-minimal players, place goal macguffins last. This helps prevent fill from filling most/all
+                    # reachable locations with the goal macguffins that are only required for the goal.
+                    return -1
+            else:
+                # Python sorting is stable, so this will leave everything else in its original order.
+                return 0
+
+        progitempool.sort(key=sort_func)
 
     def post_fill(self) -> None:
         if not self.options.galaxy_lock.value:
