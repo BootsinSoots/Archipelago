@@ -276,7 +276,7 @@ CHOMWORK_loc: dict[str, SMG2LocationData] = {
                                              regname.CHOMWORK1LAVA, RB.CanPound),
     locname.CHOMPWORKSTAR2: SMG2LocationData(["Power Star Location", regname.CHOMWORK], regname.CHOMWORK,
                                              regname.CHOMWORK2TOWER, RB.SPRONGIN
-                                             | (RB.CanWallSpin & RB.CanTriple & RB.CanBackOrSideflip)),
+                                             | (RB.HardLogic & RB.CanWallSpin & RB.CanTriple & RB.CanBackOrSideflip)),
     locname.CHOMPWORKSTAR3: SMG2LocationData(["Power Star Location", regname.CHOMWORK], regname.CHOMWORK,
                                              regname.CHOMWORK3LAVA, RB.CanPound),
 }
@@ -670,7 +670,7 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  | (RB.MediumLogic & RB.CanTriple)),
     locname.CHOMPWORKSTARG3:    SMG2LocationData(["Green Star Location", regname.CHOMWORK], regname.CHOMWORK,
                                                  regname.CHOMWORK2TOWER, RB.SPRONGIN
-                                                 | (RB.CanWallSpin & RB.CanTriple & RB.CanBackOrSideflip & RB.CanLongJump)),
+                                                 | (RB.HardLogic & RB.CanWallSpin & RB.CanTriple & RB.CanBackOrSideflip & RB.CanLongJump)),
     locname.HONEYHOPSTARG1:     SMG2LocationData(["Green Star Location", regname.HONEYHOP], regname.HONEYHOP,
                                                  regname.HONEYHOP1CLOUDS),
     locname.HONEYHOPSTARG2:     SMG2LocationData(["Green Star Location", regname.HONEYHOP], regname.HONEYHOP,
