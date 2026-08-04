@@ -61,6 +61,8 @@ all_galaxy_slots: list[str] = (major_entr_list + gal_minor_entr_list + luma_entr
 region_list: dict[str, SMG2RegionData] = {
     regname.SHIP: SMG2RegionData("Main", [], []),
     regname.SHIP2: SMG2RegionData("Main", [], []),
+    regname.SHIPLEFTEAR: SMG2RegionData("Main", [], []),
+    regname.SHIPSTARSHROOM: SMG2RegionData("Main", [], []),
     regname.WORLD1: SMG2RegionData("World", [regname.SHIP], []),
     regname.WORLD2: SMG2RegionData("World", [regname.SHIP], []),
     regname.WORLD5: SMG2RegionData("World", [regname.SHIP], []),

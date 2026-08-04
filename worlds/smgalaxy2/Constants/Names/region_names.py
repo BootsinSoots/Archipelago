@@ -10,7 +10,9 @@ WORLD5 = "World 5"
 WORLD4 = "World 4"
 WORLD3 = "World 3"
 WORLD7 = "World 7"
-SHIPINSIDE = "Inside Starship Mario"
+SHIPINSIDE = "Starship Mario Engine Room"
+SHIPLEFTEAR = "Lumalee Room"
+SHIPSTARSHROOM = "Toad Brigade Starshroom"
 
 # Hungry Luma Galaxies - 7
 FLIPSWAP = "Flip Swap Galaxy"
