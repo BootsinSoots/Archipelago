@@ -52,6 +52,7 @@ EnemizerCLI/
 /options.yaml
 /config.yaml
 /logs/
+/fuzz_output/
 _persistent_storage.yaml
 mystery_result_*.yaml
 *-errors.txt
@@ -201,3 +202,5 @@ _speedups.html
 .LSOverride
 Thumbs.db
 [Dd]esktop.ini
+/fuzz.py
+/determinism.py
