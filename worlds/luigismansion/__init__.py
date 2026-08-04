@@ -799,8 +799,9 @@ class LMWorld(World):
             if self.options.gold_mice.value:
                 bundles += copy.deepcopy(list(gold_mice_bundles.keys()))
             if self.options.portrification.value:
-                pearls = copy.deepcopy(list(pearl_bundles.keys()))
-                bundles += [pearls for _ in range(19)]
+                pearls = copy.deepcopy(list(pearl_bundles.keys())[0]) # Grab the only string in the list
+                for _ in range(19):
+                    bundles.append(pearls)
             while n_bundles > 0:
                 item = self.random.choice(sorted(bundles)) # Always create 1 copy of each treasure bundle and not more
                 bundles.remove(item)
