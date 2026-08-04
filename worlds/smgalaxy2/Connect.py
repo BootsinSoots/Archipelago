@@ -735,7 +735,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     #world.get_region(regname.SUPMASS1PIPES).connect(world.get_region(regname.SUPMASS1GSTAR2), #requires Luigi
     #                                                rule=RB.CanLongSpin)
     world.get_region(regname.SUPMASS1THWOMPS).connect(world.get_region(regname.SUPMASS1GSTAR2),
-                                                      rule=RB.CanAirSpin | RB.CanWallJump)
+                                                      rule=RB.CanAirSpin | RB.MediumLogic)
     world.get_region(regname.SUPMASS1THWOMPS).connect(world.get_region(regname.SUPMASS1KOOPAS),
                                                       "Supermassive 1: Thwomps Launch Star",
                                                       rule=(RB.CanWallJump|RB.JumpHeight4))
@@ -761,7 +761,8 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                               )
     world.get_region(regname.SUPMASS2START).connect(world.get_region(regname.SUPMASS2PIPES),
                                                     rule=RB.CanWallJump)
-    world.get_region(regname.SUPMASS2PIPES).connect(world.get_region(regname.SUPMASS2THWOMPS))
+    world.get_region(regname.SUPMASS2PIPES).connect(world.get_region(regname.SUPMASS2THWOMPS),
+                                                    rule=RB.CanLongJump | RB.CanAirSpin)
     world.get_region(regname.SUPMASS2THWOMPS).connect(world.get_region(regname.SUPMASS2KOOPAS),
                                                       "Supermassive Comet: Thwomps Launch Star",
                                                       rule=RB.CanWallJump | RB.JumpHeight4)
@@ -1098,8 +1099,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.SLIPSAND1CUBE).connect(world.get_region(regname.SLIPSAND1SLIDE),
                                                     "Slipsand 1: Cube Launch Star")
     world.get_region(regname.SLIPSAND1SLIDE).connect(world.get_region(regname.SLIPSAND1BOSS),
-                                                    "Slipsand 1: Slide Launch Star",
-                                                     rule=RB.CanSlide) #Add/remove CanSlide if needed
+                                                    "Slipsand 1: Slide Launch Star")
     world.get_region(regname.SLIPSAND).connect(world.get_region(regname.SLIPSAND2LONG1), "Slipsand Star 2")
     world.get_region(regname.SLIPSAND2LONG1).connect(world.get_region(regname.SLIPSAND2GRAV),
                                                     "Slipsand 2: Green Pipe")
@@ -1238,7 +1238,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                      "Clockwork Ruins: Push Block Launch Star",
                                                      rule=RB.CanPound)
     world.get_region(regname.CLOCKWORK1WHEELSB).connect(world.get_region(regname.CLOCKWORK1WHEELST),
-                                                        rule=RB.CanWallJump)
+                                                        rule=RB.CanWallJump & RB.CanSwing & (RB.CanGroundPound | RB.JumpHeight5))
     world.get_region(regname.CLOCKWORK1WHEELST).connect(world.get_region(regname.CLOCKWORK1COINROOM),
                                                      "Clockwork Ruins: Wheel Planet Green Pipe")
     world.get_region(regname.CLOCKWORK1COGS).connect(world.get_region(regname.CLOCKWORK3HAMMER),
@@ -1304,7 +1304,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.WORLD6).connect(world.get_region(regname.SLIMSPRI), "World 6 Slot 5 Galaxy")
     world.get_region(regname.SLIMSPRI).connect(world.get_region(regname.SLIMSPRI1MOUTH1), "Slimy Spring Star")
     world.get_region(regname.SLIMSPRI1MOUTH1).connect(world.get_region(regname.SLIMSPRI1CAVE1),
-                                                      rule=RB.CanSwim&RB.CanSlide)
+                                                      rule=RB.CanSwim)
     world.get_region(regname.SLIMSPRI1MOUTH1).connect(world.get_region(regname.SLIMSPRI1CHESTROOM),
                                                       "Slimy Spring: Green Pipe")
     world.get_region(regname.SLIMSPRI1CAVE1).connect(world.get_region(regname.SLIMSPRI1MOUTH2),
@@ -1314,7 +1314,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                       rule=RB.CanSwim)
     world.get_region(regname.SLIMSPRI).connect(world.get_region(regname.SLIMSPRI2MOUTH1), "Slimy Spring Chimp Star")
     world.get_region(regname.SLIMSPRI2MOUTH1).connect(world.get_region(regname.SLIMSPRI2CAVE1),
-                                                      rule=RB.CanSwim&RB.CanSlide)
+                                                      rule=RB.CanSwim)
     world.get_region(regname.SLIMSPRI2CAVE1).connect(world.get_region(regname.SLIMSPRI2MOUTH2),
                                                      "Slimy Spring Chimp: First Cave Launch Star",
                                                      rule=(RB.CanSwim & (RB.CanShell | RB.HardLogic)))
