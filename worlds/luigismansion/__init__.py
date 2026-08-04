@@ -807,7 +807,7 @@ class LMWorld(World):
                 for _ in range(max(0, 1 - exclude.count(item))): # Check here for start_inventory item
                     loc_itempool.append(self.create_item(item))
                     n_bundles -= 1
-                if n_bundles <= 0:
+                if n_bundles <= 0 or len(bundles) <= 0:
                     break
 
         # Calculate the number of additional filler items to create to fill all locations
