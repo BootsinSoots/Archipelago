@@ -28,7 +28,6 @@ class LMWeb(WebWorld):
             LuigiOptions.GameMode,
             LuigiOptions.VacuumStart,
             LuigiOptions.MarioItems,
-            LuigiOptions.TreasureBundles,
             LuigiOptions.BooGates,
             # LuigiOptions.WashroomBooCount,
             LuigiOptions.BalconyBooCount,
@@ -66,6 +65,8 @@ class LMWeb(WebWorld):
             LuigiOptions.BooEscapeTime,
             LuigiOptions.BooAnger,
             LuigiOptions.ExtraBooSpots,
+            LuigiOptions.PortraitHealthOption,
+            LuigiOptions.PortraitHealthValue
         ]),
         Options.OptionGroup("Cosmetics", [
             LuigiOptions.RandomMusic,

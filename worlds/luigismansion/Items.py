@@ -25,8 +25,8 @@ class LMItem(Item):
     game: str = "Luigi's Mansion"
     doorid: Optional[int] = None
 
-    def __init__(self, name: str, player: int, data: LMItemData, force_nonprogress: bool = False):
-        adjusted_classification = IC.filler if force_nonprogress else data.classification
+    def __init__(self, name: str, player: int, data: LMItemData, force_progress: bool = False):
+        adjusted_classification = IC.progression if force_progress else data.classification
         super(LMItem, self).__init__(name, adjusted_classification, LMItem.get_apid(data.code), player)
 
         self.type = data.type
@@ -243,6 +243,7 @@ other_filler_items: Dict[str, LMItemData] = {
     "Ruby": CurrencyItemData(123, { CURRENCY_NAME.RUBY: 1, }),
     "Diamond": CurrencyItemData(124, { CURRENCY_NAME.DIAMOND: 1, }),
     "Dust": LMItemData("Nothing Item", 127, IC.filler, update_ram_addr=[]),
+    "Grass": LMItemData("Nothing Item", 149, IC.filler, update_ram_addr=[]),
     "Small Heart": LMItemData("Heart", 128, IC.filler,
         update_ram_addr=[LMRamData(0x803D8B40, pointer_offset=0xB8, ram_byte_size=2, item_count=20)]),
     "Large Heart": LMItemData("Heart", 129, IC.filler,
@@ -283,62 +284,17 @@ trap_filler_items: Dict[str, LMItemData] = {
         update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=9)], default_weight=5)
 }
 
-treasure_bundles: Dict[str, LMItemData] = {
-    "Hidden Room Treasure Bundle":
-        CurrencyItemData(148,
-                         { CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 2,
-                           CURRENCY_NAME.SAPPHIRE: 1, CURRENCY_NAME.EMERALD: 1, CURRENCY_NAME.RUBY: 1}),
-    "Laundry Room Treasure Bundle":
-        CurrencyItemData(149,
-                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 2}),
-    "Dining Room Treasure Bundle":
-        CurrencyItemData(150,
-                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 2,
-                          CURRENCY_NAME.DIAMOND: 1}),
-    "Boneyard Flower Bundle":
-        CurrencyItemData(151,
-                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 30, CURRENCY_NAME.GOLD_BARS: 2,
-                          CURRENCY_NAME.GOLD_DIAMOND: 1}),
-    "Billiards Room Treasure Bundle":
-        CurrencyItemData(152,
-                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 2,
-                          CURRENCY_NAME.DIAMOND: 1}),
-    "Rec Room Treasure Bundle":
-        CurrencyItemData(153,
-                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 2,
-                          CURRENCY_NAME.DIAMOND: 1}),
-    "Courtyard Treasure Bundle":
-        CurrencyItemData(154,
-                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 2}),
-    "Guest Room Treasure Bundle":
-        CurrencyItemData(155,
-                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 2,
-                          CURRENCY_NAME.DIAMOND: 1}),
-    "2F Washroom Treasure Bundle":
-        CurrencyItemData(156,
-                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 1}),
-    "Telephone Room Treasure Bundle":
-        CurrencyItemData(157,
-                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 1}),
-    "Ceramics Studio Treasure Bundle":
-        CurrencyItemData(158,
-                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 2,
-                          CURRENCY_NAME.DIAMOND: 1})
-}
-
 filler_items = {**other_filler_items,
                 **trap_filler_items}
 
 ALL_ITEMS_TABLE = {**ITEM_TABLE,
                    **BOO_ITEM_TABLE,
-                   **filler_items,
-                   **treasure_bundles,}
+                   **filler_items}
 
 
 BOO_AP_ID_LIST: list[int] = [LMItem.get_apid(value.code) for value in BOO_ITEM_TABLE.values()]
 IMPORTANT_ITEM_AP_LIST: list[int] = [LMItem.get_apid(value.code) for value in ITEM_TABLE.values() if
     not value.code == 65]
-BUNDLES_AP_ID_LIST: list[int] = [LMItem.get_apid(value.code) for value in treasure_bundles.values()] #TODO Figure out how to make remote on not treasure chests
 
 # Mario items + Elemental Medals + Traps + Boo Radar + Super Vac + Progressive Flower + Certain Traps
 RECV_OWN_GAME_ITEMS: list[int] = BOO_AP_ID_LIST + IMPORTANT_ITEM_AP_LIST + [8126, 8141, 8142, 8143, 8145, 8146, 8147]

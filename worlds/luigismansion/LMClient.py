@@ -1,10 +1,12 @@
 import asyncio, time
 import copy, sys, re
+import os
 from typing import Any
 
 # AP related imports
 import NetUtils, Utils
 from CommonClient import get_base_parser, gui_enabled, server_loop
+from settings import get_settings
 
 # 3rd Party related imports
 import dolphin_memory_engine as dme
@@ -20,6 +22,19 @@ from .client.links.energy_link.energy_link import EnergyLinkConstants
 from .client.links.energy_link.energy_link_command_processor import EnergyLinkCommandProcessor
 from .client.constants import *
 from .client.display_in_game import LMDisplayQueue
+
+# Load settings and enforce that LM options exist. If they do, import their name and save for later use.
+from .client.luigismansion_settings import LuigisMansionSettings, DolphinProcessName
+
+DME_DOLPHIN_PROCESS_NAME_ENV_VARIABLE = "DME_DOLPHIN_PROCESS_NAME"
+
+# DME seems to only load the environment variables value once, then after the first hook it never retrieves it again.
+# It is in our best interest to set this up first, then call hook later
+lm_settings: LuigisMansionSettings = get_settings().luigismansion_options
+if lm_settings.dolphin_process_name:
+    os.environ[DME_DOLPHIN_PROCESS_NAME_ENV_VARIABLE] = lm_settings.dolphin_process_name
+elif DME_DOLPHIN_PROCESS_NAME_ENV_VARIABLE in os.environ:
+    del os.environ[DME_DOLPHIN_PROCESS_NAME_ENV_VARIABLE]
 
 # This is the address that holds the player's slot name.
 # This way, the player does not have to manually authenticate their slot name.
@@ -127,6 +142,32 @@ class LMCommandProcessor(EnergyLinkCommandProcessor):
         if isinstance(self.ctx, LMContext):
             Utils.async_start(self.ctx.get_debug_info(), name="Get Luigi's Mansion Debug info")
 
+    def _cmd_breaker_broke(self):
+        """
+        Breaker room broke for you? Run this command and provide the output to the devs.
+        Breaker-fix command will allow you to continue your (a)sync.
+        """
+        if isinstance(self.ctx, LMContext):
+            Utils.async_start(self.ctx.get_breaker_info(), name="Get Luigi's Mansion Breaker info")
+
+    def _cmd_breaker_fix(self):
+        """
+        Fixes your pesty breaker room door being locked on you (please try and use breaker_broke first to report bugs).
+        """
+        if isinstance(self.ctx, LMContext):
+            Utils.async_start(self.ctx.fix_breaker(), name="Fix Luigi's Mansion Breaker")
+
+    def _cmd_change_dolphin_process_name(self, process_name: str):
+        """Specify the name of the Dolphin process to connect to. "" for system default."""
+        self.ctx.hook_check = False
+        self.ctx.hook_name = process_name
+        logger.info(f"Changing Dolphin process name to: {process_name if process_name else ""}")
+        lm_settings.dolphin_process_name = DolphinProcessName(process_name)
+        get_settings().save()
+        log_msg: str = f"Dolphin process name set to {process_name or "default"}. You must open a new client for this to take effect."
+        logger.info(log_msg)
+        Utils.messagebox("Close LM Client to take effect", log_msg)
+
 class LMContext(BaseContext):
     command_processor = LMCommandProcessor
     game = RANDOMIZER_NAME
@@ -142,6 +183,7 @@ class LMContext(BaseContext):
         super().__init__(server_address, password)
 
         # Handle various Dolphin connection related tasks
+        self.breaker_should_be_open = False
         self.instance_id = None
         self.dolphin_sync_task: Optional[asyncio.Task[None]] = None
         self.rom_loaded = False
@@ -250,6 +292,9 @@ class LMContext(BaseContext):
                 self.boolossus_difficulty = int(slot_data["boolossus_difficulty"])
                 self.send_hints = bool(slot_data["send_hints"])
 
+                # Debug Breaker Door
+                self.breaker_should_be_open = bool(slot_data["door rando list"]["71"])
+
                 # Update Tags for relevant links
                 Utils.async_start(self.network_engine.update_tags_async(bool(slot_data[EnergyLinkConstants.INTERNAL_NAME]),
                     EnergyLinkConstants.FRIENDLY_NAME), name=f"Update {EnergyLinkConstants.FRIENDLY_NAME}")
@@ -260,6 +305,16 @@ class LMContext(BaseContext):
                 Utils.async_start(self.non_essentials_async_tasks(), "LM Non-Essential Tasks")
                 Utils.async_start(self.display_class.display_in_game(), "LM - Display Items in Game")
                 self.ring_link.reset_ringlink()
+
+                # Update the Text for Caught/Received Boos based on boosanity enabled.
+                if not self.boosanity:
+                    self.ui.important_labels["Boos"].text = "Caught Boos"
+                else:
+                    self.ui.important_labels["Boos"].text = "Received Boos"
+
+                # Lastly Update the Client tab with details of the Balcony Boo Count / King Boo
+                self.ui.update_king_boo_label(self.boo_final_count)
+                self.ui.update_balcony_boo_label(self.boo_balcony_count)
 
             case "Bounced":
                 if not (self.check_ingame() and self.check_alive()):
@@ -401,6 +456,31 @@ class LMContext(BaseContext):
                 logger.info("Flag #" + str(current_flag_num+flag_bit) + " is set to: " + flag_val)
         return
 
+    async def get_breaker_info(self):
+        if not (dme.is_hooked() and self.dolphin_status == CONNECTION_CONNECTED_STATUS) or not self.check_ingame():
+            logger.info(f"Unable to use this command until you are in a {RANDOMIZER_NAME} ROM, loaded and connected.")
+            return
+
+        blackout_addr = 0x803D3399 + 8
+        blackout_flag_byte = dme.read_byte(blackout_addr)
+        logger.info(f"Blackout Flag #{str(8 * 8 + 5)} is set to: {"True" if (blackout_flag_byte & (1 << 5)) > 0 else "False"}")
+        logger.info(f"Blackout Door should be closed/open per settings: {str(self.breaker_should_be_open)}")
+
+        blackout_door_byte = dme.read_byte(0x803D5E1C)
+        logger.info(f"Breaker Door Locked State: {"True" if (blackout_door_byte & (1 << 7)) > 0 else "False"}")
+
+        return
+
+    async def fix_breaker(self):
+        if not (dme.is_hooked() and self.dolphin_status == CONNECTION_CONNECTED_STATUS) or not self.check_ingame():
+            logger.info(f"Unable to use this command until you are in a {RANDOMIZER_NAME} ROM, loaded and connected.")
+            return
+
+        blackout_door_byte = dme.read_byte(0x803D5E1C)
+        dme.write_byte(0x803D5E1C, blackout_door_byte | (1 << 7))
+
+        return
+
     def check_ram_location(self, loc_data, addr_to_update, curr_map_id, map_to_check) -> bool:
         """
         Checks a provided location in ram to see if the location was interacted with. This includes
@@ -457,6 +537,10 @@ class LMContext(BaseContext):
             if current_map_id not in lm_loc_data.map_id:
                 continue
 
+            # Some locations, like Gold Portraits require multiple RAM address to be true simultaneously. Keep track of
+            # all of these booleans in a list and check if all true to send the check.
+            all_true_list: list[bool] = []
+
             # This only checks if one address in the ram list is true, not all, so any location in the list can be true
             #   to consider the location as "checked"
             for loc_addr in lm_loc_data.update_ram_addr:
@@ -470,7 +554,16 @@ class LMContext(BaseContext):
                     if not room_to_check == current_room_id:
                         continue
 
+                if lm_loc_data.all_true:
+                    all_true_list.append(self.check_ram_location(lm_loc_data, loc_addr, current_map_id, lm_loc_data.map_id))
+                    continue
+
                 if self.check_ram_location(lm_loc_data, loc_addr, current_map_id, lm_loc_data.map_id):
+                    self.locations_checked.add(mis_loc)
+                    break
+
+            if lm_loc_data.all_true:
+                if all(loc_true for loc_true in all_true_list):
                     self.locations_checked.add(mis_loc)
 
         await self.check_locations(self.locations_checked)
@@ -554,7 +647,6 @@ class LMContext(BaseContext):
             # If the user is subscribed to send items and the trap is a valid trap and the trap was not already
             # received (to prevent sending the same traps over and over to other TrapLinkers if Luigi died)
             if self.trap_link.is_enabled() and item.item in trap_id_list and last_recv_idx > self.non_save_last_recv_idx:
-                logger.info("Triggering Trap...")
                 await self.trap_link.send_trap_link_async(lm_item_name)
 
             # Filter for only items where we have not received yet. If same slot, only receive locations from pre-set
@@ -571,7 +663,8 @@ class LMContext(BaseContext):
                 self.update_received_idx(last_recv_idx)
                 continue
             elif lm_item.type == "Trap" and (self.non_save_last_recv_idx >= last_recv_idx or
-                (item.item == 8147 and self.get_item_count_by_id(8148) < 1)):
+                (item.item == 8147 and self.get_item_count_by_id(8148) < 1) or
+                (lm_item_name == "Ghost" and self.last_map_id != 2)): # TODO Remove when either ghost trap stop dropping hearts or another workaround to do.
                 # Skip this trap item to avoid Luigi dying in an infinite trap loop.
                 # Also skip No Vac Trap if we don't have a vacuum
                 self.update_received_idx(last_recv_idx)
@@ -840,14 +933,14 @@ class LMContext(BaseContext):
 
                     # At this point, we are verified as connected. Update UI elements in the LMCLient tab.
                     if self.ui:
-                        boo_count = len(
-                            set(([item.item for item in self.items_received if item.item in BOO_AP_ID_LIST])))
+                        if self.boosanity:
+                            boo_count = len(([item.item for item in self.items_received if item.item in BOO_AP_ID_LIST]))
+                        else:
+                            boo_count = sum(bin(byte).count('1') for byte in dme.read_bytes(0x803D5E04, 8))
                         self.ui.update_boo_count_label(boo_count)
                         self.ui.get_wallet_value()
                         self.ui.update_flower_label(self.get_item_count_by_id(8140))
                         self.ui.update_vacuum_label(self.get_item_count_by_id(8064))
-                        self.ui.update_king_boo_label(self.boo_balcony_count)
-                        self.ui.update_balcony_boo_label(self.boo_balcony_count)
 
                     if not (self.check_ingame() and self.check_alive()):
                         await self.wait_for_next_loop(WAIT_TIMER_SHORT_TIMEOUT)
