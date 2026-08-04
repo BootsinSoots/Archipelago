@@ -12,7 +12,7 @@ from worlds.LauncherComponents import Component, SuffixIdentifier, Type, compone
 
 # Relative Imports
 from .Items import LMItem, LMItemData, ALL_ITEMS_TABLE, BOO_ITEM_TABLE, ITEM_TABLE, get_item_names_per_category, \
-    treasure_bundles
+    treasure_bundles, speedy_bundles, gold_mice_bundles
 from .LM_Web import LMWeb
 from .Locations import *
 from .LuigiOptions import *
@@ -794,6 +794,10 @@ class LMWorld(World):
             n_items: int = len(loc_itempool)
             n_bundles: int = n_locations - n_items
             bundles: list[str] = copy.deepcopy(list(treasure_bundles.keys()))
+            if self.options.speedy_spirits.value:
+                bundles += copy.deepcopy(list(speedy_bundles.keys()))
+            if self.options.gold_mice.value:
+                bundles += copy.deepcopy(list(gold_mice_bundles.keys()))
             while n_bundles > 0:
                 item = self.random.choice(sorted(bundles)) # Always create 1 copy of each treasure bundle and not more
                 bundles.remove(item)
