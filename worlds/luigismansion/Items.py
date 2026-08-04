@@ -409,8 +409,9 @@ gold_mice_bundles: dict[str, LMItemData] = {
 }
 
 pearl_bundles: dict[str, LMItemData] = {
-    "Pearl bundle": LMItemData(186,
-                               {CURRENCY_NAME.SMALL_PEARL: 4, CURRENCY_NAME.MEDIUM_PEARL: 4, CURRENCY_NAME.LARGE_PEARL: 1})
+    "Pearl bundle":
+        CurrencyItemData(186,
+                        {CURRENCY_NAME.SMALL_PEARL: 4, CURRENCY_NAME.MEDIUM_PEARL: 4, CURRENCY_NAME.LARGE_PEARL: 1})
 }
 
 filler_items = {**other_filler_items,
