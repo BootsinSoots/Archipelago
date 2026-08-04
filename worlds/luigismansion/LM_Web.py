@@ -78,6 +78,7 @@ class LMWeb(WebWorld):
         ]),
         Options.OptionGroup("Filler Weights", [
             LuigiOptions.FillerWeights,
+            LuigiOptions.TreasureBundles,
             LuigiOptions.TrapPercentage,
             LuigiOptions.TrapWeights,
         ]),

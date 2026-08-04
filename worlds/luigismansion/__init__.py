@@ -11,7 +11,8 @@ from worlds.AutoWorld import World
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess, icon_paths
 
 # Relative Imports
-from .Items import LMItem, LMItemData, ALL_ITEMS_TABLE, BOO_ITEM_TABLE, ITEM_TABLE, get_item_names_per_category
+from .Items import LMItem, LMItemData, ALL_ITEMS_TABLE, BOO_ITEM_TABLE, ITEM_TABLE, get_item_names_per_category, \
+    treasure_bundles, speedy_bundles, gold_mice_bundles, pearl_bundles
 from .LM_Web import LMWeb
 from .Locations import *
 from .LuigiOptions import *
@@ -785,6 +786,30 @@ class LMWorld(World):
             copies_to_place = max(0, copies_to_place - exclude.count(item))
             for _ in range(copies_to_place):
                 loc_itempool.append(self.create_item(item))
+
+
+        # Add treasure bundles until there is no longer space or out of bundles
+        if self.options.treasure_bundles:
+            n_locations: int = len(self.multiworld.get_unfilled_locations(self.player))
+            n_items: int = len(loc_itempool)
+            n_bundles: int = n_locations - n_items
+            bundles: list[str] = copy.deepcopy(list(treasure_bundles.keys()))
+            if self.options.speedy_spirits.value:
+                bundles += copy.deepcopy(list(speedy_bundles.keys()))
+            if self.options.gold_mice.value:
+                bundles += copy.deepcopy(list(gold_mice_bundles.keys()))
+            if self.options.portrification.value:
+                pearls = copy.deepcopy(list(pearl_bundles.keys())[0]) # Grab the only string in the list
+                for _ in range(19):
+                    bundles.append(pearls)
+            while n_bundles > 0:
+                item = self.random.choice(sorted(bundles)) # Always create 1 copy of each treasure bundle and not more
+                bundles.remove(item)
+                for _ in range(max(0, 1 - exclude.count(item))): # Check here for start_inventory item
+                    loc_itempool.append(self.create_item(item))
+                    n_bundles -= 1
+                if n_bundles <= 0 or len(bundles) <= 0:
+                    break
 
         # Calculate the number of additional filler items to create to fill all locations
         n_locations = len(self.multiworld.get_unfilled_locations(self.player))

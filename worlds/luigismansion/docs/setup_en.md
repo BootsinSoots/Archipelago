@@ -25,6 +25,8 @@ Run the emulator at least once to make sure it is working.
 
 6. Note for Windows users: you may experience some issues with patching the ISO if your file is stored on OneDrive.
 
+6. Note for Windows users: you may experience some issues with patching the ISO if your file is stored on OneDrive.
+
 ## Create a Config (.yaml) File
 
 ### What is a config file and why do I need one?
