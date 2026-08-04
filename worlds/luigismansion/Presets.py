@@ -79,12 +79,14 @@ allsanity_settings = {
 
 money_settings = {
     LMOptions.FillerWeights.internal_name:             LMOptions.FillerWeights.all_on_dict,
+    LMOptions.TreasureBundles.internal_name:           "true",
     LMOptions.TrapWeights.internal_name:               LMOptions.TrapWeights.all_off_dict,
     LMOptions.TrapPercentage.internal_name:            0,
 }
 
 trap_settings = {
     LMOptions.FillerWeights.internal_name:             LMOptions.FillerWeights.all_off_dict,
+    LMOptions.TreasureBundles.internal_name:           "false",
     LMOptions.TrapWeights.internal_name:               LMOptions.TrapWeights.all_on_dict,
     LMOptions.TrapPercentage.internal_name:            100,
 }
