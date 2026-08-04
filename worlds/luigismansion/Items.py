@@ -408,6 +408,11 @@ gold_mice_bundles: dict[str, LMItemData] = {
                          {CURRENCY_NAME.COINS: 30, CURRENCY_NAME.BILLS: 40}),
 }
 
+pearl_bundles: dict[str, LMItemData] = {
+    "Pearl bundle": LMItemData(186,
+                               {CURRENCY_NAME.SMALL_PEARL: 4, CURRENCY_NAME.MEDIUM_PEARL: 4, CURRENCY_NAME.LARGE_PEARL: 1})
+}
+
 filler_items = {**other_filler_items,
                 **trap_filler_items}
 
@@ -416,7 +421,8 @@ ALL_ITEMS_TABLE = {**ITEM_TABLE,
                    **filler_items,
                    **treasure_bundles,
                    **speedy_bundles,
-                   **gold_mice_bundles,}
+                   **gold_mice_bundles,
+                   **pearl_bundles,}
 
 
 BOO_AP_ID_LIST: list[int] = [LMItem.get_apid(value.code) for value in BOO_ITEM_TABLE.values()]
