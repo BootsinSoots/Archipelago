@@ -56,7 +56,7 @@ REGION_LIST: dict[str, LMRegionInfo] = {
     "Butler's Room": LMRegionInfo(2, 1, 0, 0, ["Butler's Room Key", "Laundry Room Key", "Heart Key"], ["Butler's Room Key"],
         [1], True, -3800.646000, 0.000000, -327.291077),
     "Fortune-Teller's Room": LMRegionInfo(2, 1, 3, 3, ["Fortune Teller Key", "Mirror Room Key"],
-        ["Fortune Teller Key", "Mirror Room Key"], [4, 5], True, 1807.135740, 0.000000, 14.838852),
+        ["Fortune Teller Key", "Mirror Room Key"], [4, 5], True, 2343.24854, 0.000000, -191.177582),
     "Ballroom": LMRegionInfo(2, 1, 10, 9,  ["Ballroom Key", "Storage Room Key"], ["Ballroom Key", "Storage Room Key"],
         [15, 16], True, 2854.236820, 0.000000, -1565.909060, "No Element"),
     "Dining Room": LMRegionInfo(2, 1, 9, 8, ["Dining Room Key", "Kitchen Key"], ["Dining Room Key", "Kitchen Key"],
@@ -65,7 +65,7 @@ REGION_LIST: dict[str, LMRegionInfo] = {
     "1F Bathroom": LMRegionInfo(2, 1, 20, 21, ["1F Bathroom Key", "Heart Key"], ["1F Bathroom Key"], [23],
         True, -2160.237550, 0.000000, -4671.114750, "No Element"),
     "Conservatory": LMRegionInfo(2, 1, 21, 22, ["Conservatory Key", "Lower 2F Stairwell Key", "Heart Key"],
-        ["Conservatory Key"], [21], True, 780.405884, 0.000000, -4662.089840),
+        ["Conservatory Key"], [21], True, 1309.44092, 0.000000, -4962.23096),
     "Billiards Room": LMRegionInfo(2, 1, 12, 12, ["Billiards Room Key", "Heart Key"],
         ["Billiards Room Key", "Projection room Key"], [17, 18], True, -963.755737, 0.000000, -3055.808110),
     "Basement Stairwell": LMRegionInfo(2, 0, 65, 67, []),
@@ -80,7 +80,7 @@ REGION_LIST: dict[str, LMRegionInfo] = {
     "Storage Room": LMRegionInfo(2, 1, 14, 14, ["Storage Room Key", "Ballroom Key"], ["Storage Room Key"], [16],
         True, 3412.177250, 0.000000, -3009.698000, "No Element"),
     "Mirror Room": LMRegionInfo(2, 1, 4, 4, ["Mirror Room Key", "Fortune Teller Key"],  ["Mirror Room Key"], [5],
-        True, 3343.897950, 0.000000, -114.910957, "No Element"),
+        True, 3764.000000, 0.000000, 159.723618, "No Element"),
     "Rec Room": LMRegionInfo(2, 1, 22, 23, ["North Rec Room Key", "South Rec Room Key", "Lower 2F Stairwell Key",
         "Upper 2F Stairwell Key"], ["North Rec Room Key", "South Rec Room Key"], [24, 25], True,
         3517.026860, 0.000000, -4646.33203),
@@ -194,7 +194,7 @@ def set_ghost_type(world: "LMWorld", ghost_list: dict):
     types: list[str] = ["Fire", "Water", "Ice", "No Element"]
     weights: list[int] = [2, 2, 2, 8]
 
-    for region_name in ghost_list:
+    for region_name in ghost_list.keys():
         if not REGION_LIST[region_name].allow_element_rando:
             ghost_type = "No Element"
         else:
@@ -297,7 +297,7 @@ def connect_regions(world: "LMWorld"):
     lmconnect(world, "Safari Room", "East Attic Hallway", "East Attic Hallway Key", 55)
     lmconnect(world, "East Attic Hallway", "Artist's Studio", "Artist's Studio Key", 63)
     lmconnect(world, "East Attic Hallway", "Balcony", "Balcony Key", 62,
-            lambda state, balc_boo_count=world.options.balcony_boo_count.value: state.has_group("Boo", world.player, balc_boo_count)
+            lambda state, balc_boo_count=world.options.balcony_boo_count.value: state.has_group_unique("Boo", world.player, balc_boo_count)
                           or state.has("Boo", world.player, balc_boo_count))
     lmconnect(world, "Balcony", "West Attic Hallway", "Diamond Key", 59)
     lmconnect(world, "West Attic Hallway", "Armory", "Armory Key", 51)
@@ -315,7 +315,7 @@ def connect_regions(world: "LMWorld"):
     lmconnect(world, "Basement Hallway", "Pipe Room", "Pipe Room Key", 69)
     lmconnect(world, "Basement Hallway", "Altar Hallway", "Altar Hallway Key", 70)
     lmconnect(world, "Altar Hallway", "Secret Altar", "Spade Key", 72,
-            lambda state, final_boo_count=world.options.final_boo_count.value: state.has_group("Boo", world.player, final_boo_count)
+            lambda state, final_boo_count=world.options.final_boo_count.value: state.has_group_unique("Boo", world.player, final_boo_count)
                           or state.has("Boo", world.player, final_boo_count))
     lmconnect(world, world.origin_region_name, "Gallery")
     lmconnect(world, world.origin_region_name, "Training Room")

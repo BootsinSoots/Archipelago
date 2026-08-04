@@ -65,6 +65,8 @@ class LMWeb(WebWorld):
             LuigiOptions.BooEscapeTime,
             LuigiOptions.BooAnger,
             LuigiOptions.ExtraBooSpots,
+            LuigiOptions.PortraitHealthOption,
+            LuigiOptions.PortraitHealthValue
         ]),
         Options.OptionGroup("Cosmetics", [
             LuigiOptions.RandomMusic,
@@ -76,6 +78,7 @@ class LMWeb(WebWorld):
         ]),
         Options.OptionGroup("Filler Weights", [
             LuigiOptions.FillerWeights,
+            LuigiOptions.TreasureBundles,
             LuigiOptions.TrapPercentage,
             LuigiOptions.TrapWeights,
         ]),

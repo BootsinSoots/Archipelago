@@ -1,7 +1,5 @@
 from typing import NamedTuple, Dict, Set, Optional
 
-from win32comext.ifilter.ifilter import BindIFilterFromStream
-
 from BaseClasses import Item
 from BaseClasses import ItemClassification as IC
 from .Helper_Functions import LMRamData
@@ -27,8 +25,8 @@ class LMItem(Item):
     game: str = "Luigi's Mansion"
     doorid: Optional[int] = None
 
-    def __init__(self, name: str, player: int, data: LMItemData, force_nonprogress: bool = False):
-        adjusted_classification = IC.filler if force_nonprogress else data.classification
+    def __init__(self, name: str, player: int, data: LMItemData, force_progress: bool = False):
+        adjusted_classification = IC.progression if force_progress else data.classification
         super(LMItem, self).__init__(name, adjusted_classification, LMItem.get_apid(data.code), player)
 
         self.type = data.type
@@ -270,6 +268,13 @@ other_filler_items: Dict[str, LMItemData] = {
     "Ruby": CurrencyItemData(123, { CURRENCY_NAME.RUBY: 1, }),
     "Diamond": CurrencyItemData(124, { CURRENCY_NAME.DIAMOND: 1, }),
     "Dust": LMItemData("Nothing Item", 127, IC.filler, update_ram_addr=[]),
+    "Grass": LMItemData("Nothing Item", 149, IC.filler, update_ram_addr=[]),
+    "20 Coins & Bills": CurrencyItemData(119, { CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, }),
+    "Sapphire": CurrencyItemData(121, { CURRENCY_NAME.SAPPHIRE: 1, }),
+    "Emerald": CurrencyItemData(122, { CURRENCY_NAME.EMERALD: 1, }),
+    "Ruby": CurrencyItemData(123, { CURRENCY_NAME.RUBY: 1, }),
+    "Diamond": CurrencyItemData(124, { CURRENCY_NAME.DIAMOND: 1, }),
+    "Dust": LMItemData("Nothing Item", 127, IC.filler, update_ram_addr=[]),
     "Small Heart": LMItemData("Heart", 128, IC.filler,
         update_ram_addr=[LMRamData(0x803D8B40, pointer_offset=0xB8, ram_byte_size=2, item_count=20)]),
     "Large Heart": LMItemData("Heart", 129, IC.filler,
@@ -310,12 +315,146 @@ trap_filler_items: Dict[str, LMItemData] = {
         update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=9)], default_weight=5)
 }
 
+treasure_bundles: dict[str, LMItemData] = {
+    "Hidden Room Treasure Bundle":
+        CurrencyItemData(159,
+                         { CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 2,
+                           CURRENCY_NAME.SAPPHIRE: 1, CURRENCY_NAME.EMERALD: 1, CURRENCY_NAME.RUBY: 1}),
+    "Laundry Room Treasure Bundle":
+        CurrencyItemData(160,
+                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 2}),
+    "Dining Room Treasure Bundle":
+        CurrencyItemData(150,
+                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 2,
+                          CURRENCY_NAME.DIAMOND: 1}),
+    "Boneyard Flower Bundle":
+        CurrencyItemData(151,
+                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 30, CURRENCY_NAME.GOLD_BARS: 2,
+                          CURRENCY_NAME.GOLD_DIAMOND: 1}),
+    "Billiards Room Treasure Bundle":
+        CurrencyItemData(152,
+                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 2,
+                          CURRENCY_NAME.DIAMOND: 1}),
+    "Rec Room Treasure Bundle":
+        CurrencyItemData(153,
+                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 2,
+                          CURRENCY_NAME.DIAMOND: 1}),
+    "Courtyard Treasure Bundle":
+        CurrencyItemData(154,
+                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 2}),
+    "Guest Room Treasure Bundle":
+        CurrencyItemData(155,
+                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 2,
+                          CURRENCY_NAME.DIAMOND: 1}),
+    "2F Washroom Treasure Bundle":
+        CurrencyItemData(156,
+                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 1}),
+    "Telephone Room Treasure Bundle":
+        CurrencyItemData(157,
+                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 1}),
+    "Ceramics Studio Treasure Bundle":
+        CurrencyItemData(158,
+                         {CURRENCY_NAME.BILLS: 20, CURRENCY_NAME.COINS: 20, CURRENCY_NAME.GOLD_BARS: 2,
+                          CURRENCY_NAME.DIAMOND: 1})
+}
+
+speedy_bundles: dict[str, LMItemData] = {
+    "Wardrobe Speedy Spirit Bundle":
+        CurrencyItemData(161,
+                         {CURRENCY_NAME.COINS: 20, CURRENCY_NAME.BILLS: 20}),
+    "Study Speedy Spirit Bundle":
+        CurrencyItemData(162,
+                         {CURRENCY_NAME.COINS: 20, CURRENCY_NAME.BILLS: 5, CURRENCY_NAME.RUBY: 1}),
+    "Nursery Speedy Spirit Bundle":
+        CurrencyItemData(163,
+                         {CURRENCY_NAME.COINS: 20, CURRENCY_NAME.BILLS: 30}),
+    "Storage Room Speedy Spirit Bundle":
+        CurrencyItemData(164,
+                         {CURRENCY_NAME.COINS: 20, CURRENCY_NAME.BILLS: 10, CURRENCY_NAME.GOLD_BARS: 2}),
+    "Hidden Room Speedy Spirit Bundle":
+        CurrencyItemData(165,
+                         {CURRENCY_NAME.COINS: 20, CURRENCY_NAME.BILLS: 5, CURRENCY_NAME.EMERALD: 1}),
+    "Conservatory Speedy Spirit Bundle":
+        CurrencyItemData(166,
+                         {CURRENCY_NAME.COINS: 20, CURRENCY_NAME.BILLS: 5, CURRENCY_NAME.RUBY: 1}),
+    "Dining Room Speedy Spirit Bundle":
+        CurrencyItemData(167,
+                         {CURRENCY_NAME.COINS: 20, CURRENCY_NAME.BILLS: 5, CURRENCY_NAME.EMERALD: 1}),
+    "Kitchen Speedy Spirit Bundle":
+        CurrencyItemData(168,
+                         {CURRENCY_NAME.COINS: 20, CURRENCY_NAME.BILLS: 5, CURRENCY_NAME.SAPPHIRE: 1}),
+    "Rec Room Speedy Spirit Bundle":
+        CurrencyItemData(169,
+                         {CURRENCY_NAME.COINS: 20, CURRENCY_NAME.BILLS: 5, CURRENCY_NAME.RUBY: 1}),
+    "Nana's Room Speedy Spirit Bundle":
+        CurrencyItemData(170,
+                         {CURRENCY_NAME.COINS: 20, CURRENCY_NAME.BILLS: 10, CURRENCY_NAME.GOLD_BARS: 2}),
+    "Billiards Room Speedy Spirit Bundle":
+        CurrencyItemData(171,
+                         {CURRENCY_NAME.COINS: 20, CURRENCY_NAME.BILLS: 5, CURRENCY_NAME.SAPPHIRE: 1}),
+    "Twins' Room Speedy Spirit Bundle":
+        CurrencyItemData(172,
+                         {CURRENCY_NAME.COINS: 20, CURRENCY_NAME.BILLS: 30}),
+    "Breaker Room Speedy Spirit Bundle":
+        CurrencyItemData(173,
+                         {CURRENCY_NAME.COINS: 20, CURRENCY_NAME.BILLS: 5, CURRENCY_NAME.SAPPHIRE: 1}),
+    "Cellar Speedy Spirit Bundle":
+        CurrencyItemData(174,
+                         {CURRENCY_NAME.COINS: 20, CURRENCY_NAME.BILLS: 10, CURRENCY_NAME.GOLD_BARS: 2}),
+    "Sealed Room Speedy Spirit Bundle":
+        CurrencyItemData(175,
+                         {CURRENCY_NAME.COINS: 20, CURRENCY_NAME.BILLS: 5, CURRENCY_NAME.EMERALD: 1}),
+}
+
+gold_mice_bundles: dict[str, LMItemData] = {
+    "Study Cheese Mouse Bundle":
+        CurrencyItemData(176,
+                         {CURRENCY_NAME.COINS: 30, CURRENCY_NAME.BILLS: 10, CURRENCY_NAME.EMERALD: 1}),
+    "Fortune-Teller's Room Cheese Mouse Bundle":
+        CurrencyItemData(177,
+                         {CURRENCY_NAME.COINS: 30, CURRENCY_NAME.BILLS: 10, CURRENCY_NAME.SAPPHIRE: 1}),
+    "Dining Room Cheese Mouse Bundle":
+        CurrencyItemData(178,
+                         {CURRENCY_NAME.COINS: 30, CURRENCY_NAME.BILLS: 15, CURRENCY_NAME.GOLD_BARS: 2}),
+    "Tea Room Cheese Mouse Bundle":
+        CurrencyItemData(179,
+                         {CURRENCY_NAME.COINS: 30, CURRENCY_NAME.BILLS: 10, CURRENCY_NAME.RUBY: 1}),
+    "Safari Room Cheese Mouse Bundle":
+        CurrencyItemData(180,
+                         {CURRENCY_NAME.COINS: 30, CURRENCY_NAME.BILLS: 40}),
+    "1F Hallway Chance Mouse Bundle":
+        CurrencyItemData(181,
+                         {CURRENCY_NAME.COINS: 30, CURRENCY_NAME.BILLS: 15, CURRENCY_NAME.GOLD_BARS: 2}),
+    "Kitchen Chance Mouse Bundle":
+        CurrencyItemData(182,
+                         {CURRENCY_NAME.COINS: 30, CURRENCY_NAME.BILLS: 10, CURRENCY_NAME.EMERALD: 1}),
+    "Tea Room Chance Mouse Bundle":
+        CurrencyItemData(183,
+                         {CURRENCY_NAME.COINS: 30, CURRENCY_NAME.BILLS: 10, CURRENCY_NAME.RUBY: 1}),
+    "2F Hallway Chance Mouse Bundle":
+        CurrencyItemData(184,
+                         {CURRENCY_NAME.COINS: 30, CURRENCY_NAME.BILLS: 10, CURRENCY_NAME.SAPPHIRE: 1}),
+    "Sealed Room Chance Mouse Bundle":
+        CurrencyItemData(185,
+                         {CURRENCY_NAME.COINS: 30, CURRENCY_NAME.BILLS: 40}),
+}
+
+pearl_bundles: dict[str, LMItemData] = {
+    "Pearl bundle":
+        CurrencyItemData(186,
+                        {CURRENCY_NAME.SMALL_PEARL: 4, CURRENCY_NAME.MEDIUM_PEARL: 4, CURRENCY_NAME.LARGE_PEARL: 1})
+}
+
 filler_items = {**other_filler_items,
                 **trap_filler_items}
 
 ALL_ITEMS_TABLE = {**ITEM_TABLE,
                    **BOO_ITEM_TABLE,
-                   **filler_items}
+                   **filler_items,
+                   **treasure_bundles,
+                   **speedy_bundles,
+                   **gold_mice_bundles,
+                   **pearl_bundles,}
 
 
 BOO_AP_ID_LIST: list[int] = [LMItem.get_apid(value.code) for value in BOO_ITEM_TABLE.values()]

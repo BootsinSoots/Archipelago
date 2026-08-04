@@ -1,17 +1,18 @@
 # Python related Imports
-import math, os, threading, copy
+import os, threading
 from dataclasses import fields
 from typing import ClassVar
 
 # AP Related Imports
 import Options
-from BaseClasses import ItemClassification
+from BaseClasses import ItemClassification, Item
 from Utils import visualize_regions, local_path
 from worlds.AutoWorld import World
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess, icon_paths
 
 # Relative Imports
-from .Items import *
+from .Items import LMItem, LMItemData, ALL_ITEMS_TABLE, BOO_ITEM_TABLE, ITEM_TABLE, get_item_names_per_category, \
+    treasure_bundles, speedy_bundles, gold_mice_bundles, pearl_bundles
 from .LM_Web import LMWeb
 from .Locations import *
 from .LuigiOptions import *
@@ -67,20 +68,33 @@ class LMWorld(World):
     open_doors: dict[int, int]
     hints: dict[str, dict[str, str]]
     boo_spheres: dict[str, int]
+    silver_portrait_upgrades: dict[str, int]
+    gold_portrait_upgrades: dict[str, int]
+    portrait_ghost_health: dict [str, int]
 
     # Adding all filler dict to be used later on
     all_filler_dict: dict[str, int]
     trap_filler_dict: dict[str, int]
     other_filler_dict: dict[str, int]
 
+    # Additional Upgrade Count Lists used to calculate how many upgrades Gold/Silver needs.
+    # Without this, UT will not be able to calculate the required amount of upgrades properly.
+    silver_original_counts: list[int]
+    gold_original_counts: list[int]
+
     def __init__(self, *args, **kwargs):
         super(LMWorld, self).__init__(*args, **kwargs)
         self.ghost_affected_regions = copy.deepcopy({key: val.element_type for (key, val) in REGION_LIST.items() if val.element_type})
         self.open_doors: dict[int, int] = copy.deepcopy(vanilla_door_state)
         self.origin_region_name: str = "Foyer"
-        self.finished_hints = threading.Event()
-        self.finished_boo_scaling = threading.Event()
+        # If hints for other peoples worlds are enabled or need to calculate boo health by sphere
+        self.finished_post_generation = threading.Event()
         self.boo_spheres = {}
+        self.silver_portrait_upgrades = {}
+        self.gold_portrait_upgrades = {}
+        self.silver_original_counts = []
+        self.gold_original_counts = []
+        self.portrait_ghost_health = {}
         self.hints = {}
         self.spawn_full_locked: bool = False
         self.local_early_key: str = ""
@@ -119,9 +133,31 @@ class LMWorld(World):
                 entry = LMLocation(self.player, location, region, data)
                 if data.require_poltergust:
                     add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
-                set_element_rules(self, entry, False)
+                if data.code in (603,604,605,606,607,608,609): #Specifically the Artist's Easels require element rules
+                    set_element_rules(self, entry, True)
+                else:
+                    set_element_rules(self, entry, False)
+                region.locations.append(entry)
+        elif "Random Any" in self.options.furnisanity.value:
+            for location, data in FURNITURE_LOCATION_TABLE.items():
+                if self.random.choice([0,1]) == 0:
+                    continue
+                region = self.get_region(data.region)
+                entry = LMLocation(self.player, location, region, data)
+                if data.require_poltergust:
+                    add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
+                if data.code in (603,604,605,606,607,608,609): #Specifically the Artist's Easels require element rules
+                    set_element_rules(self, entry, True)
+                else:
+                    set_element_rules(self, entry, False)
                 region.locations.append(entry)
         else:
+            if "Random Groups" in self.options.furnisanity.value:
+                # add groups to option randomly
+                for group in sorted(self.options.furnisanity.valid_keys):
+                    if group not in ["Full", "Random All", "Random Groups"]:
+                        if self.random.choice([0,1]) == 1:
+                            self.options.furnisanity.value = set(list(self.options.furnisanity.value) + [group])
             location_dict: dict[str, LMLocationData] = {}
             if self.options.game_mode.value == 1:
                 for name, loc_data in FURNITURE_LOCATION_TABLE.items():
@@ -239,47 +275,112 @@ class LMWorld(World):
                     add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
                 if data.region == "Fortune-Teller's Room": # If it's Clairvoya's room, should match Mario item count
                     add_rule(entry,
-                             lambda state: state.has_group("Mario Item", self.player, self.options.mario_items.value),
+                             lambda state: state.has_group_unique("Mario Item", self.player, self.options.mario_items.value),
+                             "and")
+                set_element_rules(self, entry, True)
+                region.locations.append(entry)
+        else:
+            for location, data in PORTRAIT_LOCATION_TABLE.items():
+                region = self.get_region(data.region)
+                entry = LMLocation(self.player, location, region, data)
+                entry.address = None
+                entry.place_locked_item(Item("Portrait _Ghost", ItemClassification.progression, None, self.player))
+                add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
+                if entry.region == "Twins' Room" and self.open_doors.get(28) == 0:
+                    add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
+                if data.region == "Fortune-Teller's Room": # If it's Clairvoya's room, should match Mario item count
+                    add_rule(entry,
+                             lambda state: state.has_group_unique("Mario Item", self.player, self.options.mario_items.value),
                              "and")
                 set_element_rules(self, entry, True)
                 region.locations.append(entry)
         if self.options.silver_ghosts:
+            # Set max required upgrades based on chosen max health value
+            # @200, 350, 500, 650, 800 +1 upgrade
+            # randomly choose a number of upgrades for a given portrait ghost.
+            # After spheres, set health values based on sphere + number of upgrades compared to max value
+            number_list: list[int] = self.portrait_health_by_sphere() if not self.silver_original_counts else self.silver_original_counts
+            self.silver_original_counts = copy.deepcopy(number_list)
             for location, data in SILVER_PORTRAIT_TABLE.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
-                if entry.code == 880 and self.open_doors.get(28) == 0:
+                add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
+                if entry.code == 978 and self.open_doors.get(28) == 0:
                     add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
-                if entry.code == 883:
+                if entry.code == 981:
                     add_rule(entry,
-                             lambda state: state.has_group("Mario Item", self.player, self.options.mario_items.value),
+                             lambda state: state.has_group_unique("Mario Item", self.player, self.options.mario_items.value),
                              "and")
+                portrait_short_name = location.split("-")[0].split(" ", 1)[1].strip()
+                location_name = [name for name in PORTRAIT_LOCATION_TABLE.keys() if portrait_short_name in name]
+                if self.options.portrait_health_option.value == 2:
+                    if entry.code not in (977, 985, 992):
+                        upgrade_count = number_list.pop()
+                        if upgrade_count > 0:
+                            add_rule(entry, lambda state, up_count=upgrade_count: state.has("Vacuum Upgrade", self.player, up_count))
+                        self.silver_portrait_upgrades.update({location_name[0]: upgrade_count})
+                elif self.options.portrait_health_option.value < 2:
+                    if entry.code not in (977, 985, 992):
+                        portrait_short_name = location.split("-")[0].split(" ", 1)[1].strip()
+                        location_name = [name for name in PORTRAIT_LOCATION_TABLE.keys() if portrait_short_name in name]
+                        health = self.portrait_ghost_health[location_name[0]]
+                        upgrade_count = math.floor(health / 200)
+                        if upgrade_count > 0:
+                            add_rule(entry, lambda state, up_count=upgrade_count: state.has("Vacuum Upgrade", self.player, up_count))
                 set_element_rules(self, entry, True)
                 region.locations.append(entry)
         if self.options.gold_ghosts:
+            # Set max required upgrades based on chosen max health value
+            # @130, 260, 390, 520, 650 +1 upgrade - cap max health at 600 if gold portraits are chosen
+            # randomly choose a number of upgrades for a given portrait ghost.
+            # After spheres, set health values based on sphere + number of upgrades compared to max value
+            number_list: list[int] = self.portrait_health_by_sphere() if not self.gold_original_counts else self.gold_original_counts
+            self.gold_original_counts = copy.deepcopy(number_list)
             for location, data in GOLD_PORTRAIT_TABLE.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
-                if entry.code == 902 and self.open_doors.get(28) == 0:
+                add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
+                if entry.code == 953 and self.open_doors.get(28) == 0: # Special logic for twins
                     add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
-                if entry.code == 905:
+                if entry.code == 956: # Special logic for Clairvoya
                     add_rule(entry,
-                             lambda state: state.has_group("Mario Item", self.player, self.options.mario_items.value),
+                             lambda state: state.has_group_unique("Mario Item", self.player, self.options.mario_items.value),
                              "and")
+                # Choose number of upgrades for each portrasit ghost if by sphere is on
+                portrait_short_name = location.split("-")[0].split(" ", 1)[1].strip()
+                location_name = [name for name in PORTRAIT_LOCATION_TABLE.keys() if portrait_short_name in name]
+                if self.options.portrait_health_option.value == 2:
+                    if entry.code not in (952, 960, 967):
+                        upgrade_count = number_list.pop()
+                        if entry.code in (962, 971): # Gold borders requiring Vac Upgrade
+                            min_vac_count = min(5, upgrade_count+1, self.options.vacuum_upgrades.value)
+                            add_rule(entry, lambda state, up_count=min_vac_count: state.has("Vacuum Upgrade", self.player, up_count))
+                            self.gold_portrait_upgrades.update({location_name[0]: min_vac_count})
+                        else:
+                            if upgrade_count > 0:
+                                add_rule(entry, lambda state, up_count=upgrade_count: state.has("Vacuum Upgrade", self.player, up_count))
+                            self.gold_portrait_upgrades.update({location_name[0]: upgrade_count})
+                elif self.options.portrait_health_option.value < 2:
+                    if entry.code not in (952, 960, 967):
+                        health = self.portrait_ghost_health[location_name[0]]
+                        upgrade_count = math.floor(health/130)
+                        if upgrade_count > 0:
+                            add_rule(entry, lambda state, up_count=upgrade_count: state.has("Vacuum Upgrade", self.player, up_count))
                 set_element_rules(self, entry, True)
                 region.locations.append(entry)
         if self.options.lightsanity:
             for location, data in LIGHT_LOCATION_TABLE.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
-                if entry.code not in (771, 775, 776): # If not a room that turns on automatically
+                if data.require_poltergust:
                     add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
                 if entry.region == "Twins' Room" and self.open_doors.get(28) == 0:
                     add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
                 if data.region == "Fortune-Teller's Room": # If it's Clairvoya's room, should match Mario item count
                     add_rule(entry,
-                             lambda state: state.has_group("Mario Item", self.player, self.options.mario_items.value),
+                             lambda state: state.has_group_unique("Mario Item", self.player, self.options.mario_items.value),
                              "and")
-                elif entry.code == 772: # If family ahllway light
+                elif entry.code == 772: # If family hallway light
                     add_rule(entry, lambda state: state.can_reach_location("Nursery Clear Chest", self.player))
                 elif entry.code == 773: # If 1F Hallway light
                     add_rule(entry, lambda state: state.can_reach_location("Graveyard Clear Chest", self.player))
@@ -317,7 +418,7 @@ class LMWorld(World):
                     add_rule(entry, lambda state: state.has("Nursery Key", self.player), "and")
                 elif data.region == "Fortune-Teller's Room": # If it's Clairvoya's room, should match Mario item count
                     add_rule(entry,
-                             lambda state: state.has_group("Mario Item", self.player, self.options.mario_items.value),
+                             lambda state: state.has_group_unique("Mario Item", self.player, self.options.mario_items.value),
                              "and")
                 if entry.parent_region.name == self.origin_region_name:
                     if self.spawn_full_locked:
@@ -346,7 +447,7 @@ class LMWorld(World):
                     add_rule(entry, lambda state: state.has("Nursery Key", self.player), "and")
                 elif data.region == "Fortune-Teller's Room": # If it's Clairvoya's room, should match Mario item count
                     add_rule(entry,
-                             lambda state: state.has_group("Mario Item", self.player, self.options.mario_items.value),
+                             lambda state: state.has_group_unique("Mario Item", self.player, self.options.mario_items.value),
                              "and")
                 if entry.parent_region.name == self.origin_region_name:
                     if self.spawn_full_locked:
@@ -366,7 +467,9 @@ class LMWorld(World):
                 region.locations.append(entry)
 
         rankcalc = 0
-        if self.options.rank_requirement < 3:
+        if self.options.rank_requirement == 0:
+            rankcalc = 0
+        elif 1 < self.options.rank_requirement < 3:
             rankcalc = 1
         elif self.options.rank_requirement == 3:
             rankcalc = 2
@@ -377,8 +480,20 @@ class LMWorld(World):
         else:
             rankcalc = 5
         loc = self.get_location("King Boo")
-        add_rule(loc, lambda state: state.has("Gold Diamond", self.player, rankcalc), "and")
+        if rankcalc != 0 :
+            add_rule(loc, lambda state: state.has("Gold Diamond", self.player, rankcalc), "and")
         add_rule(loc, lambda state: state.has("Poltergust 3000", self.player), "and")
+
+    def portrait_health_by_sphere(self) -> list[int]:
+        amount_per_group = math.floor(19 / (self.options.vacuum_upgrades.value + 1))
+        remainder = math.ceil(19 % (self.options.vacuum_upgrades.value + 1))
+        number_list: list[int] = []
+        for i in range(self.options.vacuum_upgrades.value + 1):
+            number_list += list([i for _ in range(amount_per_group)])
+        for _ in range(remainder):
+            number_list += [0]
+        self.random.shuffle(number_list)
+        return number_list
 
     def _set_ut_logic(self):
         if hasattr(self.multiworld, "re_gen_passthrough"):
@@ -432,9 +547,11 @@ class LMWorld(World):
                 if not spawn_doors:
                     self.spawn_full_locked: bool = True
 
-            #filler_weights: FillerWeights
-            #trap_percentage: TrapPercentage
-            #trap_weights: TrapWeights
+            # Various Portrait Ghost health related options.
+            self.portrait_ghost_health = slot_data["portrait_health"]
+            self.options.portrait_health_option.value = slot_data["portrait_ghost_health_option"]
+            self.silver_original_counts = list(slot_data["silver_original_counts"])
+            self.gold_original_counts = list(slot_data["gold_original_counts"])
             return True
 
         return False
@@ -463,6 +580,9 @@ class LMWorld(World):
         # If player wants to start with boo radar
         if self.options.boo_radar == 0:
             self.multiworld.push_precollected(self.create_item("Boo Radar"))
+
+        if self.options.gold_ghosts.value == 1 and self.options.vacuum_upgrades.value < 1:
+            self.options.vacuum_upgrades.value = 1
 
         # Anything below this is normal logic, so if using UT, can exit early.
         if using_ut:
@@ -510,7 +630,7 @@ class LMWorld(World):
                 self.open_doors[door_id] = 0
 
         spawn_doors = copy.deepcopy(REGION_LIST[self.origin_region_name].door_ids)
-        if spawn_doors:
+        if spawn_doors and self.origin_region_name != "Butler's Room":
             for door in REGION_LIST[self.origin_region_name].door_ids:
                 if self.open_doors[door] == 0:
                     spawn_doors.remove(door)
@@ -528,6 +648,33 @@ class LMWorld(World):
                 self.local_early_key = early_key
                 self.multiworld.local_early_items[self.player].update({early_key: 1})
 
+        if self.options.portrait_health_option.value == 0:
+            for ghost, data in PORTRAIT_LOCATION_TABLE.items():
+                if data.code == 638:
+                    continue
+                self.portrait_ghost_health.update({ghost: self.options.portrait_health_value.value})
+        elif self.options.portrait_health_option.value == 1:
+            for ghost, data in PORTRAIT_LOCATION_TABLE.items():
+                if data.code == 638:
+                    continue
+                health = self.random.randint(1, self.options.portrait_health_value.value)
+                self.portrait_ghost_health.update({ghost: health})
+        elif self.options.portrait_health_option.value == 3:
+            for ghost, data in PORTRAIT_LOCATION_TABLE.items():
+                if data.code == 638:
+                    continue
+                self.portrait_ghost_health.update({ghost: 100})
+
+        if self.options.gold_ghosts.value == 1 and self.options.portrait_health_option.value != 2:
+            max_health = max(self.portrait_ghost_health.values())
+            upgrade_count = min(5, math.floor(max_health / 130))
+            if self.options.vacuum_upgrades.value < upgrade_count:
+                self.options.vacuum_upgrades.value = upgrade_count
+        elif self.options.silver_ghosts.value == 1 and self.options.portrait_health_option.value != 2:
+            max_health = max(self.portrait_ghost_health.values())
+            upgrade_count = min(5, math.floor(max_health / 200))
+            if self.options.vacuum_upgrades.value < upgrade_count:
+                self.options.vacuum_upgrades.value = upgrade_count
 
         self.trap_filler_dict: dict[str, int] = self.options.trap_weights.value
 
@@ -537,7 +684,6 @@ class LMWorld(World):
             "Emerald": self.options.filler_weights["Gems"],
             "Ruby": self.options.filler_weights["Gems"],
             "Diamond": math.ceil(self.options.filler_weights["Gems"] * 0.4),
-            "Dust": self.options.filler_weights["Dust"],
             "Small Heart": self.options.filler_weights["Hearts"],
             "Large Heart":  max(0,self.options.filler_weights["Hearts"] - 5),
             "10 Coins": self.options.filler_weights["Coins"],
@@ -548,6 +694,10 @@ class LMWorld(World):
             "1 Gold Bar": self.options.filler_weights["Bars"],
             "2 Gold Bars": max(0,self.options.filler_weights["Bars"] - 5),
         }
+        if self.options.grassanity.value == 1:
+            self.other_filler_dict.update({"Grass": self.options.filler_weights["Dust"],})
+        else:
+            self.other_filler_dict.update({"Dust": self.options.filler_weights["Dust"],})
 
         self.all_filler_dict = {**self.trap_filler_dict, **self.other_filler_dict}
 
@@ -581,12 +731,13 @@ class LMWorld(World):
         for location, data in CLEAR_LOCATION_TABLE.items():
             region = self.get_region(data.region)
             entry = LMLocation(self.player, location, region, data)
-            add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
+            if data.require_poltergust:
+                add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
             # If it's Clairvoya's room chest, should match Mario item count.
             # Do not compare to region to keep rule correct for the Candles Key
             if data.code == 5:
                 add_rule(entry,
-                         lambda state: state.has_group("Mario Item", self.player, self.options.mario_items.value))
+                         lambda state: state.has_group_unique("Mario Item", self.player, self.options.mario_items.value))
             if entry.region == "Twins' Room" and self.open_doors.get(28) == 0:
                 add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
             set_element_rules(self, entry, True)
@@ -595,10 +746,13 @@ class LMWorld(World):
         connect_regions(self)
 
     def create_item(self, item: str) -> LMItem:
-        set_non_progress = False
+        if (self.options.gold_ghosts.value == 1 or self.options.silver_ghosts.value == 1) and item == "Vacuum Upgrade":
+            set_progress = True
+        else:
+            set_progress = False
 
         if item in ALL_ITEMS_TABLE.keys():
-            return LMItem(item, self.player, ALL_ITEMS_TABLE[item], set_non_progress)
+            return LMItem(item, self.player, ALL_ITEMS_TABLE[item], set_progress)
         raise Exception(f"Invalid item name: {item}")
 
     # def post_fill(self):
@@ -633,6 +787,30 @@ class LMWorld(World):
             for _ in range(copies_to_place):
                 loc_itempool.append(self.create_item(item))
 
+
+        # Add treasure bundles until there is no longer space or out of bundles
+        if self.options.treasure_bundles:
+            n_locations: int = len(self.multiworld.get_unfilled_locations(self.player))
+            n_items: int = len(loc_itempool)
+            n_bundles: int = n_locations - n_items
+            bundles: list[str] = copy.deepcopy(list(treasure_bundles.keys()))
+            if self.options.speedy_spirits.value:
+                bundles += copy.deepcopy(list(speedy_bundles.keys()))
+            if self.options.gold_mice.value:
+                bundles += copy.deepcopy(list(gold_mice_bundles.keys()))
+            if self.options.portrification.value:
+                pearls = copy.deepcopy(list(pearl_bundles.keys())[0]) # Grab the only string in the list
+                for _ in range(19):
+                    bundles.append(pearls)
+            while n_bundles > 0:
+                item = self.random.choice(sorted(bundles)) # Always create 1 copy of each treasure bundle and not more
+                bundles.remove(item)
+                for _ in range(max(0, 1 - exclude.count(item))): # Check here for start_inventory item
+                    loc_itempool.append(self.create_item(item))
+                    n_bundles -= 1
+                if n_bundles <= 0 or len(bundles) <= 0:
+                    break
+
         # Calculate the number of additional filler items to create to fill all locations
         n_locations = len(self.multiworld.get_unfilled_locations(self.player))
         n_items = len(loc_itempool)
@@ -662,7 +840,7 @@ class LMWorld(World):
             other_filler = dict(sorted(self.other_filler_dict.items()))
             return self.random.choices(list(other_filler.keys()), weights=list(other_filler.values()), k=1)[0]
         else:
-            return "Dust"
+            return "Dust" if self.options.grassanity.value == 0 else "Grass"
 
     # Used for ItemLink and overrides the one used by AP.
     def get_filler_item_name(self) -> str:
@@ -670,71 +848,96 @@ class LMWorld(World):
             filler_dict = dict(sorted(self.all_filler_dict.items()))
             return self.random.choices(list(filler_dict.keys()), weights=list(filler_dict.values()), k=1)[0]
         else:
-            return "Dust"
+            return "Dust" if self.options.grassanity.value == 0 else "Grass"
 
     def set_rules(self):
         self.multiworld.completion_condition[self.player] = lambda state: state.has("Mario's Painting", self.player)
 
     def post_fill(self) -> None:
         if self.options.boosanity:
+            # Count number of trap items on these locations. Determine difference between total trap count and 8
+            # then repick using other filler listing if difference is positive, equal to difference, and replace those items
             boolossus_locations: list[LMLocation] = []
             for location in BOOLOSSUS_LOCATION_TABLE.keys():
                 boolossus_locations += [self.get_location(location)]
-            trap_boolossus_list = [lm_loc for lm_loc in boolossus_locations if lm_loc.item.classification == IC.trap]
+            trap_boolossus_list = [lm_loc for lm_loc in boolossus_locations if (lm_loc.item.classification ==
+                ItemClassification.trap and lm_loc.item.player == self.player)]
             if len(trap_boolossus_list) > 8:
                 trap_count = len(trap_boolossus_list) - 8
                 for _ in range(trap_count):
                     loc = self.random.choice(trap_boolossus_list)
-                    loc.item = self.create_item(self.get_other_filler_item())
+                    # Un-place the existing item.
+                    loc.item.location = None
+                    loc.item = None
+                    # Place a new, replacement filler item.
+                    self.multiworld.push_item(loc, self.create_item(self.get_other_filler_item()), False)
                     trap_boolossus_list.remove(loc)
-            # Count number of trap items on these locations. Determine difference between total trap count and 8
-            # then repick using other filler listing if difference is positive, equal to difference, and replace those items
 
     @classmethod # output_directory is required even though we don't use it
     def stage_generate_output(cls, multiworld: MultiWorld, output_directory: str):
         # Filter for any Luigi's Mansion worlds that need hints or have boo health by sphere turned on
         hint_worlds = {world.player for world in multiworld.get_game_worlds(cls.game)
                        if (world.options.hint_distribution.value != 5 and world.options.hint_distribution.value != 1)}
-        boo_worlds = {world.player for world in multiworld.get_game_worlds(cls.game) if world.options.boo_health_option == 2}
-        if not boo_worlds and not hint_worlds:
-            return
-        # Produce hints for LM games that need them
-        if hint_worlds:
-            get_hints_by_option(multiworld, hint_worlds)
-        if not boo_worlds:
-            return
+        boo_worlds = {world.player for world in multiworld.get_game_worlds(cls.game)
+                      if world.options.boo_health_option.value == 2}
+        portrait_sphere_worlds = {world.player for world in multiworld.get_game_worlds(cls.game)
+                      if world.options.portrait_health_option.value == 2}
 
-        # Produce values for boo health for worlds the need them
-        def check_boo_players_done() -> None:
-            done_players = set()
-            for player in boo_worlds:
-                player_world = multiworld.worlds[player]
-                if len(player_world.boo_spheres.keys()) == len(ROOM_BOO_LOCATION_TABLE.keys()):
-                    player_world.finished_boo_scaling.set()
-                    done_players.add(player)
-            boo_worlds.difference_update(done_players)
-        for sphere_num, sphere in enumerate(multiworld.get_spheres(), 1):
-            for loc in sphere:
-                if loc.player in boo_worlds and loc.name in ROOM_BOO_LOCATION_TABLE.keys():
-                    player_world = multiworld.worlds[loc.player]
-                    player_world.boo_spheres.update({loc.name: sphere_num})
-            check_boo_players_done()
-            if not boo_worlds:
+        # Even if no worlds have any hints/boo worlds, always set the thread anyway as it won't hurt anything.
+        try:
+            if not boo_worlds and not hint_worlds and not portrait_sphere_worlds:
                 return
 
+            if hint_worlds:
+                # Produce hints for LM games that need them
+                get_hints_by_option(multiworld, hint_worlds)
+
+            if portrait_sphere_worlds:
+                portrait_health_sphere_things(multiworld, portrait_sphere_worlds)
+
+            # Produce values for boo health for worlds the need them
+            def check_boo_players_done() -> None:
+                done_players = set()
+                for player in boo_worlds:
+                    player_lm_world = multiworld.worlds[player]
+                    if len(player_lm_world.boo_spheres.keys()) == len(ROOM_BOO_LOCATION_TABLE.keys()):
+                        done_players.add(player)
+                boo_worlds.difference_update(done_players)
+            if boo_worlds:
+                for sphere_num, sphere in enumerate(multiworld.get_spheres(), 1):
+                    for loc in sphere:
+                        if loc.player in boo_worlds and loc.name in ROOM_BOO_LOCATION_TABLE.keys():
+                            player_world = multiworld.worlds[loc.player]
+                            player_world.boo_spheres.update({loc.name: sphere_num})
+                        check_boo_players_done()
+
+                    if not boo_worlds:
+                        return
+        except Exception:
+            import traceback
+            traceback.print_exc()
+            raise
+        finally:
+            _set_gen_thread_finished(multiworld, cls.game)
 
     # Output options, locations and doors for patcher
     def generate_output(self, output_directory: str):
+        if 'W' in self.multiworld.seed_name:
+            ap_seed: str = str(self.multiworld.seed_name[1:])
+        else:
+            ap_seed: str = str(self.multiworld.seed_name)
+
         # Output seed name and slot number to seed RNG in randomizer client
-        output_data = {
-            "Seed": self.multiworld.seed,
+        output_data: dict = {
+            "Seed": ap_seed,
             "Slot": self.player,
             "Name": self.player_name,
             "Options": {},
             "Locations": {},
-            "Entrances": {},
-            "Room Enemies": {},
+            "Entrances": self.open_doors,
+            "Room Enemies": self.ghost_affected_regions,
             "Hints": {},
+            "Portrait Health": {},
             AP_WORLD_VERSION_NAME: CLIENT_VERSION
         }
 
@@ -747,20 +950,18 @@ class LMWorld(World):
         # Output the spawn region name
         output_data["Options"]["spawn"]: str = self.origin_region_name
 
-        # Ourput Randomized Door info
-        output_data["Entrances"] = self.open_doors
+        # Wait for output thread to finish first.
+        if ((self.options.hint_distribution != 5 and self.options.hint_distribution != 1) or
+            self.options.boo_health_option.value == 2 or self.options.portrait_health_option.value == 2):
+            self.finished_post_generation.wait()
 
-        # Output randomized Ghost info
-        output_data["Room Enemies"] = self.ghost_affected_regions
-
-        # Output hints for patching
+        # If current world required hint distribution, update the output hint dict
         if self.options.hint_distribution != 5 and self.options.hint_distribution != 1:
-            self.finished_hints.wait()
             output_data["Hints"] = self.hints
 
-        # Output boo spheres for relevant worlds
-        if self.options.boo_health_option.value == 2:
-            self.finished_boo_scaling.wait()
+        # We output the portrait health here in case option 2 (health by sphere) is chosen,
+        #   which is after the above thread waiting.
+        output_data["Portrait Health"] = self.portrait_ghost_health
 
         # Output which item has been placed at each location
         for location in list(lmloc for lmloc in self.get_locations() if isinstance(lmloc, LMLocation)):
@@ -817,6 +1018,11 @@ class LMWorld(World):
 
     # Fill slot data for LM tracker
     def fill_slot_data(self):
+        if 'W' in self.multiworld.seed_name:
+            ap_seed: str = str(self.multiworld.seed_name[1:])
+        else:
+            ap_seed: str = str(self.multiworld.seed_name)
+
         return {
             "rank requirement": self.options.rank_requirement.value,
             "game mode": self.options.game_mode.value,
@@ -857,19 +1063,23 @@ class LMWorld(World):
             "portrait_hints": self.options.portrait_hints.value,
             "hints": self.hints,
             "apworld version": CLIENT_VERSION,
-            "seed": self.multiworld.seed,
+            "seed": ap_seed,
             "disabled_traps": _get_disabled_traps(self.options),
             "self_item_messages": self.options.self_item_messages.value,
             "enable_ring_client_msg": self.options.enable_ring_client_msg.value,
             "enable_trap_client_msg": self.options.enable_trap_client_msg.value,
-            "local first key": self.local_early_key
+            "local first key": self.local_early_key,
+            "portrait_health": self.portrait_ghost_health,
+            "portrait_ghost_health_option": self.options.portrait_health_option.value,
+            "silver_original_counts": self.silver_original_counts,
+            "gold_original_counts": self.gold_original_counts,
         }
 
     def modify_multidata(self, multidata: "MultiData") -> None:
-        if self.options.hint_distribution != 5 and self.options.hint_distribution != 1:
-            self.finished_hints.wait()
-        if self.options.boo_health_option.value == 2:
-            self.finished_boo_scaling.wait()
+        # Wait for output thread to finish first.
+        if ((self.options.hint_distribution != 5 and self.options.hint_distribution != 1) or
+            self.options.boo_health_option.value == 2 or self.options.portrait_health_option.value == 2):
+            self.finished_post_generation.wait()
 
 def _get_disabled_traps(options: LuigiOptions.LMOptions) -> int:
     """
@@ -906,3 +1116,7 @@ def _get_disabled_traps(options: LuigiOptions.LMOptions) -> int:
         trap_flags += TrapLinkType.GHOST.value
 
     return trap_flags
+
+def _set_gen_thread_finished(multiworld: MultiWorld, game_name: str):
+    for world in multiworld.get_game_worlds(game_name):
+        world.finished_post_generation.set()

@@ -1,3 +1,4 @@
+import copy
 from importlib.resources.abc import Traversable
 from typing import NamedTuple, Optional, TYPE_CHECKING
 import importlib.resources as resources
@@ -7,7 +8,7 @@ if TYPE_CHECKING:
     from gclib.rarc import RARCFileEntry, RARC, RARCNode
     from gclib.gcm import GCM
 
-PROJECT_ROOT: Traversable = resources.files(__name__)
+PROJECT_ROOT: Traversable = resources.files("worlds.luigismansion")
 
 IGNORE_RARC_NAMES: list[str] = [".", ".."]
 RARC_FILE_STR_ENCODING: str = "shift_jis"
@@ -143,7 +144,7 @@ class LMDynamicAddresses:
         name_list: list[str] = ["Generate_Ghost", "Monochrome_Trap_Timer", "Player_Reaction", "gItem_Information",
             "Weapon_Action", "Mirror_Warp_X", "Mirror_Warp_Y", "Mirror_Warp_Z", "Play_King_Boo_Gem_Fast_Pickup",
             "gItem_Information_Timer", "Boolossus_Mini_Boo_Difficulty", "Custom_Boo_Counter_Bitfields", "gTsuri_Speed",
-            "Player_Weapon_Trap_Timer"]
+            "Player_Weapon_Trap_Timer", "gPortrait_Ghost_Starting_Health__6KtKagi"]
 
         for custom_line in custom_address_list:
             if custom_line.rstrip() == "":  # Ignore any whitespace lines.
@@ -172,6 +173,8 @@ class LMDynamicAddresses:
                     ram_addresses["DOL"][csv_line[2]] = updated_addr
                 case "Mirror_Warp_Z":
                     ram_addresses["DOL"][csv_line[2]] = updated_addr
+                case "gPortrait_Ghost_Starting_Health__6KtKagi":
+                    ram_addresses["DOL"]["gPortrait_Ghost_Starting_Health"] = updated_addr
                 case "Boolossus_Mini_Boo_Difficulty":
                     ram_addresses["Client"][csv_line[2]] = updated_addr
                 case "Play_King_Boo_Gem_Fast_Pickup":
@@ -219,9 +222,10 @@ class LMDynamicAddresses:
                         curr_ram_data.in_game_room_id, curr_ram_data.item_count)
 
                 case "Custom_Boo_Counter_Bitfields":
-                    for boo_name in BOO_ITEM_TABLE.keys():
+                    for boo_idx, boo_name in enumerate(BOO_ITEM_TABLE.keys(), 0):
                         curr_ram_data: LMRamData = ALL_ITEMS_TABLE[boo_name].update_ram_addr[0]
-                        ALL_ITEMS_TABLE[boo_name].update_ram_addr[0] = LMRamData(converted_addr,
+                        boo_addr = copy.deepcopy(converted_addr) + int(boo_idx/8)
+                        ALL_ITEMS_TABLE[boo_name].update_ram_addr[0] = LMRamData(boo_addr,
                             curr_ram_data.bit_position, curr_ram_data.ram_byte_size, curr_ram_data.pointer_offset,
                             curr_ram_data.in_game_room_id, curr_ram_data.item_count)
 

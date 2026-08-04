@@ -65,6 +65,7 @@ Output Logs/
 /installdelete.iss
 /data/user.kv
 /datapackage
+/datapackage_export.json
 /custom_worlds
 /fuzz_output/
 
@@ -198,3 +199,5 @@ _speedups.html
 .LSOverride
 Thumbs.db
 [Dd]esktop.ini
+/determinism.py
+/fuzz.py

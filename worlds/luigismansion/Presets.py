@@ -23,6 +23,7 @@ all_random_settings = { #TODO: Rename this because FillerWeights and TrapWeights
     LMOptions.PortraitHints.internal_name:             "random",
     LMOptions.HintDistribution.internal_name:          "random",
     LMOptions.SendHints.internal_name:                 "random",
+    LMOptions.Furnisanity.internal_name:               ["Random Any"],
     LMOptions.Toadsanity.internal_name:                "random",
     LMOptions.GoldMice.internal_name:                  "random",
     LMOptions.Boosanity.internal_name:                 "random",
@@ -38,6 +39,7 @@ all_random_settings = { #TODO: Rename this because FillerWeights and TrapWeights
     LMOptions.KingBooHealth.internal_name:             "random",
     LMOptions.BoolossusDifficulty.internal_name:       "random",
     LMOptions.MarioItems.internal_name:                "random",
+    LMOptions.TreasureBundles.internal_name:           "rendom",
     # LMOptions.WashroomBooCount.internal_name:          "random",
     LMOptions.BalconyBooCount.internal_name:           "random",
     LMOptions.FinalBooCount.internal_name:             "random",
@@ -77,12 +79,14 @@ allsanity_settings = {
 
 money_settings = {
     LMOptions.FillerWeights.internal_name:             LMOptions.FillerWeights.all_on_dict,
+    LMOptions.TreasureBundles.internal_name:           "true",
     LMOptions.TrapWeights.internal_name:               LMOptions.TrapWeights.all_off_dict,
     LMOptions.TrapPercentage.internal_name:            0,
 }
 
 trap_settings = {
     LMOptions.FillerWeights.internal_name:             LMOptions.FillerWeights.all_off_dict,
+    LMOptions.TreasureBundles.internal_name:           "false",
     LMOptions.TrapWeights.internal_name:               LMOptions.TrapWeights.all_on_dict,
     LMOptions.TrapPercentage.internal_name:            100,
 }
