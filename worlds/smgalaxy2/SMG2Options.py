@@ -4,6 +4,8 @@ from collections import Counter
 
 
 from Options import Choice, Range, PerGameCommonOptions, OptionSet, Toggle, OptionCounter, OptionDict, OptionGroup
+from .items import trap_filler_items
+
 
 class Goal(Choice):
     """
@@ -404,6 +406,33 @@ class Passengers(Toggle):
     display_name = "Passengers"
     internal_name = "passengers"
 
+class TrapWeights(OptionCounter):
+    """
+    Set Trap Weights for traps chosen as filler items, if Trap Percentage is greater than 0.
+    Each weight represents a number of balls in a lottery roller with that trap on it.
+    So if you had Daredevial Trap set to 3, and Joy Trap set to 7, and the rest set to 0,
+    you would have a 3/10 chance for a Daredevil Trap to be chosen when rolling for trap fillers
+    Must be between 0 and 100
+    """
+    display_name = "Trap Weights"
+    internal_name = "trap_weights"
+    min = 0
+    max = 100
+    valid_keys = trap_filler_items.keys()
+    default = {item: data.default_weight for item, data in trap_filler_items.items()}
+    all_on_dict = {item: 100 for item in trap_filler_items.keys()}
+    all_off_dict = {item: 0 for item in trap_filler_items.keys()}
+
+
+class TrapPercentage(Range):
+    """
+    Set the percentage of filler items that are traps. Default percentage is 0%
+    """
+    display_name = "Trap Percentage"
+    internal_name = "trap_percentage"
+    range_start = 0
+    range_end = 100
+    default = 0
 
 # Comet medals in pool, provide galaxy "order", 1 comet to one level
 
@@ -438,6 +467,8 @@ class SMG2Options(PerGameCommonOptions):
     logic_difficulty: LogicDifficulty
     mailtoad_letters: MailtoadLetters
     passengers: Passengers
+    trap_weights: TrapWeights
+    trap_percentage: TrapPercentage
 
 option_groups = [
     OptionGroup("Map Options", [
@@ -474,7 +505,9 @@ option_groups = [
         Passengers,
     ]),
     OptionGroup("Itempool Changes", [
-        PowerUpFiller
+        PowerUpFiller,
+        TrapPercentage,
+        TrapWeights,
     ]),
     OptionGroup("Cosmetics", [
         MarioColors

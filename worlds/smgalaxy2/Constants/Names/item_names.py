@@ -163,3 +163,7 @@ ROLLMASTKEY = "Rolling Masterpiece Galaxy Key"
 HONEYHOPKEY = "Honeyhop Galaxy Key"
 UPDOWNKEY = "Upside Dizzy Galaxy Key"
 SLIMSPRIKEY = "Slimy Spring Galaxy Key"
+
+# Traps
+DARETRAP = "Daredevil Trap"
+JOYTRAP = "Joyful Trap"

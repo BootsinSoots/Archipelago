@@ -9,6 +9,7 @@ class SMG2ItemData(NamedTuple):
     type: list[str]
     classification: IC
     default_count: int = 1
+    default_weight: int = 0
 
 class SMG2Item(Item):
     game: str = "Super Mario Galaxy 2"
@@ -241,6 +242,11 @@ galaxy_keys: dict[str, SMG2ItemData] = {
    itemname.SLIMSPRIKEY : SMG2ItemData(["Galaxy Key"], IC.progression),
 }
 
+trap_filler_items: dict[str, SMG2ItemData] = {
+    itemname.DARETRAP: SMG2ItemData(["Trap"], IC.trap, default_weight=5),
+    itemname.JOYTRAP: SMG2ItemData(["Trap"], IC.trap, default_weight=5),
+}
+
 expanded_filler: dict[str, SMG2ItemData] = {**filler_items, **powerup_consumables}
 
 all_filler: dict[str, SMG2ItemData] = {**expanded_filler, **smg1_consumables}
@@ -249,7 +255,8 @@ all_items_table: dict[str, SMG2ItemData] = {**keyed_grand_stars, **item_table, *
                                             **world_green_keys, **all_filler, **powerup_consumables, **powerup_unlocks,
                                             **starbit_luma_key, **starbit_world_keys, **move_rando_separate_jump,
                                             **prog_jumps, **yoshi_moves, **object_unlocks, **coin_world_keys,
-                                            **coin_luma_key, **comet_type_keys, **comet_all_key, **green_star_all_key,}
+                                            **coin_luma_key, **comet_type_keys, **comet_all_key, **green_star_all_key,
+                                            **trap_filler_items,}
 
 ITEM_NAME_TO_ID: dict[str, int] =  {
     name: list(all_items_table.keys()).index(name) for name in list(all_items_table.keys()) }

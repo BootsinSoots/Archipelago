@@ -1,5 +1,6 @@
 import copy
 import json
+import math
 import os
 from dataclasses import fields
 from typing import ClassVar, Counter
@@ -57,6 +58,8 @@ class SMG2World(World):
     location_name_groups = get_location_names_per_category()
     required_client_version = (0, 6, 7)
 
+    trap_filler_dict: dict[str, int]
+
     hint_blacklist = {"Peach"}
 
     def __init__(self, *args, **kwargs):
@@ -70,6 +73,7 @@ class SMG2World(World):
 
     def generate_early(self) -> None:
         start_inv: list[str] = [start_item.name for start_item in self.multiworld.precollected_items[self.player]]
+        self.trap_filler_dict: dict[str, int] = self.options.trap_weights.value
 
         if "random" in self.options.starbit_luma_counts.value.keys():
             random_cap: int = self.options.starbit_luma_counts.value["random"]
@@ -175,15 +179,19 @@ class SMG2World(World):
         return item
 
     def get_filler_item_name(self) -> str:
+        filler_item: str = itemname.ONEUP
         if self.options.powerup_consumables.value == 0:
-            return self.random.choice(list(items.filler_items.keys()))
+            filler_item = self.random.choice(list(items.filler_items.keys()))
         elif self.options.powerup_consumables.value == 1:
-            return self.random.choice(list(items.expanded_filler.keys()))
+            filler_item = self.random.choice(list(items.expanded_filler.keys()))
         elif self.options.powerup_consumables.value == 2:
-            return self.random.choice(list(items.all_filler.keys()))
-        else:
-            return itemname.ONEUP
-    
+            filler_item = self.random.choice(list(items.all_filler.keys()))
+        return filler_item
+
+    def get_trap_item_name(self) -> str:
+        filler_traps = dict(sorted(self.trap_filler_dict.items()))
+        return self.random.choices(list(filler_traps.keys()), weights=list(filler_traps.values()), k=1)[0]
+
     def create_items(self):
         exclude = [item.name for item in self.multiworld.precollected_items[self.player]]
         local_pool: list[SMG2Item] = []
@@ -239,10 +247,18 @@ class SMG2World(World):
         # Calculate the number of additional filler items to create to fill all locations
         n_locations = len(self.multiworld.get_unfilled_locations(self.player))
         n_filler_items = n_locations - len(local_pool)
+        n_trap_items = math.ceil(n_filler_items*(self.options.trap_percentage.value/100))
+        n_other_filler = n_filler_items - n_trap_items
 
-        # Create filler
-        for _ in range(n_filler_items):
-            local_pool.append(self.create_item(self.get_filler_item_name()))
+        if sum(self.trap_filler_dict.values()) > 0:  # Add filler items to the item pool. Add traps if they are on.
+            for _ in range(n_trap_items):
+                local_pool.append(self.create_item(self.get_trap_item_name()))
+
+            for _ in range(n_other_filler):
+                local_pool.append(self.create_item((self.get_filler_item_name())))
+        else:
+            for _ in range(n_filler_items):
+                local_pool.append(self.create_item((self.get_filler_item_name())))
 
         self.multiworld.itempool += local_pool
 
