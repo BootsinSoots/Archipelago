@@ -3,6 +3,7 @@ from typing import NamedTuple, Optional, TYPE_CHECKING
 
 from BaseClasses import Region, Entrance, MultiWorld
 from entrance_rando import disconnect_entrance_for_randomization
+from locations import lumalee_locations
 from rule_builder.rules import CanReachLocation
 
 from .Constants.Names import region_names as regname
@@ -643,6 +644,7 @@ def create_regions(world: "SMG2World"): #TODO Correctly add locations
     create_locations(COMETMEDAL_loc, world)
     create_locations(checkpoint_loc_table, world)
     create_locations(hungry_luma_loc, world)
+    create_locations(lumalee_locations, world)
     for loc, data in event_locations.items():
         world.get_region(data.region).add_event(loc, data.locked_item, data.default_access,
                                                 location_type=SMG2Location, item_type=SMG2Item)
