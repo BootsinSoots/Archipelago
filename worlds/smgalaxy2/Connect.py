@@ -636,7 +636,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                        rule=RB.ROCKNROLLIN)
     world.get_region(regname.FREEFLAK2SNOWBYH).connect(world.get_region(regname.FREEFLAK2WHITOUT),
                                                        "Freezy Flake 2: Snowy Hill Launch Star",
-                                                       rule=RB.ROCKNROLLIN)
+                                                       rule=RB.ROCKNROLLIN & RB.CanCollectStarChips)
     world.get_region(regname.FREEFLAK2WHITOUT).connect(world.get_region(regname.FREEFLAK2DICEROOM),
                                                        "Freezy Flake 2: Whiteout Green Pipe")
     world.get_region(regname.FREEFLAK2WHITOUT).connect(world.get_region(regname.FREEFLAK2SORBHEA),
@@ -1238,7 +1238,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                      "Clockwork Ruins: Push Block Launch Star",
                                                      rule=RB.CanPound)
     world.get_region(regname.CLOCKWORK1WHEELSB).connect(world.get_region(regname.CLOCKWORK1WHEELST),
-                                                        rule=RB.CanWallJump & RB.CanSwing & (RB.CanGroundPound | RB.JumpHeight5))
+                                                        rule=RB.CanWallJump & RB.CanSwing & (RB.CanPound | RB.JumpHeight5))
     world.get_region(regname.CLOCKWORK1WHEELST).connect(world.get_region(regname.CLOCKWORK1COINROOM),
                                                      "Clockwork Ruins: Wheel Planet Green Pipe")
     world.get_region(regname.CLOCKWORK1COGS).connect(world.get_region(regname.CLOCKWORK3HAMMER),
