@@ -77,13 +77,13 @@ def get_hints_by_option(multiworld: MultiWorld, player_hints: set[int]) -> None:
             else:
                 loc: Any = None
                 if world.options.hint_distribution.value == 0 or world.options.hint_distribution.value == 4:
-                    hint_type = world.random.choices(sorted(["Prog", "Other"]), [60, 40], k=1)[0]
+                    hint_type = world.random.choices(sorted(["Prog", "Other"]), [40, 60], k=1)[0]
                     if hint_type == "Prog":
                         loc = get_progression_only_items(world, already_hinted_locations, prog_no_skip)
                     else:
                         loc = get_other_items(world, already_hinted_locations, other_items)
                 elif world.options.hint_distribution.value == 3 or world.options.hint_distribution.value == 1:
-                    hint_type = world.random.choices(sorted(["Prog", "Other"]), [90, 10], k=1)[0]
+                    hint_type = world.random.choices(sorted(["Prog", "Other"]), [10, 90], k=1)[0]
                     if hint_type == "Prog":
                         loc = get_progression_only_items(world, already_hinted_locations, prog_no_skip)
                     else:
