@@ -107,8 +107,6 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.GOODEGG2SHOOTING).connect(world.get_region(regname.GOODEGG2ORBITS),
                                               "Yoshi Star 2: Mid-Travel Launch Star",
                                                        rule=RB.CanRideDino)
-    world.get_region(regname.GOODEGG2SHOOTING).connect(world.get_region(regname.GOODEGG2MARBLE),
-                                                       "Yoshi Star 2: Spiny Shooting Launch Star")
     world.get_region(regname.GOODEGG2ORBITS).connect(world.get_region(regname.GOODEGG2MARBLE),
                                               "Yoshi Star 2: Planetoids Launch Star")
     world.get_region(regname.GOODEGG2SHOOTING).connect(world.get_region(regname.GOODEGG2MARBLE),
