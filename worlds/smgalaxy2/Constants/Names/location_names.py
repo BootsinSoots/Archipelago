@@ -608,3 +608,13 @@ SLIPSANLUMALEE = "Slipsand Lumalee Shop"
 SHIVBURLUMALEE = "Shiverburn Lumalee Shop"
 BATTBELLUMALEE = "Battle Belt Lumalee Shop"
 BOSSBLILUMALEE = "Boss Blitz Lumalee Shop"
+
+# Launch Star Names
+SKYOBS1HOULS = "Sky Station 1: House Launch Star"
+SKYOBS1GRELS = "Sky Station 1: Green Hill Launch Star"
+SKYOBS1MINLS = "Sky Station 1: Mini Planets Launch Star"
+SKYOBS1CYLLS = "Sky Station 1: Cylinder Launch Star"
+SKYOBS1TWOLS = "Sky Station 1: Two-Sided Launch Star"
+
+
+# Pipe Names
