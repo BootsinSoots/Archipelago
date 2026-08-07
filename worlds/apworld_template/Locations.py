@@ -11,10 +11,15 @@ from .Constants.world_constants import GAME_NAME
 if TYPE_CHECKING:
     from .world import GameWorld
 
+class GameOptionData(NamedTuple):
+    option_list: dict[str, list[Any]]
+    combine: bool = True
+
 class GameLocationData(NamedTuple):
     region: str
     location_groups: list[str]  # one or more groups that this location belongs to
-    access: Rule[Any]
+    access: Rule[Any] = None
+    req_options: GameOptionData = None
     other_variable: int = -1  # Variable, to be used however it is needed.
 
 
@@ -57,4 +62,16 @@ def get_location_names_per_category() -> dict[str, set[str]]:
 LOCATION_NAME_TO_ID: dict[str, int] = get_location_name_to_id()
 
 def create_all_locations(world: "GameWorld"):
-    pass
+    for loc, data in all_location_table.items():
+        if data.req_options:
+            req_option_list: list = [getattr(world.options, x).value in y for (x,y) in data.req_options.option_list.items()]
+            option_value: bool = all(req_option_list) if data.req_options.combine else any(req_option_list)
+            if not option_value:
+                continue
+
+        reg = world.get_region(data.region)
+        location = GameLocation(world.player, loc, list(all_location_table.keys()).index(loc), reg)
+        if data.access is not None:
+            world.set_rule(location, data.access)
+
+        reg.locations += [location]
