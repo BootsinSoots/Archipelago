@@ -55,3 +55,6 @@ def get_location_names_per_category() -> dict[str, set[str]]:
     return categories
 
 LOCATION_NAME_TO_ID: dict[str, int] = get_location_name_to_id()
+
+def create_all_locations(world: "GameWorld"):
+    pass

@@ -68,11 +68,14 @@ class GameWorld(World):
     # The main ones are: create_regions, set_rules, create_items.
     # For better structure and readability, we put each of these in their own file.
     def create_regions(self) -> None:
-        Regions.create_and_connect_regions(self)
+        Regions.create_regions(self)
         Locations.create_all_locations(self)
 
     def set_rules(self) -> None:
-        Rules.set_all_rules(self)
+        pass
+
+    def connect_entrances(self) -> None:
+        Rules.connect_entrances(self)
 
     def create_items(self) -> None:
         Items.create_all_items(self)
