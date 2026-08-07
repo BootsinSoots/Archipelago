@@ -83,6 +83,8 @@ class Option1(DefaultOnToggle):
 
 @dataclass
 class GameOptions(DeathLinkMixin, PerGameCommonOptions):
+    trap_weights: TrapWeights
+    trap_percentage: TrapPercentage
     Option1: Option1
     start_inventory_from_pool: StartInventoryPool
 
@@ -99,5 +101,9 @@ game_options_presets: Dict[str, Dict[str, Any]] = {
 options_groups = [
         OptionGroup("Extra Locations", [
             Option1,
+        ]),
+        OptionGroup("Itempool Changes", [
+            TrapWeights,
+            TrapPercentage,
         ])
     ]
