@@ -1,3 +1,4 @@
+import json
 import math
 from typing import NamedTuple, Optional, TYPE_CHECKING
 
@@ -12,7 +13,7 @@ if TYPE_CHECKING:
 class GameItemData(NamedTuple):
     item_groups: list[str]
     classification: IC
-    count: int
+    count: int = 1
     default_weight: int = 1
     other_variable: Optional[int] = None
 
@@ -26,18 +27,22 @@ class GameItem(Item):
         self.data = all_item_table[name]
         self.code = ITEM_NAME_TO_ID["item"] if "item" in ITEM_NAME_TO_ID else None
 
+base_items_table: dict[str, GameItemData] = {
+    ItemName.ITEM1: GameItemData(["Item Group"], IC.progression)
+}
+
 trap_filler_items: dict[str, GameItemData] = {
 
 }
 
-all_item_table: dict[str, GameItemData] = {
-
-}
+all_item_table: dict[str, GameItemData] = {**trap_filler_items}
 
 def get_items_name_to_id() -> dict[str, int]:
     dict_locs: dict[str, int] = {}
     for name, data in all_item_table.items():
         dict_locs.update({name: len(dict_locs) + 1})
+    with open("items.json", "w", encoding="utf-8") as file:
+        json.dump(dict_locs, file, indent=4, sort_keys=True, ensure_ascii=False)
     return dict_locs
 
 def get_item_names_per_category() -> dict[str, set[str]]:
