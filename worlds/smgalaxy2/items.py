@@ -247,6 +247,14 @@ trap_filler_items: dict[str, SMG2ItemData] = {
     itemname.JOYTRAP: SMG2ItemData(["Trap"], IC.trap, default_weight=5),
 }
 
+launch_star_all: dict[str, SMG2ItemData] = {
+    itemname.LAUNCHSTARALL: SMG2ItemData(["Launch Star All Key"], IC.progression)
+}
+
+pipe_all: dict[str, SMG2ItemData] = {
+    itemname.PIPEALL: SMG2ItemData(["All Pipes Key"], IC.progression)
+}
+
 expanded_filler: dict[str, SMG2ItemData] = {**filler_items, **powerup_consumables}
 
 all_filler: dict[str, SMG2ItemData] = {**expanded_filler, **smg1_consumables}

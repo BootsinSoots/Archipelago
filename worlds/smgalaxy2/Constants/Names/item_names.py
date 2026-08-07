@@ -167,3 +167,9 @@ SLIMSPRIKEY = "Slimy Spring Galaxy Key"
 # Traps
 DARETRAP = "Daredevil Trap"
 JOYTRAP = "Joyful Trap"
+
+# Launch Star items
+LAUNCHSTARALL = "Launch Stars"
+
+#Pipe items
+PIPEALL = "Pipes"
