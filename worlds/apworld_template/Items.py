@@ -6,6 +6,7 @@ from BaseClasses import Item, ItemClassification as IC
 
 from .Constants.Names import item_names as ItemName
 from .Constants.world_constants import GAME_NAME
+from .Locations import GameOptionData
 
 if TYPE_CHECKING:
     from .world import GameWorld
@@ -14,6 +15,7 @@ class GameItemData(NamedTuple):
     item_groups: list[str]
     classification: IC
     count: int = 1
+    req_options: GameOptionData = None
     default_weight: int = 1
     other_variable: Optional[int] = None
 
@@ -30,6 +32,10 @@ class GameItem(Item):
 # We make a table with all the items we are adding every time
 base_items_table: dict[str, GameItemData] = {
     ItemName.ITEM1: GameItemData(["Item Group"], IC.progression)
+}
+
+filler_items: dict[str, GameItemData] = {
+
 }
 
 # We have a separate table for traps so we don't add them unless we need to.
@@ -69,6 +75,16 @@ def create_all_items(world: "GameWorld"):
     local_pool: list[GameItem] = []
 
     # Add basic items, here and if statements for any optional items
+    for item, data in base_items_table.items():
+        if data.req_options:
+            req_option_list: list = [getattr(world.options, x).value in y for (x,y) in data.req_options.option_list.items()]
+            option_value: bool = all(req_option_list) if data.req_options.combine else any(req_option_list)
+            if not option_value:
+                continue
+
+        copies = max(0, all_item_table[item].count - exclude.count(item))
+        local_pool += [world.create_item(item) for _ in range(copies)]
+
 
     # Calculate the number of additional filler items to create to fill all locations
     n_locations = len(world.multiworld.get_unfilled_locations(world.player)) # How many locations in our world
@@ -91,7 +107,7 @@ def create_all_items(world: "GameWorld"):
 # Replace return "Nothing" with an actual filler determination. This function is required in case Archipelago needs to
 # replace an item
 def get_random_filler_item_name(world: "GameWorld"):
-    return "Nothing"
+    return world.random.choice(list(filler_items.keys()))
 
 # A generic function for pick
 def  get_trap_item_name(world: "GameWorld"):
