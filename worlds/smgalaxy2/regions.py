@@ -3,14 +3,14 @@ from typing import NamedTuple, Optional, TYPE_CHECKING
 
 from BaseClasses import Region, Entrance, MultiWorld
 from entrance_rando import disconnect_entrance_for_randomization
-from locations import lumalee_locations, launch_star_locs
 from rule_builder.rules import CanReachLocation
 
 from .Constants.Names import region_names as regname
 from .Constants.Names import location_names as locname
 from .items import SMG2Item
-from .locations import SMG2Location, base_stars_locations, SMG2LocationData, green_star_locations, COMETMEDAL_loc, \
-    event_locations, mailtoad_locations, checkpoint_loc_table, hungry_luma_loc, passenger_loc, all_location_table
+from .locations import (SMG2Location, base_stars_locations, SMG2LocationData, green_star_locations, COMETMEDAL_loc,
+    event_locations, mailtoad_locations, checkpoint_loc_table, hungry_luma_loc, passenger_loc, all_location_table,
+                        pipe_locations, lumalee_locations, launch_star_locs)
 
 if TYPE_CHECKING:
     from . import SMG2World
