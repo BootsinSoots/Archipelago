@@ -5,7 +5,7 @@ from rule_builder.field_resolvers import FromOption
 from rule_builder.options import OptionFilter
 from rule_builder.rules import Has, True_, HasFromList, Rule, HasGroup, CanReachLocation
 from .SMG2Options import GreenStarBehavior, GreenStarstoFinish, EnableGreenStars, PowerupRando, MoveRando, YoshiRando, \
-    CoinLumaLocks, ObjectRando, CometMission, \
+    CoinLumaLocks, ObjectRando, CometMission, LaunchStars, Pipesanity, \
     CometItems, WorldShuffle, LogicDifficulty
 from .Constants.Names import item_names as itemname
 from .Constants.Names import location_names as locname
@@ -106,3 +106,8 @@ MailtoadOpen: Rule[Any] = PowerStarCount(13) # May need additional rules here in
 def CoinLumaRule(coin_count: int) -> Rule[Any]:
     return True_() if coin_count < 100 else Has("Can Farm Coins")
 
+CanLaunchStar: Rule[Any] = ((True_()&OptionFilter(LaunchStars, 0))
+                            |(Has(itemname.LAUNCHSTARALL)&OptionFilter(LaunchStars, 1)))
+
+CanPipe: Rule[Any] = ((True_()&OptionFilter(Pipesanity, 0))
+                            |(Has(itemname.PIPEALL)&OptionFilter(Pipesanity, 1)))
