@@ -1,8 +1,8 @@
 import json
-from typing import Optional, NamedTuple, TYPE_CHECKING
+from typing import Optional, NamedTuple, TYPE_CHECKING, Any
 
 from BaseClasses import Location, Region
-from rule_builder.rules import True_()
+from rule_builder.rules import True_, Rule
 
 from .Constants.Names import location_names as LocationName
 from .Constants.Names import region_names as RegionName
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 class GameLocationData(NamedTuple):
     region: str
     location_groups: list[str]  # one or more groups that this location belongs to
-    access: list[str]
+    access: Rule[Any]
     other_variable: int = -1  # Variable, to be used however it is needed.
 
 
@@ -39,6 +39,8 @@ def get_location_name_to_id() -> dict[str, int]:
     dict_locs: dict[str, int] = {}
     for name, data in all_location_table.items():
         dict_locs.update({name: len(dict_locs) + 1})
+
+    # We output location name to ID for anyone creating poptracker packs, so it's available if we update
     with open("locations.json", "w", encoding="utf-8") as file:
         json.dump(dict_locs, file, indent=4, sort_keys=True, ensure_ascii=False)
     return dict_locs

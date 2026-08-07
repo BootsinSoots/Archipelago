@@ -27,20 +27,24 @@ class GameItem(Item):
         self.data = all_item_table[name]
         self.code = ITEM_NAME_TO_ID["item"] if "item" in ITEM_NAME_TO_ID else None
 
+# We make a table with all the items we are adding every time
 base_items_table: dict[str, GameItemData] = {
     ItemName.ITEM1: GameItemData(["Item Group"], IC.progression)
 }
 
+# We have a separate table for traps so we don't add them unless we need to.
 trap_filler_items: dict[str, GameItemData] = {
 
 }
 
-all_item_table: dict[str, GameItemData] = {**trap_filler_items}
+all_item_table: dict[str, GameItemData] = {**base_items_table, **trap_filler_items}
 
 def get_items_name_to_id() -> dict[str, int]:
     dict_locs: dict[str, int] = {}
     for name, data in all_item_table.items():
         dict_locs.update({name: len(dict_locs) + 1})
+
+    # We output item name to ID for anyone creating poptracker packs, so it's available if we update
     with open("items.json", "w", encoding="utf-8") as file:
         json.dump(dict_locs, file, indent=4, sort_keys=True, ensure_ascii=False)
     return dict_locs
@@ -74,7 +78,7 @@ def create_all_items(world: "GameWorld"):
 
     if sum(world.trap_filler_dict.values()) > 0:  # Add filler items to the item pool. Add traps if they are on.
         for _ in range(n_trap_items):
-            local_pool.append(world.create_item(world.get_trap_item_name()))
+            local_pool.append(world.create_item(get_trap_item_name(world)))
 
         for _ in range(n_other_filler):
             local_pool.append(world.create_item((world.get_filler_item_name())))
@@ -88,3 +92,8 @@ def create_all_items(world: "GameWorld"):
 # replace an item
 def get_random_filler_item_name(world: "GameWorld"):
     return "Nothing"
+
+# A generic function for pick
+def  get_trap_item_name(world: "GameWorld"):
+    filler_traps = dict(sorted(world.trap_filler_dict.items()))
+    return world.random.choices(list(filler_traps.keys()), weights=list(filler_traps.values()), k=1)[0]
