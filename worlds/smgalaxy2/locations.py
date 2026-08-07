@@ -1254,9 +1254,9 @@ passenger_loc: dict[str, SMG2LocationData] = {
                                         CanReachLocation(locname.COSCCOVESTAR2)),
     locname.JIBBEPASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
                                         CanReachLocation(locname.WILDGLIDESTAR2)),
-    locname.LUMA1PASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
+    locname.LUMA1PASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIPLEFTEAR,
                                         RB.PowerStarCount(18)),
-    locname.LUMA2PASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
+    locname.LUMA2PASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIPLEFTEAR,
                                         CanReachLocation(locname.MELTMONSSTAR1)),
     locname.WHITTPASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
                                         CanReachLocation(locname.TALLTREESTAR2)),
@@ -1272,6 +1272,31 @@ passenger_loc: dict[str, SMG2LocationData] = {
                                         RB.PowerStarCount(120)),
     locname.ROSALPASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
                                         CanReachLocation(locname.GRANDMASTSTAR2)),
+}
+
+lumalee_locations: dict[str, SMG2LocationData] = {
+    locname.SHIPLUMALEE1: SMG2LocationData(["Lumalee Location"], regname.SHIP2, regname.SHIPLEFTEAR,
+                                           RB.PowerStarCount(18)),
+    locname.SHIPLUMALEE2: SMG2LocationData(["Lumalee Location"], regname.SHIP2, regname.SHIPLEFTEAR,
+                                           CanReachLocation(locname.MELTMONSSTAR1) & Has("Can Farm Coins")),
+    locname.SPINDIGLUMALEE: SMG2LocationData(["Lumalee Location"], regname.SPINDIG, regname.SPINDIG1TOADS,),
+    locname.PUZPLANLUMALEE: SMG2LocationData(["Lumalee Location"], regname.PUZZPLAN, regname.PUZZPLAN1CHECKP,),
+    locname.BOULDERLUMALEE: SMG2LocationData(["Lumalee Location"], regname.BOULBOWL, regname.BOULBOWL1DODECAH,),
+    locname.FREEZYLUMALEE: SMG2LocationData(["Lumalee Location"], regname.FREEFLAKE, regname.FREEFLAK2WHITOUT,),
+    locname.FEARSOMLUMALEE: SMG2LocationData(["Lumalee Location"], regname.BOWJR2, regname.FEARFLET1AIRSHIP,),
+    locname.FLIPSVILUMALEE: SMG2LocationData(["Lumalee Location"], regname.FLIPVILL, regname.FLIPVILL1STARSHROOM,),
+    locname.SLIPSANLUMALEE: SMG2LocationData(["Lumalee Location"], regname.SLIPSAND, regname.SLIPSAND1SLIDE,),
+    locname.SHIVBURLUMALEE: SMG2LocationData(["Lumalee Location"], regname.SHIVBURN, regname.SHIVBURN1TOAD,),
+    locname.BATTBELLUMALEE: SMG2LocationData(["Lumalee Location"], regname.BATTLEBELT, regname.BATTBELT1RTOA,),
+    locname.BOSSBLILUMALEE: SMG2LocationData(["Lumalee Location"], regname.BOSSBLITZ, regname.BOSSBLITZ1BOULDER,),
+}
+
+launch_star_locs: dict[str, SMG2LocationData] = {
+
+}
+
+pipe_locations: dict[str, SMG2LocationData] = {
+
 }
 
 event_locations: dict[str, SMG2LocationData] = {
@@ -1309,7 +1334,8 @@ base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_l
                         **MELTMONS_loc, **CLOCKRUIN_loc, **THROWBACK_loc, **BATTBELT_loc}
 
 all_location_table = {**base_stars_locations, **green_star_locations, **COMETMEDAL_loc, **mailtoad_locations,
-                      **checkpoint_loc_table, **hungry_luma_loc, **passenger_loc}
+                      **checkpoint_loc_table, **hungry_luma_loc, **passenger_loc, **lumalee_locations,
+                      **pipe_locations, **launch_star_locs, }
 
 LOCATION_NAME_TO_ID: dict[str, int] =  {
     name: list(all_location_table.keys()).index(name) for name in all_location_table.keys() }

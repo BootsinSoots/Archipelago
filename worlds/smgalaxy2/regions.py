@@ -3,6 +3,7 @@ from typing import NamedTuple, Optional, TYPE_CHECKING
 
 from BaseClasses import Region, Entrance, MultiWorld
 from entrance_rando import disconnect_entrance_for_randomization
+from locations import lumalee_locations, launch_star_locs
 from rule_builder.rules import CanReachLocation
 
 from .Constants.Names import region_names as regname
@@ -61,6 +62,8 @@ all_galaxy_slots: list[str] = (major_entr_list + gal_minor_entr_list + luma_entr
 region_list: dict[str, SMG2RegionData] = {
     regname.SHIP: SMG2RegionData("Main", [], []),
     regname.SHIP2: SMG2RegionData("Main", [], []),
+    regname.SHIPLEFTEAR: SMG2RegionData("Main", [], []),
+    regname.SHIPSTARSHROOM: SMG2RegionData("Main", [], []),
     regname.WORLD1: SMG2RegionData("World", [regname.SHIP], []),
     regname.WORLD2: SMG2RegionData("World", [regname.SHIP], []),
     regname.WORLD5: SMG2RegionData("World", [regname.SHIP], []),
@@ -641,6 +644,7 @@ def create_regions(world: "SMG2World"): #TODO Correctly add locations
     create_locations(COMETMEDAL_loc, world)
     create_locations(checkpoint_loc_table, world)
     create_locations(hungry_luma_loc, world)
+    create_locations(lumalee_locations, world)
     for loc, data in event_locations.items():
         world.get_region(data.region).add_event(loc, data.locked_item, data.default_access,
                                                 location_type=SMG2Location, item_type=SMG2Item)
@@ -676,6 +680,12 @@ def create_regions(world: "SMG2World"): #TODO Correctly add locations
 
     if world.options.passengers.value:
         create_locations(passenger_loc, world)
+
+    if world.options.launch_stars.value:
+        create_locations(launch_star_locs, world)
+
+    if world.options.pipesanity.value:
+        create_locations(pipe_locations, world)
 
 def create_region(name: str, world: "SMG2World") -> Region:
     return Region(name, world.player, world.multiworld, name)
