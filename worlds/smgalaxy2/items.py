@@ -264,7 +264,7 @@ all_items_table: dict[str, SMG2ItemData] = {**keyed_grand_stars, **item_table, *
                                             **starbit_luma_key, **starbit_world_keys, **move_rando_separate_jump,
                                             **prog_jumps, **yoshi_moves, **object_unlocks, **coin_world_keys,
                                             **coin_luma_key, **comet_type_keys, **comet_all_key, **green_star_all_key,
-                                            **trap_filler_items,}
+                                            **trap_filler_items, **pipe_all, **launch_star_all}
 
 ITEM_NAME_TO_ID: dict[str, int] =  {
     name: list(all_items_table.keys()).index(name) for name in list(all_items_table.keys()) }

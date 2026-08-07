@@ -3,7 +3,7 @@ from typing import NamedTuple, Optional, TYPE_CHECKING
 
 from BaseClasses import Region, Entrance, MultiWorld
 from entrance_rando import disconnect_entrance_for_randomization
-from locations import lumalee_locations
+from locations import lumalee_locations, launch_star_locs
 from rule_builder.rules import CanReachLocation
 
 from .Constants.Names import region_names as regname
@@ -680,6 +680,12 @@ def create_regions(world: "SMG2World"): #TODO Correctly add locations
 
     if world.options.passengers.value:
         create_locations(passenger_loc, world)
+
+    if world.options.launch_stars.value:
+        create_locations(launch_star_locs, world)
+
+    if world.options.pipesanity.value:
+        create_locations(pipe_locations, world)
 
 def create_region(name: str, world: "SMG2World") -> Region:
     return Region(name, world.player, world.multiworld, name)

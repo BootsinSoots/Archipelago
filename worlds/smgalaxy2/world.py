@@ -195,7 +195,6 @@ class SMG2World(World):
     def create_items(self):
         exclude = [item.name for item in self.multiworld.precollected_items[self.player]]
         local_pool: list[SMG2Item] = []
-        copies: int = 1
         if self.options.enable_green_stars.value > 0 and self.options.green_star_behavior != 2:
             local_pool += self.create_items_from_list([itemname.GREEN], exclude)
 
@@ -243,7 +242,13 @@ class SMG2World(World):
         
         # make sure we don't create more stars than locations, somehow
         local_pool += self.create_items_from_list([itemname.POWER], exclude)
-        
+
+        if self.options.launch_stars.value == 1: # defining outright for when this changes from toggle to choice
+            local_pool += self.create_items_from_list(list(items.launch_star_all.keys()), exclude)
+
+        if self.options.pipesanity.value == 1: # defining outright for when this changes from toggle to choice
+            local_pool += self.create_items_from_list(list(items.pipe_all.keys()), exclude)
+
         # Calculate the number of additional filler items to create to fill all locations
         n_locations = len(self.multiworld.get_unfilled_locations(self.player))
         n_filler_items = n_locations - len(local_pool)
@@ -285,7 +290,7 @@ class SMG2World(World):
     def stage_fill_hook(cls, multiworld: MultiWorld, progitempool: list[Item], usefulitempool: list[Item],
         filleritempool: list[Item], fill_locations: list[Location]) -> None:
 
-        # Credit to @Mysteryem for this hook and the sort_fuc.
+        # Credit to @Mysteryem for this hook and the sort_func.
         game_players = multiworld.get_game_players(cls.game)
         # Get all player IDs that require either power stars to complete their goal or green stars
         smg2_excessive_prog_items = {player for player in game_players if

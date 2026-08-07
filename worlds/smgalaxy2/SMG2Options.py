@@ -434,6 +434,20 @@ class TrapPercentage(Range):
     range_end = 100
     default = 0
 
+class LaunchStars(Toggle):
+    """
+    Add Launch and Sling Stars as locations to the pool. You must be able to use the star to get the locations
+    """
+    display_name = "Launch Stars"
+    internal_name = "launch_stars"
+
+class Pipesanity(Toggle):
+    """
+    Add Pipes as locations to the pool. You must be able to use the pipe to get the locations
+    """
+    display_name = "Pipesanity"
+    internal_name = "pipesanity"
+
 # Comet medals in pool, provide galaxy "order", 1 comet to one level
 
 
@@ -469,6 +483,8 @@ class SMG2Options(PerGameCommonOptions):
     passengers: Passengers
     trap_weights: TrapWeights
     trap_percentage: TrapPercentage
+    launch_stars: LaunchStars
+    pipesanity: Pipesanity
 
 option_groups = [
     OptionGroup("Map Options", [
@@ -503,6 +519,8 @@ option_groups = [
     OptionGroup("Extra Locations", [
         MailtoadLetters,
         Passengers,
+        LaunchStars,
+        Pipesanity,
     ]),
     OptionGroup("Itempool Changes", [
         PowerUpFiller,

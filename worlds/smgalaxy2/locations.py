@@ -1291,6 +1291,14 @@ lumalee_locations: dict[str, SMG2LocationData] = {
     locname.BOSSBLILUMALEE: SMG2LocationData(["Lumalee Location"], regname.BOSSBLITZ, regname.BOSSBLITZ1BOULDER,),
 }
 
+launch_star_locs: dict[str, SMG2LocationData] = {
+
+}
+
+pipe_locations: dict[str, SMG2LocationData] = {
+
+}
+
 event_locations: dict[str, SMG2LocationData] = {
     "Melty Monster 2 Starbit Farming": SMG2LocationData(["Event"], regname.MELTY, regname.MELTY2BOWLING,
                                                         RB.CanStarbitShoot, locked_item="Can Farm Starbits"),
@@ -1326,7 +1334,8 @@ base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_l
                         **MELTMONS_loc, **CLOCKRUIN_loc, **THROWBACK_loc, **BATTBELT_loc}
 
 all_location_table = {**base_stars_locations, **green_star_locations, **COMETMEDAL_loc, **mailtoad_locations,
-                      **checkpoint_loc_table, **hungry_luma_loc, **passenger_loc, **lumalee_locations}
+                      **checkpoint_loc_table, **hungry_luma_loc, **passenger_loc, **lumalee_locations,
+                      **pipe_locations, **launch_star_locs, }
 
 LOCATION_NAME_TO_ID: dict[str, int] =  {
     name: list(all_location_table.keys()).index(name) for name in all_location_table.keys() }
