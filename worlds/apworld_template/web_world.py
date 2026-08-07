@@ -1,7 +1,7 @@
 from BaseClasses import Tutorial
 from worlds.AutoWorld import WebWorld
 
-from .Options import options_groups, game_options_presets
+from .GameOptions import options_groups, game_options_presets
 from .Constants.world_constants import GAME_NAME
 
 

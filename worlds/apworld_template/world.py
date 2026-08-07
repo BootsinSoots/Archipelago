@@ -5,7 +5,7 @@ from typing import Any
 from worlds.AutoWorld import World
 
 # Imports of your world's files must be relative.
-from . import Items, Locations, Options, Regions, Rules, web_world
+from . import Items, Locations, GameOptions, Regions, Rules, web_world
 from .Constants.world_constants import GAME_NAME
 
 # APQuest will go through all the parts of the world api one step at a time,
@@ -37,8 +37,8 @@ class GameWorld(World):
     web = web_world.GameWebWorld()
 
     # This is how we associate the options defined in our options.py with our world.
-    options_dataclass = Options.GameOptions
-    options: Options.GameOptions  # Common mistake: This has to be a colon (:), not an equals sign (=).
+    options_dataclass = GameOptions.GameOptions
+    options: GameOptions.GameOptions  # Common mistake: This has to be a colon (:), not an equals sign (=).
 
     # Our world class must have a static location_name_to_id and item_name_to_id defined.
     # We define these in regions.py and items.py respectively, so we just set them here.
