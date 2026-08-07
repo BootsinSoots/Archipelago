@@ -3,12 +3,13 @@ from typing import Dict, Any
 
 from Options import Toggle, Range, PerGameCommonOptions, Choice, StartInventoryPool, DeathLinkMixin, OptionSet, \
     DefaultOnToggle, OptionDict, OptionCounter, OptionGroup
+from .Items import trap_filler_items
 
 
-#Example Options from Luigi's Mansion
+# Example Options from Luigi's Mansion
 
 
-class LuigiWalkSpeed(Choice):
+class LuigiWalkSpeed(Choice): # Does not affect logic in any capacity, so it ends up simply passing through to patch
     """Choose how fast Luigi moves. Speeds above normal may cause OoB issues"""
     display_name = "Walk Speed"
     internal_name = "walk_speed"
@@ -18,12 +19,12 @@ class LuigiWalkSpeed(Choice):
     default = 0
 
 
-class FillerWeights(OptionCounter):
+class FillerWeights(OptionCounter): # Affects item pool but not logic. used in create_items step
     """
     Set filler weights for filler items.
     Each weight represents a number of balls in a lottery roller with that trap on it.
-    So if you had Banana Trap set to 3, and Ice Trap set to 7, and the rest set to 0,
-    you would have a 3/10 for a Banana Trap to be chosen when rolling for trap fillers
+    So if you had Coins set to 3, and Bills set to 7, and the rest set to 0,
+    you would have a 3/10 for a Coin item to be chosen when rolling for fillers
     Must be between 0 and 100
     """
     display_name = "Filler Weights"
@@ -42,6 +43,34 @@ class FillerWeights(OptionCounter):
     }
     all_on_dict = {item: 100 for item in valid_keys}
     all_off_dict = {item: 0 for item in valid_keys}
+
+class TrapWeights(OptionCounter):# Affects item pool but not logic. used in create_items step
+    """
+    Set Trap Weights for traps chosen as filler items, if Trap Percentage is greater than 0.
+    Each weight represents a number of balls in a lottery roller with that trap on it.
+    So if you had Daredevil Trap set to 3, and Joy Trap set to 7, and the rest set to 0,
+    you would have a 3/10 chance for a Daredevil Trap to be chosen when rolling for trap fillers
+    Must be between 0 and 100
+    """
+    display_name = "Trap Weights"
+    internal_name = "trap_weights"
+    min = 0
+    max = 100
+    valid_keys = trap_filler_items.keys()
+    default = {item: data.default_weight for item, data in trap_filler_items.items()}
+    all_on_dict = {item: 100 for item in trap_filler_items.keys()}
+    all_off_dict = {item: 0 for item in trap_filler_items.keys()}
+
+
+class TrapPercentage(Range):# Affects item pool but not logic. used in create_items step
+    """
+    Set the percentage of filler items that are traps. Default percentage is 0%
+    """
+    display_name = "Trap Percentage"
+    internal_name = "trap_percentage"
+    range_start = 0
+    range_end = 100
+    default = 0
 
 class Option1(DefaultOnToggle):
     """
