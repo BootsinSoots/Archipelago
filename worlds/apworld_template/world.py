@@ -52,6 +52,18 @@ class GameWorld(World):
     # This defaults to "Menu", but you can change it by overriding origin_region_name.
     origin_region_name = "Overworld"
 
+    # We can add extra world variables, in case we have things we want to set for use in multiple different stages. For
+    # example, we need the trap weights in multiple locations to determine what traps to add.
+    trap_filler_dict: dict[str, int]
+
+    # generate_early is a special step used to perform any kinds of randomization you need to do before logic is
+    # determined. This includes things like random values in OptionDicts, or setting world variables that depend on
+    # player chosen options. This is also where OptionErrors should be raised to stop generation in case of incompatible
+    # option combinations that your world might have. In our example, we use this to set the values for our trap weights,
+    # which we use inside multiple functions.
+    def generate_early(self) -> None:
+        self.trap_filler_dict: dict[str, int] = self.options.trap_weights.value
+
     # Our world class must have certain functions ("steps") that get called during generation.
     # The main ones are: create_regions, set_rules, create_items.
     # For better structure and readability, we put each of these in their own file.
@@ -68,7 +80,7 @@ class GameWorld(World):
     # Our world class must also have a create_item function that can create any one of our items by name at any time.
     # We also put this in a different file, the same one that create_items is in.
     def create_item(self, name: str) -> Items.GameItem:
-        item_data: Items.GameItemData = Items.item_table[name]
+        item_data: Items.GameItemData = Items.all_item_table[name]
         return Items.GameItem(name, item_data.classification, item_data.code, self.player)
 
     # For features such as item links and panic-method start inventory, AP may ask your world to create extra filler.

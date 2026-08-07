@@ -18,16 +18,17 @@ class GameLocation(Location):
 
     def __init__(self, player: int, name: str, address: Optional[int], parent: Optional[Region]):
         super(GameLocation, self).__init__(player, name, address, parent)
-        self.data = location_table[name]
+        self.data = all_location_table[name]
+        self.code = LOCATION_NAME_TO_ID["item"] if "item" in LOCATION_NAME_TO_ID else None
 
 
-location_table: dict[str, GameLocationData] = {
+all_location_table: dict[str, GameLocationData] = {
 
 }
 
 def get_location_name_to_id() -> dict[str, int]:
     dict_locs: dict[str, int] = {}
-    for name, data in location_table.items():
+    for name, data in all_location_table.items():
         dict_locs.update({name: len(dict_locs) + 1})
     return dict_locs
 
