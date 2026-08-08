@@ -22,6 +22,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.WORLD1).connect(world.get_region(regname.SKYOBS), "World 1 Slot 1 Galaxy")
     world.get_region(regname.SKYOBS).connect(world.get_region(regname.SKYOBS1STARTTOPSIDE), "Sky Station Star 1")
     world.get_region(regname.SKYOBS1STARTTOPSIDE).connect(world.get_region(regname.SKYOBS1STARTBOTTOM),
+                                                          "Sky Station 1: House Green pipe",
                                                           rule=True_()|RB.CanLongJump|RB.JumpHeight3) # replace the True_() with a pipe once pipes are in
     world.get_region(regname.SKYOBS1STARTTOPSIDE).connect(world.get_region(regname.SKYOBS1TOPOFHOUSE),
                                                           rule=(RB.JumpHeight6 | RB.CanWallSpin
@@ -46,6 +47,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                        "Sky Station 1: Two-Sided Launch Star")
     world.get_region(regname.SKYOBS).connect(world.get_region(regname.SKYOBS2STARTTOPSIDE), "Sky Station Star 2")
     world.get_region(regname.SKYOBS2STARTTOPSIDE).connect(world.get_region(regname.SKYOBS2STARTBOTTOM),
+                                                          "Sky Station 2: House Green Pipe",
                                                           rule=True_()|RB.CanLongJump|RB.JumpHeight3) # replace the True_() with a pipe once pipes are in
     world.get_region(regname.SKYOBS2STARTTOPSIDE).connect(world.get_region(regname.SKYOBS2TOPOFHOUSE),
                                                           rule=(RB.JumpHeight6 | RB.CanWallSpin
@@ -67,6 +69,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                      |(OptionFilter(CometMission, 3)&CanReachLocation(locname.SKYSTACM)
                                                        &CanReachLocation(locname.SKYSTASTAR1)))))
     world.get_region(regname.SKYOBS3STARTTOPSIDE).connect(world.get_region(regname.SKYOBS3STARTBOTTOM),
+                                                          "Sky Station Comet: House Green Pipe",
                                                           rule=True_()|Has(itemname.MARIOLONG)|RB.JumpHeight3) # replace the True_() with a pipe once pipes are in
     world.get_region(regname.SKYOBS3STARTTOPSIDE).connect(world.get_region(regname.SKYOBS3TOPOFHOUSE),
                                                           rule=(RB.JumpHeight6 | RB.CanWallSpin
@@ -904,7 +907,7 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                            & CanReachLocation(locname.FLIPVILLESTAR2))))
                                                )
     world.get_region(regname.FLIPVILL3TOWER).connect(world.get_region(regname.FLIPVILL3GRAVITY),
-                                                     "Flipsville 3: Spin-Drill Tower Pipe")
+                                                     "Flipsville Comet: Spin-Drill Tower Pipe")
     # Honeyhop
     world.get_region(regname.WORLD4).connect(world.get_region(regname.HONEYHOP), "World 4 Slot 4 Galaxy")
     world.get_region(regname.HONEYHOP).connect(world.get_region(regname.HONEYHOP1START), "Honeyhop Star 1")
