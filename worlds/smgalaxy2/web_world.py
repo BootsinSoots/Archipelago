@@ -19,8 +19,7 @@ class SMG2WebWorld(WebWorld):
         "English",
         "setup_en.md",
         "setup/en",
-        ["CosmicCarbon"],
+        ["CosmicCarbon", "BootsinSoots"],
         # This is mostly placeholder till someone writes the full guide
     )
     tutorials = [setup_en]
-    #option_groups = option_groups
