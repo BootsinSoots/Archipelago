@@ -74,8 +74,10 @@ FLUFBLUF_loc: dict[str, SMG2LocationData] = {
                                             & RB.PowerStarCount(15) & RB.MailtoadOpen
                                             & (RB.CanAirSpin | RB.MediumLogic)),
     locname.FLUFBLUFSTAR3: SMG2LocationData(["Power Star Location",regname.FLUFFBLUFF],regname.FLUFFBLUFF,
-                                            regname.FLUFFBLUFF3TOWER, RB.CanMakeCloud),
+                                            regname.FLUFFBLUFF3TOWER, RB.CanMakeCloud
+                                            | (RB.CloudMario & RB.HardLogic))
 }
+
 
 # Rightside Dow
 RIGHTDOWN_loc: dict[str, SMG2LocationData] = {
