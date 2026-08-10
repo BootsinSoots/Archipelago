@@ -95,7 +95,6 @@ trap_settings = {
 
 game_options_presets: Dict[str, Dict[str, Any]] = {
     "Raining Traps": trap_settings,
-
 }
 
 options_groups = [

@@ -1,12 +1,17 @@
 from collections.abc import Mapping
+from dataclasses import fields
 from typing import Any
 
 # Imports of base Archipelago modules must be absolute.
 from worlds.AutoWorld import World
+from Options import PerGameCommonOptions
 
 # Imports of your world's files must be relative.
 from . import Items, Locations, GameOptions, Regions, Rules, web_world
 from .Constants.world_constants import GAME_NAME
+
+# Module-level, computed once
+PER_GAME_OPTION_NAMES = {f.name for f in fields(PerGameCommonOptions)}
 
 # APQuest will go through all the parts of the world api one step at a time,
 # with many examples and comments across multiple files.
@@ -22,6 +27,8 @@ from .Constants.world_constants import GAME_NAME
 # This implementation in particular has the following additional files, each covering one topic:
 # regions.py, locations.py, rules.py, items.py, options.py and web_world.py.
 # It is recommended that you read these in that specific order, then come back to the world class.
+
+
 class GameWorld(World):
     """
     APQuest is a minimal 8bit-era inspired adventure game with grid-like movement.
@@ -62,6 +69,18 @@ class GameWorld(World):
     # option combinations that your world might have. In our example, we use this to set the values for our trap weights,
     # which we use inside multiple functions.
     def generate_early(self) -> None:
+        # First check if UT is doing this generation, then just grab the data out of slot, rather than doing gen early.
+        if hasattr(self.multiworld, "re_gen_passthrough"):
+            slot_data = self.multiworld.re_gen_passthrough[self.game]
+
+            for key, value in slot_data.items():
+                if hasattr(self, key):
+                    setattr(self, key, value)
+                else:
+                    getattr(self.options, key).value = value
+
+            return
+
         self.trap_filler_dict: dict[str, int] = self.options.trap_weights.value
 
     # Our world class must have certain functions ("steps") that get called during generation.
@@ -99,6 +118,21 @@ class GameWorld(World):
     # slot_data is just a dictionary using basic types, that will be converted to json when sent to the client.
     def fill_slot_data(self) -> Mapping[str, Any]:
         # If you need access to the player's chosen options on the client side, there is a helper for that.
-        return self.options.as_dict(
-            "hard_mode", "hammer", "extra_starting_chest", "confetti_explosiveness", "player_sprite"
-        )
+        slot_data: dict = {}
+
+        # This gets all the names of the options from both the world's option class and the inherited class,
+        #   since this world's options inherit from PerGameCommonOptions, there will be duplicates.
+        # HOWEVER, rather than just doing GameOptions.__annotations__ and getting it directly that way,
+        #   you would automatically filter out death_link for example and... well im just lazy lol
+        for f in sorted(fields(self.options), key=lambda f: f.name):
+            if f.name in PER_GAME_OPTION_NAMES:
+                continue
+
+            # Skip options explicitly slot_req = False
+            option = getattr(self.options, f.name)
+            if getattr(option, "slot_req", True) is False:
+                continue
+
+            slot_data[f.name] = option.value
+
+        return slot_data
