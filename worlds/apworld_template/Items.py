@@ -7,6 +7,7 @@ from BaseClasses import Item, ItemClassification as IC
 from .Constants.Names import item_names as ItemName
 from .Constants.world_constants import GAME_NAME
 from .Locations import GameOptionData
+from .Helpers_Function import RamData
 
 if TYPE_CHECKING:
     from .world import GameWorld
@@ -17,7 +18,7 @@ class GameItemData(NamedTuple):
     count: int = 1
     req_options: GameOptionData = None
     default_weight: int = 1
-    other_variable: Optional[int] = None
+    ram_data: RamData = None
 
 
 class GameItem(Item):

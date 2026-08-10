@@ -7,6 +7,7 @@ from rule_builder.rules import True_, Rule
 from .Constants.Names import location_names as LocationName
 from .Constants.Names import region_names as RegionName
 from .Constants.world_constants import GAME_NAME
+from .Helpers_Function import RamData
 
 if TYPE_CHECKING:
     from .world import GameWorld
@@ -20,7 +21,7 @@ class GameLocationData(NamedTuple):
     location_groups: list[str]  # one or more groups that this location belongs to
     access: Rule[Any] = None
     req_options: GameOptionData = None
-    other_variable: int = -1  # Variable, to be used however it is needed.
+    ram_data: RamData = None
 
 
 class GameLocation(Location):

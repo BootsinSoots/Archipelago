@@ -8,8 +8,8 @@ class RamEndianness(StrEnum):
 
 
 class RamData(NamedTuple):
-    ram_addr: int
+    address: int
     endianness: RamEndianness
-    ram_byte_size: int
-    bit_position: Optional[int] = None
-    pointers_list: Optional[list[int]] = None
+    size: int
+    bit_position: int = None
+    pointers_list: list[int] = None
