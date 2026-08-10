@@ -613,6 +613,7 @@ BOSSBLILUMALEE = "Boss Blitz Lumalee Shop"
 SKYOBS1HOULS = "Sky Station 1: House Launch Star"
 SKYOBS1GRELS = "Sky Station 1: Green Hill Launch Star"
 SKYOBS1MINLS = "Sky Station 1: Mini Planets Launch Star"
+SKYOBS1MINSS = "Sky Station 1: Mini Planets Sling Star"
 SKYOBS1CYLLS = "Sky Station 1: Cylinder Launch Star"
 SKYOBS1TWOLS = "Sky Station 1: Two-Sided Launch Star"
 SKYOBS2HOULS = "Sky Station 2: House Launch Star"
@@ -622,7 +623,6 @@ SKYOBS3HOULS = "Sky Station Comet: House Launch Star"
 SKYOBS3CYLLS = "Sky Station Comet: Cylinder Launch Star"
 
 ## Yoshi Star Galaxy
-
 GOODEGG1PLALS = "Yoshi Star 1: Yoshi Planet Launch Star"
 GOODEGG1EARLS = "Yoshi Star 1: Earthy Planet Launch Star"
 GOODEGG1TOWLS = "Yoshi Star 1: Tower Launch Star"
@@ -633,38 +633,38 @@ GOODEGG2SHOLS = "Yoshi Star 2: Shooting Gallery Launch Star"
 GOODEGG2MARLS = "Yoshi Star 2: Marble Block Launch Star"
 
 ## Spin Dig Galaxy
-
 SPINDIG1DIGLS = "Spin-Dig 1: Dig Dirt Launch Star"
 SPINDIG1DRILS = "Spin-Dig 1: Drill Zone Launch Star"
 SPINDIG1STELS = "Spin-Dig 1: Steel Ring Launch Star"
 SPINDIG1DIRLS = "Spin-Dig 1: Dirt Tower Launch Star"
 SPINDIG1REDLS = "Spin-Dig 1: Red Toadship Launch Star"
-SPINDIG2DARLS = "Spin-Dig 2: Dark Canister Launch"
+SPINDIG2TETSS = "Spin-Dig 2: Dig Dirt Sling to Vine"
+SPINDIG2DARLS = "Spin-Dig 2: Dark Canister Launch Star"
 SPINDIG2BLULS = "Spin-Dig 2: Blue Toadship Launch Star"
 
 ## Fluffy Bluff Galaxy
-
 FLUFFBLUFF1WALLS = "Fluffy Bluff: Wall Jump Launch Star"
 FLUFFBLUFF1WATLS = "Fluffy Bluff: Water Sphere Launch Star"
+FLUFFBLUFF1LANSS = "Fluffy Bluff: Landing Big Tree Sling Star"
+FLUFFBLUFF2BUISS = "Fluffy Bluff Chimp: Buildings Sling Star"
 
 ## Fiery Flotilla Galaxy
-
 FIREFLOT1LAVLS = "Fiery Flotilla: Lava Planet Launch Star"
+FIREFLOT1LANSS = "Fiery Flotilla: Fort Sling Star"
 
 ## Puzzle Plank Galaxy
-
 PUZZPLAN1WIGLS = "Puzzle Plank: Wiggler Platform Launch Star"
 PUZZPLAN1GRALS = "Puzzle Plank: Grassy Buzzsaw Launch Star"
 PUZZPLAN1CHELS = "Puzzle Plank: Checkpoint Launch Star"
+PUZZPLAN1SAWSS = "Puzzle Plank: Saws & Planks Sling Star"
 
 # Boulder Bowl Galaxy
-
 BOULBOWL1ROCLS = "Boulder Bowl: Falling Rocks Launch Star"
 BOULBOWL1DODLS = "Boulder Bowl: Dodecahedron Launch Star"
-BOULBOWL1ASTLS = "Boulder Bowl: Asteroid Launch Star"
+BOULBOWL2ASTLS = "Boulder Bowl Comet: Asteroid Launch Star"
+BOULBOWL1BOUSS = "Boulder Bowl: Boulder Sling Star"
 
 # Hightail Fails Galaxy
-
 HIGHTAIL1LANLS = "Hightail Falls: Hot Pepper Landing Launch Star"
 HIGHTAIL1CLILS = "Hightail Falls: Hot Pepper Climb Launch Star"
 HIGHTAIL1DASLS = "Hightail Falls: Hot Pepper Dash Launch Star"
@@ -673,69 +673,71 @@ HIGHTAIL2CLILS = "Hightail Falls Comet: Hot Pepper Climb Launch Star"
 HIGHTAIL2DASLS = "Hightail Falls Comet: Hot Pepper Dash Launch Star"
 
 # Cosmic Cove Galaxy
-
 COSMIC2LANLS = "Cosmic Cove 2: Landing Launch Star"
 COSMIC2TOALS = "Cosmic Cove 2: Toadship Launch Star"
 
 # Lava Lair Galaxy
-
 LAVALAIR1CYLLS = "Lava Lair: Lava Cylinder Launch Star"
-
+LAVALAIR1LAVSS = "Lava Lair: Lava Sling Star"
+LAVALAIR2LAVSS = "Lava Lair Comet: Lava Sling Star"
 
 # Tall Trunk Galaxy
-
 TALLTRUNK1BIGLS = "Tall Trunk 1: Big Tree Launch Star"
 TALLTRUNK1LOGLS = "Tall Trunk 1: Carved Log Launch Star"
 TALLTRUNK2BIGLS = "Tall Trunk 2: Big Tree Launch Star"
 
 # Cloudy Court Galaxy
-
 CLOUCOUR1CYMLS = "Cloudy Court: Cymbal Launch Star"
 CLOUCOUR1TOWLS = "Cloudy Court: Tower Launch Star"
 CLOUCOUR2LAULS = "Cloudy Court Comet: Launch Star"
+CLOUCOUR2CS1SS = "Cloudy Court Comet: Wall Jump Sling Star"
+CLOUCOUR2CS2SS = "Cloudy Court Comet: Final Sling Star"
 
 # Haunty Halls Galaxy
-
 HAUNHALL1HALLS = "Haunty Halls 1: Hallway Launch Star"
 HAUNHALL2HALLS = "Haunty Halls 2: Hallway Launch Star"
+HAUNHALL2CRESS = "Haunty Halls 2: Creepy Platforms Sling Star"
 
 # Freezy Flake Galaxy
-
 FREEFLAK1CABLS = "Freezy Flake 1: Log Cabin Launch Star"
 FREEFLAK2CABLS = "Freezy Flake 2: Log Cabin Launch Star"
 FREEFLAK2SNOLS = "Freezy Flake 2: Snowy Hill Launch Star"
 FREEFLAK2WHILS = "Freezy Flake 2: Whiteout Launch Star"
+FREEFLAK2SORSS = "Freezy Flake 2: Sorbetti's Head Sling Star"
 
 # Fearsome Fleet Galaxy
-
 FEARFLET1AIRLS = "Fearsome Fleet: Airship Launch Star"
+FEARFLET1FIRSS = "Fearsome Fleet: Firing Line Sling Star"
 
 # Supermassive Galaxy
-
-SUPMASS1THWLS = "Supermassive 1: Thwomps Launch Star"
-SUPMASS1KOOLS = "Supermassive 1: Koopa Launch Star"
-SUPMASS1BLOLS = "Supermassive 1: ? Block Launch Star"
-SUPMASS1GARLS = "Supermassive 1: Garden Planet Launch Star"
+SUPMASS1THWLS = "Supermassive: Thwomps Launch Star"
+SUPMASS1KOOLS = "Supermassive: Koopa Launch Star"
+SUPMASS1BLOLS = "Supermassive: ? Block Launch Star"
+SUPMASS1GARLS = "Supermassive: Garden Planet Launch Star"
+SUPMASS2THWLS = "Supermassive Comet: Thwomps Launch Star"
+SUPMASS2KOOLS = "Supermassive Comet: Koopa Launch Star"
+SUPMASS2BLOLS = "Supermassive Comet: ? Block Launch Star"
+SUPMASS2GARLS = "Supermassive Comet: Garden Planet Launch Star"
 
 # Sweet Mystery Galaxy
-
 SWEETMYS1FLILS = "Sweet Mystery: Flipswitch Launch Star"
 
 # Flipsville Galaxy
-
 FLIPVILL1DOLLS = "Flipsville 1: Dollhouse Launch Star"
 FLIPVILL1CHOLS = "Flipsville 1: Chomps Launch Star"
 FLIPVILL1LIFLS = "Flipsville 1: Lifts Launch Star"
 FLIPVILL1STALS = "Flipsville 1: Starshroom Launch Star"
 FLIPVILL2DOLLS = "Flipsville 2: Dollhouse Planet Launch Star"
 
-# Starshine Beach Galaxy
+# Honeyhop
+HONEYHOP2BASSS = "Honeyhop Chimp: Base Sling Star"
+HONEYHOP2BUBSS = "Honeyhop Chimp: Cliff Pond Sling Star"
 
+# Starshine Beach Galaxy
 STARBEACH1WATLS = "Starshine Star 1: Waterdrop Launch Star"
 STARBEACH2WATLS = "Starshine Star 2: Waterdrop Launch Star"
 
 # Chompworks Galaxy
-
 CHOMWORK1STALS = "Chompworks 1: Start Launch Star"
 CHOMWORK1ROLLS = "Chompworks 1: Rolling Chomps Launch Star"
 CHOMWORK1FLILS = "Chompworks 1: Flipping Platforms Launch Star"
@@ -743,32 +745,28 @@ CHOMWORK2STALS = "Chompworks 2: Start Launch Star"
 CHOMWORK2ROLLS = "Chompworks 2: Rolling Chomps Launch Star"
 
 # Gravity Gauntlet Galaxy
-
 GRAVGAUN1FIRLS = "Gravity Gauntlet: Fire Wheel Launch Star"
 
 # Space Storm Galaxy
-
 SPACSTOR1PULLS = "Space Storm 1: Pull to Launch Star"
 SPACSTOR1SATLS = "Space Storm 1: Satellite Launch Star"
 SPACSTOR1CANLS = "Space Storm 1: Canister Launch Star"
 SPACSTOR2PULLS = "Space Storm 2: Pull to Launch Star"
+SPACSTOR2TOWSS = "Space Storm 2: Tower Base Sling Star"
 
 # Boo Moon Galaxy
-
 BOOMOON1DARLS = "Boo Moon 1: Dark Planet Launch Star"
 BOOMOON1POILS = "Boo Moon 1: Poison Swamp Launch Star"
 BOOMOON1MOOLS = "Boo Moon 1: Moon Launch Star"
 BOOMOON2DARLS = "Boo Moon 2: Dark Planet Launch Star"
 
 # Slipsand Galaxy
-
 SLIPSAND1LONLS = "Slipsand 1: Long Launch Star"
 SLIPSAND1CUBLS = "Slipsand 1: Cube Launch Star"
 SLIPSAND1SLILS = "Slipsand 1: Slide Launch Star"
 SLIPSAND2LONLS = "Slipsand 2: Long Launch Star"
 
 # Shiverburn Galaxy
-
 SHIVBURN1VOLLS = "Shiverburn: Volcano Launch Star"
 SHIVBURN1LAVLS = "Shiverburn: Lava Ball Launch Star"
 SHIVBURN1ICELS = "Shiverburn: Lava Ice Launch Star"
@@ -776,42 +774,58 @@ SHIVBURN1GRELS = "Shiverburn: Green Toadship Launch Star"
 SHIVBURN2GRELS = "Shiverburn Comet: Green Toadship Launch Star"
 
 # Boom Bunker Galaxy
-
 BOOMBUNK1FORLS = "Boom Bunker: Fort Launch Star"
 BOOMBUNK1PLALS = "Boom Bunker: Platform Launch Star"
 BOOMBUNK2FORLS = "Boom Bunker Comet: Fort Launch Star"
 BOOMBUNK2DARLS = "Boom Bunker Comet: Dark Matter Launch Star"
 
 # Melty Monster Galaxy
-
 MELTY1MAGLS = "Melty Monster 1: Magmaargh Launch Star"
 MELTY1LAVLS = "Melty Monster 1: Lava Wave Launch Star"
 MELTY2ROLLS = "Melty Monster 2: Roll to Launch Star"
 
 # Clockwork Ruins Galaxy
-
 CLOCKWORK1COGLS = "Clockwork Ruins: Cog Wall Launch Star"
 CLOCKWORK1PUSLS = "Clockwork Ruins: Push Block Launch Star"
 
 # Flash Black Galaxy
-
 FLASHBLACK1TOWLS = "Flash Black: Tower Launch Star"
 
 # Slimy Spring Galaxy
-
 SLIMSPRI1CAVLS = "Slimy Spring: First Cave Launch Star"
 SLIMSPRI2CAVLS = "Slimy Spring Chimp: First Cave Launch Star"
 
-# Galaxy Generator Galaxy
+# Battle Belt
+BATTBELT1GOOSS = "Battle Belt: Goomba Sling Star"
+BATTBELT1CINSS = "Battle Belt: Li'l Cinders Sling Star"
+BATTBELT1URCSS = "Battle Belt: Urchin Sling Star"
+BATTBELT1CRASS = "Battle Belt: Crabber Sling Star"
+BATTBELT1PTOSS = "Battle Belt: Pink Toadship Sling Star"
+BATTBELT1PUMSS = "Battle Belt: Jack O'Goomba Sling Star"
+BATTBELT1RTOSS = "Battle Belt: Red Toadship Sling Star"
+BATTBELT1BRRSS = "Battle Belt: Li'l Brr Sling Star"
+BATTBELT1SWASS = "Battle Belt: Swaphopper Sling Star"
+BATTBELT2GOOSS = "Battle Belt Comet: Goomba Sling Star"
+BATTBELT2CINSS = "Battle Belt Comet: Li'l Cinders Sling Star"
+BATTBELT2URCSS = "Battle Belt Comet: Urchin Sling Star"
+BATTBELT2CRASS = "Battle Belt Comet: Crabber Sling Star"
+BATTBELT2PTOSS = "Battle Belt Comet: Pink Toadship Sling Star"
+BATTBELT2PUMSS = "Battle Belt Comet: Jack O'Goomba Sling Star"
+BATTBELT2RTOSS = "Battle Belt Comet: Red Toadship Sling Star"
+BATTBELT2BRRSS = "Battle Belt Comet: Li'l Brr Sling Star"
+BATTBELT2SWASS = "Battle Belt Comet: Swaphopper Sling Star"
 
+# Galaxy Generator Galaxy
 GALGEN1LANLS = "Galaxy Generator: Landing Launch Star"
 GALGEN1LAVLS = "Galaxy Generator: Lava Cylinder Launch Star"
 GALGEN1TOWLS = "Galaxy Generator: Tower Launch Star"
 GALGEN2LAVLS = "Galaxy Generator Comet: Lava Cylinder Launch Star"
 GALGEN2TOWLS = "Galaxy Generator Comet: Tower Launch Star"
+GALGEN1DASSS = "Galaxy Generator: Dash Castle Sling Star"
+GALGEN2LANSS = "Galaxy Generator Comet: Landing Sling Star"
+GALGEN2DASSS = "Galaxy Generator Comet: Dash Castle Sling Star"
 
 # Boss Blitz Galaxy
-
 BOSSBLITZ1DINLS = "Boss Blitz: Dino Piranha Launch Star"
 BOSSBLITZ1KALLS = "Boss Blitz: King Kaliente Launch Star"
 BOSSBLITZ1MAJLS = "Boss Blitz: Major Burrows Launch Star"
@@ -824,7 +838,6 @@ BOSSBLITZ2BOULS = "Boss Blitz Comet: Bouldergeist Launch Star"
 BOSSBLITZ2TINLS = "Boss Blitz Comet: Tiny Meteor Launch Star"
 
 # Grandmaster Galaxy
-
 GRANDMASTER1YOSLS = "Grandmaster: Yoshi Flower Launch Star"
 GRANDMASTER1SWILS = "Grandmaster: Flipswitch Launch Star"
 GRANDMASTER1ELELS = "Grandmaster: Electric Clouds Launch Star"
@@ -836,6 +849,8 @@ GRANDMASTER2ELELS = "Grandmaster Comet: Electric Clouds Launch Star"
 GRANDMASTER2SWALS = "Grandmaster Comet: Flip-Swap Launch Star"
 GRANDMASTER2PULLS = "Grandmaster Comet: Pull Star Launch Star"
 GRANDMASTER2JUMLS = "Grandmaster Comet: Jumping Bros Launch Star"
+GRANDMASTER1BROSS = "Grandmaster: Bros Landing Sling Star"
+GRANDMASTER2BROSS = "Grandmaster Comet: Bros Landing Sling Star"
 
 # Pipe Names
 SKYOBS1HOUPIG = "Sky Station 1: House Green Pipe"
