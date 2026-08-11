@@ -610,10 +610,12 @@ BATTBELLUMALEE = "Battle Belt Lumalee Shop"
 BOSSBLILUMALEE = "Boss Blitz Lumalee Shop"
 
 # Launch Star Names
+## Sky Station Galaxy
 SKYOBS1HOULS = "Sky Station 1: House Launch Star"
 SKYOBS1GRELS = "Sky Station 1: Green Hill Launch Star"
 SKYOBS1MINLS = "Sky Station 1: Mini Planets Launch Star"
 SKYOBS1MINSS = "Sky Station 1: Mini Planets Sling Star"
+SKYOBS1QCOSS = "Sky Station 1: Mini Planets ?-Coin Sling Star"
 SKYOBS1CYLLS = "Sky Station 1: Cylinder Launch Star"
 SKYOBS1TWOLS = "Sky Station 1: Two-Sided Launch Star"
 SKYOBS2HOULS = "Sky Station 2: House Launch Star"

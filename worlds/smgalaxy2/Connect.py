@@ -218,9 +218,10 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.WORLD1).connect(world.get_region(regname.FLUFFBLUFF), "World 1 Slot 5 Galaxy")
     world.get_region(regname.FLUFFBLUFF).connect(world.get_region(regname.FLUFFBLUFF1LANDING), "Fluffy Bluff Star")
     world.get_region(regname.FLUFFBLUFF1LANDING).connect(world.get_region(regname.FLUFFBLUFF1COINROOM),
-                                                         "Fluffy Bluff: Landing Green Pipe")
+                                                         "Fluffy Bluff: Landing Green Pipe",
+                                                         rule=RB.CanPipe)
     world.get_region(regname.FLUFFBLUFF1LANDING).connect(world.get_region(regname.FLUFFBLUFF1BUILDING),
-                                                         rule=RB.CanPipe & (RB.JumpHeight3 | RB.CloudMario))
+                                                         rule=RB.JumpHeight3 | RB.CloudMario)
     world.get_region(regname.FLUFFBLUFF1BUILDING).connect(world.get_region(regname.FLUFFBLUFF1BIGTREE),
                                                          rule=(RB.CanMakeCloud | (RB.CloudMario & (RB.CanLongJump | RB.MediumLogic))))
     world.get_region(regname.FLUFFBLUFF1BUILDING).connect(world.get_region(regname.FLUFFBLUFF1CLIFF1),
@@ -232,10 +233,10 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                              | (RB.CanAirSpin & RB.CanBackflip))
     world.get_region(regname.FLUFFBLUFF1BIGTREE).connect(world.get_region(regname.FLUFFBLUFF1BIGCLOUD),
                                                          "Fluffy Bluff: Landing Big Tree Sling Star",
-                                                         rule=RB.CloudMario)
+                                                         rule=RB.CanLaunchStar & RB.CloudMario)
     world.get_region(regname.FLUFFBLUFF1BIGCLOUD).connect(world.get_region(regname.FLUFFBLUFF3TOWER),
                                                          "Fluffy Bluff: Hungry Luma",
-                                                          rule=((RB.CoinLumaBase|
+                                                          rule=RB.CanLaunchStar & ((RB.CoinLumaBase|
                                                            (OptionFilter(CoinLumaLocks,2)&Has(itemname.COINHL1)))
                                                      & RB.CoinLumaRule(world.options.coin_luma_counts.value["Fluffy Bluff Coin Luma"]))),
     world.get_region(regname.FLUFFBLUFF1BIGCLOUD).connect(world.get_region(regname.FLUFFBLUFF1CLIFF1))
@@ -243,12 +244,13 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                         rule=RB.CloudMario | (RB.HellLogic & RB.CanWallSpin & RB.CanSideflip))
     world.get_region(regname.FLUFFBLUFF1CLIFF2).connect(world.get_region(regname.FLUFFBLUFF1WATER),
                                                          "Fluffy Bluff: Wall Jump Launch Star",
-                                                        rule=(RB.CanWallJump
-                                                              | (RB.CanMakeCloud & RB.MediumLogic)
-                                                              | (RB.CloudMario & RB.CanLongJump & RB.HardLogic)))
+                                                        rule=RB.CanLaunchStar
+                                                             & (RB.CanWallJump
+                                                                | (RB.CanMakeCloud & RB.MediumLogic)
+                                                                | (RB.CloudMario & RB.CanLongJump & RB.HardLogic)))
     world.get_region(regname.FLUFFBLUFF1WATER).connect(world.get_region(regname.FLUFFBLUFF1CLOUDCLIMB),
                                                          "Fluffy Bluff: Water Sphere Launch Star",
-                                                       rule=RB.CanCollectStarChips)
+                                                       rule=RB.CanLaunchStar & RB.CanCollectStarChips)
     world.create_entrance(world.get_region(regname.FLUFFBLUFF1BIGCLOUD),world.get_region(regname.FLUFFBLUFF1CLOUDCLIMB), # Trick Entrance
                           RB.CanLongJump & RB.CanMakeCloud & RB.HardLogic)
     world.get_region(regname.FLUFFBLUFF1CLOUDCLIMB).connect(world.get_region(regname.FLUFFBLUFF1TREECLIMB),
@@ -286,10 +288,10 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.BOWJR1).connect(world.get_region(regname.FIREFLOT1LANDING), "Fiery Flotilla Grand Star")
     world.get_region(regname.FIREFLOT1LANDING).connect(world.get_region(regname.FIREFLOT1LAVA),
                                                        "Fiery Flotilla: Fort Sling Star",
-                                                       rule= (RB.CanLaunchStar|(RB.HardLogic&(RB.CanLongJump|RB.CanAirSpin))))
+                                                       rule= (RB.CanLaunchStar | (RB.HardLogic & (RB.CanLongJump | RB.CanAirSpin))))
     world.get_region(regname.FIREFLOT1LAVA).connect(world.get_region(regname.FIREFLOT1BOSS),
                                                        "Fiery Flotilla: Lava Planet Launch Star",
-                                                    rule=RB.CanAirSpin)
+                                                    rule=RB.CanLaunchStar)
     world.create_entrance(world.get_region(regname.FIREFLOT1LANDING),world.get_region(regname.FIREFLOT1BOSS), # Trick Entrance
                           (RB.MediumLogic & (RB.JumpHeight3 | RB.CanLongJump)))
     world.get_region(regname.BOWJR1).connect(world.get_region(regname.FIREFLOT2BOSS), "Fiery Flotilla Comet Star",
