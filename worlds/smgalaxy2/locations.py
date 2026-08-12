@@ -29,7 +29,7 @@ class SMG2LocationData(NamedTuple):
     game_address: Optional[int] = 0
     locked_item: str = None
 
-#TODO Add Hungry Luma, Comets and Checkpoint locations to base table
+
 # Sky Station S
 SKYOBS_loc: dict[str, SMG2LocationData] = {
     locname.SKYSTASTAR1: SMG2LocationData([regname.SKYOBS, "Power Star Location"],
@@ -794,7 +794,6 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.FLIPOUT2CLIMB, RB.CanWallSpin),
 }
 
-#TODO Comet Medals Table
 COMETMEDAL_loc:dict[str, SMG2LocationData] = {
     locname.SKYSTACM: SMG2LocationData(["Comet Medal Location", regname.SKYOBS], regname.SKYOBS,
                                        regname.SKYOBS1CYLINDER,
@@ -1140,13 +1139,6 @@ checkpoint_loc_table: dict[str, SMG2LocationData] = {
                                                  regname.GRANDMASTER1PULL),
 }
 
-#TODO Add Pipe Table
-
-#TODO Add Launch Star table here
-
-#TODO Add NPC table here - vanilla unlock requirement
-
-#TODO Add Mailtoad Letters table here - vanilla unlock requirement
 mailtoad_locations: dict[str, SMG2LocationData] = {
     locname.GOLDGEARMO:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
                                                  regname.SHIP2,
