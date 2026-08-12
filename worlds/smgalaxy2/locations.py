@@ -29,7 +29,7 @@ class SMG2LocationData(NamedTuple):
     game_address: Optional[int] = 0
     locked_item: str = None
 
-#TODO Add Hungry Luma, Comets and Checkpoint locations to base table
+
 # Sky Station S
 SKYOBS_loc: dict[str, SMG2LocationData] = {
     locname.SKYSTASTAR1: SMG2LocationData([regname.SKYOBS, "Power Star Location"],
@@ -796,7 +796,6 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.FLIPOUT2CLIMB, RB.CanWallSpin),
 }
 
-#TODO Comet Medals Table
 COMETMEDAL_loc:dict[str, SMG2LocationData] = {
     locname.SKYSTACM: SMG2LocationData(["Comet Medal Location", regname.SKYOBS], regname.SKYOBS,
                                        regname.SKYOBS1CYLINDER,
@@ -1142,13 +1141,6 @@ checkpoint_loc_table: dict[str, SMG2LocationData] = {
                                                  regname.GRANDMASTER1PULL),
 }
 
-#TODO Add Pipe Table
-
-#TODO Add Launch Star table here
-
-#TODO Add NPC table here - vanilla unlock requirement
-
-#TODO Add Mailtoad Letters table here - vanilla unlock requirement
 mailtoad_locations: dict[str, SMG2LocationData] = {
     locname.GOLDGEARMO:         SMG2LocationData(["Letter Locations"], regname.SHIP2,
                                                  regname.SHIP2,
@@ -1520,6 +1512,28 @@ launch_star_locs: dict[str, SMG2LocationData] = {
     locname.GRANDMASTER2JUMLS: SMG2LocationData(["Launch Stars"], regname.GRANDMASTER, regname.GRANDMASTER2BROS2, RB.CanLaunchStar),
     locname.GRANDMASTER1BROSS: SMG2LocationData(["Launch Stars"], regname.GRANDMASTER, regname.GRANDMASTER1BROS1, RB.CanLaunchStar),
     locname.GRANDMASTER2BROSS: SMG2LocationData(["Launch Stars"], regname.GRANDMASTER, regname.GRANDMASTER2BROS1, RB.CanLaunchStar),
+
+    locname.FLUFFY1HUNGRYLS: SMG2LocationData(["Launch Stars"], regname.FLUFFBLUFF, regname.FLUFFBLUFF1BIGCLOUD,
+                                              CanReachEntrance("Fluffy Bluff: Hungry Luma",
+                                                               parent_region_name=regname.FLUFFBLUFF1BIGCLOUD) & RB.CanLaunchStar),
+    locname.PUZZPL1HUNGRYLS: SMG2LocationData(["Launch Stars"], regname.PUZZPLAN, regname.PUZZPLAN1GRUZZY,
+                                              CanReachEntrance("Puzzle Plank: Hungry Luma",
+                                                               parent_region_name=regname.PUZZPLAN1GRUZZY) & RB.CanLaunchStar),
+    locname.HIGHTA1HUNGRYLS: SMG2LocationData(["Launch Stars"], regname.HIGHTAIL, regname.HIGHTAIL1DASHWAL1,
+                                              CanReachEntrance("Hightail Falls: Hungry Luma",
+                                                               parent_region_name=regname.HIGHTAIL1DASHWAL1) & RB.CanLaunchStar),
+    locname.COSMIC1HUNGRYLS: SMG2LocationData(["Launch Stars"], regname.COSMICO, regname.COSMIC1POOL,
+                                              CanReachEntrance("Cosmic Cove: Hungry Luma",
+                                                               parent_region_name=regname.COSMIC1POOL) & RB.CanLaunchStar),
+    locname.CLOUDY1HUNGRYLS: SMG2LocationData(["Launch Stars"], regname.CLOUCOUR, regname.CLOUCOUR1TOWERS,
+                                              CanReachEntrance("Cloudy Court: Hungry Luma",
+                                                               parent_region_name=regname.CLOUCOUR1TOWERS) & RB.CanLaunchStar),
+    locname.CLOCKW1HUNGRYLS: SMG2LocationData(["Launch Stars"], regname.CLOCKWORK, regname.CLOCKWORK1COGS,
+                                              CanReachEntrance("Clockwork Ruins: Hungry Luma",
+                                                               parent_region_name=regname.CLOCKWORK1COGS) & RB.CanLaunchStar),
+    locname.BATTLE1HUNGRYLS: SMG2LocationData(["Launch Stars"], regname.BATTLEBELT, regname.BATTBELT1ICEP,
+                                              CanReachEntrance("Battle Belt: Hungry Luma",
+                                                               parent_region_name=regname.BATTBELT1ICEP) & RB.CanLaunchStar),
 }
 
 pipe_locations: dict[str, SMG2LocationData] = {

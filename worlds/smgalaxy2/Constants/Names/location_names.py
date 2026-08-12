@@ -854,6 +854,15 @@ GRANDMASTER2JUMLS = "Grandmaster Comet: Jumping Bros Launch Star"
 GRANDMASTER1BROSS = "Grandmaster: Bros Landing Sling Star"
 GRANDMASTER2BROSS = "Grandmaster Comet: Bros Landing Sling Star"
 
+# Hungry Luma LS
+FLUFFY1HUNGRYLS = "Fluffy Bluff: Hungry Luma Launch Star"
+PUZZPL1HUNGRYLS = "Puzzle Plank: Hungry Luma Launch Star"
+HIGHTA1HUNGRYLS = "Hightail Falls: Hungry Luma Launch Star"
+COSMIC1HUNGRYLS = "Cosmic Cove: Hungry Luma Launch Star"
+CLOUDY1HUNGRYLS = "Cloudy Court: Hungry Luma Launch Star"
+CLOCKW1HUNGRYLS = "Clockwork Ruins: Hungry Luma Launch Star"
+BATTLE1HUNGRYLS = "Battle Belt: Hungry Luma Launch Star"
+
 # Pipe Names
 SKYOBS1HOUPIG = "Sky Station 1: House Green Pipe"
 SKYOBS1HOUPIO = "Sky Station 1: House Orange Pipe"
