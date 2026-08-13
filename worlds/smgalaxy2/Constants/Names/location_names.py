@@ -657,6 +657,7 @@ FIREFLOT1LANSS = "Fiery Flotilla: Fort Sling Star"
 ## Puzzle Plank Galaxy
 PUZZPLAN1WIGLS = "Puzzle Plank: Wiggler Platform Launch Star"
 PUZZPLAN1GRALS = "Puzzle Plank: Grassy Buzzsaw Launch Star"
+PUZZPLAN3HLUMA = "Puzzle Plank: Hungry Luma Launch Star"
 PUZZPLAN1CHELS = "Puzzle Plank: Checkpoint Launch Star"
 PUZZPLAN1SAWSS = "Puzzle Plank: Saws & Planks Sling Star"
 
@@ -675,12 +676,16 @@ HIGHTAIL2CLILS = "Hightail Falls Comet: Hot Pepper Climb Launch Star"
 HIGHTAIL2DASLS = "Hightail Falls Comet: Hot Pepper Dash Launch Star"
 
 # Cosmic Cove Galaxy
+COSMIC1LANSS = "Cosmic Cove 1: Landing River Sing Star"
+COSMIC1CORSS = "Cosmic Cove 1: Cove Lake Coral Sling Star"
+COSMIC1PILSS = "Cosmic Cove 1: Cove Lake Pillars Sling Star"
 COSMIC2LANLS = "Cosmic Cove 2: Landing Launch Star"
 COSMIC2TOALS = "Cosmic Cove 2: Toadship Launch Star"
 
 # Lava Lair Galaxy
 LAVALAIR1CYLLS = "Lava Lair: Lava Cylinder Launch Star"
 LAVALAIR1LAVSS = "Lava Lair: Lava Sling Star"
+LAVALAIR2CYLLS = "Lava Lair Comet: Lava Cylinder Launch Star"
 LAVALAIR2LAVSS = "Lava Lair Comet: Lava Sling Star"
 
 # Tall Trunk Galaxy
