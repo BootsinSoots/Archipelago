@@ -1381,10 +1381,21 @@ launch_star_locs: dict[str, SMG2LocationData] = {
                                            CanReachEntrance("Cosmic Cove 2: Landing Launch Star", parent_region_name=regname.COSMIC2LANDING)),
     locname.COSMIC2TOALS: SMG2LocationData(["Launch Stars"], regname.COSMICO, regname.COSMIC2TOADSHI, RB.CanLaunchStar),
 
-    locname.LAVALAIR1CYLLS: SMG2LocationData(["Launch Stars"], regname.BOWSER1, regname.LAVALAIR1LAVACYL2, RB.CanLaunchStar),
-    locname.LAVALAIR1LAVSS: SMG2LocationData(["Launch Stars"], regname.BOWSER1, regname.LAVALAIR1LAVAPLA1B, RB.CanLaunchStar),
-    locname.LAVALAIR2CYLLS: SMG2LocationData(["Launch Stars"], regname.BOWSER1, regname.LAVALAIR2LAVACYL2, RB.CanLaunchStar),
-    locname.LAVALAIR2LAVSS: SMG2LocationData(["Launch Stars"], regname.BOWSER1, regname.LAVALAIR2LAVAPLA1B, RB.CanLaunchStar),
+    locname.LAVALAIR1CYLLS: SMG2LocationData(["Launch Stars"], regname.BOWSER1, regname.LAVALAIR1LAVACYL2,
+                                             CanReachEntrance(locname.LAVALAIR1CYLLS,
+                                                              parent_region_name=regname.LAVALAIR1LAVACYL2) & RB.CanLaunchStar
+                                             ),
+    locname.LAVALAIR1LAVSS: SMG2LocationData(["Launch Stars"], regname.BOWSER1, regname.LAVALAIR1LAVAPLA1B,
+                                             CanReachEntrance(locname.LAVALAIR1LAVSS,
+                                                              parent_region_name=regname.LAVALAIR1LAVAPLA1B) & RB.CanLaunchStar
+                                             ),
+    locname.LAVALAIR2CYLLS: SMG2LocationData(["Launch Stars"], regname.BOWSER1, regname.LAVALAIR2LAVACYL2,
+                                             CanReachEntrance(locname.LAVALAIR2CYLLS,
+                                                              parent_region_name=regname.LAVALAIR2LAVACYL2) & RB.CanLaunchStar
+                                             ),
+    locname.LAVALAIR2LAVSS: SMG2LocationData(["Launch Stars"], regname.BOWSER1, regname.LAVALAIR2LAVAPLA1B,
+                                             CanReachEntrance(locname.LAVALAIR2LAVSS,
+                                                              parent_region_name=regname.LAVALAIR2LAVAPLA1B) & RB.CanLaunchStar),
 
     locname.TALLTRUNK1BIGLS: SMG2LocationData(["Launch Stars"], regname.TALLTRUNK, regname.TALLTRUNK1BIGTREE, RB.CanLaunchStar),
     locname.TALLTRUNK1LOGLS: SMG2LocationData(["Launch Stars"], regname.TALLTRUNK, regname.TALLTRUNK1LOG, RB.CanLaunchStar),
