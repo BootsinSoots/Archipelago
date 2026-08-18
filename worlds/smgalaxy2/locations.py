@@ -1703,6 +1703,19 @@ event_locations: dict[str, SMG2LocationData] = {
                                                            locked_item="Can Farm Starbits"),
 }
 
+
+special_locations: dict[str, SMG2LocationData] = {
+    locname.VISITWORLD1: SMG2LocationData(["Specials"], regname.WORLD1, regname.WORLD1),
+    locname.VISITWORLD2: SMG2LocationData(["Specials"], regname.WORLD2, regname.WORLD2),
+    locname.VISITWORLD3: SMG2LocationData(["Specials"], regname.WORLD3, regname.WORLD3),
+    locname.VISITWORLD4: SMG2LocationData(["Specials"], regname.WORLD4, regname.WORLD4),
+    locname.VISITWORLD5: SMG2LocationData(["Specials"], regname.WORLD5, regname.WORLD5),
+    locname.VISITWORLD6: SMG2LocationData(["Specials"], regname.WORLD6, regname.WORLD6),
+    locname.VISITWORLD7: SMG2LocationData(["Specials"], regname.WORLD7, regname.WORLD7),
+    locname.SPEAKTOLUBB: SMG2LocationData(["Specials"], regname.SHIP , regname.SHIP),
+    locname.OPENWORLDMP: SMG2LocationData(["Specials"], regname.SHIP , regname.SHIP),
+}
+
 base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_loc, **RIGHTDOWN_loc,
                         **FLIPSWAP_loc, **WILDGLIDE_loc, **ROLLMAST_loc, **HONEYHOP_loc, **UPDIZZY_loc,
                         **SLIMSPRI_loc, **BEEBLOOM_loc, **BEATBLOCK_loc, **SWEETMYS_loc, **FLETGLIDE_loc,
@@ -1712,11 +1725,11 @@ base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_l
                         **HIGHFALL_loc, **ROCKBOWL_loc, **COSCCOVE_loc, **TALLTREE_loc, **CLOUDCOURT_loc,
                         **HAUNTHALL_loc, **SNOWFLAKE_loc, **SUPMASS_loc, **FLIPVILL_loc, **STARBEACH_loc,
                         **CHOMWORK_loc, **SPACSTOR_loc, **SLIPSAND_loc, **COLDFIRE_loc, **BOOMOON_loc,
-                        **MELTMONS_loc, **CLOCKRUIN_loc, **THROWBACK_loc, **BATTBELT_loc}
+                        **MELTMONS_loc, **CLOCKRUIN_loc, **THROWBACK_loc, **BATTBELT_loc, **special_locations}
 
 all_location_table = {**base_stars_locations, **green_star_locations, **COMETMEDAL_loc, **mailtoad_locations,
                       **checkpoint_loc_table, **hungry_luma_loc, **passenger_loc, **lumalee_locations,
-                      **pipe_locations, **launch_star_locs, }
+                      **pipe_locations, **launch_star_locs, **special_locations}
 
 LOCATION_NAME_TO_ID: dict[str, int] =  {
     name: list(all_location_table.keys()).index(name) for name in all_location_table.keys() }
