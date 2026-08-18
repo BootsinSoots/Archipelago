@@ -695,6 +695,7 @@ TALLTRUNK2BIGLS = "Tall Trunk 2: Big Tree Launch Star"
 
 # Cloudy Court Galaxy
 CLOUCOUR1CYMLS = "Cloudy Court: Cymbal Launch Star"
+CLOUCOUR1HLLS  = "Cloudy Court: Hungry Luma"
 CLOUCOUR1TOWLS = "Cloudy Court: Tower Launch Star"
 CLOUCOUR2LAULS = "Cloudy Court Comet: Launch Star"
 CLOUCOUR2CS1SS = "Cloudy Court Comet: Wall Jump Sling Star"
