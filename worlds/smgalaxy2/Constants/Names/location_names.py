@@ -695,7 +695,6 @@ TALLTRUNK2BIGLS = "Tall Trunk 2: Big Tree Launch Star"
 
 # Cloudy Court Galaxy
 CLOUCOUR1CYMLS = "Cloudy Court: Cymbal Launch Star"
-CLOUCOUR1HLLS  = "Cloudy Court: Hungry Luma"
 CLOUCOUR1TOWLS = "Cloudy Court: Tower Launch Star"
 CLOUCOUR2LAULS = "Cloudy Court Comet: Launch Star"
 CLOUCOUR2CS1SS = "Cloudy Court Comet: Wall Jump Sling Star"
@@ -742,8 +741,9 @@ HONEYHOP2BASSS = "Honeyhop Chimp: Base Sling Star"
 HONEYHOP2BUBSS = "Honeyhop Chimp: Cliff Pond Sling Star"
 
 # Starshine Beach Galaxy
-STARBEACH1WATLS = "Starshine Star 1: Waterdrop Launch Star"
-STARBEACH2WATLS = "Starshine Star 2: Waterdrop Launch Star"
+STARBEACH1WATLS = "Starshine Beach 1: Waterdrop Launch Star"
+STARBEACH2WATLS = "Starshine Beach 2: Waterdrop Launch Star"
+STARBEACH2TUNSS = "Starshine Beach"
 
 # Chompworks Galaxy
 CHOMWORK1STALS = "Chompworks 1: Start Launch Star"
@@ -898,8 +898,8 @@ FREEZY2WHIPIG = "Freezy Flake 2: Whiteout Green Pipe"
 FLIPVI2TOWPIG = "Flipsville 2: Spin-Drill Tower Pipe"
 FLIPVI3TOWPIG = "Flipsville Comet : Spin-Drill Tower Pipe"
 HONEYH1PONPIG = "Honeyhop: Pond Green Pipe"
-STARSH1BEAPIG = "Starshine Star 1: Tropical Beach Green Pipe"
-STARSH2BEAPIG = "Starshine Star 2: Tropical Beach Green Pipe"
+STARSH1BEAPIG = "Starshine Beach 1: Tropical Beach Green Pipe"
+STARSH2BEAPIG = "Starshine Beach 2: Tropical Beach Green Pipe"
 CHOMPW1ROLPIG = "Chompworks 1: Bonus Room Pipe"
 SPACES2TOWPIG = "Space Storm 2: Tower Green Pipe"
 UPDOWN1CASPIG = "Upside Dizzy: Castle Pipe"
