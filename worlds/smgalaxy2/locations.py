@@ -23,11 +23,11 @@ class SMG2Location(Location):
 
 class SMG2LocationData(NamedTuple):
     location_groups: list[str]
-    galaxy: str # What galaxy the location is in []
+    galaxy: str # What galaxy the location is in
     region: str # The specific region the locations is in
-    default_access: Rule[Any] = None
+    default_access: Optional[Rule[Any]] = None
     game_address: Optional[int] = 0
-    locked_item: str = None
+    locked_item: Optional[str] = None
 
 
 # Sky Station S
@@ -1465,7 +1465,7 @@ launch_star_locs: dict[str, SMG2LocationData] = {
                                               RB.CanLaunchStar & RB.CanSwim),
     locname.STARBEACH2WATLS: SMG2LocationData(["Launch Stars"], regname.STARBEACH, regname.STARBEACH2WATER,
                                               RB.CanLaunchStar & RB.CanSwim),
-    locname.STARBEACH2TUNSS: SMG2LocationData(["Launch Stars"], regname.STARBEACH, regname.STARBEACH2MAIN,
+    locname.STARBEACH2TUNSS: SMG2LocationData(["Launch Stars"], regname.STARBEACH, regname.STARBEACH2DEEPW,
                                               RB.CanLaunchStar & RB.CanSwim),
 
     locname.CHOMWORK1STALS: SMG2LocationData(["Launch Stars"], regname.CHOMWORK, regname.CHOMWORK1START,

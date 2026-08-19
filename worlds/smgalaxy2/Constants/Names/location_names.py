@@ -742,7 +742,7 @@ HONEYHOP2BUBSS = "Honeyhop Chimp: Cliff Pond Sling Star"
 # Starshine Beach Galaxy
 STARBEACH1WATLS = "Starshine Beach 1: Waterdrop Launch Star"
 STARBEACH2WATLS = "Starshine Beach 2: Waterdrop Launch Star"
-STARBEACH2TUNSS = "Starshine Beach"
+STARBEACH2TUNSS = "Starshine Beach 2: Water Tunnel Sling Star"
 
 # Chompworks Galaxy
 CHOMWORK1STALS = "Chompworks 1: Start Launch Star"
