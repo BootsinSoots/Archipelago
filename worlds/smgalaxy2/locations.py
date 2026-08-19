@@ -1330,7 +1330,7 @@ launch_star_locs: dict[str, SMG2LocationData] = {
     locname.SPINDIG2BLULS: SMG2LocationData(["Launch Stars"], regname.SPINDIG, regname.SPINDIG2BTOAD, RB.CanLaunchStar),
 
     locname.FLUFFBLUFF1WALLS: SMG2LocationData(["Launch Stars"], regname.FLUFFBLUFF, regname.FLUFFBLUFF1CLIFF2,
-                                               CanReachEntrance("Fluffy Bluff 1: Wall Jump Launch Star", parent_region_name=regname.FLUFFBLUFF1CLIFF2)),
+                                               CanReachEntrance(locname.FLUFFBLUFF1WALLS, parent_region_name=regname.FLUFFBLUFF1CLIFF2)),
     locname.FLUFFBLUFF1WATLS: SMG2LocationData(["Launch Stars"], regname.FLUFFBLUFF, regname.FLUFFBLUFF1WATER,
                                                RB.CanLaunchStar & RB.CanCollectStarChips),
     locname.FLUFFBLUFF1LANSS: SMG2LocationData(["Launch Stars"], regname.FLUFFBLUFF, regname.FLUFFBLUFF1BIGTREE, RB.CanLaunchStar),
