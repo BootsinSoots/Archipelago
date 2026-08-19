@@ -64,6 +64,10 @@ def get_hints_by_option(multiworld: MultiWorld, player_hints: set[int]) -> None:
                     locs = [get_progression_only_items(world, already_hinted_locations, prog_no_skip)]
 
                 loc: Location = world.random.choice(sorted(locs))
+                # Solve hint if item was itemlinked
+                if loc.player in world.multiworld.groups:
+                    loc: Location = world.random.choice(sorted(world.multiworld.find_item_locations(
+                        loc.item.name, loc.player, True)))
                 hint = {name: {"Item": loc.item.name,
                                "Location": loc.name,
                                "Location ID": str(loc.address),
@@ -99,6 +103,7 @@ def get_hints_by_option(multiworld: MultiWorld, player_hints: set[int]) -> None:
                 else:
                     icolor = "Other"
                 item_name: str = loc.item.name
+                # Solve hint if item was itemlinked
                 if loc.player in world.multiworld.groups:
                     loc: Location = world.random.choice(sorted(world.multiworld.find_item_locations(
                         item_name, loc.player, True)))
