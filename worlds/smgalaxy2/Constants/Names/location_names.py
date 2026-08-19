@@ -657,7 +657,6 @@ FIREFLOT1LANSS = "Fiery Flotilla: Fort Sling Star"
 ## Puzzle Plank Galaxy
 PUZZPLAN1WIGLS = "Puzzle Plank: Wiggler Platform Launch Star"
 PUZZPLAN1GRALS = "Puzzle Plank: Grassy Buzzsaw Launch Star"
-PUZZPLAN3HLUMA = "Puzzle Plank: Hungry Luma Launch Star"
 PUZZPLAN1CHELS = "Puzzle Plank: Checkpoint Launch Star"
 PUZZPLAN1SAWSS = "Puzzle Plank: Saws & Planks Sling Star"
 
