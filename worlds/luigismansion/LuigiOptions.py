@@ -355,6 +355,7 @@ class DoorRando(Choice):
     option_suit_doors = 2
     option_all_doors_unlocked = 3
     option_all_doors_locked = 4
+    option_suit_doors_only = 5
     default = 0
 
 
