@@ -1741,6 +1741,16 @@ special_locations: dict[str, SMG2LocationData] = {
     locname.OPENWORLDMP: SMG2LocationData(["Specials"], regname.SHIP , regname.SHIP),
 }
 
+oneup_locations: dict[str, SMG2LocationData] = {
+
+}
+
+dice_block_locations: dict[str, SMG2LocationData] = {
+
+}
+
+
+
 base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_loc, **RIGHTDOWN_loc,
                         **FLIPSWAP_loc, **WILDGLIDE_loc, **ROLLMAST_loc, **HONEYHOP_loc, **UPDIZZY_loc,
                         **SLIMSPRI_loc, **BEEBLOOM_loc, **BEATBLOCK_loc, **SWEETMYS_loc, **FLETGLIDE_loc,
