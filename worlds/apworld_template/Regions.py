@@ -11,8 +11,6 @@ class GameRegionData(NamedTuple):
     entrance_regions: Optional[list[str]] # Regions with entrances to this one
     exit_regions: Optional[list[str]] # Regions with entrances from this one
 
-
-
 class GameRegion(Region):
     game: str = "Game"
     region_data: GameRegionData
@@ -21,5 +19,8 @@ class GameRegion(Region):
         super().__init__(region_name, player, multiworld)
         self.region_data = region_data
 
+region_list: dict[str, BVFUBJRegionData] = {}
+
 def create_regions(world: "GameWorld"):
-    pass
+    for region_name in region_list.keys():
+        world.multiworld.regions.append(SMGRegion(region_name, region_list[region_name], world.player, world.multiworld))
