@@ -1737,8 +1737,8 @@ special_locations: dict[str, SMG2LocationData] = {
     locname.VISITWORLD5: SMG2LocationData(["Specials"], regname.WORLD5, regname.WORLD5),
     locname.VISITWORLD6: SMG2LocationData(["Specials"], regname.WORLD6, regname.WORLD6),
     locname.VISITWORLD7: SMG2LocationData(["Specials"], regname.WORLD7, regname.WORLD7),
-    locname.SPEAKTOLUBB: SMG2LocationData(["Specials"], regname.SHIP , regname.SHIP),
-    locname.OPENWORLDMP: SMG2LocationData(["Specials"], regname.SHIP , regname.SHIP),
+    locname.SPEAKTOLUBB: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIP),
+    locname.OPENWORLDMP: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIP),
 }
 
 oneup_locations: dict[str, SMG2LocationData] = {
@@ -1760,7 +1760,8 @@ base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_l
                         **HIGHFALL_loc, **ROCKBOWL_loc, **COSCCOVE_loc, **TALLTREE_loc, **CLOUDCOURT_loc,
                         **HAUNTHALL_loc, **SNOWFLAKE_loc, **SUPMASS_loc, **FLIPVILL_loc, **STARBEACH_loc,
                         **CHOMWORK_loc, **SPACSTOR_loc, **SLIPSAND_loc, **COLDFIRE_loc, **BOOMOON_loc,
-                        **MELTMONS_loc, **CLOCKRUIN_loc, **THROWBACK_loc, **BATTBELT_loc, **special_locations}
+                        **MELTMONS_loc, **CLOCKRUIN_loc, **THROWBACK_loc, **BATTBELT_loc, **special_locations,
+                        **oneup_locations, **dice_block_locations}
 
 all_location_table = {**base_stars_locations, **green_star_locations, **COMETMEDAL_loc, **mailtoad_locations,
                       **checkpoint_loc_table, **hungry_luma_loc, **passenger_loc, **lumalee_locations,
