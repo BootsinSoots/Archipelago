@@ -76,15 +76,7 @@ def create_all_items(world: "GameWorld"):
     local_pool: list[GameItem] = []
 
     # Add basic items, here and if statements for any optional items
-    for item, data in base_items_table.items():
-        if data.req_options:
-            req_option_list: list = [getattr(world.options, x).value in y for (x,y) in data.req_options.option_list.items()]
-            option_value: bool = all(req_option_list) if data.req_options.combine else any(req_option_list)
-            if not option_value:
-                continue
-
-        copies = max(0, all_item_table[item].count - exclude.count(item))
-        local_pool += [world.create_item(item) for _ in range(copies)]
+    local_pool += create_items_from_dict(base_items_table, world, exclude)
 
 
     # Calculate the number of additional filler items to create to fill all locations
@@ -114,3 +106,19 @@ def get_random_filler_item_name(world: "GameWorld"):
 def  get_trap_item_name(world: "GameWorld"):
     filler_traps = dict(sorted(world.trap_filler_dict.items()))
     return world.random.choices(list(filler_traps.keys()), weights=list(filler_traps.values()), k=1)[0]
+
+
+def create_items_from_dict(item_dict: dict[str, GameItemData],
+                           world: "GameWorld", excluded:list[str]) -> list[GameItem]:
+    new_items = []
+    for item, data in item_dict.items():
+        if data.req_options:
+            req_option_list: list = [getattr(world.options, x).value in y for (x,y) in data.req_options.option_list.items()]
+            option_value: bool = all(req_option_list) if data.req_options.combine else any(req_option_list)
+            if not option_value:
+                continue
+
+        copies = max(0, all_item_table[item].count - excluded.count(item))
+        new_items = [world.create_item(item) for _ in range(copies)]
+
+    return new_items
