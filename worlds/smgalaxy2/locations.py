@@ -1746,7 +1746,41 @@ oneup_locations: dict[str, SMG2LocationData] = {
 }
 
 dice_block_locations: dict[str, SMG2LocationData] = {
-
+    locname.SHIPABOVEGDIE: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIP),
+    locname.LUMA1CHANCDIE: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIPLEFTEAR,
+                                            RB.PowerStarCount(18)),
+    locname.LUMA2CHANDIE1: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIPLEFTEAR,
+                                            CanReachLocation(locname.MELTMONSSTAR1)),
+    locname.LUMA2CHANDIE2: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIPLEFTEAR,
+                                            CanReachLocation(locname.MELTMONSSTAR1)),
+    locname.LUMA2CHANDIE3: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIPLEFTEAR,
+                                            CanReachLocation(locname.MELTMONSSTAR1)),
+    locname.LUMA2CHANDIE4: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIPLEFTEAR,
+                                            CanReachLocation(locname.MELTMONSSTAR1)),
+    locname.LUMA2CHANDIE5: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIPLEFTEAR,
+                                            CanReachLocation(locname.MELTMONSSTAR1)),
+    locname.YOSHIS1DIRDIE: SMG2LocationData(["Specials"], regname.GOODEGG, regname.GOODEGG1EARTH),
+    locname.BOULDE1BODIE1: SMG2LocationData(["Specials"], regname.BOULBOWL, regname.BOULBOWL1DICEROOM),
+    locname.BOULDE1BODIE2: SMG2LocationData(["Specials"], regname.BOULBOWL, regname.BOULBOWL1DICEROOM),
+    locname.BOULDE1BODIE3: SMG2LocationData(["Specials"], regname.BOULBOWL, regname.BOULBOWL1DICEROOM),
+    locname.BOULDE1BODIE4: SMG2LocationData(["Specials"], regname.BOULBOWL, regname.BOULBOWL1DICEROOM),
+    locname.BOULDE1BODIE5: SMG2LocationData(["Specials"], regname.BOULBOWL, regname.BOULBOWL1DICEROOM),
+    locname.BOULDE1BODIE6: SMG2LocationData(["Specials"], regname.BOULBOWL, regname.BOULBOWL1DICEROOM),
+    locname.TALLTR1BODIE1: SMG2LocationData(["Specials"], regname.TALLTRUNK, regname.TALLTRUNK1DICEPIPE),
+    locname.TALLTR1BODIE2: SMG2LocationData(["Specials"], regname.TALLTRUNK, regname.TALLTRUNK1DICEPIPE),
+    locname.TALLTR1BODIE3: SMG2LocationData(["Specials"], regname.TALLTRUNK, regname.TALLTRUNK1DICEPIPE),
+    locname.FREFLASNOWDIE: SMG2LocationData(["Specials"], regname.FREEFLAKE, regname.FREEFLAK1SNOWBYH),
+    locname.FREFLA2BODIE1: SMG2LocationData(["Specials"], regname.FREEFLAKE, regname.FREEFLAK2DICEROOM),
+    locname.FREFLA2BODIE2: SMG2LocationData(["Specials"], regname.FREEFLAKE, regname.FREEFLAK2DICEROOM),
+    locname.FREFLA2BODIE3: SMG2LocationData(["Specials"], regname.FREEFLAKE, regname.FREEFLAK2DICEROOM),
+    locname.CHOMPW1BODIE1: SMG2LocationData(["Specials"], regname.CHOMWORK, regname.CHOMWORK1BONUS),
+    locname.CHOMPW1BODIE2: SMG2LocationData(["Specials"], regname.CHOMWORK, regname.CHOMWORK1BONUS),
+    locname.CHOMPW1BODIE3: SMG2LocationData(["Specials"], regname.CHOMWORK, regname.CHOMWORK1BONUS),
+    locname.HONEYH1BODIE1: SMG2LocationData(["Specials"], regname.HONEYHOP, regname.HONEYHOP1DICEROOM),
+    locname.HONEYH1BODIE2: SMG2LocationData(["Specials"], regname.HONEYHOP, regname.HONEYHOP1DICEROOM),
+    locname.HONEYH1BODIE3: SMG2LocationData(["Specials"], regname.HONEYHOP, regname.HONEYHOP1DICEROOM),
+    locname.BOOMBUSTRTDIE: SMG2LocationData(["Specials"], regname.BOWJR3, regname.BOOMBUNK1HAMMER),
+    locname.THROWBASRTDIE: SMG2LocationData(["Specials"], regname.WHOMPFORT, regname.WHOMP1FORT),
 }
 
 
