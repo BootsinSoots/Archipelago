@@ -1783,7 +1783,9 @@ dice_block_locations: dict[str, SMG2LocationData] = {
     locname.THROWBASRTDIE: SMG2LocationData(["Specials"], regname.WHOMPFORT, regname.WHOMP1FORT),
 }
 
+enemy_clear_locations: dict[str, SMG2LocationData] = {
 
+}
 
 base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_loc, **RIGHTDOWN_loc,
                         **FLIPSWAP_loc, **WILDGLIDE_loc, **ROLLMAST_loc, **HONEYHOP_loc, **UPDIZZY_loc,
@@ -1799,7 +1801,7 @@ base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_l
 
 all_location_table = {**base_stars_locations, **green_star_locations, **COMETMEDAL_loc, **mailtoad_locations,
                       **checkpoint_loc_table, **hungry_luma_loc, **passenger_loc, **lumalee_locations,
-                      **pipe_locations, **launch_star_locs, **special_locations}
+                      **pipe_locations, **launch_star_locs, **special_locations, **enemy_clear_locations}
 
 LOCATION_NAME_TO_ID: dict[str, int] =  {
     name: list(all_location_table.keys()).index(name) for name in all_location_table.keys() }
