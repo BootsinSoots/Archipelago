@@ -347,6 +347,10 @@ class DoorRando(Choice):
     All Doors Unlocked - Unlocks all doors in the mansion. Without Boo gates, this will make King Boo immediately accessible.
 
     All Doors Locked - Locks all door in the mansion.
+
+    Suit Doors Only - Only the Suit doors (and the 2F Lower stairwell door) will be locked. All other doors will be open.
+
+    Percentage - A percentage of doors will be locked at random, set by the Door Percentage option.
     """
     display_name = "Door Randomization"
     internal_name = "door_rando"
@@ -356,9 +360,18 @@ class DoorRando(Choice):
     option_all_doors_unlocked = 3
     option_all_doors_locked = 4
     option_suit_doors_only = 5
+    option_percentage = 6
     default = 0
 
-
+class DoorPercentage(Range):
+    """
+    Sets the percentage of doors that will be locked if Percentage is the chosen option in Door Rando
+    """
+    display_name = "Door Percentage"
+    internal_name = "door_percentage"
+    range_start = 0
+    range_end = 100
+    default = 50
 
 class LuigiFearAnim(DefaultOnToggle):
     """Turn on Luigi being scared by ghosts if they spawn close to him.
@@ -714,6 +727,7 @@ class LMOptions(DeathLinkMixin, PerGameCommonOptions):
     door_model_rando: DoorModelRando
     early_first_key: EarlyFirstKey
     door_rando: DoorRando
+    door_percentage: DoorPercentage
     enemizer: Enemizer
     random_spawn: RandomSpawn
     portrait_hints: PortraitHints

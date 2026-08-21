@@ -638,10 +638,19 @@ class LMWorld(World):
         elif self.options.door_rando.value == 5:
             for door_id in self.open_doors.keys():
                 # Lock only the Suit doors and nothing else
-                if door_id in [3, 42, 59, 72]:
+                if door_id in [3, 42, 59, 72, 74]:
                     self.open_doors[door_id] = 0
                     continue
                 self.open_doors[door_id] = 1
+        elif self.options.door_rando.value == 6:
+            for door_id in self.open_doors.keys():
+                self.open_doors[door_id] = 1
+            num_locked: int = math.ceil(len(self.open_doors.keys()) * (self.options.door_percentage.value/100))
+            locked_doors = self.random.choices(list(self.open_doors.keys()), k=num_locked)
+            if len(locked_doors) > 0:
+                for door_id in locked_doors:
+                    self.open_doors[door_id] = 0
+
 
         spawn_doors = copy.deepcopy(REGION_LIST[self.origin_region_name].door_ids)
         if spawn_doors and self.origin_region_name != "Butler's Room":
