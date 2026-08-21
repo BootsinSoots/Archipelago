@@ -11,7 +11,7 @@ from . import Rules as RB
 
 
 class SMG2Location(Location):
-    game: str = "Super Mario Galaxy"
+    game: str = "Super Mario Galaxy 2"
 
     def __init__(self, player: int, name: str, address: Optional[int], parent: Optional[Region]):
         super(SMG2Location, self).__init__(player, name,

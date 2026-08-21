@@ -36,9 +36,9 @@ from .SMG2Settings import SuperMarioGalaxy2
 
 class SMG2World(World):
     """
-    Super Mario Galaxy allows you to explore the cosmos with Rosalina in the Comet Observatory.
-    Mario must collect Power Stars and Grand Stars to power the observatory so it can go to the
-    center of the universe in order to save Princess Peach from Bowser's clutches.
+    Super Mario Galaxy 2 allows you to explore the cosmos on Starship Mario.
+    Mario must collect Power Stars and Grand Stars to progress through the worlds to reach World 6 in order to save
+    Princess Peach from Bowser's clutches.
     """
 
     game = GAME_NAME
