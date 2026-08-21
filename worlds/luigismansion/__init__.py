@@ -23,6 +23,7 @@ from .Rules import set_element_rules
 from .iso_helper.LM_Rom import LMPlayerContainer
 from .client.luigismansion_settings import LuigisMansionSettings
 from .client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME, RANDOMIZER_NAME
+from ..generic.Rules import set_rule
 
 if TYPE_CHECKING:
     from NetUtils import MultiData
@@ -278,13 +279,16 @@ class LMWorld(World):
                              lambda state: state.has_group_unique("Mario Item", self.player, self.options.mario_items.value),
                              "and")
                 set_element_rules(self, entry, True)
+                if location == "Boolossus, the Jumbo Ghost":
+                    set_rule(entry, lambda state: state.has("Ice Element Medal", self.player)
+                                                  and state.has("Poltergust 3000", self.player))
                 region.locations.append(entry)
         else:
             for location, data in PORTRAIT_LOCATION_TABLE.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
                 entry.address = None
-                entry.place_locked_item(Item("Portrait _Ghost", ItemClassification.progression, None, self.player))
+                entry.place_locked_item(Item("Portrait_Ghost", ItemClassification.progression, None, self.player))
                 add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
                 if entry.region == "Twins' Room" and self.open_doors.get(28) == 0:
                     add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
@@ -293,6 +297,9 @@ class LMWorld(World):
                              lambda state: state.has_group_unique("Mario Item", self.player, self.options.mario_items.value),
                              "and")
                 set_element_rules(self, entry, True)
+                if location == "Boolossus, the Jumbo Ghost":
+                    set_rule(entry, lambda state: state.has("Ice Element Medal", self.player)
+                                                  and state.has("Poltergust 3000", self.player))
                 region.locations.append(entry)
         if self.options.silver_ghosts:
             # Set max required upgrades based on chosen max health value
@@ -734,6 +741,9 @@ class LMWorld(World):
             entry = LMLocation(self.player, location, region, data)
             add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
             set_element_rules(self, entry, True)
+            if location == "Defeat Boolossus":
+                set_rule(entry, lambda state: state.has("Ice Element Medal", self.player)
+                                              and state.has("Poltergust 3000", self.player))
             region.locations.append(entry)
         for location, data in CLEAR_LOCATION_TABLE.items():
             region = self.get_region(data.region)
