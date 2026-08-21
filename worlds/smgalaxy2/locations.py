@@ -8,6 +8,7 @@ from .Constants.Names import region_names as regname
 from .Constants.Names import item_names as itemname
 from .Constants.Names import location_names as locname
 from . import Rules as RB
+from .Constants.Names.region_names import COSMIC2INPIPE
 
 
 class SMG2Location(Location):
@@ -1615,9 +1616,9 @@ pipe_locations: dict[str, SMG2LocationData] = {
     locname.SPIND2CAN1PIG: SMG2LocationData(["Pipe Location"], regname.SPINDIG, regname.SPINDIG2DARKT,
                                             RB.CanPipe),
     locname.SPIND2CAN2PIG: SMG2LocationData(["Pipe Location"], regname.SPINDIG, regname.SPINDIG2DARKIN1,
-                                            RB.CanPipe & RB.DRILLMASTER),
+                                            CanReachEntrance(locname.SPIND2CAN2PIG, parent_region_name=regname.SPINDIG2DARKIN1)),
     locname.SPINDI2CANPIO: SMG2LocationData(["Pipe Location"], regname.SPINDIG, regname.SPINDIG2DARKIN2,
-                                            RB.CanPipe & RB.DRILLMASTER),
+                                            CanReachEntrance(locname.SPINDI2CANPIO, parent_region_name=regname.SPINDIG2DARKIN2)),
     locname.FLUFF1LANDPIG: SMG2LocationData(["Pipe Location"], regname.FLUFFBLUFF, regname.FLUFFBLUFF1LANDING,
                                             RB.CanPipe),
     locname.RIGHTDOWN1LANPIG: SMG2LocationData(["Pipe Location"], regname.RIGHTDOWN, regname.RIGHTDOWNLANDING,
@@ -1637,9 +1638,9 @@ pipe_locations: dict[str, SMG2LocationData] = {
     locname.COSMIC2PIG1:   SMG2LocationData(["Pipe Location"], regname.COSMICO, regname.COSMIC2LANDING,
                                             RB.CanPipe),
     locname.COSMIC2PIG2:   SMG2LocationData(["Pipe Location"], regname.COSMICO, regname.COSMIC2INPIPE,
-                                            RB.CanPipe & RB.CanWallJump & RB.CanSwim),
+                                            CanReachEntrance(locname.COSMIC2PIG2, parent_region_name=regname.COSMIC2INPIPE)),
     locname.COSMIC2PIG3:   SMG2LocationData(["Pipe Location"], regname.COSMICO, regname.COSMIC2WATERPA,
-                                            RB.CanPipe & RB.CanSwim),
+                                            CanReachEntrance(locname.COSMIC2PIG3, parent_region_name=regname.COSMIC2WATERPA)),
     locname.TALLTR1LOGPIG: SMG2LocationData(["Pipe Location"], regname.TALLTRUNK, regname.TALLTRUNK1LOG,
                                             RB.CanPipe),
     locname.HAUNTY1DISPIG: SMG2LocationData(["Pipe Location"], regname.HAUNHALL, regname.HAUNHALL1DISAPPE,
@@ -1675,18 +1676,15 @@ pipe_locations: dict[str, SMG2LocationData] = {
     locname.UPDOWN1BREPIO: SMG2LocationData(["Pipe Location"], regname.UPDOWN, regname.UPDOWNFIRE,
                                             RB.CanPipe & RB.FireMario),
     locname.UPDOWN1INPIG2: SMG2LocationData(["Pipe Location"], regname.UPDOWN, regname.UPDOWNINEND,
-                                            RB.CanPipe & (RB.CanPound | (RB.HardLogic & RB.CanAirSpin)
-                                                          | (RB.CanBackflip & RB.CanWallJump & RB.HellLogic))),
+                                            CanReachEntrance(locname.UPDOWN1INPIG2, regname.UPDOWNINEND)),
     locname.SLIPSA1LONPIG: SMG2LocationData(["Pipe Location"], regname.SLIPSAND, regname.SLIPSAND1LONG,
                                             RB.CanPipe),
     locname.SLIPSA2LONPIG: SMG2LocationData(["Pipe Location"], regname.SLIPSAND, regname.SLIPSAND2LONG1,
                                             RB.CanPipe),
     locname.SLIPSA2LONPIO: SMG2LocationData(["Pipe Location"], regname.SLIPSAND, regname.SLIPSAND2GRAV,
-                                            RB.CanPipe & (RB.CanWallJump | RB.CanGrabLedge
-                                                          | RB.JumpHeight3 | (RB.HardLogic & RB.CanDouble))), ########
+                                            CanReachEntrance(locname.SLIPSA2LONPIO, parent_region_name=regname.SLIPSAND2GRAV)), ########
     locname.SHIVBU1CHIPIG: SMG2LocationData(["Pipe Location"], regname.SHIVBURN, regname.SHIVBURN1VOLCANO,
-                                            RB.CanPipe & ((RB.CanMakeCloud & (RB.CanPound | RB.CanLongJump | RB.HardLogic))
-                                                       | (RB.HardLogic & RB.CanPound & (RB.CanLongJump | RB.HellLogic)))),
+                                            CanReachEntrance(locname.SHIVBU1CHIPIG, parent_region_name=regname.SHIVBURN1VOLCANO)),
     locname.MELTYM1CHIPIG: SMG2LocationData(["Pipe Location"], regname.MELTY, regname.MELTY1LANDING,
                                             RB.CanPipe),
     locname.MELTYM2CHIPIG: SMG2LocationData(["Pipe Location"], regname.MELTY, regname.MELTY2LANDING,
@@ -1696,7 +1694,7 @@ pipe_locations: dict[str, SMG2LocationData] = {
     locname.CLOCKW3HAMPIG: SMG2LocationData(["Pipe Location"], regname.CLOCKWORK, regname.CLOCKWORK3HAMMER,
                                             RB.CanPipe),
     locname.SLIMYS1LANPIG: SMG2LocationData(["Pipe Location"], regname.SLIMSPRI, regname.SLIMSPRI1MOUTH1,
-                                            RB.CanPipe & (RB.CanGrabLedge | RB.JumpHeight3 | (RB.CanDouble & RB.MediumLogic))),
+                                            CanReachEntrance(locname.SLIMYS1LANPIG, parent_region_name=regname.SLIMSPRI1MOUTH1)),
     locname.BATTLE1JACPIG: SMG2LocationData(["Pipe Location"], regname.BATTLEBELT, regname.BATTBELT1PUMP,
                                             RB.CanPipe),
     locname.BATTLE1SWAPIG: SMG2LocationData(["Pipe Location"], regname.BATTLEBELT, regname.BATTBELT1MOLE,
