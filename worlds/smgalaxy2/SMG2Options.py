@@ -448,6 +448,21 @@ class Pipesanity(Toggle):
     display_name = "Pipesanity"
     internal_name = "pipesanity"
 
+class BonusTeleporters(Toggle):
+    """
+    Add clearing the bonus teleporters as locations to the pool
+    """
+    display_name = "Bonus Teleporters"
+    internal_name = "bonus_teleporters"
+
+class Bossanity(Toggle):
+    """
+    Each boss is added to the location pool, such that defeating a boss grants an additional item on top of the star
+    spawning, or grants an item even if it didn't before.
+    """
+    display_name = "Bossanity"
+    internal_name = "bossanity"
+
 # Comet medals in pool, provide galaxy "order", 1 comet to one level
 
 
@@ -485,6 +500,8 @@ class SMG2Options(PerGameCommonOptions):
     trap_percentage: TrapPercentage
     launch_stars: LaunchStars
     pipesanity: Pipesanity
+    bonus_teleporters: BonusTeleporters
+    bossanity: Bossanity
 
 option_groups = [
     OptionGroup("Map Options", [
@@ -521,6 +538,8 @@ option_groups = [
         Passengers,
         LaunchStars,
         Pipesanity,
+        BonusTeleporters,
+        Bossanity,
     ]),
     OptionGroup("Itempool Changes", [
         PowerUpFiller,

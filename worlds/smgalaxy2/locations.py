@@ -11,7 +11,7 @@ from . import Rules as RB
 
 
 class SMG2Location(Location):
-    game: str = "Super Mario Galaxy"
+    game: str = "Super Mario Galaxy 2"
 
     def __init__(self, player: int, name: str, address: Optional[int], parent: Optional[Region]):
         super(SMG2Location, self).__init__(player, name,
@@ -23,11 +23,11 @@ class SMG2Location(Location):
 
 class SMG2LocationData(NamedTuple):
     location_groups: list[str]
-    galaxy: str # What galaxy the location is in []
+    galaxy: str # What galaxy the location is in
     region: str # The specific region the locations is in
-    default_access: Rule[Any] = None
+    default_access: Optional[Rule[Any]] = None
     game_address: Optional[int] = 0
-    locked_item: str = None
+    locked_item: Optional[str] = None
 
 
 # Sky Station S
@@ -1330,7 +1330,7 @@ launch_star_locs: dict[str, SMG2LocationData] = {
     locname.SPINDIG2BLULS: SMG2LocationData(["Launch Stars"], regname.SPINDIG, regname.SPINDIG2BTOAD, RB.CanLaunchStar),
 
     locname.FLUFFBLUFF1WALLS: SMG2LocationData(["Launch Stars"], regname.FLUFFBLUFF, regname.FLUFFBLUFF1CLIFF2,
-                                               CanReachEntrance("Fluffy Bluff 1: Wall Jump Launch Star", parent_region_name=regname.FLUFFBLUFF1CLIFF2)),
+                                               CanReachEntrance(locname.FLUFFBLUFF1WALLS, parent_region_name=regname.FLUFFBLUFF1CLIFF2)),
     locname.FLUFFBLUFF1WATLS: SMG2LocationData(["Launch Stars"], regname.FLUFFBLUFF, regname.FLUFFBLUFF1WATER,
                                                RB.CanLaunchStar & RB.CanCollectStarChips),
     locname.FLUFFBLUFF1LANSS: SMG2LocationData(["Launch Stars"], regname.FLUFFBLUFF, regname.FLUFFBLUFF1BIGTREE, RB.CanLaunchStar),
@@ -1465,7 +1465,7 @@ launch_star_locs: dict[str, SMG2LocationData] = {
                                               RB.CanLaunchStar & RB.CanSwim),
     locname.STARBEACH2WATLS: SMG2LocationData(["Launch Stars"], regname.STARBEACH, regname.STARBEACH2WATER,
                                               RB.CanLaunchStar & RB.CanSwim),
-    locname.STARBEACH2TUNSS: SMG2LocationData(["Launch Stars"], regname.STARBEACH, regname.STARBEACH2MAIN,
+    locname.STARBEACH2TUNSS: SMG2LocationData(["Launch Stars"], regname.STARBEACH, regname.STARBEACH2DEEPW,
                                               RB.CanLaunchStar & RB.CanSwim),
 
     locname.CHOMWORK1STALS: SMG2LocationData(["Launch Stars"], regname.CHOMWORK, regname.CHOMWORK1START,
@@ -1728,6 +1728,67 @@ event_locations: dict[str, SMG2LocationData] = {
                                                            locked_item="Can Farm Starbits"),
 }
 
+
+special_locations: dict[str, SMG2LocationData] = {
+    locname.VISITWORLD1: SMG2LocationData(["Specials"], regname.WORLD1, regname.WORLD1),
+    locname.VISITWORLD2: SMG2LocationData(["Specials"], regname.WORLD2, regname.WORLD2),
+    locname.VISITWORLD3: SMG2LocationData(["Specials"], regname.WORLD3, regname.WORLD3),
+    locname.VISITWORLD4: SMG2LocationData(["Specials"], regname.WORLD4, regname.WORLD4),
+    locname.VISITWORLD5: SMG2LocationData(["Specials"], regname.WORLD5, regname.WORLD5),
+    locname.VISITWORLD6: SMG2LocationData(["Specials"], regname.WORLD6, regname.WORLD6),
+    locname.VISITWORLD7: SMG2LocationData(["Specials"], regname.WORLD7, regname.WORLD7),
+    locname.SPEAKTOLUBB: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIP),
+    locname.OPENWORLDMP: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIP),
+}
+
+oneup_locations: dict[str, SMG2LocationData] = {
+
+}
+
+dice_block_locations: dict[str, SMG2LocationData] = {
+    locname.SHIPABOVEGDIE: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIP),
+    locname.LUMA1CHANCDIE: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIPLEFTEAR,
+                                            RB.PowerStarCount(18)),
+    locname.LUMA2CHANDIE1: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIPLEFTEAR,
+                                            CanReachLocation(locname.MELTMONSSTAR1)),
+    locname.LUMA2CHANDIE2: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIPLEFTEAR,
+                                            CanReachLocation(locname.MELTMONSSTAR1)),
+    locname.LUMA2CHANDIE3: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIPLEFTEAR,
+                                            CanReachLocation(locname.MELTMONSSTAR1)),
+    locname.LUMA2CHANDIE4: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIPLEFTEAR,
+                                            CanReachLocation(locname.MELTMONSSTAR1)),
+    locname.LUMA2CHANDIE5: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIPLEFTEAR,
+                                            CanReachLocation(locname.MELTMONSSTAR1)),
+    locname.YOSHIS1DIRDIE: SMG2LocationData(["Specials"], regname.GOODEGG, regname.GOODEGG1EARTH),
+    locname.BOULDE1BODIE1: SMG2LocationData(["Specials"], regname.BOULBOWL, regname.BOULBOWL1DICEROOM),
+    locname.BOULDE1BODIE2: SMG2LocationData(["Specials"], regname.BOULBOWL, regname.BOULBOWL1DICEROOM),
+    locname.BOULDE1BODIE3: SMG2LocationData(["Specials"], regname.BOULBOWL, regname.BOULBOWL1DICEROOM),
+    locname.BOULDE1BODIE4: SMG2LocationData(["Specials"], regname.BOULBOWL, regname.BOULBOWL1DICEROOM),
+    locname.BOULDE1BODIE5: SMG2LocationData(["Specials"], regname.BOULBOWL, regname.BOULBOWL1DICEROOM),
+    locname.BOULDE1BODIE6: SMG2LocationData(["Specials"], regname.BOULBOWL, regname.BOULBOWL1DICEROOM),
+    locname.TALLTR1BODIE1: SMG2LocationData(["Specials"], regname.TALLTRUNK, regname.TALLTRUNK1DICEPIPE),
+    locname.TALLTR1BODIE2: SMG2LocationData(["Specials"], regname.TALLTRUNK, regname.TALLTRUNK1DICEPIPE),
+    locname.TALLTR1BODIE3: SMG2LocationData(["Specials"], regname.TALLTRUNK, regname.TALLTRUNK1DICEPIPE),
+    locname.FREFLASNOWDIE: SMG2LocationData(["Specials"], regname.FREEFLAKE, regname.FREEFLAK1SNOWBYH),
+    locname.FREFLA2BODIE1: SMG2LocationData(["Specials"], regname.FREEFLAKE, regname.FREEFLAK2DICEROOM),
+    locname.FREFLA2BODIE2: SMG2LocationData(["Specials"], regname.FREEFLAKE, regname.FREEFLAK2DICEROOM),
+    locname.FREFLA2BODIE3: SMG2LocationData(["Specials"], regname.FREEFLAKE, regname.FREEFLAK2DICEROOM),
+    locname.CHOMPW1BODIE1: SMG2LocationData(["Specials"], regname.CHOMWORK, regname.CHOMWORK1BONUS),
+    locname.CHOMPW1BODIE2: SMG2LocationData(["Specials"], regname.CHOMWORK, regname.CHOMWORK1BONUS),
+    locname.CHOMPW1BODIE3: SMG2LocationData(["Specials"], regname.CHOMWORK, regname.CHOMWORK1BONUS),
+    locname.HONEYH1BODIE1: SMG2LocationData(["Specials"], regname.HONEYHOP, regname.HONEYHOP1DICEROOM),
+    locname.HONEYH1BODIE2: SMG2LocationData(["Specials"], regname.HONEYHOP, regname.HONEYHOP1DICEROOM),
+    locname.HONEYH1BODIE3: SMG2LocationData(["Specials"], regname.HONEYHOP, regname.HONEYHOP1DICEROOM),
+    locname.BOOMBUSTRTDIE: SMG2LocationData(["Specials"], regname.BOWJR3, regname.BOOMBUNK1HAMMER),
+    locname.THROWBASRTDIE: SMG2LocationData(["Specials"], regname.WHOMPFORT, regname.WHOMP1FORT),
+}
+
+bonus_teleporter_locations: dict[str, SMG2LocationData] = {
+
+}
+
+# TODO Add Powerup first locations
+
 base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_loc, **RIGHTDOWN_loc,
                         **FLIPSWAP_loc, **WILDGLIDE_loc, **ROLLMAST_loc, **HONEYHOP_loc, **UPDIZZY_loc,
                         **SLIMSPRI_loc, **BEEBLOOM_loc, **BEATBLOCK_loc, **SWEETMYS_loc, **FLETGLIDE_loc,
@@ -1737,11 +1798,12 @@ base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_l
                         **HIGHFALL_loc, **ROCKBOWL_loc, **COSCCOVE_loc, **TALLTREE_loc, **CLOUDCOURT_loc,
                         **HAUNTHALL_loc, **SNOWFLAKE_loc, **SUPMASS_loc, **FLIPVILL_loc, **STARBEACH_loc,
                         **CHOMWORK_loc, **SPACSTOR_loc, **SLIPSAND_loc, **COLDFIRE_loc, **BOOMOON_loc,
-                        **MELTMONS_loc, **CLOCKRUIN_loc, **THROWBACK_loc, **BATTBELT_loc}
+                        **MELTMONS_loc, **CLOCKRUIN_loc, **THROWBACK_loc, **BATTBELT_loc, **special_locations,
+                        **oneup_locations, **dice_block_locations}
 
 all_location_table = {**base_stars_locations, **green_star_locations, **COMETMEDAL_loc, **mailtoad_locations,
                       **checkpoint_loc_table, **hungry_luma_loc, **passenger_loc, **lumalee_locations,
-                      **pipe_locations, **launch_star_locs, }
+                      **pipe_locations, **launch_star_locs, **special_locations, **bonus_teleporter_locations}
 
 LOCATION_NAME_TO_ID: dict[str, int] =  {
     name: list(all_location_table.keys()).index(name) for name in all_location_table.keys() }
