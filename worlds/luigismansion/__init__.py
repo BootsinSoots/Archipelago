@@ -9,6 +9,7 @@ from BaseClasses import ItemClassification, Item
 from Utils import visualize_regions, local_path
 from worlds.AutoWorld import World
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess, icon_paths
+from generic.Rules import set_rule
 
 # Relative Imports
 from .Items import LMItem, LMItemData, ALL_ITEMS_TABLE, BOO_ITEM_TABLE, ITEM_TABLE, get_item_names_per_category, \
@@ -23,7 +24,7 @@ from .Rules import set_element_rules
 from .iso_helper.LM_Rom import LMPlayerContainer
 from .client.luigismansion_settings import LuigisMansionSettings
 from .client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME, RANDOMIZER_NAME
-from ..generic.Rules import set_rule
+
 
 if TYPE_CHECKING:
     from NetUtils import MultiData
