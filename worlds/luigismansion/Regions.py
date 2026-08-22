@@ -198,7 +198,7 @@ def set_ghost_type(world: "LMWorld", ghost_list: dict):
         if not REGION_LIST[region_name].allow_element_rando:
             ghost_type = "No Element"
         else:
-            ghost_type = world.random.choices(sorted(types), weights, k=1)[0]
+            ghost_type = world.random.choices(types, weights, k=1)[0]
         ghost_list.update({region_name: ghost_type})
 
 
