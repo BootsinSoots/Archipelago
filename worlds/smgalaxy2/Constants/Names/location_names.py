@@ -786,6 +786,7 @@ BOOMBUNK2FORLS = "Boom Bunker Comet: Fort Launch Star"
 BOOMBUNK2DARLS = "Boom Bunker Comet: Dark Matter Launch Star"
 
 # Melty Monster Galaxy
+MELTY1PULLS = "Melty Monster 1: Pull Stars Launch Star"
 MELTY1MAGLS = "Melty Monster 1: Magmaargh Launch Star"
 MELTY1LAVLS = "Melty Monster 1: Lava Wave Launch Star"
 MELTY2ROLLS = "Melty Monster 2: Roll to Launch Star"
@@ -797,6 +798,10 @@ CLOCKWORK1PUSLS = "Clockwork Ruins: Push Block Launch Star"
 # Flash Black Galaxy
 FLASHBLACK1TOWLS = "Flash Black: Tower Launch Star"
 
+#Throwback Galaxy
+WHOMP1CANNSS = "Throwback 1: Cannon Spot Sing Star"
+WHOMP2CANNSS = "Throwback 2: Cannon Spot Sing Star"
+WHOMP3CANNSS = "Throwback Comet: Cannon Spot Sing Star"
 # Slimy Spring Galaxy
 SLIMSPRI1CAVLS = "Slimy Spring: First Cave Launch Star"
 SLIMSPRI2CAVLS = "Slimy Spring Chimp: First Cave Launch Star"
