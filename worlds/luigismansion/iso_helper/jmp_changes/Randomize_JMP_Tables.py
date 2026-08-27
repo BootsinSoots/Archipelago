@@ -388,8 +388,8 @@ class RandomizeJMPTables:
             57, 15, 7, arg0=157))
 
         # This one checks for luigi entering the study, triggering the father hint
-        map_two_nobserver.add_jmp_entry(create_observer_entry(-2440.000000, 550.000000, -2700.000000,
-            34, 15, 7, arg0=157))
+        #map_two_nobserver.add_jmp_entry(create_observer_entry(-2440.000000, 550.000000, -2700.000000,
+        #    34, 15, 7, arg0=157))
 
         # This one checks for luigi entering the master bedroom, triggering the mother hint
         map_two_nobserver.add_jmp_entry(create_observer_entry(-3760.000000, 550.000000, -1800.000000,
