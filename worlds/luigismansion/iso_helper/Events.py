@@ -433,7 +433,8 @@ class EventChanges:
                                   portrait_hint["Location"])
                         csv_lines = csv_lines.replace(f"{portrait_name}", hintfo)
 
-        self._update_custom_event("78", True, None, csv_lines)
+        txt_lines = read_custom_file("txt", "event78.txt")
+        self._update_custom_event("78", True, txt_lines, csv_lines)
 
 
     def _randomize_music(self):
