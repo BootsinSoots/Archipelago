@@ -20,6 +20,7 @@ all_random_settings = { #TODO: Rename this because FillerWeights and TrapWeights
     LMOptions.DoorModelRando.internal_name:            "random",
     LMOptions.EarlyFirstKey.internal_name:             "random",
     LMOptions.DoorRando.internal_name:                 "random",
+    LMOptions.DoorPercentage.internal_name:            "random",
     LMOptions.PortraitHints.internal_name:             "random",
     LMOptions.HintDistribution.internal_name:          "random",
     LMOptions.SendHints.internal_name:                 "random",
