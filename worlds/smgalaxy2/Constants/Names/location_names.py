@@ -765,7 +765,6 @@ SPACSTOR2TOWSS = "Space Storm 2: Tower Base Sling Star"
 BOOMOON1DARLS = "Boo Moon 1: Dark Planet Launch Star"
 BOOMOON1POILS = "Boo Moon 1: Poison Swamp Launch Star"
 BOOMOON1MOOLS = "Boo Moon 1: Moon Launch Star"
-BOOMOON2DARLS = "Boo Moon 2: Dark Planet Launch Star"
 
 # Slipsand Galaxy
 SLIPSAND1LONLS = "Slipsand 1: Long Launch Star"
@@ -780,13 +779,14 @@ SHIVBURN1ICELS = "Shiverburn: Lava Ice Launch Star"
 SHIVBURN1GRELS = "Shiverburn: Green Toadship Launch Star"
 SHIVBURN2GRELS = "Shiverburn Comet: Green Toadship Launch Star"
 
-# Boom Bunker Galaxy
+# Boom Bunker
 BOOMBUNK1FORLS = "Boom Bunker: Fort Launch Star"
 BOOMBUNK1PLALS = "Boom Bunker: Platform Launch Star"
 BOOMBUNK2FORLS = "Boom Bunker Comet: Fort Launch Star"
 BOOMBUNK2DARLS = "Boom Bunker Comet: Dark Matter Launch Star"
 
 # Melty Monster Galaxy
+MELTY1PULLS = "Melty Monster 1: Pull Stars Launch Star"
 MELTY1MAGLS = "Melty Monster 1: Magmaargh Launch Star"
 MELTY1LAVLS = "Melty Monster 1: Lava Wave Launch Star"
 MELTY2ROLLS = "Melty Monster 2: Roll to Launch Star"
@@ -798,6 +798,10 @@ CLOCKWORK1PUSLS = "Clockwork Ruins: Push Block Launch Star"
 # Flash Black Galaxy
 FLASHBLACK1TOWLS = "Flash Black: Tower Launch Star"
 
+#Throwback Galaxy
+WHOMP1CANNSS = "Throwback 1: Cannon Spot Sing Star"
+WHOMP2CANNSS = "Throwback 2: Cannon Spot Sing Star"
+WHOMP3CANNSS = "Throwback Comet: Cannon Spot Sing Star"
 # Slimy Spring Galaxy
 SLIMSPRI1CAVLS = "Slimy Spring: First Cave Launch Star"
 SLIMSPRI2CAVLS = "Slimy Spring Chimp: First Cave Launch Star"
@@ -822,7 +826,7 @@ BATTBELT2RTOSS = "Battle Belt Comet: Red Toadship Sling Star"
 BATTBELT2BRRSS = "Battle Belt Comet: Li'l Brr Sling Star"
 BATTBELT2SWASS = "Battle Belt Comet: Swaphopper Sling Star"
 
-# Galaxy Generator Galaxy
+# Galaxy Generator
 GALGEN1LANLS = "Galaxy Generator: Landing Launch Star"
 GALGEN1LAVLS = "Galaxy Generator: Lava Cylinder Launch Star"
 GALGEN1TOWLS = "Galaxy Generator: Tower Launch Star"
@@ -901,6 +905,7 @@ STARSH1BEAPIG = "Starshine Beach 1: Tropical Beach Green Pipe"
 STARSH2BEAPIG = "Starshine Beach 2: Tropical Beach Green Pipe"
 CHOMPW1ROLPIG = "Chompworks 1: Bonus Room Pipe"
 SPACES2TOWPIG = "Space Storm 2: Tower Green Pipe"
+BOOMOON2DAPIG = "Boo Moon 2: Dark Planet Pipe"
 UPDOWN1CASPIG = "Upside Dizzy: Castle Pipe"
 UPDOWN1INPIG1 = "Upside Dizzy: 1st Green Pipe"
 UPDOWN1BREPIO = "Upside Dizzy: Fiery Orange Pipe"
