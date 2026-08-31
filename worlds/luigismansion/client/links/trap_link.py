@@ -37,6 +37,10 @@ class TrapLinkType(Flag):
     SPOOKY = 256
     SQUASH = 512
     NOVAC = 1024
+    TUTORIAL = 2048
+    FIRSTPER = 4096
+    PIKMIN = 8192
+    EGADD = 16384
 
 class TrapLink(LinkBase):
     """ Manages interactions between Luigi's Mansion Client, emulator, and Archipelago server. """
@@ -121,6 +125,14 @@ class TrapLink(LinkBase):
             elif trap_name in NOVAC_EQUIV:
                 if vac_count > 0:
                     _receive_weighted_trap(self, "No Vac Trap", TrapLinkType.NOVAC)
+            elif trap_name in TUTORIAL_EQUIV:
+                _receive_weighted_trap(self, "Tutorial Trap", TrapLinkType.TUTORIAL)
+            elif trap_name in EGADD_EQUIV:
+                _receive_weighted_trap(self, "E. Gadd Ramblings", TrapLinkType.EGADD)
+            elif trap_name in PIKMIN_EQUIV:
+                _receive_weighted_trap(self, "Pikmin Trap", TrapLinkType.PIKMIN)
+            elif trap_name in FIRSTPER_EQUIV:
+                _receive_weighted_trap(self, "First Person Trap", TrapLinkType.FIRSTPER)
 
     def on_connected(self, args):
         """
