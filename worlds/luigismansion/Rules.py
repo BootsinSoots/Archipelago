@@ -1,9 +1,11 @@
 import copy
 import math
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 from BaseClasses import CollectionState, MultiWorld
+from rule_builder.rules import Rule, True_, OptionFilter, CanReachRegion, Has, HasGroup, HasGroupUnique
 
 from .Locations import LMLocation, PORTRAIT_LOCATION_TABLE
+from .LuigiOptions import VacuumStart, Boosanity
 from worlds.generic.Rules import add_rule
 
 if TYPE_CHECKING:
@@ -60,6 +62,42 @@ def set_element_rules(world: "LMWorld", location: LMLocation, use_enemizer: bool
                 add_rule(location, lambda state: can_fst_fire(state, world.player), "and")
             else:
                 pass
+
+HasVac: Rule[Any] = (True_() & OptionFilter(VacuumStart, 1))|(Has("Poltergust 3000") & OptionFilter(VacuumStart, 0))
+VacnIce: Rule[Any] = HasVac & Has("Ice Element Medal")
+
+def BooCount(boo_count: int) -> Rule[Any]:     
+    return ((HasGroupUnique("Boo", boo_count) & OptionFilter(Boosanity, 1))
+            |(Has("Boo", boo_count) & OptionFilter(Boosanity, 0)))  
+
+CanFstFire: Rule[Any] = HasVac & Has("Fire Element Medal") & (
+    CanReachRegion("1F Hallway")|
+    CanReachRegion("Study")| 
+    CanReachRegion("Butler's Room")| 
+    CanReachRegion("Cold Storage")|
+    CanReachRegion("Mirror Room")|
+    CanReachRegion("Dining Room")|
+    CanReachRegion("2F Rear Hallway")|
+    CanReachRegion("Sitting Room")|
+    CanReachRegion("Graveyard")|
+    CanReachRegion("Roof")
+)
+
+CanFstWater: Rule[Any] = HasVac & Has("Water Element Medal") & (
+    CanReachRegion("Kitchen")|
+    CanReachRegion("Boneyard")|
+    CanReachRegion("Courtyard")|
+    CanReachRegion("1F Bathroom")|
+    CanReachRegion("2F Washroom")|
+    CanReachRegion("Sitting Room")
+)
+
+CanFstIce: Rule[Any] = VacnIce & (
+    CanReachRegion("Kitchen")|
+    CanReachRegion("Pipe Room")|
+    CanReachRegion("Tea Room")|
+    CanReachRegion("Ceramics Studio")
+)
 
 def can_fst_fire(state: CollectionState, player: int):
     return (state.has("Fire Element Medal", player) and state.has("Poltergust 3000", player)
