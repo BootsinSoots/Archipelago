@@ -288,7 +288,7 @@ trap_filler_items: Dict[str, LMItemData] = {
         update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=90)], default_weight=10),
     "Pikmin Trap": LMItemData("Trap", 147, IC.trap,
         update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=1)], default_weight=20),
-    "Rambling Trap": LMItemData("Trap", 147, IC.trap,
+    "E. Gadd Ramblings": LMItemData("Trap", 147, IC.trap,
         update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=1)], default_weight=15),
 }
 
@@ -447,17 +447,21 @@ RECV_ITEMS_IGNORE: list[int] = [8127]
 # List of health related items, which are used to not exceed max health
 HEALTH_RELATED_ITEMS: list[int] = [8128, 8129]
 
-ICE_TRAP_EQUIV = ["Freeze Trap", "Frozen Trap", "Ice Trap", "Paralyze Trap", "Chaos Control Trap", "Bubble Trap", "Ice Floor Trap"]
-BOMB_EQUIV = ["TNT Barrel Trap", "Bomb", "Fire Trap", "Items to Bombs", "Burn Trap"]
-BANANA_TRAP_EQUIV = ["Stun Trap", "Banana Trap", "Thwimp Trap", "Hiccup Trap", "Push Trap", "Pie Trap", "Banana Peel Trap", "Slip Trap"]
-GHOST_EQUIV = ["OmoTrap", "Ghost", "Bee Trap", "Police Trap", "Nut Trap", "Army Trap", "Buyon Trap", "Animal Trap", "Fishin' Boo Trap", "Enemy Ball Trap"]
-POISON_MUSH_EQUIV = [ "Tiny Trap", "Poison Mushroom", "Iron Boots Trap", "Poison Trap", "Electrocution Trap", "Slow Trap", "Frog Trap", "Slowness Trap"]
-BONK_EQUIV = ["Spring Trap", "Damage Trap", "Bonk Trap", "Jumping Jacks Trap"]
-POSSESION_EQUIV = ["Possession Trap", "Laughter Trap", "My Turn! Trap", "Blue Balls Curse", "Controller Drift Trap"]
-FEAR_EQUIV = ["Fear Trap", "Confuse Trap", "Confound Trap", "Confusion Trap", "Icy Hot Pants Trap", "Paralysis Trap"]
-SPOOKY_EQUIV = ["Spooky Time", "Deisometric Trap", "Fake Transition", "Ghost Chat", "SvC Effect", "Pixellation Trap", "144p Trap", "Spotlight Trap", "Pixelate Trap", "Fish Eye Trap"]
-SQUASH_EQUIV = ["Squash Trap", "W I D E Trap", "Meteor Trap", "Spike Ball Trap", "Whoops! Trap", "Paper Trap", "Rockfall Trap"]
-NOVAC_EQUIV = ["No Vac Trap", "Eject Ability", "Depletion trap", "Disable B Trap", "Disable Z Trap", "Dry Trap", "Cursed Ball Trap"]
+ICE_TRAP_EQUIV = ["Freeze Trap", "Frozen Trap", "Ice Trap", "Paralyze Trap", "Chaos Control Trap", "Bubble Trap", "Ice Floor Trap", "Blango Artillery", "Depression Trap", "Frost Trap", "Paratoad"]
+BOMB_EQUIV = ["TNT Barrel Trap", "Bomb", "Fire Trap", "Items to Bombs", "Burn Trap", "Bomb Trap", "Explosion Trap", "Blastoad", "Laser Trap", "TNT Trap"]
+BANANA_TRAP_EQUIV = ["Stun Trap", "Banana Trap", "Thwimp Trap", "Hiccup Trap", "Push Trap", "Pie Trap", "Banana Peel Trap", "Slip Trap", "Pincercrab"]
+GHOST_EQUIV = ["Ghost", "Bee Trap", "Police Trap", "Nut Trap", "Army Trap", "Buyon Trap", "Animal Trap", "Fishin' Boo Trap", "Enemy Ball Trap", "Chaser Trap", "Dad Trap", "Dead Ringer Trap", "Egg Trap", "Employee Hiring Trap", "Flint Trap", "Guest Spawn Trap", "Monkey Trap", "Nightmare Trap", "Ninja Trap", "Person Trap", "Summon Trap"]
+POISON_MUSH_EQUIV = ["Tiny Trap", "Poison Mushroom", "Iron Boots Trap", "Poison Trap", "Electrocution Trap", "Slow Trap", "Frog Trap", "Slowness Trap", "Food Poisoning Trap", "Guest Vomiting Trap", "Mana Drain Trap", "Poisontoad", "Shrink Trap", "Toxin Trap"]
+BONK_EQUIV = ["Spring Trap", "Damage Trap", "Bonk Trap", "Jumping Jacks Trap", "Gustcrab", "Wailnard"]
+POSSESION_EQUIV = ["Possession Trap", "Laughter Trap", "My Turn! Trap", "Blue Balls Curse", "Curse Trap", "Cursed Trap", "Puppet Spider", "Random Status Trap"]
+FEAR_EQUIV = ["Fear Trap", "Confuse Trap", "Confound Trap", "Confusion Trap", "Icy Hot Pants Trap", "Paralysis Trap", "Impatience Trap", "Stinky Trap", "Tar Trap", "Whirlpool Trap"]
+SPOOKY_EQUIV = ["Spooky Time", "Deisometric Trap", "Fake Transition", "Ghost Chat", "SvC Effect", "Pixellation Trap", "144p Trap", "Spotlight Trap", "Pixelate Trap", "Fish Eye Trap", "CRT Trap", "Crystal Trap", "Fracture Trap", "Invert Colors Trap", "Sandstorm Trap", "Shake Trap", "Stutter Trap", "Syntax Jumpscare Trap", "Vintage Trap", "Weather Cloudy Trap", "Weather Sunny Trap", "Weather Rainy Trap", "Weather Stormy Trap"]
+SQUASH_EQUIV = ["Squash Trap", "W I D E Trap", "Meteor Trap", "Spike Ball Trap", "Whoops! Trap", "Paper Trap", "Rockfall Trap", "Leaping Trap"]
+NOVAC_EQUIV = ["No Vac Trap", "Eject Ability", "Depletion Trap", "Dry Trap", "Cursed Ball Trap", "Disarm Trap", "No Hat Trap", "Tool Swap Trap"]
+TUTORIAL_EQUIV = ["Tutorial Trap", "Earth Trap", "Employee Training Trap", "Farcaster", "Help Trap", "Teleport Trap"]
+PIKMIN_EQUIV = ["Pikmin Trap", "Chaos Trap", "Clear Image Trap", "Extreme Chaos Mode", "Home Trap", "No Return Trap", "Sleeptoad", "Time Warp Trap"]
+FIRSTPER_EQUIV = ["First Person Trap", "Controller Drift Trap", "Disable B Trap", "Disable Z Trap", "Camera Trap", "Flip Horizontal Trap", "Flip Vertical Trap", "Inverted Mouse Trap", "Isometric Trap", "Reverse Trap", "Zoom In Trap", "Zoom Out Trap", "Zoom Trap", "Screen Flip Trap"]
+EGADD_EQUIV = ["E. Gadd Ramblings", "OmoTrap", "Literature Trap", "Phone Trap", "Hey! Trap", "Spam Trap", "Well Done Trap", "Trivia Trap", "Text Trap", "PowerPoint Trap", "Pokemon Count Trap", "Pokemon Trivia Trap"]
 
 trap_id_list = [8125, 8126, 8130, 8131, 8132, 8141, 8142, 8143, 8145, 8146, 8147]
 ACCEPTED_TRAPS: list[str] = (ICE_TRAP_EQUIV+BOMB_EQUIV+BANANA_TRAP_EQUIV+GHOST_EQUIV+POISON_MUSH_EQUIV+BONK_EQUIV+POSSESION_EQUIV+
