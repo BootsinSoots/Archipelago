@@ -281,7 +281,15 @@ trap_filler_items: Dict[str, LMItemData] = {
     "Squash Trap": LMItemData("Trap", 146, IC.trap,
         update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=7)], default_weight=15),
     "No Vac Trap": LMItemData("Trap", 147, IC.trap,
-        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=9)], default_weight=5)
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=9)], default_weight=5),
+    "Tutorial Trap": LMItemData("Trap", 200, IC.trap,
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=1)], default_weight=10),
+    "First Person Trap": LMItemData("Trap", 147, IC.trap,
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=90)], default_weight=10),
+    "Pikmin Trap": LMItemData("Trap", 147, IC.trap,
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=1)], default_weight=20),
+    "Rambling Trap": LMItemData("Trap", 147, IC.trap,
+        update_ram_addr=[LMRamData(0, ram_byte_size=4, item_count=1)], default_weight=15),
 }
 
 treasure_bundles: dict[str, LMItemData] = {
