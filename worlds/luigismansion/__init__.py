@@ -156,7 +156,7 @@ class LMWorld(World):
             if "Random Groups" in self.options.furnisanity.value:
                 # add groups to option randomly
                 for group in sorted(self.options.furnisanity.valid_keys):
-                    if group not in ["Full", "Random All", "Random Groups"]:
+                    if group not in ["Full", "Random Any", "Random Groups"]:
                         if self.random.choice([0,1]) == 1:
                             self.options.furnisanity.value = set(list(self.options.furnisanity.value) + [group])
             location_dict: dict[str, LMLocationData] = {}
