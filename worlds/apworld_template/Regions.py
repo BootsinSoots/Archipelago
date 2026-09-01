@@ -19,8 +19,8 @@ class GameRegion(Region):
         super().__init__(region_name, player, multiworld)
         self.region_data = region_data
 
-region_list: dict[str, BVFUBJRegionData] = {}
+region_list: dict[str, GameRegionData] = {}
 
 def create_regions(world: "GameWorld"):
     for region_name in region_list.keys():
-        world.multiworld.regions.append(SMGRegion(region_name, region_list[region_name], world.player, world.multiworld))
+        world.multiworld.regions.append(GameRegion(region_name, region_list[region_name], world.player, world.multiworld))
