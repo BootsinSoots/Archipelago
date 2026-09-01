@@ -106,9 +106,17 @@ class LMWorld(World):
         # There are more clever ways to do this, but all would require much larger changes
         return slot_data  # Tell UT that we have logic to fix
 
+    def _create_loc_from_dict(self, locations: dict, use_enemizer: bool):
+        for location, data in locations.items():
+            region = self.get_region(data.region)
+            entry = LMLocation(self.player, location, region, data)
+            set_element_rules(self, entry, use_enemizer)
+            region.locations.append(entry)
+
     def _set_optional_locations(self):
         # Set the flags for progression location by checking player's settings
         if self.options.WDYM_checks:
+            self._create_loc_from_dict(WDYM_LOCATION_TABLE, False)
             for location, data in WDYM_LOCATION_TABLE.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)

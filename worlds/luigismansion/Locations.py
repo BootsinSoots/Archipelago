@@ -1,6 +1,9 @@
 from pickle import FALSE
 from typing import NamedTuple, Optional, List
 from BaseClasses import Location, Region
+from rule_builder.rules import Rule, Has, OptionFilter, True_
+
+from .Rules import HasVac, CanFstFire, CanFstWater, CanFstIce, VacnIce
 from .Helper_Functions import LMRamData
 
 
@@ -9,7 +12,7 @@ class LMLocationData(NamedTuple):
     code: Optional[int]  # used to create ap_id, None for events
     type: str  # type of randomization option/jmp table and group [Chest, Furniture, Furniture, Plant, Boo, GSpeedy (Gold Mouse), BSpeedy (Blue Ghost), Portrait, Toad]
     jmpentry: int = -1  # entry number on the jmp table it belongs to
-    access: List[str] = []  # items required to access location, many special cases
+    access: Rule = True_()  # items required to access location, many special cases
     floor: int = 0
     locked_item: Optional[str] = None
     remote_only: bool = False
@@ -23,7 +26,7 @@ class LMLocationData(NamedTuple):
 
 class LMLocation(Location):
     game: str = "Luigi's Mansion"
-    access: list[str]
+    access: Rule
     rule_def: str = ""
     locked_item: Optional[str]
 
@@ -60,76 +63,76 @@ class LMLocation(Location):
 # Base Chests / Locations
 BASE_LOCATION_TABLE: dict[str, LMLocationData] = {
     # Give item on Altar lights turning on
-    "Luigi's Courage": LMLocationData("Foyer", 708, "KingdomHearts", 0, [], remote_only=True,
+    "Luigi's Courage": LMLocationData("Foyer", 708, "KingdomHearts", 0, remote_only=True,
         update_ram_addr=[LMRamData(0x803CDFDC, bit_position=1, ram_byte_size=2)], require_poltergust=False),
-    "E. Gadd's Gift": LMLocationData("Foyer", 853, "KingdomHearts", 0, [], remote_only=True,
+    "E. Gadd's Gift": LMLocationData("Foyer", 853, "KingdomHearts", 0, remote_only=True,
         update_ram_addr=[LMRamData(0x803CDFDC, bit_position=1, ram_byte_size=2)], require_poltergust=False),
-    "1F Washroom Toilet": LMLocationData("1F Washroom", 4, "Furniture", 233, [],
+    "1F Washroom Toilet": LMLocationData("1F Washroom", 4, "Furniture", 233,
         update_ram_addr=[LMRamData(in_game_room_id=16)], require_poltergust=False),
-    "Laundry Room Washing Machine": LMLocationData("Laundry Room", 7, "Furniture", 187, [],
+    "Laundry Room Washing Machine": LMLocationData("Laundry Room", 7, "Furniture", 187,
         update_ram_addr=[LMRamData(in_game_room_id=5)], require_poltergust=False),
-    "Hidden Room Large Chest R": LMLocationData("Hidden Room", 11, "Furniture", 242, [],
+    "Hidden Room Large Chest R": LMLocationData("Hidden Room", 11, "Furniture", 242,
         update_ram_addr=[LMRamData(in_game_room_id=1)], require_poltergust=False),
-    "Hidden Room Small Chest R Shelf": LMLocationData("Hidden Room", 13, "Furniture", 244, [],
+    "Hidden Room Small Chest R Shelf": LMLocationData("Hidden Room", 13, "Furniture", 244, HasVac,
         update_ram_addr=[LMRamData(in_game_room_id=1)]),
-    "Hidden Room Small Chest L Floor": LMLocationData("Hidden Room", 14, "Furniture", 246, [],
+    "Hidden Room Small Chest L Floor": LMLocationData("Hidden Room", 14, "Furniture", 246,
         update_ram_addr=[LMRamData(in_game_room_id=1)], require_poltergust=False),
-    "Rec Room Treadmill Key": LMLocationData("Rec Room", 18, "Furniture", 106, [],
+    "Rec Room Treadmill Key": LMLocationData("Rec Room", 18, "Furniture", 106,
         update_ram_addr=[LMRamData(in_game_room_id=23)], require_poltergust=False, hide_boo=False),
-    "Courtyard Birdhouse": LMLocationData("Courtyard", 20, "Furniture", 146, [],
+    "Courtyard Birdhouse": LMLocationData("Courtyard", 20, "Furniture", 146,
         update_ram_addr=[LMRamData(in_game_room_id=24)], require_poltergust=False),
-    "Sealed Room NW Shelf Chest": LMLocationData("Sealed Room", 29, "Furniture", 532, [],
+    "Sealed Room NW Shelf Chest": LMLocationData("Sealed Room", 29, "Furniture", 532, HasVac,
         update_ram_addr=[LMRamData(in_game_room_id=37)]),
-    "Sealed Room NE Shelf Chest": LMLocationData("Sealed Room", 30, "Furniture", 534, [],
+    "Sealed Room NE Shelf Chest": LMLocationData("Sealed Room", 30, "Furniture", 534, HasVac,
         update_ram_addr=[LMRamData(in_game_room_id=37)]),
-    "Sealed Room SE Shelf Chest": LMLocationData("Sealed Room", 32, "Furniture", 535, [],
+    "Sealed Room SE Shelf Chest": LMLocationData("Sealed Room", 32, "Furniture", 535, HasVac,
         update_ram_addr=[LMRamData(in_game_room_id=37)]),
-    "Sealed Room Table Chest": LMLocationData("Sealed Room", 33, "Furniture", 533, [],
+    "Sealed Room Table Chest": LMLocationData("Sealed Room", 33, "Furniture", 533, HasVac,
         update_ram_addr=[LMRamData(in_game_room_id=37)]),
-    "Sealed Room Upper L Big Chest": LMLocationData("Sealed Room", 35, "Furniture", 528, [],
+    "Sealed Room Upper L Big Chest": LMLocationData("Sealed Room", 35, "Furniture", 528,
         update_ram_addr=[LMRamData(in_game_room_id=37)], require_poltergust=False),
-    "Sealed Room Upper R Big Chest": LMLocationData("Sealed Room", 37, "Furniture", 530, [],
+    "Sealed Room Upper R Big Chest": LMLocationData("Sealed Room", 37, "Furniture", 530,
         update_ram_addr=[LMRamData(in_game_room_id=37)], require_poltergust=False),
-    "Armory Gray Chest (left, back Wall)": LMLocationData("Armory", 39, "Furniture", 652, [],
+    "Armory Gray Chest (left, back Wall)": LMLocationData("Armory", 39, "Furniture", 652,
         update_ram_addr=[LMRamData(in_game_room_id=51)], require_poltergust=False),
-    "Armory Gray Chest (middle, back Wall)": LMLocationData("Armory", 41, "Furniture", 654, [],
+    "Armory Gray Chest (middle, back Wall)": LMLocationData("Armory", 41, "Furniture", 654,
         update_ram_addr=[LMRamData(in_game_room_id=51)], require_poltergust=False),
-    "Armory Gray Chest (right, back Wall)": LMLocationData("Armory", 42, "Furniture", 655, [],
+    "Armory Gray Chest (right, back Wall)": LMLocationData("Armory", 42, "Furniture", 655,
         update_ram_addr=[LMRamData(in_game_room_id=51)], require_poltergust=False),
-    "Telephone Room R2 Chest": LMLocationData("Telephone Room", 45, "Furniture", 682, [],
+    "Telephone Room R2 Chest": LMLocationData("Telephone Room", 45, "Furniture", 682,
         update_ram_addr=[LMRamData(in_game_room_id=53)], require_poltergust=False),
-    "Huge Flower (Boneyard)":   LMLocationData("Boneyard", 70, "Chest", 8, ["Water Element Medal"],
+    "Huge Flower (Boneyard)":   LMLocationData("Boneyard", 70, "Chest", 8, CanFstWater,
         update_ram_addr=[LMRamData(0x803CDF66, bit_position=2, in_game_room_id=11, ram_byte_size=2)]),
 
-    "Hidden Room Large Chest L": LMLocationData("Hidden Room", 9, "Furniture", 243, [], remote_only=True,
+    "Hidden Room Large Chest L": LMLocationData("Hidden Room", 9, "Furniture", 243, remote_only=True,
                                                 update_ram_addr=[LMRamData(in_game_room_id=1)], require_poltergust=False),
-    "Hidden Room Large Chest C": LMLocationData("Hidden Room", 10, "Furniture", 241, [], remote_only=True,
+    "Hidden Room Large Chest C": LMLocationData("Hidden Room", 10, "Furniture", 241, remote_only=True,
                                                      update_ram_addr=[LMRamData(in_game_room_id=1)], require_poltergust=False),
-    "Hidden Room Small Chest L Shelf": LMLocationData("Hidden Room", 12, "Furniture", 245, [], remote_only=True,
+    "Hidden Room Small Chest L Shelf": LMLocationData("Hidden Room", 12, "Furniture", 245, HasVac, remote_only=True,
                                                      update_ram_addr=[LMRamData(in_game_room_id=1)]),
-    "Hidden Room Small Chest R Floor": LMLocationData("Hidden Room", 15, "Furniture", 247, [], remote_only=True,
+    "Hidden Room Small Chest R Floor": LMLocationData("Hidden Room", 15, "Furniture", 247, remote_only=True,
                                                      update_ram_addr=[LMRamData(in_game_room_id=1)], require_poltergust=False),
-    "Sealed Room Lower Big Chest": LMLocationData("Sealed Room", 34, "Furniture", 529, [], remote_only=True,
+    "Sealed Room Lower Big Chest": LMLocationData("Sealed Room", 34, "Furniture", 529, remote_only=True,
                                                   update_ram_addr=[LMRamData(in_game_room_id=37)], require_poltergust=False),
-    "Sealed Room Upper C Big Chest": LMLocationData("Sealed Room", 36, "Furniture", 527, [], remote_only=True,
+    "Sealed Room Upper C Big Chest": LMLocationData("Sealed Room", 36, "Furniture", 527, remote_only=True,
                                                      update_ram_addr=[LMRamData(in_game_room_id=37)], require_poltergust=False),
-    "Sealed Room SW Shelf Chest": LMLocationData("Sealed Room", 869, "Furniture", 531, [],
+    "Sealed Room SW Shelf Chest": LMLocationData("Sealed Room", 869, "Furniture", 531, HasVac,
         update_ram_addr=[LMRamData(in_game_room_id=37)]),
-    "Armory 4th Gray Chest": LMLocationData("Armory", 38, "Furniture", 651, [], remote_only=True,
+    "Armory 4th Gray Chest": LMLocationData("Armory", 38, "Furniture", 651, remote_only=True,
                                                      update_ram_addr=[LMRamData(in_game_room_id=51)], require_poltergust=False),
-    "Armory 5th Gray Chest": LMLocationData("Armory", 40, "Furniture", 653, [], remote_only=True,
+    "Armory 5th Gray Chest": LMLocationData("Armory", 40, "Furniture", 653, remote_only=True,
                                                      update_ram_addr=[LMRamData(in_game_room_id=51)], require_poltergust=False),
-    "Telephone Room C Chest": LMLocationData("Telephone Room", 43, "Furniture", 680, [], remote_only=True,
+    "Telephone Room C Chest": LMLocationData("Telephone Room", 43, "Furniture", 680, remote_only=True,
                                                      update_ram_addr=[LMRamData(in_game_room_id=53)], require_poltergust=False),
-    "Telephone Room R1 Chest": LMLocationData("Telephone Room", 44, "Furniture", 681, [], remote_only=True,
+    "Telephone Room R1 Chest": LMLocationData("Telephone Room", 44, "Furniture", 681, remote_only=True,
                                                      update_ram_addr=[LMRamData(in_game_room_id=53)], require_poltergust=False),
-    "Visit E. Gadd's Gallery": LMLocationData("Gallery", 925, "Map", 0, [], remote_only=True,
+    "Visit E. Gadd's Gallery": LMLocationData("Gallery", 925, "Map", 0, remote_only=True,
                                       update_ram_addr=[LMRamData(0x804D80A4)], require_poltergust=False, map_id=[6]),
-    "Complete Training": LMLocationData("Training Room", 926, "Special", 0, [], remote_only=True,
+    "Complete Training": LMLocationData("Training Room", 926, "Special", 0, HasVac, remote_only=True,
                        update_ram_addr=[LMRamData(0x803D33B2, bit_position=0, in_game_room_id=0)], map_id=[3]),
-    "Catch 9 Ghosts in Training": LMLocationData("Training Room", 927, "Special", 0, [], remote_only=True,
+    "Catch 9 Ghosts in Training": LMLocationData("Training Room", 927, "Special", 0, HasVac, remote_only=True,
                        update_ram_addr=[LMRamData(0x803D33B2, bit_position=1, in_game_room_id=0)], map_id=[3]),
-    "Wardrobe Clear Chest": LMLocationData("Wardrobe", 0, "Chest", 22, ["Blackout"],
+    "Wardrobe Clear Chest": LMLocationData("Wardrobe", 0, "Chest", 22, Has("Blackout"),
           update_ram_addr=[LMRamData(0x803CDF9C, bit_position=2, in_game_room_id=41, ram_byte_size=2)]),
 
 
