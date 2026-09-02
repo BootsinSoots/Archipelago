@@ -40,11 +40,14 @@ ICE_SPIRIT_SPOT = ("Kitchen",
 grimmly_list = ["Uncle Grimmly, Hermit of the Darkness", "Catch Grimmly - Silver", "Catch Grimmly - Gold", "Wardrobe Clear Chest"]
 
 
-def set_element_rules(world: "LMWorld", location: LMLocation, use_enemizer: bool):
+def set_element_rules(world: "LMWorld", location: LMLocation, use_enemizer: bool, rule = None):
     region = location.region
-    rule = None
-    if location.access is not None:
+    if location.access is not None and rule is not None:
+        rule: Rule = location.access & rule
+    elif location.access is not None:
         rule: Rule = location.access
+    else:
+        rule = True_()
 
     if use_enemizer:
         if region in world.ghost_affected_regions.keys() and location not in grimmly_list:

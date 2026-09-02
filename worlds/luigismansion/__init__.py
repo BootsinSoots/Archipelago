@@ -271,19 +271,14 @@ class LMWorld(World):
             for location, data in SILVER_PORTRAIT_TABLE.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
-                if entry.code == 978 and self.open_doors.get(28) == 0:
-                    add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
-                if entry.code == 981:
-                    add_rule(entry,
-                             lambda state: state.has_group_unique("Mario Item", self.player, self.options.mario_items.value),
-                             "and")
                 portrait_short_name = location.split("-")[0].split(" ", 1)[1].strip()
                 location_name = [name for name in PORTRAIT_LOCATION_TABLE.keys() if portrait_short_name in name]
+                extra_rule = None
                 if self.options.portrait_health_option.value == 2:
                     if entry.code not in (977, 985, 992):
                         upgrade_count = number_list.pop()
                         if upgrade_count > 0:
-                            add_rule(entry, lambda state, up_count=upgrade_count: state.has("Vacuum Upgrade", self.player, up_count))
+                            extra_rule = Has("Vacuum Upgrade", upgrade_count)
                         self.silver_portrait_upgrades.update({location_name[0]: upgrade_count})
                 elif self.options.portrait_health_option.value < 2:
                     if entry.code not in (977, 985, 992):
@@ -292,8 +287,8 @@ class LMWorld(World):
                         health = self.portrait_ghost_health[location_name[0]]
                         upgrade_count = math.floor(health / 200)
                         if upgrade_count > 0:
-                            add_rule(entry, lambda state, up_count=upgrade_count: state.has("Vacuum Upgrade", self.player, up_count))
-                set_element_rules(self, entry, True)
+                            extra_rule = Has("Vacuum Upgrade", upgrade_count)
+                set_element_rules(self, entry, True, rule=extra_rule)
                 region.locations.append(entry)
         if self.options.gold_ghosts:
             # Set max required upgrades based on chosen max health value
@@ -305,34 +300,28 @@ class LMWorld(World):
             for location, data in GOLD_PORTRAIT_TABLE.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
-                add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
-                if entry.code == 953 and self.open_doors.get(28) == 0: # Special logic for twins
-                    add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
-                if entry.code == 956: # Special logic for Clairvoya
-                    add_rule(entry,
-                             lambda state: state.has_group_unique("Mario Item", self.player, self.options.mario_items.value),
-                             "and")
-                # Choose number of upgrades for each portrasit ghost if by sphere is on
+                # Choose number of upgrades for each portrait ghost if by sphere is on
                 portrait_short_name = location.split("-")[0].split(" ", 1)[1].strip()
                 location_name = [name for name in PORTRAIT_LOCATION_TABLE.keys() if portrait_short_name in name]
+                extra_rule = None
                 if self.options.portrait_health_option.value == 2:
                     if entry.code not in (952, 960, 967):
                         upgrade_count = number_list.pop()
                         if entry.code in (962, 971): # Gold borders requiring Vac Upgrade
                             min_vac_count = min(5, upgrade_count+1, self.options.vacuum_upgrades.value)
-                            add_rule(entry, lambda state, up_count=min_vac_count: state.has("Vacuum Upgrade", self.player, up_count))
+                            extra_rule = Has("Vacuum Upgrade", min_vac_count)
                             self.gold_portrait_upgrades.update({location_name[0]: min_vac_count})
                         else:
                             if upgrade_count > 0:
-                                add_rule(entry, lambda state, up_count=upgrade_count: state.has("Vacuum Upgrade", self.player, up_count))
+                                extra_rule = Has("Vacuum Upgrade", upgrade_count)
                             self.gold_portrait_upgrades.update({location_name[0]: upgrade_count})
                 elif self.options.portrait_health_option.value < 2:
                     if entry.code not in (952, 960, 967):
                         health = self.portrait_ghost_health[location_name[0]]
                         upgrade_count = math.floor(health/130)
                         if upgrade_count > 0:
-                            add_rule(entry, lambda state, up_count=upgrade_count: state.has("Vacuum Upgrade", self.player, up_count))
-                set_element_rules(self, entry, True)
+                            extra_rule = Has("Vacuum Upgrade", upgrade_count)
+                set_element_rules(self, entry, True, rule=extra_rule)
                 region.locations.append(entry)
         if self.options.lightsanity:
             self._create_loc_from_dict(LIGHT_LOCATION_TABLE, True)
@@ -382,6 +371,7 @@ class LMWorld(World):
         loc = self.get_location("King Boo")
         self.set_rule(loc, HasVac & Has("Gold Diamond", count=rankcalc))
 
+        # 19 total ghosts
     def portrait_health_by_sphere(self) -> list[int]:
         amount_per_group = math.floor(19 / (self.options.vacuum_upgrades.value + 1))
         remainder = math.ceil(19 % (self.options.vacuum_upgrades.value + 1))
