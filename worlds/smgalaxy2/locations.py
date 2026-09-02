@@ -2028,7 +2028,8 @@ oneup_locations: dict[str, SMG2LocationData] = {
     locname.FLIP1FINA1UP: SMG2LocationData(["1-up Location"], regname.FLIPOUT, regname.SHIP),
     locname.FLIP2COME1UP: SMG2LocationData(["1-up Location"], regname.FLIPOUT, regname.SHIP),
     locname.GRND1CLOU1UP: SMG2LocationData(["1-up Location"], regname.GRANDMASTER, regname.SHIP),
-    locname.GRND2COME1UP: SMG2LocationData(["1-up Location"], regname.GRANDMASTER, regname.SHIP),
+    locname.GRND2COME1UP: SMG2LocationData(["1-up Location"], regname.GRANDMASTER, regname.GRANDMASTER2BROS2),
+    locname.GRND2GATE1UP: SMG2LocationData(["1-up Location"], regname.GRANDMASTER, regname.GRANDMASTER2ROSA)
 }
 
 dice_block_locations: dict[str, SMG2LocationData] = {
