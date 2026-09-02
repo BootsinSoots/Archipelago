@@ -203,13 +203,12 @@ def set_ghost_type(world: "LMWorld", ghost_list: dict):
 
 
 def lmconnect(world: "LMWorld", source: str, target: str, key: Optional[str] = None,
-            doorid: Optional[int] = None, rule: Optional[Callable] = None, one_way: bool = False, required_element: Optional[str] = ""):
-    player = world.player
+            doorid: Optional[int] = None, rule: Optional[Rules.Rule] = None, one_way: bool = False):
 
     if world.open_doors.get(doorid) == 0:
-        extra_rule = lambda state: state.has(key, player)
+        extra_rule = Rules.Has(key)
         if rule is not None:
-            rule = lambda state, orig_rule=rule: orig_rule(state) and extra_rule(state)
+            rule = rule & extra_rule
         else:
             rule = extra_rule
 
@@ -218,31 +217,6 @@ def lmconnect(world: "LMWorld", source: str, target: str, key: Optional[str] = N
     source_region.connect(target_region, rule=rule)
     if not one_way:
         target_region.connect(source_region, rule=rule)
-
-    if required_element == "Fire":
-        for fregion in Rules.FIRE_SPIRIT_SPOT:
-            world.multiworld.register_indirect_condition(world.get_region(fregion),
-                                                         world.multiworld.get_entrance(f"{source_region.name} -> {target_region.name}", world.player))
-            if not one_way:
-                world.multiworld.register_indirect_condition(world.get_region(fregion),
-                                                             world.multiworld.get_entrance(
-                                                                 f"{target_region.name} -> {source_region.name}", world.player))
-    elif required_element == "Ice":
-        for iregion in Rules.ICE_SPIRIT_SPOT:
-            world.multiworld.register_indirect_condition(world.get_region(iregion),
-                                                         world.multiworld.get_entrance(f"{source_region.name} -> {target_region.name}", world.player))
-            if not one_way:
-                world.multiworld.register_indirect_condition(world.get_region(iregion),
-                                                             world.multiworld.get_entrance(
-                                                                 f"{target_region.name} -> {source_region.name}", world.player))
-    elif required_element == "Water":
-        for wregion in Rules.WATER_SPIRIT_SPOT:
-            world.multiworld.register_indirect_condition(world.get_region(wregion),
-                                                         world.multiworld.get_entrance(f"{source_region.name} -> {target_region.name}", world.player))
-            if not one_way:
-                world.multiworld.register_indirect_condition(world.get_region(wregion),
-                                                             world.multiworld.get_entrance(
-                                                                 f"{target_region.name} -> {source_region.name}", world.player))
 
 
 def connect_regions(world: "LMWorld"):
@@ -263,8 +237,7 @@ def connect_regions(world: "LMWorld"):
     lmconnect(world, "1F Hallway", "Conservatory", "Conservatory Key", 21)
     lmconnect(world, "1F Hallway", "Billiards Room", "Billiards Room Key", 17)
     lmconnect(world, "1F Hallway", "1F Washroom", "1F Washroom Key", 20)
-            # lambda state, wash_boo_count=world.options.washroom_boo_count.value: state.has_group("Boo", world.player, wash_boo_count)
-            #               or state.has("Boo", world.player, wash_boo_count))
+            # Rules.BooCount(world.options.washroom_boo_count.value))
     lmconnect(world, "1F Hallway", "Ballroom", "Ballroom Key", 15)
     lmconnect(world, "1F Hallway", "Dining Room", "Dining Room Key", 14)
     lmconnect(world, "1F Hallway", "Laundry Room", "Laundry Room Key", 7)
@@ -273,17 +246,17 @@ def connect_regions(world: "LMWorld"):
     lmconnect(world, "Ballroom", "Storage Room", "Storage Room Key", 16)
     lmconnect(world, "Dining Room", "Kitchen", "Kitchen Key", 11)
     lmconnect(world, "Kitchen", "Boneyard", "Boneyard Key", 10,
-            lambda state: Rules.can_fst_water(state, world.player), required_element="Water")
+            Rules.CanFstWater)
     lmconnect(world, "Boneyard", "Graveyard",
-            rule=lambda state: Rules.can_fst_water(state, world.player), required_element="Water")
+            rule=CanReachLocation("Spooky, the Guard Dog"))
     lmconnect(world, "Billiards Room", "Projection Room", "Projection Room Key", 18)
     lmconnect(world, "Fortune-Teller's Room", "Mirror Room", "Mirror Room Key", 5)
     lmconnect(world, "Laundry Room", "Butler's Room", "Butler's Room Key", 1)
-    lmconnect(world, "Butler's Room", "Hidden Room", rule=lambda state: state.has("Poltergust 3000", world.player))
+    lmconnect(world, "Butler's Room", "Hidden Room", rule=Rules.HasVac)
     lmconnect(world, "Courtyard", "The Well")
     lmconnect(world, "Rec Room", "2F Stairwell", "South Rec Room Key", 24)
     lmconnect(world, "2F Stairwell", "Tea Room", "Tea Room Key", 47,
-            lambda state: Rules.can_fst_water(state, world.player), required_element="Water")
+            Rules.CanFstWater)
     lmconnect(world, "2F Stairwell", "2F Rear Hallway", "Upper 2F Stairwell Key", 75)
     lmconnect(world, "2F Rear Hallway", "2F Bathroom", "2F Bathroom Key", 48)
     lmconnect(world, "2F Rear Hallway", "2F Washroom", "2F Washroom Key", 45)
@@ -292,31 +265,29 @@ def connect_regions(world: "LMWorld"):
     lmconnect(world, "2F Rear Hallway", "Sitting Room", "Sitting Room Key", 29)
     lmconnect(world, "2F Rear Hallway", "Safari Room", "Safari Room Key", 56)
     lmconnect(world, "Astral Hall", "Observatory", "Observatory Key", 40,
-            lambda state: Rules.can_fst_fire(state, world.player), required_element="Fire")
+            Rules.CanFstFire)
     lmconnect(world, "Sitting Room", "Guest Room", "Guest Room Key", 30)
     lmconnect(world, "Safari Room", "East Attic Hallway", "East Attic Hallway Key", 55)
     lmconnect(world, "East Attic Hallway", "Artist's Studio", "Artist's Studio Key", 63)
     lmconnect(world, "East Attic Hallway", "Balcony", "Balcony Key", 62,
-            lambda state, balc_boo_count=world.options.balcony_boo_count.value: state.has_group_unique("Boo", world.player, balc_boo_count)
-                          or state.has("Boo", world.player, balc_boo_count))
+            Rules.BooCount(world.options.balcony_boo_count.value))
     lmconnect(world, "Balcony", "West Attic Hallway", "Diamond Key", 59)
     lmconnect(world, "West Attic Hallway", "Armory", "Armory Key", 51)
     lmconnect(world, "West Attic Hallway", "Telephone Room", "Telephone Room Key", 52)
     lmconnect(world, "Telephone Room", "Clockwork Room", "Clockwork Key", 53)
     lmconnect(world, "Armory", "Ceramics Studio", "Ceramics Studio Key", 50)
-    lmconnect(world, "Clockwork Room", "Roof", rule=lambda state: state.has("Defeat Clockwork", world.player))
+    lmconnect(world, "Clockwork Room", "Roof", rule=Rules.Has("Defeat Clockwork"))
     lmconnect(world, "Roof", "Sealed Room", one_way=True),
     lmconnect(world, "Basement Stairwell", "Breaker Room", "Breaker Room Key", 71)
     lmconnect(world, "Basement Stairwell", "Cellar", "Cellar Key", 68,
-              rule=lambda state: state.has("Poltergust 3000", world.player))
+              rule=Rules.HasVac)
     lmconnect(world, "Cellar", "Basement Hallway", "Basement Hallway Key", 67,
-              rule=lambda state: state.has("Poltergust 3000", world.player))
+              rule=Rules.HasVac)
     lmconnect(world, "Basement Hallway", "Cold Storage", "Cold Storage Key", 65)
     lmconnect(world, "Basement Hallway", "Pipe Room", "Pipe Room Key", 69)
     lmconnect(world, "Basement Hallway", "Altar Hallway", "Altar Hallway Key", 70)
     lmconnect(world, "Altar Hallway", "Secret Altar", "Spade Key", 72,
-            lambda state, final_boo_count=world.options.final_boo_count.value: state.has_group_unique("Boo", world.player, final_boo_count)
-                          or state.has("Boo", world.player, final_boo_count))
+            Rules.BooCount(world.options.final_boo_count.value))
     lmconnect(world, world.origin_region_name, "Gallery")
     lmconnect(world, world.origin_region_name, "Training Room")
 

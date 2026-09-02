@@ -5,6 +5,7 @@ from typing import ClassVar
 
 # AP Related Imports
 import Options
+from AutoWorld import World
 from BaseClasses import ItemClassification, Item
 from Utils import visualize_regions, local_path
 from worlds.AutoWorld import World
@@ -117,13 +118,6 @@ class LMWorld(World):
         # Set the flags for progression location by checking player's settings
         if self.options.WDYM_checks:
             self._create_loc_from_dict(WDYM_LOCATION_TABLE, False)
-            for location, data in WDYM_LOCATION_TABLE.items():
-                region = self.get_region(data.region)
-                entry = LMLocation(self.player, location, region, data)
-                if data.require_poltergust:
-                    add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
-                set_element_rules(self, entry, False)
-                region.locations.append(entry)
         if self.options.toadsanity:
             for location, data in TOAD_LOCATION_TABLE.items():
                 # If location is starting room toad, assign to starting room. Otherwise proceed as normal
@@ -138,8 +132,6 @@ class LMWorld(World):
             for location, data in FURNITURE_LOCATION_TABLE.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
-                if data.require_poltergust:
-                    add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
                 if data.code in (603,604,605,606,607,608,609): #Specifically the Artist's Easels require element rules
                     set_element_rules(self, entry, True)
                 else:
@@ -151,8 +143,6 @@ class LMWorld(World):
                     continue
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
-                if data.require_poltergust:
-                    add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
                 if data.code in (603,604,605,606,607,608,609): #Specifically the Artist's Easels require element rules
                     set_element_rules(self, entry, True)
                 else:
@@ -252,53 +242,23 @@ class LMWorld(World):
             for location, data in location_dict.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
-                if data.require_poltergust or region.name == self.origin_region_name:
-                    add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
                 if data.code in (603,604,605,606,607,608,609): #Specifically the Artist's Easels require element rules
                     set_element_rules(self, entry, True)
                 else:
                     set_element_rules(self, entry, False)
                 region.locations.append(entry)
         if self.options.gold_mice:
-            for location, data in GOLD_MICE_LOCATION_TABLE.items():
-                region = self.get_region(data.region)
-                entry = LMLocation(self.player, location, region, data)
-                add_rule(entry, lambda state: state.has("Blackout", self.player), "and")
-                add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
-                region.locations.append(entry)
+            self._create_loc_from_dict(GOLD_MICE_LOCATION_TABLE, False)
         if self.options.speedy_spirits:
-            for location, data in SPEEDY_LOCATION_TABLE.items():
-                region = self.get_region(data.region)
-                entry = LMLocation(self.player, location, region, data)
-                add_rule(entry, lambda state: state.has("Blackout", self.player), "and")
-                add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
-                region.locations.append(entry)
+            self._create_loc_from_dict(SPEEDY_LOCATION_TABLE, False)
         if self.options.portrification:
-            for location, data in PORTRAIT_LOCATION_TABLE.items():
-                region = self.get_region(data.region)
-                entry = LMLocation(self.player, location, region, data)
-                add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
-                if entry.region == "Twins' Room" and self.open_doors.get(28) == 0:
-                    add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
-                if data.region == "Fortune-Teller's Room": # If it's Clairvoya's room, should match Mario item count
-                    add_rule(entry,
-                             lambda state: state.has_group_unique("Mario Item", self.player, self.options.mario_items.value),
-                             "and")
-                set_element_rules(self, entry, True)
-                region.locations.append(entry)
+            self._create_loc_from_dict(PORTRAIT_LOCATION_TABLE, True)
         else:
-            for location, data in PORTRAIT_LOCATION_TABLE.items():
+            for location, data in PORTRAIT_LOCATION_TABLE.items(): #TODO Convert to add_event
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
                 entry.address = None
                 entry.place_locked_item(Item("Portrait _Ghost", ItemClassification.progression, None, self.player))
-                add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
-                if entry.region == "Twins' Room" and self.open_doors.get(28) == 0:
-                    add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
-                if data.region == "Fortune-Teller's Room": # If it's Clairvoya's room, should match Mario item count
-                    add_rule(entry,
-                             lambda state: state.has_group_unique("Mario Item", self.player, self.options.mario_items.value),
-                             "and")
                 set_element_rules(self, entry, True)
                 region.locations.append(entry)
         if self.options.silver_ghosts:
@@ -311,7 +271,6 @@ class LMWorld(World):
             for location, data in SILVER_PORTRAIT_TABLE.items():
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
-                add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
                 if entry.code == 978 and self.open_doors.get(28) == 0:
                     add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
                 if entry.code == 981:
@@ -376,86 +335,22 @@ class LMWorld(World):
                 set_element_rules(self, entry, True)
                 region.locations.append(entry)
         if self.options.lightsanity:
-            for location, data in LIGHT_LOCATION_TABLE.items():
-                region = self.get_region(data.region)
-                entry = LMLocation(self.player, location, region, data)
-                if data.require_poltergust:
-                    add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
-                if entry.region == "Twins' Room" and self.open_doors.get(28) == 0:
-                    add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
-                if data.region == "Fortune-Teller's Room": # If it's Clairvoya's room, should match Mario item count
-                    add_rule(entry,
-                             lambda state: state.has_group_unique("Mario Item", self.player, self.options.mario_items.value),
-                             "and")
-                elif entry.code == 772: # If family hallway light
-                    add_rule(entry, lambda state: state.can_reach_location("Nursery Clear Chest", self.player))
-                elif entry.code == 773: # If 1F Hallway light
-                    add_rule(entry, lambda state: state.can_reach_location("Graveyard Clear Chest", self.player))
-                elif entry.code in (778, 782, 784, 789, 790, 851): # If any other hallway light
-                    add_rule(entry, lambda state: state.can_reach_location("Balcony Clear Chest", self.player))
-                elif entry.code == 757 and self.options.enemizer.value != 2: # If sitting room light
-                    add_rule(entry, lambda state: Rules.can_fst_water(state, self.player), "and")
-                set_element_rules(self, entry, True)
-                region.locations.append(entry)
+            self._create_loc_from_dict(LIGHT_LOCATION_TABLE, True)
         if self.options.walksanity:
-            for location, data in WALK_LOCATION_TABLE.items():
-                region = self.get_region(data.region)
-                entry = LMLocation(self.player, location, region, data)
-                if data.require_poltergust:
-                    add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
-                set_element_rules(self, entry, False)
-                region.locations.append(entry)
+            self._create_loc_from_dict(WALK_LOCATION_TABLE, False)
         if self.options.grassanity:
-            for location, data in MEME_LOCATION_TABLE.items():
-                region = self.get_region(data.region)
-                entry = LMLocation(self.player, location, region, data)
-                if data.require_poltergust:
-                    add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
-                set_element_rules(self, entry, False)
-                region.locations.append(entry)
+            self._create_loc_from_dict(MEME_LOCATION_TABLE, False)
         if self.options.boosanity:
-            for location, data in ROOM_BOO_LOCATION_TABLE.items():
-                region: Region = self.get_region(data.region)
-                entry: LMLocation = LMLocation(self.player, location, region, data)
-                add_rule(entry, lambda state: state.has("Boo Radar", self.player), "and")
-                add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
-                if entry.region == "Twins' Room" and self.open_doors.get(28) == 0:
-                    add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
-                elif data.region == "Nursery" and self.open_doors.get(27) == 0:
-                    add_rule(entry, lambda state: state.has("Nursery Key", self.player), "and")
-                elif data.region == "Fortune-Teller's Room": # If it's Clairvoya's room, should match Mario item count
-                    add_rule(entry,
-                             lambda state: state.has_group_unique("Mario Item", self.player, self.options.mario_items.value),
-                             "and")
-                if entry.parent_region.name == self.origin_region_name:
-                    if self.spawn_full_locked:
-                        keys = REGION_LIST[self.origin_region_name].door_keys
-                        add_rule(entry, lambda state: state.has_any(keys, self.player), "and")
-                set_element_rules(self, entry, True)
-                region.locations.append(entry)
-            for location, data in BOOLOSSUS_LOCATION_TABLE.items():
-                region = self.get_region(data.region)
-                entry = LMLocation(self.player, location, region, data)
-                add_rule(entry, lambda state: state.has("Ice Element Medal", self.player), "and")
-                add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
-                region.locations.append(entry)
+            self._create_loc_from_dict(ROOM_BOO_LOCATION_TABLE, True)
+            self._create_loc_from_dict(BOOLOSSUS_LOCATION_TABLE, False)
         else:
-            for location, data in ROOM_BOO_LOCATION_TABLE.items():
+            for location, data in ROOM_BOO_LOCATION_TABLE.items(): #TODO Convert to Add_event
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
                 entry.address = None
                 entry.place_locked_item(Item("Boo", ItemClassification.progression, None, self.player))
                 if self.options.boo_gates:
                     add_rule(entry, lambda state: state.has("Boo Radar", self.player), "and")
-                add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
-                if entry.region == "Twins' Room" and self.open_doors.get(28) == 0:
-                    add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
-                elif data.region == "Nursery" and self.open_doors.get(27) == 0:
-                    add_rule(entry, lambda state: state.has("Nursery Key", self.player), "and")
-                elif data.region == "Fortune-Teller's Room": # If it's Clairvoya's room, should match Mario item count
-                    add_rule(entry,
-                             lambda state: state.has_group_unique("Mario Item", self.player, self.options.mario_items.value),
-                             "and")
                 if entry.parent_region.name == self.origin_region_name:
                     if self.spawn_full_locked:
                         keys = REGION_LIST[self.origin_region_name].door_keys
@@ -469,8 +364,6 @@ class LMWorld(World):
                 entry.address = None
                 entry.code = None
                 entry.place_locked_item(Item("Boo", ItemClassification.progression, None, self.player))
-                add_rule(entry, lambda state: state.has("Ice Element Medal", self.player), "and")
-                add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
                 region.locations.append(entry)
 
         rankcalc = 0
@@ -487,9 +380,7 @@ class LMWorld(World):
         else:
             rankcalc = 5
         loc = self.get_location("King Boo")
-        if rankcalc != 0 :
-            add_rule(loc, lambda state: state.has("Gold Diamond", self.player, rankcalc), "and")
-        add_rule(loc, lambda state: state.has("Poltergust 3000", self.player), "and")
+        self.set_rule(loc, HasVac & Has("Gold Diamond", count=rankcalc))
 
     def portrait_health_by_sphere(self) -> list[int]:
         amount_per_group = math.floor(19 / (self.options.vacuum_upgrades.value + 1))
@@ -721,34 +612,12 @@ class LMWorld(World):
             else:
                 region = self.get_region(data.region)
             entry = LMLocation(self.player, location, region, data)
-            if data.require_poltergust:
-                add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
             set_element_rules(self, entry, False)
-            if location == "Huge Flower (Boneyard)":
-                add_rule(entry, lambda state: state.has("Progressive Flower", self.player, 3))
-            if entry.code is None:
+            if entry.code is None: #TODO remove to it's own event creation section
                 entry.place_locked_item(Item(entry.locked_item, ItemClassification.progression, None, self.player))
             region.locations.append(entry)
-        for location, data in ENEMIZER_LOCATION_TABLE.items():
-            region = self.get_region(data.region)
-            entry = LMLocation(self.player, location, region, data)
-            add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
-            set_element_rules(self, entry, True)
-            region.locations.append(entry)
-        for location, data in CLEAR_LOCATION_TABLE.items():
-            region = self.get_region(data.region)
-            entry = LMLocation(self.player, location, region, data)
-            if data.require_poltergust:
-                add_rule(entry, lambda state: state.has("Poltergust 3000", self.player), "and")
-            # If it's Clairvoya's room chest, should match Mario item count.
-            # Do not compare to region to keep rule correct for the Candles Key
-            if data.code == 5:
-                add_rule(entry,
-                         lambda state: state.has_group_unique("Mario Item", self.player, self.options.mario_items.value))
-            if entry.region == "Twins' Room" and self.open_doors.get(28) == 0:
-                add_rule(entry, lambda state: state.has("Twins Bedroom Key", self.player), "and")
-            set_element_rules(self, entry, True)
-            region.locations.append(entry)
+        self._create_loc_from_dict(ENEMIZER_LOCATION_TABLE, True)
+        self._create_loc_from_dict(CLEAR_LOCATION_TABLE, True)
         self._set_optional_locations()
         connect_regions(self)
 
