@@ -44,3 +44,7 @@ class MEMORY_CONSTANTS:
 
     TRAINING_BUTTON_LAYOUT_SCREEN: int = 0x803D33AE
     """ Flag 168: Room flag used to determine if the button layout screen during training is present. """
+
+DEATH_MSGS: list[str] = [
+    "{playername} scared themselves to death.",
+]

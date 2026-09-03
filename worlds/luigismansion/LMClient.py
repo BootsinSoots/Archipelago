@@ -2,6 +2,7 @@ import asyncio, time
 import copy, sys, re
 import os
 from typing import Any
+from random import Random
 
 # AP related imports
 import NetUtils, Utils
@@ -238,6 +239,7 @@ class LMContext(BaseContext):
 
         # Useful for displaying various in-game messages
         self.display_class = LMDisplayQueue(self)
+        self.random = Random()
 
     async def disconnect(self, allow_autoreconnect: bool = False):
         """
@@ -812,7 +814,8 @@ class LMContext(BaseContext):
         if not self.is_luigi_dead and time.time() >= float(self.last_death_link + (CHECKS_WAIT * LONGER_MODIFIER * 3)):
             self.is_luigi_dead = True
             self.set_luigi_dead()
-            await self.send_death(self.player_names[self.slot] + " scared themselves to death.")
+            death_msg: str = self.random.choice(DEATH_MSGS)
+            await self.send_death(death_msg.format(playername=self.player_names[self.slot]))
 
     async def manage_wallet_async(self):
         try:
