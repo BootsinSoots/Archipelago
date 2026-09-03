@@ -1,5 +1,6 @@
 from typing import Optional, Callable, TYPE_CHECKING, NamedTuple
 from BaseClasses import Region, MultiWorld
+from rule_builder.rules import CanReachLocation
 
 from . import Rules
 

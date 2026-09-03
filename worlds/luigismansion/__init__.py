@@ -599,7 +599,6 @@ class LMWorld(World):
         self._create_loc_from_dict(ENEMIZER_LOCATION_TABLE, True)
         self._create_loc_from_dict(CLEAR_LOCATION_TABLE, True)
         self._set_optional_locations()
-        connect_regions(self)
 
     def create_item(self, item: str) -> LMItem:
         if (self.options.gold_ghosts.value == 1 or self.options.silver_ghosts.value == 1) and item == "Vacuum Upgrade":
@@ -684,6 +683,9 @@ class LMWorld(World):
 
     def set_rules(self):
         self.multiworld.completion_condition[self.player] = lambda state: state.has("Mario's Painting", self.player)
+
+    def connect_entrances(self) -> None:
+        connect_regions(self)
 
     def post_fill(self) -> None:
         if self.options.boosanity:
