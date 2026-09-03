@@ -254,13 +254,11 @@ class LMWorld(World):
         if self.options.portrification:
             self._create_loc_from_dict(PORTRAIT_LOCATION_TABLE, True)
         else:
-            for location, data in PORTRAIT_LOCATION_TABLE.items(): #TODO Convert to add_event
+            for location, data in PORTRAIT_LOCATION_TABLE.items():
                 region = self.get_region(data.region)
-                entry = LMLocation(self.player, location, region, data)
-                entry.address = None
-                entry.place_locked_item(Item("Portrait _Ghost", ItemClassification.progression, None, self.player))
+                region.add_event(location, "Portrait_Ghost", location_type=LMLocation, item_type=LMItem)
+                entry = self.get_location(location)
                 set_element_rules(self, entry, True)
-                region.locations.append(entry)
         if self.options.silver_ghosts:
             # Set max required upgrades based on chosen max health value
             # @200, 350, 500, 650, 800 +1 upgrade
@@ -333,27 +331,16 @@ class LMWorld(World):
             self._create_loc_from_dict(ROOM_BOO_LOCATION_TABLE, True)
             self._create_loc_from_dict(BOOLOSSUS_LOCATION_TABLE, False)
         else:
-            for location, data in ROOM_BOO_LOCATION_TABLE.items(): #TODO Convert to Add_event
+            for location, data in ROOM_BOO_LOCATION_TABLE.items():
                 region = self.get_region(data.region)
-                entry = LMLocation(self.player, location, region, data)
-                entry.address = None
-                entry.place_locked_item(Item("Boo", ItemClassification.progression, None, self.player))
-                if self.options.boo_gates:
-                    add_rule(entry, lambda state: state.has("Boo Radar", self.player), "and")
-                if entry.parent_region.name == self.origin_region_name:
-                    if self.spawn_full_locked:
-                        keys = REGION_LIST[self.origin_region_name].door_keys
-                        add_rule(entry, lambda state: state.has_any(keys, self.player), "and")
-                entry.code = None
+                region.add_event(location, "Boo", location_type=LMLocation, item_type=LMItem)
+                entry = self.get_location(location)
                 set_element_rules(self, entry, True)
-                region.locations.append(entry)
             for location, data in BOOLOSSUS_LOCATION_TABLE.items():
                 region = self.get_region(data.region)
-                entry = LMLocation(self.player, location, region, data)
-                entry.address = None
-                entry.code = None
-                entry.place_locked_item(Item("Boo", ItemClassification.progression, None, self.player))
-                region.locations.append(entry)
+                region.add_event(location, "Boo", location_type=LMLocation, item_type=LMItem)
+                entry = self.get_location(location)
+                set_element_rules(self, entry, False)
 
         rankcalc = 0
         if self.options.rank_requirement == 0:
