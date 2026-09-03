@@ -47,4 +47,15 @@ class MEMORY_CONSTANTS:
 
 DEATH_MSGS: list[str] = [
     "{playername} scared themselves to death.",
+    "Boolossus took {playername} on a one way trip to the Bahamas.",
+    "{playername} got walloped by a ghost.",
+    "An icicle fell on {playername}.",
+    "2 spooky 4 {playername}.",
+    "{playername} looked in the wrong mirror.",
+    "{playername} got zoomed by a Boo.",
+    "{playername} ate a bad mushroom.",
+    "{playername} forgot his flashlight.",
+    "Mario is so disappointed in {playername}.",
+    "{playername} opened the wrong chest.",
+    "{playername} got squashed by a chandelier.",
 ]
