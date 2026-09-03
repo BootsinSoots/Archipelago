@@ -36,7 +36,7 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
     lm_dol.read(dol_data)
 
     # Get the dynamic addresses, which are used for various dol changes
-    dynamic_addr: dict = lm_gen.lm_dynamic_addr.dynamic_addresses["DOL"]
+    dynamic_addr: dict = lm_gen.lm_dynamic_addr.dynamic_addresses
 
     # Walk Speed
     speed_to_use = 16784 if walk_speed == 0 else (16850 if walk_speed == 1 else 16950)

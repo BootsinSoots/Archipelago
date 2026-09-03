@@ -730,7 +730,7 @@ class LMContext(BaseContext):
             vac_count = self.get_item_count_by_id(8148)
             vac_speed = min(self.get_item_count_by_id(8064), 5)
 
-            vac_timer_addr: int = int(dynamic_addr["Client"]["Player_Weapon_Trap_Timer"], 16)
+            vac_timer_addr: int = int(dynamic_addr["Player_Weapon_Trap_Timer"], 16)
             if not self.trap_link.check_vac_trap_active(vac_timer_addr) and vac_count > 0:
                 for item in [8064, 8148]:
                     lm_item_name = self.item_names.lookup_in_game(item)
@@ -748,11 +748,11 @@ class LMContext(BaseContext):
             # Always adjust Pickup animation issues if the user turned pick up animations off.
             if not self.pickup_anim_on:
                 crown_helper_val = "00000001"
-                pickup_addr: int = int(dynamic_addr["Client"]["Play_King_Boo_Gem_Fast_Pickup"], 16)
+                pickup_addr: int = int(dynamic_addr["Play_King_Boo_Gem_Fast_Pickup"], 16)
                 dme.write_bytes(pickup_addr, bytes.fromhex(crown_helper_val))
 
             # Always update Boolossus difficulty
-            boolossus_diff_addr: int = int(dynamic_addr["Client"]["Boolossus_Mini_Boo_Difficulty"], 16)
+            boolossus_diff_addr: int = int(dynamic_addr["Boolossus_Mini_Boo_Difficulty"], 16)
             dme.write_bytes(boolossus_diff_addr, self.boolossus_difficulty.to_bytes(4,'big'))
 
             # Always update the flower to have the correct amount of flowers in game
