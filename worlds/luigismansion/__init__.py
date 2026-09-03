@@ -590,9 +590,12 @@ class LMWorld(World):
                 region = self.get_region(data.region)
             entry = LMLocation(self.player, location, region, data)
             set_element_rules(self, entry, False)
-            if entry.code is None: #TODO remove to it's own event creation section
-                entry.place_locked_item(Item(entry.locked_item, ItemClassification.progression, None, self.player))
             region.locations.append(entry)
+        for location, data in event_locations:
+            region = self.get_region(data.region)
+            region.add_event(location, data.locked_item, location_type=LMLocation, item_type=LMItem)
+            entry = self.get_location(location)
+            set_element_rules(self, entry, False)
         self._create_loc_from_dict(ENEMIZER_LOCATION_TABLE, True)
         self._create_loc_from_dict(CLEAR_LOCATION_TABLE, True)
         self._set_optional_locations()

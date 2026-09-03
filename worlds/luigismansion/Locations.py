@@ -152,11 +152,15 @@ BASE_LOCATION_TABLE: dict[str, LMLocationData] = {
     "Observatory Shoot the Moon": LMLocationData("Observatory", 24, "Special", -1, HasVac, remote_only=True,
         update_ram_addr = [LMRamData(0x803D339F, bit_position=2, in_game_room_id=44)]),
 
+}
+
+event_locations: dict[str, LMLocationData] = {
     # Game Event Locations
     "Breaker Box": LMLocationData("Breaker Room", None, "Event", -1, locked_item="Blackout"),
     "King Boo": LMLocationData("Secret Altar", None, "Event", -1, locked_item="Mario's Painting"),
     "Clockwork Clear": LMLocationData("Clockwork Room", None, "Event", -1,
-                                      HasVac & CanReachLocation("Clockwork Soldiers, the Toy Platoon", parent_region_name="Clockwork Room"),
+                                      CanReachLocation("Clockwork Soldiers, the Toy Platoon",
+                                                                parent_region_name="Clockwork Room"),
                                       locked_item="Defeat Clockwork"),
     "Shivers Spawn": LMLocationData("1F Hallway", None, "Event", -1, CanFstFire, locked_item="Shivers Spawn")
 }
@@ -2398,6 +2402,7 @@ GOLD_PORTRAIT_TABLE: dict[str, LMLocationData] = {
 }
 
 ALL_LOCATION_TABLE: dict[str, LMLocationData] = {**BASE_LOCATION_TABLE,
+                      **event_locations,
                       **CLEAR_LOCATION_TABLE,
                       **ENEMIZER_LOCATION_TABLE,
                       **FURNITURE_LOCATION_TABLE,
