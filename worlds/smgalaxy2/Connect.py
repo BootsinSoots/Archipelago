@@ -1777,6 +1777,7 @@ def set_rules(world: "SMG2World", player: int):
     # Special connections if power-up rando is on
     # Rainbow Star
     world.get_region(regname.SKYOBS1OCTOBONUS).connect(world.get_region(regname.FIRSTSUPASTAR))
+    world.get_region(regname.SKYOBS2STARTBOTTOM).connect(world.get_region(regname.FIRSTSUPASTAR))
     world.get_region(regname.SKYOBS2OCTOBONUS).connect(world.get_region(regname.FIRSTSUPASTAR))
     world.get_region(regname.SPINDIG1BONUS).connect(world.get_region(regname.FIRSTSUPASTAR))
     world.get_region(regname.GOODEGG3MUDDY).connect(world.get_region(regname.FIRSTSUPASTAR))
@@ -1807,7 +1808,8 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.FLUFFBLUFF1LANDING).connect(world.get_region(regname.FIRSTCLOUD))
     world.get_region(regname.PUZZPLAN3BUGABO).connect(world.get_region(regname.FIRSTCLOUD))
     world.get_region(regname.CLOUCOUR1LANDING).connect(world.get_region(regname.FIRSTCLOUD))
-    world.get_region(regname.STARBEACH2MAIN).connect(world.get_region(regname.FIRSTCLOUD))
+    world.get_region(regname.STARBEACH2MAIN).connect(world.get_region(regname.FIRSTCLOUD),
+                                                     rule=RB.CanSwim & RB.CanPound)
     world.get_region(regname.WHOMP2FORT).connect(world.get_region(regname.FIRSTCLOUD))
     world.get_region(regname.WHOMP3FORT).connect(world.get_region(regname.FIRSTCLOUD))
     world.get_region(regname.BOOMBUNK1PLAT).connect(world.get_region(regname.FIRSTCLOUD))
@@ -1822,7 +1824,7 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.SPINDIG2DARKIN1).connect(world.get_region(regname.FIRSTSPINDRILL))
     world.get_region(regname.SUPMASS1KOOPAS).connect(world.get_region(regname.FIRSTSPINDRILL))
     world.get_region(regname.SUPMASS2KOOPAS).connect(world.get_region(regname.FIRSTSPINDRILL))
-    world.get_region(regname.FLIPVILL2TOWERSTART).connect(world.get_region(regname.FIRSTSPINDRILL))
+    world.get_region(regname.FLIPVILL2MAZESTART).connect(world.get_region(regname.FIRSTSPINDRILL))
     world.get_region(regname.FLIPVILL3GRAVITY).connect(world.get_region(regname.FIRSTSPINDRILL))
     world.get_region(regname.COSMIC2WATERPL1).connect(world.get_region(regname.FIRSTSPINDRILL))
     world.get_region(regname.GALGEN1VOLCANO).connect(world.get_region(regname.FIRSTSPINDRILL))
