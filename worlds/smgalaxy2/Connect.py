@@ -1803,7 +1803,7 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.BOULBOWL2CAGEPLA).connect(world.get_region(regname.FIRSTROCK))
     # Booshroom
     world.get_region(regname.BOOMOON2TOWER).connect(world.get_region(regname.FIRSTBOOMARIO))
-    # Cloud Mushroom
+    # Cloud Flower
     world.get_region(regname.FLUFFBLUFF1LANDING).connect(world.get_region(regname.FIRSTCLOUD))
     world.get_region(regname.PUZZPLAN3BUGABO).connect(world.get_region(regname.FIRSTCLOUD))
     world.get_region(regname.CLOUCOUR1LANDING).connect(world.get_region(regname.FIRSTCLOUD))
