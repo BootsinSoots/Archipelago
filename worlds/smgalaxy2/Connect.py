@@ -1786,7 +1786,9 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.CHOMWORK2ROLLING).connect(world.get_region(regname.FIRSTSPRING))
     # Fire Flower
     world.get_region(regname.RIGHTDOWNBREAKER).connect(world.get_region(regname.FIRSTFIREFLOWER))
+    world.get_region(regname.RIGHTDOWNCOINROOM).connect(world.get_region(regname.FIRSTFIREFLOWER))
     world.get_region(regname.UPDOWNBREAKER).connect(world.get_region(regname.FIRSTFIREFLOWER))
+    world.get_region(regname.UPDOWNFIRE).connect(world.get_region(regname.FIRSTFIREFLOWER))
     world.get_region(regname.SLIPSAND1CUBE).connect(world.get_region(regname.FIRSTFIREFLOWER))
     world.get_region(regname.SLIPSAND1BOSS).connect(world.get_region(regname.FIRSTFIREFLOWER))
     world.get_region(regname.SLIPSAND3BOSS).connect(world.get_region(regname.FIRSTFIREFLOWER))
