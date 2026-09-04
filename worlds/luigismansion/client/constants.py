@@ -58,4 +58,12 @@ DEATH_MSGS: list[str] = [
     "Mario is so disappointed in {playername}.",
     "{playername} opened the wrong chest.",
     "{playername} got squashed by a chandelier.",
+    "{playername} got squashed by a door.",
+    "{playername} got sent a trap while in a door.",
+    "{playername} died to a ghost mouse.",
+    "{playername} missed the moon.",
+    "A lightning bolt struck {playername} on the roof.",
+    "{playername} fell down the chimney wrong.",
+    "{playername} fell through the floor.",
+    "A toad with a very specific set of skills found {playername}",
 ]
