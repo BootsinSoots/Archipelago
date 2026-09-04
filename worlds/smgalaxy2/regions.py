@@ -10,7 +10,8 @@ from .Constants.Names import location_names as locname
 from .items import SMG2Item
 from .locations import (SMG2Location, base_stars_locations, SMG2LocationData, green_star_locations, COMETMEDAL_loc,
     event_locations, mailtoad_locations, checkpoint_loc_table, hungry_luma_loc, passenger_loc, all_location_table,
-                        pipe_locations, lumalee_locations, launch_star_locs)
+                        pipe_locations, lumalee_locations, launch_star_locs, bonus_teleporter_locations,
+                        first_powerup_locations)
 
 if TYPE_CHECKING:
     from . import SMG2World
@@ -615,6 +616,16 @@ region_list: dict[str, SMG2RegionData] = {
     regname.SWEETMYS1CAKE:              SMG2RegionData("Planet", [], []),
     regname.GOODEGG1MUDDY:              SMG2RegionData("Planet", [], []),
     regname.GOODEGG2MUDDY:              SMG2RegionData("Planet", [], []),
+    regname.GOODEGG2BONUS:          SMG2RegionData("Planet", [], []),
+    regname.SPINDIG2BONUS:              SMG2RegionData("Planet", [], []),
+    regname.FIRSTSUPASTAR:              SMG2RegionData("Special Powerup", [], []),
+    regname.FIRSTFIREFLOWER:              SMG2RegionData("Special Powerup", [], []),
+    regname.FIRSTBEEMARIO:              SMG2RegionData("Special Powerup", [], []),
+    regname.FIRSTSPRING:              SMG2RegionData("Special Powerup", [], []),
+    regname.FIRSTBOOMARIO:              SMG2RegionData("Special Powerup", [], []),
+    regname.FIRSTCLOUD:              SMG2RegionData("Special Powerup", [], []),
+    regname.FIRSTROCK:              SMG2RegionData("Special Powerup", [], []),
+    regname.FIRSTSPINDRILL:              SMG2RegionData("Special Powerup", [], []),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]
@@ -675,6 +686,9 @@ def create_regions(world: "SMG2World"): #TODO Correctly add locations
     if world.options.enable_green_stars.value > 0: # Fix for Green star locations
         create_locations(green_star_locations, world, True)
 
+    if world.options.powerup_rando.value:
+        create_locations(first_powerup_locations, world)
+
     if world.options.mailtoad_letters.value:
         create_locations(mailtoad_locations, world)
 
@@ -686,6 +700,9 @@ def create_regions(world: "SMG2World"): #TODO Correctly add locations
 
     if world.options.pipesanity.value:
         create_locations(pipe_locations, world)
+
+    if world.options.bonus_teleporters.value:
+        create_locations(bonus_teleporter_locations, world)
 
 def create_region(name: str, world: "SMG2World") -> Region:
     return Region(name, world.player, world.multiworld, name)

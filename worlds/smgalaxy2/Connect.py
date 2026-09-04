@@ -7,11 +7,11 @@ from .Rules import CanLongJump, ROCKNROLLIN, CanSwim
 if TYPE_CHECKING:
     from . import SMG2World
 from .Constants.Names import region_names as regname, item_names as itemname, location_names as locname
-from .SMG2Options import WorldShuffle, CoinLumaLocks, CometItems, CometMission
+from .SMG2Options import WorldShuffle, CoinLumaLocks, CometItems, CometMission, PowerupRando
 from . import Rules as RB
 
 
-def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
+def set_rules(world: "SMG2World", player: int):
     # World 1
     world.get_region(regname.SHIP).connect(world.get_region(regname.WORLD1), "World 1 Map",
                                            rule=((True_()&
@@ -115,6 +115,8 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                                              | (RB.MediumLogic & RB.CanRideDino)))
     world.get_region(regname.GOODEGG).connect(world.get_region(regname.GOODEGG2LANDING), "Yoshi Star Star 2")
     world.get_region(regname.GOODEGG2LANDING).connect(world.get_region(regname.GOODEGG2MUDDY))
+    world.get_region(regname.GOODEGG2MUDDY).connect(world.get_region(regname.GOODEGG2BONUS),
+                                                      "Yoshi Star 2: Octogoomba Bonus Teleporter")
     world.get_region(regname.GOODEGG2MUDDY).connect(world.get_region(regname.GOODEGG2SHOOTING),
                                               "Yoshi Star 2: Yoshi Planet Launch Star",
                                                     rule=RB.CanRideDino & RB.CanLaunchStar)
@@ -175,6 +177,8 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.SPINDIG2DARKT).connect(world.get_region(regname.SPINDIG2DARKIN1),
                                                     "Spin-Dig 2: Dark Canister 1st Green Pipe",
                                                     rule=RB.CanPipe)
+    world.get_region(regname.SPINDIG2DARKT).connect(world.get_region(regname.SPINDIG2BONUS),
+                                                    "Spin-Dig 2: Twirlips Bonus Teleporter")
     world.get_region(regname.SPINDIG2DARKIN1).connect(world.get_region(regname.SPINDIG2DARKIN2),
                                                     "Spin-Dig 2: Dark Canister 2nd Green Pipe",
                                                       rule=RB.DRILLMASTER & RB.CanPipe)
@@ -1770,6 +1774,59 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                         "Grandmaster Comet: Jumping Bros Launch Star",
                                                         rule=RB.CanLaunchStar)
 
+    # Special connections if power-up rando is on
+    # Rainbow Star
+    world.get_region(regname.SKYOBS1OCTOBONUS).connect(world.get_region(regname.FIRSTSUPASTAR))
+    world.get_region(regname.SKYOBS2OCTOBONUS).connect(world.get_region(regname.FIRSTSUPASTAR))
+    world.get_region(regname.SPINDIG1BONUS).connect(world.get_region(regname.FIRSTSUPASTAR))
+    world.get_region(regname.GOODEGG3MUDDY).connect(world.get_region(regname.FIRSTSUPASTAR))
+    world.get_region(regname.SHIVBURN2ROMP).connect(world.get_region(regname.FIRSTSUPASTAR))
+    # Springshroom
+    world.get_region(regname.CHOMWORK2ROLLING).connect(world.get_region(regname.FIRSTSPRING))
+    # Fire Flower
+    world.get_region(regname.RIGHTDOWNBREAKER).connect(world.get_region(regname.FIRSTFIREFLOWER))
+    world.get_region(regname.UPDOWNBREAKER).connect(world.get_region(regname.FIRSTFIREFLOWER))
+    world.get_region(regname.SLIPSAND1CUBE).connect(world.get_region(regname.FIRSTFIREFLOWER))
+    world.get_region(regname.SLIPSAND1BOSS).connect(world.get_region(regname.FIRSTFIREFLOWER))
+    world.get_region(regname.SLIPSAND3BOSS).connect(world.get_region(regname.FIRSTFIREFLOWER))
+    world.get_region(regname.FREEFLAK1LOGCABI).connect(world.get_region(regname.FIRSTFIREFLOWER))
+    world.get_region(regname.BATTBELT1URCH).connect(world.get_region(regname.FIRSTFIREFLOWER))
+    world.get_region(regname.BATTBELT2URCH).connect(world.get_region(regname.FIRSTFIREFLOWER))
+    # Bee Mushroom
+    world.get_region(regname.HONEYBLOOM1WALL2).connect(world.get_region(regname.FIRSTBEEMARIO))
+    world.get_region(regname.HONEYHOP1START).connect(world.get_region(regname.FIRSTBEEMARIO))
+    # Rockshroom
+    world.get_region(regname.FREEFLAK2LOGCABI).connect(world.get_region(regname.FIRSTROCK))
+    world.get_region(regname.MELTY2BOWLING).connect(world.get_region(regname.FIRSTROCK))
+    world.get_region(regname.MELTY3CHIMP).connect(world.get_region(regname.FIRSTROCK))
+    world.get_region(regname.BOULBOWL1CRYSTAL).connect(world.get_region(regname.FIRSTROCK))
+    world.get_region(regname.BOULBOWL2CAGEPLA).connect(world.get_region(regname.FIRSTROCK))
+    # Booshroom
+    world.get_region(regname.BOOMOON2TOWER).connect(world.get_region(regname.FIRSTBOOMARIO))
+    # Cloud Mushroom
+    world.get_region(regname.FLUFFBLUFF1LANDING).connect(world.get_region(regname.FIRSTCLOUD))
+    world.get_region(regname.PUZZPLAN3BUGABO).connect(world.get_region(regname.FIRSTCLOUD))
+    world.get_region(regname.CLOUCOUR1LANDING).connect(world.get_region(regname.FIRSTCLOUD))
+    world.get_region(regname.STARBEACH2MAIN).connect(world.get_region(regname.FIRSTCLOUD))
+    world.get_region(regname.WHOMP2FORT).connect(world.get_region(regname.FIRSTCLOUD))
+    world.get_region(regname.WHOMP3FORT).connect(world.get_region(regname.FIRSTCLOUD))
+    world.get_region(regname.BOOMBUNK1PLAT).connect(world.get_region(regname.FIRSTCLOUD))
+    world.get_region(regname.GALGEN1TOWER).connect(world.get_region(regname.FIRSTCLOUD))
+    world.get_region(regname.GALGEN2TOWER).connect(world.get_region(regname.FIRSTCLOUD))
+    world.get_region(regname.SHIP2).connect(world.get_region(regname.FIRSTCLOUD))
+    world.get_region(regname.TWISTY1PLAT1).connect(world.get_region(regname.FIRSTCLOUD))
+    world.get_region(regname.GRANDMASTER1CLOUD).connect(world.get_region(regname.FIRSTCLOUD))
+    world.get_region(regname.GRANDMASTER2CLOUD).connect(world.get_region(regname.FIRSTCLOUD))
+    # Spin Drill
+    world.get_region(regname.SPINDIG1TETRA).connect(world.get_region(regname.FIRSTSPINDRILL))
+    world.get_region(regname.SPINDIG2DARKIN1).connect(world.get_region(regname.FIRSTSPINDRILL))
+    world.get_region(regname.SUPMASS1KOOPAS).connect(world.get_region(regname.FIRSTSPINDRILL))
+    world.get_region(regname.SUPMASS2KOOPAS).connect(world.get_region(regname.FIRSTSPINDRILL))
+    world.get_region(regname.FLIPVILL2TOWERSTART).connect(world.get_region(regname.FIRSTSPINDRILL))
+    world.get_region(regname.FLIPVILL3GRAVITY).connect(world.get_region(regname.FIRSTSPINDRILL))
+    world.get_region(regname.COSMIC2WATERPL1).connect(world.get_region(regname.FIRSTSPINDRILL))
+    world.get_region(regname.GALGEN1VOLCANO).connect(world.get_region(regname.FIRSTSPINDRILL))
+    world.get_region(regname.GALGEN2VOLCANO).connect(world.get_region(regname.FIRSTSPINDRILL))
 
     world.get_region(regname.SHIP).connect(world.get_region(regname.SHIP2)),
     world.get_region(regname.SHIP2).connect(world.get_region(regname.SHIPINSIDE)),
