@@ -115,6 +115,8 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
                                                                              | (RB.MediumLogic & RB.CanRideDino)))
     world.get_region(regname.GOODEGG).connect(world.get_region(regname.GOODEGG2LANDING), "Yoshi Star Star 2")
     world.get_region(regname.GOODEGG2LANDING).connect(world.get_region(regname.GOODEGG2MUDDY))
+    world.get_region(regname.GOODEGG2MUDDY).connect(world.get_region(regname.GOODEGG2OCTOBONUS),
+                                                      "Yoshi Star 2: Octogoomba Bonus Teleporter")
     world.get_region(regname.GOODEGG2MUDDY).connect(world.get_region(regname.GOODEGG2SHOOTING),
                                               "Yoshi Star 2: Yoshi Planet Launch Star",
                                                     rule=RB.CanRideDino & RB.CanLaunchStar)
@@ -175,6 +177,8 @@ def set_rules(world: "SMG2World", player: int): #TODO add rules to entrances
     world.get_region(regname.SPINDIG2DARKT).connect(world.get_region(regname.SPINDIG2DARKIN1),
                                                     "Spin-Dig 2: Dark Canister 1st Green Pipe",
                                                     rule=RB.CanPipe)
+    world.get_region(regname.SPINDIG2DARKT).connect(world.get_region(regname.SPINDIG2BONUS),
+                                                    "Spin-Dig 2: Twirlips Bonus Teleporter")
     world.get_region(regname.SPINDIG2DARKIN1).connect(world.get_region(regname.SPINDIG2DARKIN2),
                                                     "Spin-Dig 2: Dark Canister 2nd Green Pipe",
                                                       rule=RB.DRILLMASTER & RB.CanPipe)

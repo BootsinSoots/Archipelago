@@ -2070,7 +2070,27 @@ dice_block_locations: dict[str, SMG2LocationData] = {
 }
 
 bonus_teleporter_locations: dict[str, SMG2LocationData] = {
-
+    locname.SKYSTA1BONUSCL: SMG2LocationData(["Specials"], regname.SKYOBS, regname.SKYOBS1OCTOBONUS),
+    locname.SKYSTA2BONUSCL: SMG2LocationData(["Specials"], regname.SKYOBS, regname.SKYOBS2OCTOBONUS),
+    locname.YOSHIS1BONUSCL: SMG2LocationData(["Specials"], regname.GOODEGG, regname.GOODEGG1OCTOBONUS),
+    locname.YOSHIS2BONUSCL: SMG2LocationData(["Specials"], regname.GOODEGG, regname.GOODEGG2OCTOBONUS),
+    locname.SPINDI1BONUSCL: SMG2LocationData(["Specials"], regname.SPINDIG, regname.SPINDIG1BONUS),
+    locname.SPINDI2BONUSCL: SMG2LocationData(["Specials"], regname.SPINDIG, regname.SPINDIG2BONUS),
+    locname.RIGHTSIBONUSCL: SMG2LocationData(["Specials"], regname.RIGHTDOWN, regname.RIGHTDOWNBONUS),
+    locname.HIGHTA1BONUSCL: SMG2LocationData(["Specials"], regname.HIGHTAIL, regname.HIGHTAIL1BONUS),
+    locname.TALLTR1BONUSCL: SMG2LocationData(["Specials"], regname.TALLTRUNK, regname.TALLTRUNK1PIRANHABONUS),
+    locname.TALLTR2BONUSCL: SMG2LocationData(["Specials"], regname.TALLTRUNK, regname.TALLTRUNK2PIRANHABONUS),
+    locname.CLOUDY1BONUSCL: SMG2LocationData(["Specials"], regname.CLOUCOUR, regname.CLOUCOUR1PARAGOOMBONUS),
+    locname.HAUNTY1BONUSCL: SMG2LocationData(["Specials"], regname.HAUNHALL, regname.HAUNHALL1JACKBON),
+    locname.HAUNTY2BONUSCL: SMG2LocationData(["Specials"], regname.HAUNHALL, regname.HAUNHALL2JACKBON),
+    locname.FLIPSV1BONUSCL: SMG2LocationData(["Specials"], regname.FLIPVILL, regname.FLIPVILL1TWIRLIP),
+    locname.FLIPSV2BONUSCL: SMG2LocationData(["Specials"], regname.FLIPVILL, regname.FLIPVILL2TWIRLIP),
+    locname.STARSH1BONUSCL: SMG2LocationData(["Specials"], regname.STARBEACH, regname.STARBEACH1BONUS),
+    locname.STARSH2BONUSCL: SMG2LocationData(["Specials"], regname.STARBEACH, regname.STARBEACH2BONUS),
+    locname.BOOMOO1BONUSCL: SMG2LocationData(["Specials"], regname.BOOMOON, regname.BOOMOON1GOOMBONUS),
+    locname.BOOMOO2BONUSCL: SMG2LocationData(["Specials"], regname.BOOMOON, regname.BOOMOON2GOOMBONUS),
+    locname.THROWB1BONUSCL: SMG2LocationData(["Specials"], regname.WHOMPFORT, regname.WHOMP1BONUS),
+    locname.THROWB2BONUSCL: SMG2LocationData(["Specials"], regname.WHOMPFORT, regname.WHOMP2BONUS),
 }
 
 # TODO Add Powerup first locations

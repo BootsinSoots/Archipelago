@@ -3,6 +3,7 @@ from typing import NamedTuple, Optional, TYPE_CHECKING
 
 from BaseClasses import Region, Entrance, MultiWorld
 from entrance_rando import disconnect_entrance_for_randomization
+from locations import bonus_teleporter_locations
 from rule_builder.rules import CanReachLocation
 
 from .Constants.Names import region_names as regname
@@ -615,6 +616,8 @@ region_list: dict[str, SMG2RegionData] = {
     regname.SWEETMYS1CAKE:              SMG2RegionData("Planet", [], []),
     regname.GOODEGG1MUDDY:              SMG2RegionData("Planet", [], []),
     regname.GOODEGG2MUDDY:              SMG2RegionData("Planet", [], []),
+    regname.GOODEGG2OCTOBONUS:          SMG2RegionData("Planet", [], []),
+    regname.SPINDIG2BONUS:              SMG2RegionData("Planet", [], []),
 }
 
 major_galaxy_list: list[str] = [key for key, data in region_list.items() if data.type == "Major"]
@@ -686,6 +689,9 @@ def create_regions(world: "SMG2World"): #TODO Correctly add locations
 
     if world.options.pipesanity.value:
         create_locations(pipe_locations, world)
+
+    if world.options.bonus_teleporters.value:
+        create_locations(bonus_teleporter_locations, world)
 
 def create_region(name: str, world: "SMG2World") -> Region:
     return Region(name, world.player, world.multiworld, name)
