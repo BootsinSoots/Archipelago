@@ -2111,7 +2111,7 @@ bonus_teleporter_locations: dict[str, SMG2LocationData] = {
     locname.SKYSTA1BONUSCL: SMG2LocationData(["Specials"], regname.SKYOBS, regname.SKYOBS1OCTOBONUS),
     locname.SKYSTA2BONUSCL: SMG2LocationData(["Specials"], regname.SKYOBS, regname.SKYOBS2OCTOBONUS),
     locname.YOSHIS1BONUSCL: SMG2LocationData(["Specials"], regname.GOODEGG, regname.GOODEGG1OCTOBONUS),
-    locname.YOSHIS2BONUSCL: SMG2LocationData(["Specials"], regname.GOODEGG, regname.GOODEGG2OCTOBONUS),
+    locname.YOSHIS2BONUSCL: SMG2LocationData(["Specials"], regname.GOODEGG, regname.GOODEGG2BONUS),
     locname.SPINDI1BONUSCL: SMG2LocationData(["Specials"], regname.SPINDIG, regname.SPINDIG1BONUS),
     locname.SPINDI2BONUSCL: SMG2LocationData(["Specials"], regname.SPINDIG, regname.SPINDIG2BONUS),
     locname.RIGHTSIBONUSCL: SMG2LocationData(["Specials"], regname.RIGHTDOWN, regname.RIGHTDOWNBONUS),
@@ -2135,7 +2135,24 @@ bonus_teleporter_locations: dict[str, SMG2LocationData] = {
     locname.THROWB2BONUSCL: SMG2LocationData(["Specials"], regname.WHOMPFORT, regname.WHOMP2BONUS),
 }
 
-# TODO Add Powerup first locations
+first_powerup_locations: dict[str, SMG2LocationData] = {
+    locname.SUPASTAR1ST:        SMG2LocationData(["Fisrt Power-Up Location"], regname.FIRSTSUPASTAR, regname.FIRSTSUPASTAR,
+                                                 RB.SUPAPOWA),
+    locname.FIREFLOWER1ST:      SMG2LocationData(["Fisrt Power-Up Location"], regname.FIRSTFIREFLOWER, regname.FIRSTFIREFLOWER,
+                                                 RB.FireMario),
+    locname.BEEMARIO1ST:        SMG2LocationData(["Fisrt Power-Up Location"], regname.FIRSTBEEMARIO, regname.FIRSTBEEMARIO,
+                                                 RB.BeeFlight),
+    locname.SPRING1ST:          SMG2LocationData(["Fisrt Power-Up Location"], regname.FIRSTSPRING, regname.FIRSTSPRING,
+                                                 RB.SPRONGIN),
+    locname.BOOMARIO1ST:        SMG2LocationData(["Fisrt Power-Up Location"], regname.FIRSTBOOMARIO, regname.FIRSTBOOMARIO,
+                                                 RB.BooMario),
+    locname.CLOUD1ST:           SMG2LocationData(["Fisrt Power-Up Location"], regname.FIRSTCLOUD, regname.FIRSTCLOUD,
+                                                 RB.CloudMario),
+    locname.ROCK1ST:            SMG2LocationData(["Fisrt Power-Up Location"], regname.FIRSTROCK, regname.FIRSTROCK,
+                                                 RB.ROCKNROLLIN),
+    locname.SPINDRILL1ST:       SMG2LocationData(["Fisrt Power-Up Location"], regname.FIRSTSPINDRILL, regname.FIRSTSPINDRILL,
+                                                 RB.DRILLMASTER),
+}
 
 base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_loc, **RIGHTDOWN_loc,
                         **FLIPSWAP_loc, **WILDGLIDE_loc, **ROLLMAST_loc, **HONEYHOP_loc, **UPDIZZY_loc,
@@ -2151,7 +2168,8 @@ base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_l
 
 all_location_table = {**base_stars_locations, **green_star_locations, **COMETMEDAL_loc, **mailtoad_locations,
                       **checkpoint_loc_table, **hungry_luma_loc, **passenger_loc, **lumalee_locations,
-                      **pipe_locations, **launch_star_locs, **special_locations, **bonus_teleporter_locations}
+                      **pipe_locations, **launch_star_locs, **special_locations, **bonus_teleporter_locations,
+                      **first_powerup_locations}
 
 LOCATION_NAME_TO_ID: dict[str, int] =  {
     name: list(all_location_table.keys()).index(name) for name in all_location_table.keys() }

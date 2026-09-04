@@ -1272,3 +1272,13 @@ BOOMOO1BONUSCL = "Boo Moon 1: Bonus Teleporter Clear"
 BOOMOO2BONUSCL = "Boo Moon 2: Bonus Teleporter Clear"
 THROWB1BONUSCL = "Throwback 1: Bonus Teleporter Clear"
 THROWB2BONUSCL = "Throwback 2: Bonus Teleporter Clear"
+
+# First Power-Up locations
+SUPASTAR1ST    = "Rainbow Star"
+FIREFLOWER1ST  = "Fire Flower"
+BEEMARIO1ST    = "Bee Mushroom"
+SPRING1ST      = "Spring Mushroom"
+BOOMARIO1ST    = "Boo Mushroom"
+CLOUD1ST       = "Cloud Mushroom"
+ROCK1ST        = "Rock Mushroom"
+SPINDRILL1ST   = "Spin Drill"
