@@ -32,11 +32,21 @@ options.
 
 ### Where do I get a config file?
 
-Run the ArchipelagoLauncher.exe from your Archipelago install and click `Generate Template Options`.
-This will produce a `/Players/Templates` folder in your Archipelago install, which contains default config files for 
-every game in your `custom_worlds` and `lib/worlds` folder. You can manually edit the config file using a text editor of your choice.
+### Where do I get a config file?
+You have a few options on how to make your YAML config file. 
 
-Alternately, the [Player Settings](../player-settings) page on the website allows you to configure
+The easiest way is to open the Options Creator in the Archipelago Launcher. Run the ArchipelagoLauncher.exe from your 
+Archipelago install and open the Options Creator. On the left side is a list of all the games you have in your 
+`custom_worlds` and all the core games. Until a future update comes, you will have to scroll through the games to find 
+the one you would like to play. After you select it, the options for that game will appear in the right side of the screen. 
+After filling in your options, you will be able to export the file to use for yourself or give to the host.
+
+Your second option is also through the Archipelago Launcher. Run the ArchipelagoLauncher.exe from your Archipelago 
+install and click `Generate Template Options`. This will produce a `/Players/Templates` folder in your Archipelago 
+install, which contains default config files for every game in your `custom_worlds` and `lib/worlds` folder. 
+You can manually edit the config file using a text editor of your choice.
+
+Alternately, the [Player Settings](../player-settings) page on the website (if this game is present there) allows you to configure
 your personal settings and export a config file from them.
 
 ### Verifying your config file
