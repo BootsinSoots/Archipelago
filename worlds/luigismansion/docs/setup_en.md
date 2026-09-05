@@ -37,12 +37,16 @@ to enjoy an experience customized for their taste, and different players in the 
 options.
 
 ### Where do I get a config file?
+You have a few options on how to make your YAML config file. The easiest way is to open the Options Creator in the 
+Archipelago Launcher. Run the ArchipelagoLauncher.exe from your Archipelago install and open the Options Creator.
+After filling in your options, you will be able to export the file to use for yourself or give to the host.
 
-Run the ArchipelagoLauncher.exe from your Archipelago install and click `Generate Template Options`.
-This will produce a `/Players/Templates` folder in your Archipelago install, which contains default config files for 
-every game in your `custom_worlds` and `lib/worlds` folder. You can manually edit the config file using a text editor of your choice.
+Your second option is also through the Archipelago Launcher. Run the ArchipelagoLauncher.exe from your Archipelago 
+install and click `Generate Template Options`. This will produce a `/Players/Templates` folder in your Archipelago 
+install, which contains default config files for every game in your `custom_worlds` and `lib/worlds` folder. 
+You can manually edit the config file using a text editor of your choice.
 
-Alternately, the [Player Settings](../player-settings) page on the website allows you to configure
+Alternately, the [Player Settings](../player-settings) page on the website (if this game is present there) allows you to configure
 your personal settings and export a config file from them.
 
 ### Verifying your config file
@@ -63,16 +67,18 @@ If you would like to validate your config file to make sure it works, you may do
 6. Run the ArchipelagoLauncher.exe and click `Open Patch`. Select your `.aplm` patch file.
 You will be prompted to locate your Luigi's Mansion ISO the first time you do this.
    - This action will automatically run the Luigi's Mansion Client (and connect to the webhost if the patch was downloaded from there).
-   - The patch will be placed in the same folder as your patch file by default.
+   - This will also automatically open Dolphin with the patched ISO.
+   - In case you need it, the patch will be placed in the same folder as your patch file by default.
    - You will ***not*** need to patch the game every time, and can simply run the `LMClient` from the list on the right of the Archipelago Launcher
 to continue later.
+### ***The following steps are only required if you do not use `Open Patch` to launch the game each time***
 7. Open Dolphin and from Dolphin, open your newly patched Luigi's Mansion ISO. Load all the way into a brand new save file, and pause.
    - Ensure that "Enable GPU Overclock" and "Emulated Memory Size Override" are both off in your Dolphin settings
    - You ***must*** use a brand new save file, not a New Game Plus file. New Game Plus is ***not*** supported
 8. In the server page, there will be a port number. Copy this port number into the top of your LMClient if it did not populate on its own. 
    - The field should read `archipelago.gg:<port number>`
 9. Once you have loaded into the game, click the `Connect` button at the top of the LMClient. You are now connected and ready to play!
-   - The client takes around 10 seconds to finish connecting, and only connects once you are actually in the mansion
+   - The client takes around 10 seconds to finish connecting
    - Unfortunately, due to the nature of some checks, you must be connected to a server while playing. Please keep a link to the webpage on hand
 10. To rejoin the room later, you need to open the webpage, open the LM Client through the Archipelago Launcher, and open the patched ISO with Dolphin.
 Then you can click connect on the LM Client so long as the port matches what is shown on the webpage.
@@ -90,8 +96,10 @@ to locate your Luigi's Mansion ISO
 
 ### Connect to the client
 
-When the ISO patched, the Luigi's Mansion client (LMClient) should have also automatically launched in
-the background. If it did not, please check the log in your Archipelaog/logs folder. If this is its first time launching, you may be prompted to allow it to communicate through the Windows Firewall. You must reopen the client each time you connect to a different randomized ISO.
+When the ISO patched, the Luigi's Mansion client (LMClient) and Dolphin should have also automatically launched in
+the background. If it did not, please check the log in your Archipelaog/logs folder. If this is its first time launching, 
+you may be prompted to allow it to communicate through the Windows Firewall. You must reopen the client each time you 
+connect to a different randomized ISO.
 
 1. Open Dolphin and from Dolphin, open your newly patched Luigi's Mansion ISO
 2. In the server page, there will be a port number. Copy this port number into the top of your LMClient. 
