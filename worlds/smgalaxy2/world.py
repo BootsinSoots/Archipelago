@@ -21,7 +21,7 @@ from .Constants.Names import location_names as locname
 from .Constants.constants import AP_WORLD_VERSION_NAME, CLIENT_VERSION, GAME_NAME
 from .SMG2Options import WorldShuffle
 from .EntranceRando import rules_from_er_placements
-from .Patch.Patch import SMGPlayerContainer
+from .Patch.Patch import SMG2PlayerContainer
 from .locations import LOCATION_NAME_TO_ID, get_location_names_per_category, SMG2Location
 from .items import SMG2Item, ITEM_NAME_TO_ID, get_item_names_per_category, world_green_keys, SMG2ItemData
 from .regions import disconnect_from_option, region_list, SMG2RegionData
@@ -70,6 +70,7 @@ class SMG2World(World):
         self.star_block_counts: dict[str, dict[str, int]] = {}
         self.galaxy_key_items: list[SMG2Item] = []
         self.start_galaxy: str = regname.SKYOBS
+        self.music_mapping: dict[str, str] = {"TallTrunk1": "MBGM_SMG2something"}
 
     def generate_early(self) -> None:
         start_inv: list[str] = [start_item.name for start_item in self.multiworld.precollected_items[self.player]]
@@ -357,7 +358,7 @@ class SMG2World(World):
             output_data["Options"][field.name] = getattr(self.options, field.name).value
             if isinstance(output_data["Options"][field.name], set):
                 output_data["Options"][field.name] = list(output_data["Options"][field.name])
-        output_data["Options"]["mario_colors"] = getattr(self.options, "mario_colors").value
+        # output_data["Options"]["mario_colors"] = getattr(self.options, "mario_colors").value
 
         # Output which item has been placed at each location
         for location in list(smgloc for smgloc in self.get_locations() if isinstance(smgloc, SMG2Location)):
@@ -369,6 +370,7 @@ class SMG2World(World):
                     "name": location.item.name,
                     "game": self.game,
                     "classification": location.item.classification,
+                    "location_id": self.location_name_to_id[location.name],
                     # "type": location.type,
                 }
             elif location.item:
@@ -378,6 +380,7 @@ class SMG2World(World):
                     "name": location.item.name,
                     "game": location.item.game,
                     "classification": location.item.classification.name,
+                    "location_id": self.location_name_to_id[location.name],
                     #"type": location.type,
                 }
             else:
@@ -386,9 +389,9 @@ class SMG2World(World):
         # Outputs the plando details to our expected output file
         # Create the output path based on the current player + expected patch file ending.
         patch_path = os.path.join(output_directory,
-            f"{self.multiworld.get_out_file_name_base(self.player)}{SMGPlayerContainer.patch_file_ending}")
+            f"{self.multiworld.get_out_file_name_base(self.player)}{SMG2PlayerContainer.patch_file_ending}")
         # Create a zip (container) that will contain all the necessary output files for us to use during patching.
-        smg_container: SMGPlayerContainer = SMGPlayerContainer(output_data, patch_path, self.player_name, self.player)
+        smg_container: SMG2PlayerContainer = SMG2PlayerContainer(output_data, patch_path, self.player_name, self.player)
         # Write the expected output zip container to the Generated Seed folder.
         smg_container.write()
         
