@@ -83,6 +83,9 @@ class LMWorld(World):
     silver_original_counts: list[int]
     gold_original_counts: list[int]
 
+    # Furnisanity Value for Random Any
+    furn_any_list: list[str] | None
+
     def __init__(self, *args, **kwargs):
         super(LMWorld, self).__init__(*args, **kwargs)
         self.ghost_affected_regions = copy.deepcopy({key: val.element_type for (key, val) in REGION_LIST.items() if val.element_type})
@@ -102,11 +105,7 @@ class LMWorld(World):
         self.all_filler_dict = {}
         self.trap_filler_dict = {}
         self.other_filler_dict = {}
-
-    @staticmethod
-    def interpret_slot_data(slot_data):
-        # There are more clever ways to do this, but all would require much larger changes
-        return slot_data  # Tell UT that we have logic to fix
+        self.furn_any_list = None
 
     def _set_optional_locations(self):
         # Set the flags for progression location by checking player's settings
@@ -128,6 +127,8 @@ class LMWorld(World):
                 entry: LMLocation = LMLocation(self.player, location, region, data)
                 set_element_rules(self, entry, True)
                 region.locations.append(entry)
+
+        self.options.furnisanity.value = sorted(set(self.options.furnisanity.value))
         if "Full" in self.options.furnisanity.value:
             for location, data in FURNITURE_LOCATION_TABLE.items():
                 region = self.get_region(data.region)
@@ -139,9 +140,16 @@ class LMWorld(World):
                 else:
                     set_element_rules(self, entry, False)
                 region.locations.append(entry)
+
         elif "Random Any" in self.options.furnisanity.value:
+            if "Random Groups" in self.options.furnisanity.value:
+                self.options.furnisanity.value.remove("Random Groups")
+            local_list: list[str] = []
             for location, data in FURNITURE_LOCATION_TABLE.items():
-                if self.random.choice([0,1]) == 0:
+                if self.furn_any_list:
+                    if not location in self.furn_any_list:
+                        continue
+                elif self.random.choice([0,1]) == 0:
                     continue
                 region = self.get_region(data.region)
                 entry = LMLocation(self.player, location, region, data)
@@ -152,13 +160,20 @@ class LMWorld(World):
                 else:
                     set_element_rules(self, entry, False)
                 region.locations.append(entry)
+                local_list.append(location)
+            self.furn_any_list = local_list
+
         else:
             if "Random Groups" in self.options.furnisanity.value:
+                self.options.furnisanity.value.remove("Random Groups")
                 # add groups to option randomly
                 for group in sorted(self.options.furnisanity.valid_keys):
-                    if group not in ["Full", "Random Any", "Random Groups"]:
-                        if self.random.choice([0,1]) == 1:
-                            self.options.furnisanity.value = set(list(self.options.furnisanity.value) + [group])
+                    if group in ["Full", "Random Any", "Random Groups"]:
+                        continue
+                    if self.random.choice([0,1]) == 1:
+                        self.options.furnisanity.value.append(group)
+                self.options.furnisanity.value = sorted(set(self.options.furnisanity.value))
+
             location_dict: dict[str, LMLocationData] = {}
             if self.options.game_mode.value == 1:
                 for name, loc_data in FURNITURE_LOCATION_TABLE.items():
@@ -559,6 +574,10 @@ class LMWorld(World):
             self.options.portrait_health_option.value = slot_data["portrait_ghost_health_option"]
             self.silver_original_counts = list(slot_data["silver_original_counts"])
             self.gold_original_counts = list(slot_data["gold_original_counts"])
+
+            # Furnisanty UT value
+            loc_list: list[str] = list(slot_data["furn_any_list"])
+            self.furn_any_list = None if not loc_list else loc_list
             return True
 
         return False
@@ -1044,10 +1063,7 @@ class LMWorld(World):
 
     # Fill slot data for LM tracker
     def fill_slot_data(self):
-        if 'W' in self.multiworld.seed_name:
-            ap_seed: str = str(self.multiworld.seed_name[1:])
-        else:
-            ap_seed: str = str(self.multiworld.seed_name)
+        ap_seed: str = str(self.multiworld.seed_name)[:16]
 
         return {
             "rank requirement": self.options.rank_requirement.value,
@@ -1099,6 +1115,7 @@ class LMWorld(World):
             "portrait_ghost_health_option": self.options.portrait_health_option.value,
             "silver_original_counts": self.silver_original_counts,
             "gold_original_counts": self.gold_original_counts,
+            "furn_any_list": [] if not self.furn_any_list else self.furn_any_list,
         }
 
     def modify_multidata(self, multidata: "MultiData") -> None:
