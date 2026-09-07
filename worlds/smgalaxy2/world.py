@@ -377,6 +377,7 @@ class SMG2World(World):
             "Galaxies": self.shuffled_levels,
             "Galaxy Counts": self.star_block_counts,
             "Hints": {},
+            "Music Map": self.music_mapping
         }
 
         # Output relevant options to file
