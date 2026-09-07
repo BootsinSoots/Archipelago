@@ -78,10 +78,10 @@ def dict_to_xml(tag_key: str, d: dict):
     return elem
         
 
-class SMGPlayerContainer(APPlayerContainer):
+class SMG2PlayerContainer(APPlayerContainer):
     game = GAME_NAME
     compression_method = zipfile.ZIP_DEFLATED
-    patch_file_ending = ".apsmg"
+    patch_file_ending = ".apsmg2"
 
     def __init__(self, player_choices: dict, patch_path: str, player_name: str, player: int,
         server: str = ""):
