@@ -201,3 +201,14 @@ Thumbs.db
 [Dd]esktop.ini
 /determinism.py
 /fuzz.py
+/check_placement_item_location_references.py
+/collect_accessibility_test.py
+/deprecated_get_options.py
+/deprecated_get_settings.py
+/detect_output_placement_changes.py
+/detect_rule_variable_capture_issues.py
+/gerpocalypse.py
+/indirect_conditions.py
+/item_location_count.py
+/profile.py
+/with_empty.py
