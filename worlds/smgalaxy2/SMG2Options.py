@@ -26,6 +26,7 @@ class Goal(Choice):
     option_Grandmaster = 2
     option_Perfect_Run = 3
     option_All_Bowsers = 4
+    slot_req = True
 
 class GalaxyShuffle(OptionSet):
     """
@@ -51,6 +52,8 @@ class GalaxyShuffle(OptionSet):
     display_name = "Galaxy Shuffle"
     internal_name = "galaxy_shuffle"
     valid_keys = {"Full", "World Majors", "World Minors", "Hungry Lumas", "World S Specials", "Bosses", "Grandmaster"}
+    slot_req = True
+
 
 class GalaxyShuffleType(Choice):
     """
@@ -68,6 +71,7 @@ class GalaxyShuffleType(Choice):
     option_By_Type = 0
     option_Major_Separate = 1
     option_Full = 2
+    slot_req = True
 
 class WorldShuffle(Choice):
     """
@@ -85,6 +89,7 @@ class WorldShuffle(Choice):
     option_Progressive = 0
     option_Keyed_Grand_Stars = 1
     option_Open = 2
+    slot_req = True
 
 class EnableGreenStars(Choice):
     """
@@ -107,6 +112,7 @@ class EnableGreenStars(Choice):
     option_Require_Galaxy_Generator = 2
     option_Require_Green_Star_Comet = 3
     option_Require_World_Green_Key = 4
+    slot_req = True
 
 class StarstoFinish(Range):
     """
@@ -120,6 +126,7 @@ class StarstoFinish(Range):
     range_start = 0
     range_end = 240
     default = 60
+    slot_req = True
 
 class GreenStarBehavior(Choice):
     """
@@ -136,6 +143,7 @@ class GreenStarBehavior(Choice):
     option_Power_Stars = 0
     option_Green_Stars = 1
     option_Disabled = 2
+    slot_req = True
 
 class GreenStarstoFinish(Range):
     """
@@ -146,11 +154,14 @@ class GreenStarstoFinish(Range):
     range_start = 0
     range_end = 120
     default = 60
+    slot_req = True
 
 class FinalStarBlocks(OptionCounter):
     value: Counter
     """
     Set the star requirements for the final Star Block in each world.
+    
+    Adding 'Random: XXX' will roll ALL values somewhere between 0 and XXX
 
     If the world has multiple blocks, the others will be set based on your choice for the final block.
 
@@ -161,7 +172,7 @@ class FinalStarBlocks(OptionCounter):
     min = 0
     max = 236
     valid_keys = ["Final Star Block 1", "Final Star Block 2", "Final Star Block 3", "Final Star Block 4",
-                  "Final Star Block 5", "Final Star Block 6", "Final Star Block 7"]
+                  "Final Star Block 5", "Final Star Block 6", "Final Star Block 7", "Random"]
     default = {
         "Final Star Block 1": 7, # -4 for other block
         "Final Star Block 2": 16,
@@ -171,6 +182,7 @@ class FinalStarBlocks(OptionCounter):
         "Final Star Block 6": 70, # -5 and -10 for other blocks
         "Final Star Block 7": 110 # -10, -20, -30, -35 for other blocks
     }
+    slot_req = True
 
 
 class  MarioColors(OptionDict):
@@ -198,6 +210,7 @@ class GalaxyLock(Toggle):
     """
     display_name = "Galaxy Locks"
     internal_name = "galaxy_lock"
+    slot_req = True
 
 class ActiveCometsGame(Range): # doesn't affect logic
     """
@@ -208,6 +221,7 @@ class ActiveCometsGame(Range): # doesn't affect logic
     range_start = 1
     range_end = 39
     default = 1
+    slot_req = True
 
 class ActiveCometsWorld(Range): # doesn't affect logic
     """
@@ -218,6 +232,7 @@ class ActiveCometsWorld(Range): # doesn't affect logic
     range_start = 1
     range_end = 7
     default = 1
+    slot_req = True
 
 class PowerupRando(Toggle):
     """
@@ -225,6 +240,7 @@ class PowerupRando(Toggle):
     """
     display_name = "Power-Up Rando"
     internal_name = "powerup_rando"
+    slot_req = True
 
 class PowerUpFiller(Choice):
     """
@@ -237,6 +253,7 @@ class PowerUpFiller(Choice):
     option_Off = 0
     option_Exclude_Ice_and_Fly = 1
     option_All = 2
+    slot_req = True
 
 class MoveRando(Choice):
     """
@@ -251,6 +268,7 @@ class MoveRando(Choice):
     option_Off = 0
     option_Progressive_Jumps = 1
     option_Separate_Jumps = 2
+    slot_req = True
 
 class YoshiRando(Toggle):
     """
@@ -258,6 +276,7 @@ class YoshiRando(Toggle):
     """
     display_name = "Yoshi Rando"
     internal_name = "yoshi_rando"
+    slot_req = True
 
 class ObjectRando(Toggle):
     """
@@ -265,6 +284,7 @@ class ObjectRando(Toggle):
     """
     display_name = "Object Rando"
     internal_name = "object_rando"
+    slot_req = True
 
 class StarbitLumaLocks(Choice):
     """
@@ -279,20 +299,20 @@ class StarbitLumaLocks(Choice):
     option_Off = 0
     option_Global = 1
     option_Individual = 2
-
+    slot_req = True
 
 class StarbitLumaCounts(OptionCounter):
     """
-    Determine how many starbits are required for each Starbit Luma
+    Determine how many starbits are required for each Starbit Luma. Maximum is 9999
 
-    Adding 'random: XXX' will roll ALL values somewhere between 0 and XXX
+    Adding 'Random: XXX' will roll ALL values somewhere between 50 and XXX
     """
     display_name = "Starbit Luma Counts"
     internal_name = "starbit_luma_counts"
     min = 50
     max = 9999
     valid_keys = ["World 1 Starbit Luma", "World 2 Starbit Luma", "World 3 Starbit Luma","World 4 Starbit Luma",
-                  "World 5 Starbit Luma", "World 6 Starbit Luma", "World 7 Starbit Luma", "random"]
+                  "World 5 Starbit Luma", "World 6 Starbit Luma", "World 7 Starbit Luma", "Random"]
     default = {
         "World 1 Starbit Luma": 300,
         "World 2 Starbit Luma": 700,
@@ -302,6 +322,7 @@ class StarbitLumaCounts(OptionCounter):
         "World 6 Starbit Luma": 1800,
         "World 7 Starbit Luma": 2000
     }
+    slot_req = True
 
 class CoinLumaLocks(Choice):
     """
@@ -316,20 +337,21 @@ class CoinLumaLocks(Choice):
     option_Off = 0
     option_Global = 1
     option_Individual = 2
+    slot_req = True
 
 
 class CoinLumaCounts(OptionCounter):
     """
-    Determine how many coins are required for each Coin Luma
+    Determine how many coins are required for each Coin Luma. Maximum is 9999
 
-    Adding 'random: XXX' will roll ALL values somewhere between 0 and XXX
+    Adding 'Random: XXX' will roll ALL values somewhere between 0 and XXX
     """
     display_name = "Coin Luma Counts"
     internal_name = "Coin_luma_counts"
     min = 0
     max = 9999
     valid_keys = ["Fluffy Bluff Coin Luma", "Puzzle Plank Coin Luma", "Hightail Falls Coin Luma","Cosmic Cove Coin Luma",
-                  "Cloudy Court Coin Luma", "Clockwork Ruins Coin Luma", "Battle Belt Coin Luma", "random"]
+                  "Cloudy Court Coin Luma", "Clockwork Ruins Coin Luma", "Battle Belt Coin Luma", "Random"]
     default = {
         "Fluffy Bluff Coin Luma": 100,
         "Puzzle Plank Coin Luma": 70,
@@ -339,6 +361,7 @@ class CoinLumaCounts(OptionCounter):
         "Clockwork Ruins Coin Luma": 30,
         "Battle Belt Coin Luma": 20
     }
+    slot_req = True
 
 class CometItems(Choice):
     """
@@ -353,6 +376,7 @@ class CometItems(Choice):
     option_Off = 0
     option_Global = 1
     option_Type = 2
+    slot_req = True
 
 class CometMission(Choice):
     """
@@ -372,6 +396,7 @@ class CometMission(Choice):
     option_Medal = 1
     option_Mission = 2
     option_Both = 3
+    slot_req = True
 
 class LogicDifficulty(Choice):
     """
@@ -391,6 +416,7 @@ class LogicDifficulty(Choice):
     option_Medium = 1
     option_Hard = 2
     option_Hell = 3
+    slot_req = True
 
 class MailtoadLetters(Toggle):
     """
@@ -398,6 +424,7 @@ class MailtoadLetters(Toggle):
     """
     display_name = "Mailtoad Letters"
     internal_name = "mailtoad_letters"
+    slot_req = True
 
 class Passengers(Toggle):
     """
@@ -405,6 +432,7 @@ class Passengers(Toggle):
     """
     display_name = "Passengers"
     internal_name = "passengers"
+    slot_req = True
 
 class TrapWeights(OptionCounter):
     """
@@ -422,7 +450,7 @@ class TrapWeights(OptionCounter):
     default = {item: data.default_weight for item, data in trap_filler_items.items()}
     all_on_dict = {item: 100 for item in trap_filler_items.keys()}
     all_off_dict = {item: 0 for item in trap_filler_items.keys()}
-
+    slot_req = True
 
 class TrapPercentage(Range):
     """
@@ -433,6 +461,7 @@ class TrapPercentage(Range):
     range_start = 0
     range_end = 100
     default = 0
+    slot_req = True
 
 class LaunchStars(Toggle):
     """
@@ -440,6 +469,7 @@ class LaunchStars(Toggle):
     """
     display_name = "Launch Stars"
     internal_name = "launch_stars"
+    slot_req = True
 
 class Pipesanity(Toggle):
     """
@@ -447,6 +477,7 @@ class Pipesanity(Toggle):
     """
     display_name = "Pipesanity"
     internal_name = "pipesanity"
+    slot_req = True
 
 class BonusTeleporters(Toggle):
     """
@@ -454,6 +485,14 @@ class BonusTeleporters(Toggle):
     """
     display_name = "Bonus Teleporters"
     internal_name = "bonus_teleporters"
+    slot_req = True
+
+class MusicRando(Toggle):
+    """
+    Randomize music played in each stage or area.
+    """
+    display_name = "Music Rando"
+    internal_name = "music_rando"
 
 # class Bossanity(Toggle):
 #     """
@@ -501,6 +540,7 @@ class SMG2Options(PerGameCommonOptions):
     launch_stars: LaunchStars
     pipesanity: Pipesanity
     bonus_teleporters: BonusTeleporters
+    music_rando: MusicRando
     #bossanity: Bossanity
 
 option_groups = [
@@ -547,7 +587,8 @@ option_groups = [
         TrapWeights,
     ]),
     OptionGroup("Cosmetics", [
-        MarioColors
+        MarioColors,
+        MusicRando,
     ]),
 ]
 

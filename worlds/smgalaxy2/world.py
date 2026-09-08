@@ -3,13 +3,12 @@ import json
 import math
 import os
 from dataclasses import fields
-from typing import ClassVar, Counter
-
+from typing import ClassVar, Counter, Mapping, Any
 
 from BaseClasses import Item, MultiWorld, Location
 from Utils import visualize_regions
 from BaseClasses import ItemClassification
-from Options import OptionError
+from Options import OptionError, PerGameCommonOptions
 from entrance_rando import randomize_entrances
 from worlds.AutoWorld import World
 from worlds.LauncherComponents import Component, SuffixIdentifier, Type, components, launch_subprocess
@@ -23,10 +22,13 @@ from .SMG2Options import WorldShuffle
 from .EntranceRando import rules_from_er_placements
 from .Patch.Patch import SMG2PlayerContainer
 from .locations import LOCATION_NAME_TO_ID, get_location_names_per_category, SMG2Location
-from .items import SMG2Item, ITEM_NAME_TO_ID, get_item_names_per_category, world_green_keys, SMG2ItemData
+from .items import (SMG2Item, ITEM_NAME_TO_ID, get_item_names_per_category, world_green_keys, SMG2ItemData, music_map,
+                    all_music_list)
 from .regions import disconnect_from_option, region_list, SMG2RegionData
 from .SMG2Settings import SuperMarioGalaxy2
-# from .Patch.Patch import SMGPlayerContainer
+
+# Module-level, computed once
+PER_GAME_OPTION_NAMES = {f.name for f in fields(PerGameCommonOptions)}
 
 # def runClient(*args):
 #     from .SMG2Client import launch
@@ -59,6 +61,7 @@ class SMG2World(World):
     required_client_version = (0, 6, 7)
 
     trap_filler_dict: dict[str, int]
+    music_mapping: dict[str, str] = {}
 
     hint_blacklist = {"Peach"}
 
@@ -70,7 +73,7 @@ class SMG2World(World):
         self.star_block_counts: dict[str, dict[str, int]] = {}
         self.galaxy_key_items: list[SMG2Item] = []
         self.start_galaxy: str = regname.SKYOBS
-        self.music_mapping: dict[str, str] = {"TallTrunk1": "MBGM_SMG2something"}
+        self.music_mapping: dict[str, str] = music_map
 
     def generate_early(self) -> None:
         start_inv: list[str] = [start_item.name for start_item in self.multiworld.precollected_items[self.player]]
@@ -79,17 +82,20 @@ class SMG2World(World):
         if "random" in self.options.starbit_luma_counts.value.keys():
             random_cap: int = self.options.starbit_luma_counts.value["random"]
             self.options.starbit_luma_counts.value = {
-                "World 1 Starbit Luma": self.random.choice(range(random_cap)),
-                "World 2 Starbit Luma": self.random.choice(range(random_cap)),
-                "World 3 Starbit Luma": self.random.choice(range(random_cap)),
-                "World 4 Starbit Luma": self.random.choice(range(random_cap)),
-                "World 5 Starbit Luma": self.random.choice(range(random_cap)),
-                "World 6 Starbit Luma": self.random.choice(range(random_cap)),
-                "World 7 Starbit Luma": self.random.choice(range(random_cap))
+                "World 1 Starbit Luma": self.random.choice(range(50, random_cap)),
+                "World 2 Starbit Luma": self.random.choice(range(50, random_cap)),
+                "World 3 Starbit Luma": self.random.choice(range(50, random_cap)),
+                "World 4 Starbit Luma": self.random.choice(range(50, random_cap)),
+                "World 5 Starbit Luma": self.random.choice(range(50, random_cap)),
+                "World 6 Starbit Luma": self.random.choice(range(50, random_cap)),
+                "World 7 Starbit Luma": self.random.choice(range(50, random_cap))
             }
         for key in self.options.starbit_luma_counts.valid_keys:
+            if key is "Random":
+                continue
             if key not in self.options.starbit_luma_counts.value.keys():
                 self.options.starbit_luma_counts.value.update({key: 0})
+
         if "random" in self.options.coin_luma_counts.value.keys():
             random_cap: int = self.options.coin_luma_counts.value["random"]
             self.options.coin_luma_counts.value = {
@@ -102,11 +108,31 @@ class SMG2World(World):
                 "Battle Belt Coin Luma": self.random.choice(range(random_cap))
             }
         for key in self.options.coin_luma_counts.valid_keys:
+            if key is "Random":
+                continue
             if key not in self.options.coin_luma_counts.value.keys():
                 self.options.coin_luma_counts.value.update({key: 0})
+
+        if "random" in self.options.final_star_blocks.value.keys():
+            random_cap: int = self.options.final_star_blocks.value["random"]
+            self.options.coin_luma_counts.value = {
+                "Final Star Block 1": self.random.choice(range(random_cap)),
+                "Final Star Block 2": self.random.choice(range(random_cap)),
+                "Final Star Block 3": self.random.choice(range(random_cap)),
+                "Final Star Block 4": self.random.choice(range(random_cap)),
+                "Final Star Block 5": self.random.choice(range(random_cap)),
+                "Final Star Block 6": self.random.choice(range(random_cap)),
+                "Final Star Block 7": self.random.choice(range(random_cap))
+            }
         for key in self.options.final_star_blocks.valid_keys:
+            if key is "Random":
+                continue
             if key not in self.options.final_star_blocks.value.keys():
                 self.options.final_star_blocks.value.update({key: 0})
+
+        if self.options.music_rando.value:
+            for key in self.music_mapping:
+                self.music_mapping[key] = self.random.choice(sorted(all_music_list))
 
         if self.options.move_rando.value:
             move_list = [move_name for move_name in list(items.move_rando.keys()) if not move_name in start_inv]
@@ -287,6 +313,27 @@ class SMG2World(World):
     def pre_fill(self) -> None:
         visualize_regions(self.get_region(self.origin_region_name), "SMG2_region_graph.puml",show_entrance_names=True)
 
+    def fill_slot_data(self) -> Mapping[str, Any]:
+        # If you need access to the player's chosen options on the client side, there is a helper for that.
+        slot_data: dict = {}
+
+        # This gets all the names of the options from both the world's option class and the inherited class,
+        #   since this world's options inherit from PerGameCommonOptions, there will be duplicates.
+        # HOWEVER, rather than just doing GameOptions.__annotations__ and getting it directly that way,
+        #   you would automatically filter out death_link for example and... well im just lazy lol
+        for f in sorted(fields(self.options), key=lambda f: f.name):
+            if f.name in PER_GAME_OPTION_NAMES:
+                continue
+
+            # Skip options explicitly slot_req = False
+            option = getattr(self.options, f.name)
+            if getattr(option, "slot_req", True) is False:
+                continue
+
+            slot_data[f.name] = option.value
+
+        return slot_data
+
     @classmethod
     def stage_fill_hook(cls, multiworld: MultiWorld, progitempool: list[Item], usefulitempool: list[Item],
         filleritempool: list[Item], fill_locations: list[Location]) -> None:
@@ -349,6 +396,7 @@ class SMG2World(World):
             "Galaxies": self.shuffled_levels,
             "Galaxy Counts": self.star_block_counts,
             "Hints": {},
+            "Music Map": self.music_mapping
         }
 
         # Output relevant options to file
