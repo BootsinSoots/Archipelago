@@ -82,17 +82,20 @@ class SMG2World(World):
         if "random" in self.options.starbit_luma_counts.value.keys():
             random_cap: int = self.options.starbit_luma_counts.value["random"]
             self.options.starbit_luma_counts.value = {
-                "World 1 Starbit Luma": self.random.choice(range(random_cap)),
-                "World 2 Starbit Luma": self.random.choice(range(random_cap)),
-                "World 3 Starbit Luma": self.random.choice(range(random_cap)),
-                "World 4 Starbit Luma": self.random.choice(range(random_cap)),
-                "World 5 Starbit Luma": self.random.choice(range(random_cap)),
-                "World 6 Starbit Luma": self.random.choice(range(random_cap)),
-                "World 7 Starbit Luma": self.random.choice(range(random_cap))
+                "World 1 Starbit Luma": self.random.choice(range(50, random_cap)),
+                "World 2 Starbit Luma": self.random.choice(range(50, random_cap)),
+                "World 3 Starbit Luma": self.random.choice(range(50, random_cap)),
+                "World 4 Starbit Luma": self.random.choice(range(50, random_cap)),
+                "World 5 Starbit Luma": self.random.choice(range(50, random_cap)),
+                "World 6 Starbit Luma": self.random.choice(range(50, random_cap)),
+                "World 7 Starbit Luma": self.random.choice(range(50, random_cap))
             }
         for key in self.options.starbit_luma_counts.valid_keys:
+            if key is "Random":
+                continue
             if key not in self.options.starbit_luma_counts.value.keys():
                 self.options.starbit_luma_counts.value.update({key: 0})
+
         if "random" in self.options.coin_luma_counts.value.keys():
             random_cap: int = self.options.coin_luma_counts.value["random"]
             self.options.coin_luma_counts.value = {
@@ -105,9 +108,25 @@ class SMG2World(World):
                 "Battle Belt Coin Luma": self.random.choice(range(random_cap))
             }
         for key in self.options.coin_luma_counts.valid_keys:
+            if key is "Random":
+                continue
             if key not in self.options.coin_luma_counts.value.keys():
                 self.options.coin_luma_counts.value.update({key: 0})
+
+        if "random" in self.options.final_star_blocks.value.keys():
+            random_cap: int = self.options.final_star_blocks.value["random"]
+            self.options.coin_luma_counts.value = {
+                "Final Star Block 1": self.random.choice(range(random_cap)),
+                "Final Star Block 2": self.random.choice(range(random_cap)),
+                "Final Star Block 3": self.random.choice(range(random_cap)),
+                "Final Star Block 4": self.random.choice(range(random_cap)),
+                "Final Star Block 5": self.random.choice(range(random_cap)),
+                "Final Star Block 6": self.random.choice(range(random_cap)),
+                "Final Star Block 7": self.random.choice(range(random_cap))
+            }
         for key in self.options.final_star_blocks.valid_keys:
+            if key is "Random":
+                continue
             if key not in self.options.final_star_blocks.value.keys():
                 self.options.final_star_blocks.value.update({key: 0})
 

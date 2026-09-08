@@ -160,6 +160,8 @@ class FinalStarBlocks(OptionCounter):
     value: Counter
     """
     Set the star requirements for the final Star Block in each world.
+    
+    Adding 'Random: XXX' will roll ALL values somewhere between 0 and XXX
 
     If the world has multiple blocks, the others will be set based on your choice for the final block.
 
@@ -170,7 +172,7 @@ class FinalStarBlocks(OptionCounter):
     min = 0
     max = 236
     valid_keys = ["Final Star Block 1", "Final Star Block 2", "Final Star Block 3", "Final Star Block 4",
-                  "Final Star Block 5", "Final Star Block 6", "Final Star Block 7"]
+                  "Final Star Block 5", "Final Star Block 6", "Final Star Block 7", "Random"]
     default = {
         "Final Star Block 1": 7, # -4 for other block
         "Final Star Block 2": 16,
@@ -301,16 +303,16 @@ class StarbitLumaLocks(Choice):
 
 class StarbitLumaCounts(OptionCounter):
     """
-    Determine how many starbits are required for each Starbit Luma
+    Determine how many starbits are required for each Starbit Luma. Maximum is 9999
 
-    Adding 'random: XXX' will roll ALL values somewhere between 0 and XXX
+    Adding 'Random: XXX' will roll ALL values somewhere between 50 and XXX
     """
     display_name = "Starbit Luma Counts"
     internal_name = "starbit_luma_counts"
     min = 50
     max = 9999
     valid_keys = ["World 1 Starbit Luma", "World 2 Starbit Luma", "World 3 Starbit Luma","World 4 Starbit Luma",
-                  "World 5 Starbit Luma", "World 6 Starbit Luma", "World 7 Starbit Luma", "random"]
+                  "World 5 Starbit Luma", "World 6 Starbit Luma", "World 7 Starbit Luma", "Random"]
     default = {
         "World 1 Starbit Luma": 300,
         "World 2 Starbit Luma": 700,
@@ -340,16 +342,16 @@ class CoinLumaLocks(Choice):
 
 class CoinLumaCounts(OptionCounter):
     """
-    Determine how many coins are required for each Coin Luma
+    Determine how many coins are required for each Coin Luma. Maximum is 9999
 
-    Adding 'random: XXX' will roll ALL values somewhere between 0 and XXX
+    Adding 'Random: XXX' will roll ALL values somewhere between 0 and XXX
     """
     display_name = "Coin Luma Counts"
     internal_name = "Coin_luma_counts"
     min = 0
     max = 9999
     valid_keys = ["Fluffy Bluff Coin Luma", "Puzzle Plank Coin Luma", "Hightail Falls Coin Luma","Cosmic Cove Coin Luma",
-                  "Cloudy Court Coin Luma", "Clockwork Ruins Coin Luma", "Battle Belt Coin Luma", "random"]
+                  "Cloudy Court Coin Luma", "Clockwork Ruins Coin Luma", "Battle Belt Coin Luma", "Random"]
     default = {
         "Fluffy Bluff Coin Luma": 100,
         "Puzzle Plank Coin Luma": 70,
