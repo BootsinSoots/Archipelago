@@ -34,6 +34,7 @@ class LMWeb(WebWorld):
             LuigiOptions.FinalBooCount,
             LuigiOptions.Enemizer,
             LuigiOptions.DoorRando,
+            LuigiOptions.DoorPercentage,
             LuigiOptions.RandomSpawn,
             LuigiOptions.EarlyFirstKey,
         ]),
