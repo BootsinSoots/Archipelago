@@ -570,7 +570,7 @@ def set_rules(world: "SMG2World", player: int):
                                                         "Tall Trunk 2: Piranha Bonus Teleporter")
     world.get_region(regname.TALLTRUNK2BIGTREE).connect(world.get_region(regname.TALLTRUNK2SLIDE),
                                                         "Tall Trunk 2: Big Tree Launch Star",
-                                                        rule=RB.CanLaunchStar & RB.CanSwing) #Test: Can climb tree, what's needed?
+                                                        rule=RB.CanLaunchStar & (RB.CanSwing | (RB.CanWallSpin & (RB.HardLogic | (RB.CanBackflip & RB.MediumLogic)))))
     world.get_region(regname.TALLTRUNK2SLIDE).connect(world.get_region(regname.TALLTRUNK2SLIDEND),
                                                       rule=RB.CanSlide)
     world.get_region(regname.TALLTRUNK).connect(world.get_region(regname.TALLTRUNK3PCOINSLIDE), "Tall Trunk Comet Star",
