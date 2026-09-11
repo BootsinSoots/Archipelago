@@ -925,7 +925,7 @@ class LMContext(BaseContext):
                             await self.wait_for_next_loop(WAIT_TIMER_LONG_TIMEOUT)
                             continue
 
-                        arg_seed = read_string(0x80000001, len(str(self.arg_seed)))
+                        arg_seed = read_string(0x80000003, len(str(self.arg_seed)))
                         if arg_seed != self.arg_seed:
                             raise Exception(
                                 f"Incorrect Randomized {RANDOMIZER_NAME} ISO file selected. The seed does not match." +
