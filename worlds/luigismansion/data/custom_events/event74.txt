@@ -17,7 +17,11 @@
 <WINDOW>(1)<COLOR>(4)
 <SAY><COLOR>(0)Sorry Luigi, I can't GIVE credit!
 <ANYKEY>
-<SAY><COLOR>(0)Come back when you're a little, mmm, richer!
+<SAY><COLOR>(0)Come back when you're a little,
+<ANYKEY>
+<SAY><COLOR>(0)mmm,
+<ANYKEY>
+<SAY><COLOR>(0)richer!
 <ANYKEY>
 <CLOSEWINDOW>(1)
 <LUIGIFREE2>
