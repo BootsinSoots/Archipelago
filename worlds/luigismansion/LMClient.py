@@ -936,11 +936,11 @@ class LMContext(BaseContext):
 
                         if __debug__:
                             flower_item_data = ALL_ITEMS_TABLE[self.item_names.lookup_in_game(8140)]
-                            print(f"Flower Addr: {"; ".join([hex(x.ram_addr) for x in flower_item_data.update_ram_addr])}")
+                            logger.info(f"Flower Addr: {"; ".join([hex(x.ram_addr) for x in flower_item_data.update_ram_addr])}")
                             speed = ALL_ITEMS_TABLE[self.item_names.lookup_in_game(8148)]
-                            print(f"Vac Speed Addr: {"; ".join([hex(x.ram_addr) for x in speed.update_ram_addr])}")
-                            count = ALL_ITEMS_TABLE[self.item_names.lookup_in_game(6064)]
-                            print(f"Vac Count Addr: {"; ".join([hex(x.ram_addr) for x in count.update_ram_addr])}")
+                            logger.info(f"Vac Speed Addr: {"; ".join([hex(x.ram_addr) for x in speed.update_ram_addr])}")
+                            count = ALL_ITEMS_TABLE[self.item_names.lookup_in_game(8064)]
+                            logger.info(f"Vac Count Addr: {"; ".join([hex(x.ram_addr) for x in count.update_ram_addr])}")
 
                     # At this point, we are verified as connected. Update UI elements in the LMCLient tab.
                     if self.ui:
