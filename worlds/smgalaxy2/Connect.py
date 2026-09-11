@@ -95,7 +95,7 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.GOODEGG).connect(world.get_region(regname.GOODEGG1LANDING), "Yoshi Star Star 1")
     world.get_region(regname.GOODEGG1LANDING).connect(world.get_region(regname.GOODEGG1MUDDY))
     world.get_region(regname.GOODEGG1MUDDY).connect(world.get_region(regname.GOODEGG1OCTOBONUS),
-                                                      "Yoshi Star 1: Octogoomba Bonus Teleporter",
+                                                      "Yoshi Star 1: Goomba Bonus Teleporter",
                                                     rule=(RB.CanRideDino | RB.CanLongSpin))
     world.get_region(regname.GOODEGG1MUDDY).connect(world.get_region(regname.GOODEGG1EARTH),
                                                       "Yoshi Star 1: Yoshi Planet Launch Star",
@@ -116,7 +116,8 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.GOODEGG).connect(world.get_region(regname.GOODEGG2LANDING), "Yoshi Star Star 2")
     world.get_region(regname.GOODEGG2LANDING).connect(world.get_region(regname.GOODEGG2MUDDY))
     world.get_region(regname.GOODEGG2MUDDY).connect(world.get_region(regname.GOODEGG2BONUS),
-                                                      "Yoshi Star 2: Octogoomba Bonus Teleporter")
+                                                      "Yoshi Star 2: Goomba Bonus Teleporter",
+                                                    rule=RB.CanRideDino)
     world.get_region(regname.GOODEGG2MUDDY).connect(world.get_region(regname.GOODEGG2SHOOTING),
                                               "Yoshi Star 2: Yoshi Planet Launch Star",
                                                     rule=RB.CanRideDino & RB.CanLaunchStar)
