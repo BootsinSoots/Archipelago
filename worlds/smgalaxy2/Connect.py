@@ -95,7 +95,7 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.GOODEGG).connect(world.get_region(regname.GOODEGG1LANDING), "Yoshi Star Star 1")
     world.get_region(regname.GOODEGG1LANDING).connect(world.get_region(regname.GOODEGG1MUDDY))
     world.get_region(regname.GOODEGG1MUDDY).connect(world.get_region(regname.GOODEGG1OCTOBONUS),
-                                                      "Yoshi Star 1: Octogoomba Bonus Teleporter",
+                                                      "Yoshi Star 1: Goomba Bonus Teleporter",
                                                     rule=(RB.CanRideDino | RB.CanLongSpin))
     world.get_region(regname.GOODEGG1MUDDY).connect(world.get_region(regname.GOODEGG1EARTH),
                                                       "Yoshi Star 1: Yoshi Planet Launch Star",
@@ -116,7 +116,8 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.GOODEGG).connect(world.get_region(regname.GOODEGG2LANDING), "Yoshi Star Star 2")
     world.get_region(regname.GOODEGG2LANDING).connect(world.get_region(regname.GOODEGG2MUDDY))
     world.get_region(regname.GOODEGG2MUDDY).connect(world.get_region(regname.GOODEGG2BONUS),
-                                                      "Yoshi Star 2: Octogoomba Bonus Teleporter")
+                                                      "Yoshi Star 2: Goomba Bonus Teleporter",
+                                                    rule=RB.CanRideDino)
     world.get_region(regname.GOODEGG2MUDDY).connect(world.get_region(regname.GOODEGG2SHOOTING),
                                               "Yoshi Star 2: Yoshi Planet Launch Star",
                                                     rule=RB.CanRideDino & RB.CanLaunchStar)
@@ -570,7 +571,7 @@ def set_rules(world: "SMG2World", player: int):
                                                         "Tall Trunk 2: Piranha Bonus Teleporter")
     world.get_region(regname.TALLTRUNK2BIGTREE).connect(world.get_region(regname.TALLTRUNK2SLIDE),
                                                         "Tall Trunk 2: Big Tree Launch Star",
-                                                        rule=RB.CanLaunchStar & RB.CanSwing) #Test: Can climb tree, what's needed?
+                                                        rule=RB.CanLaunchStar & (RB.CanSwing | (RB.CanWallSpin & (RB.HardLogic | (RB.CanBackflip & RB.MediumLogic)))))
     world.get_region(regname.TALLTRUNK2SLIDE).connect(world.get_region(regname.TALLTRUNK2SLIDEND),
                                                       rule=RB.CanSlide)
     world.get_region(regname.TALLTRUNK).connect(world.get_region(regname.TALLTRUNK3PCOINSLIDE), "Tall Trunk Comet Star",
