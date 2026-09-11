@@ -515,8 +515,8 @@ class RandomizeJMPTables:
 
             # Removes the Mr. Bones requirement. He will spawn instantly
             elif event_num == 23:
+                event_info["CharacterName"] = "dog01"
                 event_info["EventFlag"] = 0
-                event_info["disappear_flag"] = 74
 
             # Turn off Event 74 (Warp to King Boo Fight) in blackout by disabling event if King Boo isn't present
             elif event_num == 74:
