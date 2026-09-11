@@ -327,125 +327,49 @@ class RandomizeJMPTables:
         for observer_entry in new_observ_entries:
             map_two_nobserver.add_jmp_entry(observer_entry)
 
-        # # This one checks for the candles being lit in the Fortune-Teller's Room, flagging that key spawn
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(1870.000000, 190.000000, 140.000000,
-        #     3, 9, 7, arg0=110))
-        #
-        # # This one checks for lights on in the 1F Bathroom, flagging that key spawn
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(-2130.000000, 180.000000, -4550.000000,
-        #     20, 13, 7, arg0=110))
-        #
-        # # This one checks for lights on in the Well, flagging that key spawn
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(590.000000, -445.000000, -5910.000000,
-        #     69, 13, 7, arg0=110))
-        #
-        # # This one checks for lights on in the Wardrobe, flagging that key spawn
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(-2040.000000, 760.000000, -3020.000000,
-        #     38, 13, 7, arg0=110))
-        #
-        # # Turn on Flag 22 to stop Van Gogh from reloading
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(2970.000000, 1550.000000, -2095.000000,
-        #     57, 13, 7, arg0=22))
-        #
-        # # This one checks for lights on in the Dining Room, to prevent Luggs Respawning
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(-400.000000, 420.000000, -1800.000000,
-        #     9, 13, 7, arg0=31))
-        #
-        # # Adds an observer in Clairvoya's room (event36) to turn on spikes on the doors when room flag 120 is on.
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(2074.000000, 100.000000, -261.000000,
-        #     3, 18, 11, cond_arg0=120))
-        #
-        # # Adds an observer in Clairvoya's room (event36) to turn off spikes on the doors when room flag 120 is off.
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(2074.000000, 100.000000, -261.000000,
-        #     3, 19, 12, cond_arg0=120))
-        #
-        # # Adds an observer in Blackout Breaker room (event44) to turn on spikes on the doors when room flag 115 is on.
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(3250.000000, -500.000000, -1480.000000,
-        #     67, 18, 11, cond_arg0=115))
-        #
-        # # Adds an observer in Blackout Breaker room (event44) to turn off spikes on the doors when room flag 120 is on.
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(3250.000000, -500.000000, -1480.000000,
-        #     67, 18, 12, cond_arg0=120))
-        #
-        # # This one adds an observer into the Foyer where if Luigi is in the room anywhere, it will turn on the lights.
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(0.000000, 0.000000, 0.000000,
-        #     2, 15, 1))
-        #
-        # # This one checks for luigi entering the clockwork room, triggering the doll hint
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(10.000000, 1100.000000, -1650.000000,
-        #     56, 15, 7, arg0=157))
-        #
-        # # This one checks for luigi entering the clockwork room, triggering the doll2 hint
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(10.000000, 1100.000000, -1650.000000,
-        #     56, 15, 7, arg0=158))
-        #
-        # # This one checks for luigi entering the clockwork room, triggering the doll3 hint
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(10.000000, 1100.000000, -1650.000000,
-        #     56, 15, 7, arg0=159))
-        #
-        # # This one checks for luigi entering the artist's room, triggering the gaka hint
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(2890.000000, 1100.000000, -1640.000000,
-        #     57, 15, 7, arg0=157))
-        #
-        # # This one checks for luigi entering the study, triggering the father hint
-        # #map_two_nobserver.add_jmp_entry(create_observer_entry(-2440.000000, 550.000000, -2700.000000,
-        # #    34, 15, 7, arg0=157))
-        #
-        # # This one checks for luigi entering the master bedroom, triggering the mother hint
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(-3760.000000, 550.000000, -1800.000000,
-        #     33, 15, 7, arg0=157))
-        #
-        # # This one checks for luigi entering the nursery, triggering the baby hint
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(-3340.000000, 550.000000, -220.000000,
-        #     24, 15, 7, arg0=157))
-        #
-        # # This one checks for luigi entering the twins room, triggering the dboy hint
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(-1820.000000, 550.000000, -220.000000,
-        #     25, 15, 7, arg0=157))
-        #
-        # # This one checks for luigi entering the nanas room, triggering the nana hint
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(300.000000, 550.000000, -4960.000000,
-        #     46, 15, 7, arg0=157))
-        #
-        # # This one checks for luigi entering the 2f bathroom, triggering the petunia hint
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(-2100.000000, 550.000000, -4640.000000,
-        #     45, 15, 7, arg0=157))
-        #
-        # # This one checks for luigi entering the guest room, triggering the girl hint
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(3340.000000, 550.000000, -220.000000,
-        #     28, 15, 7, arg0=157))
-        #
-        # # This one checks for luigi entering the back hallway, triggering the butler hint
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(-3600.000000, 0.000000, 150.000000,
-        #     18, 15, 7, arg0=157))
-        #
-        # # This one checks for luigi entering the dining room, triggering the luggs hint
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(-280.000000, 0.000000, -1480.000000,
-        #     9, 15, 7, arg0=157))
-        #
-        # # This one checks for luigi entering the ballroom, triggering the dancer hint
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(2540.000000, 0.000000, -2800.000000,
-        #     10, 15, 7, arg0=157))
-        #
-        # # This one checks for luigi entering the billiard room, triggering the hustler hint
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(-1200.000000, 0.000000, -3840.000000,
-        #     12, 15, 7, arg0=157))
-        #
-        # # This one checks for luigi entering the conservatory, triggering the pianist hint
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(1360.000000, 0.000000, -4920.000000,
-        #     21, 15, 7, arg0=157))
-        #
-        # # This one checks for luigi entering the rec room, triggering the builder hint
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(2840.000000, 0.000000, -4940.000000,
-        #     22, 15, 7, arg0=157))
-        #
-        # # This one checks for luigi entering the boneyard, triggering the dog hint
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(-3360.000000, 0.000000, -3080.000000,
-        #     11, 15, 7, arg0=157))
-        #
-        # # This one checks for luigi entering the cold storage, triggering the snowman hint
-        # map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, -445.000000, -690.000000,
-        #     61, 15, 7, arg0=157))
+        # This one checks for the candles being lit in the Fortune-Teller's Room, flagging that key spawn
+        map_two_nobserver.add_jmp_entry(create_observer_entry(1870.000000, 190.000000, 140.000000,
+            3, 9, 7, arg0=110))
+
+        # This one checks for lights on in the 1F Bathroom, flagging that key spawn
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-2130.000000, 180.000000, -4550.000000,
+            20, 13, 7, arg0=110))
+
+        # This one checks for lights on in the Well, flagging that key spawn
+        map_two_nobserver.add_jmp_entry(create_observer_entry(590.000000, -445.000000, -5910.000000,
+            69, 13, 7, arg0=110))
+
+        # This one checks for lights on in the Wardrobe, flagging that key spawn
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-2040.000000, 760.000000, -3020.000000,
+            38, 13, 7, arg0=110))
+
+        # Turn on Flag 22 to stop Van Gogh from reloading
+        map_two_nobserver.add_jmp_entry(create_observer_entry(2970.000000, 1550.000000, -2095.000000,
+            57, 13, 7, arg0=22))
+
+        # This one checks for lights on in the Dining Room, to prevent Luggs Respawning
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-400.000000, 420.000000, -1800.000000,
+            9, 13, 7, arg0=31))
+
+        # Adds an observer in Clairvoya's room (event36) to turn on spikes on the doors when room flag 120 is on.
+        map_two_nobserver.add_jmp_entry(create_observer_entry(2074.000000, 100.000000, -261.000000,
+            3, 18, 11, cond_arg0=120))
+
+        # Adds an observer in Clairvoya's room (event36) to turn off spikes on the doors when room flag 120 is off.
+        map_two_nobserver.add_jmp_entry(create_observer_entry(2074.000000, 100.000000, -261.000000,
+            3, 19, 12, cond_arg0=120))
+
+        # Adds an observer in Blackout Breaker room (event44) to turn on spikes on the doors when room flag 115 is on.
+        map_two_nobserver.add_jmp_entry(create_observer_entry(3250.000000, -500.000000, -1480.000000,
+            67, 18, 11, cond_arg0=115))
+
+        # Adds an observer in Blackout Breaker room (event44) to turn off spikes on the doors when room flag 120 is on.
+        map_two_nobserver.add_jmp_entry(create_observer_entry(3250.000000, -500.000000, -1480.000000,
+            67, 18, 12, cond_arg0=120))
+
+        # This one adds an observer into the Foyer where if Luigi is in the room anywhere, it will turn on the lights.
+        map_two_nobserver.add_jmp_entry(create_observer_entry(0.000000, 0.000000, 0.000000,
+            2, 15, 1))
 
 
     def _map_two_enemy_changes(self):
