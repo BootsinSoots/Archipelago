@@ -2240,6 +2240,7 @@ WALK_LOCATION_TABLE: dict[str, LMLocationData] = {
 }
 
 MEME_LOCATION_TABLE: dict[str, LMLocationData] = {
+    # Courtyard Grass
     "Touch Courtyard Grass In front of Left-Side Tree": LMLocationData("Courtyard", 880, "Walk", 0, [], remote_only=True,
         update_ram_addr=[LMRamData(0x803D33A8, bit_position=3, in_game_room_id=24, ram_byte_size=2)], require_poltergust=False),
     "Touch Courtyard Grass Behind Left-Side Tree": LMLocationData("Courtyard", 881, "Walk", 0, [], remote_only=True,
@@ -2288,10 +2289,54 @@ MEME_LOCATION_TABLE: dict[str, LMLocationData] = {
         update_ram_addr=[LMRamData(0x803D33AB, bit_position=1, in_game_room_id=24, ram_byte_size=2)], require_poltergust=False),
     "Touch Courtyard Grass Near of Rec Room Door": LMLocationData("Courtyard", 903, "Walk", 0, [], remote_only=True,
         update_ram_addr=[LMRamData(0x803D33AB, bit_position=2, in_game_room_id=24, ram_byte_size=2)], require_poltergust=False),
-    "Touch Boneyard Grass":  LMLocationData("Boneyard", 905, "Walk", 0, [], remote_only=True,
-        update_ram_addr=[LMRamData(0x803CDF66, bit_position=0, in_game_room_id=11, ram_byte_size=2)]),
-    "Touch Graveyard Grass": LMLocationData("Graveyard", 904, "Walk", 0, [], remote_only=True,
-        update_ram_addr=[LMRamData(0x803CDF70, bit_position=0, in_game_room_id=15, ram_byte_size=2)]),
+
+    # Boneyard Grass
+    "Touch Boneyard Grass Left of Kitchen Door": LMLocationData("Boneyard", 904, "Walk", 0, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803D33A8, bit_position=3, in_game_room_id=11, ram_byte_size=2)]),
+    "Touch Boneyard Grass by Spooky's Doghouse": LMLocationData("Boneyard", 905, "Walk", 0, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803D33A8, bit_position=4, in_game_room_id=11, ram_byte_size=2)]),
+    "Touch Boneyard Grass Right of Kitchen Door": LMLocationData("Boneyard", 1000, "Walk", 0, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803D33A8, bit_position=5, in_game_room_id=11, ram_byte_size=2)]),
+    "Touch Boneyard Grass by Spooky's Dog Bowl": LMLocationData("Boneyard", 1001, "Walk", 0, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803D33A8, bit_position=6, in_game_room_id=11, ram_byte_size=2)]),
+    "Touch Boneyard Grass by Small Weed Patch": LMLocationData("Boneyard", 1002, "Walk", 0, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803D33A8, bit_position=7, in_game_room_id=11, ram_byte_size=2)]),
+    "Touch Boneyard Grass Left of Flower Bed": LMLocationData("Boneyard", 1003, "Walk", 0, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803D33A9, bit_position=0, in_game_room_id=11, ram_byte_size=2)]),
+    "Touch Boneyard Grass By Boneyard Sign": LMLocationData("Boneyard", 1004, "Walk", 0, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803D33A9, bit_position=1, in_game_room_id=11, ram_byte_size=2)]),
+    "Touch Boneyard Grass by Water Spigot": LMLocationData("Boneyard", 1005, "Walk", 0, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803D33A9, bit_position=2, in_game_room_id=11, ram_byte_size=2)]),
+
+    # Graveyard Grass
+    "Touch Graveyard Grass Left of Tree Stump": LMLocationData("Graveyard", 1006, "Walk", 0, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803D33A8, bit_position=3, in_game_room_id=15, ram_byte_size=2)]),
+    "Touch Graveyard Grass Left of Left Tree": LMLocationData("Graveyard", 1007, "Walk", 0, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803D33A8, bit_position=4, in_game_room_id=15, ram_byte_size=2)]),
+    "Touch Graveyard Grass Left Side Wall": LMLocationData("Graveyard", 1008, "Walk", 0, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803D33A8, bit_position=5, in_game_room_id=15, ram_byte_size=2)]),
+    "Touch Graveyard Grass Top Left Corner": LMLocationData("Graveyard", 1009, "Walk", 0, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803D33A8, bit_position=6, in_game_room_id=15, ram_byte_size=2)]),
+    "Touch Graveyard Grass Right of Tree Stump": LMLocationData("Graveyard", 1010, "Walk", 0, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803D33A8, bit_position=7, in_game_room_id=15, ram_byte_size=2)]),
+    "Touch Graveyard Grass Right of Left Tree": LMLocationData("Graveyard", 1011, "Walk", 0, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803D33A9, bit_position=0, in_game_room_id=15, ram_byte_size=2)]),
+    "Touch Graveyard Grass Near Left Brazier": LMLocationData("Graveyard", 1012, "Walk", 0, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803D33A9, bit_position=1, in_game_room_id=15, ram_byte_size=2)]),
+    "Touch Graveyard Grass Left of Bogmire Grave": LMLocationData("Graveyard", 1013, "Walk", 0, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803D33A9, bit_position=2, in_game_room_id=15, ram_byte_size=2)]),
+    "Touch Graveyard Grass Left of Right Tree": LMLocationData("Graveyard", 1014, "Walk", 0, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803D33A9, bit_position=3, in_game_room_id=15, ram_byte_size=2)]),
+    "Touch Graveyard Grass Near Right Brazier": LMLocationData("Graveyard", 1015, "Walk", 0, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803D33A9, bit_position=4, in_game_room_id=15, ram_byte_size=2)]),
+    "Touch Graveyard Grass Right of Bogmire Grave": LMLocationData("Graveyard", 1016, "Walk", 0, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803D33A9, bit_position=5, in_game_room_id=15, ram_byte_size=2)]),
+    "Touch Graveyard Grass Right of Right Tree": LMLocationData("Graveyard", 1017, "Walk", 0, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803D33A9, bit_position=6, in_game_room_id=15, ram_byte_size=2)]),
+    "Touch Graveyard Grass Right Side Wall": LMLocationData("Graveyard", 1018, "Walk", 0, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803D33A9, bit_position=7, in_game_room_id=15, ram_byte_size=2)]),
+    "Touch Graveyard Grass Top Right Corner": LMLocationData("Graveyard", 1019, "Walk", 0, [], remote_only=True,
+        update_ram_addr=[LMRamData(0x803D33AA, bit_position=0, in_game_room_id=15, ram_byte_size=2)]),
 }
 
 SILVER_PORTRAIT_TABLE: dict[str, LMLocationData] = {
