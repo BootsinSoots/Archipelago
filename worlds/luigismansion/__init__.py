@@ -967,10 +967,7 @@ class LMWorld(World):
 
     # Output options, locations and doors for patcher
     def generate_output(self, output_directory: str):
-        if 'W' in self.multiworld.seed_name:
-            ap_seed: str = str(self.multiworld.seed_name[1:])
-        else:
-            ap_seed: str = str(self.multiworld.seed_name)
+        ap_seed: str = str(self.multiworld.seed_name)[:16]
 
         # Output seed name and slot number to seed RNG in randomizer client
         output_data: dict = {
