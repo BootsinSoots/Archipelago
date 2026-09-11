@@ -373,53 +373,53 @@ class RandomizeJMPTables:
 
         # GRASSANITY WALL
         map_two_nobserver.add_jmp_entry(create_observer_entry(-2250.000000, 10.000000, -5770.000000,
-                                                              23, 7, 7, arg0=123))
+            23, 7, 7, arg0=123, arg1=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(-2250.000000, 10.000000, -6350.000000,
-                                                              23, 7, 7, arg0=124))
+            23, 7, 7, arg0=124, arg1=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
-                                                              23, 7, 7, arg0=125))
+            23, 7, 7, arg0=124, arg1=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
-                                                              23, 7, 7, arg0=126))
+            23, 7, 7, arg0=124, arg1=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
-                                                              23, 7, 7, arg0=127))
+            23, 7, 7, arg0=124, arg1=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
-                                                              23, 7, 7, arg0=128))
+            23, 7, 7, arg0=128, arg1=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
-                                                              23, 7, 7, arg0=129))
+            23, 7, 7, arg0=129, arg1=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
-                                                              23, 7, 7, arg0=130))
+            23, 7, 7, arg0=130, arg1=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
-                                                              23, 7, 7, arg0=131))
+            23, 7, 7, arg0=131, arg1=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
-                                                              23, 7, 7, arg0=132))
+            23, 7, 7, arg0=132, arg1=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
-                                                              23, 7, 7, arg0=133))
+            23, 7, 7, arg0=133, arg1=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
-                                                              23, 7, 7, arg0=134))
+            23, 7, 7, arg0=134, arg1=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
-                                                              23, 7, 7, arg0=135))
+            23, 7, 7, arg0=135, arg1=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
-                                                              23, 7, 7, arg0=136))
+            23, 7, 7, arg0=136, arg1=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
-                                                              23, 7, 7, arg0=137))
+            23, 7, 7, arg0=137, arg1=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
-                                                              23, 7, 7, arg0=138))
+            23, 7, 7, arg0=138, arg1=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
-                                                              23, 7, 7, arg0=139))
+            23, 7, 7, arg0=139, arg1=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
-                                                              23, 7, 7, arg0=140))
+            23, 7, 7, arg0=140, arg1=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
-                                                              23, 7, 7, arg0=141))
+            23, 7, 7, arg0=141, arg1=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
-                                                              23, 7, 7, arg0=142))
+            23, 7, 7, arg0=142, arg1=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
-                                                              23, 7, 7, arg0=143))
+            23, 7, 7, arg0=143, arg1=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
-                                                              23, 7, 7, arg0=144))
+            23, 7, 7, arg0=144, arg1=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
-                                                              23, 7, 7, arg0=145))
+            23, 7, 7, arg0=145, arg1=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
-                                                              23, 7, 7, arg0=146))
+            23, 7, 7, arg0=146, arg1=10))
 
 
     def _map_two_enemy_changes(self):
