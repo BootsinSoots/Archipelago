@@ -345,11 +345,11 @@ class LMWorld(World):
         rankcalc = 0
         if self.options.rank_requirement == 0:
             rankcalc = 0
-        elif 1 < self.options.rank_requirement < 3:
+        elif 0 < self.options.rank_requirement < 3:
             rankcalc = 1
         elif self.options.rank_requirement == 3:
             rankcalc = 2
-        elif 3 < self.options.rank_requirement < 5:
+        elif 3 < self.options.rank_requirement < 6:
             rankcalc = 3
         elif self.options.rank_requirement == 6:
             rankcalc = 4
