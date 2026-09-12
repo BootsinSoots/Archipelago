@@ -377,11 +377,11 @@ class RandomizeJMPTables:
         map_two_nobserver.add_jmp_entry(create_observer_entry(-2250.000000, 10.000000, -6050.000000,
             23, 7, 7, arg0=124, arg1=0, arg2=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(-2250.000000, 10.000000, -6350.000000,
-            23, 7, 7, arg0=124, arg1=0, arg2=10))
+            23, 7, 7, arg0=125, arg1=0, arg2=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
-            23, 7, 7, arg0=124, arg1=0, arg2=10))
+            23, 7, 7, arg0=126, arg1=0, arg2=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
-            23, 7, 7, arg0=124, arg1=0, arg2=10))
+            23, 7, 7, arg0=127, arg1=0, arg2=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
             23, 7, 7, arg0=128, arg1=0, arg2=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
