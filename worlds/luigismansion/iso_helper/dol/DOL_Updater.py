@@ -218,13 +218,13 @@ def read_and_update_hooks(dol_data: DOL, boo_rando_enabled: bool):
     custom_hook_text: str = (PROJECT_ROOT.joinpath("iso_helper").joinpath("dol").joinpath("Codes_Hooks.txt")
         .read_text(encoding="utf-8").lstrip().rstrip())
     custom_hook_lines: list[str] = custom_hook_text.splitlines()
-    if not ("04050E50" in custom_hook_text and "04050EB0" in custom_hook_text):
-        raise Exception("Unable to properly identify the code hooks to exclude regarding boosanity...")
+    #if not ("04050E50" in custom_hook_text and "04050EB0" in custom_hook_text):
+    #    raise Exception("Unable to properly identify the code hooks to exclude regarding boosanity...")
     for hook_line in custom_hook_lines:
         if hook_line.rstrip() == "": # Ignore any whitespace lines.
             continue
-        elif not boo_rando_enabled and ("04050E50" in hook_line or "04050EB0" in hook_line):
-            continue
+        #elif not boo_rando_enabled and ("04050E50" in hook_line or "04050EB0" in hook_line):
+        #    continue
 
         arc_code_line: list[str] = hook_line.split(" ")
         ram_addr: int = int("80" + arc_code_line[0][2:], 16)
