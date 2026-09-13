@@ -937,6 +937,7 @@ VISITWORLD6 = "Visit World 6"
 VISITWORLD7 = "Visit World 7"
 SPEAKTOLUBB = "Speak to Lubba: You're the Captain Now!"
 OPENWORLDMP = "Open the World Map"
+STARCTBOARD = "Look at Star Count Board"
 
 # Dice Blocks
 SHIPABOVEGDIE = "Starship Mario: Aboveground Chance Cube"
