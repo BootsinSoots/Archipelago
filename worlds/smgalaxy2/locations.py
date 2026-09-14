@@ -1783,7 +1783,7 @@ special_locations: dict[str, SMG2LocationData] = {
 oneup_locations: dict[str, SMG2LocationData] = {
     locname.SHIPTOADS1UP: SMG2LocationData(["1-up Location"], regname.SHIP2, regname.SHIPSTARSHROOM),
     locname.SHIPCLOUD1UP: SMG2LocationData(["1-up Location"], regname.SHIP2, regname.SHIP2,
-                                           RB.CanMakeCloud),
+                                           RB.CanMakeCloud & CanReachLocation(locname.STARBEACHSTAR2)),
     locname.SKST1PIOR1UP: SMG2LocationData(["1-up Location"], regname.SKYOBS, regname.SKYOBS1STARTTOPSIDE,
                                            RB.CanPipe),
     locname.SKST1YELL1UP: SMG2LocationData(["1-up Location"], regname.SKYOBS, regname.SKYOBS1GREENHILL),
