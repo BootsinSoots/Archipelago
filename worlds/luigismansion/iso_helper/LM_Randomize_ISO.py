@@ -4,6 +4,7 @@ import json, os
 from logging import Logger, getLogger
 from random import Random
 from importlib.resources import read_text
+from io import BytesIO
 
 # AP Related Imports
 import Utils
@@ -20,7 +21,9 @@ from .jmp_changes.Randomize_JMP_Tables import RandomizeJMPTables
 from .LM_Map_File import LMMapFile
 from ..client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME, RANDOMIZER_NAME, CLIENT_NAME, LM_GC_IDs
 from .LM_GameUSA_Arc import LMGameUSAArc
-from ..Helper_Functions import LMDynamicAddresses
+from ..Helper_Functions import LMDynamicAddresses, get_arc, find_rarc_file_entry
+from .LM_BTI import LMBTI
+from ..Helper_Functions import PROJECT_ROOT
 
 class LuigisMansionRandomizer:
 
@@ -93,6 +96,7 @@ class LuigisMansionRandomizer:
 
         # Update the relevant Game RARC archive
         self._load_game_archive(lm_regional_id)
+        self._copy_bti() # TODO Maybe move this elsewhere. May need to check for boosanity, unsure.
 
         # Update all of our items to have their dynamic values.
         self.lm_dynamic_addr.update_item_addresses()
@@ -223,3 +227,20 @@ class LuigisMansionRandomizer:
     def _export_files_from_memory(self):
         """Saves the files to export them into their expected output location."""
         yield from self.lm_gcm.export_disc_to_iso_with_changed_files(self.output_file_path)
+
+    def _copy_bti(self):
+        resource_dir: str = "files/resource"
+        self.lm_gcm.add_new_directory(resource_dir)
+        resource_dir += "/Archipelago"
+        self.lm_gcm.add_new_directory(resource_dir)
+
+        game_arc = get_arc(self.lm_gcm, "files/Game/game.szp")
+        new_bti: LMBTI = LMBTI()
+        new_bti.load_bti(find_rarc_file_entry(game_arc, "kawano", "teresar.bti").data)
+        new_bti.width = new_bti.width // 2
+        new_bti.height = new_bti.height // 2
+        self.lm_gcm.add_new_file(resource_dir + "/teresa_local_icon.bti", new_bti.to_bytes())
+
+        new_bti = LMBTI()
+        new_bti.load_png(BytesIO(PROJECT_ROOT.joinpath('data', 'archiboolego.png').read_bytes()))
+        self.lm_gcm.add_new_file(resource_dir + "/teresa_online_icon.bti", new_bti.to_bytes())
