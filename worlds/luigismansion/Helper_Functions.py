@@ -137,12 +137,26 @@ class LMDynamicAddresses:
             .joinpath("Custom_Addresses.map").read_text(encoding="utf-8").lstrip().rstrip().splitlines())
 
         for custom_line in custom_address_list:
-            if custom_line.rstrip() == "" or custom_line.lstrip().lower().startswith(".text"):  # Ignore any whitespace lines.
+            if custom_line.rstrip() == "":
                 continue
-            csv_line: list[str] = re.sub(r"[\s ]+", ",", custom_line, 0, flags=0).split(",")
 
-            updated_addr: str = csv_line[1].replace("0x", "")
-            self.dynamic_addresses[csv_line[2]] = updated_addr
+            custom_line = custom_line.strip()
+            if custom_line.lower().startswith(".text") or custom_line.startswith("__"):
+                continue
+
+            csv_line: list[str] = re.sub(r"[\s ]+", ",", custom_line, 0, flags=0).split(",")
+            if not (csv_line[1].startswith("0x") or csv_line[0].startswith("0x")):
+                continue
+
+            updated_addr: str = csv_line[1].replace("0x", "") if csv_line[1].startswith("0x") else \
+                csv_line[0].replace("0x", "")
+            updated_name = csv_line[2] if len(csv_line) > 2 else csv_line[1]
+            if updated_name.startswith("__"):
+                continue
+            elif updated_name.startswith("0x"):
+                raise Exception(f"Critical error when patching the Address map: {csv_line}")
+
+            self.dynamic_addresses[updated_name] = updated_addr
 
 
     def update_item_addresses(self):
@@ -177,7 +191,7 @@ class LMDynamicAddresses:
                         curr_ram_data.bit_position, curr_ram_data.ram_byte_size, curr_ram_data.pointer_offset,
                         curr_ram_data.in_game_room_id, curr_ram_data.item_count)
 
-                case "GC2D_read_Boo_Counter_Bitfields":
+                case "gcPlayer_Boo_Fields_Archipelago":
                     for boo_idx, boo_name in enumerate(BOO_ITEM_TABLE.keys(), 0):
                         curr_ram_data: LMRamData = ALL_ITEMS_TABLE[boo_name].update_ram_addr[0]
                         boo_addr = copy.deepcopy(converted_addr) + int(boo_idx/8)
