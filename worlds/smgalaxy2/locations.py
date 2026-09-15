@@ -1776,8 +1776,6 @@ special_locations: dict[str, SMG2LocationData] = {
     locname.VISITWORLD7: SMG2LocationData(["Specials"], regname.WORLD7, regname.WORLD7),
     locname.SPEAKTOLUBB: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIP),
     locname.OPENWORLDMP: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIP),
-    locname.STARCTBOARD: SMG2LocationData(["Specials"], regname.SHIP2, regname.SHIP2,
-                                          RB.PowerStarCount(16) & Has(itemname.STARBOARD)),
 }
 
 oneup_locations: dict[str, SMG2LocationData] = {

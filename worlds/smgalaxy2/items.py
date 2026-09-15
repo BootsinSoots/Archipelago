@@ -25,7 +25,7 @@ item_table: dict[str, SMG2ItemData] = {
   itemname.POWER: SMG2ItemData(["Power Stars"], IC.progression_deprioritized_skip_balancing, 115),
   itemname.GRAND: SMG2ItemData(["Grand Stars", "Power Stars"], IC.progression, 7),
   itemname.GREEN: SMG2ItemData(["Power Stars", "Green Stars"], IC.progression, 120),
-  itemname.STARBOARD: SMG2ItemData(["Star Board Item"], IC.progression),
+  itemname.STARBOARD: SMG2ItemData(["Star Board Item"], IC.useful),
   # Comet Medals
 }
 
