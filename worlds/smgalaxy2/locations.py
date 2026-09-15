@@ -1249,8 +1249,7 @@ passenger_loc: dict[str, SMG2LocationData] = {
                                         CanReachLocation(locname.COSCCOVESTAR2)),
     locname.JIBBEPASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
                                         CanReachLocation(locname.WILDGLIDESTAR2)),
-    locname.LUMA1PASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIPLEFTEAR,
-                                        RB.PowerStarCount(18)),
+    locname.LUMA1PASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIPLEFTEAR),
     locname.LUMA2PASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIPLEFTEAR,
                                         CanReachLocation(locname.MELTMONSSTAR1)),
     locname.WHITTPASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
@@ -1270,8 +1269,7 @@ passenger_loc: dict[str, SMG2LocationData] = {
 }
 
 lumalee_locations: dict[str, SMG2LocationData] = {
-    locname.SHIPLUMALEE1: SMG2LocationData(["Lumalee Location"], regname.SHIP2, regname.SHIPLEFTEAR,
-                                           RB.PowerStarCount(18)),
+    locname.SHIPLUMALEE1: SMG2LocationData(["Lumalee Location"], regname.SHIP2, regname.SHIPLEFTEAR),
     locname.SHIPLUMALEE2: SMG2LocationData(["Lumalee Location"], regname.SHIP2, regname.SHIPLEFTEAR,
                                            CanReachLocation(locname.MELTMONSSTAR1) & Has("Can Farm Coins")),
     locname.SPINDIGLUMALEE: SMG2LocationData(["Lumalee Location"], regname.SPINDIG, regname.SPINDIG1TOADS,),
@@ -2182,8 +2180,7 @@ oneup_locations: dict[str, SMG2LocationData] = {
 
 dice_block_locations: dict[str, SMG2LocationData] = {
     locname.SHIPABOVEGDIE: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIP),
-    locname.LUMA1CHANCDIE: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIPLEFTEAR,
-                                            RB.PowerStarCount(18)),
+    locname.LUMA1CHANCDIE: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIPLEFTEAR),
     locname.LUMA2CHANDIE1: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIPLEFTEAR,
                                             CanReachLocation(locname.MELTMONSSTAR1)),
     locname.LUMA2CHANDIE2: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIPLEFTEAR,

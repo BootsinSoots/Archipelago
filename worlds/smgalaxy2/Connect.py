@@ -1842,6 +1842,6 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.SHIP).connect(world.get_region(regname.SHIP2)),
     world.get_region(regname.SHIP2).connect(world.get_region(regname.SHIPINSIDE)),
     world.get_region(regname.SHIP2).connect(world.get_region(regname.SHIPLEFTEAR), "Starship Mario Left Ear Pipe",
-                                            rule=RB.CanPipe & CanReachLocation(locname.RIGHTDOWNSTAR1)),
+                                            rule=RB.CanPipe),
     world.get_region(regname.SHIP2).connect(world.get_region(regname.SHIPSTARSHROOM), "Starship Mario Right Ear Teleporter"),
     world.set_completion_rule(Has("Peach"))
