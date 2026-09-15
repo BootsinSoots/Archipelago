@@ -1335,6 +1335,7 @@ launch_star_locs: dict[str, SMG2LocationData] = {
     locname.FLUFFBLUFF1WATLS: SMG2LocationData(["Launch Stars"], regname.FLUFFBLUFF, regname.FLUFFBLUFF1WATER,
                                                RB.CanLaunchStar & RB.CanCollectStarChips),
     locname.FLUFFBLUFF1LANSS: SMG2LocationData(["Launch Stars"], regname.FLUFFBLUFF, regname.FLUFFBLUFF1BIGTREE, RB.CanLaunchStar),
+    locname.FLUFFBLUFF2LANSS: SMG2LocationData(["Launch Stars"], regname.FLUFFBLUFF, regname.FLUFFBLUFF2LANDING, RB.CanLaunchStar),
     locname.FLUFFBLUFF2BUISS: SMG2LocationData(["Launch Stars"], regname.FLUFFBLUFF, regname.FLUFFBLUFF2BUILDING, RB.CanLaunchStar),
 
     locname.FIREFLOT1LAVLS: SMG2LocationData(["Launch Stars"], regname.BOWJR1, regname.FIREFLOT1LAVA, RB.CanLaunchStar),

@@ -648,6 +648,7 @@ SPINDIG2BLULS = "Spin-Dig 2: Blue Toadship Launch Star"
 FLUFFBLUFF1WALLS = "Fluffy Bluff: Wall Jump Launch Star"
 FLUFFBLUFF1WATLS = "Fluffy Bluff: Water Sphere Launch Star"
 FLUFFBLUFF1LANSS = "Fluffy Bluff: Landing Big Tree Sling Star"
+FLUFFBLUFF2LANSS = "Fluffy Bluff Chimp: Buildings Sling Star"
 FLUFFBLUFF2BUISS = "Fluffy Bluff Chimp: Buildings Sling Star"
 
 ## Fiery Flotilla Galaxy

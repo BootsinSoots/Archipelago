@@ -111,6 +111,9 @@ object_unlocks: dict[str, SMG2ItemData] = {
     itemname.MARIOSHELL:        SMG2ItemData(["Objects"], IC.progression),
     itemname.MARIOSWING:        SMG2ItemData(["Objects"], IC.progression),
     itemname.MARIOSTARCHIPS:    SMG2ItemData(["Objects"], IC.progression),
+    itemname.CHIMPSKATE:    SMG2ItemData(["Objects"], IC.progression),
+    itemname.CHIMPSCORE:    SMG2ItemData(["Objects"], IC.progression),
+    itemname.CHIMPBOWL :    SMG2ItemData(["Objects"], IC.progression),
 }
 
 generic_event_items: dict[str, SMG2ItemData] = {

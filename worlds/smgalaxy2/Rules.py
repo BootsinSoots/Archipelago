@@ -92,6 +92,9 @@ CanSwing: Rule[Any] = ObjectRandoOff|(Has(itemname.MARIOSWING)&OptionFilter(Obje
 CanCannon: Rule[Any] = ObjectRandoOff|(Has(itemname.MARIOCANNON)&OptionFilter(ObjectRando,1))
 CanShell: Rule[Any] = ObjectRandoOff|(Has(itemname.MARIOSHELL)&OptionFilter(ObjectRando,1))
 CanCollectStarChips: Rule[Any] = ObjectRandoOff|(Has(itemname.MARIOSTARCHIPS)&OptionFilter(ObjectRando,1))
+HasChimpBowl: Rule[Any] = ObjectRandoOff|(OptionFilter(ObjectRando, 1) & Has(itemname.CHIMPBOWL))
+HasChimpScore: Rule[Any] = ObjectRandoOff|(OptionFilter(ObjectRando, 1) & Has(itemname.CHIMPSCORE))
+HasChimpSkate: Rule[Any] = ObjectRandoOff|(OptionFilter(ObjectRando, 1) & Has(itemname.CHIMPSKATE))
 
 CoinLumaBase: Rule[Any] = ((True_()&OptionFilter(CoinLumaLocks, 0))
                            |(Has(itemname.COINLUMAKEY)&OptionFilter(CoinLumaLocks,1)))
