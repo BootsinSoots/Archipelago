@@ -772,10 +772,10 @@ class LMContext(BaseContext):
                     lm_item = ALL_ITEMS_TABLE[lm_item_name]
                     for addr_to_update in lm_item.update_ram_addr:
                         curr_val = int.from_bytes(dme.read_bytes(dme.follow_pointers(addr_to_update.ram_addr,
-                            [addr_to_update.pointer_offset]), addr_to_update.ram_byte_size))
+                            [addr_to_update.pointer_offset]), 1))
                         curr_val = (curr_val | (1 << addr_to_update.bit_position))
                         await write_bytes_and_validate(addr_to_update.ram_addr, addr_to_update.pointer_offset,
-                            curr_val.to_bytes(addr_to_update.ram_addr, 'big'))
+                            curr_val.to_bytes(1, 'big'))
 
                 curr_boo_count = len(set(boo_received_list))
                 if curr_boo_count >= self.boo_balcony_count:
