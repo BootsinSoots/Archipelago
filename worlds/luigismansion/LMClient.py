@@ -402,8 +402,6 @@ class LMContext(BaseContext):
             self.last_map_id = curr_map_id
             self.last_not_ingame = time.time()
             self.already_mentioned_rank_diff = False
-            Utils.async_start(self.lm_update_non_savable_ram(), "LM - Update Non-Saveable RAM - Map Change")
-            Utils.async_start(self.give_progression_again(), "LM - Give Progression Items")
             return False
 
         # These are the only valid maps we want Luigi to have checks with or do health detection with.
@@ -428,12 +426,7 @@ class LMContext(BaseContext):
                             "operations": [{"operation": "replace", "value": current_room_id}]
                         }]), name="Update Luigi Mansion Room ID")
                         self.last_room_id = current_room_id
-                        Utils.async_start(self.lm_update_non_savable_ram(), "LM - Update Non-Saveable RAM - Room Change")
                 return bool_loaded_in_map
-            elif curr_map_id == 3:
-                curr_val = dme.read_byte(MEMORY_CONSTANTS.TRAINING_BUTTON_LAYOUT_SCREEN)
-                if (curr_val & (1 << 0)) > 0:
-                    Utils.async_start(self.lm_update_non_savable_ram(), "LM - Update Non-Saveable RAM - Training Room")
             return True
 
         self.last_not_ingame = time.time()
@@ -641,10 +634,10 @@ class LMContext(BaseContext):
             lm_item = ALL_ITEMS_TABLE[lm_item_name]
 
             # Add the item to the display items queue to display when it can
-            if self.self_item_messages == 0:
-                self.display_class.items_received.append(item)
-            elif self.self_item_messages == 1 and lm_item.classification == IC.progression:
-                self.display_class.items_received.append(item)
+            #if self.self_item_messages == 0:
+            #    self.display_class.items_received.append(item)
+            #elif self.self_item_messages == 1 and lm_item.classification == IC.progression:
+            #    self.display_class.items_received.append(item)
 
             # If the user is subscribed to send items and the trap is a valid trap and the trap was not already
             # received (to prevent sending the same traps over and over to other TrapLinkers if Luigi died)
@@ -775,9 +768,6 @@ class LMContext(BaseContext):
             # Make it so the displayed Boo counter always appears even if you don't have boo radar or if you haven't caught
             # a boo in-game yet.
             if self.boosanity:
-                # This allows the in-game display to work correctly.
-                dme.write_bytes(0x803D5E0B, bytes.fromhex("01"))
-
                 # Update the in-game counter to reflect how many boos you got.
                 boo_received_list = [item.item for item in self.items_received if item.item in BOO_AP_ID_LIST]
 
@@ -785,9 +775,11 @@ class LMContext(BaseContext):
                     lm_item_name = self.item_names.lookup_in_game(boo_item)
                     lm_item = ALL_ITEMS_TABLE[lm_item_name]
                     for addr_to_update in lm_item.update_ram_addr:
-                        curr_val = dme.read_byte(addr_to_update.ram_addr)
+                        curr_val = int.from_bytes(dme.read_bytes(dme.follow_pointers(addr_to_update.ram_addr,
+                            [addr_to_update.pointer_offset]), addr_to_update.ram_byte_size))
                         curr_val = (curr_val | (1 << addr_to_update.bit_position))
-                        dme.write_byte(addr_to_update.ram_addr, curr_val)
+                        await write_bytes_and_validate(addr_to_update.ram_addr, addr_to_update.pointer_offset,
+                            curr_val.to_bytes(addr_to_update.ram_addr, 'big'))
 
                 curr_boo_count = len(set(boo_received_list))
                 if curr_boo_count >= self.boo_balcony_count:
@@ -963,6 +955,8 @@ class LMContext(BaseContext):
                     # Lastly check any locations and update the non-save able ram stuff
                     await self.lm_check_locations()
                     await self.give_lm_items()
+                    await self.lm_update_non_savable_ram()
+                    await self.give_progression_again()
                     await self.wait_for_next_loop(WAIT_TIMER_SHORT_TIMEOUT)
                 except Exception as ex:
                     dme.un_hook()
