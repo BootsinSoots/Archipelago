@@ -73,11 +73,11 @@ NON_SAVE_LAST_RECV_ITEM_ADDR = 0x803D5CC0
 
 # These addresses are related to displaying text in game.
 RECV_DEFAULT_TIMER_IN_HEX = "96" # 5 Seconds
-RECV_ITEM_DISPLAY_TIMER_ADDR = 0x804DDA6C
-RECV_ITEM_DISPLAY_VIZ_ADDR = 0x804DDA70
-RECV_ITEM_NAME_ADDR = 0x804DE528
-RECV_ITEM_LOC_ADDR = 0x804DE550
-RECV_ITEM_SENDER_ADDR = 0x804DE570
+#RECV_ITEM_DISPLAY_TIMER_ADDR = 0x804DDA6C
+#RECV_ITEM_DISPLAY_VIZ_ADDR = 0x804DDA70
+#RECV_ITEM_NAME_ADDR = 0x804DE528
+#RECV_ITEM_LOC_ADDR = 0x804DE550
+#RECV_ITEM_SENDER_ADDR = 0x804DE570
 RECV_MAX_STRING_LENGTH = 24
 RECV_LINE_STRING_LENGTH = 26
 FRAME_AVG_COUNT = 30
@@ -88,10 +88,6 @@ EVENT_FLAG_RECV_ADDRR = 0x803D33B1
 
 # This address will monitor when you capture the final boss, King Boo
 KING_BOO_ADDR = 0x803D5DBF
-
-# This address is used to deal with the current display for Captured Boos
-BOO_COUNTER_DISPLAY_ADDR = 0x803A3CC4
-BOO_COUNTER_DISPLAY_OFFSET = 0x77
 
 # These addresses and bits are used to turn on flags for Boo Count related events.
 # BOO_WASHROOM_FLAG_ADDR = 0x803D339C
@@ -634,10 +630,10 @@ class LMContext(BaseContext):
             lm_item = ALL_ITEMS_TABLE[lm_item_name]
 
             # Add the item to the display items queue to display when it can
-            #if self.self_item_messages == 0:
-            #    self.display_class.items_received.append(item)
-            #elif self.self_item_messages == 1 and lm_item.classification == IC.progression:
-            #    self.display_class.items_received.append(item)
+            if self.self_item_messages == 0:
+                self.display_class.items_received.append(item)
+            elif self.self_item_messages == 1 and lm_item.classification == IC.progression:
+                self.display_class.items_received.append(item)
 
             # If the user is subscribed to send items and the trap is a valid trap and the trap was not already
             # received (to prevent sending the same traps over and over to other TrapLinkers if Luigi died)
@@ -667,7 +663,7 @@ class LMContext(BaseContext):
 
             for addr_to_update in lm_item.update_ram_addr:
                 byte_size = 1 if addr_to_update.ram_byte_size is None else addr_to_update.ram_byte_size
-                ram_offset = None if not addr_to_update.pointer_offset else [addr_to_update.pointer_offset]
+                ram_offset = None if addr_to_update.pointer_offset is None else [addr_to_update.pointer_offset]
 
                 if item.item in trap_id_list:
                     curr_val = addr_to_update.item_count
