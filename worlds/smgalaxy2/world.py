@@ -394,7 +394,7 @@ class SMG2World(World):
             "Options": {},
             "Locations": {},
             "Galaxies": self.shuffled_levels,
-            "Galaxy Counts": self.star_block_counts,
+            "Star Block Counts": self.star_block_counts,
             "Hints": {},
             "Music Map": self.music_mapping
         }

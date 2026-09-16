@@ -2280,7 +2280,7 @@ all_location_table = {**base_stars_locations, **green_star_locations, **COMETMED
                       **first_powerup_locations}
 
 LOCATION_NAME_TO_ID: dict[str, int] =  {
-    name: list(all_location_table.keys()).index(name) for name in all_location_table.keys() }
+    name: list(all_location_table.keys()).index(name)+1 for name in all_location_table.keys() }
 
 def get_location_names_per_category() -> Dict[str, Set[str]]:
     categories: Dict[str, Set[str]] = {}

@@ -270,7 +270,7 @@ all_items_table: dict[str, SMG2ItemData] = {**keyed_grand_stars, **item_table, *
                                             **trap_filler_items, **pipe_all, **launch_star_all}
 
 ITEM_NAME_TO_ID: dict[str, int] =  {
-    name: list(all_items_table.keys()).index(name) for name in list(all_items_table.keys()) }
+    name: list(all_items_table.keys()).index(name)+1 for name in list(all_items_table.keys()) }
 
 def get_item_names_per_category() -> Dict[str, Set[str]]:
     categories: Dict[str, Set[str]] = {}

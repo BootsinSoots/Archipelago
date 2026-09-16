@@ -1,5 +1,6 @@
 import hashlib, os, zipfile
-import xml.etree.ElementTree as eT
+import json
+from NetUtils import convert_to_base_types
 
 from worlds.Files import APPlayerContainer
 from ..Constants.constants import GAME_NAME, USA_GAME_ID
@@ -62,20 +63,6 @@ def get_base_rom_path() -> str:
     if not os.path.exists(file_name):
         file_name = Utils.user_path(file_name)
     return file_name
-
-
-def dict_to_xml(tag_key: str, d: dict):
-    elem = eT.Element(tag_key)
-    for key, val in d.items():
-        if key.startswith('@'):
-            elem.set(key[1:], val)
-        elif isinstance(val, dict):
-            elem.append(dict_to_xml(key, val))
-        else:
-            child = eT.Element(key)
-            child.text = str(val)
-            elem.append(child)
-    return elem
         
 
 class SMG2PlayerContainer(APPlayerContainer):
@@ -89,5 +76,5 @@ class SMG2PlayerContainer(APPlayerContainer):
         super().__init__(patch_path, player, player_name, server)
 
     def write_contents(self, opened_zipfile: zipfile.ZipFile) -> None:
-        opened_zipfile.writestr("patch.xml", eT.tostring(dict_to_xml("root", self.output_data), encoding='unicode'))
+        opened_zipfile.writestr("patch.json", json.dumps(self.output_data, indent=4, default=convert_to_base_types))
         super().write_contents(opened_zipfile)
