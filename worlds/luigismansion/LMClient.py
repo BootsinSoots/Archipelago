@@ -774,7 +774,7 @@ class LMContext(BaseContext):
                         curr_val = int.from_bytes(dme.read_bytes(dme.follow_pointers(addr_to_update.ram_addr,
                             [addr_to_update.pointer_offset]), 1))
                         curr_val = (curr_val | (1 << addr_to_update.bit_position))
-                        await write_bytes_and_validate(addr_to_update.ram_addr, addr_to_update.pointer_offset,
+                        await write_bytes_and_validate(addr_to_update.ram_addr, [addr_to_update.pointer_offset],
                             curr_val.to_bytes(1, 'big'))
 
                 curr_boo_count = len(set(boo_received_list))
