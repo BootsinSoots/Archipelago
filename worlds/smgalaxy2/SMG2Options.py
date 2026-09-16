@@ -494,6 +494,27 @@ class MusicRando(Toggle):
     display_name = "Music Rando"
     internal_name = "music_rando"
 
+class GreenBoot(Toggle):
+    """
+    If this option is on, Green Stars will bot the player out of the stage when collected
+
+    If it is if, you will be able to continue the leve after collecting the green star. If you would normally fall as
+    a result, you will instead be returned to your last stable position.
+    """
+    display_name = "Green Star Boot-Out"
+    internal_name = "green_star_boot_out"
+
+class GreenScenario(Toggle):
+    """
+    If this option is on, Green Stars will not appear unless you specifically select their scenario in the star select
+    screen
+
+    If this option is off, Green Stars will appear in whatever stage they would normally be in, whether selecting a
+    green star or normal stage on the star select screen
+    """
+    display_name = "Green Star Scenario Select"
+    internal_name = "green_star_scenario_select"
+
 # class Bossanity(Toggle):
 #     """
 #     Each boss is added to the location pool, such that defeating a boss grants an additional item on top of the star
@@ -513,6 +534,8 @@ class SMG2Options(PerGameCommonOptions):
     green_star_behavior: GreenStarBehavior
     stars_to_finish: StarstoFinish
     green_stars_to_finish: GreenStarstoFinish
+    green_star_boot_out: GreenBoot
+    green_star_scenario_select: GreenScenario
     mario_colors: MarioColors
     final_star_blocks: FinalStarBlocks
     world_shuffle: WorldShuffle
@@ -561,6 +584,8 @@ option_groups = [
         EnableGreenStars,
         GreenStarBehavior,
         GreenStarstoFinish,
+        GreenBoot,
+        GreenScenario,
     ]),
     OptionGroup("Logic Options", [
         LogicDifficulty,
