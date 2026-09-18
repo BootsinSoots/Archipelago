@@ -367,13 +367,15 @@ class CometItems(Choice):
     """
     Choose whether comet stars require an item to unlock them.
 
+    Unlocked: All comet star missions are unlocked from the start
+
     Global: All comets unlock after receiving a single item
 
     Type: Comets unlock based on what kind of comet star they are
     """
     display_name = "Comet Items"
     internal_name = "comet_items"
-    option_Off = 0
+    option_Unlocked = 0
     option_Global = 1
     option_Type = 2
     slot_req = True
