@@ -22,9 +22,10 @@ class SMG2Item(Item):
 
 # TODO Replace this item table
 item_table: dict[str, SMG2ItemData] = {
-  "Power Star": SMG2ItemData(["Power Stars"], IC.progression_deprioritized_skip_balancing, 115),
-  "Grand Star": SMG2ItemData(["Grand Stars", "Power Stars"], IC.progression, 7),
-  "Green Star": SMG2ItemData(["Power Stars", "Green Stars"], IC.progression, 120),
+  itemname.POWER: SMG2ItemData(["Power Stars"], IC.progression_deprioritized_skip_balancing, 115),
+  itemname.GRAND: SMG2ItemData(["Grand Stars", "Power Stars"], IC.progression, 7),
+  itemname.GREEN: SMG2ItemData(["Power Stars", "Green Stars"], IC.progression, 120),
+  itemname.STARBOARD: SMG2ItemData(["Star Board Item"], IC.useful),
   # Comet Medals
 }
 
@@ -110,6 +111,9 @@ object_unlocks: dict[str, SMG2ItemData] = {
     itemname.MARIOSHELL:        SMG2ItemData(["Objects"], IC.progression),
     itemname.MARIOSWING:        SMG2ItemData(["Objects"], IC.progression),
     itemname.MARIOSTARCHIPS:    SMG2ItemData(["Objects"], IC.progression),
+    itemname.CHIMPSKATE:    SMG2ItemData(["Objects"], IC.progression),
+    itemname.CHIMPSCORE:    SMG2ItemData(["Objects"], IC.progression),
+    itemname.CHIMPBOWL :    SMG2ItemData(["Objects"], IC.progression),
 }
 
 generic_event_items: dict[str, SMG2ItemData] = {
@@ -266,7 +270,7 @@ all_items_table: dict[str, SMG2ItemData] = {**keyed_grand_stars, **item_table, *
                                             **trap_filler_items, **pipe_all, **launch_star_all}
 
 ITEM_NAME_TO_ID: dict[str, int] =  {
-    name: list(all_items_table.keys()).index(name) for name in list(all_items_table.keys()) }
+    name: list(all_items_table.keys()).index(name)+1 for name in list(all_items_table.keys()) }
 
 def get_item_names_per_category() -> Dict[str, Set[str]]:
     categories: Dict[str, Set[str]] = {}

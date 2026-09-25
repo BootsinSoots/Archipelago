@@ -264,9 +264,11 @@ def set_rules(world: "SMG2World", player: int):
                                                                  | (RB.CanWallSpin & RB.JumpHeight4 & RB.MediumLogic & RB.CanSwing)
                                                                  | (RB.CloudMario & RB.CanSwing
                                                                     & (RB.CanGrabLedge | RB.MediumLogic | RB.JumpHeight3)))
-    world.get_region(regname.FLUFFBLUFF).connect(world.get_region(regname.FLUFFBLUFF2LANDING), "Fluffy Bluff Chimp Star")
+    world.get_region(regname.FLUFFBLUFF).connect(world.get_region(regname.FLUFFBLUFF2LANDING), "Fluffy Bluff Chimp Star",
+                                                 RB.HasChimpScore)
     world.get_region(regname.FLUFFBLUFF2LANDING).connect(world.get_region(regname.FLUFFBLUFF2BUILDING),
-                                                         rule=RB.JumpHeight3 | True_()) # Replace True_() with Launch star rule when implemented
+                                                         "Fluffy Bluff Chimp: Landing Sling Star",
+                                                         rule=RB.JumpHeight3 | RB.CanLaunchStar)
     world.get_region(regname.FLUFFBLUFF2BUILDING).connect(world.get_region(regname.FLUFFBLUFF2CLIFF),
                                                           "Fluffy Bluff Chimp: Buildings Sling Star",
                                                           rule=RB.CanLaunchStar| (RB.CanTriple & RB.CanWallSpin))
@@ -670,7 +672,7 @@ def set_rules(world: "SMG2World", player: int):
                                                        rule=RB.FireMario & RB.CanLaunchStar)
     world.get_region(regname.FREEFLAK1SNOWBYH).connect(world.get_region(regname.FREEFLAK3CHIMP),
                                                        "Freezy Flake 1: Snowy Hill 1 Green Pipe",
-                                                       rule=RB.CanPipe & RB.FireMario)
+                                                       rule=RB.CanPipe & RB.FireMario & RB.HasChimpSkate)
     world.get_region(regname.FREEFLAK1SNOWBYH).connect(world.get_region(regname.FREEFLAK1SLIDELA),
                                                        "Freezy Flake 1: Snow Slide",
                                                        rule=RB.CanSlide & RB.FireMario)
@@ -683,7 +685,7 @@ def set_rules(world: "SMG2World", player: int):
                                                        rule=RB.CanLaunchStar & RB.ROCKNROLLIN)
     world.get_region(regname.FREEFLAK2SNOWBYH).connect(world.get_region(regname.FREEFLAK3CHIMP),
                                                        "Freezy Flake 2: Snowy Hill 2 Green Pipe",
-                                                       rule=RB.CanPipe & RB.ROCKNROLLIN)
+                                                       rule=RB.CanPipe & RB.ROCKNROLLIN & RB.HasChimpSkate)
     world.get_region(regname.FREEFLAK2SNOWBYH).connect(world.get_region(regname.FREEFLAK2WHITOUT),
                                                        "Freezy Flake 2: Snowy Hill Launch Star",
                                                        rule=RB.CanLaunchStar & RB.ROCKNROLLIN & RB.CanCollectStarChips)
@@ -989,7 +991,8 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.HONEYHOP1QBBUBBLE).connect(world.get_region(regname.HONEYHOP1QBTOP),
                                                         rule=(RB.BeeFlight | RB.CanWallJump)
                                                              & (RB.CanSwing | RB.BeeFlight | RB.CanWallSpin | (RB.HardLogic & RB.JumpHeight6)))
-    world.get_region(regname.HONEYHOP).connect(world.get_region(regname.HONEYHOP2QBBASE), "Honeyhop Chimp Star")
+    world.get_region(regname.HONEYHOP).connect(world.get_region(regname.HONEYHOP2QBBASE), "Honeyhop Chimp Star",
+                                               RB.HasChimpScore)
     world.get_region(regname.HONEYHOP2QBBASE).connect(world.get_region(regname.HONEYHOP2QBBUBBLE),
                                                       "Honeyhop Chimp: Base Sling Star",
                                                       rule=RB.CanLaunchStar | RB.JumpHeight4 | RB.CanSideflip | RB.CanAirSpin
@@ -1228,8 +1231,9 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.SHIVBURN).connect(world.get_region(regname.SHIVBURN1VOLCANO), "Shiverburn Star")
     world.get_region(regname.SHIVBURN1VOLCANO).connect(world.get_region(regname.SHIVBURN3CHIMP),
                                                        "Shiverburn: Green Pipe",
-                                                       rule=RB.CanPipe & ((RB.CanMakeCloud & (RB.CanPound | RB.CanLongJump | RB.HardLogic))
+                                                       rule=(RB.CanPipe & ((RB.CanMakeCloud & (RB.CanPound | RB.CanLongJump | RB.HardLogic))
                                                        | (RB.HardLogic & RB.CanPound & (RB.CanLongJump | RB.HellLogic))))
+                                                       & RB.HasChimpSkate)
     world.get_region(regname.SHIVBURN1VOLCANO).connect(world.get_region(regname.SHIVBURN1LAVA),
                                                        "Shiverburn: Volcano Launch Star",
                                                        rule=RB.CanLaunchStar & ((RB.CanMakeCloud & (RB.CanPound | RB.CanLongJump | RB.HardLogic))
@@ -1307,7 +1311,7 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.MELTY).connect(world.get_region(regname.MELTY1LANDING), "Melty Monster Star 1")
     world.get_region(regname.MELTY1LANDING).connect(world.get_region(regname.MELTY3CHIMP),
                                                     "Melty Monster 1: Green Pipe",
-                                                    rule=RB.CanPipe)
+                                                    rule=RB.CanPipe & RB.HasChimpBowl)
     world.get_region(regname.MELTY1LANDING).connect(world.get_region(regname.MELTY1MAGMAARG),
                                                     "Melty Monster 1: Pull Star Path")
     world.get_region(regname.MELTY1MAGMAARG).connect(world.get_region(regname.MELTY1LAVAWAVE1),
@@ -1321,7 +1325,8 @@ def set_rules(world: "SMG2World", player: int):
                                                       rule=RB.CanSwing & RB.CanLaunchStar)
     world.get_region(regname.MELTY).connect(world.get_region(regname.MELTY2LANDING), "Melty Monster Star 2")
     world.get_region(regname.MELTY2LANDING).connect(world.get_region(regname.MELTY3CHIMP),
-                                                    "Melty Monster 2: Green Pipe")
+                                                    "Melty Monster 2: Green Pipe",
+                                                    RB.CanPipe & RB.HasChimpBowl)
     world.get_region(regname.MELTY2LANDING).connect(world.get_region(regname.MELTY2BOWLING),
                                                     "Melty Monster 2: Roll to Launch Star",
                                                     rule=RB.ROCKNROLLIN & RB.CanLaunchStar)
@@ -1413,7 +1418,8 @@ def set_rules(world: "SMG2World", player: int):
                                                      rule=(RB.CanSwim & (RB.CanShell | RB.HardLogic)))
     world.get_region(regname.SLIMSPRI1MOUTH2).connect(world.get_region(regname.SLIMSPRI1CAVE2),
                                                       rule=RB.CanSwim)
-    world.get_region(regname.SLIMSPRI).connect(world.get_region(regname.SLIMSPRI2MOUTH1), "Slimy Spring Chimp Star")
+    world.get_region(regname.SLIMSPRI).connect(world.get_region(regname.SLIMSPRI2MOUTH1), "Slimy Spring Chimp Star",
+                                               RB.HasChimpScore)
     world.get_region(regname.SLIMSPRI2MOUTH1).connect(world.get_region(regname.SLIMSPRI2CAVE1),
                                                       rule=RB.CanSwim)
     world.get_region(regname.SLIMSPRI2CAVE1).connect(world.get_region(regname.SLIMSPRI2MOUTH2),

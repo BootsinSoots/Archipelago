@@ -1249,8 +1249,7 @@ passenger_loc: dict[str, SMG2LocationData] = {
                                         CanReachLocation(locname.COSCCOVESTAR2)),
     locname.JIBBEPASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
                                         CanReachLocation(locname.WILDGLIDESTAR2)),
-    locname.LUMA1PASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIPLEFTEAR,
-                                        RB.PowerStarCount(18)),
+    locname.LUMA1PASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIPLEFTEAR),
     locname.LUMA2PASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIPLEFTEAR,
                                         CanReachLocation(locname.MELTMONSSTAR1)),
     locname.WHITTPASS: SMG2LocationData(["Passenger Location"], regname.SHIP2, regname.SHIP2,
@@ -1270,8 +1269,7 @@ passenger_loc: dict[str, SMG2LocationData] = {
 }
 
 lumalee_locations: dict[str, SMG2LocationData] = {
-    locname.SHIPLUMALEE1: SMG2LocationData(["Lumalee Location"], regname.SHIP2, regname.SHIPLEFTEAR,
-                                           RB.PowerStarCount(18)),
+    locname.SHIPLUMALEE1: SMG2LocationData(["Lumalee Location"], regname.SHIP2, regname.SHIPLEFTEAR),
     locname.SHIPLUMALEE2: SMG2LocationData(["Lumalee Location"], regname.SHIP2, regname.SHIPLEFTEAR,
                                            CanReachLocation(locname.MELTMONSSTAR1) & Has("Can Farm Coins")),
     locname.SPINDIGLUMALEE: SMG2LocationData(["Lumalee Location"], regname.SPINDIG, regname.SPINDIG1TOADS,),
@@ -1335,6 +1333,7 @@ launch_star_locs: dict[str, SMG2LocationData] = {
     locname.FLUFFBLUFF1WATLS: SMG2LocationData(["Launch Stars"], regname.FLUFFBLUFF, regname.FLUFFBLUFF1WATER,
                                                RB.CanLaunchStar & RB.CanCollectStarChips),
     locname.FLUFFBLUFF1LANSS: SMG2LocationData(["Launch Stars"], regname.FLUFFBLUFF, regname.FLUFFBLUFF1BIGTREE, RB.CanLaunchStar),
+    locname.FLUFFBLUFF2LANSS: SMG2LocationData(["Launch Stars"], regname.FLUFFBLUFF, regname.FLUFFBLUFF2LANDING, RB.CanLaunchStar),
     locname.FLUFFBLUFF2BUISS: SMG2LocationData(["Launch Stars"], regname.FLUFFBLUFF, regname.FLUFFBLUFF2BUILDING, RB.CanLaunchStar),
 
     locname.FIREFLOT1LAVLS: SMG2LocationData(["Launch Stars"], regname.BOWJR1, regname.FIREFLOT1LAVA, RB.CanLaunchStar),
@@ -1781,7 +1780,7 @@ special_locations: dict[str, SMG2LocationData] = {
 oneup_locations: dict[str, SMG2LocationData] = {
     locname.SHIPTOADS1UP: SMG2LocationData(["1-up Location"], regname.SHIP2, regname.SHIPSTARSHROOM),
     locname.SHIPCLOUD1UP: SMG2LocationData(["1-up Location"], regname.SHIP2, regname.SHIP2,
-                                           RB.CanMakeCloud),
+                                           RB.CanMakeCloud & CanReachLocation(locname.STARBEACHSTAR2)),
     locname.SKST1PIOR1UP: SMG2LocationData(["1-up Location"], regname.SKYOBS, regname.SKYOBS1STARTTOPSIDE,
                                            RB.CanPipe),
     locname.SKST1YELL1UP: SMG2LocationData(["1-up Location"], regname.SKYOBS, regname.SKYOBS1GREENHILL),
@@ -2181,8 +2180,7 @@ oneup_locations: dict[str, SMG2LocationData] = {
 
 dice_block_locations: dict[str, SMG2LocationData] = {
     locname.SHIPABOVEGDIE: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIP),
-    locname.LUMA1CHANCDIE: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIPLEFTEAR,
-                                            RB.PowerStarCount(18)),
+    locname.LUMA1CHANCDIE: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIPLEFTEAR),
     locname.LUMA2CHANDIE1: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIPLEFTEAR,
                                             CanReachLocation(locname.MELTMONSSTAR1)),
     locname.LUMA2CHANDIE2: SMG2LocationData(["Specials"], regname.SHIP, regname.SHIPLEFTEAR,
@@ -2282,7 +2280,7 @@ all_location_table = {**base_stars_locations, **green_star_locations, **COMETMED
                       **first_powerup_locations}
 
 LOCATION_NAME_TO_ID: dict[str, int] =  {
-    name: list(all_location_table.keys()).index(name) for name in all_location_table.keys() }
+    name: list(all_location_table.keys()).index(name)+1 for name in all_location_table.keys() }
 
 def get_location_names_per_category() -> Dict[str, Set[str]]:
     categories: Dict[str, Set[str]] = {}

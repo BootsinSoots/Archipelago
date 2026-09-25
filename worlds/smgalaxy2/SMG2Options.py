@@ -367,13 +367,15 @@ class CometItems(Choice):
     """
     Choose whether comet stars require an item to unlock them.
 
+    Unlocked: All comet star missions are unlocked from the start
+
     Global: All comets unlock after receiving a single item
 
     Type: Comets unlock based on what kind of comet star they are
     """
     display_name = "Comet Items"
     internal_name = "comet_items"
-    option_Off = 0
+    option_Unlocked = 0
     option_Global = 1
     option_Type = 2
     slot_req = True
@@ -494,6 +496,16 @@ class MusicRando(Toggle):
     display_name = "Music Rando"
     internal_name = "music_rando"
 
+class GreenBoot(Toggle):
+    """
+    If this option is on, Green Stars will bot the player out of the stage when collected
+
+    If it is if, you will be able to continue the leve after collecting the green star. If you would normally fall as
+    a result, you will instead be returned to your last stable position.
+    """
+    display_name = "Green Star Boot-Out"
+    internal_name = "green_star_boot_out"
+
 # class Bossanity(Toggle):
 #     """
 #     Each boss is added to the location pool, such that defeating a boss grants an additional item on top of the star
@@ -513,6 +525,7 @@ class SMG2Options(PerGameCommonOptions):
     green_star_behavior: GreenStarBehavior
     stars_to_finish: StarstoFinish
     green_stars_to_finish: GreenStarstoFinish
+    green_star_boot_out: GreenBoot
     mario_colors: MarioColors
     final_star_blocks: FinalStarBlocks
     world_shuffle: WorldShuffle
@@ -561,6 +574,7 @@ option_groups = [
         EnableGreenStars,
         GreenStarBehavior,
         GreenStarstoFinish,
+        GreenBoot,
     ]),
     OptionGroup("Logic Options", [
         LogicDifficulty,
