@@ -2119,6 +2119,7 @@ oneup_locations: dict[str, SMG2LocationData] = {
     locname.THROW2BON1UP2: SMG2LocationData(["1-up Location"], regname.WHOMPFORT, regname.WHOMP2BONUS),
     locname.THROW2BON1UP3: SMG2LocationData(["1-up Location"], regname.WHOMPFORT, regname.WHOMP2BONUS),
     locname.BATTLBLUE1UP: SMG2LocationData(["1-up Location"], regname.BATTLEBELT, regname.BATTBELT1CRAB),
+    locname.BATTL2BLUE1UP: SMG2LocationData(["1-up Location"], regname.BATTLEBELT, regname.BATTBELT2CRAB),
     locname.BATTLLAVA1UP: SMG2LocationData(["1-up Location"], regname.BATTLEBELT, regname.BATTBELT2LAVA),
     locname.FLASHLEDG1UP: SMG2LocationData(["1-up Location"], regname.FLASHBLACK, regname.FLASHBLACK1TOWER),
     locname.FLASHPLAT1UP: SMG2LocationData(["1-up Location"], regname.FLASHBLACK, regname.FLASHBLACK1PATH),
