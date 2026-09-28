@@ -2027,6 +2027,9 @@ oneup_locations: dict[str, SMG2LocationData] = {
     locname.SWEETPATH1UP: SMG2LocationData(["1-up Location"], regname.SWEETMYS, regname.SWEETMYS1COOKIE,
                                            RB.CanDinoGlow),
     locname.SWEETSHRK1UP: SMG2LocationData(["1-up Location"], regname.SWEETMYS, regname.SWEETMYS1CHOCO),
+    locname.SWEET2PATH1UP: SMG2LocationData(["1-up Location"], regname.SWEETMYS, regname.SWEETMYS2COOKIE,
+                                           RB.CanDinoGlow),
+    locname.SWEET2SHRK1UP: SMG2LocationData(["1-up Location"], regname.SWEETMYS, regname.SWEETMYS2CHOCO),
     locname.HONEYWATR1UP: SMG2LocationData(["1-up Location"], regname.HONEYHOP, regname.HONEYHOP1POND),
     locname.GRAVIWATR1UP: SMG2LocationData(["1-up Location"], regname.BOWSER2, regname.GRAVGAUN1WATERCO), #Check when beta releases - how is this water affected by no swim?
     locname.GRAVICHEK1UP: SMG2LocationData(["1-up Location"], regname.BOWSER2, regname.GRAVGAUN1WHOMPWA,
