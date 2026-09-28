@@ -1265,9 +1265,10 @@ FLIP1FINA1UP = "Flip-Out: Final Section 1-Up"
 FLIP2FINA1UP = "Flip-Out C: Final Section 1-Up"
 FLIP2COME1UP = "Flip-Out C: Comet Medal 1-Up"
 GRND1CLOU1UP = "Grandmaster: 1-Up Above Cloud Checkpoint"
-GRND2CLOU1UP = "Grandmaster C: 1-Up Above Cloud Checkpoint"
+GRND2CLOU1UP = "Grandmaster C: 1-Up Above Cloud Section Start"
 GRND2COME1UP = "Grandmaster C: Comet Medal 1-Up"
-GRND2GATE1UP = "Grandmaster C: 1-Up Behind Gate"
+GRND2GATE1UP = "Grandmaster C: 1-Up Behind Rosalina"
+
 # Bonus Teleporter Clears
 SKYSTA1BONUSCL = "Sky Station 1: Bonus Teleporter Clear"
 SKYSTA2BONUSCL = "Sky Station 2: Bonus Teleporter Clear"
