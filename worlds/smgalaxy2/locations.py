@@ -1803,6 +1803,8 @@ oneup_locations: dict[str, SMG2LocationData] = {
     locname.SKST2WOOD1UP: SMG2LocationData(["1-up Location"], regname.SKYOBS, regname.SKYOBS2SKYFLEET),
     locname.SKST2FLIP1UP: SMG2LocationData(["1-up Location"], regname.SKYOBS, regname.SKYOBS2FLIPSWITCH),
     locname.YOSH1RIGH1UP: SMG2LocationData(["1-up Location"], regname.GOODEGG, regname.GOODEGG1MUDDY),
+    locname.YOSH2RIGH1UP: SMG2LocationData(["1-up Location"], regname.GOODEGG, regname.GOODEGG2MUDDY),
+    locname.YOSH3RIGH1UP: SMG2LocationData(["1-up Location"], regname.GOODEGG, regname.GOODEGG3MUDDY),
     locname.YOSH1BON1UP1: SMG2LocationData(["1-up Location"], regname.GOODEGG, regname.GOODEGG1OCTOBONUS),
     locname.YOSH1BON1UP2: SMG2LocationData(["1-up Location"], regname.GOODEGG, regname.GOODEGG1OCTOBONUS),
     locname.YOSH1BON1UP3: SMG2LocationData(["1-up Location"], regname.GOODEGG, regname.GOODEGG1OCTOBONUS),
