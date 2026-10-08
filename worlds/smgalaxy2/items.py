@@ -30,16 +30,16 @@ item_table: dict[str, SMG2ItemData] = {
 }
 
 filler_items: dict[str, SMG2ItemData] = {
-    itemname.ONEUP: SMG2ItemData(["Filler Items"], IC.filler),
-    itemname.LIFEUP: SMG2ItemData(["Filler Items"], IC.filler),
-    itemname.STARBIT10: SMG2ItemData(["Filler Items"], IC.filler),
-    itemname.STARBIT25: SMG2ItemData(["Filler Items"], IC.filler),
-    itemname.STARBIT50: SMG2ItemData(["Filler Items"], IC.filler),
-    itemname.STARBI100: SMG2ItemData(["Filler Items"], IC.filler),
-    itemname.COINS1: SMG2ItemData(["Filler Items"], IC.filler),
-    itemname.COINS5: SMG2ItemData(["Filler Items"], IC.filler),
-    itemname.COIN10: SMG2ItemData(["Filler Items"], IC.filler),
-    itemname.COIN20: SMG2ItemData(["Filler Items"], IC.filler),
+    itemname.ONEUP: SMG2ItemData(["Filler Items"], IC.filler, default_weight= 25),
+    itemname.LIFEUP: SMG2ItemData(["Filler Items"], IC.filler, default_weight= 25),
+    itemname.STARBIT10: SMG2ItemData(["Filler Items"], IC.filler, default_weight= 20),
+    itemname.STARBIT25: SMG2ItemData(["Filler Items"], IC.filler, default_weight= 40),
+    itemname.STARBIT50: SMG2ItemData(["Filler Items"], IC.filler, default_weight= 200),
+    itemname.STARBI100: SMG2ItemData(["Filler Items"], IC.filler, default_weight= 10),
+    itemname.COINS1: SMG2ItemData(["Filler Items"], IC.filler, default_weight= 30),
+    itemname.COINS5: SMG2ItemData(["Filler Items"], IC.filler, default_weight= 40),
+    itemname.COIN10: SMG2ItemData(["Filler Items"], IC.filler, default_weight= 20),
+    itemname.COIN20: SMG2ItemData(["Filler Items"], IC.filler, default_weight= 10),
 }
 
 yoshi_moves: dict[str, SMG2ItemData] = {
@@ -80,17 +80,14 @@ move_rando_prog_jump: dict[str, SMG2ItemData] = {**move_rando, **prog_jumps}
 move_rando_separate_jump: dict[str, SMG2ItemData] = {**move_rando, **separate_jump}
 
 powerup_consumables: dict[str, SMG2ItemData] = {
-    itemname.INVINCIBILITY: SMG2ItemData(["Consumable"], IC.useful),
-    itemname.FIREBALLFLO: SMG2ItemData(["Consumable"], IC.useful),
-    itemname.BEESHROOM: SMG2ItemData(["Consumable"], IC.useful),
-    itemname.SPRINGSHROOM: SMG2ItemData(["Consumable"], IC.useful),
-    itemname.BOOSHROOM: SMG2ItemData(["Consumable"], IC.useful),
-    itemname.CLOUDFLOW: SMG2ItemData(["Consumable"], IC.useful),
-    itemname.ROCKSHROOM: SMG2ItemData(["Consumable"], IC.useful),
-    itemname.DRILLHAT: SMG2ItemData(["Consumable"], IC.useful),
-}
-
-smg1_consumables: dict[str, SMG2ItemData] = {
+    itemname.INVINCIBILITY: SMG2ItemData(["Consumable"], IC.useful, default_weight= 5),
+    itemname.FIREBALLFLO: SMG2ItemData(["Consumable"], IC.useful, default_weight= 30),
+    itemname.BEESHROOM: SMG2ItemData(["Consumable"], IC.useful, default_weight= 10),
+    itemname.SPRINGSHROOM: SMG2ItemData(["Consumable"], IC.useful, default_weight= 15),
+    itemname.BOOSHROOM: SMG2ItemData(["Consumable"], IC.useful, default_weight= 10),
+    itemname.CLOUDFLOW: SMG2ItemData(["Consumable"], IC.useful, default_weight= 10),
+    itemname.ROCKSHROOM: SMG2ItemData(["Consumable"], IC.useful, default_weight= 30),
+    itemname.DRILLHAT: SMG2ItemData(["Consumable"], IC.useful, default_weight= 30),
     itemname.ICEFLOWER: SMG2ItemData(["Consumable"], IC.useful),
     itemname.REDSTAR: SMG2ItemData(["Consumable"], IC.useful),
 }
@@ -260,10 +257,8 @@ pipe_all: dict[str, SMG2ItemData] = {
 
 expanded_filler: dict[str, SMG2ItemData] = {**filler_items, **powerup_consumables}
 
-all_filler: dict[str, SMG2ItemData] = {**expanded_filler, **smg1_consumables}
-
 all_items_table: dict[str, SMG2ItemData] = {**keyed_grand_stars, **item_table, **galaxy_keys,
-                                            **world_green_keys, **all_filler, **powerup_consumables, **powerup_unlocks,
+                                            **world_green_keys, **expanded_filler, **powerup_consumables, **powerup_unlocks,
                                             **starbit_luma_key, **starbit_world_keys, **move_rando_separate_jump,
                                             **prog_jumps, **yoshi_moves, **object_unlocks, **coin_world_keys,
                                             **coin_luma_key, **comet_type_keys, **comet_all_key, **green_star_all_key,

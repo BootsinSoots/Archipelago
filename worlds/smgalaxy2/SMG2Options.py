@@ -4,6 +4,7 @@ from collections import Counter
 
 
 from Options import Choice, Range, PerGameCommonOptions, OptionSet, Toggle, OptionCounter, OptionDict, OptionGroup
+from items import powerup_consumables
 from .items import trap_filler_items
 
 
@@ -242,17 +243,36 @@ class PowerupRando(Toggle):
     internal_name = "powerup_rando"
     slot_req = True
 
-class PowerUpFiller(Choice):
+class PowerUpFiller(Toggle):
     """
-    Add consumable Power-Ups as filler items to the itempool
+    Add consumable Power-Ups as filler items to the itempool. Use the Consumable Weights option to determine how
+    frequently you get power-ups of a certain type.
 
-    Ice Mario and the Flight Star from Super Mario Galaxy 1 are only included as consumables if chosen
+    Ice Mario/Flower from Super Mario Galaxy 1 is only included as a consumable if you confirm you have your own copy of
+    SMG1, so that the models can be imported from that game. You will need to turn on that option separately.
     """
     display_name = "Power-Up Consumables"
-    internal_name = ("powerup_consumables")
-    option_Off = 0
-    option_Exclude_Ice_and_Fly = 1
-    option_All = 2
+    internal_name = "powerup_consumables"
+    slot_req = True
+
+class ConsumableWeights(OptionCounter):
+    """
+    Set Consumable Weights for power-ups chosen as filler items.
+    Each weight represents a number of balls in a lottery roller with that power-up on it.
+    So if you had Consumable Cloud Flower set to 3, and Consumable Fire Flower set to 7, and the rest set to 0,
+    you would have a 3/10 chance for a Consumable Cloud Flower to be chosen when rolling for power-up fillers
+    Must be between 0 and 100
+
+    Ice Flower and Flight Star are disabled by default.
+    """
+    display_name = "Consumable Weights"
+    internal_name = "consumable_weights"
+    min = 0
+    max = 100
+    valid_keys = powerup_consumables.keys()
+    default = {item: data.default_weight for item, data in powerup_consumables.items()}
+    all_on_dict = {item: 100 for item in powerup_consumables.keys()}
+    all_off_dict = {item: 0 for item in powerup_consumables.keys()}
     slot_req = True
 
 class MoveRando(Choice):
@@ -440,7 +460,7 @@ class TrapWeights(OptionCounter):
     """
     Set Trap Weights for traps chosen as filler items, if Trap Percentage is greater than 0.
     Each weight represents a number of balls in a lottery roller with that trap on it.
-    So if you had Daredevial Trap set to 3, and Joy Trap set to 7, and the rest set to 0,
+    So if you had Daredevil Trap set to 3, and Joy Trap set to 7, and the rest set to 0,
     you would have a 3/10 chance for a Daredevil Trap to be chosen when rolling for trap fillers
     Must be between 0 and 100
     """
@@ -498,13 +518,25 @@ class MusicRando(Toggle):
 
 class GreenBoot(Toggle):
     """
-    If this option is on, Green Stars will bot the player out of the stage when collected
+    If this option is on, Green Stars will boot the player out of the stage when collected
 
-    If it is if, you will be able to continue the leve after collecting the green star. If you would normally fall as
+    If it is off, you will be able to continue the level after collecting the green star. If you would normally fall as
     a result, you will instead be returned to your last stable position.
     """
     display_name = "Green Star Boot-Out"
     internal_name = "green_star_boot_out"
+
+class SMG1Confirm(Toggle):
+    """
+    Only turn this option on if you, the player, have your own legally acquired ISO of Super Mario Galaxy (1). A popup
+    window will ask you for your copy during the patching process later.
+
+    This option must be on in order for Ice Flower to exist as filler items. If you are unable to provide an SMG1 iso
+    during patching, any Ice Flowers created will be ignored.
+    """
+    display_name = "Confirm Super Mario Galaxy 1"
+    internal_name = "confirm_smg1"
+
 
 # class Bossanity(Toggle):
 #     """
@@ -548,12 +580,14 @@ class SMG2Options(PerGameCommonOptions):
     logic_difficulty: LogicDifficulty
     mailtoad_letters: MailtoadLetters
     passengers: Passengers
+    consumable_weights: ConsumableWeights
     trap_weights: TrapWeights
     trap_percentage: TrapPercentage
     launch_stars: LaunchStars
     pipesanity: Pipesanity
     bonus_teleporters: BonusTeleporters
     music_rando: MusicRando
+    confirm_smg1:SMG1Confirm
     #bossanity: Bossanity
 
 option_groups = [
@@ -597,6 +631,7 @@ option_groups = [
     ]),
     OptionGroup("Itempool Changes", [
         PowerUpFiller,
+        ConsumableWeights,
         TrapPercentage,
         TrapWeights,
     ]),
