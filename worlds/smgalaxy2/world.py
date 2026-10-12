@@ -61,6 +61,7 @@ class SMG2World(World):
     required_client_version = (0, 6, 7)
 
     trap_filler_dict: dict[str, int]
+    filler_dict: dict[str, int]
     music_mapping: dict[str, str] = {}
 
     hint_blacklist = {"Peach"}
@@ -78,6 +79,12 @@ class SMG2World(World):
     def generate_early(self) -> None:
         start_inv: list[str] = [start_item.name for start_item in self.multiworld.precollected_items[self.player]]
         self.trap_filler_dict: dict[str, int] = self.options.trap_weights.value
+
+        self.filler_dict: dict[str, int] = {k: v.default_weight for k, v in items.filler_items.items()}
+        if self.options.powerup_consumables.value:
+            if self.options.confirm_smg1.value == 0:
+                self.options.consumable_weights.value.update({itemname.ICEFLOWER: 0})
+            self.filler_dict = {**self.filler_dict, **self.options.consumable_weights.value}
 
         if "random" in self.options.starbit_luma_counts.value.keys():
             random_cap: int = self.options.starbit_luma_counts.value["random"]
@@ -206,14 +213,8 @@ class SMG2World(World):
         return item
 
     def get_filler_item_name(self) -> str:
-        filler_item: str = itemname.ONEUP
-        if self.options.powerup_consumables.value == 0:
-            filler_item = self.random.choice(list(items.filler_items.keys()))
-        elif self.options.powerup_consumables.value == 1:
-            filler_item = self.random.choice(list(items.expanded_filler.keys()))
-        elif self.options.powerup_consumables.value == 2:
-            filler_item = self.random.choice(list(items.all_filler.keys()))
-        return filler_item
+        filler_weights = dict(sorted(self.filler_dict.items()))
+        return self.random.choices(list(filler_weights.keys()), weights=list(filler_weights.values()), k=1)[0]
 
     def get_trap_item_name(self) -> str:
         filler_traps = dict(sorted(self.trap_filler_dict.items()))
