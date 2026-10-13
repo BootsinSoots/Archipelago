@@ -19,7 +19,7 @@ class GameMode(Choice):
 
     Default - Play through the mansion as usual
 
-    Poltergust Hunt - You must first find the Poltergust 3000 inside a piece of furniture before use. Enabling this will
+    Poltergust Hunt - You must first find the Poltergust 3000 or be given it from the multiworld. Enabling this will
     automatically add certain pieces of furniture to the pool of locations even if other furniture options are turned off.
     This will also unlock all doors in the mansion. This is intended as a short form game mode
     """
