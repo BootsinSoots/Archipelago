@@ -6,6 +6,11 @@ from random import Random
 from importlib.resources import read_text
 from io import BytesIO
 
+from PIL import Image
+from PIL.Image import Image as pImage
+from gclib.bti import BTI
+from gclib import texture_utils as text_utils
+
 # AP Related Imports
 import Utils
 
@@ -22,7 +27,6 @@ from .LM_Map_File import LMMapFile
 from ..client.constants import CLIENT_VERSION, AP_WORLD_VERSION_NAME, RANDOMIZER_NAME, CLIENT_NAME, LM_GC_IDs
 from .LM_GameUSA_Arc import LMGameUSAArc
 from ..Helper_Functions import LMDynamicAddresses, get_arc, find_rarc_file_entry
-from .LM_BTI import LMBTI
 from ..Helper_Functions import PROJECT_ROOT
 
 class LuigisMansionRandomizer:
@@ -235,12 +239,26 @@ class LuigisMansionRandomizer:
         self.lm_gcm.add_new_directory(resource_dir)
 
         game_arc = get_arc(self.lm_gcm, "files/Game/game.szp")
-        new_bti: LMBTI = LMBTI()
-        new_bti.load_bti(find_rarc_file_entry(game_arc, "kawano", "teresar.bti").data)
-        new_bti.width = new_bti.width // 2
-        new_bti.height = new_bti.height // 2
-        self.lm_gcm.add_new_file(resource_dir + "/teresa_local_icon.bti", new_bti.to_bytes())
+        icon_bti: BTI = BTI(find_rarc_file_entry(game_arc, "kawano", "teresar.bti"))
+        icon_img = _update_img(icon_bti)
+        icon_bti.replace_image(icon_img)
+        icon_bti.save_changes()
+        self.lm_gcm.add_new_file(resource_dir + "/teresa_local_icon.bti", copy.deepcopy(icon_bti.data))
 
-        new_bti = LMBTI()
-        new_bti.load_png(BytesIO(PROJECT_ROOT.joinpath('data', 'archiboolego.png').read_bytes()))
-        self.lm_gcm.add_new_file(resource_dir + "/teresa_online_icon.bti", new_bti.to_bytes())
+        online_img: pImage = Image.open(BytesIO(PROJECT_ROOT.joinpath('data', 'archiboolego.png').read_bytes()))
+        icon_bti.replace_image(online_img)
+        icon_bti.save_changes()
+        self.lm_gcm.add_new_file(resource_dir + "/teresa_online_icon.bti", icon_bti.data)
+
+def _update_img(loc_bti: BTI) -> pImage:
+    icon_img: pImage = text_utils.decode_image(loc_bti.image_data, loc_bti.palette_data, loc_bti.image_format,
+        loc_bti.palette_format, loc_bti.num_colors, loc_bti.width, loc_bti.height)
+    icon_img = icon_img.resize([icon_img.width // 2, icon_img.height // 2])
+    img_pix = icon_img.load()
+    width, height = icon_img.size
+
+    for x in range(width // 2):
+        for y in range(height):
+            img_pix[x, y], img_pix[width - x - 1, y] = img_pix[width - x - 1, y], img_pix[x, y]
+
+    return icon_img
