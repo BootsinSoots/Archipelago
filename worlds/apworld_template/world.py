@@ -70,8 +70,9 @@ class GameWorld(World):
     # which we use inside multiple functions.
     def generate_early(self) -> None:
         # First check if UT is doing this generation, then just grab the data out of slot, rather than doing gen early.
-        if hasattr(self.multiworld, "re_gen_passthrough"):
-            slot_data = self.multiworld.re_gen_passthrough[self.game]
+        regen_passthrough = getattr(self.multiworld, "re_gen_passthrough", {})
+        if regen_passthrough and self.game in regen_passthrough:
+            slot_data = regen_passthrough[self.game]
 
             for key, value in slot_data.items():
                 if hasattr(self, key):
