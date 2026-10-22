@@ -21,8 +21,9 @@ BLUEISH_ITEM_NAMES: list[str] = ["Small Key", "Blue", "Ocean", "Sea", "Magic"]
 
 # This is a list of furniture that is at ceiling height. These need to be adjusted to avoid spawning items out of bounds.
 CEILING_FURNITURE_LIST: list[int] = [4, 38, 43, 62, 63, 76, 77, 81, 84, 85, 91, 92, 101, 110, 111, 137, 156, 158, 159,
-    163, 173, 174, 189, 190, 195, 199, 200, 228, 240, 266, 310, 342, 352, 354, 355, 356, 357, 358, 359, 373, 374, 378,
-    379, 380, 381, 399, 423, 426, 445, 446, 454, 459, 460, 463, 467, 485, 547, 595, 596, 631, 632, 636, 657, 671, 672]
+    163, 173, 174, 189, 190, 195, 199, 200, 228, 240, 266, 310, 321, 322, 323, 342, 352, 354, 355, 356, 357, 358, 359,
+    373, 374, 378, 379, 380, 381, 399, 423, 426, 445, 446, 454, 459, 460, 463, 467, 485, 547, 595, 596, 631, 632, 636,
+    657, 671, 672]
 
 # Similar to Ceiling furniture, except only needs a slight adjustment to prevent items from going out of bounds.
 MEDIUM_HEIGHT_FURNITURE_LIST: list[int] = [0, 1, 104, 112, 113, 114, 124, 125, 135, 136, 204, 206, 210, 232, 234, 235,

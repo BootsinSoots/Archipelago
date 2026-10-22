@@ -105,7 +105,7 @@ def update_dol_offsets(lm_gen: "LuigisMansionRandomizer"):
     lm_dol.data.write(struct.pack(">H", king_boo_health))
 
     # Replace section two with our own custom section, which is about 1000 hex bytes long.
-    new_dol_size = 0x4000
+    new_dol_size = 0x5000
     new_dol_sect = DOLSection(CUSTOM_CODE_OFFSET_START, 0x804DD940, new_dol_size)
     lm_dol.sections[2] = new_dol_sect
 
@@ -243,5 +243,5 @@ def update_portrait_health(dol_data: DOL, base_portrait_health_addr: int, health
         if portrait_offset is None: # Should only be none for bosses really
             continue
 
-        dol_data.data.seek(portrait_base_offset+portrait_offset)
+        dol_data.data.seek(portrait_base_offset + portrait_offset)
         dol_data.data.write(struct.pack(">H", portrait_health))
