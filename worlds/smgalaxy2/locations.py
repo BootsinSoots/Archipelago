@@ -181,7 +181,7 @@ LAVALAIR_loc: dict[str, SMG2LocationData] = {
 # Tall Trunk St
 TALLTREE_loc: dict[str, SMG2LocationData] = {
     locname.TALLTREESTAR1: SMG2LocationData(["Power Star Location", regname.TALLTRUNK], regname.TALLTRUNK,
-                                            regname.TALLTRUNK1WOODCIRClE, RB.CanDinoBlimp),
+                                            regname.TALLTRUNK1WOODCIRCLE, RB.CanDinoBlimp),
     locname.TALLTREESTAR2: SMG2LocationData(["Power Star Location", regname.TALLTRUNK], regname.TALLTRUNK,
                                             regname.TALLTRUNK2SLIDEND),
     locname.TALLTREESTAR3: SMG2LocationData(["Power Star Location", regname.TALLTRUNK], regname.TALLTRUNK,
@@ -982,8 +982,8 @@ checkpoint_loc_table: dict[str, SMG2LocationData] = {
                                                    regname.LAVALAIR1LAVAPLA2C),
     locname.TALLTRUNK1LOGCP: SMG2LocationData(["Checkpoint Location",regname.TALLTRUNK], regname.TALLTRUNK,
                                               regname.TALLTRUNK1LOG),
-    locname.TALLTRUNK1WOODCIRClECP: SMG2LocationData(["Checkpoint Location",regname.TALLTRUNK], regname.TALLTRUNK,
-                                                     regname.TALLTRUNK1WOODCIRClE),
+    locname.TALLTRUNK1WOODCIRCLECP: SMG2LocationData(["Checkpoint Location",regname.TALLTRUNK], regname.TALLTRUNK,
+                                                     regname.TALLTRUNK1WOODCIRCLE),
     locname.TALLTRUNK2SLIDECP: SMG2LocationData(["Checkpoint Location", regname.TALLTRUNK], regname.TALLTRUNK,
                                                      regname.TALLTRUNK2SLIDE),
     locname.CLOUCOUR1TOWERSCP: SMG2LocationData(["Checkpoint Location", regname.CLOUCOUR], regname.CLOUCOUR,
@@ -2257,21 +2257,21 @@ bonus_teleporter_locations: dict[str, SMG2LocationData] = {
 }
 
 first_powerup_locations: dict[str, SMG2LocationData] = {
-    locname.SUPASTAR1ST:        SMG2LocationData(["Fisrt Power-Up Location"], regname.FIRSTSUPASTAR, regname.FIRSTSUPASTAR,
+    locname.SUPASTAR1ST:        SMG2LocationData(["First Power-Up Location"], regname.FIRSTSUPASTAR, regname.FIRSTSUPASTAR,
                                                  RB.SUPAPOWA),
-    locname.FIREFLOWER1ST:      SMG2LocationData(["Fisrt Power-Up Location"], regname.FIRSTFIREFLOWER, regname.FIRSTFIREFLOWER,
+    locname.FIREFLOWER1ST:      SMG2LocationData(["First Power-Up Location"], regname.FIRSTFIREFLOWER, regname.FIRSTFIREFLOWER,
                                                  RB.FireMario),
-    locname.BEEMARIO1ST:        SMG2LocationData(["Fisrt Power-Up Location"], regname.FIRSTBEEMARIO, regname.FIRSTBEEMARIO,
+    locname.BEEMARIO1ST:        SMG2LocationData(["First Power-Up Location"], regname.FIRSTBEEMARIO, regname.FIRSTBEEMARIO,
                                                  RB.BeeFlight),
-    locname.SPRING1ST:          SMG2LocationData(["Fisrt Power-Up Location"], regname.FIRSTSPRING, regname.FIRSTSPRING,
+    locname.SPRING1ST:          SMG2LocationData(["First Power-Up Location"], regname.FIRSTSPRING, regname.FIRSTSPRING,
                                                  RB.SPRONGIN),
-    locname.BOOMARIO1ST:        SMG2LocationData(["Fisrt Power-Up Location"], regname.FIRSTBOOMARIO, regname.FIRSTBOOMARIO,
+    locname.BOOMARIO1ST:        SMG2LocationData(["First Power-Up Location"], regname.FIRSTBOOMARIO, regname.FIRSTBOOMARIO,
                                                  RB.BooMario),
-    locname.CLOUD1ST:           SMG2LocationData(["Fisrt Power-Up Location"], regname.FIRSTCLOUD, regname.FIRSTCLOUD,
+    locname.CLOUD1ST:           SMG2LocationData(["First Power-Up Location"], regname.FIRSTCLOUD, regname.FIRSTCLOUD,
                                                  RB.CloudMario),
-    locname.ROCK1ST:            SMG2LocationData(["Fisrt Power-Up Location"], regname.FIRSTROCK, regname.FIRSTROCK,
+    locname.ROCK1ST:            SMG2LocationData(["First Power-Up Location"], regname.FIRSTROCK, regname.FIRSTROCK,
                                                  RB.ROCKNROLLIN),
-    locname.SPINDRILL1ST:       SMG2LocationData(["Fisrt Power-Up Location"], regname.FIRSTSPINDRILL, regname.FIRSTSPINDRILL,
+    locname.SPINDRILL1ST:       SMG2LocationData(["First Power-Up Location"], regname.FIRSTSPINDRILL, regname.FIRSTSPINDRILL,
                                                  RB.DRILLMASTER),
 }
 

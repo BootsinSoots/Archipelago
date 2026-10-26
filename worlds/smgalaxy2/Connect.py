@@ -169,7 +169,7 @@ def set_rules(world: "SMG2World", player: int):
                                                     "Spin-Dig 1: Dirt Tower Launch Star",
                                                     rule=RB.CanLaunchStar & RB.DRILLMASTER)
     world.get_region(regname.SPINDIG1TOADS).connect(world.get_region(regname.SPINDIG1BOSS),
-                                                    "Spin-Dig 1: Red Toadship Launch Star",
+                                                    "Spin-Dig 1: Toad Brigade Starshroom Launch Star",
                                                     rule=RB.CanLaunchStar)
     world.get_region(regname.SPINDIG).connect(world.get_region(regname.SPINDIG2TETRA), "Spin-Dig Star 2")
     world.get_region(regname.SPINDIG2TETRA).connect(world.get_region(regname.SPINDIG2DARKT),
@@ -190,7 +190,7 @@ def set_rules(world: "SMG2World", player: int):
                                                     "Spin-Dig 2: Dark Canister Launch Star",
                                                     rule=RB.CanLaunchStar)
     world.get_region(regname.SPINDIG2BTOAD).connect(world.get_region(regname.SPINDIG2SQUARE),
-                                                    "Spin-Dig 2: Blue Toadship Launch Star",
+                                                    "Spin-Dig 2: Blue Starshroom Launch Star",
                                                     rule=RB.CanLaunchStar)
     world.get_region(regname.SPINDIG).connect(world.get_region(regname.SPINDIG3BOSS), "Spin-Dig Comet Star",
                                               rule=((RB.Comet1ItemAccess | (
@@ -483,7 +483,7 @@ def set_rules(world: "SMG2World", player: int):
                                                   "Cosmic Cove 2: Landing Launch Star",
                                                      rule=RB.CanLaunchStar & CanReachEntrance("Cosmic Cove 2: Return Green Pipe"))
     world.get_region(regname.COSMIC2TOADSHI).connect(world.get_region(regname.COSMIC2WATERPL1),
-                                                  "Cosmic Cove 2: Toadship Launch Star",
+                                                  "Cosmic Cove 2: Starshroom Launch Star",
                                                      rule=RB.CanLaunchStar)
     world.get_region(regname.COSMIC2WATERPL1).connect(world.get_region(regname.COSMIC2WATERPL2),
                                                       rule=RB.CanSwim & RB.DRILLMASTER)
@@ -562,7 +562,7 @@ def set_rules(world: "SMG2World", player: int):
                                                                                  | (RB.HardLogic & RB.CanBackflip & RB.CanWallSpin)))
     world.get_region(regname.TALLTRUNK1BIGTREE).connect(world.get_region(regname.TALLTRUNK1PIRANHABONUS),
                                                         "Tall Trunk 1: Piranha Bonus Teleporter")
-    world.get_region(regname.TALLTRUNK1LOG).connect(world.get_region(regname.TALLTRUNK1WOODCIRClE),
+    world.get_region(regname.TALLTRUNK1LOG).connect(world.get_region(regname.TALLTRUNK1WOODCIRCLE),
                                                         "Tall Trunk 1: Carved Log Launch Star",
                                                     rule=RB.CanLaunchStar & RB.CanDinoBlimp & RB.CanCollectStarChips)
     world.get_region(regname.TALLTRUNK1LOG).connect(world.get_region(regname.TALLTRUNK1DICEPIPE),
@@ -1245,7 +1245,7 @@ def set_rules(world: "SMG2World", player: int):
                                                        "Shiverburn: Lava Ice Launch Star",
                                                        rule=RB.CanLaunchStar)
     world.get_region(regname.SHIVBURN1TOAD).connect(world.get_region(regname.SHIVBURN1BOSS),
-                                                       "Shiverburn: Green Toadship Launch Star",
+                                                       "Shiverburn: Green Starshroom Launch Star",
                                                     rule=RB.CanLaunchStar)
     world.get_region(regname.SHIVBURN).connect(world.get_region(regname.SHIVBURN2TOAD), "Shiverburn Comet Star",
                                                rule=((RB.Comet1ItemAccess | (
@@ -1260,7 +1260,7 @@ def set_rules(world: "SMG2World", player: int):
                                                            & CanReachLocation(locname.COLDFIRESTAR1))))
                                                )
     world.get_region(regname.SHIVBURN2TOAD).connect(world.get_region(regname.SHIVBURN2ROMP),
-                                                       "Shiverburn Comet: Green Toadship Launch Star",
+                                                       "Shiverburn Comet: Green Starshroom Launch Star",
                                                     rule=RB.CanLaunchStar)
     # Boom Bunker
     world.get_region(regname.WORLD5).connect(world.get_region(regname.BOWJR3), "World 5 Slot 7 Galaxy")
@@ -1443,7 +1443,7 @@ def set_rules(world: "SMG2World", player: int):
                                                     "Battle Belt: Crabber Sling Star",
                                                     rule=RB.CanLaunchStar)
     world.get_region(regname.BATTBELT1PTOA).connect(world.get_region(regname.BATTBELT1PUMP),
-                                                    "Battle Belt: Pink Toadship Sling Star",
+                                                    "Battle Belt: Pink Starshroom Sling Star",
                                                     rule=RB.CanLaunchStar)
     world.get_region(regname.BATTBELT1PUMP).connect(world.get_region(regname.BATTBELT1PUMI),
                                                     "Battle Belt: Jack O'Goomba Green Pipe",
@@ -1452,7 +1452,7 @@ def set_rules(world: "SMG2World", player: int):
                                                     "Battle Belt: Jack O'Goomba Sling Star",
                                                     rule=RB.CanLaunchStar & RB.CanPipe & (RB.CanShell & RB.CanSwim))
     world.get_region(regname.BATTBELT1RTOA).connect(world.get_region(regname.BATTBELT1ICEP),
-                                                    "Battle Belt: Red Toadship Sling Star",
+                                                    "Battle Belt: Toad Brigade Starshroom Sling Star",
                                                     rule=RB.CanLaunchStar)
     world.get_region(regname.BATTBELT1ICEP).connect(world.get_region(regname.BATTBELT3BOSS),
                                                     "Battle Belt: Hungry Luma",
@@ -1496,7 +1496,7 @@ def set_rules(world: "SMG2World", player: int):
                                                     "Battle Belt Comet: Crabber Sling Star",
                                                     rule=RB.CanLaunchStar)
     world.get_region(regname.BATTBELT2PTOA).connect(world.get_region(regname.BATTBELT2PUMP),
-                                                    "Battle Belt Comet: Yellow Toadship Sling Star",
+                                                    "Battle Belt Comet: Yellow Starshroom Sling Star",
                                                     rule=RB.CanLaunchStar)
     world.get_region(regname.BATTBELT2PUMP).connect(world.get_region(regname.BATTBELT2PUMI),
                                                     "Battle Belt Comet: Jack O'Goomba Green Pipe",
@@ -1505,7 +1505,7 @@ def set_rules(world: "SMG2World", player: int):
                                                     "Battle Belt Comet: Jack O'Goomba Sling Star",
                                                     rule=RB.CanLaunchStar & RB.CanPipe & RB.CanShell & RB.CanSwim)
     world.get_region(regname.BATTBELT2RTOA).connect(world.get_region(regname.BATTBELT2ICEP),
-                                                    "Battle Belt Comet: Red Toadship Sling Star",
+                                                    "Battle Belt Comet: Toad Brigade Starshroom Sling Star",
                                                     rule=RB.CanLaunchStar)
     world.get_region(regname.BATTBELT2ICEP).connect(world.get_region(regname.BATTBELT2MOLE),
                                                     "Battle Belt Comet: Li'l Brr Sling Star",
