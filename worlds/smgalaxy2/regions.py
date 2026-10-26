@@ -154,7 +154,7 @@ region_list: dict[str, SMG2RegionData] = {
     regname.TALLTRUNK1PIRANHABONUS:     SMG2RegionData("Planet", [], []),
     regname.TALLTRUNK1LOG:              SMG2RegionData("Planet", [], []),
     regname.TALLTRUNK1DICEPIPE:         SMG2RegionData("Planet", [], []),
-    regname.TALLTRUNK1WOODCIRClE:       SMG2RegionData("Planet", [], []),
+    regname.TALLTRUNK1WOODCIRCLE:       SMG2RegionData("Planet", [], []),
     regname.TALLTRUNK2BIGTREE:          SMG2RegionData("Planet", [], []),
     regname.TALLTRUNK2PIRANHABONUS:     SMG2RegionData("Planet", [], []),
     regname.TALLTRUNK2SLIDE:            SMG2RegionData("Planet", [], []),
