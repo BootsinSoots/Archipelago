@@ -537,6 +537,16 @@ class SMG1Confirm(Toggle):
     display_name = "Confirm Super Mario Galaxy 1"
     internal_name = "confirm_smg1"
 
+class StarSpoiler(Toggle):
+    """
+    When on, this option causes items in the world to be color-coded according to the type of AP item you will find in the
+    location.
+
+    When off, the items will all have the same color, so you won't know what kind of item is in that location.
+    """
+    display_name = "Star Spoiler"
+    internal_name = "star_spoiler"
+
 
 # class Bossanity(Toggle):
 #     """
@@ -588,6 +598,7 @@ class SMG2Options(PerGameCommonOptions):
     bonus_teleporters: BonusTeleporters
     music_rando: MusicRando
     confirm_smg1:SMG1Confirm
+    star_spoiler:StarSpoiler
     #bossanity: Bossanity
 
 option_groups = [
@@ -599,6 +610,7 @@ option_groups = [
         GalaxyShuffle,
         GalaxyShuffleType,
         GalaxyLock,
+        StarSpoiler,
         StarbitLumaLocks,
         StarbitLumaCounts,
         ActiveCometsWorld,
