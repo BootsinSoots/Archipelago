@@ -940,7 +940,7 @@ class LMWorld(World):
             if portrait_sphere_worlds:
                 portrait_health_sphere_things(multiworld, portrait_sphere_worlds)
 
-            # Produce values for boo health for worlds the need them
+            # Produce values for boo health for worlds that need them
             def check_boo_players_done() -> None:
                 done_players = set()
                 for player in boo_worlds:
