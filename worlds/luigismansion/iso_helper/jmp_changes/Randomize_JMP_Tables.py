@@ -372,27 +372,28 @@ class RandomizeJMPTables:
             2, 15, 1))
 
         # GRASSANITY WALL
-        map_two_nobserver.add_jmp_entry(create_observer_entry(-2250.000000, 10.000000, -5770.000000,
-            23, 7, 7, arg0=123, arg1=0, arg2=100))
-        map_two_nobserver.add_jmp_entry(create_observer_entry(-2250.000000, 10.000000, -6050.000000,
-            23, 7, 7, arg0=124, arg1=0, arg2=100))
-        map_two_nobserver.add_jmp_entry(create_observer_entry(-2250.000000, 10.000000, -6350.000000,
-            23, 7, 7, arg0=125, arg1=0, arg2=100))
-        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+        # Courtyard
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-2250.000000, 20.000000, -5770.000000,
+            23, 7, 7, arg0=123, arg1=0, arg2=500))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-2250.000000, 20.000000, -6350.000000, # 6050
+            23, 7, 7, arg0=124, arg1=0, arg2=500))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-1850.000000, 20.000000, -5770.000000,
+            23, 7, 7, arg0=125, arg1=0, arg2=500))
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-1850.000000, 20.000000, -6050.000000,
             23, 7, 7, arg0=126, arg1=0, arg2=10))
-        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-1850.000000, 20.000000, -6350.000000,
             23, 7, 7, arg0=127, arg1=0, arg2=10))
-        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-1450.000000, 20.000000, -5770.000000,
             23, 7, 7, arg0=128, arg1=0, arg2=10))
-        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-1450.000000, 20.000000, -6350.000000,
             23, 7, 7, arg0=129, arg1=0, arg2=10))
-        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-1350.000000, 20.000000, -5770.000000,
             23, 7, 7, arg0=130, arg1=0, arg2=10))
-        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-1350.000000, 20.000000, -6350.000000,
             23, 7, 7, arg0=131, arg1=0, arg2=10))
-        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-1250.000000, 20.000000, -5770.000000,
             23, 7, 7, arg0=132, arg1=0, arg2=10))
-        map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-1250.000000, 20.000000, -6350.000000,
             23, 7, 7, arg0=133, arg1=0, arg2=10))
         map_two_nobserver.add_jmp_entry(create_observer_entry(1180.000000, 10.000000, -690.000000,
             23, 7, 7, arg0=134, arg1=0, arg2=10))
