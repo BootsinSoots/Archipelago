@@ -56,7 +56,8 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.SKYOBS2STARTTOPSIDE).connect(world.get_region(regname.SKYOBS2TOPOFHOUSE),
                                                           rule=(RB.JumpHeight6 | RB.CanWallSpin
                                                                 | (RB.CanGrabLedge & RB.CanAirSpin & RB.CanBackOrSideflip)
-                                                                | (RB.CanTriple & RB.CanWallJump & RB.MediumLogic)))
+                                                                | (RB.CanTriple & RB.CanWallJump & RB.MediumLogic)
+                                                                | (RB.CanGrabLedge & RB.CanAirSpin & RB.HardLogic)))
     world.get_region(regname.SKYOBS2STARTBOTTOM).connect(world.get_region(regname.SKYOBS2SKYFLEET),
                                                         "Sky Station 2: House Launch Star",
                                                          rule=RB.CanLaunchStar)
