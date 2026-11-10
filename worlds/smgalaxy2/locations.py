@@ -1801,7 +1801,13 @@ oneup_locations: dict[str, SMG2LocationData] = {
     locname.SKST2BON1UP2: SMG2LocationData(["1-up Location"], regname.SKYOBS, regname.SKYOBS2OCTOBONUS),
     locname.SKST2BON1UP3: SMG2LocationData(["1-up Location"], regname.SKYOBS, regname.SKYOBS2OCTOBONUS),
     locname.SKST2WOOD1UP: SMG2LocationData(["1-up Location"], regname.SKYOBS, regname.SKYOBS2SKYFLEET),
+    locname.SKST3PIOR1UP: SMG2LocationData(["1-up Location"], regname.SKYOBS, regname.SKYOBS3STARTTOPSIDE,
+                                           RB.CanPipe),
     locname.SKST2FLIP1UP: SMG2LocationData(["1-up Location"], regname.SKYOBS, regname.SKYOBS2FLIPSWITCH),
+    locname.SKST3CART1UP: SMG2LocationData(["1-up Location"], regname.SKYOBS, regname.SKYOBS3CYLINDER,
+                                           RB.JumpHeight3 | (RB.JumpHeight2 & RB.CanGrabLedge)
+                                           | RB.HardLogic),
+    locname.SKST3CRYS1UP: SMG2LocationData(["1-up Location"], regname.SKYOBS, regname.SKYOBS3CYLINDER),
     locname.YOSH1RIGH1UP: SMG2LocationData(["1-up Location"], regname.GOODEGG, regname.GOODEGG1MUDDY),
     locname.YOSH2RIGH1UP: SMG2LocationData(["1-up Location"], regname.GOODEGG, regname.GOODEGG2MUDDY),
     locname.YOSH3RIGH1UP: SMG2LocationData(["1-up Location"], regname.GOODEGG, regname.GOODEGG3MUDDY),
