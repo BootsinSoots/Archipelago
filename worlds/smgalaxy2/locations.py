@@ -2289,7 +2289,7 @@ base_stars_locations = {**SKYOBS_loc, **YOSHTAR_loc, **SPINDIG_loc, **FLUFBLUF_l
 
 all_location_table = {**base_stars_locations, **green_star_locations, **COMETMEDAL_loc, **mailtoad_locations,
                       **checkpoint_loc_table, **hungry_luma_loc, **passenger_loc, **lumalee_locations,
-                      **pipe_locations, **launch_star_locs, **special_locations, **bonus_teleporter_locations,
+                      **pipe_locations, **launch_star_locs, **bonus_teleporter_locations,
                       **first_powerup_locations}
 
 LOCATION_NAME_TO_ID: dict[str, int] =  {
