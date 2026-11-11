@@ -304,14 +304,26 @@ def set_rules(world: "SMG2World", player: int):
                                                         rule=RB.CanPipe & RB.FireMario)
     world.get_region(regname.RIGHTDOWNCORRIDOR).connect(world.get_region(regname.RIGHTDOWNBONUS),
                                                 "Rightside Down: Paragoomba Bonus Teleporter")
-    world.get_region(regname.RIGHTDOWNCORRIDOR).connect(world.get_region(regname.RIGHTDOWNTOPVIEW),
-                                                        rule=RB.FireMario & (RB.CanWallJump | (RB.CanTriple & RB.MediumLogic)))
+    world.get_region(regname.RIGHTDOWNCORRIDOR).connect(world.get_region(regname.RIGHTDOWNCHOMP))
+    world.get_region(regname.RIGHTDOWNCHOMP).connect(world.get_region(regname.RIGHTDOWNFLOWER),
+                                                     rule=RB.JumpHeight2 | RB.HardLogic | RB.CanGrabLedge | RB.CanWallJump)
+    world.get_region(regname.RIGHTDOWNFLOWER).connect(world.get_region(regname.RIGHTDOWNTOPVIEW),
+                                                        rule=RB.FireMario & (RB.CanWallJump | RB.CanSideflip | (RB.CanTriple & RB.MediumLogic)))
+    world.get_region(regname.RIGHTDOWNTOPVIEW).connect(world.get_region(regname.RIGHTDOWNFINAL))
+    world.get_region(regname.RIGHTDOWNTOPVIEW).connect(world.get_region(regname.RIGHTDOWNABOVE),
+                                                       rule=RB.JumpHeight3 | RB.CanWallJump)
     # Fiery Flotilla
     world.get_region(regname.WORLD1).connect(world.get_region(regname.BOWJR1), "World 1 Slot 7 Galaxy")
     world.get_region(regname.BOWJR1).connect(world.get_region(regname.FIREFLOT1LANDING), "Fiery Flotilla Grand Star")
+    world.get_region(regname.FIREFLOT1LANDING).connect(world.get_region(regname.FIREFLOT1CASTLE),
+                                                       rule=RB.CanAirSpin | RB.CanBackflip
+                                                            | (RB.MediumLogic & RB.CanSideflip & RB.CanGrabLedge)
+                                                            | (RB.HardLogic & RB.CanTriple))
     world.get_region(regname.FIREFLOT1LANDING).connect(world.get_region(regname.FIREFLOT1LAVA),
                                                        "Fiery Flotilla: Fort Sling Star",
-                                                       rule= (RB.CanLaunchStar | (RB.HardLogic & (RB.CanLongJump | RB.CanAirSpin))))
+                                                       rule= RB.CanLaunchStar)
+    world.get_region(regname.FIREFLOT1CASTLE).connect(world.get_region(regname.FIREFLOT1LAVA),
+                                                      rule=RB.CanLaunchStar | (RB.HardLogic & (RB.CanLongJump | RB.CanAirSpin)))
     world.get_region(regname.FIREFLOT1LAVA).connect(world.get_region(regname.FIREFLOT1BOSS),
                                                        "Fiery Flotilla: Lava Planet Launch Star",
                                                     rule=RB.CanLaunchStar)
