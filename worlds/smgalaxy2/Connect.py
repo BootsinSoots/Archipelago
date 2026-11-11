@@ -91,7 +91,7 @@ def set_rules(world: "SMG2World", player: int):
                                                         "Sky Station Comet: Cylinder Launch Star",
                                                       rule=RB.CanLaunchStar)
 
-    # Yoshi star
+    # Yoshi Star
     world.get_region(regname.WORLD1).connect(world.get_region(regname.GOODEGG), "World 1 Slot 2 Galaxy")
     world.get_region(regname.GOODEGG).connect(world.get_region(regname.GOODEGG1LANDING), "Yoshi Star Star 1")
     world.get_region(regname.GOODEGG1LANDING).connect(world.get_region(regname.GOODEGG1MUDDY))
