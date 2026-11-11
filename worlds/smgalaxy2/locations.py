@@ -70,8 +70,7 @@ FLUFBLUF_loc: dict[str, SMG2LocationData] = {
                                             RB.CanMakeCloud | (RB.JumpHeight6 & RB.CanLongJump & RB.HellLogic)),
     locname.FLUFBLUFSTAR2: SMG2LocationData(["Power Star Location",regname.FLUFFBLUFF],regname.FLUFFBLUFF,
                                             regname.FLUFFBLUFF2LANDING,
-                                            ((CanReachRegion(regname.FLUFFBLUFF2CLIFF)&(RB.CanClimbPole|RB.JumpHeight5)
-                                              &CanReachRegion(regname.FLUFFBLUFF2TREE)))
+                                            (CanReachRegion(regname.FLUFFBLUFF2CLIFF))
                                             & RB.PowerStarCount(15) & RB.MailtoadOpen
                                             & (RB.CanAirSpin | RB.MediumLogic)),
     locname.FLUFBLUFSTAR3: SMG2LocationData(["Power Star Location",regname.FLUFFBLUFF],regname.FLUFFBLUFF,
@@ -524,7 +523,7 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.SKYOBS2SKYFLEET),
     locname.YOSHSTARSTARG1:     SMG2LocationData(["Green Star Location", regname.GOODEGG], regname.GOODEGG, 
                                                  regname.GOODEGGGSTAR1,
-                                                 (RB.NarrowJumpHeight5) | RB.CanRideDino),
+                                                 RB.NarrowJumpHeight5 | RB.CanRideDino),
     locname.YOSHSTARSTARG2:     SMG2LocationData(["Green Star Location", regname.GOODEGG], regname.GOODEGG, 
                                                  regname.GOODEGGGSTAR2),
     locname.YOSHSTARSTARG3:     SMG2LocationData(["Green Star Location", regname.GOODEGG], regname.GOODEGG, 
@@ -532,10 +531,10 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  (RB.CanDinoSwing  | RB.CanInfiniteFlutter)),
     locname.SPINDIGSTARG1:      SMG2LocationData(["Green Star Location", regname.SPINDIG], regname.SPINDIG,
                                                  regname.SPINDIG1DRILL,
-                                                 RB.JumpHeight3),
+                                                 RB.NarrowJumpHeight3 | (RB.CanTriple & RB.MediumLogic)),
     locname.SPINDIGSTARG2:      SMG2LocationData(["Green Star Location", regname.SPINDIG], regname.SPINDIG,
                                                  regname.SPINDIG1STEEL,
-                                                 RB.JumpHeight6),
+                                                 RB.JumpHeight6 | (RB.NarrowJumpHeight5 & RB.MediumLogic)),
     locname.SPINDIGSTARG3:      SMG2LocationData(["Green Star Location", regname.SPINDIG], regname.SPINDIG,
                                                  regname.SPINDIG2DARKIN1,
                                                  (RB.DRILLMASTER & ((RB.CanWallJump & (RB.CanSideflip | RB.CanTriple))
@@ -1840,22 +1839,23 @@ oneup_locations: dict[str, SMG2LocationData] = {
     locname.FLUF1BOMP1UP: SMG2LocationData(["1-up Location"], regname.FLUFFBLUFF, regname.FLUFFBLUFF1CLOUDCLIMB,
                                            RB.CanMakeCloud
                                            | (RB.CloudMario & RB.CanWallJump & RB.CanBackflip & RB.HardLogic)
-                                           | (RB.JumpHeight4 & RB.CanWallJump & RB.HardLogic)),
+                                           | (RB.CloudMario & (RB.CanGrabLedge | RB.MediumLogic | RB.JumpHeight3))
+                                           | (RB.CanWallSpin & RB.HardLogic)),
     locname.FLUF1CLOU1UP: SMG2LocationData(["1-up Location"], regname.FLUFFBLUFF, regname.FLUFFBLUFF1TREECLIMB,
                                            RB.CanMakeCloud),
     locname.FLUF2BRID1UP: SMG2LocationData(["1-up Location"], regname.FLUFFBLUFF, regname.FLUFFBLUFF2LANDING),
-    locname.FLUF2TREE1UP: SMG2LocationData(["1-up Location"], regname.FLUFFBLUFF, regname.FLUFFBLUFF2TREE,
+    locname.FLUF2TREE1UP: SMG2LocationData(["1-up Location"], regname.FLUFFBLUFF, regname.FLUFFBLUFF2TREE),
+    locname.FLUF2CLIF1UP: SMG2LocationData(["1-up Location"], regname.FLUFFBLUFF, regname.FLUFFBLUFF2CLIFF,
                                            RB.CanClimbPole | RB.JumpHeight5),
-    locname.FLUF2CLIF1UP: SMG2LocationData(["1-up Location"], regname.FLUFFBLUFF, regname.FLUFFBLUFF2CLIFF),
     locname.FLUF3PLAT1UP: SMG2LocationData(["1-up Location"], regname.FLUFFBLUFF, regname.FLUFFBLUFF3TOWER,
                                            RB.CanMakeCloud
-                                           | (RB.CloudMario & RB.CanBackOrSideflip & RB.CanWallJump & RB.HardLogic)),
+                                           | (RB.CloudMario & (RB.HardLogic | (RB.JumpHeight3 & RB.MediumLogic)))),
     locname.FLUF3BEH1UP1: SMG2LocationData(["1-up Location"], regname.FLUFFBLUFF, regname.FLUFFBLUFF3TOWER,
                                            RB.CanMakeCloud
-                                           | (RB.CloudMario & RB.CanBackOrSideflip & RB.CanWallJump & RB.HardLogic)),
+                                           | (RB.CloudMario & (RB.HardLogic | (RB.JumpHeight3 & RB.MediumLogic)))),
     locname.FLUF3BEH1UP2: SMG2LocationData(["1-up Location"], regname.FLUFFBLUFF, regname.FLUFFBLUFF3TOWER,
                                            RB.CanMakeCloud
-                                           | (RB.CloudMario & RB.CanBackOrSideflip & RB.CanWallJump & RB.HardLogic)),
+                                           | (RB.CloudMario & (RB.HardLogic | (RB.JumpHeight3 & RB.MediumLogic)))),
     locname.FLIPFENCE1UP: SMG2LocationData(["1-up Location"], regname.FLIPSWAP, regname.FLIPSWAP1,
                                            RB.CanAirSpin | RB.CanLongJump | RB.HardLogic),
     locname.FLIPCHOMP1UP: SMG2LocationData(["1-up Location"], regname.FLIPSWAP, regname.FLIPSWAP1,

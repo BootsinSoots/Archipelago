@@ -175,7 +175,8 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.SPINDIG).connect(world.get_region(regname.SPINDIG2TETRA), "Spin-Dig Star 2")
     world.get_region(regname.SPINDIG2TETRA).connect(world.get_region(regname.SPINDIG2DARKT),
                                                     "Spin-Dig 2: Dig Dirt Sling to Vine",
-                                                    rule=(RB.CanLaunchStar | RB.JumpHeight3 | (RB.CanDouble & RB.MediumLogic)))
+                                                    rule=(RB.CanLaunchStar | RB.JumpHeight3
+                                                          | ((RB.CanDouble | RB.CanLongJump) & RB.MediumLogic)))
     world.get_region(regname.SPINDIG2DARKT).connect(world.get_region(regname.SPINDIG2DARKIN1),
                                                     "Spin-Dig 2: Dark Canister 1st Green Pipe",
                                                     rule=RB.CanPipe)
@@ -262,8 +263,8 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.FLUFFBLUFF1CLOUDCLIMB).connect(world.get_region(regname.FLUFFBLUFF1TREECLIMB),
                                                          "Fluffy Bluff: Vine Swing",
                                                             rule=RB.CanMakeCloud
-                                                                 | (RB.CanWallSpin & RB.JumpHeight4 & RB.MediumLogic & RB.CanSwing)
-                                                                 | (RB.CloudMario & RB.CanSwing
+                                                                 | (RB.CanWallSpin & (RB.JumpHeight4 | RB.HardLogic) & RB.MediumLogic & RB.CanSwing)
+                                                                 | (RB.CloudMario & (RB.CanSwing | RB.HardLogic)
                                                                     & (RB.CanGrabLedge | RB.MediumLogic | RB.JumpHeight3)))
     world.get_region(regname.FLUFFBLUFF).connect(world.get_region(regname.FLUFFBLUFF2LANDING), "Fluffy Bluff Chimp Star",
                                                  RB.HasChimpScore)
