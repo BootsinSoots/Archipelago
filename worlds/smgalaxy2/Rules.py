@@ -86,6 +86,8 @@ CanWallSpin: Rule[Any] = CanWallJump&CanAirSpin
 CanLongSpin: Rule[Any] = CanLongJump&CanAirSpin
 CanBackOrSideflip: Rule[Any] = CanBackflip|CanSideflip
 CanHomingPound: Rule[Any] = CanAirSpin&CanPound
+NarrowJumpHeight3 = CanAirSpin | CanBackOrSideflip
+NarrowJumpHeight5 = CanAirSpin & CanBackOrSideflip
 
 ObjectRandoOff: Rule[Any] = True_()&OptionFilter(ObjectRando, 0)
 CanSwing: Rule[Any] = ObjectRandoOff|(Has(itemname.MARIOSWING)&OptionFilter(ObjectRando,1))

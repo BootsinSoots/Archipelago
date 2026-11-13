@@ -56,7 +56,8 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.SKYOBS2STARTTOPSIDE).connect(world.get_region(regname.SKYOBS2TOPOFHOUSE),
                                                           rule=(RB.JumpHeight6 | RB.CanWallSpin
                                                                 | (RB.CanGrabLedge & RB.CanAirSpin & RB.CanBackOrSideflip)
-                                                                | (RB.CanTriple & RB.CanWallJump & RB.MediumLogic)))
+                                                                | (RB.CanTriple & RB.CanWallJump & RB.MediumLogic)
+                                                                | (RB.CanGrabLedge & RB.CanAirSpin & RB.HardLogic)))
     world.get_region(regname.SKYOBS2STARTBOTTOM).connect(world.get_region(regname.SKYOBS2SKYFLEET),
                                                         "Sky Station 2: House Launch Star",
                                                          rule=RB.CanLaunchStar)
@@ -90,7 +91,7 @@ def set_rules(world: "SMG2World", player: int):
                                                         "Sky Station Comet: Cylinder Launch Star",
                                                       rule=RB.CanLaunchStar)
 
-    # Yoshi star
+    # Yoshi Star
     world.get_region(regname.WORLD1).connect(world.get_region(regname.GOODEGG), "World 1 Slot 2 Galaxy")
     world.get_region(regname.GOODEGG).connect(world.get_region(regname.GOODEGG1LANDING), "Yoshi Star Star 1")
     world.get_region(regname.GOODEGG1LANDING).connect(world.get_region(regname.GOODEGG1MUDDY))
@@ -174,7 +175,8 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.SPINDIG).connect(world.get_region(regname.SPINDIG2TETRA), "Spin-Dig Star 2")
     world.get_region(regname.SPINDIG2TETRA).connect(world.get_region(regname.SPINDIG2DARKT),
                                                     "Spin-Dig 2: Dig Dirt Sling to Vine",
-                                                    rule=(RB.CanLaunchStar | RB.JumpHeight3 | (RB.CanDouble & RB.MediumLogic)))
+                                                    rule=(RB.CanLaunchStar | RB.JumpHeight3
+                                                          | ((RB.CanDouble | RB.CanLongJump) & RB.MediumLogic)))
     world.get_region(regname.SPINDIG2DARKT).connect(world.get_region(regname.SPINDIG2DARKIN1),
                                                     "Spin-Dig 2: Dark Canister 1st Green Pipe",
                                                     rule=RB.CanPipe)
@@ -206,8 +208,14 @@ def set_rules(world: "SMG2World", player: int):
                                               )
     # Flip-Swap
     world.get_region(regname.WORLD1).connect(world.get_region(regname.FLIPSWAP), "World 1 Slot 4 Galaxy")
-    world.get_region(regname.FLIPSWAP).connect(world.get_region(regname.FLIPSWAP1), "Flip-Swap Star")
-    world.get_region(regname.FLIPSWAP).connect(world.get_region(regname.FLIPSWAP2), "Flip-Swap Comet Star",
+    world.get_region(regname.FLIPSWAP).connect(world.get_region(regname.FLIPSWAP1START), "Flip-Swap Star")
+    world.get_region(regname.FLIPSWAP1START).connect(world.get_region(regname.FLIPSWAP1ELECF),
+                                                     rule=RB.CanAirSpin | RB.CanLongJump | RB.MediumLogic)
+    world.get_region(regname.FLIPSWAP1ELECF).connect(world.get_region(regname.FLIPSWAP1CHOMP),
+                                                     rule=RB.CanAirSpin | RB.CanLongJump | RB.MediumLogic)
+    world.get_region(regname.FLIPSWAP1CHOMP).connect(world.get_region(regname.FLIPSWAP1STAR),
+                                                     rule=RB.CanAirSpin | RB.CanLongJump | RB.HardLogic)
+    world.get_region(regname.FLIPSWAP).connect(world.get_region(regname.FLIPSWAP2START), "Flip-Swap Comet Star",
                                                rule=((RB.Comet1ItemAccess | (
                                                            OptionFilter(CometItems, 2) & Has(itemname.PURPLECOMET)))
                                                      & (RB.CometMissionOff
@@ -219,6 +227,14 @@ def set_rules(world: "SMG2World", player: int):
                                                                    locname.FLIPSWAPCM)
                                                            & CanReachLocation(locname.FLIPSWAPSTAR1))))
                                                )
+    world.get_region(regname.FLIPSWAP2START).connect(world.get_region(regname.FLIPSWAP21UPPLAT),
+                                                rule=RB.CanAirSpin | RB.CanLongJump | RB.MediumLogic)
+    world.get_region(regname.FLIPSWAP21UPPLAT).connect(world.get_region(regname.FLIPSWAP2ELECF),
+                                                rule=RB.CanAirSpin | RB.CanLongJump | RB.HardLogic)
+    world.get_region(regname.FLIPSWAP2ELECF).connect(world.get_region(regname.FLIPSWAP2CHOMP),
+                                                rule=RB.CanAirSpin | RB.CanLongJump | RB.HardLogic)
+    world.get_region(regname.FLIPSWAP2CHOMP).connect(world.get_region(regname.FLIPSWAP2STAR),
+                                                rule=RB.CanAirSpin | RB.CanLongJump | RB.HardLogic)
     # Fluffy Bluff
     world.get_region(regname.WORLD1).connect(world.get_region(regname.FLUFFBLUFF), "World 1 Slot 5 Galaxy")
     world.get_region(regname.FLUFFBLUFF).connect(world.get_region(regname.FLUFFBLUFF1LANDING), "Fluffy Bluff Star")
@@ -261,8 +277,8 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.FLUFFBLUFF1CLOUDCLIMB).connect(world.get_region(regname.FLUFFBLUFF1TREECLIMB),
                                                          "Fluffy Bluff: Vine Swing",
                                                             rule=RB.CanMakeCloud
-                                                                 | (RB.CanWallSpin & RB.JumpHeight4 & RB.MediumLogic & RB.CanSwing)
-                                                                 | (RB.CloudMario & RB.CanSwing
+                                                                 | (RB.CanWallSpin & (RB.JumpHeight4 | RB.HardLogic) & RB.MediumLogic & RB.CanSwing)
+                                                                 | (RB.CloudMario & (RB.CanSwing | RB.HardLogic)
                                                                     & (RB.CanGrabLedge | RB.MediumLogic | RB.JumpHeight3)))
     world.get_region(regname.FLUFFBLUFF).connect(world.get_region(regname.FLUFFBLUFF2LANDING), "Fluffy Bluff Chimp Star",
                                                  RB.HasChimpScore)
@@ -288,14 +304,26 @@ def set_rules(world: "SMG2World", player: int):
                                                         rule=RB.CanPipe & RB.FireMario)
     world.get_region(regname.RIGHTDOWNCORRIDOR).connect(world.get_region(regname.RIGHTDOWNBONUS),
                                                 "Rightside Down: Paragoomba Bonus Teleporter")
-    world.get_region(regname.RIGHTDOWNCORRIDOR).connect(world.get_region(regname.RIGHTDOWNTOPVIEW),
-                                                        rule=RB.FireMario & (RB.CanWallJump | (RB.CanTriple & RB.MediumLogic)))
+    world.get_region(regname.RIGHTDOWNCORRIDOR).connect(world.get_region(regname.RIGHTDOWNCHOMP))
+    world.get_region(regname.RIGHTDOWNCHOMP).connect(world.get_region(regname.RIGHTDOWNFLOWER),
+                                                     rule=RB.JumpHeight2 | RB.HardLogic | RB.CanGrabLedge | RB.CanWallJump)
+    world.get_region(regname.RIGHTDOWNFLOWER).connect(world.get_region(regname.RIGHTDOWNTOPVIEW),
+                                                        rule=RB.FireMario & (RB.CanWallJump | RB.CanSideflip | (RB.CanTriple & RB.MediumLogic)))
+    world.get_region(regname.RIGHTDOWNTOPVIEW).connect(world.get_region(regname.RIGHTDOWNFINAL))
+    world.get_region(regname.RIGHTDOWNTOPVIEW).connect(world.get_region(regname.RIGHTDOWNABOVE),
+                                                       rule=RB.JumpHeight3 | RB.CanWallJump)
     # Fiery Flotilla
     world.get_region(regname.WORLD1).connect(world.get_region(regname.BOWJR1), "World 1 Slot 7 Galaxy")
     world.get_region(regname.BOWJR1).connect(world.get_region(regname.FIREFLOT1LANDING), "Fiery Flotilla Grand Star")
+    world.get_region(regname.FIREFLOT1LANDING).connect(world.get_region(regname.FIREFLOT1CASTLE),
+                                                       rule=RB.CanAirSpin | RB.CanBackflip
+                                                            | (RB.MediumLogic & RB.CanSideflip & RB.CanGrabLedge)
+                                                            | (RB.HardLogic & RB.CanTriple))
     world.get_region(regname.FIREFLOT1LANDING).connect(world.get_region(regname.FIREFLOT1LAVA),
                                                        "Fiery Flotilla: Fort Sling Star",
-                                                       rule= (RB.CanLaunchStar | (RB.HardLogic & (RB.CanLongJump | RB.CanAirSpin))))
+                                                       rule= RB.CanLaunchStar)
+    world.get_region(regname.FIREFLOT1CASTLE).connect(world.get_region(regname.FIREFLOT1LAVA),
+                                                      rule=RB.CanLaunchStar | (RB.HardLogic & (RB.CanLongJump | RB.CanAirSpin)))
     world.get_region(regname.FIREFLOT1LAVA).connect(world.get_region(regname.FIREFLOT1BOSS),
                                                        "Fiery Flotilla: Lava Planet Launch Star",
                                                     rule=RB.CanLaunchStar)
@@ -367,7 +395,7 @@ def set_rules(world: "SMG2World", player: int):
                                                        "Boulder Bowl: Falling Rocks Launch Star",
                                                        rule=RB.CanLaunchStar)
     world.create_entrance(world.get_region(regname.BOULBOWL1CRYSTAL),world.get_region(regname.BOULBOWL1BOULDER), # Trick Entrance
-                          (RB.HardLogic & ROCKNROLLIN) | (RB.MediumLogic & RB.CanLongSpin))
+                          (RB.HardLogic & RB.ROCKNROLLIN & RB.CanAirSpin) | (RB.MediumLogic & RB.CanLongSpin))
     world.get_region(regname.BOULBOWL1BOULDER).connect(world.get_region(regname.BOULBOWL1DODECAH),
                                                        "Boulder Bowl: Boulder Sling Star",
                                                        rule=RB.ROCKNROLLIN & RB.CanLaunchStar)
@@ -1534,7 +1562,7 @@ def set_rules(world: "SMG2World", player: int):
                                                                             | (RB.CanAirSpin & RB.MediumLogic)))
     world.get_region(regname.GALGEN1YOSHI).connect(world.get_region(regname.GALGEN1DASHCAS),
                                                    rule=(RB.CanDinoSwing
-                                                         | (RB.CanMakeCloud & CanLongJump & RB.CanWallJump & RB.HardLogic)))
+                                                         | (RB.CanMakeCloud & RB.CanLongJump & RB.CanWallJump & RB.HardLogic)))
     world.get_region(regname.GALGEN1DASHCAS).connect(world.get_region(regname.GALGEN1LAVASNA),
                                                      "Galaxy Generator: Dash Castle Sling Star",
                                                      rule=RB.CanLaunchStar & (RB.CanDinoRun
@@ -1573,7 +1601,7 @@ def set_rules(world: "SMG2World", player: int):
                                                          | (RB.CanAirSpin & RB.MediumLogic)))
     world.get_region(regname.GALGEN2YOSHI).connect(world.get_region(regname.GALGEN2DASHCAS),
                                                    rule=(RB.CanDinoSwing
-                                                         | (RB.CanMakeCloud & CanLongJump & RB.CanWallJump & RB.HellLogic))
+                                                         | (RB.CanMakeCloud & RB.CanLongJump & RB.CanWallJump & RB.HellLogic))
                                                    )
     world.get_region(regname.GALGEN2DASHCAS).connect(world.get_region(regname.GALGEN2LAVASNA),
                                                      "Galaxy Generator Comet: Dash Castle Sling Star",
