@@ -113,7 +113,7 @@ PUZZPLANK_loc: dict[str, SMG2LocationData] = {
     locname.PUZZPLANKSTAR2:  SMG2LocationData(["Power Star Location", regname.PUZZPLAN], regname.PUZZPLAN,
                                               regname.PUZZPLAN2COINRO),
     locname.PUZZPLANKSTAR3:  SMG2LocationData(["Power Star Location", regname.PUZZPLAN], regname.PUZZPLAN,
-                                              regname.PUZZPLAN3BUGABO, RB.CanMakeCloud&RB.CanPound),
+                                              regname.PUZZPLAN3BUGABO, RB.CanPound & (RB.CanMakeCloud | RB.HardLogic)),
 }
 
 # Hightail Falls Stars
@@ -567,10 +567,10 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  RB.CanLongSpin | RB.MediumLogic),
     locname.PUZZPLANKSTARG1:    SMG2LocationData(["Green Star Location", regname.PUZZPLAN], regname.PUZZPLAN,
                                                  regname.PUZZPLAN1BLOCK,
-                                                 (RB.CanPound & RB.CanWallSpin & RB.CanBackOrSideflip)),
+                                                 (RB.CanPound & (RB.CanWallSpin | (RB.MediumLogic & RB.CanAirSpin)) & RB.CanBackOrSideflip)),
     locname.PUZZPLANKSTARG2:    SMG2LocationData(["Green Star Location", regname.PUZZPLAN], regname.PUZZPLAN,
                                                  regname.PUZZPLAN1SAWBLA,
-                                                 (RB.CanWallSpin | RB.NarrowJumpHeight5
+                                                 (RB.CanWallSpin | (RB.CanBackflip & RB.CanAirSpin)
                                                   | (RB.JumpHeight6 & RB.MediumLogic))),
     locname.PUZZPLANKSTARG3:    SMG2LocationData(["Green Star Location", regname.PUZZPLAN], regname.PUZZPLAN,
                                                  regname.PUZZPLAN1SAWBLA,
@@ -938,8 +938,7 @@ checkpoint_loc_table: dict[str, SMG2LocationData] = {
     locname.RIGHTDOWNCORRIDORCP2: SMG2LocationData(["Checkpoint Location", regname.RIGHTDOWN], regname.RIGHTDOWN,
                                                    regname.RIGHTDOWNCORRIDOR),
     locname.RIGHTDOWNCORRIDORCP3: SMG2LocationData(["Checkpoint Location", regname.RIGHTDOWN], regname.RIGHTDOWN,
-                                                   regname.RIGHTDOWNCORRIDOR, (RB.FireMario
-                                                                               & (RB.CanWallJump | (RB.CanTriple & RB.MediumLogic)))),
+                                                   regname.RIGHTDOWNFLOWER),
     locname.FIREFLOT1LAVACP: SMG2LocationData(["Checkpoint Location", regname.BOWJR1], regname.BOWJR1,
                                               regname.FIREFLOT1LAVA),
     locname.PUZZPLAN1SAWBLACP: SMG2LocationData(["Checkpoint Location", regname.PUZZPLAN], regname.PUZZPLAN,
@@ -947,7 +946,7 @@ checkpoint_loc_table: dict[str, SMG2LocationData] = {
     locname.PUZZPLAN1CHECKPCP: SMG2LocationData(["Checkpoint Location", regname.PUZZPLAN], regname.PUZZPLAN,
                                                 regname.PUZZPLAN1CHECKP),
     locname.PUZZPLAN3BUGABOCP: SMG2LocationData(["Checkpoint Location", regname.PUZZPLAN], regname.PUZZPLAN,
-                                                regname.PUZZPLAN3BUGABO),
+                                                regname.PUZZPLAN3BUGISL),
     locname.HIGHTAIL1PLATDASCP: SMG2LocationData(["Checkpoint Location", regname.HIGHTAIL], regname.HIGHTAIL,
                                                  regname.HIGHTAIL1PLATDAS),
     locname.HIGHTAIL1DASHWALCP: SMG2LocationData(["Checkpoint Location", regname.HIGHTAIL], regname.HIGHTAIL,

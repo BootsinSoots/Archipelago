@@ -492,6 +492,7 @@ region_list: dict[str, SMG2RegionData] = {
     regname.PUZZPLAN1BLOCK:             SMG2RegionData("Planet", [], []),
     regname.PUZZPLAN1GROUND:            SMG2RegionData("Planet", [], []),
     regname.PUZZPLAN1GRUZZY:            SMG2RegionData("Planet", [], []),
+    regname.PUZZPLAN3BUGISL:            SMG2RegionData("Planet", [], []),
     regname.PUZZPLAN3BUGABO:            SMG2RegionData("Planet", [], []),
     regname.PUZZPLAN1COINRO:            SMG2RegionData("Planet", [], []),
     regname.PUZZPLAN1SAWBLA:            SMG2RegionData("Planet", [], []),

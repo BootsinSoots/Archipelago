@@ -357,11 +357,13 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.PUZZPLAN1GRUZZY).connect(world.get_region(regname.PUZZPLAN1COINRO),
                                                       "Puzzle Plank: Grassy Buzzsaw Green Pipe",
                                                       rule=RB.CanPipe)
-    world.get_region(regname.PUZZPLAN1GRUZZY).connect(world.get_region(regname.PUZZPLAN3BUGABO),
+    world.get_region(regname.PUZZPLAN1GRUZZY).connect(world.get_region(regname.PUZZPLAN3BUGISL),
                                                       "Puzzle Plank: Hungry Luma",
                                                       rule=RB.CanLaunchStar & ((RB.CoinLumaBase|
                                                            (OptionFilter(CoinLumaLocks,2)&Has(itemname.COINHL2)))
                                                      & RB.CoinLumaRule(world.options.coin_luma_counts.value["Puzzle Plank Coin Luma"])))
+    world.get_region(regname.PUZZPLAN1BUGISL).connect(world.get_region(regname.PUZZPLAN3BUGABO),
+                                                      rule=RB.CanMakeCloud | (RB.HardLogic & RB.CloudMario))
     world.get_region(regname.PUZZPLAN1GRUZZY).connect(world.get_region(regname.PUZZPLAN1SAWBLA),
                                                       "Puzzle Plank: Grassy Buzzsaw Launch Star",
                                                       rule=RB.CanLaunchStar & (RB.CanPound | (RB.JumpHeight5 & RB.CanAirSpin)))
