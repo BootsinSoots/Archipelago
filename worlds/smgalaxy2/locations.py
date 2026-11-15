@@ -599,7 +599,7 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                                              | (RB.CanBackflip & RB.CanWallSpin & RB.HardLogic)
                                                                              | RB.CanInfiniteFlutter)),
     locname.TALLTREESTARG2:     SMG2LocationData(["Green Star Location", regname.TALLTRUNK], regname.TALLTRUNK,
-                                                 regname.TALLTRUNK1LOG, RB.CanDinoBlimp),
+                                                 regname.TALLTRUNK1LOG, RB.CanDinoBlimp | (RB.CanRideDino & RB.MediumLogic)),
     locname.TALLTREESTARG3:     SMG2LocationData(["Green Star Location", regname.TALLTRUNK], regname.TALLTRUNK,
                                                  regname.TALLTRUNK2SLIDE, RB.CanSlide),
     locname.CLOUDCOURTSTARG1:   SMG2LocationData(["Green Star Location", regname.CLOUCOUR], regname.CLOUCOUR,
@@ -1910,6 +1910,7 @@ oneup_locations: dict[str, SMG2LocationData] = {
     locname.TALL2GAPP1UP: SMG2LocationData(["1-up Location"], regname.TALLTRUNK, regname.TALLTRUNK2SLIDE,
                                            RB.CanAirSpin & RB.CanSlide),
     locname.TALL2STAR1UP: SMG2LocationData(["1-up Location"], regname.TALLTRUNK, regname.TALLTRUNK2SLIDEND),
+    locname.TALL3STAR1UP: SMG2LocationData(["1-up Location"], regname.TALLTRUNK, regname.TALLTRUNK3PCOINEND),
     locname.CLOU1DINO1UP: SMG2LocationData(["1-up Location"], regname.CLOUCOUR, regname.CLOUCOUR1LANDING),
     locname.CLOU1BON1UP1: SMG2LocationData(["1-up Location"], regname.CLOUCOUR, regname.CLOUCOUR1PARAGOOMBONUS),
     locname.CLOU1BON1UP2: SMG2LocationData(["1-up Location"], regname.CLOUCOUR, regname.CLOUCOUR1PARAGOOMBONUS),

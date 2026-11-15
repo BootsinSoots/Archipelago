@@ -593,7 +593,8 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.TALLTRUNK1BIGTREE).connect(world.get_region(regname.TALLTRUNK1LOG),
                                                         "Tall Trunk 1: Big Tree Launch Star",
                                                         rule=RB.CanLaunchStar & (RB.CanDinoBlimp
-                                                                                 | (RB.HardLogic & RB.CanBackflip & RB.CanWallSpin)))
+                                                                                 | (RB.HardLogic & RB.CanBackflip & RB.CanWallSpin)
+                                                                                 | RB.CanInfiniteFlutter))
     world.get_region(regname.TALLTRUNK1BIGTREE).connect(world.get_region(regname.TALLTRUNK1PIRANHABONUS),
                                                         "Tall Trunk 1: Piranha Bonus Teleporter")
     world.get_region(regname.TALLTRUNK1LOG).connect(world.get_region(regname.TALLTRUNK1WOODCIRCLE),
@@ -607,7 +608,9 @@ def set_rules(world: "SMG2World", player: int):
                                                         "Tall Trunk 2: Piranha Bonus Teleporter")
     world.get_region(regname.TALLTRUNK2BIGTREE).connect(world.get_region(regname.TALLTRUNK2SLIDE),
                                                         "Tall Trunk 2: Big Tree Launch Star",
-                                                        rule=RB.CanLaunchStar & (RB.CanSwing | (RB.CanWallSpin & (RB.HardLogic | (RB.CanBackflip & RB.MediumLogic)))))
+                                                        rule=RB.CanLaunchStar
+                                                             & (RB.CanSwing
+                                                                | (RB.CanWallSpin & (RB.HardLogic | (RB.CanBackflip & RB.MediumLogic)))))
     world.get_region(regname.TALLTRUNK2SLIDE).connect(world.get_region(regname.TALLTRUNK2SLIDEND),
                                                       rule=RB.CanSlide)
     world.get_region(regname.TALLTRUNK).connect(world.get_region(regname.TALLTRUNK3PCOINSLIDE), "Tall Trunk Comet Star",
