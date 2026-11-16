@@ -634,8 +634,10 @@ def set_rules(world: "SMG2World", player: int):
                                                        rule=RB.CanMakeCloud)
     world.get_region(regname.CLOUCOUR1CYMBAL).connect(world.get_region(regname.CLOUCOUR1TOWERS),
                                                       "Cloudy Court: Cymbal Launch Star",
-                                                      rule=RB.CanLaunchStar
-                                                           & (RB.CanMakeCloud | (RB.CloudMario & RB.CanPound & RB.HardLogic)))
+                                                      rule=(RB.CanLaunchStar | (RB.CanMakeCloud & RB.MediumLogic))
+                                                           & (RB.CanMakeCloud | (RB.CloudMario
+                                                                                 & (RB.CanPound | RB.CanWallJump)
+                                                                                 & RB.HardLogic)))
     world.get_region(regname.CLOUCOUR1TOWERS).connect(world.get_region(regname.CLOUCOUR3PCOINS),
                                                       "Cloudy Court: Hungry Luma",
                                                       rule=RB.CanLaunchStar & ((RB.CoinLumaBase |
@@ -644,10 +646,11 @@ def set_rules(world: "SMG2World", player: int):
                                                                               "Cloudy Court Coin Luma"])))
     world.get_region(regname.CLOUCOUR1TOWERS).connect(world.get_region(regname.CLOUCOUR1PARAGOOMBONUS),
                                                       "Cloudy Court: Paragoomba Bonus Teleporter",
-                                                      rule=RB.CanMakeCloud)
+                                                      rule=RB.CloudMario
+                                                           | (RB.CanBackOrSideflip & RB.CanWallSpin & RB.HardLogic))
     world.get_region(regname.CLOUCOUR1TOWERS).connect(world.get_region(regname.CLOUCOUR1CASTLE),
                                                       "Cloudy Court: Tower Launch Star",
-                                                      rule=RB.CanLaunchStar & RB.CanMakeCloud)
+                                                      rule=RB.CanLaunchStar & RB.CloudMario)
     world.get_region(regname.CLOUCOUR).connect(world.get_region(regname.CLOUCOUR2LANDING), "Cloudy Court Comet Star",
                                                rule=((RB.Comet1ItemAccess | (
                                                            OptionFilter(CometItems, 2) & Has(itemname.COSMICCLONE)))
