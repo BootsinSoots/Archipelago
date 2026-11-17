@@ -1,6 +1,8 @@
 <<MENUOFF>
 <FULLSCREEN>
 <LUIGISTOP2>
+<KEYUNLOCK>(0)
+<KEYUNLOCK>(1)
 <WAIT>(15)
 <LUIGISTOP>
 <ACTOR>"demo_luigi"<LOOK>"demo_hakase"
