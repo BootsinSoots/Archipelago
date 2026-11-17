@@ -374,53 +374,53 @@ class RandomizeJMPTables:
         # GRASSANITY WALL
         # Courtyard
         map_two_nobserver.add_jmp_entry(create_observer_entry(-2250.000000, 20.000000, -5770.000000,
-            23, 7, 7, arg0=123, arg1=0, arg2=30)) # In front of Left Tree
+            23, 7, 7, arg0=123, arg1=0, arg2=60)) # In front of Left Tree
         map_two_nobserver.add_jmp_entry(create_observer_entry(-2250.000000, 20.000000, -6250.000000,
-            23, 7, 7, arg0=124, arg1=0, arg2=30)) # Behind Left Tree
+            23, 7, 7, arg0=124, arg1=0, arg2=60)) # Behind Left Tree
         map_two_nobserver.add_jmp_entry(create_observer_entry(-1350.000000, 20.000000, -5770.000000,
-            23, 7, 7, arg0=125, arg1=0, arg2=30)) # In front of Man Statue
+            23, 7, 7, arg0=125, arg1=0, arg2=60)) # In front of Man Statue
         map_two_nobserver.add_jmp_entry(create_observer_entry(-1700.000000, 20.000000, -6000.000000,
-            23, 7, 7, arg0=126, arg1=0, arg2=30)) # Left of Man Statue
+            23, 7, 7, arg0=126, arg1=0, arg2=60)) # Left of Man Statue
         map_two_nobserver.add_jmp_entry(create_observer_entry(-1350.000000, 20.000000, -6250.000000,
-            23, 7, 7, arg0=127, arg1=0, arg2=30)) # Behind Man Statue
+            23, 7, 7, arg0=127, arg1=0, arg2=60)) # Behind Man Statue
         map_two_nobserver.add_jmp_entry(create_observer_entry(-900.000000, 20.000000, -5770.000000,
-            23, 7, 7, arg0=128, arg1=0, arg2=30)) # In front of Fountain
+            23, 7, 7, arg0=128, arg1=0, arg2=60)) # In front of Fountain
         map_two_nobserver.add_jmp_entry(create_observer_entry(-900.000000, 20.000000, -6250.000000,
-            23, 7, 7, arg0=129, arg1=0, arg2=30)) # Behind Fountain
+            23, 7, 7, arg0=129, arg1=0, arg2=60)) # Behind Fountain
         map_two_nobserver.add_jmp_entry(create_observer_entry(-525.000000, 20.000000, -5700.000000,
-            23, 7, 7, arg0=130, arg1=0, arg2=30)) # Left of Fountain
+            23, 7, 7, arg0=130, arg1=0, arg2=60)) # Left of Fountain
         map_two_nobserver.add_jmp_entry(create_observer_entry(-85.000000, 20.000000, -5700.000000,
-            23, 7, 7, arg0=131, arg1=0, arg2=30)) # Right of Fountain
+            23, 7, 7, arg0=131, arg1=0, arg2=60)) # Right of Fountain
         map_two_nobserver.add_jmp_entry(create_observer_entry(750.000000, 20.000000, -5600.000000,
-            23, 7, 7, arg0=132, arg1=0, arg2=30)) # In Front of Well
+            23, 7, 7, arg0=132, arg1=0, arg2=60)) # In Front of Well
         map_two_nobserver.add_jmp_entry(create_observer_entry(750.000000, 20.000000, -6250.000000,
-            23, 7, 7, arg0=133, arg1=0, arg2=30)) # Behind Well
+            23, 7, 7, arg0=133, arg1=0, arg2=60)) # Behind Well
         map_two_nobserver.add_jmp_entry(create_observer_entry(400.000000, 10.000000, -5900.000000,
-            23, 7, 7, arg0=134, arg1=0, arg2=30)) # Left of Well
+            23, 7, 7, arg0=134, arg1=0, arg2=60)) # Left of Well
         map_two_nobserver.add_jmp_entry(create_observer_entry(1050.000000, 10.000000, -5900.000000,
-            23, 7, 7, arg0=135, arg1=0, arg2=30)) # Right of Well
+            23, 7, 7, arg0=135, arg1=0, arg2=60)) # Right of Well
         map_two_nobserver.add_jmp_entry(create_observer_entry(1570.000000, 10.000000, -5600.000000,
-            23, 7, 7, arg0=136, arg1=0, arg2=30)) # In Front of Birdhouse
+            23, 7, 7, arg0=136, arg1=0, arg2=60)) # In Front of Birdhouse
         map_two_nobserver.add_jmp_entry(create_observer_entry(1570.000000, 10.000000, -6250.000000,
-            23, 7, 7, arg0=137, arg1=0, arg2=30)) # Behind Birdhouse
+            23, 7, 7, arg0=137, arg1=0, arg2=60)) # Behind Birdhouse
         map_two_nobserver.add_jmp_entry(create_observer_entry(2500.000000, 10.000000, -5600.000000,
-            23, 7, 7, arg0=138, arg1=0, arg2=30)) # In Front of Woman Statue
+            23, 7, 7, arg0=138, arg1=0, arg2=60)) # In Front of Woman Statue
         map_two_nobserver.add_jmp_entry(create_observer_entry(2500.000000, 10.000000, -6250.000000,
-            23, 7, 7, arg0=139, arg1=0, arg2=30)) # Behind Woman Statue
+            23, 7, 7, arg0=139, arg1=0, arg2=60)) # Behind Woman Statue
         map_two_nobserver.add_jmp_entry(create_observer_entry(2250.000000, 10.000000, -5900.000000,
-            23, 7, 7, arg0=140, arg1=0, arg2=30)) # Left of Woman Statue
+            23, 7, 7, arg0=140, arg1=0, arg2=60)) # Left of Woman Statue
         map_two_nobserver.add_jmp_entry(create_observer_entry(2750.000000, 10.000000, -5900.000000,
-            23, 7, 7, arg0=141, arg1=0, arg2=30)) # Right of Woman Statue
+            23, 7, 7, arg0=141, arg1=0, arg2=60)) # Right of Woman Statue
         map_two_nobserver.add_jmp_entry(create_observer_entry(3300.000000, 10.000000, -5600.000000,
-            23, 7, 7, arg0=142, arg1=0, arg2=30)) # In Front of Outhouse
+            23, 7, 7, arg0=142, arg1=0, arg2=60)) # In Front of Outhouse
         map_two_nobserver.add_jmp_entry(create_observer_entry(3300.000000, 10.000000, -6250.000000,
-            23, 7, 7, arg0=143, arg1=0, arg2=30)) # Behind Outhouse
+            23, 7, 7, arg0=143, arg1=0, arg2=60)) # Behind Outhouse
         map_two_nobserver.add_jmp_entry(create_observer_entry(3000.000000, 10.000000, -6000.000000,
-            23, 7, 7, arg0=144, arg1=0, arg2=30)) # Left of Outhouse
+            23, 7, 7, arg0=144, arg1=0, arg2=60)) # Left of Outhouse
         map_two_nobserver.add_jmp_entry(create_observer_entry(3600.000000, 10.000000, -6000.000000,
-            23, 7, 7, arg0=145, arg1=0, arg2=30)) # Right of Outhouse
+            23, 7, 7, arg0=145, arg1=0, arg2=60)) # Right of Outhouse
         map_two_nobserver.add_jmp_entry(create_observer_entry(3800.000000, 10.000000, -5600.000000,
-            23, 7, 7, arg0=146, arg1=0, arg2=30)) # Rec Room Door
+            23, 7, 7, arg0=146, arg1=0, arg2=60)) # Rec Room Door
 
 
     def _map_two_enemy_changes(self):
