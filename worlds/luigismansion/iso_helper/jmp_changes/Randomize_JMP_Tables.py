@@ -867,6 +867,11 @@ class RandomizeJMPTables:
                     char_entry["pos_x"] = -1900.000000
                     char_entry["pos_z"] = -4830.000000
 
+                # Special Case: Armory is a Stupid Room where everything touches this chest.
+                elif char_room == 48:
+                    char_entry["pos_x"] = -3169.000000
+                    char_entry["pos_z"] = -604.000000
+
                 # Change chest appearance and size based of player cosmetic choices
                 chest_visual: str = get_item_chest_visual(self.lm_rando, loc_data, char_name)
                 char_entry["name"] = chest_visual
