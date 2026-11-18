@@ -627,9 +627,11 @@ green_star_locations: dict[str, SMG2LocationData]  = {
     locname.ROLLMASTERSTARG2:   SMG2LocationData(["Green Star Location", regname.ROLLMAST], regname.ROLLMAST,
                                                  regname.ROLLMAST1SILVERC),
     locname.BEATBLOCKSTARG1:    SMG2LocationData(["Green Star Location", regname.BEATBLOCK], regname.BEATBLOCK,
-                                                 regname.BEATBLOK1, RB.JumpHeight6 | (RB.CanBackflip & RB.CanAirSpin)),
+                                                 regname.BEATBLOK1, RB.JumpHeight6 | (RB.CanBackflip & RB.CanAirSpin)
+                                                 | (RB.CanAirSpin & RB.CanSideflip & RB.HardLogic)),
     locname.BEATBLOCKSTARG2:    SMG2LocationData(["Green Star Location", regname.BEATBLOCK], regname.BEATBLOCK,
-                                                 regname.BEATBLOK1, (RB.CanAirSpin & (RB.HardLogic | RB.CanBackOrSideflip)
+                                                 regname.BEATBLOK1, (RB.CanAirSpin & (RB.HardLogic | RB.CanBackOrSideflip
+                                                                                      | RB.CanLongJump)
                                                                      | (RB.CanTriple & RB.MediumLogic))),
     locname.FEARFLETSTARG1:     SMG2LocationData(["Green Star Location", regname.BOWJR2], regname.BOWJR2,
                                                  regname.FEARFLET1UNDERGR, RB.CanRideDino),
