@@ -196,7 +196,7 @@ CLOUDCOURT_loc: dict[str, SMG2LocationData] = {
 # Haunty Halls Stars
 HAUNTHALL_loc: dict[str, SMG2LocationData] = {
     locname.HAUNTHALLSTAR1: SMG2LocationData(["Power Star Location", regname.HAUNHALL], regname.HAUNHALL,
-                                             regname.HAUNHALL1BULBBER, (RB.CanDinoGlow&RB.CanDinoSwing)),
+                                             regname.HAUNHALL1BULBBER, RB.CanDinoGlow),
     locname.HAUNTHALLSTAR2: SMG2LocationData(["Power Star Location", regname.HAUNHALL], regname.HAUNHALL,
                                              regname.HAUNHALL2CREEPYH),
     locname.HAUNTHALLSTAR3: SMG2LocationData(["Power Star Location", regname.HAUNHALL], regname.HAUNHALL,
@@ -613,7 +613,7 @@ green_star_locations: dict[str, SMG2LocationData]  = {
     locname.HAUNTHALLSTARG1:    SMG2LocationData(["Green Star Location",regname.HAUNHALL],regname.HAUNHALL,
                                                  regname.HAUNHALL1HALLWAY, RB.CanAirSpin),
     locname.HAUNTHALLSTARG2:    SMG2LocationData(["Green Star Location",regname.HAUNHALL],regname.HAUNHALL,
-                                                 regname.HAUNHALL1DISAPPE, RB.JumpHeight5),
+                                                 regname.HAUNHALL1DISAPPE, RB.JumpHeight5 & RB.CanAirSpin),
     locname.HAUNTHALLSTARG3:    SMG2LocationData(["Green Star Location",regname.HAUNHALL],regname.HAUNHALL,
                                                  regname.HAUNHALL2CREEPYH, RB.JumpHeight4),
     locname.SNOWFLAKESTARG1:    SMG2LocationData(["Green Star Location", regname.FREEFLAKE], regname.FREEFLAKE,

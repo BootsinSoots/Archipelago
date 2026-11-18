@@ -691,7 +691,7 @@ def set_rules(world: "SMG2World", player: int):
                                                        rule=RB.CanLaunchStar)
     world.get_region(regname.HAUNHALL2CREEPYC).connect(world.get_region(regname.HAUNHALL2CREEPYH),
                                                "Haunty Halls 2: Creepy Platforms Sling Star",
-                                                       rule=RB.CanLaunchStar) #Test: Maybe able to skip with long spin?
+                                                       rule=RB.CanLaunchStar)
     world.get_region(regname.HAUNHALL).connect(world.get_region(regname.HAUNHALL3CREEPYH), "Haunty Halls Comet Star",
                                                rule=((RB.Comet1ItemAccess | (
                                                            OptionFilter(CometItems, 2) & Has(itemname.COSMICCLONE)))
@@ -765,7 +765,8 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.ROLLMAST1ELEVATO).connect(world.get_region(regname.ROLLMAST1SAWBLAD),
                                                        "Rolling Masterpiece: Elevator Ball Launcher",
                                                        rule=RB.CanBalance)
-    world.get_region(regname.ROLLMAST1SAWBLAD).connect(world.get_region(regname.ROLLMAST1SILVERC))
+    world.get_region(regname.ROLLMAST1SAWBLAD).connect(world.get_region(regname.ROLLMAST1SILVERC),
+                                                       rule=RB.CanBalance)
     world.get_region(regname.ROLLMAST).connect(world.get_region(regname.ROLLMAST2LANDING), "Rolling Masterpiece Comet Star",
                                                rule=((RB.Comet1ItemAccess | (
                                                            OptionFilter(CometItems, 2) & Has(itemname.SPEEDYCOMET)))
