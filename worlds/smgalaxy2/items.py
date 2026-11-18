@@ -243,8 +243,15 @@ galaxy_keys: dict[str, SMG2ItemData] = {
 }
 
 trap_filler_items: dict[str, SMG2ItemData] = {
-    itemname.DARETRAP: SMG2ItemData(["Trap"], IC.trap, default_weight=5),
-    itemname.JOYTRAP: SMG2ItemData(["Trap"], IC.trap, default_weight=5),
+    itemname.DARETRAP: SMG2ItemData(["Trap"], IC.trap, default_weight=10),
+    itemname.JOYTRAP: SMG2ItemData(["Trap"], IC.trap, default_weight=10),
+    itemname.BURNTRAP: SMG2ItemData(["Trap"], IC.trap, default_weight=10),
+    itemname.SPRINGTRAP: SMG2ItemData(["Trap"], IC.trap, default_weight=10),
+    itemname.COSMICTRAP: SMG2ItemData(["Trap"], IC.trap, default_weight=5),
+    itemname.NOSPINTRAP: SMG2ItemData(["Trap"], IC.trap, default_weight=5),
+    itemname.CROUCHTRAP: SMG2ItemData(["Trap"], IC.trap, default_weight=5),
+    itemname.COINTRAP: SMG2ItemData(["Trap"], IC.trap, default_weight=15),
+    itemname.STARBITTRAP: SMG2ItemData(["Trap"], IC.trap, default_weight=15),
 }
 
 launch_star_all: dict[str, SMG2ItemData] = {

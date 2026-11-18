@@ -168,6 +168,13 @@ SLIMSPRIKEY = "Slimy Spring Galaxy Key"
 # Traps
 DARETRAP = "Daredevil Trap"
 JOYTRAP = "Joyful Trap"
+BURNTRAP = "Fire Burn Trap"
+SPRINGTRAP = "Spring Mario Trap"
+COSMICTRAP = "Cosmic Mario Trap"
+NOSPINTRAP = "No Spin Trap"
+CROUCHTRAP = "Crouch Lock Trap"
+COINTRAP = "Taxes"
+STARBITTRAP = "Space Taxes"
 
 # Launch Star items
 LAUNCHSTARALL = "Launch Stars"
