@@ -1417,6 +1417,12 @@ launch_star_locs: dict[str, SMG2LocationData] = {
     locname.FEARFLET1AIRLS: SMG2LocationData(["Launch Stars"], regname.BOWJR2, regname.FEARFLET1AIRSHIP,
                                              CanReachEntrance(locname.FEARFLET1AIRLS, parent_region_name=regname.FEARFLET1AIRSHIP)),
     locname.FEARFLET1FIRSS: SMG2LocationData(["Launch Stars"], regname.BOWJR2, regname.FEARFLET1UNDERGR, RB.CanLaunchStar),
+    locname.FEARFLET1BO1SS: SMG2LocationData(["Launch Stars"], regname.BOWJR2, regname.FEARFLET1MEGAHAM, RB.CanLaunchStar),
+    locname.FEARFLET1BO2SS: SMG2LocationData(["Launch Stars"], regname.BOWJR2, regname.FEARFLET1MEGAHAM, RB.CanLaunchStar),
+    locname.FEARFLET1BO3SS: SMG2LocationData(["Launch Stars"], regname.BOWJR2, regname.FEARFLET1MEGAHAM, RB.CanLaunchStar),
+    locname.FEARFLET2BO1SS: SMG2LocationData(["Launch Stars"], regname.BOWJR2, regname.FEARFLET2MEGAHAM, RB.CanLaunchStar),
+    locname.FEARFLET2BO2SS: SMG2LocationData(["Launch Stars"], regname.BOWJR2, regname.FEARFLET2MEGAHAM, RB.CanLaunchStar),
+    locname.FEARFLET2BO3SS: SMG2LocationData(["Launch Stars"], regname.BOWJR2, regname.FEARFLET2MEGAHAM, RB.CanLaunchStar),
 
     locname.SUPMASS1THWLS: SMG2LocationData(["Launch Stars"], regname.SUPMASS, regname.SUPMASS1THWOMPS,
                                             CanReachEntrance(locname.SUPMASS1THWLS, parent_region_name=regname.SUPMASS1THWOMPS)),

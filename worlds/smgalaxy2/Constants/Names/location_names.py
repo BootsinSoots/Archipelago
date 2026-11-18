@@ -715,6 +715,12 @@ FREEFLAK2SORSS = "Freezy Flake 2: Sorbetti's Head Sling Star"
 # Fearsome Fleet Galaxy
 FEARFLET1AIRLS = "Fearsome Fleet: Airship Launch Star"
 FEARFLET1FIRSS = "Fearsome Fleet: Firing Line Sling Star"
+FEARFLET1BO1SS = "Fearsome Fleet: Boss Fight Sling Star #1"
+FEARFLET1BO2SS = "Fearsome Fleet: Boss Fight Sling Star #2"
+FEARFLET1BO3SS = "Fearsome Fleet: Boss Fight Sling Star #3"
+FEARFLET2BO1SS = "Fearsome Fleet Comet: Boss Fight Sling Star #1"
+FEARFLET2BO2SS = "Fearsome Fleet Comet: Boss Fight Sling Star #2"
+FEARFLET2BO3SS = "Fearsome Fleet Comet: Boss Fight Sling Star #3"
 
 # Supermassive Galaxy
 SUPMASS1THWLS = "Supermassive: Thwomps Launch Star"
