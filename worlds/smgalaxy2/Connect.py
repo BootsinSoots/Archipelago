@@ -826,7 +826,7 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.WORLD4).connect(world.get_region(regname.SUPMASS), "World 4 Slot 1 Galaxy")
     world.get_region(regname.SUPMASS).connect(world.get_region(regname.SUPMASS1START), "Supermassive Star")
     world.get_region(regname.SUPMASS1START).connect(world.get_region(regname.SUPMASS1PIPES),
-                                                    rule=RB.CanWallJump | (RB.JumpHeight6 & RB.CanGrabLedge & RB.HardLogic))
+                                                    rule=RB.CanWallJump | (RB.JumpHeight6 & RB.HardLogic))
     world.get_region(regname.SUPMASS1PIPES).connect(world.get_region(regname.SUPMASS1THWOMPS),
                                                     rule=RB.CanAirSpin | RB.CanLongJump)
     #world.get_region(regname.SUPMASS1PIPES).connect(world.get_region(regname.SUPMASS1GSTAR2), #requires Luigi

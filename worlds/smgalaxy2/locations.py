@@ -243,9 +243,10 @@ SUPMASS_loc: dict[str, SMG2LocationData] = {
     locname.SUPERMASSSTAR1: SMG2LocationData(["Power Star Location", regname.SUPMASS], regname.SUPMASS,
                                              regname.SUPMASS1WIGGLERS, RB.CanClimbPole),
     locname.SUPERMASSSTAR2: SMG2LocationData(["Power Star Location", regname.SUPMASS], regname.SUPMASS,
-                                             regname.SUPMASS1GARDEN),
+                                             regname.SUPMASS2WIGGLERS, RB.CanClimbPole
+                                             & (RB.CanLongJump | RB.HardLogic)),
     locname.SUPERMASSSTAR3: SMG2LocationData(["Power Star Location", regname.SUPMASS], regname.SUPMASS,
-                                             regname.SUPMASS2WIGGLERS, RB.CanClimbPole),
+                                             regname.SUPMASS1GARDEN),
 }
 
 # Flipsville Stars
@@ -643,7 +644,7 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.SUPMASS1GSTAR2),
     locname.SUPERMASSSTARG3:    SMG2LocationData(["Green Star Location", regname.SUPMASS], regname.SUPMASS,
                                                  regname.SUPMASS1KOOPAS,
-                                                 (RB.JumpHeight6 | RB.CanLongJump | RB.MediumLogic)),
+                                                 (RB.JumpHeight5 | RB.CanLongJump | RB.MediumLogic)),
     locname.FLIPVILLESTARG1:    SMG2LocationData(["Green Star Location", regname.FLIPVILL], regname.FLIPVILL,
                                                  regname.FLIPVILL1MAZETOP),
     locname.FLIPVILLESTARG2:    SMG2LocationData(["Green Star Location", regname.FLIPVILL], regname.FLIPVILL,
