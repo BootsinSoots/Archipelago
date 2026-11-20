@@ -153,7 +153,7 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.WORLD1).connect(world.get_region(regname.SPINDIG), "World 1 Slot 3 Galaxy")
     world.get_region(regname.SPINDIG).connect(world.get_region(regname.SPINDIG1TETRA), "Spin-Dig Star 1")
     world.get_region(regname.SPINDIG1TETRA).connect(world.get_region(regname.SPINDIG1DRILL),
-                                                    "Spin-Dig 1: Dig Dirt Launch Star",
+                                                    "Spin-Dig 1: Tetra Dirt Launch Star",
                                                     rule=RB.CanLaunchStar
                                                          & (RB.DRILLMASTER | RB.JumpHeight6
                                                             | (RB.MediumLogic & RB.CanWallSpin & (RB.CanDouble | RB.CanBackflip))
@@ -174,7 +174,7 @@ def set_rules(world: "SMG2World", player: int):
                                                     rule=RB.CanLaunchStar)
     world.get_region(regname.SPINDIG).connect(world.get_region(regname.SPINDIG2TETRA), "Spin-Dig Star 2")
     world.get_region(regname.SPINDIG2TETRA).connect(world.get_region(regname.SPINDIG2DARKT),
-                                                    "Spin-Dig 2: Dig Dirt Sling to Vine",
+                                                    "Spin-Dig 2: Tetra Dirt Sling Star to Vine",
                                                     rule=(RB.CanLaunchStar | RB.JumpHeight3
                                                           | ((RB.CanDouble | RB.CanLongJump) & RB.MediumLogic)))
     world.get_region(regname.SPINDIG2DARKT).connect(world.get_region(regname.SPINDIG2DARKIN1),

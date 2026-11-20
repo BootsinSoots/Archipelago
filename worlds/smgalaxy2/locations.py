@@ -1313,7 +1313,7 @@ launch_star_locs: dict[str, SMG2LocationData] = {
                                             RB.CanLaunchStar & RB.CanRideDino),
 
     locname.SPINDIG1DIGLS: SMG2LocationData(["Launch Stars"], regname.SPINDIG, regname.SPINDIG1TETRA,
-                                            CanReachEntrance("Spin-Dig 1: Dig Dirt Launch Star", parent_region_name=regname.SPINDIG1TETRA)),
+                                            CanReachEntrance("Spin-Dig 1: Tetra Dirt Launch Star", parent_region_name=regname.SPINDIG1TETRA)),
     locname.SPINDIG1DRILS: SMG2LocationData(["Launch Stars"], regname.SPINDIG, regname.SPINDIG1DRILL,
                                             RB.CanLaunchStar & RB.DRILLMASTER),
     locname.SPINDIG1STELS: SMG2LocationData(["Launch Stars"], regname.SPINDIG, regname.SPINDIG1STEEL, RB.CanLaunchStar),

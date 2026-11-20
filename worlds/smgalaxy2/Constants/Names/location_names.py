@@ -635,12 +635,12 @@ GOODEGG2SHOLS = "Yoshi Star 2: Shooting Gallery Launch Star"
 GOODEGG2MARLS = "Yoshi Star 2: Marble Block Launch Star"
 
 ## Spin Dig Galaxy
-SPINDIG1DIGLS = "Spin-Dig 1: Dig Dirt Launch Star"
+SPINDIG1DIGLS = "Spin-Dig 1: Tetra Dirt Launch Star"
 SPINDIG1DRILS = "Spin-Dig 1: Drill Zone Launch Star"
 SPINDIG1STELS = "Spin-Dig 1: Steel Ring Launch Star"
 SPINDIG1DIRLS = "Spin-Dig 1: Dirt Tower Launch Star"
 SPINDIG1REDLS = "Spin-Dig 1: Toad Brigade Starshroom Launch Star"
-SPINDIG2TETSS = "Spin-Dig 2: Dig Dirt Sling to Vine"
+SPINDIG2TETSS = "Spin-Dig 2: Tetra Dirt Sling Star to Vine"
 SPINDIG2DARLS = "Spin-Dig 2: Dark Canister Launch Star"
 SPINDIG2BLULS = "Spin-Dig 2: Blue Starshroom Launch Star"
 
