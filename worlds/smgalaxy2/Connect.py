@@ -392,7 +392,7 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.BOULBOWL1CRYSTAL).connect(world.get_region(regname.BOULBOWL1FALLING),
                                                        rule=RB.ROCKNROLLIN)
     world.get_region(regname.BOULBOWL1FALLING).connect(world.get_region(regname.BOULBOWL1BOULDER),
-                                                       "Boulder Bowl: Falling Rocks Launch Star",
+                                                       "Boulder Bowl: Rolling Rocks Launch Star",
                                                        rule=RB.CanLaunchStar)
     world.create_entrance(world.get_region(regname.BOULBOWL1CRYSTAL),world.get_region(regname.BOULBOWL1BOULDER), # Trick Entrance
                           (RB.HardLogic & RB.ROCKNROLLIN & RB.CanAirSpin) | (RB.MediumLogic & RB.CanLongSpin))
