@@ -175,6 +175,7 @@ NOSPINTRAP = "No Spin Trap"
 CROUCHTRAP = "Crouch Lock Trap"
 COINTRAP = "Taxes"
 STARBITTRAP = "Space Taxes"
+SLOWDOWNTRAP = "Slowdown Trap"
 
 # Launch Star items
 LAUNCHSTARALL = "Launch Stars"

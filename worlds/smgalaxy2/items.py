@@ -252,6 +252,7 @@ trap_filler_items: dict[str, SMG2ItemData] = {
     itemname.CROUCHTRAP: SMG2ItemData(["Trap"], IC.trap, default_weight=5),
     itemname.COINTRAP: SMG2ItemData(["Trap"], IC.trap, default_weight=15),
     itemname.STARBITTRAP: SMG2ItemData(["Trap"], IC.trap, default_weight=15),
+    itemname.SLOWDOWNTRAP: SMG2ItemData(["Trap"], IC.trap, default_weight=5),
 }
 
 launch_star_all: dict[str, SMG2ItemData] = {
