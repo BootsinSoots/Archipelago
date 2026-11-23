@@ -921,10 +921,10 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.FLIPVILL1MAZEBOTTOM).connect(world.get_region(regname.FLIPVILL1MAZETOP),
                                                           rule=RB.CanPound)
     world.create_entrance(world.get_region(regname.FLIPVILL1MAZEBACK),world.get_region(regname.FLIPVILL1MAZETOP),
-                          RB.CanBackOrSideflip & RB.CanWallSpin & RB.HardLogic) #Trick Entrance
+                          RB.CanWallSpin & RB.HardLogic) #Trick Entrance
     world.get_region(regname.FLIPVILL1MAZEBOTTOM).connect(world.get_region(regname.FLIPVILL1COMETMEDAL))
     world.get_region(regname.FLIPVILL1MAZEBACK).connect(world.get_region(regname.FLIPVILL1COMETMEDAL),
-                                                        rule=RB.MediumLogic & RB.CanAirSpin)
+                                                        rule=RB.HardLogic & RB.CanAirSpin)
     world.get_region(regname.FLIPVILL1MAZEBACK).connect(world.get_region(regname.FLIPVILL1TWIRLIP),
                                                         "Flipsville 1: Twirlip Bonus Teleporter")
     world.get_region(regname.FLIPVILL1MAZETOP).connect(world.get_region(regname.FLIPVILL1WANWANSTART),
@@ -937,14 +937,15 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.FLIPVILL1WANWANALLEY).connect(world.get_region(regname.FLIPVILL1WANWANLANE),
                                                            rule=RB.CanPound)
     world.create_entrance(world.get_region(regname.FLIPVILL1MAZEBOTTOM),world.get_region(regname.FLIPVILL1WANWANLANE),
-                          RB.CanLongSpin & RB.HellLogic & RB.CanWallJump,
+                          RB.CanLongSpin & RB.HellLogic,
                           "Flipsville 1: Jump to Chomp Planet") # Trick Entrance
     world.get_region(regname.FLIPVILL1WANWANLANE).connect(world.get_region(regname.FLIPVILL1WANWANBACK),
                                                           rule=RB.CanPound)
     world.get_region(regname.FLIPVILL1WANWANBACK).connect(world.get_region(regname.FLIPVILL1LIFTSTART),
                                                           "Flipsville 1: Chomps Launch Star",
                                                           rule=RB.CanLaunchStar)
-    world.create_entrance(world.get_region(regname.FLIPVILL1MAZEBACK),world.get_region(regname.FLIPVILL1LIFTSTART)) # Trick Entrance
+    world.create_entrance(world.get_region(regname.FLIPVILL1MAZETOP),world.get_region(regname.FLIPVILL1LIFTSTART),
+                          RB.CanLongSpin & RB.HellLogic) # Trick Entrance
     world.get_region(regname.FLIPVILL1LIFTSTART).connect(world.get_region(regname.FLIPVILL1LIFTBELOW),
                                                          rule=RB.CanPound)
     world.get_region(regname.FLIPVILL1LIFTSTART).connect(world.get_region(regname.FLIPVILL1LIFTTOP),
