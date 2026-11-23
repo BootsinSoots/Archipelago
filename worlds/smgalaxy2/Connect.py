@@ -153,7 +153,7 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.WORLD1).connect(world.get_region(regname.SPINDIG), "World 1 Slot 3 Galaxy")
     world.get_region(regname.SPINDIG).connect(world.get_region(regname.SPINDIG1TETRA), "Spin-Dig Star 1")
     world.get_region(regname.SPINDIG1TETRA).connect(world.get_region(regname.SPINDIG1DRILL),
-                                                    "Spin-Dig 1: Dig Dirt Launch Star",
+                                                    "Spin-Dig 1: Tetra Dirt Launch Star",
                                                     rule=RB.CanLaunchStar
                                                          & (RB.DRILLMASTER | RB.JumpHeight6
                                                             | (RB.MediumLogic & RB.CanWallSpin & (RB.CanDouble | RB.CanBackflip))
@@ -174,7 +174,7 @@ def set_rules(world: "SMG2World", player: int):
                                                     rule=RB.CanLaunchStar)
     world.get_region(regname.SPINDIG).connect(world.get_region(regname.SPINDIG2TETRA), "Spin-Dig Star 2")
     world.get_region(regname.SPINDIG2TETRA).connect(world.get_region(regname.SPINDIG2DARKT),
-                                                    "Spin-Dig 2: Dig Dirt Sling to Vine",
+                                                    "Spin-Dig 2: Tetra Dirt Sling Star to Vine",
                                                     rule=(RB.CanLaunchStar | RB.JumpHeight3
                                                           | ((RB.CanDouble | RB.CanLongJump) & RB.MediumLogic)))
     world.get_region(regname.SPINDIG2DARKT).connect(world.get_region(regname.SPINDIG2DARKIN1),
@@ -394,15 +394,15 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.BOULBOWL1CRYSTAL).connect(world.get_region(regname.BOULBOWL1FALLING),
                                                        rule=RB.ROCKNROLLIN)
     world.get_region(regname.BOULBOWL1FALLING).connect(world.get_region(regname.BOULBOWL1BOULDER),
-                                                       "Boulder Bowl: Falling Rocks Launch Star",
+                                                       "Boulder Bowl: Octoguy Launch Star",
                                                        rule=RB.CanLaunchStar)
     world.create_entrance(world.get_region(regname.BOULBOWL1CRYSTAL),world.get_region(regname.BOULBOWL1BOULDER), # Trick Entrance
                           (RB.HardLogic & ((RB.ROCKNROLLIN & RB.CanAirSpin) | RB.CanLongSpin)))
     world.get_region(regname.BOULBOWL1BOULDER).connect(world.get_region(regname.BOULBOWL1DODECAH),
-                                                       "Boulder Bowl: Boulder Sling Star",
+                                                       "Boulder Bowl: Chain Chomp Sling Star",
                                                        rule=RB.ROCKNROLLIN & RB.CanLaunchStar)
     world.get_region(regname.BOULBOWL1BOULDER).connect(world.get_region(regname.BOULBOWL1DICEROOM),
-                                                       "Boulder Bowl: Boulder Green Pipe",
+                                                       "Boulder Bowl: Chain CHomp Green Pipe",
                                                        rule=RB.CanPipe & RB.ROCKNROLLIN)
     world.get_region(regname.BOULBOWL1DODECAH).connect(world.get_region(regname.BOULBOWL1BOSS),
                                                        "Boulder Bowl: Dodecahedron Launch Star",
