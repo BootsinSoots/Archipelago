@@ -422,6 +422,52 @@ class RandomizeJMPTables:
         map_two_nobserver.add_jmp_entry(create_observer_entry(3800.000000, 10.000000, -5600.000000,
             23, 7, 7, arg0=146, arg1=0, arg2=100)) # Rec Room Door
 
+        # Boneyard
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-3900.000000, 20.000000, -2500.000000,
+            11, 7, 7, arg0=123, arg1=0, arg2=100)) # Left of Kitchen Door
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-3800.000000, 40.000000, -3200.000000,
+            11, 7, 7, arg0=124, arg1=0, arg2=100)) # Spooky's Doghouse
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-3600.000000, 20.000000, -2500.000000,
+            11, 7, 7, arg0=125, arg1=0, arg2=100)) # Right of Kitchen Door
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-3550.000000, 40.000000, -3200.000000,
+            11, 7, 7, arg0=126, arg1=0, arg2=100)) # Spooky's Dog Bowl
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-3280.000000, 20.000000, -2750.000000,
+            11, 7, 7, arg0=127, arg1=0, arg2=100)) # Small Weed Patch near Bone
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-3300.000000, 40.000000, -3450.000000,
+            11, 7, 7, arg0=128, arg1=0, arg2=100)) # Boneyard Sign
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-2900.000000, 20.000000, -2600.000000,
+            11, 7, 7, arg0=129, arg1=0, arg2=100)) # Water Spigot
+
+        # Graveyard
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-4050.000000, 20.000000, -4100.000000,
+            16, 7, 7, arg0=123, arg1=0, arg2=100)) # Left of Tree Stump
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-4050.000000, 20.000000, -5100.000000,
+            16, 7, 7, arg0=124, arg1=0, arg2=100)) # Left of Left Tree
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-3950.000000, 20.000000, -5500.000000,
+            16, 7, 7, arg0=125, arg1=0, arg2=100)) # Left of Left Side Grave
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-3900.000000, 110.000000, -6200.000000,
+            16, 7, 7, arg0=126, arg1=0, arg2=100)) # Top Left Corner
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-3500.000000, 20.000000, -4300.000000,
+            16, 7, 7, arg0=127, arg1=0, arg2=100)) # Right of Tree Stump
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-3500.000000, 20.000000, -5000.000000,
+            16, 7, 7, arg0=128, arg1=0, arg2=100)) # Right of Left Tree
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-3600.000000, 20.000000, -5700.000000,
+            16, 7, 7, arg0=129, arg1=0, arg2=100)) # Near Left Brazier
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-3600.000000, 200.000000, -6200.000000,
+            16, 7, 7, arg0=130, arg1=0, arg2=100)) # Left of Bogmire Grave
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-3100.000000, 20.000000, -5000.000000,
+            16, 7, 7, arg0=131, arg1=0, arg2=100)) # Left of Right Tree
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-3100.000000, 20.000000, -5700.000000,
+            16, 7, 7, arg0=132, arg1=0, arg2=100)) # Near Right Brazier
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-3100.000000, 180.000000, -6200.000000,
+            16, 7, 7, arg0=133, arg1=0, arg2=100)) # Right of Bogmire Grave
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-2700.000000, 20.000000, -4900.000000,
+            16, 7, 7, arg0=134, arg1=0, arg2=100)) # Right of Right Tree
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-2800.000000, 20.000000, -5600.000000,
+            16, 7, 7, arg0=135, arg1=0, arg2=100)) # Right of Right Side Grave
+        map_two_nobserver.add_jmp_entry(create_observer_entry(-2850.000000, 80.000000, -6200.000000,
+            16, 7, 7, arg0=136, arg1=0, arg2=100)) # Top Right Corner
+
 
     def _map_two_enemy_changes(self):
         """Handles changes to enemy table for both normal and blackout."""
