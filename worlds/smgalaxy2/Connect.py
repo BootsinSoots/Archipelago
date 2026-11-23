@@ -1084,7 +1084,7 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.CHOMWORK).connect(world.get_region(regname.CHOMWORK1START), "Chompworks Star 1")
     world.get_region(regname.CHOMWORK1START).connect(world.get_region(regname.CHOMWORK1ROLLING),
                                                      "Chompworks 1: Start Launch Star",
-                                                     rule=RB.CanLaunchStar & (RB.JumpHeight3 | (RB.JumpHeight2 & RB.CanGrabLedge)))
+                                                     rule=RB.CanLaunchStar & (RB.JumpHeight2 | RB.HardLogic))
     world.get_region(regname.CHOMWORK1ROLLING).connect(world.get_region(regname.CHOMWORK1BONUS),
                                                        "Chompworks 1: Bonus Room Pipe",
                                                        rule=RB.CanPipe)
@@ -1098,12 +1098,14 @@ def set_rules(world: "SMG2World", player: int):
     world.get_region(regname.CHOMWORK2START).connect(world.get_region(regname.CHOMWORK2ROLLING),
                                                      "Chompworks 2: Start Launch Star",
                                                      rule=RB.CanLaunchStar & (RB.SPRONGIN | RB.HardLogic
-                                                                              | ((RB.JumpHeight6 | RB.CanLongSpin) & RB.CanWallJump & RB.MediumLogic)
-                                                                              | (RB.CanWallSpin & RB.CanBackflip & RB.MediumLogic)))
+                                                                              | ((RB.CanBackflip | RB.CanLongSpin | RB.CanTriple)
+                                                                                 & RB.CanWallSpin & RB.MediumLogic)))
     world.get_region(regname.CHOMWORK2ROLLING).connect(world.get_region(regname.CHOMWORK2TOWER),
                                                        "Chompworks 2: Rolling Chomps Launch Star",
-                                                       rule=RB.CanLaunchStar & (RB.SPRONGIN
-                                                                                | (RB.MediumLogic & ((RB.JumpHeight5 & RB.CanAirSpin) | RB.CanWallSpin))))
+                                                       rule=RB.CanLaunchStar & (RB.CanBackflip | ((RB.CanSideflip | RB.CanAirSpin) & RB.MediumLogic)
+                                                                                | (RB.CanTriple & RB.HardLogic) | RB.SPRONGIN)
+                                                                               & (RB.CanWallSpin | RB.JumpHeight5 | RB.SPRONGIN
+                                                                                   | (RB.JumpHeight4 & RB.CanGrabLedge & RB.HardLogic))),
     world.get_region(regname.CHOMWORK).connect(world.get_region(regname.CHOMWORK3LAVA), "Chompworks Comet Star",
                                                rule=((RB.Comet1ItemAccess | (
                                                            OptionFilter(CometItems, 2) & Has(itemname.COSMICCLONE)))
