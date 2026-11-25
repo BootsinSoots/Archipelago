@@ -1020,7 +1020,7 @@ def set_rules(world: "SMG2World", player: int):
                                                      rule=(RB.BeeFlight
                                                            | (RB.CanWallJump & RB.JumpHeight6 & RB.CanSwing & RB.HellLogic)))
     world.get_region(regname.HONEYHOP1POND).connect(world.get_region(regname.HONEYHOP1CLOUDS),
-                                                    rule=(RB.BeeFlight & (RB.CanSwing | RB.HardLogic))
+                                                    rule=(RB.BeeFlight & (RB.CanSwing | RB.MediumLogic))
                                                     | (RB.HellLogic & RB.CanWallSpin & RB.CanSwing & RB.CanBackflip))
     world.get_region(regname.HONEYHOP1POND).connect(world.get_region(regname.HONEYHOP1DICEROOM),
                                                     "Honeyhop: Pond Green Pipe",

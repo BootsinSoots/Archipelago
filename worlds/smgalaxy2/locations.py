@@ -289,7 +289,7 @@ CHOMWORK_loc: dict[str, SMG2LocationData] = {
 HONEYHOP_loc: dict[str, SMG2LocationData] = {
     locname.HONEYHOPSTAR1: SMG2LocationData(["Power Star Location", regname.HONEYHOP], regname.HONEYHOP,
                                             regname.HONEYHOP1QBTOP,
-                                            RB.JumpHeight5 | (RB.HardLogic & RB.JumpHeight4 & RB.CanWallJump)),
+                                            RB.JumpHeight5 | (RB.HardLogic & RB.JumpHeight5 & RB.CanWallJump)),
     locname.HONEYHOPSTAR2: SMG2LocationData(["Power Star Location", regname.HONEYHOP], regname.HONEYHOP,
                                             regname.HONEYHOP1QBBASE,
                                             (CanReachRegion(regname.HONEYHOP2QBBUBBLE)
