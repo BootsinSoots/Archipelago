@@ -902,13 +902,13 @@ def set_rules(world: "SMG2World", player: int):
                                                            & CanReachLocation(locname.SWEETMYSTSTAR1))))
                                                )
     world.get_region(regname.SWEETMYS2START).connect(world.get_region(regname.SWEETMYS2COOKIE),
-                                                     rule=RB.CanDinoGlow)
+                                                     rule=RB.CanDinoGlow | RB.CanInfiniteFlutter)
     world.get_region(regname.SWEETMYS2COOKIE).connect(world.get_region(regname.SWEETMYS2CHOCO),
-                                                      rule=RB.CanDinoGlow)
+                                                      rule=RB.CanDinoGlow | RB.CanInfiniteFlutter)
     world.get_region(regname.SWEETMYS2CHOCO).connect(world.get_region(regname.SWEETMYS2BISCUIT),
-                                                     rule=RB.CanDinoGlow)
+                                                     rule=RB.CanDinoGlow | RB.CanInfiniteFlutter)
     world.get_region(regname.SWEETMYS2BISCUIT).connect(world.get_region(regname.SWEETMYS2END),
-                                                       rule=RB.CanDinoGlow)
+                                                       rule=RB.CanDinoGlow | RB.CanInfiniteFlutter)
     # Flipsville
     world.get_region(regname.WORLD4).connect(world.get_region(regname.FLIPVILL), "World 4 Slot 3 Galaxy")
     world.get_region(regname.FLIPVILL).connect(world.get_region(regname.FLIPVILL1MAZESTART), "Flipsville Star 1")
