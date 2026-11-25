@@ -69,9 +69,7 @@ FLUFBLUF_loc: dict[str, SMG2LocationData] = {
                                             regname.FLUFFBLUFF1TREECLIMB,
                                             RB.CanMakeCloud | (RB.JumpHeight6 & RB.CanLongJump & RB.HellLogic)),
     locname.FLUFBLUFSTAR2: SMG2LocationData(["Power Star Location",regname.FLUFFBLUFF],regname.FLUFFBLUFF,
-                                            regname.FLUFFBLUFF2LANDING,
-                                            (CanReachRegion(regname.FLUFFBLUFF2CLIFF))
-                                            & RB.PowerStarCount(15) & RB.MailtoadOpen
+                                            regname.FLUFFBLUFF2LANDING, CanReachRegion(regname.FLUFFBLUFF2CLIFF)
                                             & (RB.CanAirSpin | RB.MediumLogic)),
     locname.FLUFBLUFSTAR3: SMG2LocationData(["Power Star Location",regname.FLUFFBLUFF],regname.FLUFFBLUFF,
                                             regname.FLUFFBLUFF3TOWER, RB.CanMakeCloud
@@ -113,7 +111,7 @@ PUZZPLANK_loc: dict[str, SMG2LocationData] = {
     locname.PUZZPLANKSTAR2:  SMG2LocationData(["Power Star Location", regname.PUZZPLAN], regname.PUZZPLAN,
                                               regname.PUZZPLAN2COINRO),
     locname.PUZZPLANKSTAR3:  SMG2LocationData(["Power Star Location", regname.PUZZPLAN], regname.PUZZPLAN,
-                                              regname.PUZZPLAN3BUGABO, RB.CanMakeCloud&RB.CanPound),
+                                              regname.PUZZPLAN3BUGABO, RB.CanPound & (RB.CanMakeCloud | RB.HardLogic)),
 }
 
 # Hightail Falls Stars
@@ -129,7 +127,7 @@ HIGHFALL_loc: dict[str, SMG2LocationData] = {
 # Boulder Bowl Stars
 ROCKBOWL_loc: dict[str, SMG2LocationData] = {
     locname.ROCKBOWLSTAR1:  SMG2LocationData(["Power Star Location", regname.BOULBOWL], regname.BOULBOWL,
-                                             regname.BOULBOWL1BOSS),
+                                             regname.BOULBOWL1BOSS, RB.ROCKNROLLIN),
     locname.ROCKBOWLSTAR2:  SMG2LocationData(["Power Star Location", regname.BOULBOWL], regname.BOULBOWL,
                                              regname.BOULBOWL2CAGEPLA, RB.ROCKNROLLIN),
     locname.ROCKBOWLSTAR3:  SMG2LocationData(["Power Star Location", regname.BOULBOWL], regname.BOULBOWL,
@@ -147,7 +145,7 @@ COSCCOVE_loc: dict[str, SMG2LocationData] = {
     locname.COSCCOVESTAR2:  SMG2LocationData(["Power Star Location", regname.COSMICO], regname.COSMICO,
                                              regname.COSMIC2WATERPL2, RB.CanSwim),
     locname.COSCCOVESTAR3:  SMG2LocationData(["Power Star Location", regname.COSMICO], regname.COSMICO,
-                                             regname.COSMIC3WATER, RB.CanPound),
+                                             regname.COSMIC3WATER, RB.CanPound | (RB.CanStarbitShoot & RB.HardLogic)),
 }
 
 # Wild Glide Stars
@@ -155,9 +153,7 @@ WILDGLIDE_loc: dict[str, SMG2LocationData] = {
     locname.WILDGLIDESTAR1: SMG2LocationData(["Power Star Location", regname.WILDGLIDE], regname.WILDGLIDE,
                                              regname.WILDGLIDE1COURSE),
     locname.WILDGLIDESTAR2: SMG2LocationData(["Power Star Location", regname.WILDGLIDE], regname.WILDGLIDE,
-                                             regname.WILDGLIDE2COURSE, (CanReachLocation(locname.BEATBLOCKSTAR1,
-                                                                                         parent_region_name=regname.BEATBLOK1)
-                                                                       & RB.MailtoadOpen)),
+                                             regname.WILDGLIDE2COURSE),
 }
 
 # Honeybloom Stars
@@ -200,7 +196,7 @@ CLOUDCOURT_loc: dict[str, SMG2LocationData] = {
 # Haunty Halls Stars
 HAUNTHALL_loc: dict[str, SMG2LocationData] = {
     locname.HAUNTHALLSTAR1: SMG2LocationData(["Power Star Location", regname.HAUNHALL], regname.HAUNHALL,
-                                             regname.HAUNHALL1BULBBER, (RB.CanDinoGlow&RB.CanDinoSwing)),
+                                             regname.HAUNHALL1BULBBER, RB.CanDinoGlow),
     locname.HAUNTHALLSTAR2: SMG2LocationData(["Power Star Location", regname.HAUNHALL], regname.HAUNHALL,
                                              regname.HAUNHALL2CREEPYH),
     locname.HAUNTHALLSTAR3: SMG2LocationData(["Power Star Location", regname.HAUNHALL], regname.HAUNHALL,
@@ -247,9 +243,10 @@ SUPMASS_loc: dict[str, SMG2LocationData] = {
     locname.SUPERMASSSTAR1: SMG2LocationData(["Power Star Location", regname.SUPMASS], regname.SUPMASS,
                                              regname.SUPMASS1WIGGLERS, RB.CanClimbPole),
     locname.SUPERMASSSTAR2: SMG2LocationData(["Power Star Location", regname.SUPMASS], regname.SUPMASS,
-                                             regname.SUPMASS1GARDEN),
+                                             regname.SUPMASS2WIGGLERS, RB.CanClimbPole
+                                             & (RB.CanLongJump | RB.HardLogic)),
     locname.SUPERMASSSTAR3: SMG2LocationData(["Power Star Location", regname.SUPMASS], regname.SUPMASS,
-                                             regname.SUPMASS2WIGGLERS, RB.CanClimbPole),
+                                             regname.SUPMASS1GARDEN),
 }
 
 # Flipsville Stars
@@ -259,7 +256,7 @@ FLIPVILL_loc: dict[str, SMG2LocationData] = {
     locname.FLIPVILLESTAR2: SMG2LocationData(["Power Star Location", regname.FLIPVILL], regname.FLIPVILL,
                                              regname.FLIPVILL2GRAVITYMAIN, RB.DRILLMASTER),
     locname.FLIPVILLESTAR3: SMG2LocationData(["Power Star Location", regname.FLIPVILL], regname.FLIPVILL,
-                                             regname.FLIPVILL3GRAVITY, RB.DRILLMASTER),
+                                             regname.FLIPVILL3GRAVITY, RB.DRILLMASTER & (RB.CanWallJump | RB.MediumLogic)),
 }
 
 # Starshine Beach Stars
@@ -268,7 +265,11 @@ STARBEACH_loc: dict[str, SMG2LocationData] = {
                                              regname.STARBEACH1MAIN,
                                              (RB.CanDinoSwing & RB.CanDinoBlimp) | RB.CanInfiniteFlutter),
     locname.STARBEACHSTAR2: SMG2LocationData(["Power Star Location", regname.STARBEACH], regname.STARBEACH,
-                                             regname.STARBEACH2MAIN, RB.CanMakeCloud&RB.CanSwim),
+                                             regname.STARBEACH2MAIN, ((RB.CanMakeCloud | (RB.CloudMario & RB.CanBackOrSideflip
+                                                                                         & RB.CanWallJump & RB.MediumLogic))
+                                             & RB.CanSwim & RB.CanPound)
+                                             | (RB.CanWallSpin & RB.HardLogic & (RB.JumpHeight5 | RB.CloudMario
+                                                                                 | (RB.JumpHeight4 & RB.CanPound & RB.HellLogic)))),
     locname.STARBEACHSTAR3: SMG2LocationData(["Power Star Location", regname.STARBEACH], regname.STARBEACH,
                                              regname.STARBEACH3MAIN, RB.CanDinoRun),
 }
@@ -279,7 +280,7 @@ CHOMWORK_loc: dict[str, SMG2LocationData] = {
                                              regname.CHOMWORK1LAVA, RB.CanPound),
     locname.CHOMPWORKSTAR2: SMG2LocationData(["Power Star Location", regname.CHOMWORK], regname.CHOMWORK,
                                              regname.CHOMWORK2TOWER, RB.SPRONGIN
-                                             | (RB.HardLogic & RB.CanWallSpin & RB.CanTriple & RB.CanBackOrSideflip)),
+                                             | (RB.HardLogic & RB.CanWallSpin & RB.CanBackOrSideflip)),
     locname.CHOMPWORKSTAR3: SMG2LocationData(["Power Star Location", regname.CHOMWORK], regname.CHOMWORK,
                                              regname.CHOMWORK3LAVA, RB.CanPound),
 }
@@ -288,14 +289,11 @@ CHOMWORK_loc: dict[str, SMG2LocationData] = {
 HONEYHOP_loc: dict[str, SMG2LocationData] = {
     locname.HONEYHOPSTAR1: SMG2LocationData(["Power Star Location", regname.HONEYHOP], regname.HONEYHOP,
                                             regname.HONEYHOP1QBTOP,
-                                            RB.JumpHeight5 | (RB.HardLogic & RB.JumpHeight4 & RB.CanWallJump)),
+                                            RB.JumpHeight5 | (RB.HardLogic & RB.JumpHeight5 & RB.CanWallJump)),
     locname.HONEYHOPSTAR2: SMG2LocationData(["Power Star Location", regname.HONEYHOP], regname.HONEYHOP,
                                             regname.HONEYHOP1QBBASE,
                                             (CanReachRegion(regname.HONEYHOP2QBBUBBLE)
                                              & CanReachRegion(regname.HONEYHOP2QBTOP)
-                                             & CanReachLocation(locname.CLOCKRUINSTAR1,
-                                                                parent_region_name=regname.CLOCKWORK1WHEELST)
-                                             & RB.MailtoadOpen
                                              & (RB.CanAirSpin | RB.HardLogic) & (RB.CanLongJump | RB.MediumLogic))),
 }
 
@@ -312,7 +310,8 @@ GRAVGAUN_loc: dict[str, SMG2LocationData] = {
     locname.GRAVGAUNSTAR1: SMG2LocationData(["Power Star Location", regname.BOWSER2], regname.BOWSER2,
                                             regname.GRAVGAUN1BOSSARE, RB.CanPound),
     locname.GRAVGAUNSTAR2: SMG2LocationData(["Power Star Location", regname.BOWSER2], regname.BOWSER2,
-                                            regname.GRAVGAUN2WHOMPWA),
+                                            regname.GRAVGAUN2WHOMPWA, (RB.CanBackOrSideflip & (RB.CanWallJump | RB.CanAirSpin))
+                                            | RB.CanWallSpin | RB.MediumLogic),
 }
 
 # World 5
@@ -373,10 +372,7 @@ FLETGLIDE_loc: dict[str, SMG2LocationData] = {
     locname.FLEETFLYSTAR1: SMG2LocationData(["Power Star Location", regname.FLEETGLIDE], regname.FLEETGLIDE,
                                             regname.FLEETGLIDE1COURSE, RB.CanRideBird),
     locname.FLEETFLYSTAR2: SMG2LocationData(["Power Star Location", regname.FLEETGLIDE], regname.FLEETGLIDE,
-                                            regname.FLEETGLIDE2COURSE, (RB.CanRideBird
-                                                                       & CanReachLocation(locname.BATTBELTSTAR1,
-                                                                                          parent_region_name=regname.BATTBELT1CHOM)
-                                                                       & RB.MailtoadOpen)),
+                                            regname.FLEETGLIDE2COURSE, RB.CanRideBird),
 }
 
 # Bowser Jr.'s Boom Bunker Stars
@@ -442,11 +438,8 @@ SLIMSPRI_loc: dict[str, SMG2LocationData] = {
     locname.SLIMYSPRISTAR1: SMG2LocationData(["Power Star Location", regname.SLIMSPRI], regname.SLIMSPRI,
                                              regname.SLIMSPRI1CAVE2, RB.CanShell),
     locname.SLIMYSPRISTAR2: SMG2LocationData(["Power Star Location", regname.SLIMSPRI], regname.SLIMSPRI,
-                                             regname.SLIMSPRI2MOUTH1, (CanReachRegion(regname.SLIMSPRI2CAVE2)
-                                                                       & CanReachLocation(locname.GALAXYGENSTAR2,
-                                                                                          parent_region_name=regname.GALGEN1BOSS)
-                                                                       & RB.MailtoadOpen
-                                                                       & RB.CanShell)),
+                                             regname.SLIMSPRI2MOUTH1, CanReachRegion(regname.SLIMSPRI2CAVE2)
+                                                                      & RB.CanShell),
 }
 
 # Bowser's Galaxy Generator Stars
@@ -567,10 +560,10 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  RB.CanLongSpin | RB.MediumLogic),
     locname.PUZZPLANKSTARG1:    SMG2LocationData(["Green Star Location", regname.PUZZPLAN], regname.PUZZPLAN,
                                                  regname.PUZZPLAN1BLOCK,
-                                                 (RB.CanPound & RB.CanWallSpin & RB.CanBackOrSideflip)),
+                                                 (RB.CanPound & (RB.CanWallSpin | (RB.MediumLogic & RB.CanAirSpin)) & RB.CanBackOrSideflip)),
     locname.PUZZPLANKSTARG2:    SMG2LocationData(["Green Star Location", regname.PUZZPLAN], regname.PUZZPLAN,
                                                  regname.PUZZPLAN1SAWBLA,
-                                                 (RB.CanWallSpin | RB.NarrowJumpHeight5
+                                                 (RB.CanWallSpin | (RB.CanBackflip & RB.CanAirSpin)
                                                   | (RB.JumpHeight6 & RB.MediumLogic))),
     locname.PUZZPLANKSTARG3:    SMG2LocationData(["Green Star Location", regname.PUZZPLAN], regname.PUZZPLAN,
                                                  regname.PUZZPLAN1SAWBLA,
@@ -582,9 +575,10 @@ green_star_locations: dict[str, SMG2LocationData]  = {
     locname.HIGHFALLSTARG3:     SMG2LocationData(["Green Star Location", regname.HIGHTAIL], regname.HIGHTAIL,
                                                  regname.HIGHTAILGSTAR3),
     locname.ROCKBOWLSTARG1:     SMG2LocationData(["Green Star Location", regname.BOULBOWL], regname.BOULBOWL,
-                                                 regname.BOULBOWL1CRYSTAL, RB.CanWallSpin&RB.JumpHeight5),
+                                                 regname.BOULBOWL1CRYSTAL, RB.CanWallSpin&RB.NarrowJumpHeight5),
     locname.ROCKBOWLSTARG2:     SMG2LocationData(["Green Star Location", regname.BOULBOWL], regname.BOULBOWL,
-                                                 regname.BOULBOWL1CRYSTAL, RB.ROCKNROLLIN),
+                                                 regname.BOULBOWL1CRYSTAL, RB.ROCKNROLLIN
+                                                 | (RB.CanWallSpin & RB.CanLongJump & RB.HardLogic)),
     locname.ROCKBOWLSTARG3:     SMG2LocationData(["Green Star Location", regname.BOULBOWL], regname.BOULBOWL,
                                                  regname.BOULBOWL1FALLING),
     locname.COSCCOVESTARG1:     SMG2LocationData(["Green Star Location", regname.COSMICO], regname.COSMICO,
@@ -601,7 +595,7 @@ green_star_locations: dict[str, SMG2LocationData]  = {
     locname.BEEBLOOMSTARG1:     SMG2LocationData(["Green Star Location", regname.HONEYBLOOM], regname.HONEYBLOOM,
                                                  regname.HONEYBLOOM1WALL3),
     locname.BEEBLOOMSTARG2:     SMG2LocationData(["Green Star Location", regname.HONEYBLOOM], regname.HONEYBLOOM,
-                                                 regname.HONEYBLOOM1WALL3, RB.CanSwing&RB.BeeFlight),
+                                                 regname.HONEYBLOOM1WALL3, RB.CanSwing & RB.BeeFlight),
     locname.LAVALAIRSTARG1:     SMG2LocationData(["Green Star Location", regname.BOWSER1], regname.BOWSER1,
                                                  regname.LAVALAIR1LAVAPLA1W, RB.CanLongSpin | RB.MediumLogic),
     locname.LAVALAIRSTARG2:     SMG2LocationData(["Green Star Location", regname.BOWSER1], regname.BOWSER1,
@@ -611,12 +605,12 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                                              | (RB.CanBackflip & RB.CanWallSpin & RB.HardLogic)
                                                                              | RB.CanInfiniteFlutter)),
     locname.TALLTREESTARG2:     SMG2LocationData(["Green Star Location", regname.TALLTRUNK], regname.TALLTRUNK,
-                                                 regname.TALLTRUNK1LOG, RB.CanDinoBlimp),
+                                                 regname.TALLTRUNK1LOG, RB.CanDinoBlimp | (RB.CanRideDino & RB.MediumLogic)),
     locname.TALLTREESTARG3:     SMG2LocationData(["Green Star Location", regname.TALLTRUNK], regname.TALLTRUNK,
                                                  regname.TALLTRUNK2SLIDE, RB.CanSlide),
     locname.CLOUDCOURTSTARG1:   SMG2LocationData(["Green Star Location", regname.CLOUCOUR], regname.CLOUCOUR,
                                                  regname.CLOUCOUR1LANDING, (RB.CanMakeCloud
-                                                                            | (RB.CloudMario & RB.CanBackOrSideflip & RB.HardLogic))),
+                                                                            | (RB.CloudMario & RB.CanBackflip & RB.CanSideflip & RB.HellLogic))),
     locname.CLOUDCOURTSTARG2:   SMG2LocationData(["Green Star Location", regname.CLOUCOUR], regname.CLOUCOUR,
                                                  regname.CLOUCOUR1CYMBAL, RB.CanMakeCloud & (RB.CanLongJump | RB.MediumLogic)),
     locname.CLOUDCOURTSTARG3:   SMG2LocationData(["Green Star Location", regname.CLOUCOUR], regname.CLOUCOUR,
@@ -625,7 +619,7 @@ green_star_locations: dict[str, SMG2LocationData]  = {
     locname.HAUNTHALLSTARG1:    SMG2LocationData(["Green Star Location",regname.HAUNHALL],regname.HAUNHALL,
                                                  regname.HAUNHALL1HALLWAY, RB.CanAirSpin),
     locname.HAUNTHALLSTARG2:    SMG2LocationData(["Green Star Location",regname.HAUNHALL],regname.HAUNHALL,
-                                                 regname.HAUNHALL1DISAPPE, RB.JumpHeight5),
+                                                 regname.HAUNHALL1DISAPPE, RB.JumpHeight5 & RB.CanAirSpin),
     locname.HAUNTHALLSTARG3:    SMG2LocationData(["Green Star Location",regname.HAUNHALL],regname.HAUNHALL,
                                                  regname.HAUNHALL2CREEPYH, RB.JumpHeight4),
     locname.SNOWFLAKESTARG1:    SMG2LocationData(["Green Star Location", regname.FREEFLAKE], regname.FREEFLAKE,
@@ -639,9 +633,11 @@ green_star_locations: dict[str, SMG2LocationData]  = {
     locname.ROLLMASTERSTARG2:   SMG2LocationData(["Green Star Location", regname.ROLLMAST], regname.ROLLMAST,
                                                  regname.ROLLMAST1SILVERC),
     locname.BEATBLOCKSTARG1:    SMG2LocationData(["Green Star Location", regname.BEATBLOCK], regname.BEATBLOCK,
-                                                 regname.BEATBLOK1, RB.JumpHeight6 | (RB.CanBackflip & RB.CanAirSpin)),
+                                                 regname.BEATBLOK1, RB.JumpHeight6 | (RB.CanBackflip & RB.CanAirSpin)
+                                                 | (RB.CanAirSpin & RB.CanSideflip & RB.HardLogic)),
     locname.BEATBLOCKSTARG2:    SMG2LocationData(["Green Star Location", regname.BEATBLOCK], regname.BEATBLOCK,
-                                                 regname.BEATBLOK1, (RB.CanAirSpin & (RB.HardLogic | RB.CanBackOrSideflip)
+                                                 regname.BEATBLOK1, (RB.CanAirSpin & (RB.HardLogic | RB.CanBackOrSideflip
+                                                                                      | RB.CanLongJump)
                                                                      | (RB.CanTriple & RB.MediumLogic))),
     locname.FEARFLETSTARG1:     SMG2LocationData(["Green Star Location", regname.BOWJR2], regname.BOWJR2,
                                                  regname.FEARFLET1UNDERGR, RB.CanRideDino),
@@ -653,7 +649,7 @@ green_star_locations: dict[str, SMG2LocationData]  = {
                                                  regname.SUPMASS1GSTAR2),
     locname.SUPERMASSSTARG3:    SMG2LocationData(["Green Star Location", regname.SUPMASS], regname.SUPMASS,
                                                  regname.SUPMASS1KOOPAS,
-                                                 (RB.JumpHeight6 | RB.CanLongJump | RB.MediumLogic)),
+                                                 (RB.JumpHeight5 | RB.CanLongJump | RB.MediumLogic)),
     locname.FLIPVILLESTARG1:    SMG2LocationData(["Green Star Location", regname.FLIPVILL], regname.FLIPVILL,
                                                  regname.FLIPVILL1MAZETOP),
     locname.FLIPVILLESTARG2:    SMG2LocationData(["Green Star Location", regname.FLIPVILL], regname.FLIPVILL,
@@ -666,23 +662,26 @@ green_star_locations: dict[str, SMG2LocationData]  = {
     locname.STARBEACHSTARG2:    SMG2LocationData(["Green Star Location", regname.STARBEACH], regname.STARBEACH,
                                                  regname.STARBEACH1MAIN, RB.CanDinoRun | (RB.CanRideDino & RB.MediumLogic)),
     locname.STARBEACHSTARG3:    SMG2LocationData(["Green Star Location", regname.STARBEACH], regname.STARBEACH,
-                                                 regname.STARBEACH2MAIN, RB.CanPound & RB.CanMakeCloud & RB.CanSwim),
+                                                 regname.STARBEACH2MAIN, RB.CanMakeCloud & RB.CanBackOrSideflip
+                                                 & ((RB.CanSwim & RB.CanPound) | (RB.CanWallSpin & RB.HellLogic))),
     locname.CHOMPWORKSTARG1:    SMG2LocationData(["Green Star Location", regname.CHOMWORK], regname.CHOMWORK,
                                                  regname.CHOMWORK1START, RB.CanLongSpin & (RB.CanBackflip | RB.HardLogic)),
     locname.CHOMPWORKSTARG2:    SMG2LocationData(["Green Star Location", regname.CHOMWORK], regname.CHOMWORK,
                                                  regname.CHOMWORK1FLIPSWAP, RB.CanWallSpin | RB.NarrowJumpHeight5
-                                                 | (RB.MediumLogic & RB.CanTriple)),
+                                                 | (RB.MediumLogic & RB.CanTriple)
+                                                 | (RB.JumpHeight4 & RB.CanGrabLedge & RB.HardLogic)),
     locname.CHOMPWORKSTARG3:    SMG2LocationData(["Green Star Location", regname.CHOMWORK], regname.CHOMWORK,
                                                  regname.CHOMWORK2TOWER, RB.SPRONGIN
-                                                 | (RB.HardLogic & RB.CanWallSpin & RB.CanTriple & RB.CanBackOrSideflip & RB.CanLongJump)),
+                                                 | (RB.HardLogic & RB.CanWallSpin & RB.CanBackOrSideflip
+                                                    & (RB.CanLongJump | (RB.CanBackflip & RB.CanAirSpin)))),
     locname.HONEYHOPSTARG1:     SMG2LocationData(["Green Star Location", regname.HONEYHOP], regname.HONEYHOP,
                                                  regname.HONEYHOP1CLOUDS),
     locname.HONEYHOPSTARG2:     SMG2LocationData(["Green Star Location", regname.HONEYHOP], regname.HONEYHOP,
                                                  regname.HONEYHOP1QBTOP, RB.BeeFlight),
     locname.SWEETMYSTSTARG1:    SMG2LocationData(["Green Star Location", regname.SWEETMYS], regname.SWEETMYS,
-                                                 regname.SWEETMYS1CHOCO, RB.CanDinoGlow),
+                                                 regname.SWEETMYS1CHOCO, RB.CanDinoGlow | RB.CanInfiniteFlutter),
     locname.SWEETMYSTSTARG2:    SMG2LocationData(["Green Star Location", regname.SWEETMYS], regname.SWEETMYS,
-                                                 regname.SWEETMYS1CHOCO, RB.CanDinoGlow&RB.CanLongJump),
+                                                 regname.SWEETMYS1CHOCO, RB.CanDinoGlow | RB.CanInfiniteFlutter),
     locname.GRAVGAUNSTARG1:     SMG2LocationData(["Green Star Location", regname.BOWSER2], regname.BOWSER2,
                                                  regname.GRAVGAUNGSTAR1),
     locname.GRAVGAUNSTARG2:     SMG2LocationData(["Green Star Location", regname.BOWSER2], regname.BOWSER2,
@@ -822,9 +821,10 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
     locname.WILDGLIDECM: SMG2LocationData(["Comet Medal Location", regname.WILDGLIDE], regname.WILDGLIDE,
                                           regname.WILDGLIDE1COURSE),
     locname.BEEBLOOMCM: SMG2LocationData(["Comet Medal Location", regname.HONEYBLOOM], regname.HONEYBLOOM,
-                                         regname.HONEYBLOOM1WALL2, RB.BeeFlight),
+                                         regname.HONEYBLOOM1WALL2, RB.BeeFlight | (RB.CanBackflip & RB.CanAirSpin & RB.HellLogic)),
     locname.LAVALAIRCM: SMG2LocationData(["Comet Medal Location", regname.BOWSER1], regname.BOWSER1,
-                                         regname.LAVALAIR1LAVAPLA1W, RB.JumpHeight5|RB.CanWallSpin),
+                                         regname.LAVALAIR1LAVAPLA1W, RB.JumpHeight5 | RB.CanWallSpin | RB.HardLogic
+                                         | (RB.MediumLogic & RB.CanBackOrSideflip & RB.CanWallJump)),
     locname.TALLTREECM: SMG2LocationData(["Comet Medal Location", regname.TALLTRUNK], regname.TALLTRUNK,
                                          regname.TALLTRUNK1LOG, RB.CanDinoBlimp),
     locname.CLOUDCOURTCM: SMG2LocationData(["Comet Medal Location", regname.CLOUCOUR], regname.CLOUCOUR,
@@ -846,14 +846,14 @@ COMETMEDAL_loc:dict[str, SMG2LocationData] = {
     locname.STARBEACHCM: SMG2LocationData(["Comet Medal Location", regname.STARBEACH], regname.STARBEACH,
                                           regname.STARBEACH1MAIN, RB.CanSwim),
     locname.CHOMPWORKCM: SMG2LocationData(["Comet Medal Location", regname.CHOMWORK], regname.CHOMWORK,
-                                          regname.CHOMWORK1START, RB.JumpHeight5),
+                                          regname.CHOMWORK1START, RB.NarrowJumpHeight3),
     locname.HONEYHOPCM: SMG2LocationData(["Comet Medal Location", regname.HONEYHOP], regname.HONEYHOP,
                                          regname.HONEYHOP1QBBUBBLE, RB.CanWallJump | RB.BeeFlight),
     locname.SWEETMYSTCM: SMG2LocationData(["Comet Medal Location", regname.SWEETMYS], regname.SWEETMYS,
                                           regname.SWEETMYS1CHOCO, RB.CanDinoGlow),
     locname.GRAVGAUNTCM: SMG2LocationData(["Comet Medal Location", regname.BOWSER2], regname.BOWSER2,
                                           regname.GRAVGAUN1LANDING, (RB.CanGrabLedge&RB.JumpHeight2) | RB.JumpHeight3
-                                          | RB.HellLogic),
+                                          | RB.HardLogic),
     locname.SPACESTORMCM: SMG2LocationData(["Comet Medal Location", regname.SPACSTOR], regname.SPACSTOR,
                                            regname.SPACSTOR1SATELLITE, RB.CanLongJump | RB.MediumLogic),
     locname.SLIPSANDCM: SMG2LocationData(["Comet Medal Location", regname.SLIPSAND], regname.SLIPSAND,
@@ -938,8 +938,7 @@ checkpoint_loc_table: dict[str, SMG2LocationData] = {
     locname.RIGHTDOWNCORRIDORCP2: SMG2LocationData(["Checkpoint Location", regname.RIGHTDOWN], regname.RIGHTDOWN,
                                                    regname.RIGHTDOWNCORRIDOR),
     locname.RIGHTDOWNCORRIDORCP3: SMG2LocationData(["Checkpoint Location", regname.RIGHTDOWN], regname.RIGHTDOWN,
-                                                   regname.RIGHTDOWNCORRIDOR, (RB.FireMario
-                                                                               & (RB.CanWallJump | (RB.CanTriple & RB.MediumLogic)))),
+                                                   regname.RIGHTDOWNFLOWER),
     locname.FIREFLOT1LAVACP: SMG2LocationData(["Checkpoint Location", regname.BOWJR1], regname.BOWJR1,
                                               regname.FIREFLOT1LAVA),
     locname.PUZZPLAN1SAWBLACP: SMG2LocationData(["Checkpoint Location", regname.PUZZPLAN], regname.PUZZPLAN,
@@ -947,7 +946,7 @@ checkpoint_loc_table: dict[str, SMG2LocationData] = {
     locname.PUZZPLAN1CHECKPCP: SMG2LocationData(["Checkpoint Location", regname.PUZZPLAN], regname.PUZZPLAN,
                                                 regname.PUZZPLAN1CHECKP),
     locname.PUZZPLAN3BUGABOCP: SMG2LocationData(["Checkpoint Location", regname.PUZZPLAN], regname.PUZZPLAN,
-                                                regname.PUZZPLAN3BUGABO),
+                                                regname.PUZZPLAN3BUGISL),
     locname.HIGHTAIL1PLATDASCP: SMG2LocationData(["Checkpoint Location", regname.HIGHTAIL], regname.HIGHTAIL,
                                                  regname.HIGHTAIL1PLATDAS),
     locname.HIGHTAIL1DASHWALCP: SMG2LocationData(["Checkpoint Location", regname.HIGHTAIL], regname.HIGHTAIL,
@@ -975,7 +974,7 @@ checkpoint_loc_table: dict[str, SMG2LocationData] = {
     locname.LAVALAIR1LAVAPLA2CP1: SMG2LocationData(["Checkpoint Location", regname.BOWSER1], regname.BOWSER1,
                                                    regname.LAVALAIR1LAVAPLA2C),
     locname.LAVALAIR1LAVAPLA2CP2: SMG2LocationData(["Checkpoint Location", regname.BOWSER1], regname.BOWSER1,
-                                                   regname.LAVALAIR1LAVAPLA2C),
+                                                   regname.LAVALAIR1LAVAPLA2S),
     locname.TALLTRUNK1LOGCP: SMG2LocationData(["Checkpoint Location",regname.TALLTRUNK], regname.TALLTRUNK,
                                               regname.TALLTRUNK1LOG),
     locname.TALLTRUNK1WOODCIRCLECP: SMG2LocationData(["Checkpoint Location",regname.TALLTRUNK], regname.TALLTRUNK,
@@ -1367,11 +1366,11 @@ launch_star_locs: dict[str, SMG2LocationData] = {
                                              CanReachEntrance("Hightail Falls Comet: Hot Pepper Dash Launch Star",
                                                               parent_region_name=regname.HIGHTAIL2PLATDAS)),
 
-    locname.COSMIC1LANSS: SMG2LocationData(["Launch Stars"], regname.COSMICO, regname.COSMIC2LANDING,
+    locname.COSMIC1LANSS: SMG2LocationData(["Launch Stars"], regname.COSMICO, regname.COSMIC1LANDING,
                                            RB.CanLaunchStar & RB.CanSwim),
-    locname.COSMIC1CORSS: SMG2LocationData(["Launch Stars"], regname.COSMICO, regname.COSMIC2LANDING,
+    locname.COSMIC1CORSS: SMG2LocationData(["Launch Stars"], regname.COSMICO, regname.COSMIC1POOL,
                                            RB.CanLaunchStar & RB.CanSwim),
-    locname.COSMIC1PILSS: SMG2LocationData(["Launch Stars"], regname.COSMICO, regname.COSMIC2LANDING,
+    locname.COSMIC1PILSS: SMG2LocationData(["Launch Stars"], regname.COSMICO, regname.COSMIC1POOL,
                                            RB.CanLaunchStar & RB.CanSwim),
     locname.COSMIC2LANLS: SMG2LocationData(["Launch Stars"], regname.COSMICO, regname.COSMIC2LANDING,
                                            CanReachEntrance("Cosmic Cove 2: Landing Launch Star", parent_region_name=regname.COSMIC2LANDING)),
@@ -1427,6 +1426,12 @@ launch_star_locs: dict[str, SMG2LocationData] = {
     locname.FEARFLET1AIRLS: SMG2LocationData(["Launch Stars"], regname.BOWJR2, regname.FEARFLET1AIRSHIP,
                                              CanReachEntrance(locname.FEARFLET1AIRLS, parent_region_name=regname.FEARFLET1AIRSHIP)),
     locname.FEARFLET1FIRSS: SMG2LocationData(["Launch Stars"], regname.BOWJR2, regname.FEARFLET1UNDERGR, RB.CanLaunchStar),
+    locname.FEARFLET1BO1SS: SMG2LocationData(["Launch Stars"], regname.BOWJR2, regname.FEARFLET1MEGAHAM, RB.CanLaunchStar),
+    locname.FEARFLET1BO2SS: SMG2LocationData(["Launch Stars"], regname.BOWJR2, regname.FEARFLET1MEGAHAM, RB.CanLaunchStar),
+    locname.FEARFLET1BO3SS: SMG2LocationData(["Launch Stars"], regname.BOWJR2, regname.FEARFLET1MEGAHAM, RB.CanLaunchStar),
+    locname.FEARFLET2BO1SS: SMG2LocationData(["Launch Stars"], regname.BOWJR2, regname.FEARFLET2MEGAHAM, RB.CanLaunchStar),
+    locname.FEARFLET2BO2SS: SMG2LocationData(["Launch Stars"], regname.BOWJR2, regname.FEARFLET2MEGAHAM, RB.CanLaunchStar),
+    locname.FEARFLET2BO3SS: SMG2LocationData(["Launch Stars"], regname.BOWJR2, regname.FEARFLET2MEGAHAM, RB.CanLaunchStar),
 
     locname.SUPMASS1THWLS: SMG2LocationData(["Launch Stars"], regname.SUPMASS, regname.SUPMASS1THWOMPS,
                                             CanReachEntrance(locname.SUPMASS1THWLS, parent_region_name=regname.SUPMASS1THWOMPS)),
@@ -1922,15 +1927,21 @@ oneup_locations: dict[str, SMG2LocationData] = {
     locname.TALL2GAPP1UP: SMG2LocationData(["1-up Location"], regname.TALLTRUNK, regname.TALLTRUNK2SLIDE,
                                            RB.CanAirSpin & RB.CanSlide),
     locname.TALL2STAR1UP: SMG2LocationData(["1-up Location"], regname.TALLTRUNK, regname.TALLTRUNK2SLIDEND),
+    locname.TALL3STAR1UP: SMG2LocationData(["1-up Location"], regname.TALLTRUNK, regname.TALLTRUNK3PCOINEND),
     locname.CLOU1DINO1UP: SMG2LocationData(["1-up Location"], regname.CLOUCOUR, regname.CLOUCOUR1LANDING),
     locname.CLOU1BON1UP1: SMG2LocationData(["1-up Location"], regname.CLOUCOUR, regname.CLOUCOUR1PARAGOOMBONUS),
     locname.CLOU1BON1UP2: SMG2LocationData(["1-up Location"], regname.CLOUCOUR, regname.CLOUCOUR1PARAGOOMBONUS),
     locname.CLOU1BON1UP3: SMG2LocationData(["1-up Location"], regname.CLOUCOUR, regname.CLOUCOUR1PARAGOOMBONUS),
-    locname.CLOU1DOME1UP: SMG2LocationData(["1-up Location"], regname.CLOUCOUR, regname.CLOUCOUR1TOWERS),
-    locname.CLOU1LEF1UP1: SMG2LocationData(["1-up Location"], regname.CLOUCOUR, regname.CLOUCOUR1CASTLE),
-    locname.CLOU1LEF1UP2: SMG2LocationData(["1-up Location"], regname.CLOUCOUR, regname.CLOUCOUR1CASTLE),
-    locname.CLOU1LEF1UP3: SMG2LocationData(["1-up Location"], regname.CLOUCOUR, regname.CLOUCOUR1CASTLE),
-    locname.CLOU1UPDR1UP: SMG2LocationData(["1-up Location"], regname.CLOUCOUR, regname.CLOUCOUR1CASTLE),
+    locname.CLOU1DOME1UP: SMG2LocationData(["1-up Location"], regname.CLOUCOUR, regname.CLOUCOUR1TOWERS,
+                                           RB.CanMakeCloud | (RB.CloudMario & RB.MediumLogic)),
+    locname.CLOU1LEF1UP1: SMG2LocationData(["1-up Location"], regname.CLOUCOUR, regname.CLOUCOUR1CASTLE,
+                                           RB.CanMakeCloud),
+    locname.CLOU1LEF1UP2: SMG2LocationData(["1-up Location"], regname.CLOUCOUR, regname.CLOUCOUR1CASTLE,
+                                           RB.CanMakeCloud),
+    locname.CLOU1LEF1UP3: SMG2LocationData(["1-up Location"], regname.CLOUCOUR, regname.CLOUCOUR1CASTLE,
+                                           RB.CanMakeCloud),
+    locname.CLOU1UPDR1UP: SMG2LocationData(["1-up Location"], regname.CLOUCOUR, regname.CLOUCOUR1CASTLE,
+                                           RB.CanMakeCloud),
     locname.HAUN1BON1UP1: SMG2LocationData(["1-up Location"], regname.HAUNHALL, regname.HAUNHALL1JACKBON,
                                            RB.CanPound|RB.HardLogic),
     locname.HAUN1BON1UP2: SMG2LocationData(["1-up Location"], regname.HAUNHALL, regname.HAUNHALL1JACKBON,
@@ -1992,8 +2003,10 @@ oneup_locations: dict[str, SMG2LocationData] = {
     locname.FLIP2BON1UP3: SMG2LocationData(["1-up Location"], regname.FLIPVILL, regname.FLIPVILL2TWIRLIP),
     locname.FLIP2LAUN1UP: SMG2LocationData(["1-up Location"], regname.FLIPVILL, regname.FLIPVILL2MAZEBOTTOM),
     locname.FLIP2STAR1UP: SMG2LocationData(["1-up Location"], regname.FLIPVILL, regname.FLIPVILL2GRAVITYMAIN),
+    locname.FLIP3STAR1UP: SMG2LocationData(["1-up Location"], regname.FLIPVILL, regname.FLIPVILL3GRAVITY,
+                                           RB.DRILLMASTER),
     locname.STSH1ROOF1UP: SMG2LocationData(["1-up Location"], regname.STARBEACH, regname.STARBEACH1MAIN,
-                                           RB.CanRideDino),
+                                           RB.CanRideDino | (RB.JumpHeight5 & RB.CanAirSpin & RB.MediumLogic)),
     locname.STSH1BON1UP1: SMG2LocationData(["1-up Location"], regname.STARBEACH, regname.STARBEACH1BONUS,
                                            RB.CanRideDino | RB.HellLogic),
     locname.STSH1BON1UP2: SMG2LocationData(["1-up Location"], regname.STARBEACH, regname.STARBEACH1BONUS,
@@ -2005,39 +2018,52 @@ oneup_locations: dict[str, SMG2LocationData] = {
     locname.STSH1OCEA1UP: SMG2LocationData(["1-up Location"], regname.STARBEACH, regname.STARBEACH1MAIN,
                                            RB.CanSwim),
     locname.STSH2ROOF1UP: SMG2LocationData(["1-up Location"], regname.STARBEACH, regname.STARBEACH2MAIN,
-                                           CanReachRegion(regname.STARBEACH2DEEPW) & RB.CanPound & RB.CanMakeCloud),
+                                           (CanReachRegion(regname.STARBEACH2DEEPW) & RB.CanPound & RB.CanMakeCloud)
+                                           | (RB.CanWallSpin & RB.CanMakeCloud & RB.HellLogic)
+                                           | (RB.JumpHeight5 & RB.CanAirSpin & RB.MediumLogic)),
     locname.STSH2CHUK1UP: SMG2LocationData(["1-up Location"], regname.STARBEACH, regname.STARBEACH2MAIN),
     locname.STSH2SPRI1UP: SMG2LocationData(["1-up Location"], regname.STARBEACH, regname.STARBEACH2MAIN,
-                                           CanReachRegion(regname.STARBEACH2DEEPW) & RB.CanPound & RB.CanMakeCloud),
+                                           RB.CanAirSpin),
     locname.STSH2GRIN1UP: SMG2LocationData(["1-up Location"], regname.STARBEACH, regname.STARBEACH2DEEPW),
-    #I'm still a little worried about these, especially if enemies will respawn when leaving - it's both difficult and luck-based
     locname.STSH2BON1UP1: SMG2LocationData(["1-up Location"], regname.STARBEACH, regname.STARBEACH2BONUS),
     locname.STSH2BON1UP2: SMG2LocationData(["1-up Location"], regname.STARBEACH, regname.STARBEACH2BONUS),
     locname.STSH2BON1UP3: SMG2LocationData(["1-up Location"], regname.STARBEACH, regname.STARBEACH2BONUS),
-    locname.CHOM1CHBL1UP: SMG2LocationData(["1-up Location"], regname.CHOMWORK, regname.CHOMWORK1START),
-    locname.CHOM1CHUP1UP: SMG2LocationData(["1-up Location"], regname.CHOMWORK, regname.CHOMWORK1ROLLING),
-    locname.CHOM1TILT1UP: SMG2LocationData(["1-up Location"], regname.CHOMWORK, regname.CHOMWORK1FLIPSWAP),
-    locname.CHOM2CHBL1UP: SMG2LocationData(["1-up Location"], regname.CHOMWORK, regname.CHOMWORK2START),
-    locname.CHOM2CHEK1UP: SMG2LocationData(["1-up Location"], regname.CHOMWORK, regname.CHOMWORK2ROLLING),
+    locname.CHOM1CHBL1UP: SMG2LocationData(["1-up Location"], regname.CHOMWORK, regname.CHOMWORK1START,
+                                           RB.CanBackflip | ((RB.CanSideflip | RB.CanAirSpin) & RB.MediumLogic)),
+    locname.CHOM1CHUP1UP: SMG2LocationData(["1-up Location"], regname.CHOMWORK, regname.CHOMWORK1ROLLING,
+                                           (RB.CanBackflip | ((RB.CanSideflip | RB.CanAirSpin) & RB.MediumLogic)
+                                            | (RB.CanTriple & RB.HardLogic))
+                                           & (RB.CanWallSpin | RB.JumpHeight5 | (RB.JumpHeight4 & RB.CanGrabLedge & RB.HardLogic))),
+    locname.CHOM1TILT1UP: SMG2LocationData(["1-up Location"], regname.CHOMWORK, regname.CHOMWORK1FLIPSWAP,
+                                           RB.JumpHeight2 | RB.CanWallJump | RB.HardLogic),
+    locname.CHOM2CHBL1UP: SMG2LocationData(["1-up Location"], regname.CHOMWORK, regname.CHOMWORK2START,
+                                           (RB.SPRONGIN | RB.HardLogic
+                                            | ((RB.CanBackflip | RB.CanLongSpin | RB.CanTriple) & RB.CanWallSpin & RB.MediumLogic))
+                                           & ((RB.CanBackflip | ((RB.CanSideflip | RB.CanAirSpin) & RB.MediumLogic))
+                                              | (RB.SPRONGIN & RB.HardLogic))),
+    locname.CHOM2CHEK1UP: SMG2LocationData(["1-up Location"], regname.CHOMWORK, regname.CHOMWORK2ROLLING,
+                                           RB.SPRONGIN),
     locname.CHOM2SPIN1UP: SMG2LocationData(["1-up Location"], regname.CHOMWORK, regname.CHOMWORK2TOWER,
-                                           RB.SPRONGIN | (RB.HardLogic & RB.CanWallSpin & RB.CanBackOrSideflip)),
+                                           RB.SPRONGIN | (RB.MediumLogic & RB.CanWallSpin & RB.CanBackOrSideflip)),
     locname.SWEETPATH1UP: SMG2LocationData(["1-up Location"], regname.SWEETMYS, regname.SWEETMYS1COOKIE,
-                                           RB.CanDinoGlow),
+                                           RB.CanDinoGlow | RB.CanInfiniteFlutter),
     locname.SWEETSHRK1UP: SMG2LocationData(["1-up Location"], regname.SWEETMYS, regname.SWEETMYS1CHOCO),
     locname.SWEET2PATH1UP: SMG2LocationData(["1-up Location"], regname.SWEETMYS, regname.SWEETMYS2COOKIE,
-                                           RB.CanDinoGlow),
+                                           RB.CanDinoGlow | RB.CanInfiniteFlutter),
     locname.SWEET2SHRK1UP: SMG2LocationData(["1-up Location"], regname.SWEETMYS, regname.SWEETMYS2CHOCO),
     locname.HONEYWATR1UP: SMG2LocationData(["1-up Location"], regname.HONEYHOP, regname.HONEYHOP1POND),
-    locname.GRAVIWATR1UP: SMG2LocationData(["1-up Location"], regname.BOWSER2, regname.GRAVGAUN1WATERCO), #Check when beta releases - how is this water affected by no swim?
+    locname.GRAVIWATR1UP: SMG2LocationData(["1-up Location"], regname.BOWSER2, regname.GRAVGAUN1WATERCO),
     locname.GRAVICHEK1UP: SMG2LocationData(["1-up Location"], regname.BOWSER2, regname.GRAVGAUN1WHOMPWA,
-                                           (RB.CanWallSpin & (RB.CanSideflip | RB.CanTriple | (RB.HardLogic & RB.CanLongSpin)))
+                                           (RB.CanWallSpin & (RB.JumpHeight5 | (RB.HardLogic & RB.CanLongSpin)
+                                                              | (RB.CanDouble & RB.MediumLogic)))
                                            | (RB.CanAirSpin & RB.CanBackflip)),
     locname.GRAVIWHOM1UP: SMG2LocationData(["1-up Location"], regname.BOWSER2, regname.GRAVGAUN1WHOMPWA),
     locname.GRAVIGATE1UP: SMG2LocationData(["1-up Location"], regname.BOWSER2, regname.GRAVGAUN1WHOMPWA),
     locname.GRAVI2WATR1UP: SMG2LocationData(["1-up Location"], regname.BOWSER2, regname.GRAVGAUN2WATERCO),
     locname.GRAVI2CHEK1UP: SMG2LocationData(["1-up Location"], regname.BOWSER2, regname.GRAVGAUN2WHOMPWA,
-                                           (RB.CanWallSpin & (RB.CanSideflip | RB.CanTriple | (RB.HardLogic & RB.CanLongSpin)))
-                                           | (RB.CanAirSpin & RB.CanBackflip)),
+                                            (RB.CanWallSpin & (RB.JumpHeight5 | (RB.HardLogic & RB.CanLongSpin)
+                                                               | (RB.CanDouble & RB.MediumLogic)))
+                                            | (RB.CanAirSpin & RB.CanBackflip)),
     locname.GRAVI2WHOM1UP: SMG2LocationData(["1-up Location"], regname.BOWSER2, regname.GRAVGAUN2WHOMPWA),
     locname.SPAC1BACK1UP: SMG2LocationData(["1-up Location"], regname.SPACSTOR, regname.SPACSTOR1PULL),
     locname.SPAC1TOPM1UP: SMG2LocationData(["1-up Location"], regname.SPACSTOR, regname.SPACSTOR1TOPMAN),
@@ -2208,6 +2234,9 @@ dice_block_locations: dict[str, SMG2LocationData] = {
     locname.BOULDE1BODIE4: SMG2LocationData(["Specials"], regname.BOULBOWL, regname.BOULBOWL1DICEROOM),
     locname.BOULDE1BODIE5: SMG2LocationData(["Specials"], regname.BOULBOWL, regname.BOULBOWL1DICEROOM),
     locname.BOULDE1BODIE6: SMG2LocationData(["Specials"], regname.BOULBOWL, regname.BOULBOWL1DICEROOM),
+    locname.COSCCOVECHAN1: SMG2LocationData(["Specials"], regname.COSMICO, regname.COSMIC1DICEROOM),
+    locname.COSCCOVECHAN2: SMG2LocationData(["Specials"], regname.COSMICO, regname.COSMIC1DICEROOM),
+    locname.COSCCOVECHAN3: SMG2LocationData(["Specials"], regname.COSMICO, regname.COSMIC1DICEROOM),
     locname.TALLTR1BODIE1: SMG2LocationData(["Specials"], regname.TALLTRUNK, regname.TALLTRUNK1DICEPIPE),
     locname.TALLTR1BODIE2: SMG2LocationData(["Specials"], regname.TALLTRUNK, regname.TALLTRUNK1DICEPIPE),
     locname.TALLTR1BODIE3: SMG2LocationData(["Specials"], regname.TALLTRUNK, regname.TALLTRUNK1DICEPIPE),
