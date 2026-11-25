@@ -1127,7 +1127,7 @@ def set_rules(world: "SMG2World", player: int):
                                                        rule=RB.MediumLogic | (RB.CanBackflip & RB.CanAirSpin))
     world.get_region(regname.GRAVGAUN1WATERCO).connect(world.get_region(regname.GRAVGAUN1WHOMPWA))
     world.get_region(regname.GRAVGAUN1WHOMPWA).connect(world.get_region(regname.GRAVGAUNGSTAR2),
-                                                       rule=RB.CanBackOrSideflip & RB.CanAirSpin)
+                                                       rule=RB.NarrowJumpHeight5)
     world.get_region(regname.GRAVGAUN1WHOMPWA).connect(world.get_region(regname.GRAVGAUN1DOORTOD),
                                                        "Gravity Gauntlet: Fire Wheel Launch Star",
                                                        rule=RB.CanLaunchStar)
